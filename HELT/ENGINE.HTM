@@ -1,0 +1,257 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=big5">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>《象棋巫師》幫助主題——UCCI引擎</title>
+</head>
+
+<body background="bground.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font face="隸書"><img src="xqwizard.gif" width="48"
+        height="48"></font><font size="6" face="隸書">《象棋巫師》幫助主題</font><font
+        size="4"><strong>　</strong></font><font size="4"
+        face="楷体_GB2312"><strong>版本：</strong></font><font
+        size="4" face="Arial"><strong>3.0</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>《象棋巫師》研發中心<font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@elephantbase.net"><font
+        face="Times New Roman">webmaster@elephantbase.net</font></a><font
+        face="Times New Roman">)</font>　<font
+        face="Times New Roman">2006</font>年<font
+        face="Times New Roman">10</font>月</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="4" face="楷体_GB2312"><strong>謹以此軟件獻給各位電腦象棋</strong></font><font
+        size="4" face="Arial"><strong>UCCI</strong></font><font
+        size="4" face="楷体_GB2312"><strong>引擎的程序作者，</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt><font size="4" face="楷体_GB2312"><strong>他們為中國象棋程序的發展作出了突出貢獻。</strong></font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><a href="contents.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">目錄</a></dt>
+    <dt><a href="outline.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">一、概述</a></dt>
+    <dt><a href="runtime.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">二、運行環境</a></dt>
+    <dt><a href="pgnfile.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">三、棋譜文件</a></dt>
+    <dt><a href="moves.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">四、著法</a></dt>
+    <dt><a href="position.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">五、局面</a></dt>
+    <dt><a href="wizard.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">六、魔法</a></dt>
+    <dt><a href="opening.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">七、開局信息</a></dt>
+    <dt><font color="#FF0000"><strong><img src="rbs.gif"
+        width="16" height="16">八、</strong></font><font
+        color="#FF0000" face="Times New Roman"><strong>UCCI</strong></font><font
+        color="#FF0000"><strong>引擎</strong></font></dt>
+    <dt><a href="gui.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">九、界面設置</a></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>八、</strong></font><font
+        size="5" face="Arial"><strong>UCCI</strong></font><font
+        size="5" face="楷体_GB2312"><strong>引擎</strong></font></dt>
+    <dt>　</dt>
+    <dt><a name="help_8_1"></a><font face="Times New Roman"><strong>8.1</strong></font><strong>　如何讓電腦走棋？</strong></dt>
+    <dt>　</dt>
+    <dt>　　選擇“引擎執紅”或“引擎執黑”，電腦就會為指定一方走棋。電腦出子前通常會進行“思考”，此時工具欄最右端的“停止思考”紅燈就會亮起。難度設定得越高，電腦思考的時間就會越長。</dt>
+    <dt>　　啟動《象棋巫師》或新建起局，根据“選項設置”對話框中“新局的引擎狀態”的不同，電腦會自動選擇執紅或執黑。電腦執紅時，棋盤會自動翻轉，始終按用戶的視角擺放棋子。如果不需要棋盤會自動翻轉，可以把“選項設置”對話框中的“自動翻轉棋盤”選項去除。</dt>
+    <dt>　　電腦走棋時，可以選擇“后台思考”功能，在用戶走棋的時間內也進行思考，這樣會适當提高電腦的水平。如果“選項設置”對話框中打開了“啟用后台思考”選項，那么啟動《象棋巫師》或新建起局時，“后台思考”功能會自動啟用。</dt>
+    <dt>　　電腦走棋時，可以選擇“引擎分析”功能，來觀察電腦的思路。</dt>
+    <dt>　　如果以上功能無法啟用，說明引擎還沒有加載，可以使用“引擎”菜單的“加載引擎”功能。《象棋巫師》自帶的引擎<font
+        face="Times New Roman">ElephantEye</font>位于《象棋巫師》的安裝目錄下，名稱為<font
+        face="Times New Roman">ELEEYE.EXE</font>。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_2"></a><font face="Times New Roman"><strong>8.2</strong></font><strong>　目前</strong><font
+        face="Times New Roman"><strong>UCCI</strong></font><strong>引擎能有哪些工作模式？</strong></dt>
+    <dt>　</dt>
+    <dt>　　現在<font face="Times New Roman">UCCI</font>引擎已經日趨完善，目前支持三种思考方式：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>限定層數，也可以無限制搜索<font
+        face="Times New Roman">(</font>《象棋巫師》可設定的最大層數為<font
+        face="Times New Roman">30</font>層或無限制<font
+        face="Times New Roman">)</font>；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>采用時段制限時方式，即規定几分鐘之內要走完几步；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>采用加時制限時方式<font
+        face="Times New Roman">(Fischer</font>制<font
+        face="Times New Roman">)</font>，即設定一個初始時間，每走一步就在剩余時間上加几秒种。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_3"></a><font face="Times New Roman"><strong>8.3</strong></font><strong>　如何讓電腦根据時限規定的時間來思考？</strong></dt>
+    <dt>　</dt>
+    <dt>　　打開“引擎”菜單中的“級別設置”對話框，選中“時限”選項，設定時段制或加時制的時限，确定后時鐘就開始走動。此時啟用“電腦執紅”或“電腦執黑”就可以讓電腦走棋，此外還可以啟用“后台思考”和“引擎分析”功能。</dt>
+    <dt>　　值得注意的是，用戶操控的一方可以不受時限的干扰，即使超時判負了，用戶還能繼續跟引擎對弈，引擎一方的時鐘仍然會根据設定的時限走動。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_4"></a><font face="Times New Roman"><strong>8.4</strong></font><strong>　如何設置引擎的水平？</strong></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">UCCI</font>引擎是無法用“難度級別”這一標准來設定引擎水平的，但是引擎的棋力總是跟它思考的時間相關的，因此《象棋巫師》提供了<font
+        face="Times New Roman">5</font>种級別的難度，來設定引擎的時限<font
+        face="Times New Roman">(</font>都是加時制<font
+        face="Times New Roman">)</font>。這<font
+        face="Times New Roman">5</font>种難度及其對應的時限是：入門<font
+        face="Times New Roman">(1</font>分鐘<font
+        face="Times New Roman">+1</font>秒鐘<font
+        face="Times New Roman">)</font>、業余<font
+        face="Times New Roman">(2</font>分鐘<font
+        face="Times New Roman">+2</font>秒鐘<font
+        face="Times New Roman">)</font>、專業<font
+        face="Times New Roman">(6</font>分鐘<font
+        face="Times New Roman">+6</font>秒鐘<font
+        face="Times New Roman">)</font>、大師<font
+        face="Times New Roman">(24</font>分鐘<font
+        face="Times New Roman">+24</font>秒鐘<font
+        face="Times New Roman">)</font>、特大<font
+        face="Times New Roman">(120</font>分鐘<font
+        face="Times New Roman">+120</font>秒鐘<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　如果用戶覺得“入門”級別仍然難度太高<font
+        face="Times New Roman">(</font>因為計算机的速度越來越快，即使計算很短的時間，引擎也會下出不是很糟的棋<font
+        face="Times New Roman">)</font>，那么可以限定引擎的層數<font
+        face="Times New Roman">(</font>初學者設在<font
+        face="Times New Roman">4</font>到<font
+        face="Times New Roman">6</font>層為宜<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_5"></a><font face="Times New Roman"><strong>8.5</strong></font><strong>　引擎分析窗口中的“評价”一欄有什么意義？</strong></dt>
+    <dt>　</dt>
+    <dt>　　評分反映了局面的优劣，优勢是正值，劣勢是負值，它直接取自引擎反饋的評分信息。引擎主要計算子力對比，其他因素會折算成子力對比。各种引擎的評价單位不同，例如《象棋巫師》自帶的引擎<font
+        face="Times New Roman">ElephantEye</font>是以“百分輕子”為單位的，即車大約為<font
+        face="Times New Roman">200</font>，馬和炮<font
+        face="Times New Roman">100</font>等等，也有的以“百分兵值”為單位。</dt>
+    <dt>　　通常將死和困斃局面的評分是<font
+        face="Times New Roman">1000(</font>也有用<font
+        face="Times New Roman">10000</font>的，總之會是很大的整數<font
+        face="Times New Roman">)</font>，當引擎搜索到不可避免的殺棋時，數值就接近<font
+        face="Times New Roman">1000</font>，例如<font
+        face="Times New Roman">3</font>步殺的局面，評分就應該是<font
+        face="Times New Roman">995(</font>胜方走<font
+        face="Times New Roman">3</font>步，負方走<font
+        face="Times New Roman">2</font>步<font
+        face="Times New Roman">)</font>，<font
+        face="Times New Roman">2</font>步被殺的局面就是<font
+        face="Times New Roman">-996</font>。</dt>
+    <dt>　　需要注意的是，當人机對弈時如果啟用“后台思考”功能，那么“評分”一欄總是就引擎一方來作局面評价的。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_6"></a><font face="Times New Roman"><strong>8.6</strong></font><strong>　“后台思考”是如何工作的？</strong></dt>
+    <dt>　</dt>
+    <dt>　　“后台思考”功能僅限于人机對弈。引擎走完一步，就會立即猜測出對手最有可能的著法<font
+        face="Times New Roman">(</font>引擎認為的<font
+        face="Times New Roman">)</font>，然后引擎就根据這個著法來思考它下一步的應對，從而在對手思考時的時候同步思考。當對沒有走出引擎猜測的著法時，后台思考就失敗了，那么引擎必須重新思考。反之后台思考命中<font
+        face="Times New Roman">(Ponder Hit)</font>，引擎會節約很多思考的時間。</dt>
+    <dt>　　“后台思考”時猜測的著法在“思考路線”中用加了括號，之后的著法才是引擎的思路。</dt>
+    <dt>　　需要注意的是，當雙方都讓引擎來操縱時，就不能使用“后台思考”功能。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_7"></a><font face="Times New Roman"><strong>8.7</strong></font><strong>　如何讓引擎改變著法？</strong></dt>
+    <dt>　</dt>
+    <dt>　　如果用戶認為引擎的某個著法走得不好，可以刪除該著法，看引擎是否能想出別的著法來。一般來說，引擎設置參數時“隨机性”設得越大，引擎越有可能想出不一樣的著法來。此外，用戶也可以在引擎尚未出子的時候幫引擎走一步。</dt>
+    <dt>　　如果用戶覺得引擎走的這步棋違反了長打作負的規則，那么用戶可以用“設為禁著”功能刪除引擎走的著法，引擎重新思考時就不會走此著法了。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_8"></a><font face="Times New Roman"><strong>8.8</strong></font><strong>　如何悔棋？</strong></dt>
+    <dt>　</dt>
+    <dt>　　《象棋巫師》不鼓勵悔棋，因此不專門設定悔棋功能。但用戶可以連續刪除兩次著法，就相當于悔了一步。但是，有時用戶刪除了一個著法，還來不及刪除第二個時，引擎就已經走棋了，此時可以把“著法列表”中的光標停在要悔的那個著法上，刪除它就可以了。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_9"></a><font face="Times New Roman"><strong>8.9</strong></font><strong>　如何讓電腦分析一個棋譜中的某個局面？</strong></dt>
+    <dt>　</dt>
+    <dt>　　不選擇“引擎執紅”和“引擎執黑”，而直接打開“引擎分析”窗口，就可以看到引擎對當前局面的分析信息了。如果需要分析不同線路上的局面，也可以使用“分析局面”功能再打開一個《象棋巫師》窗口。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_10"></a><font face="Times New Roman"><strong>8.10</strong></font><strong>　是否可以同時打開兩個《象棋巫師》的窗口并同時思考？</strong></dt>
+    <dt>　</dt>
+    <dt>　　新開一個窗口時，《象棋巫師》會重新啟動一套引擎，所以原則上是可以同時思考的。但是多個引擎同時思考時會占据更多的存儲器，每個引擎分配到的<font
+        face="Times New Roman">CPU</font>時間更少，使引擎的工作效率大幅度降低。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_11"></a><font face="Times New Roman"><strong>8.11</strong></font><strong>　如何讓兩個不同的引擎對戰？</strong></dt>
+    <dt>　</dt>
+    <dt>　　用“設置參數”對話框中的“加載副引擎”功能，可以另加載一個別的引擎，然后選定副引擎執紅<font
+        face="Times New Roman">(</font>選中“副引擎執紅”<font
+        face="Times New Roman">)</font>還是執黑<font
+        face="Times New Roman">(</font>不要選中<font
+        face="Times New Roman">)</font>。兩個引擎對戰時，必須同時選定“引擎執紅”和“引擎執黑”，此時兩個引擎就會對戰。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_12"></a><font face="Times New Roman"><strong>8.12</strong></font><strong>　《象棋巫師》能否讓兩個引擎連續打多場比賽？</strong></dt>
+    <dt>　</dt>
+    <dt>　　《象棋巫師》的宗旨不是用來比較兩個引擎誰強誰弱，所以沒有這种功能。但是<font
+        face="Times New Roman">ElephantEye</font>源程序包中的“<font
+        face="Times New Roman">UCCI</font>引擎聯賽模擬器”可以實現這樣的功能。可參閱：</dt>
+    <dt>　　<a
+        href="http://www.elephantbase.net/league/emulator.htm"
+        target="_blank"><font face="Times New Roman">http://www.elephantbase.net/league/emulator.htm</font></a>　　</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_13"></a><font face="Times New Roman"><strong>8.13</strong></font><strong>　如何獲得其他引擎？</strong></dt>
+    <dt>　</dt>
+    <dt>　　《象棋巫師》安裝時只提供了<font
+        face="Times New Roman">ElephantEye</font>這一個引擎，其他引擎可以從互聯网上找到，其中《象棋百科全書》网站的《電腦象棋聯賽》欄目就提供了<font
+        face="Times New Roman">20</font>余個<font
+        face="Times New Roman">UCCI</font>引擎的信息，可參閱：</dt>
+    <dt>　　<a href="http://www.elephantbase.net/league.htm"
+        target="_blank"><font face="Times New Roman">http://www.elephantbase.net/league.htm</font></a></dt>
+    <dt>　　下載到這些引擎后<font
+        face="Times New Roman">(</font>通常裝在壓縮包內，釋放到某個目錄下即可<font
+        face="Times New Roman">)</font>，用“加載引擎”功能指定引擎文件<font
+        face="Times New Roman">(EXE</font>文件<font
+        face="Times New Roman">)</font>，即可完成加載。下次啟動《象棋巫師》時，最近一次被加載的引擎會被自動加載<font
+        face="Times New Roman">(</font>但副引擎不會被自動加載<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_14"></a><font face="Times New Roman"><strong>8.14</strong></font><strong>　如何設計自己的引擎并讓《象棋巫師》運行？</strong></dt>
+    <dt>　</dt>
+    <dt>　　設計對弈引擎是很艱巨的工作，能被《象棋巫師》運行的引擎還必須遵循<font
+        face="Times New Roman">UCCI</font>協議，程序設計師可參閱《象棋百科全書》网站的《計算机博弈》欄目，從中找到很多設計對弈引擎的資料：</dt>
+    <dt>　　<a href="http://www.elephantbase.net/computer.htm"
+        target="_blank"><font face="Times New Roman">http://www.elephantbase.net/computer.htm</font></a></dt>
+    <dt>　</dt>
+    <dt><a name="help_8_15"></a><font face="Times New Roman"><strong>8.15</strong></font><strong>　如何調試引擎并獲《象棋巫師》跟引擎的通訊信息？</strong></dt>
+    <dt>　</dt>
+    <dt>　　如果把“設置參數”對話框中的日志功能打開，那么《象棋巫師》跟<font
+        face="Times New Roman">UCCI</font>引擎的通訊信息<font
+        face="Times New Roman">(</font>包括《象棋巫師》發送給<font
+        face="Times New Roman">UCCI</font>引擎的“指令”和<font
+        face="Times New Roman">UCCI</font>引擎給《象棋巫師》的“反饋”<font
+        face="Times New Roman">)</font>都會以<font
+        face="Times New Roman">HTML</font>的格式記錄到日志文件里。“查看”按鈕可以直接用默認的瀏覽器<font
+        face="Times New Roman">(</font>通常是<font
+        face="Times New Roman">Internet Explorer)</font>打開日志文件，由于引擎啟動后隨時可能產生指令和反饋信息，所以要點擊瀏覽器上的“刷新”按鈕才能獲得最新的信息。</dt>
+    <dt>　　用<font face="Times New Roman">HTML</font>格式的好處是可以用不同顏色表示指令和反饋，這樣就方便了引擎設計師跟蹤和調試引擎。《象棋巫師》向引擎發出的指令用紅色表示，引擎的反饋信息用藍色表示，如果加載了副引擎，那么向副引擎發出的指令用紫紅色表示，副引擎的反饋信息用深藍色表示。</dt>
+    <dt>　　另外，“設置參數”對話框中有發送<font
+        face="Times New Roman">UCCI</font>指令的功能，此時引擎的反饋信息會顯示出來。這個功能方便了引擎的調試，發送的<font
+        face="Times New Roman">UCCI</font>指令可以是參數設置、設定局面和思考指令。不要發送退出指令“<font
+        face="Times New Roman">quit</font>”，因為《象棋巫師》不會自動察覺引擎是否已經關閉，可能會發生無法意料的情況。</dt>
+    <dt>　</dt>
+    <dt><a name="help_8_16"></a><font face="Times New Roman"><strong>8.16</strong></font><strong>　如何跟引擎提和？</strong></dt>
+    <dt>　</dt>
+    <dt>　　棋手跟電腦的交互方式有別于棋手之間的交互方式，用戶必須走完一步棋的同時跟引擎提和。選擇“提和<font
+        face="Times New Roman">/</font>接受提和”功能，再下一著棋，就把提和的信息傳遞給了引擎。如果引擎接受提和，則《象棋巫師》會終止棋局，反之引擎會繼續走棋，對提和不予理會。</dt>
+    <dt>　　反過來，引擎跟用戶提和時，也會在走出一步棋的同時提出。如果用戶接受提和，那么選擇“提和<font
+        face="Times New Roman">/</font>接受提和”功能即可，反之用戶可繼續走棋，對提和不予理會。</dt>
+    <dt>　　注意：只有在“選項設置”中選擇“允許提和認輸”，引擎才會主動提和。反過來，不選擇“允許提和認輸”，引擎也會接受用戶的提和。</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="opening.htm">開局信息</a></li>
+    <li>下一篇　<a href="gui.htm">界面設置</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.elephantbase.net/" target="_blank"><img
+        src="logo.gif" border="0" width="88" height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.elephantbase.net/"
+        target="_blank"><font size="2" face="Arial"><strong>www.elephantbase.net</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

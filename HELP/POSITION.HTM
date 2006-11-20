@@ -1,0 +1,192 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>《象棋巫师》帮助主题——局面</title>
+</head>
+
+<body background="bground.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font face="隶书"><img src="xqwizard.gif" width="48"
+        height="48"></font><font size="6" face="隶书">《象棋巫师》帮助主题</font><font
+        size="4"><strong>　</strong></font><font size="4"
+        face="楷体_GB2312"><strong>版本：</strong></font><font
+        size="4" face="Arial"><strong>3.0</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>《象棋巫师》研发中心<font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@elephantbase.net"><font
+        face="Times New Roman">webmaster@elephantbase.net</font></a><font
+        face="Times New Roman">)</font>　<font
+        face="Times New Roman">2006</font>年<font
+        face="Times New Roman">10</font>月</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="4" face="楷体_GB2312"><strong>谨以此软件献给各位电脑象棋</strong></font><font
+        size="4" face="Arial"><strong>UCCI</strong></font><font
+        size="4" face="楷体_GB2312"><strong>引擎的程序作者，</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt><font size="4" face="楷体_GB2312"><strong>他们为中国象棋程序的发展作出了突出贡献。</strong></font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><a href="contents.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">目录</a></dt>
+    <dt><a href="outline.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">一、概述</a></dt>
+    <dt><a href="runtime.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">二、运行环境</a></dt>
+    <dt><a href="pgnfile.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">三、棋谱文件</a></dt>
+    <dt><a href="moves.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">四、着法</a></dt>
+    <dt><font color="#FF0000"><strong><img src="rbs.gif"
+        width="16" height="16">五、局面</strong></font></dt>
+    <dt><a href="wizard.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">六、魔法</a></dt>
+    <dt><a href="opening.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">七、开局信息</a></dt>
+    <dt><a href="engine.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">八、<font face="Times New Roman">UCCI</font>引擎</a></dt>
+    <dt><a href="gui.htm"><img src="bbs.gif" border="0"
+        width="16" height="16">九、界面设置</a></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>五、局面</strong></font></dt>
+    <dt>　</dt>
+    <dt><a name="help_5_1"></a><font face="Times New Roman"><strong>5.1</strong></font><strong>　如何分析和推演局势？</strong></dt>
+    <dt>　</dt>
+    <dt>　　《象棋巫师》具有推演局势的功能，利用“分析局面”功能可以重新打开一个窗口，对当前局面进行推演。</dt>
+    <dt>　</dt>
+    <dt><a name="help_5_2"></a><font face="Times New Roman"><strong>5.2</strong></font><strong>　编辑局面时会丢失棋局信息吗？</strong></dt>
+    <dt>　</dt>
+    <dt>　　一旦使用“编辑局面”功能，就相当于新建一个棋局，此时《象棋巫师》会提示保存原来的棋局<font
+        face="Times New Roman">(</font>如果原来的棋局更改过的话<font
+        face="Times New Roman">)</font>。当然，新的棋局可能是原来棋局上的扩展，所以赛事信息被保留下来。</dt>
+    <dt>　</dt>
+    <dt><a name="help_5_3"></a><font face="Times New Roman"><strong>5.3</strong></font><strong>　</strong><font
+        face="Times New Roman"><strong>FEN</strong></font><strong>格式有什么好处？</strong></dt>
+    <dt>　</dt>
+    <dt>　　如果要用最简单文本串描述一个象棋局面，那么用<font
+        face="Times New Roman">FEN</font>格式是最简洁最有效的手段。《象棋巫师》可以自动为局面生成<font
+        face="Times New Roman">FEN</font>格式串，也可以把任何<font
+        face="Times New Roman">FEN</font>串的字符串解析成局面。</dt>
+    <dt>　　如果<font face="Times New Roman">FEN</font>串保存在<font
+        face="Times New Roman">FEN</font>文件中，那么使用“从<font
+        face="Times New Roman">FEN</font>文件导入”的功能就可以把这个<font
+        face="Times New Roman">FEN</font>串解析成局面。当前局面也可以用“导出到<font
+        face="Times New Roman">FEN</font>文件”保存为<font
+        face="Times New Roman">FEN</font>文件。</dt>
+    <dt>　　如果<font face="Times New Roman">FEN</font>串出现在电子刊物、网页或<font
+        face="Times New Roman">BBS</font>论坛上，那么选中并把这个<font
+        face="Times New Roman">FEN</font>串复制到剪贴板，在《象棋巫师》中使用“粘贴<font
+        face="Times New Roman">FEN</font>串”功能，这个<font
+        face="Times New Roman">FEN</font>串解析成局面。用户也可以使用“复制<font
+        face="Times New Roman">FEN</font>串”把当前局面的<font
+        face="Times New Roman">FEN</font>串复制到剪贴板，然后粘贴到论坛上，供其他人访问，如此简单的“复制”和“粘贴”方法方便了棋局的研究。</dt>
+    <dt>　　如果用户需要了解<font
+        face="Times New Roman">FEN</font>串的含义，那么可以打开“编辑局面”对话框，改动棋盘上的棋子，观察最底下一行<font
+        face="Times New Roman">FEN</font>串有什么变化。</dt>
+    <dt>　</dt>
+    <dt><a name="help_5_4"></a><font face="Times New Roman"><strong>5.4</strong></font><strong>　在“编辑局面”对话框中，如何设置为起始局面？</strong></dt>
+    <dt>　</dt>
+    <dt>　　“编辑局面”对话框是没有设置起始局面功能的。要设置起始局面，其实只要使用“新建”功能就可以了。</dt>
+    <dt>　</dt>
+    <dt><a name="help_5_5"></a><font face="Times New Roman"><strong>5.5</strong></font><strong>　编辑的局面不合法，《象棋巫师》会如何处理？</strong></dt>
+    <dt>　</dt>
+    <dt>　　没有帅<font face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>、帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>送吃、帅将对脸、帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>出宫、相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>过河、兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>不归位等，都属于“不合法局面”，但《象棋巫师》允许这些局面的出现，来增加排局的趣味性。</dt>
+    <dt>　　需要注意的是，没有帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>并不意味着棋局的结束，《象棋巫师》只认定将死或困毙<font
+        face="Times New Roman">(</font>没有子可动<font
+        face="Times New Roman">)</font>才判负。如果摆出没有帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>的局面，那么没有帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>的一方永远也不会被将死<font
+        face="Times New Roman">(</font>但棋子被吃光后就是困毙<font
+        face="Times New Roman">)</font>；摆出帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>送吃的局面，下一步对方吃掉帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>也不算取胜。</dt>
+    <dt>　　对于不合法局面，《象棋巫师》认为的走棋规则如下：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>没有归位的仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>、相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>和兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>仍旧按照规则上的走法，仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>斜走一格，相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>斜走两格，未过河的兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>只能前进一格；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>出宫的帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>如果离王宫只有一格，那么可以走回王宫；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>在对方王宫中的帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>也可以在宫中自由行走；</dt>
+    <dt>　　<font face="Times New Roman">(4) </font>过了河的相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>只能在对方半场活动，不能走回本方半场；</dt>
+    <dt>　　<font face="Times New Roman">(5) </font>没有归位的帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>、仕<font
+        face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>捉对方的将<font
+        face="Times New Roman">(</font>帅<font
+        face="Times New Roman">)</font>不算将军，允许对方不避将，但不允许对脸<font
+        face="Times New Roman">(</font>即位于同一条纵线并且中间没有隔其他子<font
+        face="Times New Roman">)</font>；</dt>
+    <dt>　　<font face="Times New Roman">(6) </font>帅<font
+        face="Times New Roman">(</font>将<font
+        face="Times New Roman">)</font>对脸时，下一步不能再保持对脸的状态，如果无法解除对脸状态，就算轮到走棋的一方被将死。</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="moves.htm">着法</a></li>
+    <li>下一篇　<a href="wizard.htm">魔法</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.elephantbase.net/" target="_blank"><img
+        src="logo.gif" border="0" width="88" height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.elephantbase.net/"
+        target="_blank"><font size="2" face="Arial"><strong>www.elephantbase.net</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
