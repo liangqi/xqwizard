@@ -1247,7 +1247,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
     End If
     AddMove = True
 Else
-    If bEcho And Options_bSounds Then
+    If bEcho And Options_bSounds And (nMoveStatus And MOVE_INCHECK) <> 0 Then
         PlayWavSound "ILLEGAL"
     End If
     AddMove = False
