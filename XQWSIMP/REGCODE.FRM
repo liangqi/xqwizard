@@ -112,9 +112,9 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-Gui_szUser = txtUser.Text
-Gui_szRegCode = txtRegCode.Text
-App_bRegistered = UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser)
+Gui_szUser = Replace(txtUser.Text, vbCrLf, "")
+Gui_szRegCode = Replace(txtRegCode.Text, vbCrLf, "")
+App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
 If App_bRegistered Then
     MsgBox "¹§Ï²Äã×¢²á³É¹¦£¡", vbInformation
 Else
