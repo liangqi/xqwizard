@@ -2446,8 +2446,8 @@ Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0")
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "CheckUpdate", "1")) <> 0)
 Options_bEngineUser = (Str2Int(GetSetting("XQWizard", "Options", "EngineUser", "0")) <> 0)
-Gui_szUser = GetSetting("XQWizard", "Gui", "User", "象棋巫师测试团队")
-Gui_szRegCode = GetSetting("XQWizard", "Gui", "Code", "")
+Gui_szUser = GetSetting("XQWizard", "Register", "User", "象棋巫师测试团队")
+Gui_szRegCode = GetSetting("XQWizard", "Register", "Code", "")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_nThinkWidth = Str2Int(GetSetting("XQWizard", "Gui", "ThinkWidth", "4800"), 2400)
@@ -2501,8 +2501,8 @@ SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
 SaveSetting "XQWizard", "Options", "CheckUpdate", IIf(Options_bCheckUpdate, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineUser", IIf(Options_bEngineUser, "1", "0")
-SaveSetting "XQWizard", "Gui", "User", Gui_szUser
-SaveSetting "XQWizard", "Gui", "Code", Gui_szRegCode
+SaveSetting "XQWizard", "Register", "User", Gui_szUser
+SaveSetting "XQWizard", "Register", "Code", Gui_szRegCode
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "ThinkWidth", LTrim(Str(Gui_nThinkWidth))
