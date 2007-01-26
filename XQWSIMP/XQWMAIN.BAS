@@ -2425,7 +2425,7 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "0")) <> 0)
+Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
@@ -2454,7 +2454,7 @@ Gui_nThinkWidth = Str2Int(GetSetting("XQWizard", "Gui", "ThinkWidth", "4800"), 2
 Gui_nThinkHeight = Str2Int(GetSetting("XQWizard", "Gui", "ThinkHeight", "2400"), 1200)
 Gui_nThinkLeft = Str2Int(GetSetting("XQWizard", "Gui", "ThinkLeft", "0"))
 Gui_nThinkTop = Str2Int(GetSetting("XQWizard", "Gui", "ThinkTop", "0"))
-Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "0"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
+Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "1")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
 Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "1"), 1, 100)
@@ -2630,7 +2630,7 @@ If Options_bCheckUpdate Then
     sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
         If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", vbQuestion + vbYesNo) = vbYes Then
-            ShellExecuteA 0, vbNullString, "http://nchc.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+            ShellExecuteA 0, vbNullString, "http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
         End If
     End If
 End If

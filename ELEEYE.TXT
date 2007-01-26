@@ -1,4 +1,4 @@
-中国象棋对弈程序ElephantEye(象眼)　版本：1.61
+中国象棋对弈程序ElephantEye(象眼)　版本：1.62
 
 黄晨 *　2006年10月
 ( * 联系地址：复旦大学化学系表面化学实验室，eMail：webmaster@elephantbase.net)
@@ -101,29 +101,40 @@
 
 七、程序表现
 
-　　ElephantEye 偏重于搜索，但在知识上非常欠缺。在2.8GHz的处理器上每秒可搜索约1,200,000个结点(包括常规搜索和静态搜索)，一般的中局局面在1分钟内可搜索约11层。
+　　ElephantEye 偏重于搜索，但在知识上比较欠缺。在2.8GHz的处理器上每秒可搜索约1,200,000个结点(包括常规搜索和静态搜索)，一般的中局局面在1分钟内可搜索约11层。
 　　在棋力上，ElephantEye 和“棋隐”、SaoLa (象棋挑战者)等程序具有同等水平，但由于局面评估函数上的缺陷，ElephantEye 距离顶尖的商业象棋软件(谢谢大师、象棋世家、象棋奇兵、棋天大圣等)尚有一定的差距。
 　　ElephantEye 在联众、弈天等象棋对弈网站上作过测试，用等级分来衡量，联众网的战绩在2500分左右，弈天网快棋的战绩在2000分左右，慢棋在1500分左右。
 　　ElephantEye 于2005年9月参加在台北举行的第10届ICGA电脑奥林匹克大赛中国象棋组比赛，战绩是7胜5和14负，在14个程序中排名第11；2006年8月参加在北京举行的全国首届计算机博弈锦标赛，战绩是7胜2和11负，在18个程序中排名第7。
 
 八、相关资源
 
-　　ElephantEye 必须在支持UCCI协议(如《象棋巫师》)的象棋程序下运行，《象棋巫师》安装程序包含了最新版本的 ElephantEye，下载地址是：
-　　　　http://www.elephantbase.net/download/xqwizard_simp.exe (简体版) 或
-　　　　http://www.elephantbase.net/download/xqwizard_trid.exe (繁体版)
-　　如果已经安装好《象棋巫师》，也可直接安装最新版本的 ElephantEye：
-　　　　http://www.elephantbase.net/download/eleeye.exe
-　　SourceForge 是 ElephantEye 源程序唯一的发布网站，ElephantEye 源程序包在 SourceForge 上的下载页面是：
+　　SourceForge 是 ElephantEye 源程序的唯一发布网站，页面是：
 　　　　http://sourceforge.net/projects/elephanteye/
+　　ElephantEye 源程序包在 SourceForge 上最快的下载链接是：
+　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.7z
+　　对于 ElephantEye 的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
+　　　　https://svn.sourceforge.net/svnroot/elephanteye/
+　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
+　　　　http://sourceforge.net/projects/tortoisesvn/
+
+　　ElephantEye 必须在支持UCCI协议(如《象棋巫师》)的象棋程序下运行，《象棋巫师》安装程序包含了最近一个版本的 ElephantEye，在 SourceForge 上最快的下载链接是：
+　　　　http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
+　　　　http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
+　　如果已经安装好《象棋巫师》，也可直接安装最近一个版本的 ElephantEye，在 SourceForge 上最快的下载链接是：
+　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.exe
 
 　　ElephantEye 的源程序包除了 ElephantEye 本身的源程序外，还包括以下几个附加模块：
-　　(1) 通用低级接口(utility)：提供了汇编指令、快速位操作、随机数、位棋盘、多线程输入、Visual Basic 下的原子语句等功能；
+　　(1) 通用低级接口(utility)：提供了汇编指令、位棋盘、数值计算、Visual Basic 下的原子语句等功能；
 　　(2) 中国象棋规则模块(cchess)：为其他软件使用 ElephantEye 代码提供了接口；
-　　(3) 开局库制作模块(MAKEBOOK)：为UCCI引擎测试和比赛提供了自动批量对局的平台；
+　　(3) 开局库制作模块(MAKEBOOK)：制作开局库ELEEYE.BIN的代码；
 　　(4) 浅红象棋适配器(UCCI2QH)：为浅红象棋调用UCCI引擎提供了接口；
 　　(5) UCCI引擎联赛模拟器(UCCILEAG)：为UCCI引擎测试和比赛提供了自动批量对局的平台；
-　　(6) BBS Chess(BBSCHESS)：一个用 Visual Basic 制作的国际象棋局面设置工具，可在各高校BBS上粘贴彩色的国际象棋局面；
-　　(7) 棋盘图片生成器(FEN2BMP)：一个可以把国际象棋和中国象棋的FEN文件转换成BMP文件的实用工具。
+　　(6) 浅红象棋引擎支持UCCI协议的适配器(QH2UCCI)：为“梦入神蛋”浅红象棋加入UCCI引擎测试提供了接口；
+　　(7) BBS Chess(BBSCHESS)：一个用 Visual Basic 制作的国际象棋局面设置工具，可在各高校BBS上粘贴彩色的国际象棋局面；
+　　(8) 棋盘图片生成器(FEN2BMP)：一个可以把国际象棋和中国象棋的FEN文件转换成BMP文件的实用工具；
+　　(9) 其他工具(MISC)：包括BASE64转码、BIG5/GB转码、UNIX文本转码、简易网络通讯、管道测试等工具。
+　　(10) 说明文档(DOC)：即《中国象棋程序设计探索》系列连载；
+　　(11) 参赛棋谱(CCGC)：ElephantEye 参加首届全国计算机博弈锦标赛(CCGC)的全部棋谱。
 
 　　如果要获得关于 ElephantEye 的更加详细的信息，可登录《象棋百科全书》网站：
 　　　　http://www.elephantbase.net/
