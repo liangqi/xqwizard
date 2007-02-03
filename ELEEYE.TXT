@@ -111,7 +111,7 @@
 　　SourceForge 是 ElephantEye 源程序的唯一发布网站，页面是：
 　　　　http://sourceforge.net/projects/elephanteye/
 　　ElephantEye 源程序包在 SourceForge 上最快的下载链接是：
-　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.7z
+　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.tar.gz
 　　对于 ElephantEye 的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
 　　　　https://svn.sourceforge.net/svnroot/elephanteye/
 　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
