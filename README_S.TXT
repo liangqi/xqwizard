@@ -22,10 +22,13 @@
 《象棋巫师》是自由软件，你可以遵照自由软件基金会出版的GNU通用公共许可证条款来修改和重新发布这一程序。源程序已发布在 SourceForge 网站上，下载页面是：
 http://sourceforge.net/projects/xqwizard/
 《象棋巫师》安装包在 SourceForge 上最快的下载链接是：
-http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
-http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
+http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
+http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
+http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
+http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
 《象棋巫师》源程序包在 SourceForge 上最快的下载链接是：
-http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_source.tar.gz
+http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_source.tar.gz
+http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_source.tar.gz
 对于《象棋巫师》的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
 https://svn.sourceforge.net/svnroot/xqwizard/
 你可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：

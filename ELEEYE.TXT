@@ -111,17 +111,21 @@
 　　SourceForge 是 ElephantEye 源程序的唯一发布网站，页面是：
 　　　　http://sourceforge.net/projects/elephanteye/
 　　ElephantEye 源程序包在 SourceForge 上最快的下载链接是：
-　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.tar.gz
+　　　　http://superb-east.dl.sourceforge.net/sourceforge/elephanteye/eleeye.tar.gz
+　　　　http://superb-west.dl.sourceforge.net/sourceforge/elephanteye/eleeye.tar.gz
 　　对于 ElephantEye 的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
 　　　　https://svn.sourceforge.net/svnroot/elephanteye/
 　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 　　　　http://sourceforge.net/projects/tortoisesvn/
 
 　　ElephantEye 必须在支持UCCI协议(如《象棋巫师》)的象棋程序下运行，《象棋巫师》安装程序包含了最近一个版本的 ElephantEye，在 SourceForge 上最快的下载链接是：
-　　　　http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
-　　　　http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
+　　　　http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
+　　　　http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
+　　　　http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
+　　　　http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
 　　如果已经安装好《象棋巫师》，也可直接安装最近一个版本的 ElephantEye，在 SourceForge 上最快的下载链接是：
-　　　　http://jaist.dl.sourceforge.net/sourceforge/elephanteye/eleeye.exe
+　　　　http://superb-east.dl.sourceforge.net/sourceforge/elephanteye/eleeye.exe
+　　　　http://superb-west.dl.sourceforge.net/sourceforge/elephanteye/eleeye.exe
 
 　　ElephantEye 的源程序包除了 ElephantEye 本身的源程序外，还包括以下几个附加模块：
 　　(1) 通用低级接口(utility)：提供了汇编指令、位棋盘、数值计算、Visual Basic 下的原子语句等功能；

@@ -2630,7 +2630,11 @@ If Options_bCheckUpdate Then
     sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
         If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", vbQuestion + vbYesNo) = vbYes Then
-            ShellExecuteA 0, vbNullString, "http://jaist.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+            If Rnd < .5 Then
+                ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+            Else
+                ShellExecuteA 0, vbNullString, "http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+            End If
         End If
     End If
 End If
