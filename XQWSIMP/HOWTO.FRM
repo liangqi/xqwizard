@@ -56,7 +56,7 @@ Begin VB.Form frmHowTo
       Width           =   1215
    End
    Begin VB.CommandButton btnPurchase 
-      Caption         =   "如何购买"
+      Caption         =   "如何注册"
       Height          =   375
       Left            =   1800
       TabIndex        =   7

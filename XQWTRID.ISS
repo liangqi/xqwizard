@@ -13,6 +13,7 @@ AppSupportURL=http://www.elephantbase.net/
 AppUpdatesURL=http://www.elephantbase.net/
 DefaultDirName={pf}\XQWizard
 DefaultGroupName=¶H´Ñ§Å®v
+LicenseFile=GPL.TXT
 OutputBaseFilename=xqwizard_trid
 OutputDir=.
 Compression=lzma

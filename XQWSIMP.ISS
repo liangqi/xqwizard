@@ -6,13 +6,14 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.01 (简体中文版)
+AppVerName=象棋巫师 3.02 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
 AppUpdatesURL=http://www.elephantbase.net/
 DefaultDirName={pf}\XQWizard
 DefaultGroupName=象棋巫师
+LicenseFile=GPL.TXT
 OutputBaseFilename=xqwizard_simp
 OutputDir=.
 Compression=lzma

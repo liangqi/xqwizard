@@ -127,7 +127,7 @@ End Sub
 
 Private Sub txtUser_Change()
 
-' txtRegCode.Text = Crc32Hex(txtUser.Text) ' For RegCode
+' txtRegCode.Text = Crc32Hex(Replace(txtUser.Text, vbCrLf, "")) ' For RegCode
 
 End Sub
 

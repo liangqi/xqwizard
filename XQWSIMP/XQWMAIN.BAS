@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.01, Last Modified: Oct. 2006
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.02, Last Modified: Mar. 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or
 ' modify it under the terms of the GNU General Public License
@@ -37,8 +37,8 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 
 ' È«¾Ö³£Á¿¡ª¡ªÏóÆåÎ×Ê¦ÐÅÏ¢
 Public Const STRING_VERSION     As String = "3.02"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2006 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 16 ' ÈÕ»ýÔÂÀÛÌõÄ¿Êý
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
+Public Const TIP_NUM            As Integer = 29 ' ÈÕ»ýÔÂÀÛÌõÄ¿Êý
 ' È«¾Ö³£Á¿¡ª¡ª¿ÉÑ¡²ÎÊý
 Public Const SHOW_SAVE          As Boolean = True ' FileDialog
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -2390,35 +2390,51 @@ Gui_szRegTip1 = "¡¡¡¡ÎªÊ¹¹ã´óÆåÃÔ¸ü¼Ó·½±ãµØÊ¹ÓÃºÍÊÕ²ØÏóÆåÎ×Ê¦Èí¼þ£¬ÏóÆåÎ×Ê¦¹âÅÌ°
         "¡¡¡¡¹âÅÌ°æ³ýÁËº¬ÓÐÏóÆåÎ×Ê¦°²×°°üÍâ£¬»¹°üÀ¨È¤Î¶ÏóÆå¡¢ÏóÆå°Ù¿ÆÈ«ÊéÑ¡ÝÍµÈ¾«²ÊÄÚÈÝ¡£" + vbCrLf + _
         "¡¡¡¡¹âÅÌ°æÓÉÖøÃûÍøÂçÏóÆå¼ÇÕß±±·½ºÃººµ£ÈÎ·¢ÐÐ´úÀí£¬Ô¸Òâ¶©¹ºÕß¿É²ÉÓÃÏÂÁÐÁªÏµ·½Ê½£º" + vbCrLf + _
         "¡¡¡¡QQ£º113844662" + vbCrLf + "¡¡¡¡Email£ºherojang@126.com" + vbCrLf + "¡¡¡¡µç»°£º0419-3224582"
-Gui_szRegTip2 = "¡¡¡¡Äú¿ÉÒÔÍ¨¹ýÒÔÏÂÍøÕ¾³ÉÎª¡¶ÏóÆåÎ×Ê¦¡·Èí¼þµÄ×¢²áÓÃ»§£º" + vbCrLf + _
+Gui_szRegTip2 = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¿î×ÔÓÉÈí¼þ£¬Äú¿ÉÒÔÍ¨¹ýÒÔÏÂÍøÕ¾¶ÔÏóÆåÎ×Ê¦×ÊÖú28Ôª£¬³ÉÎª¸ÃÈí¼þµÄ×¢²áÓÃ»§£º" + vbCrLf + _
         "¡¡¡¡(1) Ìì¿ÕÈí¼þÕ¾£ºhttp://shareware.skycn.com/soft/6752.htm" + vbCrLf + _
         "¡¡¡¡(2) ÖÐ¹ú¹²ÏíÈí¼þ×¢²áÖÐÐÄ£ºhttp://www.softreg.com.cn/Detail.aspx?id=/B20ED382-82CB-48F5-9334-2D5FF85E482D/" + vbCrLf + _
-        "¡¡¡¡ÏóÆåÎ×Ê¦µÄ×¢²á¼Û¸ñÊÇ28Ôª£¬ÒÔÉÏÍøÕ¾Ö§³ÖÍøÉÏÒøÐÐ¡¢ÊÖ»úÒøÐÐµÈ¶àÖÖ°²È«¸¶·Ñ·½Ê½£¬·Ç³£±ã½Ý¡£" + vbCrLf + _
-        "¡¡¡¡×¢²áºóÄú½«»ñµÃÒ»¸öºÍÄúµÄÓÃ»§Ãû¶ÔÓ¦µÄ×¢²áÂë£¬¸Ã×¢²áÂëÔÚ¡¶ÏóÆåÎ×Ê¦¡·µÄÒÔºó°æ±¾ÖÐÈÔÈ»ÓÐÐ§¡£"
+        "¡¡¡¡ÒÔÉÏÍøÕ¾Ö§³ÖÍøÉÏÒøÐÐ¡¢ÊÖ»úÒøÐÐµÈ¶àÖÖ°²È«¸¶·Ñ·½Ê½£¬·Ç³£±ã½Ý¡£" + vbCrLf + _
+        "¡¡¡¡×¢²áºóÄú½«»ñµÃÒ»¸öºÍÄúµÄÓÃ»§Ãû¶ÔÓ¦µÄ×¢²áÂë£¬¸Ã×¢²áÂëÔÚÏóÆåÎ×Ê¦µÄÒÔºó°æ±¾ÖÐÈÔÈ»ÓÐÐ§¡£" + vbCrLf + _
+        "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó½«°ÑÄúµÄ×ÊÖú¿îÓÃÓÚ¸ÃÈí¼þµÄÍÆ¹ã¹¤×÷ÖÐ£¬ÈÃÏóÆåÎ×Ê¦Îª¸ü¶àµÄÆåÃÔÅóÓÑ·þÎñ¡£"
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇÒ»¿î¹¦ÄÜÇ¿´óµÄµçÄÔ¶ÔÞÄºÍÆåÆ×±à¼­Èí¼þ£¬¾ßÓÐ·½±ãµÄÈË»ú¶ÔÕ½¡¢ÆåÆ×¼ÇÂ¼¡¢ÐÀÉÍ¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ÍêÈ«¿ÉÒÔÂú×ã¸÷²ã´ÎÏóÆå°®ºÃÕß¡¢ÆåÊÖ¡¢²ÃÅÐÔ±¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷ÖÖÐèÒª¡£"
-Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¶à¸öÍ¨ÓÃÏóÆåÒýÇæ£¬ËûÃÇ´ó¶¼¾ßÓÐ×¨ÒµÆåÊÖµÄË®Æ½£¬ÊÇÏóÆå°®ºÃÕßºÍ×¨ÒµÆåÊÖÌá¸ßÆåÒÕµÄÁ¼Ê¦ÒæÓÑ¡£"
-Gui_szTips(3) = "¡¡¡¡ÏóÆåÎ×Ê¦Ç¿´óµÄÆåÆ×¡¢ÆåÍ¼µ¼ÈëºÍµ¼³ö¹¦ÄÜÎªÄúÔÚÍøÂçÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
-Gui_szTips(3) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ýÍøÂç·¢ÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔ´Ó¡¶ÏóÆå°Ù¿ÆÈ«Êé¡·ÍøÕ¾»ñµÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
-Gui_szTips(4) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓÐÊýÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼þ(ºó×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü15ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¶à¸öÍ¨ÓÃÏóÆåÒýÇæ£¬ËûÃÇ´ó¶¼¾ßÓÐ×¨ÒµÆåÊÖµÄË®Æ½£¬ÊÇÏóÆå°®ºÃÕßºÍ×¨ÒµÆåÊÖÌá¸ßÆåÒÕµÄÁ¼Ê¦ÒæÓÑ¡£" + vbCrLf + _
+        "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦×Ô´øµÄÒýÇæ ElephantEye µÄ±íÏÖ²»ÂúÒâ£¬¿ÉÒÔµÇÂ¼ http://www.elephantbase.net/league.htm £¬ÏÂÔØµ½ÆäËû¸÷¾ßÌØÉ«µÄÒýÇæ¡£"
+Gui_szTips(3) = "¡¡¡¡µã»÷¡°ÒýÇæÖ´ºì¡±»ò¡°ÒýÇæÖ´ºÚ¡±°´Å¥£¬¾Í¿ÉÒÔÕ¹¿ªÈË»ú´óÕ½£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎåÖÖ²»Í¬µÄÄÑ¶È¸øÓÃ»§ÌåÑé¡£"
+Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£ÍûÈÃµçÄÔ×ßÆå£¬¶ø½ö½öÊÇÏëÖªµÀµçÄÔÔÚÏëÐ©Ê²Ã´£¬»òÕßÈÃµçÄÔ¸øÄãÒ»Ð©Æô·¢£¬¿ÉÒÔµã»÷¡°ÒýÇæ·ÖÎö¡±°´Å¥£¬´ò¿ªË¼¿¼Ï¸½Ú´°¿Ú¡£" + vbCrLf + _
+        "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼Ï¸½Ú´°¿ÚÖÐµÄË¼¿¼Â·Ïß¸´ÖÆÏÂÀ´£¬Õ³Ìùµ½Ö÷´°¿ÚÖÐ£¬¶ÔË¼¿¼ÏßÂ·½øÐÐÍÆÑÝ¡£"
+Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×Ê¦Ç¿´óµÄÆåÆ×¡¢ÆåÍ¼µ¼ÈëºÍµ¼³ö¹¦ÄÜÎªÄúÔÚÍøÂçÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
+Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ýÍøÂç·¢ÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔ´Ó¡¶ÏóÆå°Ù¿ÆÈ«Êé¡·ÍøÕ¾»ñµÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
+Gui_szTips(7) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓÐÊýÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼þ(ºó×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü15ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
         "¡¡¡¡Í¬Ê±Ò²»¶Ó­Äú½«×Ô¼ºÖÆ×÷µÄÎÄ¼þÉÏ´«¸øÎÒÃÇ¡£"
-Gui_szTips(5) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓÐÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼þµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
+Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓÐÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼þµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÁªÏµ¡£"
-Gui_szTips(6) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
-Gui_szTips(7) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ÐÏ¸ÔÄ¶Á±¾Èí¼þ¡°°ïÖú¡±Ñ¡µ¥ÖÐµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
-Gui_szTips(8) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼þ¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼þ(Í¼±êÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼þ(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
-Gui_szTips(9) = "¡¡¡¡ÔÚ°²×°ÁËXQFÎÄ¼þ¹¤¾ß°ü(ÄÚº¬XQF2PGN³ÌÐò)ºó£¬ÏóÆåÎ×Ê¦¾Í¿ÉÒÔ´ò¿ªÏóÆåÑÝ²¥ÊÒµÄXQFÎÄ¼þ¡£" + vbCrLf + _
+Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
+Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ÐÏ¸ÔÄ¶Á±¾Èí¼þ¡°°ïÖú¡±Ñ¡µ¥ÖÐµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
+Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼þ¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼þ(Í¼±êÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼þ(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
+Gui_szTips(12) = "¡¡¡¡ÔÚ°²×°ÁËXQFÎÄ¼þ¹¤¾ß°ü(ÄÚº¬XQF2PGN³ÌÐò)ºó£¬ÏóÆåÎ×Ê¦¾Í¿ÉÒÔ´ò¿ªÏóÆåÑÝ²¥ÊÒµÄXQFÎÄ¼þ¡£" + vbCrLf + _
         "¡¡¡¡ÓÃÊó±êÓÒ»÷XQFÎÄ¼þ£¬Ñ¡Ôñ¡°Open with PGN Reader¡±¹¦ÄÜ£¬XQF2PGN¾Í×Ô¶¯°Ñ¸ÃXQFÎÄ¼þ×ª»»³ÉPGN¸ñÊ½£¬²¢ÓÃÏóÆåÎ×Ê¦´ò¿ª¡£" + vbCrLf + _
         "¡¡¡¡XQFÎÄ¼þ¹¤¾ß°üµÄÏÂÔØµØÖ·ÊÇ£ºhttp://www.elephantbase.net/download/xqftools.exe"
-Gui_szTips(10) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬ÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿ò(¡°Ñ¡Ïî¡±Ñ¡µ¥ÖÐµÄ¡°ÉèÖÃ¡±Ò»Ïî)£¬°Ñ¡°½çÃæ¡±Éè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ð§¹û¡£"
-Gui_szTips(11) = "¡¡¡¡ÎªÁË·½±ãÐ£Ô°Íø×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷ÆåÆ×¡¢ÆåÍ¼ºÍ·¢±íÎÄÕÂ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎÄ±¾ÆåÆ×ºÍ²ÊÉ«ASCII×Ö·ûÆåÍ¼µÄÊä³ö¹¦ÄÜ¡£Í¨¹ý¼ôÌù°å£¬Äú¿ÉÒÔÔÚBBSÉÏ·¢±í¾«ÃÀÆ¯ÁÁµÄÆåÆ×ºÍÆåÍ¼ÁË¡£"
-Gui_szTips(12) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ·¢ANSI¶¯Ì¬ÆåÆ×Ê±£¬µã»÷¡°¸´ÖÆANSI¶¯Ì¬ÆåÆ×¡±°´Å¥£¬ÔÙÏòTelnetÖÐÕ³ÌùÄÚÈÝ£¬±£´æÌù×Ó¼´¿É¡£" + vbCrLf + _
+Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬ÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿ò(¡°Ñ¡Ïî¡±Ñ¡µ¥ÖÐµÄ¡°ÉèÖÃ¡±Ò»Ïî)£¬°Ñ¡°½çÃæ¡±Éè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ð§¹û¡£"
+Gui_szTips(14) = "¡¡¡¡ÎªÁË·½±ãÐ£Ô°Íø×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷ÆåÆ×¡¢ÆåÍ¼ºÍ·¢±íÎÄÕÂ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎÄ±¾ÆåÆ×ºÍ²ÊÉ«ASCII×Ö·ûÆåÍ¼µÄÊä³ö¹¦ÄÜ¡£Í¨¹ý¼ôÌù°å£¬Äú¿ÉÒÔÔÚBBSÉÏ·¢±í¾«ÃÀÆ¯ÁÁµÄÆåÆ×ºÍÆåÍ¼ÁË¡£"
+Gui_szTips(15) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ·¢ANSI¶¯Ì¬ÆåÆ×Ê±£¬µã»÷¡°¸´ÖÆANSI¶¯Ì¬ÆåÆ×¡±°´Å¥£¬ÔÙÏòTelnetÖÐÕ³ÌùÄÚÈÝ£¬±£´æÌù×Ó¼´¿É¡£" + vbCrLf + _
         "¡¡¡¡²é¿´º¬ÓÐANSI¶¯Ì¬ÆåÆ×µÄÌù×ÓÊ±£¬¿É¸ù¾ÝÌù×ÓÉÏµÄÌáÊ¾£¬°´¡°¡ý¡±¼üä¯ÀÀÆåÆ×£¬µ±ÆåÆ×ÍêÈ«ÏÔÊ¾³öÀ´ºó£¬°´Ò»´Î¡°¡ý¡±¼üÆå¾Ö¾Í×ßÒ»²½£¬ºÜ·½±ãÓÃ»§¹ÛÉÍÆå¾Ö¡£"
-Gui_szTips(13) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ·¢ANSI¶¯Ì¬ÆåÆ×Ê±£¬µã»÷¡°¸´ÖÆANSI¶¯Ì¬ÆåÆ×¡±°´Å¥£¬ÔÙÏòTelnetÖÐÕ³ÌùÄÚÈÝ£¬±£´æÌù×Ó¼´¿É¡£" + vbCrLf + _
-        "¡¡¡¡²é¿´º¬ÓÐANSI¶¯Ì¬ÆåÆ×µÄÌù×ÓÊ±£¬¿É¸ù¾ÝÌù×ÓÉÏµÄÌáÊ¾£¬°´¡°¡ý¡±¼üä¯ÀÀÆåÆ×£¬µ±ÆåÆ×ÍêÈ«ÏÔÊ¾³öÀ´ºó£¬°´Ò»´Î¡°¡ý¡±¼üÆå¾Ö¾Í×ßÒ»²½£¬ºÜ·½±ãÓÃ»§¹ÛÉÍÆå¾Ö¡£"
-Gui_szTips(14) = "¡¡¡¡Ê¹ÓÃ¡°¸´ÖÆÎÄ±¾ÆåÅÌ¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÌù³ö¾²Ì¬µÄANSI´úÂë£¬¸÷´ó¸ßÐ£µÄBBSÕ¾¶¼Ö§³ÖANSI´úÂë¡£ºì×ÓÓÃºì×Ö±íÊ¾£¬ºÚ×ÓÓÃÂÌ×Ö±íÊ¾£¬Ò»Ä¿ÁËÈ»¡£" + vbCrLf + _
+Gui_szTips(16) = "¡¡¡¡Ê¹ÓÃ¡°¸´ÖÆÎÄ±¾ÆåÅÌ¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÌù³ö¾²Ì¬µÄANSI´úÂë£¬¸÷´ó¸ßÐ£µÄBBSÕ¾¶¼Ö§³ÖANSI´úÂë¡£ºì×ÓÓÃºì×Ö±íÊ¾£¬ºÚ×ÓÓÃÂÌ×Ö±íÊ¾£¬Ò»Ä¿ÁËÈ»¡£" + vbCrLf + _
         "¡¡¡¡Èç¹ûBBS²»Ö§³ÖANSI´úÂë£¬»òÕßÖ»ÊÇÎªÁËÌùµ½ÆÕÍ¨ÎÄ±¾ÉÏ£¬¿ÉÒÔÔÚÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖÐ°Ñ¡°Ê¹ÓÃANSIÎÄ±¾ÆåÅÌ¡±µÄ¹³È¥µô¡£Çø±ðºì×ÓºÍºÚ×ÓµÄ·½·¨ÊÇ£ººì×ÓµÄÁ½±ß´øÔ²À¨ºÅ£¬ºÚ×ÓµÄÁ½±ß´ø·½À¨ºÅ¡£"
-Gui_szTips(15) = "¡¡¡¡Èç¹û¸ÃBBSÏµÍ³ÊÇÐèÒª°´Á½´ÎEscape¼ü²ÅÄÜ¼üÈëÒ»¸öEscape×Ö·û(Ò²¿ÉÄÜÈ¡¾öÓÚTelnetÖÕ¶ËµÄÉèÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖÐ°Ñ¡°ÓÃÁ½¸öEscÊäÈëANSI¡±¹³ÉÏ¡£"
-Gui_szTips(16) = "¡¡¡¡ÎÄ±¾ÆåÅÌµÄ×îºóÒ»ÐÐÖîÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆåÅÌ±àÂë(³ÆÎªFEN´®)£¬Èç¹ûÄúÔÚÍøÂçÂÛÌ³ÉÏ¿´µ½ÁËÕâÑùµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±Ñ¡µ¥µÄ¡°µ¼ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆåÅÌµ¼Èëµ½ÏóÆåÎ×Ê¦ÖÐ£¬ÃâÈ¥ÁË°Ú·ÅÆå×ÓÎ»ÖÃµÄ·³ÄÕ¡£"
+Gui_szTips(17) = "¡¡¡¡Èç¹û¸ÃBBSÏµÍ³ÊÇÐèÒª°´Á½´ÎEscape¼ü²ÅÄÜ¼üÈëÒ»¸öEscape×Ö·û(Ò²¿ÉÄÜÈ¡¾öÓÚTelnetÖÕ¶ËµÄÉèÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖÐ°Ñ¡°ÓÃÁ½¸öEscÊäÈëANSI¡±¹³ÉÏ¡£"
+Gui_szTips(18) = "¡¡¡¡ÎÄ±¾ÆåÅÌµÄ×îºóÒ»ÐÐÖîÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆåÅÌ±àÂë(³ÆÎªFEN´®)£¬Èç¹ûÄúÔÚÍøÂçÂÛÌ³ÉÏ¿´µ½ÁËÕâÑùµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±Ñ¡µ¥µÄ¡°µ¼ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆåÅÌµ¼Èëµ½ÏóÆåÎ×Ê¦ÖÐ£¬ÃâÈ¥ÁË°Ú·ÅÆå×ÓÎ»ÖÃµÄ·³ÄÕ¡£"
+Gui_szTips(19) = "¡¡¡¡µã»÷¡°²é¿´PGNÎÄ¼þ¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖÐÌá¹©ÁË·½±ã¡£"
+Gui_szTips(20) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É¶ÁÈëÁªÖÚ¡¢ÞÄÌì¡¢ÖÐ¹úÓÎÏ·ÖÐÐÄµÈÖÐ¹úÏóÆåµÄ´æÅÌÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾ÆåÆ×ÎÄ¼þ£¬°ÑÕâÐ©º¬ÓÐ×Å·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÌù°å£¬µã»÷¡°´Ó¼ôÌù°åµ¼Èë¡±°´Å¥£¬ÕâÐ©×Å·¨¾Í»áÂ¼ÖÆµ½ÏóÆåÎ×Ê¦ÖÐ¡£"
+Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É½«ÆåÆ×µ¼³öÎªÖ§³ÖJava¶¯Ì¬ÆåÅÌµÄHTMLÎÄ±¾£¬ÌØ±ðÊÊºÏ½«ÆåÆ×ÔÚÍøÉÏ·¢±í¡£"
+Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×Ê¦Ìá¹©µÄÆåÆ×¼üÅÌÊäÈë·¨ÎªÏ²»¶¼üÅÌÂ¼ÈëÆåÆ×µÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßÐ§µÄÆåÆ×ÊäÈë·½·¨£¬ÆåÓÑ¿É¸ù¾Ý×Ô¼ºµÄÏ°¹ßÔÚÊý×ÖÐ¡¼üÅÌ»òWXF×ÖÄ¸¸ñÊ½ÖÐÈÎÒâÑ¡Ôñ¡£"
+Gui_szTips(23) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬µã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¾Í¿É´Ó¸Ã²½×Ô¶¯ÑÝÊ¾£¬ÑÝÊ¾µÄÊ±¼ä¼ä¸ô¿ÉÒÔ×ÔÓÉµ÷Õû¡£ÔÙ´Îµã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¿ÉÍ£Ö¹×Ô¶¯ÑÝÊ¾¡£"
+Gui_szTips(24) = "¡¡¡¡µã»÷¡°²é¿´Í¼Æ¬ÆåÅÌ¡±°´Å¥£¬°ÑÍ¼Æ¬ÆåÅÌ¸´ÖÆ²¢Õ³Ìùµ½WordµÈÎÄ×Ö´¦ÀíÈí¼þÖÐ£¬¿ÉÒÔÉú³ÉÆ¯ÁÁµÄÏóÆå¸å¼þ¡£"
+Gui_szTips(25) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬¿ÉÒÔÊ¹ÓÃÆåÅÌµ¹ÖÃºÍ×óÓÒµ÷»»¹¦ÄÜÀ´´Ó²»Í¬µÄ½Ç¶ÈÐÀÉÍÆå¾Ö¡£ÆäÖÐ×óÓÒµ÷»»¹¦ÄÜ»¹¿ÉÒÔÒ»´Î½«ÀàËÆÓÚ¡°ÅÚ°ËÆ½Îå¡±¿ª¾ÖÕâÑùµÄÆåÆ××Ô¶¯×ª»»³É´ó¼ÒÏ°¹ßµÄ¡°ÅÚ¶þÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
+Gui_szTips(26) = "¡¡¡¡Èç¹ûÔÚÐÀÉÍÆåÆ×Ê±Óöµ½¸´ÔÓµÄ¾ÖÃæ£¬¿ÉÒÔµã»÷¡°·ÖÎö¾ÖÃæ¡±°´Å¥£¬½«µ±Ç°Æå¾ÖÐÂ¿ªÉèÒ»¸öÏóÆåÎ×Ê¦µÄ´°¿Ú£¬×ÔÓÉÍÆÑÝºóÐøµÄ±ä»¯¡£"
+Gui_szTips(27) = "¡¡¡¡ÔÚÁ½¸öÏóÆåÎ×Ê¦´°¿ÚÖÐ£¬Áé»îÔËÓÃ¡°²é¿´PGNÎÄ¼þ¡±ºÍ¡°´Ó¼ôÌù°åµ¼Èë¡±¹¦ÄÜ£¬¿É½«ÍÆÑÝÆåÅÌÖÐµÄÆåÆ×¼ÇÂ¼µ¼Èëµ½µ±Ç°Æå¾ÖÖÐ¡£"
+Gui_szTips(28) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¸ö×ÔÓÉÈí¼þ£¬Èç¹ûÄú¾õµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØ½«±¾Èí¼þÉÏÔØµ½ÈÎÒ»¸ö¹²ÏíÈí¼þÏÂÔØÕ¾µã¡£" + vbCrLf + _
+        "¡¡¡¡ÏóÆåÎ×Ê¦µÄÔ´³ÌÐò·¢²¼ÔÚ http://sourceforge.net/projects/xqwizard/ Õâ¸öÒ³ÃæÉÏ£¬Äú¿ÉÒÔ¸ù¾Ý×Ô¼ºµÄÐèÒª¶ÔÔ´³ÌÐò½øÐÐÐÞ¸Ä£¬²¢ÒÀÕÕGPLÐ­Òé·¢²¼ÄúÐÞ¸Ä¹ýµÄÔ´³ÌÐò¡£"
+Gui_szTips(29) = "¡¡¡¡ÏóÆåÎ×Ê¦ÔÚ¿ª·¢¹ý³ÌÖÐµÃµ½ÁË¹ã´óÆåÃÔÅóÓÑµÄÈÈÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔÐÄµÄ¸ÐÐ»£¬Í¬Ê±Ò²Ï£ÍûÄú¼ÌÐøÖ§³ÖÏóÆåÎ×Ê¦£¬¹Ø×¢ http://www.elephantbase.net/ ¡£" + vbCrLf + _
+        "¡¡¡¡ÄúÒ²¿ÉÒÔ½«±¾Èí¼þµÄÖ÷Ò³Á´½Óµ½×Ô¼ºµÄÕ¾µãÉÏ¡£ÇëÄúÊ¹ÓÃ http://www.elephantbase.net/ ×÷ÎªÁ´½ÓµÄÂ·¾¶¡£"
 
 End Sub
 
@@ -2630,7 +2646,7 @@ If Options_bCheckUpdate Then
     sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
         If MsgBox("ÏóÆåÎ×Ê¦ " + sz + " ÒÑ¾­·¢²¼£¬ÐèÒªÏÂÔØ×îÐÂ°æ±¾Âð£¿", vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < .5 Then
+            If Rnd < 0.5 Then
                 ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
