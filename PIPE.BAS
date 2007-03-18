@@ -7,7 +7,7 @@ Public Type PipeStruct
     bConsole As Long
     nBytesLeft As Long
     nReadEnd As Long
-    szBuffer(0 To 1023) As Byte
+    szBuffer(0 To 4095) As Byte
 End Type
 
 Public Declare Sub PipeOpen Lib "PIPE.DLL" Alias "_PipeOpen@8" (ByRef lppipe As PipeStruct, ByVal szProcFile As String)
