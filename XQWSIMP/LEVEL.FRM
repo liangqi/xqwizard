@@ -227,7 +227,7 @@ Begin VB.Form frmLevelSet
          OrigTop         =   480
          OrigRight       =   1395
          OrigBottom      =   750
-         Max             =   100
+         Max             =   120
          Min             =   1
          SyncBuddy       =   -1  'True
          BuddyProperty   =   0
@@ -332,7 +332,10 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Level_nDepth As Integer, Level_nInitTime As Integer, Level_nIncMove As Integer, Level_nIncTime As Integer
+Private Level_nDepth    As Integer  ' 引擎搜索深度
+Private Level_nInitTime As Integer  ' 起始时间
+Private Level_nIncMove  As Integer  ' 时段制的每时段步数
+Private Level_nIncTime  As Integer  ' 加时制的加时秒数
 
 ' 以下是级别设置例程
 
@@ -349,16 +352,18 @@ End Sub
 
 Private Sub LevelSetting(ByVal nInitTime As Integer, Optional ByVal bIncMode As Boolean = True, Optional ByVal nIncMove As Integer = 0, Optional ByVal nIncTime As Integer = 0)
 
-Level_nInitTime = nInitTime
-txtInitTime.Text = nInitTime
 If nIncMove = 0 Then
+    Level_nInitTime = 2
+    txtInitTime.Text = 2
     frmTimer.Visible = False
     frmDepth.Visible = False
-    optIncTime.Value = True
-    Level_nIncTime = nInitTime
-    txtIncTime.Text = nInitTime
-    IncModeSetting True
+    optIncMove.Value = True
+    Level_nIncMove = 120 / nInitTime
+    txtIncTime.Text = 1
+    IncModeSetting False
 Else
+    Level_nInitTime = nInitTime
+    txtInitTime.Text = nInitTime
     If bIncMode Then
         optIncTime.Value = True
     Else
@@ -503,7 +508,7 @@ End Sub
 Private Sub txtIncMove_Change()
 
 If Level_nIncMove <> Str2Int(txtIncMove.Text) Then
-    Level_nIncMove = Str2Int(txtIncMove.Text, 1, 100)
+    Level_nIncMove = Str2Int(txtIncMove.Text, 1, 120)
     txtIncMove.Text = Level_nIncMove
 End If
 

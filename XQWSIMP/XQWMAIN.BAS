@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.03, Last Modified: Mar. 2007
+' Designed by Morning Yellow, Version: 3.04, Last Modified: Mar. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.03"
+Public Const STRING_VERSION     As String = "3.04"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -2183,15 +2183,15 @@ End Sub
 ' 启动时钟
 Sub StartTimer()
 
+Timer_bOver(0) = False
+Timer_bOver(1) = False
+Timer_nTimeLeft(0) = Timer_nInitTime * 60
+Timer_nTimeLeft(1) = Timer_nInitTime * 60
+Timer_nMoveLeft(0) = Timer_nIncMove
+Timer_nMoveLeft(1) = Timer_nIncMove
+SetTimer 0
+SetTimer 1
 If Timer_nDepth = 0 And (Engine_bRed Or Engine_bBlack) Then
-    Timer_bOver(0) = False
-    Timer_bOver(1) = False
-    Timer_nTimeLeft(0) = Timer_nInitTime * 60
-    Timer_nTimeLeft(1) = Timer_nInitTime * 60
-    Timer_nMoveLeft(0) = Timer_nIncMove
-    Timer_nMoveLeft(1) = Timer_nIncMove
-    SetTimer 0
-    SetTimer 1
     Timer_dfLastTime = Timer
     Timer_bEnabled = True
     App_frmMain.mnEngineLevel.Checked = True
@@ -2451,12 +2451,12 @@ Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0"))
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
-Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "1")) <> 0)
+Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
 Options_bShowCoord = (Str2Int(GetSetting("XQWizard", "Options", "ShowCoord", "0")) <> 0)
-Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
-Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
+Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
+Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
@@ -2471,9 +2471,9 @@ Gui_nThinkHeight = Str2Int(GetSetting("XQWizard", "Gui", "ThinkHeight", "2400"),
 Gui_nThinkLeft = Str2Int(GetSetting("XQWizard", "Gui", "ThinkLeft", "0"))
 Gui_nThinkTop = Str2Int(GetSetting("XQWizard", "Gui", "ThinkTop", "0"))
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
-Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "1")) <> 0
-Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
-Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "1"), 1, 100)
+Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
+Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "2"), 1, 480)
+Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "120"), 1, 120)
 Timer_nIncTime = Str2Int(GetSetting("XQWizard", "Timer", "IncTime", "1"), -60, 600)
 Engine_bEngineLog = (Str2Int(GetSetting("XQWizard", "Engine", "EngineLog", "0")) <> 0)
 Engine_szLogFile = GetSetting("XQWizard", "Engine", "LogFile", "")
@@ -2643,7 +2643,10 @@ If Gui_bShowHowTo Or Not App_bRegistered Then
     frmHowTo.Show vbModal, App_frmMain
 End If
 If Options_bCheckUpdate Then
-    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
+    sz = STRING_VERSION
+    On Error Resume Next
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
+    On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
         If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
