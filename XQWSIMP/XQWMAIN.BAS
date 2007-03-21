@@ -2646,7 +2646,7 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.txt")
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
         If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", vbQuestion + vbYesNo) = vbYes Then
