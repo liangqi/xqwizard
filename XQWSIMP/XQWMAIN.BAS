@@ -1921,7 +1921,8 @@ If Engine_szEgtbPaths <> "" Then
     SendEngine "setoption egtbpaths " + Engine_szEgtbPaths, bSlaveEngine
 End If
 SendEngine "setoption hashsize" + IIf(Engine_nHash = 0, " 0", Str(16 * 2 ^ (Engine_nHash - 1))), bSlaveEngine
-SendEngine "setoption threads" + IIf(Engine_nThreads = 0, " 0", Str(2 ^ (Engine_nThreads - 1))), bSlaveEngine
+SendEngine "setoption threads" + IIf(Engine_nThreads < 4, " 0", Str(2 ^ (Engine_nThreads - 4))), bSlaveEngine
+SendEngine "setoption idle " + IIf(Engine_nThreads = 1, "large", IIf(Engine_nThreads = 2, "medium", IIf(Engine_nThreads = 3, "small", "none"))), bSlaveEngine
 SendEngine "setoption drawmoves" + Str(100 + Engine_nDrawMoves * 20), bSlaveEngine
 SendEngine "setoption repetition " + Choose(Engine_nRepetition + 1, "alwaysdraw", "checkban", "asianrule", "chineserule"), bSlaveEngine
 SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine

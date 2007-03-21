@@ -228,7 +228,7 @@ Begin VB.Form frmEngineSet
          Width           =   375
       End
       Begin VB.Label lblThreads 
-         Caption         =   "线程数"
+         Caption         =   "负荷"
          Height          =   255
          Left            =   120
          TabIndex        =   17
@@ -357,12 +357,15 @@ cmbHash.AddItem "512MB", 6
 cmbHash.AddItem "1024MB", 7
 cmbThreads.Clear
 cmbThreads.AddItem "自动", 0
-cmbThreads.AddItem "1线程", 1
-cmbThreads.AddItem "2线程", 2
-cmbThreads.AddItem "4线程", 3
-cmbThreads.AddItem "8线程", 4
-cmbThreads.AddItem "16线程", 5
-cmbThreads.AddItem "32线程", 6
+cmbThreads.AddItem "低负荷", 1
+cmbThreads.AddItem "中负荷", 2
+cmbThreads.AddItem "高负荷", 3
+cmbThreads.AddItem "满负荷", 4
+cmbThreads.AddItem "2线程", 5
+cmbThreads.AddItem "4线程", 6
+cmbThreads.AddItem "8线程", 7
+cmbThreads.AddItem "16线程", 8
+cmbThreads.AddItem "32线程", 9
 cmbDrawMoves.Clear
 cmbDrawMoves.AddItem "50回合", 0
 cmbDrawMoves.AddItem "60回合", 1
