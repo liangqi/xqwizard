@@ -36,7 +36,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.04"
+Public Const STRING_VERSION     As String = "3.05"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -2588,7 +2588,7 @@ End Function
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim i As Integer, sz As String
+Dim i As Integer, sz As String, szWhatsNew As String
 
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
@@ -2646,10 +2646,13 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
+    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
-        If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", vbQuestion + vbYesNo) = vbYes Then
+        On Error Resume Next
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
+        On Error GoTo 0
+        If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？" + vbCrLf + vbCrLf + szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
                 ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
             Else

@@ -408,6 +408,50 @@ Begin VB.Form frmMainLarge
          Width           =   855
       End
    End
+   Begin VB.Frame frmThink 
+      BorderStyle     =   0  'None
+      Height          =   8175
+      Left            =   8160
+      TabIndex        =   26
+      Top             =   840
+      Width           =   3975
+      Begin VB.TextBox txtThink 
+         Height          =   7935
+         Left            =   0
+         MultiLine       =   -1  'True
+         ScrollBars      =   2  'Vertical
+         TabIndex        =   30
+         Top             =   240
+         Width           =   3975
+      End
+      Begin VB.Label lblDepth 
+         Alignment       =   2  'Center
+         Caption         =   "深度"
+         Height          =   255
+         Left            =   0
+         TabIndex        =   27
+         Top             =   0
+         Width           =   495
+      End
+      Begin VB.Label lblScore 
+         Alignment       =   2  'Center
+         Caption         =   "评价"
+         Height          =   255
+         Left            =   480
+         TabIndex        =   28
+         Top             =   0
+         Width           =   495
+      End
+      Begin VB.Label lblPv 
+         Alignment       =   2  'Center
+         Caption         =   "思考路线"
+         Height          =   255
+         Left            =   960
+         TabIndex        =   29
+         Top             =   0
+         Width           =   735
+      End
+   End
    Begin ComctlLib.TabStrip strpRight 
       Height          =   8655
       Left            =   8040
@@ -418,9 +462,14 @@ Begin VB.Form frmMainLarge
       _ExtentY        =   15266
       _Version        =   327682
       BeginProperty Tabs {0713E432-850A-101B-AFC0-4210102A8DA7} 
-         NumTabs         =   1
+         NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Object.Tag             =   ""
+            ImageVarType    =   2
+         EndProperty
+         BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
+            Caption         =   "引擎分析"
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
