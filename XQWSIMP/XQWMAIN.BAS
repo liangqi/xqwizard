@@ -30,8 +30,6 @@ Public Const SND_NOWAIT         As Long = 8192
 Public Const SND_FILENAME       As Long = 131072
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
@@ -1669,7 +1667,7 @@ Dim nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
 If Engine_bAnalyze Then
-    frmThinkList.txtThinkList = ""
+    App_frmMain.txtThink.Text = ""
 End If
 szFenStr = Game_szIrrevFen(Game_nCurrIrrev)
 nIrrevMove = Game_nCurrMove + 1 - Game_posIrrev(Game_nCurrIrrev).nMoveNum
@@ -1739,7 +1737,7 @@ If i > 0 Then
     Else
         nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
     End If
-    frmThinkList.txtThinkList.Text = frmThinkList.txtThinkList.Text + Space(4 - Len(Str(nDepth))) + Str(nDepth)
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Space(4 - Len(Str(nDepth))) + Str(nDepth)
     i = InStr(szReceived, " score ")
     If i > 0 Then
         j = InStr(i + 7, szReceived, " ")
@@ -1748,9 +1746,9 @@ If i > 0 Then
         Else
             nScore = Str2Int(Mid(szReceived, i + 7))
         End If
-        frmThinkList.txtThinkList.Text = frmThinkList.txtThinkList.Text + Space(6 - Len(Str(nScore))) + Str(nScore)
+        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Space(6 - Len(Str(nScore))) + Str(nScore)
     Else
-        frmThinkList.txtThinkList.Text = frmThinkList.txtThinkList.Text + "      "
+        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + "      "
     End If
     szMoveList = ""
     i = InStr(szReceived, " pv ")
@@ -1779,8 +1777,8 @@ If i > 0 Then
             i = j + 1
         Loop
     End If
-    frmThinkList.txtThinkList.Text = frmThinkList.txtThinkList.Text + szMoveList + vbCrLf
-    frmThinkList.txtThinkList.SelStart = Len(frmThinkList.txtThinkList.Text)
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
+    App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
 End If
 
 End Sub
@@ -1953,7 +1951,7 @@ App_frmMain.mnEnginePonder.Checked = False
 App_frmMain.tlb.Buttons("EnginePonder").Enabled = False
 App_frmMain.tlb.Buttons("EnginePonder").Value = tbrUnpressed
 If Engine_bAnalyze Then
-    Unload frmThinkList
+    StopAnalyze
 End If
 App_frmMain.mnEngineAnalyze.Enabled = bLoaded
 App_frmMain.tlb.Buttons("EngineAnalyze").Enabled = bLoaded
@@ -2236,6 +2234,38 @@ If Engine_nStatus > IDLE_UNLOAD Then
         EnginePlayer
     End If
 End If
+
+End Sub
+
+' 引擎分析开始
+Public Sub StartAnalyze()
+
+Engine_bAnalyze = True
+App_frmMain.mnEngineAnalyze.Checked = True
+App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrPressed
+App_frmMain.strpRight.Tabs.Item(2).Selected = True
+App_frmMain.frmInfo.Visible = False
+App_frmMain.frmThink.Visible = True
+
+End Sub
+
+' 引擎分析结束
+Public Sub StopAnalyze()
+
+If Not (Engine_bRed Or Engine_bBlack) Then
+    If Engine_nStatus > BUSY_WAIT Then
+        Engine_nStatus = BUSY_WAIT
+        StopEngine
+    End If
+    Engine_nStatus = IDLE_READY
+End If
+Engine_bAnalyze = False
+App_frmMain.mnEngineAnalyze.Checked = False
+App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
+App_frmMain.strpRight.Tabs.Item(1).Selected = True
+App_frmMain.frmInfo.Visible = True
+App_frmMain.frmThink.Visible = False
+App_frmMain.txtMove.SetFocus
 
 End Sub
 
@@ -2550,38 +2580,6 @@ SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
 End Sub
 
 ' 以上是参数设置例程
-
-' 以下是窗口的移动过程处理
-
-' 主窗口移动时，显示思考窗口要跟着移动
-Public Function MainWindowProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-
-Dim lResult As Long
-lResult = CallWindowProcA(App_lpMainPrev, hWnd, uMsg, wParam, lParam)
-If uMsg = WM_MOVE And Engine_bAnalyze Then
-    SetWindowLongA frmThinkList.hWnd, GWL_WNDPROC, App_lpThinkPrev
-    frmThinkList.Left = App_frmMain.Left + Gui_nThinkLeft
-    frmThinkList.Top = App_frmMain.Top + Gui_nThinkTop
-    SetWindowLongA frmThinkList.hWnd, GWL_WNDPROC, AddressOf ThinkWindowProc
-End If
-MainWindowProc = lResult
-
-End Function
-
-' 显示思考窗口移动时，记录该窗口跟主窗口的相对位置
-Public Function ThinkWindowProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-
-Dim lResult As Long
-lResult = CallWindowProcA(App_lpThinkPrev, hWnd, uMsg, wParam, lParam)
-If uMsg = WM_MOVE Then
-    Gui_nThinkLeft = frmThinkList.Left - App_frmMain.Left
-    Gui_nThinkTop = frmThinkList.Top - App_frmMain.Top
-End If
-ThinkWindowProc = lResult
-
-End Function
-
-' 以上是窗口的移动过程处理
 
 ' 以下是主函数例程
 

@@ -414,12 +414,14 @@ Begin VB.Form frmMainSmall
       Left            =   6000
       TabIndex        =   26
       Top             =   840
+      Visible         =   0   'False
       Width           =   3735
       Begin VB.TextBox txtThink 
          Height          =   5535
          Left            =   0
+         Locked          =   -1  'True
          MultiLine       =   -1  'True
-         ScrollBars      =   2  'Vertical
+         ScrollBars      =   3  'Both
          TabIndex        =   30
          Top             =   240
          Width           =   3735
@@ -489,9 +491,11 @@ Begin VB.Form frmMainSmall
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   2
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Object.Tag             =   ""
          EndProperty
       EndProperty
@@ -1624,7 +1628,7 @@ If App_bUpdated Then
     End If
 End If
 If Engine_bAnalyze Then
-    Unload frmThinkList
+    StopAnalyze
 End If
 If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
@@ -2063,12 +2067,11 @@ End Sub
 Private Sub mnEngineAnalyze_Click()
 
 If Engine_bAnalyze Then
-    Unload frmThinkList
+    StopAnalyze
 Else
-    Engine_bAnalyze = True
+    StartAnalyze
     mnEngineAnalyze.Checked = True
     tlb.Buttons("EngineAnalyze").Value = tbrPressed
-    frmThinkList.Show 0, Me
 End If
     
 End Sub
@@ -2553,6 +2556,20 @@ Private Sub txtComment_Change()
 If Game_szComment(Game_nCurrMove) <> txtComment.Text Then
     Game_szComment(Game_nCurrMove) = txtComment.Text
     FileUpdated
+End If
+
+End Sub
+
+Private Sub strpRight_Click()
+
+If Engine_bAnalyze Then
+    If strpRight.Tabs.Item(1).Selected Then
+        StopAnalyze
+    End If
+Else
+    If strpRight.Tabs.Item(2).Selected Then
+        StartAnalyze
+    End If
 End If
 
 End Sub
