@@ -188,10 +188,6 @@ Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szRegTip1            As String   ' “日积月累”的注册提示一
 Public Gui_szRegTip2            As String   ' “日积月累”的注册提示二
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
-Public Gui_nThinkWidth          As Integer  ' 思考窗口的宽度
-Public Gui_nThinkHeight         As Integer  ' 思考窗口的高度
-Public Gui_nThinkLeft           As Integer  ' 思考窗口相对主窗口的左边线
-Public Gui_nThinkTop            As Integer  ' 思考窗口相对主窗口的右边线
 ' 全局变量——棋局
 Public Game_szEvent             As String   ' 赛事
 Public Game_szRound             As String   ' 轮次
@@ -2262,6 +2258,7 @@ End If
 Engine_bAnalyze = False
 App_frmMain.mnEngineAnalyze.Checked = False
 App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
+App_frmMain.txtThink.Text = ""
 App_frmMain.strpRight.Tabs.Item(1).Selected = True
 App_frmMain.frmInfo.Visible = True
 App_frmMain.frmThink.Visible = False
@@ -2497,10 +2494,6 @@ Gui_szUser = GetSetting("XQWizard", "Register", "User", "象棋巫师测试团队")
 Gui_szRegCode = GetSetting("XQWizard", "Register", "Code", "")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_nThinkWidth = Str2Int(GetSetting("XQWizard", "Gui", "ThinkWidth", "4800"), 2400)
-Gui_nThinkHeight = Str2Int(GetSetting("XQWizard", "Gui", "ThinkHeight", "2400"), 1200)
-Gui_nThinkLeft = Str2Int(GetSetting("XQWizard", "Gui", "ThinkLeft", "0"))
-Gui_nThinkTop = Str2Int(GetSetting("XQWizard", "Gui", "ThinkTop", "0"))
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "2"), 1, 480)
@@ -2552,10 +2545,6 @@ SaveSetting "XQWizard", "Register", "User", Gui_szUser
 SaveSetting "XQWizard", "Register", "Code", Gui_szRegCode
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-SaveSetting "XQWizard", "Gui", "ThinkWidth", LTrim(Str(Gui_nThinkWidth))
-SaveSetting "XQWizard", "Gui", "ThinkHeight", LTrim(Str(Gui_nThinkHeight))
-SaveSetting "XQWizard", "Gui", "ThinkLeft", LTrim(Str(Gui_nThinkLeft))
-SaveSetting "XQWizard", "Gui", "ThinkTop", LTrim(Str(Gui_nThinkTop))
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
