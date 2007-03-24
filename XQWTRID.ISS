@@ -29,6 +29,7 @@ Source: "MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruni
 Source: "MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 ; µ{§Ç¤å¥ó
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "8341.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ATOM.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
