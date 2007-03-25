@@ -37,7 +37,7 @@ Private Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal psz As Long, ByVal len_ As Long) As String
 
-Public Function Str2Lng(ByVal sz As String, Optional ByVal nMin As Long = -2147483648#, Optional ByVal nMax As Long = 2147483647) As Long
+Public Function Str2Lng(ByVal sz As String, Optional ByVal nMin As Long = -2147483647, Optional ByVal nMax As Long = 2147483647) As Long
 
 Dim df As Double
 df = Val(sz)

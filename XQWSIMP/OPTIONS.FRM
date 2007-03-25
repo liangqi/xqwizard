@@ -3,10 +3,10 @@ Object = "{FE0065C0-1B7B-11CF-9D53-00AA003C9CB6}#1.1#0"; "COMCT232.OCX"
 Begin VB.Form frmOptions 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "选项设置"
-   ClientHeight    =   6240
+   ClientHeight    =   3360
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   3480
+   ClientWidth     =   6840
    BeginProperty Font 
       Name            =   "宋体"
       Size            =   9
@@ -19,57 +19,73 @@ Begin VB.Form frmOptions
    Icon            =   "OPTIONS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   6240
-   ScaleWidth      =   3480
+   ScaleHeight     =   3360
+   ScaleWidth      =   6840
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame frmOther 
       Caption         =   "其他"
-      Height          =   975
-      Left            =   120
-      TabIndex        =   22
-      Top             =   4680
+      Height          =   855
+      Left            =   3480
+      TabIndex        =   24
+      Top             =   1920
       Width           =   3255
       Begin VB.OptionButton optEngineUser 
          Caption         =   "引擎"
          Height          =   255
          Left            =   2400
-         TabIndex        =   26
-         Top             =   600
+         TabIndex        =   27
+         Top             =   240
          Width           =   735
       End
       Begin VB.OptionButton optAppUser 
          Caption         =   "象棋巫师"
          Height          =   255
          Left            =   1320
-         TabIndex        =   25
-         Top             =   600
+         TabIndex        =   26
+         Top             =   240
          Width           =   1095
       End
       Begin VB.CheckBox chkCheckUpdate 
          Caption         =   "检查最新版本"
          Height          =   255
          Left            =   120
-         TabIndex        =   23
-         Top             =   240
+         TabIndex        =   28
+         Top             =   480
          Width           =   1455
       End
       Begin VB.Label lblUser 
          Caption         =   "人机对弈用户"
          Height          =   255
          Left            =   120
-         TabIndex        =   24
-         Top             =   600
+         TabIndex        =   25
+         Top             =   240
          Width           =   1095
       End
    End
    Begin VB.Frame frmEngine 
       Caption         =   "引擎"
-      Height          =   1335
-      Left            =   120
+      Height          =   1695
+      Left            =   3480
       TabIndex        =   15
-      Top             =   3240
+      Top             =   120
       Width           =   3255
+      Begin VB.CheckBox chkStatusBar 
+         Caption         =   "输出到状态栏"
+         Height          =   255
+         Left            =   1680
+         TabIndex        =   21
+         Top             =   960
+         Width           =   1455
+      End
+      Begin VB.CheckBox chkEngineTime 
+         Caption         =   "显示思考时间"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   20
+         Top             =   960
+         Width           =   1455
+      End
       Begin VB.CheckBox chkAllowResign 
          Caption         =   "允许提和认输"
          Height          =   255
@@ -90,8 +106,8 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1560
          Style           =   2  'Dropdown List
-         TabIndex        =   21
-         Top             =   960
+         TabIndex        =   23
+         Top             =   1320
          Width           =   1215
       End
       Begin VB.CheckBox chkAutoFlip 
@@ -113,9 +129,9 @@ Begin VB.Form frmOptions
       Begin VB.Label lblEnginePlay 
          Caption         =   "新局的引擎状态"
          Height          =   255
-         Left            =   120
-         TabIndex        =   20
-         Top             =   960
+         Left            =   240
+         TabIndex        =   22
+         Top             =   1320
          Width           =   1335
       End
    End
@@ -123,17 +139,17 @@ Begin VB.Form frmOptions
       Cancel          =   -1  'True
       Caption         =   "取消"
       Height          =   375
-      Left            =   1800
-      TabIndex        =   28
-      Top             =   5760
+      Left            =   5280
+      TabIndex        =   30
+      Top             =   2880
       Width           =   975
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
       Height          =   375
-      Left            =   600
-      TabIndex        =   27
-      Top             =   5760
+      Left            =   3960
+      TabIndex        =   29
+      Top             =   2880
       Width           =   975
    End
    Begin VB.Frame frmGui 
@@ -178,7 +194,7 @@ Begin VB.Form frmOptions
    End
    Begin VB.Frame frmWizard 
       Caption         =   "魔法"
-      Height          =   2295
+      Height          =   2415
       Left            =   120
       TabIndex        =   5
       Top             =   840
@@ -187,7 +203,7 @@ Begin VB.Form frmOptions
          Caption         =   "用两个Esc输入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   29
+         TabIndex        =   31
          Top             =   1200
          Width           =   1935
       End
@@ -225,7 +241,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196628
+         BuddyDispid     =   196633
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -327,6 +343,8 @@ chkAutoFlip.Value = IIf(Options_bAutoFlip, 1, 0)
 chkEngineName.Value = IIf(Options_bEngineName, 1, 0)
 chkAlwaysPonder.Value = IIf(Options_bAlwaysPonder, 1, 0)
 chkAllowResign.Value = IIf(Options_bAllowResign, 1, 0)
+chkEngineTime.Value = IIf(Options_bEngineTime, 1, 0)
+chkStatusBar.Value = IIf(Options_bStatusBar, 1, 0)
 cmbEnginePlay.ListIndex = Options_nEnginePlay
 chkCheckUpdate.Value = IIf(Options_bCheckUpdate, 1, 0)
 optAppUser.Value = Not Options_bEngineUser
@@ -360,6 +378,8 @@ Options_bAutoFlip = (chkAutoFlip.Value = 1)
 Options_bEngineName = (chkEngineName.Value = 1)
 Options_bAlwaysPonder = (chkAlwaysPonder.Value = 1)
 Options_bAllowResign = (chkAllowResign.Value = 1)
+Options_bEngineTime = (chkEngineTime.Value = 1)
+Options_bStatusBar = (chkStatusBar.Value = 1)
 Options_nEnginePlay = cmbEnginePlay.ListIndex
 Options_bCheckUpdate = (chkCheckUpdate.Value = 1)
 Options_bEngineUser = optEngineUser.Value

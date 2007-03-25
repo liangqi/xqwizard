@@ -172,6 +172,8 @@ Public Options_bAutoFlip        As Boolean  ' 自动翻转棋盘
 Public Options_bEngineName      As Boolean  ' 显示引擎名称
 Public Options_bAllowResign     As Boolean  ' 允许引擎认输
 Public Options_bAlwaysPonder    As Boolean  ' 启用后台思考
+Public Options_bEngineTime      As Boolean  ' 显示引擎速度
+Public Options_bStatusBar       As Boolean  ' 输出到状态栏
 Public Options_nEnginePlay      As Integer  ' 新局引擎状态
 Public Options_bShowCoord       As Boolean  ' 显示坐标
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
@@ -304,7 +306,7 @@ Digit2Word = Choose(nArg, "１", "２", "３", "４", "５", "６", "７", "８", "９")
 End Function
 
 ' 把字符串转换成整数，用于多种场合
-Public Function Str2Int(ByVal sz As String, Optional ByVal nMin As Integer = -32768, Optional ByVal nMax As Integer = 32767) As Integer
+Public Function Str2Int(ByVal sz As String, Optional ByVal nMin As Integer = -32767, Optional ByVal nMax As Integer = 32767) As Integer
 
 Dim df As Double
 df = Val(sz)
@@ -314,6 +316,21 @@ ElseIf df > nMax Then
     Str2Int = nMax
 Else
     Str2Int = df
+End If
+
+End Function
+
+' 把字符串转换成整数，用于多种场合
+Public Function Str2Lng(ByVal sz As String, Optional ByVal nMin As Long = -2147483647, Optional ByVal nMax As Long = 2147483647) As Long
+
+Dim df As Double
+df = Val(sz)
+If df < nMin Then
+    Str2Lng = nMin
+ElseIf df > nMax Then
+    Str2Lng = nMax
+Else
+    Str2Lng = df
 End If
 
 End Function
@@ -1719,67 +1736,114 @@ Else
         SendEngine szGoPonder + " depth" + Str(Timer_nDepth), bSlaveEngine
     End If
 End If
+App_frmMain.stb.Panels("Curr").Text = ""
+App_frmMain.stb.Panels("Nps").Text = ""
+App_frmMain.stb.Panels("Pv").Text = ""
+App_frmMain.stb.Panels("Msg").Text = ""
 EngineBusy True
 
 End Sub
 
-' 输出引擎的信息，显示到显示思考窗口
+' 输出引擎的信息，显示到显示思考窗口和状态栏
 Public Sub PopEngine(ByVal szReceived As String)
 
-Dim i As Integer, j As Integer, nDepth As Integer, nScore As Integer
+Dim i As Integer, nDepth As Integer, nScore As Integer
+Dim nTime As Long, nNodes As Long
 Dim szMoveList As String, nMoveStatus As Long, mv As Long
 Dim pos As PositionStruct
-nDepth = 0
+
+' 输出当前思考着法
+If Options_bStatusBar Then
+    i = InStr(szReceived, " currmove ")
+    If i > 0 Then
+        mv = Coord2Move(Mid(szReceived, i + 10))
+        Select Case Game_nFormat
+        Case 0
+            szMoveList = MkC(CchessFile2Chin(CchessMove2File(CvLng(mv), Engine_posBoard), Engine_posBoard.sdPlayer))
+        Case 1
+            szMoveList = MkL(CchessMove2File(CvLng(mv), Engine_posBoard))
+        Case 2
+            szMoveList = Move2Iccs(mv)
+        End Select
+        App_frmMain.stb.Panels("Curr").Text = "-> " + szMoveList
+    End If
+End If
+
+' 输出时间和速度
+i = InStr(szReceived, " time ")
+If i > 0 Then
+    nTime = Str2Lng(Mid(szReceived, i + 6), -28800000, 28800000)
+    If Engine_bAnalyze And Options_bEngineTime Then
+        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->" + vbCrLf
+        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+    End If
+    If Options_bStatusBar Then
+        i = InStr(szReceived, " nodes ")
+        If i > 0 Then
+            nNodes = Str2Lng(Mid(szReceived, i + 7))
+            If nTime > 0 Then
+                App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"
+            End If
+        End If
+    End If
+End If
+
+' 输出主要变例
 i = InStr(szReceived, " depth ")
 If i > 0 Then
-    j = InStr(i + 7, szReceived, " ")
-    If j > 0 Then
-        nDepth = Str2Int(Mid(szReceived, i + 7, j - i - 7), -999, 999)
-    Else
-        nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
-    End If
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Space(4 - Len(Str(nDepth))) + Str(nDepth)
+    nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
+    szMoveList = Space(4 - Len(Str(nDepth))) + LTrim(Str(nDepth))
     i = InStr(szReceived, " score ")
     If i > 0 Then
-        j = InStr(i + 7, szReceived, " ")
-        If j > 0 Then
-            nScore = Str2Int(Mid(szReceived, i + 7, j - i - 7))
+        nScore = Str2Int(Mid(szReceived, i + 7))
+        If nScore > 0 Then
+            szMoveList = szMoveList + Space(6 - Len(Str(nScore))) + "(+" + LTrim(Str(nScore)) + ")"
+        ElseIf nScore < 0 Then
+            szMoveList = szMoveList + Space(6 - Len(Str(nScore))) + "(" + Str(nScore) + ")"
         Else
-            nScore = Str2Int(Mid(szReceived, i + 7))
+            szMoveList = szMoveList + "     (0)"
         End If
-        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Space(6 - Len(Str(nScore))) + Str(nScore)
-    Else
-        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + "      "
-    End If
-    szMoveList = ""
-    i = InStr(szReceived, " pv ")
-    If i > 0 Then
-        pos = Engine_posBoard
-        If Engine_nStatus = BUSY_PONDER Then
-            szMoveList = szMoveList + " (" + Engine_szPonderStr + ")"
-        End If
-        i = i + 4
-        Do While i > 1
-            j = InStr(i, szReceived, " ")
-            If j > 0 And j + 4 <= Len(szReceived) Then
-                mv = Coord2Move(Mid(szReceived, i, j - i))
-            Else
-                mv = Coord2Move(Mid(szReceived, i))
+        i = InStr(szReceived, " pv ")
+        If i > 0 Then
+            pos = Engine_posBoard
+            If Engine_nStatus = BUSY_PONDER Then
+                szMoveList = szMoveList + " (" + Engine_szPonderStr + ")"
             End If
-            Select Case Game_nFormat
-            Case 0
-                szMoveList = szMoveList + " " + MkC(CchessFile2Chin(CchessMove2File(CvLng(mv), pos), pos.sdPlayer))
-            Case 1
-                szMoveList = szMoveList + " " + MkL(CchessMove2File(CvLng(mv), pos))
-            Case 2
-                szMoveList = szMoveList + " " + Move2Iccs(mv)
-            End Select
-            CchessTryMove pos, nMoveStatus, CvLng(mv)
-            i = j + 1
-        Loop
+            i = i + 4
+            Do While i < Len(szReceived)
+                mv = Coord2Move(Mid(szReceived, i))
+                Select Case Game_nFormat
+                Case 0
+                    szMoveList = szMoveList + " " + MkC(CchessFile2Chin(CchessMove2File(CvLng(mv), pos), pos.sdPlayer))
+                Case 1
+                    szMoveList = szMoveList + " " + MkL(CchessMove2File(CvLng(mv), pos))
+                Case 2
+                    szMoveList = szMoveList + " " + Move2Iccs(mv)
+                End Select
+                CchessTryMove pos, nMoveStatus, CvLng(mv)
+                i = i + 5
+            Loop
+        End If
+        If Options_bStatusBar And nDepth > 0 Then
+            App_frmMain.stb.Panels("Pv").Text = szMoveList
+        End If
     End If
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
-    App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+    If Engine_bAnalyze Then
+        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
+        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+    End If
+End If
+
+' 输出引擎提示信息
+i = InStr(szReceived, " message ")
+If i > 0 Then
+    If Options_bStatusBar Then
+        App_frmMain.stb.Panels("Msg").Text = Mid(szReceived, i + 9)
+    End If
+    If Engine_bAnalyze Then
+        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Mid(szReceived, i + 9) + vbCrLf
+        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+    End If
 End If
 
 End Sub
@@ -1874,9 +1938,7 @@ Else
         End Select
     ElseIf Left(szReceived, 12) = "info string " Then
     ElseIf Left(szReceived, 5) = "info " Then
-        If Engine_bAnalyze Then
-            PopEngine szReceived
-        End If
+        PopEngine szReceived
     End If
     ReceiveEngine = True
 End If
@@ -2485,6 +2547,8 @@ Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1"))
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
 Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
+Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "1")) <> 0)
+Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
 Options_bShowCoord = (Str2Int(GetSetting("XQWizard", "Options", "ShowCoord", "0")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
@@ -2540,6 +2604,8 @@ SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
 SaveSetting "XQWizard", "Options", "AlwaysPonder", IIf(Options_bAlwaysPonder, "1", "0")
 SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1", "0")
+SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
+SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
 SaveSetting "XQWizard", "Options", "EnginePlay", LTrim(Str(Options_nEnginePlay))
 SaveSetting "XQWizard", "Options", "ShowCoord", IIf(Options_bShowCoord, "1", "0")
 SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
