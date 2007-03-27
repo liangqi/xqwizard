@@ -197,113 +197,109 @@ Begin VB.Form frmMainSmall
       EndProperty
       BorderStyle     =   1
    End
-   Begin VB.Frame frmInfo 
+   Begin VB.Frame frmMove2 
       BorderStyle     =   0  'None
-      Height          =   5775
+      Height          =   2535
       Left            =   6000
-      TabIndex        =   2
-      Top             =   840
+      TabIndex        =   15
+      Top             =   2040
       Width           =   3735
       Begin VB.Frame frmMove 
          Caption         =   "着法列表"
          Height          =   2535
          Left            =   2160
-         TabIndex        =   17
-         Top             =   1200
+         TabIndex        =   16
+         Top             =   0
          Width           =   1575
-         Begin VB.ComboBox cmbFormat 
-            Height          =   300
+         Begin VB.ListBox lstMoveText 
+            Height          =   1500
             ItemData        =   "XQWMAINS.frx":0ABA
-            Left            =   600
+            Left            =   120
             List            =   "XQWMAINS.frx":0ABC
-            Style           =   2  'Dropdown List
-            TabIndex        =   22
-            Top             =   2160
-            Width           =   855
+            TabIndex        =   19
+            Top             =   600
+            Width           =   1335
          End
          Begin VB.TextBox txtMove 
             Height          =   285
             Left            =   960
-            TabIndex        =   19
+            TabIndex        =   18
             Top             =   240
             Width           =   495
          End
-         Begin VB.ListBox lstMoveText 
-            Height          =   1500
+         Begin VB.ComboBox cmbFormat 
+            Height          =   300
             ItemData        =   "XQWMAINS.frx":0ABE
-            Left            =   120
+            Left            =   600
             List            =   "XQWMAINS.frx":0AC0
-            TabIndex        =   20
-            Top             =   600
-            Width           =   1335
-         End
-         Begin VB.Label lblFormat 
-            Caption         =   "格式"
-            Height          =   255
-            Left            =   120
-            TabIndex        =   21
+            Style           =   2  'Dropdown List
+            TabIndex        =   17
             Top             =   2160
-            Width           =   375
+            Width           =   855
          End
          Begin VB.Label lblInput 
             Caption         =   "输入"
             Height          =   255
             Left            =   120
-            TabIndex        =   18
+            TabIndex        =   21
             Top             =   240
             Width           =   375
          End
+         Begin VB.Label lblFormat 
+            Caption         =   "格式"
+            Height          =   255
+            Left            =   120
+            TabIndex        =   20
+            Top             =   2160
+            Width           =   375
+         End
       End
-      Begin VB.TextBox txtComment 
-         Height          =   1935
+      Begin VB.Image imgDown 
+         Height          =   615
          Left            =   0
-         MultiLine       =   -1  'True
-         ScrollBars      =   2  'Vertical
-         TabIndex        =   24
-         Top             =   3840
-         Width           =   3735
+         Stretch         =   -1  'True
+         Top             =   1680
+         Width           =   615
       End
-      Begin VB.Label lblTimeElapsedDown 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1200
-         TabIndex        =   16
-         Top             =   3360
-         Width           =   735
+      Begin VB.Image imgUp 
+         Height          =   615
+         Left            =   0
+         Stretch         =   -1  'True
+         Top             =   120
+         Width           =   615
       End
-      Begin VB.Label lblTimeElapsedDown1 
-         Caption         =   "用时"
+      Begin VB.Label lblTimeLeftUp1 
+         Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   15
-         Top             =   3360
+         TabIndex        =   31
+         Top             =   120
          Width           =   375
       End
-      Begin VB.Label lblTimeRuleDown 
-         Alignment       =   2  'Center
-         Caption         =   "时限规则"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   14
-         Top             =   3120
-         Width           =   1215
-      End
-      Begin VB.Label lblTimeElapsedUp 
+      Begin VB.Label lblTimeLeftUp 
          Alignment       =   2  'Center
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   11
-         Top             =   1800
+         TabIndex        =   30
+         Top             =   120
          Width           =   735
       End
-      Begin VB.Label lblTimeElapsedUp1 
-         Caption         =   "用时"
+      Begin VB.Label lblTimeLeftDown 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1200
+         TabIndex        =   29
+         Top             =   1680
+         Width           =   735
+      End
+      Begin VB.Label lblTimeLeftDown1 
+         Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   10
-         Top             =   1800
+         TabIndex        =   28
+         Top             =   1680
          Width           =   375
       End
       Begin VB.Label lblTimeRuleUp 
@@ -311,9 +307,69 @@ Begin VB.Form frmMainSmall
          Caption         =   "时限规则"
          Height          =   255
          Left            =   720
-         TabIndex        =   9
-         Top             =   1560
+         TabIndex        =   27
+         Top             =   360
          Width           =   1215
+      End
+      Begin VB.Label lblTimeElapsedUp1 
+         Caption         =   "用时"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   26
+         Top             =   600
+         Width           =   375
+      End
+      Begin VB.Label lblTimeElapsedUp 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1200
+         TabIndex        =   25
+         Top             =   600
+         Width           =   735
+      End
+      Begin VB.Label lblTimeRuleDown 
+         Alignment       =   2  'Center
+         Caption         =   "时限规则"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   24
+         Top             =   1920
+         Width           =   1215
+      End
+      Begin VB.Label lblTimeElapsedDown1 
+         Caption         =   "用时"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   23
+         Top             =   2160
+         Width           =   375
+      End
+      Begin VB.Label lblTimeElapsedDown 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1200
+         TabIndex        =   22
+         Top             =   2160
+         Width           =   735
+      End
+   End
+   Begin VB.Frame frmInfo 
+      BorderStyle     =   0  'None
+      Height          =   5775
+      Left            =   6000
+      TabIndex        =   2
+      Top             =   840
+      Width           =   3735
+      Begin VB.TextBox txtComment 
+         Height          =   1815
+         Left            =   0
+         MultiLine       =   -1  'True
+         ScrollBars      =   2  'Vertical
+         TabIndex        =   8
+         Top             =   3960
+         Width           =   3735
       End
       Begin VB.Label lblOpen 
          Alignment       =   2  'Center
@@ -346,8 +402,8 @@ Begin VB.Form frmMainSmall
          Caption         =   "注释"
          Height          =   255
          Left            =   0
-         TabIndex        =   23
-         Top             =   3600
+         TabIndex        =   7
+         Top             =   3720
          Width           =   375
       End
       Begin VB.Label lblEvent 
@@ -359,70 +415,22 @@ Begin VB.Form frmMainSmall
          Top             =   0
          Width           =   3735
       End
-      Begin VB.Label lblTimeLeftDown1 
-         Caption         =   "时限"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   12
-         Top             =   2880
-         Width           =   375
-      End
-      Begin VB.Label lblTimeLeftDown 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1200
-         TabIndex        =   13
-         Top             =   2880
-         Width           =   735
-      End
-      Begin VB.Label lblTimeLeftUp 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1200
-         TabIndex        =   8
-         Top             =   1320
-         Width           =   735
-      End
-      Begin VB.Label lblTimeLeftUp1 
-         Caption         =   "时限"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   7
-         Top             =   1320
-         Width           =   375
-      End
-      Begin VB.Image imgUp 
-         Height          =   615
-         Left            =   0
-         Stretch         =   -1  'True
-         Top             =   1320
-         Width           =   615
-      End
-      Begin VB.Image imgDown 
-         Height          =   615
-         Left            =   0
-         Stretch         =   -1  'True
-         Top             =   2880
-         Width           =   615
-      End
    End
    Begin VB.Frame frmThink 
       BorderStyle     =   0  'None
       Height          =   5775
       Left            =   6000
-      TabIndex        =   26
+      TabIndex        =   10
       Top             =   840
       Visible         =   0   'False
       Width           =   3735
       Begin VB.TextBox txtThink 
-         Height          =   5535
+         Height          =   2895
          Left            =   0
          Locked          =   -1  'True
          MultiLine       =   -1  'True
          ScrollBars      =   3  'Both
-         TabIndex        =   30
+         TabIndex        =   14
          Top             =   240
          Width           =   3735
       End
@@ -431,7 +439,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "思考路线"
          Height          =   255
          Left            =   960
-         TabIndex        =   29
+         TabIndex        =   13
          Top             =   0
          Width           =   735
       End
@@ -440,7 +448,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "评价"
          Height          =   255
          Left            =   480
-         TabIndex        =   28
+         TabIndex        =   12
          Top             =   0
          Width           =   495
       End
@@ -449,7 +457,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "深度"
          Height          =   255
          Left            =   0
-         TabIndex        =   27
+         TabIndex        =   11
          Top             =   0
          Width           =   495
       End
@@ -481,7 +489,7 @@ Begin VB.Form frmMainSmall
       Align           =   2  'Align Bottom
       Height          =   240
       Left            =   0
-      TabIndex        =   25
+      TabIndex        =   9
       Top             =   6840
       Width           =   9960
       _ExtentX        =   17568
@@ -491,13 +499,11 @@ Begin VB.Form frmMainSmall
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   4
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            Text            =   ""
             TextSave        =   ""
             Key             =   "Curr"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            Text            =   ""
             TextSave        =   ""
             Key             =   "Nps"
             Object.Tag             =   ""
@@ -505,7 +511,6 @@ Begin VB.Form frmMainSmall
          BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   7620
             MinWidth        =   7620
-            Text            =   ""
             TextSave        =   ""
             Key             =   "Pv"
             Object.Tag             =   ""
@@ -513,7 +518,6 @@ Begin VB.Form frmMainSmall
          BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   5080
             MinWidth        =   5080
-            Text            =   ""
             TextSave        =   ""
             Key             =   "Msg"
             Object.Tag             =   ""

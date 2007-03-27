@@ -2309,6 +2309,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrPressed
 App_frmMain.strpRight.Tabs.Item(2).Selected = True
 App_frmMain.frmInfo.Visible = False
 App_frmMain.frmThink.Visible = True
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + 3360
 
 End Sub
 
@@ -2328,7 +2329,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
 App_frmMain.strpRight.Tabs.Item(1).Selected = True
 App_frmMain.frmInfo.Visible = True
 App_frmMain.frmThink.Visible = False
-App_frmMain.txtMove.SetFocus
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - 3360
 
 End Sub
 

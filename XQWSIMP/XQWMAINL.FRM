@@ -63,6 +63,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -98,6 +99,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -119,6 +121,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -155,6 +158,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -197,87 +201,95 @@ Begin VB.Form frmMainLarge
       EndProperty
       BorderStyle     =   1
    End
-   Begin VB.Frame frmInfo 
+   Begin VB.Frame frmMove2 
       BorderStyle     =   0  'None
-      Height          =   8175
+      Height          =   3615
       Left            =   8160
-      TabIndex        =   2
-      Top             =   840
+      TabIndex        =   15
+      Top             =   2040
       Width           =   3975
       Begin VB.Frame frmMove 
          Caption         =   "着法列表"
          Height          =   3615
          Left            =   2400
-         TabIndex        =   17
-         Top             =   1200
+         TabIndex        =   26
+         Top             =   0
          Width           =   1575
-         Begin VB.ComboBox cmbFormat 
-            Height          =   300
+         Begin VB.ListBox lstMoveText 
+            Height          =   2580
             ItemData        =   "XQWMAINL.frx":0ABA
-            Left            =   600
+            Left            =   120
             List            =   "XQWMAINL.frx":0ABC
-            Style           =   2  'Dropdown List
-            TabIndex        =   22
-            Top             =   3240
-            Width           =   855
+            TabIndex        =   29
+            Top             =   600
+            Width           =   1335
          End
          Begin VB.TextBox txtMove 
             Height          =   285
             Left            =   960
-            TabIndex        =   19
+            TabIndex        =   28
             Top             =   240
             Width           =   495
          End
-         Begin VB.ListBox lstMoveText 
-            Height          =   2580
+         Begin VB.ComboBox cmbFormat 
+            Height          =   300
             ItemData        =   "XQWMAINL.frx":0ABE
-            Left            =   120
+            Left            =   600
             List            =   "XQWMAINL.frx":0AC0
-            TabIndex        =   20
-            Top             =   600
-            Width           =   1335
-         End
-         Begin VB.Label lblFormat 
-            Caption         =   "格式"
-            Height          =   255
-            Left            =   120
-            TabIndex        =   21
+            Style           =   2  'Dropdown List
+            TabIndex        =   31
             Top             =   3240
-            Width           =   375
+            Width           =   855
          End
          Begin VB.Label lblInput 
             Caption         =   "输入"
             Height          =   255
             Left            =   120
-            TabIndex        =   18
+            TabIndex        =   27
             Top             =   240
             Width           =   375
          End
-      End
-      Begin VB.TextBox txtComment 
-         Height          =   3135
-         Left            =   0
-         MultiLine       =   -1  'True
-         ScrollBars      =   2  'Vertical
-         TabIndex        =   24
-         Top             =   5040
-         Width           =   3975
+         Begin VB.Label lblFormat 
+            Caption         =   "格式"
+            Height          =   255
+            Left            =   120
+            TabIndex        =   30
+            Top             =   3240
+            Width           =   375
+         End
       End
       Begin VB.Label lblTimeElapsedDown 
          Alignment       =   2  'Center
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1440
-         TabIndex        =   16
-         Top             =   4440
+         TabIndex        =   25
+         Top             =   3240
          Width           =   735
+      End
+      Begin VB.Label lblTimeElapsedUp 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1440
+         TabIndex        =   20
+         Top             =   600
+         Width           =   735
+      End
+      Begin VB.Label lblTimeElapsedUp1 
+         Caption         =   "用时"
+         Height          =   255
+         Left            =   960
+         TabIndex        =   19
+         Top             =   600
+         Width           =   375
       End
       Begin VB.Label lblTimeElapsedDown1 
          Caption         =   "用时"
          Height          =   255
          Left            =   960
-         TabIndex        =   15
-         Top             =   4440
+         TabIndex        =   24
+         Top             =   3240
          Width           =   375
       End
       Begin VB.Label lblTimeRuleDown 
@@ -285,35 +297,91 @@ Begin VB.Form frmMainLarge
          Caption         =   "时限规则"
          Height          =   255
          Left            =   960
-         TabIndex        =   14
-         Top             =   4200
+         TabIndex        =   23
+         Top             =   3000
          Width           =   1215
-      End
-      Begin VB.Label lblTimeElapsedUp 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1440
-         TabIndex        =   11
-         Top             =   1800
-         Width           =   735
-      End
-      Begin VB.Label lblTimeElapsedUp1 
-         Caption         =   "用时"
-         Height          =   255
-         Left            =   960
-         TabIndex        =   10
-         Top             =   1800
-         Width           =   375
       End
       Begin VB.Label lblTimeRuleUp 
          Alignment       =   2  'Center
          Caption         =   "时限规则"
          Height          =   255
          Left            =   960
-         TabIndex        =   9
-         Top             =   1560
+         TabIndex        =   18
+         Top             =   360
          Width           =   1215
+      End
+      Begin VB.Image imgDown 
+         Height          =   855
+         Left            =   0
+         Stretch         =   -1  'True
+         Top             =   2520
+         Width           =   855
+      End
+      Begin VB.Image imgUp 
+         Height          =   855
+         Left            =   0
+         Stretch         =   -1  'True
+         Top             =   120
+         Width           =   855
+      End
+      Begin VB.Label lblTimeLeftUp1 
+         Caption         =   "时限"
+         Height          =   255
+         Left            =   960
+         TabIndex        =   16
+         Top             =   120
+         Width           =   375
+      End
+      Begin VB.Label lblTimeLeftUp 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1440
+         TabIndex        =   17
+         Top             =   120
+         Width           =   735
+      End
+      Begin VB.Label lblTimeLeftDown 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1440
+         TabIndex        =   22
+         Top             =   2760
+         Width           =   735
+      End
+      Begin VB.Label lblTimeLeftDown1 
+         Caption         =   "时限"
+         Height          =   255
+         Left            =   960
+         TabIndex        =   21
+         Top             =   2760
+         Width           =   375
+      End
+   End
+   Begin VB.Frame frmInfo 
+      BorderStyle     =   0  'None
+      Height          =   8175
+      Left            =   8160
+      TabIndex        =   2
+      Top             =   840
+      Width           =   3975
+      Begin VB.TextBox txtComment 
+         Height          =   3135
+         Left            =   0
+         MultiLine       =   -1  'True
+         ScrollBars      =   2  'Vertical
+         TabIndex        =   8
+         Top             =   5040
+         Width           =   3975
+      End
+      Begin VB.Label lblComment 
+         Caption         =   "注释"
+         Height          =   255
+         Left            =   0
+         TabIndex        =   7
+         Top             =   4800
+         Width           =   375
       End
       Begin VB.Label lblOpen 
          Alignment       =   2  'Center
@@ -342,14 +410,6 @@ Begin VB.Form frmMainLarge
          Top             =   240
          Width           =   3975
       End
-      Begin VB.Label lblComment 
-         Caption         =   "注释"
-         Height          =   255
-         Left            =   0
-         TabIndex        =   23
-         Top             =   4800
-         Width           =   375
-      End
       Begin VB.Label lblEvent 
          Alignment       =   2  'Center
          Caption         =   "赛事"
@@ -359,70 +419,22 @@ Begin VB.Form frmMainLarge
          Top             =   0
          Width           =   3975
       End
-      Begin VB.Label lblTimeLeftDown1 
-         Caption         =   "时限"
-         Height          =   255
-         Left            =   960
-         TabIndex        =   12
-         Top             =   3960
-         Width           =   375
-      End
-      Begin VB.Label lblTimeLeftDown 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1440
-         TabIndex        =   13
-         Top             =   3960
-         Width           =   735
-      End
-      Begin VB.Label lblTimeLeftUp 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1440
-         TabIndex        =   8
-         Top             =   1320
-         Width           =   735
-      End
-      Begin VB.Label lblTimeLeftUp1 
-         Caption         =   "时限"
-         Height          =   255
-         Left            =   960
-         TabIndex        =   7
-         Top             =   1320
-         Width           =   375
-      End
-      Begin VB.Image imgUp 
-         Height          =   855
-         Left            =   0
-         Stretch         =   -1  'True
-         Top             =   1320
-         Width           =   855
-      End
-      Begin VB.Image imgDown 
-         Height          =   855
-         Left            =   0
-         Stretch         =   -1  'True
-         Top             =   3720
-         Width           =   855
-      End
    End
    Begin VB.Frame frmThink 
       BorderStyle     =   0  'None
       Height          =   8175
       Left            =   8160
-      TabIndex        =   26
+      TabIndex        =   10
       Top             =   840
       Visible         =   0   'False
       Width           =   3975
       Begin VB.TextBox txtThink 
-         Height          =   7935
+         Height          =   4095
          Left            =   0
          Locked          =   -1  'True
          MultiLine       =   -1  'True
-         ScrollBars      =   1  'Horizontal
-         TabIndex        =   30
+         ScrollBars      =   3  'Both
+         TabIndex        =   14
          Top             =   240
          Width           =   3975
       End
@@ -431,7 +443,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "深度"
          Height          =   255
          Left            =   0
-         TabIndex        =   27
+         TabIndex        =   11
          Top             =   0
          Width           =   495
       End
@@ -440,7 +452,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "评价"
          Height          =   255
          Left            =   480
-         TabIndex        =   28
+         TabIndex        =   12
          Top             =   0
          Width           =   495
       End
@@ -449,7 +461,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "思考路线"
          Height          =   255
          Left            =   960
-         TabIndex        =   29
+         TabIndex        =   13
          Top             =   0
          Width           =   735
       End
@@ -467,11 +479,13 @@ Begin VB.Form frmMainLarge
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -481,7 +495,7 @@ Begin VB.Form frmMainLarge
       Align           =   2  'Align Bottom
       Height          =   240
       Left            =   0
-      TabIndex        =   25
+      TabIndex        =   9
       Top             =   9240
       Width           =   12360
       _ExtentX        =   21802
