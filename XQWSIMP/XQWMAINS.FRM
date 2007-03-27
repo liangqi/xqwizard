@@ -63,6 +63,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -98,6 +99,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -119,6 +121,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -155,6 +158,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -208,7 +212,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "着法列表"
          Height          =   2535
          Left            =   2160
-         TabIndex        =   16
+         TabIndex        =   26
          Top             =   0
          Width           =   1575
          Begin VB.ListBox lstMoveText 
@@ -216,14 +220,14 @@ Begin VB.Form frmMainSmall
             ItemData        =   "XQWMAINS.frx":0ABA
             Left            =   120
             List            =   "XQWMAINS.frx":0ABC
-            TabIndex        =   19
+            TabIndex        =   29
             Top             =   600
             Width           =   1335
          End
          Begin VB.TextBox txtMove 
             Height          =   285
             Left            =   960
-            TabIndex        =   18
+            TabIndex        =   28
             Top             =   240
             Width           =   495
          End
@@ -233,7 +237,7 @@ Begin VB.Form frmMainSmall
             Left            =   600
             List            =   "XQWMAINS.frx":0AC0
             Style           =   2  'Dropdown List
-            TabIndex        =   17
+            TabIndex        =   31
             Top             =   2160
             Width           =   855
          End
@@ -241,7 +245,7 @@ Begin VB.Form frmMainSmall
             Caption         =   "输入"
             Height          =   255
             Left            =   120
-            TabIndex        =   21
+            TabIndex        =   27
             Top             =   240
             Width           =   375
          End
@@ -249,10 +253,53 @@ Begin VB.Form frmMainSmall
             Caption         =   "格式"
             Height          =   255
             Left            =   120
-            TabIndex        =   20
+            TabIndex        =   30
             Top             =   2160
             Width           =   375
          End
+      End
+      Begin VB.Label lblTimeElapsedDown1 
+         Caption         =   "用时"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   24
+         Top             =   2160
+         Width           =   375
+      End
+      Begin VB.Label lblTimeRuleDown 
+         Alignment       =   2  'Center
+         Caption         =   "时限规则"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   23
+         Top             =   1920
+         Width           =   1215
+      End
+      Begin VB.Label lblTimeElapsedUp1 
+         Caption         =   "用时"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   19
+         Top             =   600
+         Width           =   375
+      End
+      Begin VB.Label lblTimeElapsedUp 
+         Alignment       =   2  'Center
+         Caption         =   "00:00:00"
+         Height          =   255
+         Left            =   1200
+         TabIndex        =   20
+         Top             =   600
+         Width           =   735
+      End
+      Begin VB.Label lblTimeRuleUp 
+         Alignment       =   2  'Center
+         Caption         =   "时限规则"
+         Height          =   255
+         Left            =   720
+         TabIndex        =   18
+         Top             =   360
+         Width           =   1215
       End
       Begin VB.Image imgDown 
          Height          =   615
@@ -272,7 +319,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   31
+         TabIndex        =   16
          Top             =   120
          Width           =   375
       End
@@ -281,7 +328,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   30
+         TabIndex        =   17
          Top             =   120
          Width           =   735
       End
@@ -290,7 +337,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   29
+         TabIndex        =   22
          Top             =   1680
          Width           =   735
       End
@@ -298,51 +345,8 @@ Begin VB.Form frmMainSmall
          Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   28
+         TabIndex        =   21
          Top             =   1680
-         Width           =   375
-      End
-      Begin VB.Label lblTimeRuleUp 
-         Alignment       =   2  'Center
-         Caption         =   "时限规则"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   27
-         Top             =   360
-         Width           =   1215
-      End
-      Begin VB.Label lblTimeElapsedUp1 
-         Caption         =   "用时"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   26
-         Top             =   600
-         Width           =   375
-      End
-      Begin VB.Label lblTimeElapsedUp 
-         Alignment       =   2  'Center
-         Caption         =   "00:00:00"
-         Height          =   255
-         Left            =   1200
-         TabIndex        =   25
-         Top             =   600
-         Width           =   735
-      End
-      Begin VB.Label lblTimeRuleDown 
-         Alignment       =   2  'Center
-         Caption         =   "时限规则"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   24
-         Top             =   1920
-         Width           =   1215
-      End
-      Begin VB.Label lblTimeElapsedDown1 
-         Caption         =   "用时"
-         Height          =   255
-         Left            =   720
-         TabIndex        =   23
-         Top             =   2160
          Width           =   375
       End
       Begin VB.Label lblTimeElapsedDown 
@@ -350,7 +354,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   22
+         TabIndex        =   25
          Top             =   2160
          Width           =   735
       End
@@ -475,11 +479,13 @@ Begin VB.Form frmMainSmall
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty

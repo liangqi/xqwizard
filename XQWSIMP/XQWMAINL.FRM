@@ -63,7 +63,6 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -99,7 +98,6 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -121,7 +119,6 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -158,7 +155,6 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -367,12 +363,12 @@ Begin VB.Form frmMainLarge
       Top             =   840
       Width           =   3975
       Begin VB.TextBox txtComment 
-         Height          =   3135
+         Height          =   3015
          Left            =   0
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   8
-         Top             =   5040
+         Top             =   5160
          Width           =   3975
       End
       Begin VB.Label lblComment 
@@ -380,7 +376,7 @@ Begin VB.Form frmMainLarge
          Height          =   255
          Left            =   0
          TabIndex        =   7
-         Top             =   4800
+         Top             =   4920
          Width           =   375
       End
       Begin VB.Label lblOpen 
@@ -479,13 +475,11 @@ Begin VB.Form frmMainLarge
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
