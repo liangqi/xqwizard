@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.04, Last Modified: Mar. 2007
+' Designed by Morning Yellow, Version: 3.1, Last Modified: Mar. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub Call8341 Lib "8341.DLL" Alias "_Call8341@0" ()
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.05"
+Public Const STRING_VERSION     As String = "3.1"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -2716,10 +2716,11 @@ If Options_bCheckUpdate Then
     sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 Then
+        szWhatsNew = ""
         On Error Resume Next
         szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
         On Error GoTo 0
-        If MsgBox("象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？" + vbCrLf + vbCrLf + szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
                 ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
