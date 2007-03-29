@@ -601,7 +601,7 @@ Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "棋譜文件"; Fl
 Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /X {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\ELEEYE.BIN"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Register"; ValueType: string; ValueName: "User"; ValueData: "象棋巫師測試團隊"

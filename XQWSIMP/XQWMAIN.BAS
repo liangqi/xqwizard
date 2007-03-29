@@ -24,6 +24,7 @@ Option Explicit
 ' È«¾Ö³£Á¿¡ª¡ªWindows²ÎÊý³£Á¿
 Public Const WM_MOVE            As Long = 3
 Public Const GWL_WNDPROC        As Long = -4
+Public Const SW_HIDE            As Long = 0
 Public Const SW_SHOWNORMAL      As Long = 1
 Public Const SND_ASYNC          As Long = 1
 Public Const SND_NOWAIT         As Long = 8192
@@ -508,13 +509,22 @@ ImportLine = False
 
 End Function
 
-' ¶ÁPGNÆåÆ×
+' ¶ÁPGNÆåÆ×£¬Èç¹ûÊÇXQFÆåÆ×ÔòÊ×ÏÈ×ª»»ÎªPGNÆåÆ×
 Public Sub ReadFile()
 
 Dim i As Integer, j As Integer, nFileNo As Integer
 Dim bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
+
+
+If UCase(Right(App_szFileName, 4)) = ".XQF" Then
+    ShellExecuteA 0, vbNullString, App_szPath + "XQF2PGN.EXE", Chr(34) + App_szFileName + Chr(34) + " " + _
+            Chr(34) + App_szPath + "XQF2PGN.PGN" + Chr(34), vbNullString, SW_HIDE
+    Sleep 1000
+    App_szFileName = App_szPath + "XQF2PGN.PGN"
+End If
+
 RestartGame
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
@@ -593,6 +603,7 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 MsgBox "ÎÞ·¨´ò¿ªÎÄ¼þ " + App_szFileName, vbExclamation
+BoardFlush
 
 End Sub
 
@@ -865,7 +876,8 @@ Public Function ResultString() As String
 If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
     ResultString = "(×Å·¨: " + IIf(Game_sdStart = 0, "ºìÏÈ", "ºÚÏÈ") + Choose(Game_nResult + 1, "", "Ê¤", "ºÍ", "¸º") + ")"
 Else
-    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (¶Ô) ", " (ÏÈÊ¤) ", " (ÏÈºÍ) ", " (ÏÈ¸º) ") + Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
+    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (¶Ô) ", " (ÏÈÊ¤) ", " (ÏÈºÍ) ", " (ÏÈ¸º) ") + _
+            Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
 End If
 
 End Function
@@ -873,7 +885,8 @@ End Function
 ' ¿ª¾Ö×Ö·û´®
 Public Function OpenString() As String
 
-OpenString = Game_szOpen + IIf(Game_szOpen = "" Or Game_szVar = "", "", "¡ª¡ª") + Game_szVar + IIf(Game_szEcco = "", "", IIf(Game_szOpen = "" And Game_szVar = "", "(ECCO¿ª¾Ö±àºÅ: " + Game_szEcco + ")", "(" + Game_szEcco + ")"))
+OpenString = Game_szOpen + IIf(Game_szOpen = "" Or Game_szVar = "", "", "¡ª¡ª") + Game_szVar + _
+        IIf(Game_szEcco = "", "", IIf(Game_szOpen = "" And Game_szVar = "", "(ECCO¿ª¾Ö±àºÅ: " + Game_szEcco + ")", "(" + Game_szEcco + ")"))
 
 End Function
 
@@ -1145,7 +1158,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
         Game_nMaxIrrev = Game_nMaxIrrev + 1
         CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, CvLng(mv)
         CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
-        Game_szIrrevFen(Game_nMaxIrrev) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + Str(IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1))
+        Game_szIrrevFen(Game_nMaxIrrev) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + _
+                Str(IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1))
     End If
     If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
         If Timer_bIncMode Then
@@ -1300,7 +1314,8 @@ End Sub
 Public Sub CopyJava()
 
 Dim i As Integer, sq As Integer, sd As Integer, szJava As String, posJava As PositionStruct
-szJava = "<applet width=" + Chr(34) + "249" + Chr(34) + " height=" + Chr(34) + "301" + Chr(34) + " codebase=" + Chr(34) + Options_szJavaPath + Chr(34) + " code=" + Chr(34) + "JavaXQ" + Chr(34) + ">" + vbCrLf
+szJava = "<applet width=" + Chr(34) + "249" + Chr(34) + " height=" + Chr(34) + "301" + Chr(34) + _
+        " codebase=" + Chr(34) + Options_szJavaPath + Chr(34) + " code=" + Chr(34) + "JavaXQ" + Chr(34) + ">" + vbCrLf
 If Not Game_bStartPos Then
     CchessFen2Board posJava, Game_szIrrevFen(0)
     szJava = szJava + "<param name=" + Chr(34) + "Position" + Chr(34) + " value=" + Chr(34)
@@ -1379,10 +1394,12 @@ Do While Game_nCurrMove < Game_nMaxMove
         End If
     End If
     If Game_sdCurr = 0 Then
-        Print #nFileNo, "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a>";
+        Print #nFileNo, "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
+                Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a>";
         bReturned = False
     Else
-        Print #nFileNo, "&nbsp;" + "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a></dt>"
+        Print #nFileNo, "&nbsp;" + "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
+                Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a></dt>"
         Print #nFileNo, "<dt>";
         bReturned = True
     End If
@@ -1577,7 +1594,8 @@ End Sub
 ' ÏÔÊ¾ÒýÇæÐÅÏ¢µÄ¶Ô»°¿ò
 Public Sub AboutEngine()
 
-MsgBoxWithIcon "ÒýÇæ£º" + Engine_szName + vbCrLf + "°æÈ¨£º" + Engine_szCopyright + vbCrLf + "×÷Õß£º" + Engine_szAuthor + vbCrLf + "ÓÃ»§£º" + Engine_szUser, "¹ØÓÚUCCIÒýÇæ", Engine_szFile
+MsgBoxWithIcon "ÒýÇæ£º" + Engine_szName + vbCrLf + "°æÈ¨£º" + Engine_szCopyright + vbCrLf + _
+        "×÷Õß£º" + Engine_szAuthor + vbCrLf + "ÓÃ»§£º" + Engine_szUser, "¹ØÓÚUCCIÒýÇæ", Engine_szFile
 
 End Sub
 
@@ -1728,11 +1746,15 @@ If Engine_nStatus = BUSY_ANALYZE Then
 Else
     If Timer_nDepth <= 0 Then
         If Timer_bIncMode Then
-            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + " increment" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)) + _
-                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + " oppincrement" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)), bSlaveEngine
+            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
+                    " increment" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)) + _
+                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
+                    " oppincrement" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)), bSlaveEngine
         Else
-            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + " movestogo" + Str(Timer_nMoveLeft(Engine_posBoard.sdPlayer)) + _
-                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + " oppmovestogo" + Str(Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
+            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
+                    " movestogo" + Str(Timer_nMoveLeft(Engine_posBoard.sdPlayer)) + _
+                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
+                    " oppmovestogo" + Str(Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
         End If
     Else
         SendEngine szGoPonder + " depth" + Str(Timer_nDepth), bSlaveEngine
@@ -2230,7 +2252,8 @@ Else
         End If
     Loop
     If Engine_bSlaveBlack Then
-        MsgBoxWithIcon "ÒýÇæ£º" + Engine_szSlaveName + vbCrLf + "°æÈ¨£º" + szCopyright + vbCrLf + "×÷Õß£º" + szAuthor + vbCrLf + "ÓÃ»§£º" + szUser, "¹ØÓÚUCCIÒýÇæ", szEngineFile
+        MsgBoxWithIcon "ÒýÇæ£º" + Engine_szSlaveName + vbCrLf + "°æÈ¨£º" + szCopyright + vbCrLf + _
+                "×÷Õß£º" + szAuthor + vbCrLf + "ÓÃ»§£º" + szUser, "¹ØÓÚUCCIÒýÇæ", szEngineFile
         If Engine_dwTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
@@ -2508,9 +2531,7 @@ Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓÐÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏ
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ÐÏ¸ÔÄ¶Á±¾Èí¼þ¡°°ïÖú¡±Ñ¡µ¥ÖÐµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
 Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼þ¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼þ(Í¼±êÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼þ(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
-Gui_szTips(12) = "¡¡¡¡ÔÚ°²×°ÁËXQFÎÄ¼þ¹¤¾ß°ü(ÄÚº¬XQF2PGN³ÌÐò)ºó£¬ÏóÆåÎ×Ê¦¾Í¿ÉÒÔ´ò¿ªÏóÆåÑÝ²¥ÊÒµÄXQFÎÄ¼þ¡£" + vbCrLf + _
-        "¡¡¡¡ÓÃÊó±êÓÒ»÷XQFÎÄ¼þ£¬Ñ¡Ôñ¡°Open with PGN Reader¡±¹¦ÄÜ£¬XQF2PGN¾Í×Ô¶¯°Ñ¸ÃXQFÎÄ¼þ×ª»»³ÉPGN¸ñÊ½£¬²¢ÓÃÏóÆåÎ×Ê¦´ò¿ª¡£" + vbCrLf + _
-        "¡¡¡¡XQFÎÄ¼þ¹¤¾ß°üµÄÏÂÔØµØÖ·ÊÇ£ºhttp://www.elephantbase.net/download/xqftools.exe"
+Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆåÆ×¡£Ö»ÒªË«»÷XQFÎÄ¼þ(Í¼±êÊÇ¡°Ïó¡±×Ö)£¬»òÕßµã»÷¡°´ò¿ª¡±°´Å¥²¢Ñ¡ÔñÒ»¸öXQFÎÄ¼þ£¬ÏóÆåÎ×Ê¦¾Í»á´ò¿ªÕâ¸öÆåÆ×¡£"
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬ÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿ò(¡°Ñ¡Ïî¡±Ñ¡µ¥ÖÐµÄ¡°ÉèÖÃ¡±Ò»Ïî)£¬°Ñ¡°½çÃæ¡±Éè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ð§¹û¡£"
 Gui_szTips(14) = "¡¡¡¡ÎªÁË·½±ãÐ£Ô°Íø×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷ÆåÆ×¡¢ÆåÍ¼ºÍ·¢±íÎÄÕÂ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎÄ±¾ÆåÆ×ºÍ²ÊÉ«ASCII×Ö·ûÆåÍ¼µÄÊä³ö¹¦ÄÜ¡£Í¨¹ý¼ôÌù°å£¬Äú¿ÉÒÔÔÚBBSÉÏ·¢±í¾«ÃÀÆ¯ÁÁµÄÆåÆ×ºÍÆåÍ¼ÁË¡£"
 Gui_szTips(15) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ·¢ANSI¶¯Ì¬ÆåÆ×Ê±£¬µã»÷¡°¸´ÖÆANSI¶¯Ì¬ÆåÆ×¡±°´Å¥£¬ÔÙÏòTelnetÖÐÕ³ÌùÄÚÈÝ£¬±£´æÌù×Ó¼´¿É¡£" + vbCrLf + _
