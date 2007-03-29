@@ -37,6 +37,7 @@ Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.BIN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PHPCHATC.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
@@ -595,6 +596,12 @@ Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "打
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /F {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
+Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /X {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\ELEEYE.BIN"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\PHPChat\Client"; ValueType: string; ValueName: "ChatRoom"; ValueData: "象棋巫师在线咨询"

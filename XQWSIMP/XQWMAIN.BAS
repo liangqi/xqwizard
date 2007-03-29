@@ -343,12 +343,14 @@ NumberText = IIf(sd = 0, LTrim(Str(cnt)) + ".", Space(Len(Str(cnt))))
 End Function
 
 ' 打开文件对话框
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal bShowSave As Boolean = False) As String
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt1 As String, Optional ByVal szExt2 As String = "", Optional ByVal bShowSave As Boolean = False) As String
 
+Dim szExt As String
+szExt = "*." + szExt1 + IIf(szExt2 = "", "", ";*." + szExt2)
 frmHide.comdlg.FileName = ""
 frmHide.comdlg.DialogTitle = szTitle
-frmHide.comdlg.DefaultExt = "." + szExt
-frmHide.comdlg.Filter = szFileType + "(*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
+frmHide.comdlg.DefaultExt = "." + szExt1
+frmHide.comdlg.Filter = szFileType + "(" + szExt + ")|" + szExt + "|所有文件 (*.*)|*.*"
 frmHide.comdlg.Flags = IIf(bShowSave, cdlOFNOverwritePrompt, 0) + cdlOFNHideReadOnly
 If bShowSave Then
     frmHide.comdlg.ShowSave
@@ -697,7 +699,7 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = FileDialog("打开PGN文件", "PGN文件", "PGN")
+szFileName = FileDialog("打开棋谱文件", "棋谱文件", "PGN", "XQF")
 If szFileName <> "" Then
     App_szFileName = szFileName
     ReadFile
@@ -733,7 +735,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim szFileName As String
-szFileName = FileDialog("保存PGN文件", "PGN文件", "PGN", SHOW_SAVE)
+szFileName = FileDialog("保存棋谱文件", "PGN文件", "PGN", SHOW_SAVE)
 If szFileName <> "" Then
     App_szFileName = szFileName
     App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
