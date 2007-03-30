@@ -541,6 +541,22 @@ Source: "BMPBOARD\BN.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\BR.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\BC.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\BP.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
+; 图片棋盘文件
+Source: "PRINTBRD\PRINTBRD.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RK.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RA.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RB.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RN.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RR.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RC.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\RP.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BK.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BA.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BB.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BN.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BR.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BC.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\BP.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 ; Web棋盘文件
 Source: "jsboard\jsboard.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
 Source: "jsboard\oo.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
