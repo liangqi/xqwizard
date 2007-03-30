@@ -1530,7 +1530,7 @@ End Sub
 ' 生成图片棋盘
 Public Sub ViewBitmap(Optional ByVal bMono As Boolean = False)
 
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte
+Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte, lpLineBuff(1 To 108) As Byte
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
@@ -1546,10 +1546,8 @@ On Error GoTo 0
 Get #nReadFileNo, , lpBmpHeader
 Put #nWriteFileNo, , lpBmpHeader
 For i = 1 To 234
-    For j = 1 To 9
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
+    Get #nReadFileNo, , lpLineBuff
+    Put #nWriteFileNo, , lpLineBuff
 Next
 Close #nReadFileNo
 For i = 0 To 9
@@ -1566,6 +1564,61 @@ For i = 0 To 9
                 Get #nReadFileNo, , lpReadBuff
                 Seek #nWriteFileNo, i * 2592& + k * 108 + j * 12 + 119
                 For l = 1 To 9
+                    lpWriteBuff(l) = lpReadBuff(l)
+                Next
+                Put #nWriteFileNo, , lpWriteBuff
+            Next
+            Close #nReadFileNo
+        End If
+    Next
+Next
+Close #nWriteFileNo
+ShellExecuteA 0, vbNullString, App_szPath + "查看图片棋盘.BMP", vbNullString, vbNullString, SW_SHOWNORMAL
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法打开文件 " + szBmpFile, vbExclamation
+
+End Sub
+
+' 生成印刷质量的图片棋盘
+Public Sub ViewPrintBitmap()
+
+Dim lpBmpHeader(1 To 54) As Byte, lpReadBuff(1 To 104) As Byte, lpWriteBuff(1 To 102) As Byte, lpLineBuff(1 To 1064) As Byte
+Dim i As Integer, j As Integer, k As Integer, l As Integer
+Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
+nReadFileNo = FreeFile
+szBmpFile = App_szPath + "PRINTBRD\PRINTBRD.BMP"
+On Error GoTo lnErrorOpen
+Open szBmpFile For Binary Access Read As #nReadFileNo
+On Error GoTo 0
+nWriteFileNo = FreeFile
+szBmpFile = App_szPath + "查看图片棋盘.BMP"
+On Error GoTo lnErrorOpen
+Open szBmpFile For Binary Access Write As #nWriteFileNo
+On Error GoTo 0
+Get #nReadFileNo, , lpBmpHeader
+Put #nWriteFileNo, , lpBmpHeader
+For i = 1 To 394
+    Get #nReadFileNo, , lpLineBuff
+    Put #nWriteFileNo, , lpLineBuff
+Next
+Close #nReadFileNo
+For i = 0 To 9
+    For j = 0 To 8
+        k = Game_posIrrev(Game_nCurrIrrev).ucpcSquares((12 - i) * 16 + j + 3)
+        If k <> 0 Then
+            nReadFileNo = FreeFile
+            szBmpFile = App_szPath + "PRINTBRD\" + IIf(k < 32, "R", "B") + PieceByte(PieceType(k)) + ".BMP"
+            On Error GoTo lnErrorOpen
+            Open szBmpFile For Binary Access Read As #nReadFileNo
+            On Error GoTo 0
+            Seek #nReadFileNo, 55
+            For k = 0 To 33
+                Get #nReadFileNo, , lpReadBuff
+                Seek #nWriteFileNo, i * 42560 + k * 1064& + j * 120 + 55
+                For l = 1 To 102
                     lpWriteBuff(l) = lpReadBuff(l)
                 Next
                 Put #nWriteFileNo, , lpWriteBuff
