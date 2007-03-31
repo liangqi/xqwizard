@@ -42,6 +42,9 @@ Source: "PHPCHATC.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion

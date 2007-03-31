@@ -1,15 +1,15 @@
 VERSION 5.00
 Begin VB.Form frmHowTo 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "日积月累"
+   Caption         =   "ら縩る仓"
    ClientHeight    =   3195
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4680
    BeginProperty Font 
-      Name            =   "宋体"
+      Name            =   "灿蔨"
       Size            =   9
-      Charset         =   0
+      Charset         =   136
       Weight          =   400
       Underline       =   0   'False
       Italic          =   0   'False
@@ -24,7 +24,7 @@ Begin VB.Form frmHowTo
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
-      Caption         =   "关闭"
+      Caption         =   "闽超"
       Height          =   375
       Left            =   3600
       TabIndex        =   5
@@ -32,7 +32,7 @@ Begin VB.Form frmHowTo
       Width           =   855
    End
    Begin VB.CommandButton btnNext 
-      Caption         =   "下一条 >"
+      Caption         =   "兵 >"
       Height          =   375
       Left            =   2520
       TabIndex        =   4
@@ -40,7 +40,7 @@ Begin VB.Form frmHowTo
       Width           =   975
    End
    Begin VB.CommandButton btnPrev 
-      Caption         =   "< 上一条"
+      Caption         =   "< 兵"
       Height          =   375
       Left            =   1440
       TabIndex        =   3
@@ -48,7 +48,7 @@ Begin VB.Form frmHowTo
       Width           =   975
    End
    Begin VB.CommandButton btnFreeReg 
-      Caption         =   "免费注册"
+      Caption         =   "禣猔"
       Height          =   375
       Left            =   3240
       TabIndex        =   8
@@ -56,7 +56,7 @@ Begin VB.Form frmHowTo
       Width           =   1215
    End
    Begin VB.CommandButton btnPurchase 
-      Caption         =   "如何注册"
+      Caption         =   "猔"
       Height          =   375
       Left            =   1800
       TabIndex        =   7
@@ -64,7 +64,7 @@ Begin VB.Form frmHowTo
       Width           =   1215
    End
    Begin VB.CommandButton btnRegister 
-      Caption         =   "输入注册码"
+      Caption         =   "块猔絏"
       Height          =   375
       Left            =   240
       TabIndex        =   6
@@ -72,7 +72,7 @@ Begin VB.Form frmHowTo
       Width           =   1335
    End
    Begin VB.CheckBox chkShowHowTo 
-      Caption         =   "启动时显示"
+      Caption         =   "币笆陪ボ"
       Height          =   255
       Left            =   120
       TabIndex        =   2
@@ -81,7 +81,7 @@ Begin VB.Form frmHowTo
    End
    Begin VB.TextBox txtTips 
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "Ш蔨"
          Size            =   12
          Charset         =   0
          Weight          =   400
@@ -106,9 +106,9 @@ Begin VB.Form frmHowTo
       Width           =   480
    End
    Begin VB.Label lblDoYouKnow 
-      Caption         =   "你知道吗？"
+      Caption         =   "笵盾"
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "Ш蔨"
          Size            =   15
          Charset         =   0
          Weight          =   700

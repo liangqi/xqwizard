@@ -53,11 +53,11 @@ Public Const SLAVE_ENGINE       As Boolean = True ' SetEngine / SendEngine / Rec
 Public Const IDLE_UNLOAD        As Integer = 0 ' Ã»ÓĞ¼ÓÔØÒıÇæ
 Public Const IDLE_READY         As Integer = 1 ' ÒıÇæ´ıÃü(Èç¹ûÂÖµ½µçÄÔ×ßÆå£¬ÄÇÃ´ÒıÇæÁ¢¼´¹¤×÷)
 Public Const IDLE_REST          As Integer = 2 ' ÒıÇæĞİÏ¢(¼´Ê¹ÂÖµ½µçÄÔ×ßÆå£¬ÒıÇæÒ²²»¹¤×÷£¬³ı·Ç×´Ì¬¸Ä±ä)
-Public Const IDLE_PONDER        As Integer = 3 ' ºóÌ¨Ë¼¿¼½áÊø(µÈ´ı¶ÔÊÖ×ßÍêÒ»²½£¬ÔÙ×÷ÏàÓ¦´¦Àí)
+Public Const IDLE_PONDER        As Integer = 3 ' ááÌ¨Ë¼¿¼½áÊø(µÈ´ı¶ÔÊÖ×ßÍêÒ»²½£¬ÔÙ×÷ÏàÓ¦´¦Àí)
 Public Const BUSY_WAIT          As Integer = 4 ' µÈ´ıÒıÇæÍ£Ö¹Ë¼¿¼
 Public Const BUSY_ANALYZE       As Integer = 5 ' ÒıÇæÒÔ·ÖÎö·½Ê½Ë¼¿¼(ÒıÇæ²»Ö´ÈÎºÎÒ»·½£¬´ò¿ª¡°ÒıÇæ·ÖÎö¡±¹¦ÄÜ)
 Public Const BUSY_THINK         As Integer = 6 ' ÒıÇæÕı³£Ë¼¿¼
-Public Const BUSY_PONDER        As Integer = 7 ' ÒıÇæºóÌ¨Ë¼¿¼
+Public Const BUSY_PONDER        As Integer = 7 ' ÒıÇæááÌ¨Ë¼¿¼
 ' È«¾Ö³£Á¿¡ª¡ªÆå¾Ö½á¹û
 Public Const RESULT_UNKNOWN     As Integer = 0
 Public Const RESULT_REDWIN      As Integer = 1
@@ -172,7 +172,7 @@ Public Options_bMonoBitmap      As Boolean  ' Í¼Æ¬ÆåÅÌµÄºì×ÓÓÃ°×µ×ºì×Ö±íÊ¾
 Public Options_bAutoFlip        As Boolean  ' ×Ô¶¯·­×ªÆåÅÌ
 Public Options_bEngineName      As Boolean  ' ÏÔÊ¾ÒıÇæÃû³Æ
 Public Options_bAllowResign     As Boolean  ' ÔÊĞíÒıÇæÈÏÊä
-Public Options_bAlwaysPonder    As Boolean  ' ÆôÓÃºóÌ¨Ë¼¿¼
+Public Options_bAlwaysPonder    As Boolean  ' ÆôÓÃááÌ¨Ë¼¿¼
 Public Options_bEngineTime      As Boolean  ' ÏÔÊ¾ÒıÇæËÙ¶È
 Public Options_bStatusBar       As Boolean  ' Êä³öµ½×´Ì¬À¸
 Public Options_nEnginePlay      As Integer  ' ĞÂ¾ÖÒıÇæ×´Ì¬
@@ -211,7 +211,7 @@ Public Game_cntStart            As Integer  ' ÆğÊ¼»ØºÏÊı
 Public Game_sdStart             As Integer  ' ÆğÊ¼×ß×Ó·½
 Public Game_cntCurr             As Integer  ' µ±Ç°»ØºÏÊı
 Public Game_sdCurr              As Integer  ' µ±Ç°×ß×Ó·½
-Public Game_sdMax               As Integer  ' ×îºó×ß×Ó·½
+Public Game_sdMax               As Integer  ' ×îáá×ß×Ó·½
 Public Game_nFormat             As Integer  ' ¼ÇÆ×¸ñÊ½
 Public Game_mvMove(1 To 1998)   As Long     ' ×Å·¨ÁĞ±í
 Public Game_szMoveText(0 To 2, 1 To 1998) As String ' ¼ÇÆ×ÁĞ±í
@@ -221,7 +221,7 @@ Public Game_posIrrev(0 To 32)   As PositionStruct   ' ²»¿ÉÄæ¾ÖÃæÁĞ±í
 Public Game_nCurrMove           As Integer  ' µ±Ç°×Å·¨ĞòºÅ(µÚÒ»¸ö×Å·¨ĞòºÅÊÇ1)
 Public Game_nMaxMove            As Integer  ' ×î´ó×Å·¨ĞòºÅ
 Public Game_nCurrIrrev          As Integer  ' µ±Ç°²»¿ÉÄæ¾ÖÃæĞòºÅ
-Public Game_nMaxIrrev           As Integer  ' ×îºó²»¿ÉÄæ¾ÖÃæĞòºÅ
+Public Game_nMaxIrrev           As Integer  ' ×îáá²»¿ÉÄæ¾ÖÃæĞòºÅ
 ' È«¾Ö±äÁ¿¡ª¡ªÊ±¼ä
 Public Timer_bEnabled           As Boolean  ' ÊÇ·ñ¿ªÊ¼¼ÆÊ±
 Public Timer_dfLastTime         As Double   ' µ±Ç°Ê±¼ä(Ã¿Ìì00:00¹ıÈ¥µÄÃëÊı)
@@ -260,14 +260,14 @@ Public Engine_szUser            As String   ' ÒıÇæÓÃ»§
 Public Engine_posBoard  As PositionStruct   ' ÒıÇæË¼¿¼µÄ¾ÖÃæ
 Public Engine_bRed              As Boolean  ' ÒıÇæÖ´ºì
 Public Engine_bBlack            As Boolean  ' ÒıÇæÖ´ºÚ
-Public Engine_bPonder           As Boolean  ' ºóÌ¨Ë¼¿¼
+Public Engine_bPonder           As Boolean  ' ááÌ¨Ë¼¿¼
 Public Engine_bAnalyze          As Boolean  ' ÒıÇæ·ÖÎö
-Public Engine_mvPonder          As Long     ' ºóÌ¨Ë¼¿¼²Â²â×Å·¨
-Public Engine_mvPonderFinished  As Long     ' ºóÌ¨Ë¼¿¼Íê³ÉµÄ×Å·¨
-Public Engine_mvPonderFinishedPonder As Long ' ºóÌ¨Ë¼¿¼Íê³ÉµÄ²Â²â×Å·¨
-Public Engine_bPonderFinishedResign As Long ' ºóÌ¨Ë¼¿¼Íê³ÉºóÈÏÊä
-Public Engine_bPonderFinishedDraw As Long   ' ºóÌ¨Ë¼¿¼Íê³ÉºóÌáºÍ»ò½ÓÊÜÌáºÍ
-Public Engine_szPonderStr       As String   ' ºóÌ¨Ë¼¿¼Ö¸Áî´®
+Public Engine_mvPonder          As Long     ' ááÌ¨Ë¼¿¼²Â²â×Å·¨
+Public Engine_mvPonderFinished  As Long     ' ááÌ¨Ë¼¿¼Íê³ÉµÄ×Å·¨
+Public Engine_mvPonderFinishedPonder As Long ' ááÌ¨Ë¼¿¼Íê³ÉµÄ²Â²â×Å·¨
+Public Engine_bPonderFinishedResign As Long ' ááÌ¨Ë¼¿¼Íê³ÉááÈÏÊä
+Public Engine_bPonderFinishedDraw As Long   ' ááÌ¨Ë¼¿¼Íê³ÉááÌáºÍ»ò½ÓÊÜÌáºÍ
+Public Engine_szPonderStr       As String   ' ááÌ¨Ë¼¿¼Ö¸Áî´®
 Public Engine_bDraw             As Integer  ' ÌáºÍ
 Public Engine_mvBan             As Long     ' ½û×Å
 Public Engine_bSlaveRed         As Boolean  ' ¸±ÒıÇæÖ´ºì
@@ -389,7 +389,7 @@ End If
 
 End Function
 
-' ¶ÁÈëÒ»ĞĞPGNÎÄ¼şµÄÄÚÈİ£¬·µ»ØTrue±íÊ¾Õû¸öÆå¾Ö½áÊø£¬·µ»ØFalse±íÊ¾ºóÃæ»¹ÓĞÄÚÈİ£¬¶ÁÍêºóÊ£ÏÂµÄÄÚÈİ±£´æÔÚszLineStrÖĞ£¬ÒÔºóÈÔ¾ÉĞëÓÃ"ImportLine"È¥¶Á
+' ¶ÁÈëÒ»ĞĞPGNÎÄ¼şµÄÄÚÈİ£¬·µ»ØTrue±íÊ¾Õû¸öÆå¾Ö½áÊø£¬·µ»ØFalse±íÊ¾ááÃæ»¹ÓĞÄÚÈİ£¬¶ÁÍêááÊ£ÏÂµÄÄÚÈİ±£´æÔÚszLineStrÖĞ£¬ÒÔááÈÔ¾ÉĞëÓÃ"ImportLine"È¥¶Á
 Public Function ImportLine(ByRef szLineStr As String, ByRef szRemStr As String, ByRef nRemLevel As Integer) As Boolean
 
 Dim i As Integer, j As Integer, bEndFor As Boolean
@@ -1064,7 +1064,7 @@ App_frmMain.lstMoveText.ListIndex = Game_nCurrMove
 
 End Sub
 
-' ºóÍËÒ»¸ö×Å·¨
+' ááÍËÒ»¸ö×Å·¨
 Public Sub MoveBack()
 
 Dim i As Integer, Status As Long, mv As Long
@@ -1098,7 +1098,7 @@ Game_cntCurr = Game_cntCurr + 1 - Game_sdCurr
 
 End Sub
 
-' Çå³ıºóÃæËùÓĞµÄ×Å·¨
+' Çå³ıááÃæËùÓĞµÄ×Å·¨
 Public Sub MoveCut()
 
 Dim i As Integer
@@ -1143,7 +1143,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
         End If
     End If
     If Game_nCurrMove < Game_nMaxMove Then
-        If MsgBox("±ØĞëÇå³ıÒÔºóËùÓĞµÄ×Å·¨¡£" + vbCrLf + "ÊÇ·ñ¼ÌĞø£¿", vbYesNo + vbQuestion) = vbYes Then
+        If MsgBox("±ØĞëÇå³ıÒÔááËùÓĞµÄ×Å·¨¡£" + vbCrLf + "ÊÇ·ñ¼ÌĞø£¿", vbYesNo + vbQuestion) = vbYes Then
             MoveCut
         Else
             AddMove = False
@@ -2564,7 +2564,7 @@ Gui_szRegTip2 = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¿î×ÔÓÉÈí¼ş£¬Äú¿ÉÒÔÍ¨¹ıÒÔÏÂÍøÕ¾¶ÔÏóÆåÎ×Ê¦×ÊÖú28Ôª£
         "¡¡¡¡(1) Ìì¿ÕÈí¼şÕ¾£ºhttp://shareware.skycn.com/soft/6752.htm" + vbCrLf + _
         "¡¡¡¡(2) ÖĞ¹ú¹²ÏíÈí¼ş×¢²áÖĞĞÄ£ºhttp://www.softreg.com.cn/Detail.aspx?id=/B20ED382-82CB-48F5-9334-2D5FF85E482D/" + vbCrLf + _
         "¡¡¡¡ÒÔÉÏÍøÕ¾Ö§³ÖÍøÉÏÒøĞĞ¡¢ÊÖ»úÒøĞĞµÈ¶àÖÖ°²È«¸¶·Ñ·½Ê½£¬·Ç³£±ã½İ¡£" + vbCrLf + _
-        "¡¡¡¡×¢²áºóÄú½«»ñµÃÒ»¸öºÍÄúµÄÓÃ»§Ãû¶ÔÓ¦µÄ×¢²áÂë£¬¸Ã×¢²áÂëÔÚÏóÆåÎ×Ê¦µÄÒÔºó°æ±¾ÖĞÈÔÈ»ÓĞĞ§¡£" + vbCrLf + _
+        "¡¡¡¡×¢²áááÄú½«»ñµÃÒ»¸öºÍÄúµÄÓÃ»§Ãû¶ÔÓ¦µÄ×¢²áÂë£¬¸Ã×¢²áÂëÔÚÏóÆåÎ×Ê¦µÄÒÔáá°æ±¾ÖĞÈÔÈ»ÓĞĞ§¡£" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó½«°ÑÄúµÄ×ÊÖú¿îÓÃÓÚ¸ÃÈí¼şµÄÍÆ¹ã¹¤×÷ÖĞ£¬ÈÃÏóÆåÎ×Ê¦Îª¸ü¶àµÄÆåÃÔÅóÓÑ·şÎñ¡£"
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇÒ»¿î¹¦ÄÜÇ¿´óµÄµçÄÔ¶ÔŞÄºÍÆåÆ×±à¼­Èí¼ş£¬¾ßÓĞ·½±ãµÄÈË»ú¶ÔÕ½¡¢ÆåÆ×¼ÇÂ¼¡¢ĞÀÉÍ¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ÍêÈ«¿ÉÒÔÂú×ã¸÷²ã´ÎÏóÆå°®ºÃÕß¡¢ÆåÊÖ¡¢²ÃÅĞÔ±¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷ÖÖĞèÒª¡£"
 Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¶à¸öÍ¨ÓÃÏóÆåÒıÇæ£¬ËûÃÇ´ó¶¼¾ßÓĞ×¨ÒµÆåÊÖµÄË®Æ½£¬ÊÇÏóÆå°®ºÃÕßºÍ×¨ÒµÆåÊÖÌá¸ßÆåÒÕµÄÁ¼Ê¦ÒæÓÑ¡£" + vbCrLf + _
@@ -2574,7 +2574,7 @@ Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£ÍûÈÃµçÄÔ×ßÆå£¬¶ø½ö½öÊÇÏëÖªµÀµçÄÔÔÚÏëĞ©Ê²Ã´£¬»òÕßÈ
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼Ï¸½Ú´°¿ÚÖĞµÄË¼¿¼Â·Ïß¸´ÖÆÏÂÀ´£¬Õ³Ìùµ½Ö÷´°¿ÚÖĞ£¬¶ÔË¼¿¼ÏßÂ·½øĞĞÍÆÑİ¡£"
 Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×Ê¦Ç¿´óµÄÆåÆ×¡¢ÆåÍ¼µ¼ÈëºÍµ¼³ö¹¦ÄÜÎªÄúÔÚÍøÂçÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
 Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ıÍøÂç·¢ĞĞ£¬×îĞÂµÄ°æ±¾¿ÉÒÔ´Ó¡¶ÏóÆå°Ù¿ÆÈ«Êé¡·ÍøÕ¾»ñµÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
-Gui_szTips(7) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓĞÊıÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼ş(ºó×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü15ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(7) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓĞÊıÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼ş(áá×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü15ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
         "¡¡¡¡Í¬Ê±Ò²»¶Ó­Äú½«×Ô¼ºÖÆ×÷µÄÎÄ¼şÉÏ´«¸øÎÒÃÇ¡£"
 Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓĞÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼şµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÁªÏµ¡£"
@@ -2585,11 +2585,11 @@ Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¡°ÏóÆåÑİ²¥ÊÒ¡±µÄÆåÆ×¡£Ö»ÒªË«»÷XQFÎÄ¼ş(Í¼±êÊÇ¡°
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬ÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿ò(¡°Ñ¡Ïî¡±Ñ¡µ¥ÖĞµÄ¡°ÉèÖÃ¡±Ò»Ïî)£¬°Ñ¡°½çÃæ¡±Éè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ğ§¹û¡£"
 Gui_szTips(14) = "¡¡¡¡ÎªÁË·½±ãĞ£Ô°Íø×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷ÆåÆ×¡¢ÆåÍ¼ºÍ·¢±íÎÄÕÂ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎÄ±¾ÆåÆ×ºÍ²ÊÉ«ASCII×Ö·ûÆåÍ¼µÄÊä³ö¹¦ÄÜ¡£Í¨¹ı¼ôÌù°å£¬Äú¿ÉÒÔÔÚBBSÉÏ·¢±í¾«ÃÀÆ¯ÁÁµÄÆåÆ×ºÍÆåÍ¼ÁË¡£"
 Gui_szTips(15) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ·¢ANSI¶¯Ì¬ÆåÆ×Ê±£¬µã»÷¡°¸´ÖÆANSI¶¯Ì¬ÆåÆ×¡±°´Å¥£¬ÔÙÏòTelnetÖĞÕ³ÌùÄÚÈİ£¬±£´æÌù×Ó¼´¿É¡£" + vbCrLf + _
-        "¡¡¡¡²é¿´º¬ÓĞANSI¶¯Ì¬ÆåÆ×µÄÌù×ÓÊ±£¬¿É¸ù¾İÌù×ÓÉÏµÄÌáÊ¾£¬°´¡°¡ı¡±¼üä¯ÀÀÆåÆ×£¬µ±ÆåÆ×ÍêÈ«ÏÔÊ¾³öÀ´ºó£¬°´Ò»´Î¡°¡ı¡±¼üÆå¾Ö¾Í×ßÒ»²½£¬ºÜ·½±ãÓÃ»§¹ÛÉÍÆå¾Ö¡£"
+        "¡¡¡¡²é¿´º¬ÓĞANSI¶¯Ì¬ÆåÆ×µÄÌù×ÓÊ±£¬¿É¸ù¾İÌù×ÓÉÏµÄÌáÊ¾£¬°´¡°¡ı¡±¼üä¯ÀÀÆåÆ×£¬µ±ÆåÆ×ÍêÈ«ÏÔÊ¾³öÀ´áá£¬°´Ò»´Î¡°¡ı¡±¼üÆå¾Ö¾Í×ßÒ»²½£¬ºÜ·½±ãÓÃ»§¹ÛÉÍÆå¾Ö¡£"
 Gui_szTips(16) = "¡¡¡¡Ê¹ÓÃ¡°¸´ÖÆÎÄ±¾ÆåÅÌ¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÌù³ö¾²Ì¬µÄANSI´úÂë£¬¸÷´ó¸ßĞ£µÄBBSÕ¾¶¼Ö§³ÖANSI´úÂë¡£ºì×ÓÓÃºì×Ö±íÊ¾£¬ºÚ×ÓÓÃÂÌ×Ö±íÊ¾£¬Ò»Ä¿ÁËÈ»¡£" + vbCrLf + _
         "¡¡¡¡Èç¹ûBBS²»Ö§³ÖANSI´úÂë£¬»òÕßÖ»ÊÇÎªÁËÌùµ½ÆÕÍ¨ÎÄ±¾ÉÏ£¬¿ÉÒÔÔÚÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖĞ°Ñ¡°Ê¹ÓÃANSIÎÄ±¾ÆåÅÌ¡±µÄ¹³È¥µô¡£Çø±ğºì×ÓºÍºÚ×ÓµÄ·½·¨ÊÇ£ººì×ÓµÄÁ½±ß´øÔ²À¨ºÅ£¬ºÚ×ÓµÄÁ½±ß´ø·½À¨ºÅ¡£"
 Gui_szTips(17) = "¡¡¡¡Èç¹û¸ÃBBSÏµÍ³ÊÇĞèÒª°´Á½´ÎEscape¼ü²ÅÄÜ¼üÈëÒ»¸öEscape×Ö·û(Ò²¿ÉÄÜÈ¡¾öÓÚTelnetÖÕ¶ËµÄÉèÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖĞ°Ñ¡°ÓÃÁ½¸öEscÊäÈëANSI¡±¹³ÉÏ¡£"
-Gui_szTips(18) = "¡¡¡¡ÎÄ±¾ÆåÅÌµÄ×îºóÒ»ĞĞÖîÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆåÅÌ±àÂë(³ÆÎªFEN´®)£¬Èç¹ûÄúÔÚÍøÂçÂÛÌ³ÉÏ¿´µ½ÁËÕâÑùµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±Ñ¡µ¥µÄ¡°µ¼ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆåÅÌµ¼Èëµ½ÏóÆåÎ×Ê¦ÖĞ£¬ÃâÈ¥ÁË°Ú·ÅÆå×ÓÎ»ÖÃµÄ·³ÄÕ¡£"
+Gui_szTips(18) = "¡¡¡¡ÎÄ±¾ÆåÅÌµÄ×îááÒ»ĞĞÖîÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆåÅÌ±àÂë(³ÆÎªFEN´®)£¬Èç¹ûÄúÔÚÍøÂçÂÛÌ³ÉÏ¿´µ½ÁËÕâÑùµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±Ñ¡µ¥µÄ¡°µ¼ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆåÅÌµ¼Èëµ½ÏóÆåÎ×Ê¦ÖĞ£¬ÃâÈ¥ÁË°Ú·ÅÆå×ÓÎ»ÖÃµÄ·³ÄÕ¡£"
 Gui_szTips(19) = "¡¡¡¡µã»÷¡°²é¿´PGNÎÄ¼ş¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖĞÌá¹©ÁË·½±ã¡£"
 Gui_szTips(20) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É¶ÁÈëÁªÖÚ¡¢ŞÄÌì¡¢ÖĞ¹úÓÎÏ·ÖĞĞÄµÈÖĞ¹úÏóÆåµÄ´æÅÌÎÄ¼şºÍ´ó²¿·ÖµÄÎÄ±¾ÆåÆ×ÎÄ¼ş£¬°ÑÕâĞ©º¬ÓĞ×Å·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÌù°å£¬µã»÷¡°´Ó¼ôÌù°åµ¼Èë¡±°´Å¥£¬ÕâĞ©×Å·¨¾Í»áÂ¼ÖÆµ½ÏóÆåÎ×Ê¦ÖĞ¡£"
 Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É½«ÆåÆ×µ¼³öÎªÖ§³ÖJava¶¯Ì¬ÆåÅÌµÄHTMLÎÄ±¾£¬ÌØ±ğÊÊºÏ½«ÆåÆ×ÔÚÍøÉÏ·¢±í¡£"
@@ -2597,7 +2597,7 @@ Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×Ê¦Ìá¹©µÄÆåÆ×¼üÅÌÊäÈë·¨ÎªÏ²»¶¼üÅÌÂ¼ÈëÆåÆ×µÄÆåÓÑÌá¹©ÁË
 Gui_szTips(23) = "¡¡¡¡ÔÚĞÀÉÍÆåÆ×µÄ¹ı³ÌÖĞ£¬µã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¾Í¿É´Ó¸Ã²½×Ô¶¯ÑİÊ¾£¬ÑİÊ¾µÄÊ±¼ä¼ä¸ô¿ÉÒÔ×ÔÓÉµ÷Õû¡£ÔÙ´Îµã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¿ÉÍ£Ö¹×Ô¶¯ÑİÊ¾¡£"
 Gui_szTips(24) = "¡¡¡¡µã»÷¡°²é¿´Í¼Æ¬ÆåÅÌ¡±°´Å¥£¬°ÑÍ¼Æ¬ÆåÅÌ¸´ÖÆ²¢Õ³Ìùµ½WordµÈÎÄ×Ö´¦ÀíÈí¼şÖĞ£¬¿ÉÒÔÉú³ÉÆ¯ÁÁµÄÏóÆå¸å¼ş¡£"
 Gui_szTips(25) = "¡¡¡¡ÔÚĞÀÉÍÆåÆ×µÄ¹ı³ÌÖĞ£¬¿ÉÒÔÊ¹ÓÃÆåÅÌµ¹ÖÃºÍ×óÓÒµ÷»»¹¦ÄÜÀ´´Ó²»Í¬µÄ½Ç¶ÈĞÀÉÍÆå¾Ö¡£ÆäÖĞ×óÓÒµ÷»»¹¦ÄÜ»¹¿ÉÒÔÒ»´Î½«ÀàËÆÓÚ¡°ÅÚ°ËÆ½Îå¡±¿ª¾ÖÕâÑùµÄÆåÆ××Ô¶¯×ª»»³É´ó¼ÒÏ°¹ßµÄ¡°ÅÚ¶şÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
-Gui_szTips(26) = "¡¡¡¡Èç¹ûÔÚĞÀÉÍÆåÆ×Ê±Óöµ½¸´ÔÓµÄ¾ÖÃæ£¬¿ÉÒÔµã»÷¡°·ÖÎö¾ÖÃæ¡±°´Å¥£¬½«µ±Ç°Æå¾ÖĞÂ¿ªÉèÒ»¸öÏóÆåÎ×Ê¦µÄ´°¿Ú£¬×ÔÓÉÍÆÑİºóĞøµÄ±ä»¯¡£"
+Gui_szTips(26) = "¡¡¡¡Èç¹ûÔÚĞÀÉÍÆåÆ×Ê±Óöµ½¸´ÔÓµÄ¾ÖÃæ£¬¿ÉÒÔµã»÷¡°·ÖÎö¾ÖÃæ¡±°´Å¥£¬½«µ±Ç°Æå¾ÖĞÂ¿ªÉèÒ»¸öÏóÆåÎ×Ê¦µÄ´°¿Ú£¬×ÔÓÉÍÆÑİááĞøµÄ±ä»¯¡£"
 Gui_szTips(27) = "¡¡¡¡ÔÚÁ½¸öÏóÆåÎ×Ê¦´°¿ÚÖĞ£¬Áé»îÔËÓÃ¡°²é¿´PGNÎÄ¼ş¡±ºÍ¡°´Ó¼ôÌù°åµ¼Èë¡±¹¦ÄÜ£¬¿É½«ÍÆÑİÆåÅÌÖĞµÄÆåÆ×¼ÇÂ¼µ¼Èëµ½µ±Ç°Æå¾ÖÖĞ¡£"
 Gui_szTips(28) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¸ö×ÔÓÉÈí¼ş£¬Èç¹ûÄú¾õµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØ½«±¾Èí¼şÉÏÔØµ½ÈÎÒ»¸ö¹²ÏíÈí¼şÏÂÔØÕ¾µã¡£" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ê¦µÄÔ´³ÌĞò·¢²¼ÔÚ http://sourceforge.net/projects/xqwizard/ Õâ¸öÒ³ÃæÉÏ£¬Äú¿ÉÒÔ¸ù¾İ×Ô¼ºµÄĞèÒª¶ÔÔ´³ÌĞò½øĞĞĞŞ¸Ä£¬²¢ÒÀÕÕGPLĞ­Òé·¢²¼ÄúĞŞ¸Ä¹ıµÄÔ´³ÌĞò¡£"

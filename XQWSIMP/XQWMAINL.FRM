@@ -90,7 +90,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button11 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "MoveEnd"
-            Object.ToolTipText     =   "最后局面"
+            Object.ToolTipText     =   "最後局面"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button12 {0713F354-850A-101B-AFC0-4210102A8DA7} 
@@ -183,7 +183,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EnginePonder"
-            Object.ToolTipText     =   "后台思考"
+            Object.ToolTipText     =   "後台思考"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
@@ -1261,7 +1261,6 @@ Begin VB.Form frmMainLarge
    Begin VB.Image imgBoard 
       Height          =   8655
       Left            =   120
-      Picture         =   "XQWMAINL.frx":0AC2
       Stretch         =   -1  'True
       Top             =   480
       Width           =   7815
@@ -1314,7 +1313,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "下一着(&F)"
       End
       Begin VB.Menu mnMoveEnd 
-         Caption         =   "最后局面(&E)"
+         Caption         =   "最後局面(&E)"
       End
       Begin VB.Menu mnMoveSep2 
          Caption         =   "-"
@@ -1416,7 +1415,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "引擎执黑(&B)"
       End
       Begin VB.Menu mnEnginePonder 
-         Caption         =   "后台思考(&P)"
+         Caption         =   "後台思考(&P)"
       End
       Begin VB.Menu mnEngineAnalyze 
          Caption         =   "引擎分析(&A)"
@@ -1697,7 +1696,7 @@ End Sub
 Private Sub mnMoveDel_Click()
 
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox("必须清除以后所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) <> vbYes Then
+    If MsgBox("必须清除以後所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) <> vbYes Then
         Exit Sub
     End If
 End If
@@ -2101,7 +2100,7 @@ Else
         MsgBox "放弃提和。", vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox "请走一着棋，然后等待引擎接受或拒绝提和。" + vbCrLf + "如果引擎拒绝提和，则不会理睬，而是继续走棋。", vbInformation
+        MsgBox "请走一着棋，然後等待引擎接受或拒绝提和。" + vbCrLf + "如果引擎拒绝提和，则不会理睬，而是继续走棋。", vbInformation
         mnEngineDraw.Checked = True
     End If
 End If

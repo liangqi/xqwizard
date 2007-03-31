@@ -75,7 +75,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part XII
+' REGCODE.FRM - Source Code for XiangQi Wizard, Part IX
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' Designed by Morning Yellow, Version: 3.02, Last Modified: Oct. 2006

@@ -228,7 +228,7 @@ Begin VB.Form frmEngineSet
          Width           =   375
       End
       Begin VB.Label lblThreads 
-         Caption         =   "絬祘计"
+         Caption         =   "璽颤"
          Height          =   255
          Left            =   120
          TabIndex        =   17
@@ -339,6 +339,7 @@ Attribute VB_Exposed = False
 ' You should have received a copy of the GNU General Public License
 ' along with this program; if not, write to the Free Software
 ' Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
 Option Explicit
 
 Private EngineSet_bRunning As Boolean, EngineSet_bCommandSent As Boolean
@@ -356,12 +357,15 @@ cmbHash.AddItem "512MB", 6
 cmbHash.AddItem "1024MB", 7
 cmbThreads.Clear
 cmbThreads.AddItem "自動", 0
-cmbThreads.AddItem "1線程", 1
-cmbThreads.AddItem "2線程", 2
-cmbThreads.AddItem "4線程", 3
-cmbThreads.AddItem "8線程", 4
-cmbThreads.AddItem "16線程", 5
-cmbThreads.AddItem "32線程", 6
+cmbThreads.AddItem "低負荷", 1
+cmbThreads.AddItem "中負荷", 2
+cmbThreads.AddItem "高負荷", 3
+cmbThreads.AddItem "滿負荷", 4
+cmbThreads.AddItem "2線程", 5
+cmbThreads.AddItem "4線程", 6
+cmbThreads.AddItem "8線程", 7
+cmbThreads.AddItem "16線程", 8
+cmbThreads.AddItem "32線程", 9
 cmbDrawMoves.Clear
 cmbDrawMoves.AddItem "50回合", 0
 cmbDrawMoves.AddItem "60回合", 1
