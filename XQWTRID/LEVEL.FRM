@@ -8,7 +8,7 @@ Begin VB.Form frmLevelSet
    ClientTop       =   330
    ClientWidth     =   3240
    BeginProperty Font 
-      Name            =   "²Ó©úÊ^"
+      Name            =   "²Ó©úÅé"
       Size            =   9
       Charset         =   136
       Weight          =   400

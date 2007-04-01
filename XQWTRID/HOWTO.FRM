@@ -7,7 +7,7 @@ Begin VB.Form frmHowTo
    ClientTop       =   330
    ClientWidth     =   4680
    BeginProperty Font 
-      Name            =   "細明体"
+      Name            =   "細明體"
       Size            =   9
       Charset         =   136
       Weight          =   400
@@ -81,9 +81,9 @@ Begin VB.Form frmHowTo
    End
    Begin VB.TextBox txtTips 
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "細明體"
          Size            =   12
-         Charset         =   0
+         Charset         =   136
          Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
@@ -108,9 +108,9 @@ Begin VB.Form frmHowTo
    Begin VB.Label lblDoYouKnow 
       Caption         =   "你知道嗎？"
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "細明體"
          Size            =   15
-         Charset         =   0
+         Charset         =   136
          Weight          =   700
          Underline       =   0   'False
          Italic          =   0   'False

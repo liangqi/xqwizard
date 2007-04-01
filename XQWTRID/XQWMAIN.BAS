@@ -2573,7 +2573,7 @@ Gui_szRegTip2 = "¡¡¡¡ÏóÆåÎ×ŽŸÊÇ¿î×ÔÓÉÜ›¼þ£¬Äú¿ÉÒÔÍ¨ß^ÒÔÏÂÍøÕ¾Œ¦ÏóÆåÎ×ŽŸÙYÖú28Ôª£
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×ŽŸÊÇÒ»¿î¹¦ÄÜŠ´óµÄëŠÄXŒ¦ÞÄºÍÆå×V¾ŽÝ‹Ü›¼þ£¬¾ßÓÐ·½±ãµÄÈË»úŒ¦‘ð¡¢Æå×VÓ›ä›¡¢ÐÀÙp¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ÍêÈ«¿ÉÒÔM×ã¸÷ŒÓ´ÎÏóÆåÛºÃÕß¡¢ÆåÊÖ¡¢²ÃÅÐ†T¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷ÖÖÐèÒª¡£"
 Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¶à‚€Í¨ÓÃÏóÆåÒýÇæ£¬Ëû‚ƒ´ó¶¼¾ßÓÐŒ£˜IÆåÊÖµÄË®Æ½£¬ÊÇÏóÆåÛºÃÕßºÍŒ£˜IÆåÊÖÌá¸ßÆåË‡µÄÁ¼ŽŸÒæÓÑ¡£" + vbCrLf + _
         "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŽŸ×ÔŽ§µÄÒýÇæ ElephantEye µÄ±í¬F²»MÒâ£¬¿ÉÒÔµÇä› http://www.elephantbase.net/league.htm £¬ÏÂÝdµ½ÆäËû¸÷¾ßÌØÉ«µÄÒýÇæ¡£"
-Gui_szTips(3) = "¡¡¡¡üc“ô¡°ÒýÇæˆÌ¼t¡±»ò¡°ÒýÇæˆÌºÚ¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË»ú´ó‘ð£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎåÖÖ²»Í¬µÄëy¶È½oÓÃ‘ôÌåòž¡£"
+Gui_szTips(3) = "¡¡¡¡üc“ô¡°ÒýÇæˆÌ¼t¡±»ò¡°ÒýÇæˆÌºÚ¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË»ú´ó‘ð£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎåÖÖ²»Í¬µÄëy¶È½oÓÃ‘ôówòž¡£"
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£Íû×ŒëŠÄX×ßÆå£¬¶øƒHƒHÊÇÏëÖªµÀëŠÄXÔÚÏëÐ©Ê²Ã´£¬»òÕß×ŒëŠÄX½oÄãÒ»Ð©†¢°l£¬¿ÉÒÔüc“ô¡°ÒýÇæ·ÖÎö¡±°´âo£¬´òé_Ë¼¿¼¼š¹´°¿Ú¡£" + vbCrLf + _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼¼š¹´°¿ÚÖÐµÄË¼¿¼Â·¾€¸´ÖÆÏÂí£¬Õ³ÙNµ½Ö÷´°¿ÚÖÐ£¬Œ¦Ë¼¿¼¾€Â·ßMÐÐÍÆÑÝ¡£"
 Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×ŽŸŠ´óµÄÆå×V¡¢ÆåˆDŒ§ÈëºÍŒ§³ö¹¦ÄÜžéÄúÔÚÍø½jÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
@@ -2784,12 +2784,12 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "ÏóÆåÎ×ŽŸ " + sz + " ÒÑ½›°l²¼£¬ÐèÒªÏÂÝd×îÐÂ°æ±¾†á£¿", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then

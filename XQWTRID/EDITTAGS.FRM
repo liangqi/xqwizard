@@ -7,7 +7,7 @@ Begin VB.Form frmEditTags
    ClientTop       =   330
    ClientWidth     =   4440
    BeginProperty Font 
-      Name            =   "²Ó©úÊ^"
+      Name            =   "²Ó©úÅé"
       Size            =   9
       Charset         =   136
       Weight          =   400
