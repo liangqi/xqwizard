@@ -2597,7 +2597,11 @@ If Engine_bAnalyze Then
     End If
 Else
     If strpRight.Tabs.Item(2).Selected Then
-        StartAnalyze
+        If Engine_nStatus > IDLE_UNLOAD Then
+            StartAnalyze
+        Else
+            strpRight.Tabs.Item(1).Selected = True
+        End If
     End If
 End If
 
