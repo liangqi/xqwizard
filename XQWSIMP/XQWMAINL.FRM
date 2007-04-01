@@ -1900,7 +1900,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "FEN文件", "FEN", SHOW_SAVE)
+szFileName = FileDialog("导出到FEN文件", "FEN文件", "FEN", , SHOW_SAVE)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen

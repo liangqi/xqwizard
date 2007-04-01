@@ -743,7 +743,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim szFileName As String
-szFileName = FileDialog("保存棋谱文件", "PGN文件", "PGN", SHOW_SAVE)
+szFileName = FileDialog("保存棋谱文件", "PGN文件", "PGN", , SHOW_SAVE)
 If szFileName <> "" Then
     App_szFileName = szFileName
     App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
@@ -2784,12 +2784,12 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then

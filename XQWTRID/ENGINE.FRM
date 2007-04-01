@@ -450,7 +450,7 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", SHOW_SAVE)
+szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", , SHOW_SAVE)
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If

@@ -63,6 +63,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -98,6 +99,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -119,6 +121,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -155,6 +158,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -475,11 +479,13 @@ Begin VB.Form frmMainSmall
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -1930,7 +1936,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "FEN文件", "FEN", SHOW_SAVE)
+szFileName = FileDialog("导出到FEN文件", "FEN文件", "FEN", , SHOW_SAVE)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen

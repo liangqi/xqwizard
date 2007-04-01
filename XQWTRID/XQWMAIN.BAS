@@ -743,7 +743,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim szFileName As String
-szFileName = FileDialog("保存棋譜文件", "PGN文件", "PGN", SHOW_SAVE)
+szFileName = FileDialog("保存棋譜文件", "PGN文件", "PGN", , SHOW_SAVE)
 If szFileName <> "" Then
     App_szFileName = szFileName
     App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
