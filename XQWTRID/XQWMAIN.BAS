@@ -1530,7 +1530,7 @@ End Sub
 ' 生成圖片棋盤
 Public Sub ViewBitmap(Optional ByVal bMono As Boolean = False)
 
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte, lpLineBuff(1 To 108) As Byte
+Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
@@ -1546,8 +1546,10 @@ On Error GoTo 0
 Get #nReadFileNo, , lpBmpHeader
 Put #nWriteFileNo, , lpBmpHeader
 For i = 1 To 234
-    Get #nReadFileNo, , lpLineBuff
-    Put #nWriteFileNo, , lpLineBuff
+    For j = 1 To 9
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
 Next
 Close #nReadFileNo
 For i = 0 To 9
@@ -1585,7 +1587,7 @@ End Sub
 ' 生成印刷質量的圖片棋盤
 Public Sub ViewPrintBitmap()
 
-Dim lpBmpHeader(1 To 54) As Byte, lpReadBuff(1 To 104) As Byte, lpWriteBuff(1 To 102) As Byte, lpLineBuff(1 To 1064) As Byte
+Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To 17) As Byte
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
@@ -1601,8 +1603,10 @@ On Error GoTo 0
 Get #nReadFileNo, , lpBmpHeader
 Put #nWriteFileNo, , lpBmpHeader
 For i = 1 To 394
-    Get #nReadFileNo, , lpLineBuff
-    Put #nWriteFileNo, , lpLineBuff
+    For j = 1 To 9
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
 Next
 Close #nReadFileNo
 For i = 0 To 9
@@ -1614,11 +1618,11 @@ For i = 0 To 9
             On Error GoTo lnErrorOpen
             Open szBmpFile For Binary Access Read As #nReadFileNo
             On Error GoTo 0
-            Seek #nReadFileNo, 55
+            Seek #nReadFileNo, 119
             For k = 0 To 33
                 Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 42560 + k * 1064& + j * 120 + 55
-                For l = 1 To 102
+                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + 119
+                For l = 1 To 17
                     lpWriteBuff(l) = lpReadBuff(l)
                 Next
                 Put #nWriteFileNo, , lpWriteBuff

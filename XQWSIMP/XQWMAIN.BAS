@@ -36,7 +36,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub Call8341 Lib "8341.DLL" Alias "_Call8341@0" ()
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.1"
+Public Const STRING_VERSION     As String = "3.11"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -1530,7 +1530,7 @@ End Sub
 ' 生成图片棋盘
 Public Sub ViewBitmap(Optional ByVal bMono As Boolean = False)
 
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte, lpLineBuff(1 To 108) As Byte
+Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
@@ -1546,8 +1546,10 @@ On Error GoTo 0
 Get #nReadFileNo, , lpBmpHeader
 Put #nWriteFileNo, , lpBmpHeader
 For i = 1 To 234
-    Get #nReadFileNo, , lpLineBuff
-    Put #nWriteFileNo, , lpLineBuff
+    For j = 1 To 9
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
 Next
 Close #nReadFileNo
 For i = 0 To 9
@@ -1585,7 +1587,7 @@ End Sub
 ' 生成印刷质量的图片棋盘
 Public Sub ViewPrintBitmap()
 
-Dim lpBmpHeader(1 To 54) As Byte, lpReadBuff(1 To 104) As Byte, lpWriteBuff(1 To 102) As Byte, lpLineBuff(1 To 1064) As Byte
+Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To 17) As Byte
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
@@ -1601,8 +1603,10 @@ On Error GoTo 0
 Get #nReadFileNo, , lpBmpHeader
 Put #nWriteFileNo, , lpBmpHeader
 For i = 1 To 394
-    Get #nReadFileNo, , lpLineBuff
-    Put #nWriteFileNo, , lpLineBuff
+    For j = 1 To 9
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
 Next
 Close #nReadFileNo
 For i = 0 To 9
@@ -1614,11 +1618,11 @@ For i = 0 To 9
             On Error GoTo lnErrorOpen
             Open szBmpFile For Binary Access Read As #nReadFileNo
             On Error GoTo 0
-            Seek #nReadFileNo, 55
+            Seek #nReadFileNo, 119
             For k = 0 To 33
                 Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 42560 + k * 1064& + j * 120 + 55
-                For l = 1 To 102
+                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + 119
+                For l = 1 To 17
                     lpWriteBuff(l) = lpReadBuff(l)
                 Next
                 Put #nWriteFileNo, , lpWriteBuff
@@ -2780,12 +2784,12 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
+    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
