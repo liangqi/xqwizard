@@ -491,6 +491,41 @@ Begin VB.Form frmMainLarge
          EndProperty
       EndProperty
    End
+   Begin ComctlLib.StatusBar stb 
+      Align           =   2  'Align Bottom
+      Height          =   240
+      Left            =   0
+      TabIndex        =   9
+      Top             =   9240
+      Width           =   12360
+      _ExtentX        =   21802
+      _ExtentY        =   423
+      SimpleText      =   ""
+      _Version        =   327682
+      BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
+         NumPanels       =   4
+         BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   "Curr"
+            Object.Tag             =   ""
+         EndProperty
+         BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   "Nps"
+            Object.Tag             =   ""
+         EndProperty
+         BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            Object.Width           =   10160
+            MinWidth        =   10160
+            Key             =   "Pv"
+            Object.Tag             =   ""
+         EndProperty
+         BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            Object.Width           =   7620
+            MinWidth        =   7620
+            Key             =   "Msg"
+            Object.Tag             =   ""
+         EndProperty
+      EndProperty
+   End
    Begin VB.Image imgCoord 
       Enabled         =   0   'False
       Height          =   8655
