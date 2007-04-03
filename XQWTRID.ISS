@@ -35,9 +35,11 @@ Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.BIN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PHPCHATC.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
@@ -634,7 +636,8 @@ Name: "{group}\象棋巫師的网站"; Filename: "{app}\ELEBASE.URL"
 Name: "{group}\獲取UCCI引擎"; Filename: "{app}\LEAGUE.URL"
 Name: "{group}\缺陷報告"; Filename: "{app}\MANTIS.URL"
 Name: "{group}\在線咨詢"; Filename: "{app}\PHPCHATC.EXE"
-Name: "{group}\ElephantEye使用說明"; Filename: "{app}\ELEEYE.TXT"
+Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
+Name: "{group}\ElephantEye 開局庫制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 
