@@ -36,7 +36,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub Call8341 Lib "8341.DLL" Alias "_Call8341@0" ()
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.1"
+Public Const STRING_VERSION     As String = "3.11"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數

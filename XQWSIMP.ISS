@@ -630,15 +630,9 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\PHPChat\Client"; Value
 
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
-Name: "{group}\购买和注册"; Filename: "{app}\HELP\PURCHASE.HTM"
-Name: "{group}\帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
-Name: "{group}\技术支持"; Filename: "{app}\HELP\SUPPORT.HTM"
-Name: "{group}\象棋百科全书"; Filename: "{app}\ELEBASE.URL"
-Name: "{group}\获取UCCI引擎"; Filename: "{app}\LEAGUE.URL"
-Name: "{group}\缺陷报告"; Filename: "{app}\MANTIS.URL"
 Name: "{group}\在线咨询"; Filename: "{app}\PHPCHATC.EXE"
-Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\ElephantEye 开局库制作工具"; Filename: "{app}\MAKEBOOK.EXE"
+Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 
