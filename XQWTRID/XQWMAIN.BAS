@@ -36,7 +36,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub Call8341 Lib "8341.DLL" Alias "_Call8341@0" ()
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.11"
+Public Const STRING_VERSION     As String = "3.12"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數
@@ -2793,9 +2793,9 @@ If Options_bCheckUpdate Then
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
-                ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
-                ShellExecuteA 0, vbNullString, "http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
             End If
         Else
             Gui_szUpgrade = sz

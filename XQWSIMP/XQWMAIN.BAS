@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.1, Last Modified: Mar. 2007
+' Designed by Morning Yellow, Version: 3.12, Last Modified: Apr. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub Call8341 Lib "8341.DLL" Alias "_Call8341@0" ()
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.11"
+Public Const STRING_VERSION     As String = "3.12"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -2793,9 +2793,9 @@ If Options_bCheckUpdate Then
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
-                ShellExecuteA 0, vbNullString, "http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
-                ShellExecuteA 0, vbNullString, "http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe", vbNullString, vbNullString, SW_SHOWNORMAL
+                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
             End If
         Else
             Gui_szUpgrade = sz
