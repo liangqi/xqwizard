@@ -1,4 +1,4 @@
-象棋巫師 3.0 產品介紹
+象棋巫師 3.1 產品介紹
 
 ★領先的設計理念
 ※通用對弈引擎接口——仿照WinBoard和ChessBase的電腦博弈設計理念，使用UCCI(中國象棋通用引擎協議)，可加載20余個UCCI引擎。
@@ -19,7 +19,27 @@
 ※處理器：486以上，內存：16MB，硬盤：16MB
 ※操作系統：32位Windows平台(Windows 95即可)
 
+《象棋巫師》的安裝包建議到以下站點下載：
+(1) 天空軟件站
+http://www.skycn.net/soft/24665.html (簡体中文版)
+http://www.skycn.net/soft/35392.html (繁体中文版)
+(2) 華軍軟件園
+http://www.onlinedown.net/soft/38287.htm (簡体中文版)
+http://www.onlinedown.net/soft/47666.htm (繁体中文版)
+(3) eNet硅谷動力下載站
+http://download.enet.com.cn/html/080582005072501.html (簡体中文版)
+http://download.enet.com.cn/html/080582006030701.html (繁体中文版)
+(4) SourceForge
+http://sourceforge.net/projects/xqwizard/ (簡体、繁体及其免安裝版)
+(5) 象棋百科全書
+http://www.elephantbase.net/resource.htm (簡体、繁体及其免安裝版)
+
 《象棋巫師》是自由軟件，你可以遵照自由軟件基金會出版的GNU通用公共許可証條款來修改和重新發布這一程序。源程序已發布在 SourceForge 网站上，下載頁面是：
 http://sourceforge.net/projects/xqwizard/
+《象棋巫師》的版本改進，實時同步地發布在 SourceForge 的SVN站點上，獲取地址是：
+https://svn.sourceforge.net/svnroot/xqwizard/
+你可以使用 TortoiseSVN 等SVN客戶端程序獲取到最新的(跟開發者完全同步的)代碼，TortoiseSVN 的使用介紹和下載地址是：
+http://sourceforge.net/projects/tortoisesvn/
+
 為防止他人在《象棋巫師》的代碼中加入病毒和木馬，請确認《象棋巫師》下載包和執行程序含有來自《象棋百科全書》网站的簽名，該簽名的信任鏈根証書為：
 http://www.elephantbase.net/ca.cer (安裝根証書時，請确認SHA1碼指紋：08DCE562 81962C93 9D2F8DD5 5217D3B1 69380BA0)

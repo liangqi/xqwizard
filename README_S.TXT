@@ -1,4 +1,4 @@
-象棋巫师 3.0 产品介绍
+象棋巫师 3.1 产品介绍
 
 ★领先的设计理念
 ※通用对弈引擎接口——仿照WinBoard和ChessBase的电脑博弈设计理念，使用UCCI(中国象棋通用引擎协议)，可加载20余个UCCI引擎。
@@ -19,17 +19,24 @@
 ※处理器：486以上，内存：16MB，硬盘：16MB
 ※操作系统：32位Windows平台(Windows 95即可)
 
+《象棋巫师》的安装包建议到以下站点下载：
+(1) 天空软件站
+http://www.skycn.net/soft/24665.html (简体中文版)
+http://www.skycn.net/soft/35392.html (繁体中文版)
+(2) 华军软件园
+http://www.onlinedown.net/soft/38287.htm (简体中文版)
+http://www.onlinedown.net/soft/47666.htm (繁体中文版)
+(3) eNet硅谷动力下载站
+http://download.enet.com.cn/html/080582005072501.html (简体中文版)
+http://download.enet.com.cn/html/080582006030701.html (繁体中文版)
+(4) SourceForge
+http://sourceforge.net/projects/xqwizard/ (简体、繁体及其免安装版)
+(5) 象棋百科全书
+http://www.elephantbase.net/resource.htm (简体、繁体及其免安装版)
+
 《象棋巫师》是自由软件，你可以遵照自由软件基金会出版的GNU通用公共许可证条款来修改和重新发布这一程序。源程序已发布在 SourceForge 网站上，下载页面是：
 http://sourceforge.net/projects/xqwizard/
-《象棋巫师》安装包在 SourceForge 上最快的下载链接是：
-http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
-http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_simp.exe (简体中文版)
-http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
-http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_trid.exe (繁体中文版)
-《象棋巫师》源程序包在 SourceForge 上最快的下载链接是：
-http://superb-east.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_source.tar.gz
-http://superb-west.dl.sourceforge.net/sourceforge/xqwizard/xqwizard_source.tar.gz
-对于《象棋巫师》的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
+《象棋巫师》的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
 https://svn.sourceforge.net/svnroot/xqwizard/
 你可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 http://sourceforge.net/projects/tortoisesvn/
