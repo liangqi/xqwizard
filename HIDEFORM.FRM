@@ -31,7 +31,7 @@ Begin VB.Form frmHide
       _ExtentX        =   1005
       _ExtentY        =   1005
       _Version        =   393216
-      RequestTimeout  =   10
+      RequestTimeout  =   5
    End
    Begin MCI.MMControl mci 
       Height          =   330

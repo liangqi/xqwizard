@@ -39,7 +39,6 @@ Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.BIN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "PHPCHATC.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
@@ -623,12 +622,9 @@ Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\ELEEYE.BIN"
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\PHPChat\Client"; ValueType: string; ValueName: "ChatRoom"; ValueData: "象棋巫師在線咨詢"
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\PHPChat\Client"; ValueType: string; ValueName: "MyName"; ValueData: "象棋巫師用戶"
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
-Name: "{group}\在線咨詢"; Filename: "{app}\PHPCHATC.EXE"
 Name: "{group}\ElephantEye 開局庫制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"

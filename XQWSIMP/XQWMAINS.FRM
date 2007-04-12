@@ -1584,9 +1584,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpMantis 
          Caption         =   "缺陷报告(&B)"
       End
-      Begin VB.Menu mnHelpOnline 
-         Caption         =   "在线咨询(&O)"
-      End
       Begin VB.Menu mnHelpSep2 
          Caption         =   "-"
       End
@@ -2412,14 +2409,6 @@ End Sub
 Private Sub mnHelpMantis_Click()
 
 ShellExecuteA 0, vbNullString, "http://mantis.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
-
-End Sub
-
-Private Sub mnHelpOnline_Click()
-
-On Error Resume Next
-Shell App_szPath + "PHPCHATC.EXE", vbNormalFocus
-On Error GoTo 0
 
 End Sub
 

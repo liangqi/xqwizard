@@ -22,9 +22,6 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——Windows参数常量
-Public Const WM_MOVE            As Long = 3
-Public Const GWL_WNDPROC        As Long = -4
-Public Const SW_HIDE            As Long = 0
 Public Const SW_SHOWNORMAL      As Long = 1
 Public Const SND_ASYNC          As Long = 1
 Public Const SND_NOWAIT         As Long = 8192
@@ -515,8 +512,9 @@ Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
 
 
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    ShellExecuteA 0, vbNullString, App_szPath + "XQF2PGN.EXE", Chr(34) + App_szFileName + Chr(34) + " " + _
-            Chr(34) + App_szPath + "XQF2PGN.PGN" + Chr(34), vbNullString, SW_HIDE
+    On Error GoTo lnErrorOpen
+    Shell App_szPath + "XQF2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "XQF2PGN.PGN" + Chr(34), vbHide
+    On Error GoTo 0
     Sleep 1000
     App_szFileName = App_szPath + "XQF2PGN.PGN"
 End If
@@ -2782,12 +2780,12 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
