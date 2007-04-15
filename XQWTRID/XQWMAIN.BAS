@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.12"
+Public Const STRING_VERSION     As String = "3.13"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數
@@ -2622,7 +2622,7 @@ Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1"))
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
 Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
-Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "1")) <> 0)
+Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
 Options_bShowCoord = (Str2Int(GetSetting("XQWizard", "Options", "ShowCoord", "0")) <> 0)
