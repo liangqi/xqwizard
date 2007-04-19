@@ -48,7 +48,7 @@ Public Declare Function EccoIndex Lib "ECCO.DLL" Alias "_EccoIndex@4" (ByVal szF
 Public Const MOVE_ILLEGAL           As Long = 256
 Public Const MOVE_INCHECK           As Long = 128
 Public Const MOVE_CONSECUTIVE       As Long = 64
-Public Const MOVE_PERPETUAL_LOSE    As Long = 32
+Public Const MOVE_PERPETUAL_LOSS    As Long = 32
 Public Const MOVE_PERPETUAL_WIN     As Long = 16
 Public Const MOVE_PERPETUAL         As Long = 8
 Public Const MOVE_MATE              As Long = 4

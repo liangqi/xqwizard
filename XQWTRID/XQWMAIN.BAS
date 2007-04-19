@@ -1223,7 +1223,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
             If (nMoveStatus And MOVE_PERPETUAL_WIN) <> 0 Then
                 Game_nResult = Game_nResult + 1 - Game_sdCurr * 2
             End If
-            If (nMoveStatus And MOVE_PERPETUAL_LOSE) <> 0 Then
+            If (nMoveStatus And MOVE_PERPETUAL_LOSS) <> 0 Then
                 Game_nResult = Game_nResult - 1 + Game_sdCurr * 2
             End If
             If bEcho Then
