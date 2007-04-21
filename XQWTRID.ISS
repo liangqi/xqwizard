@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.12 (繁體中文版)
+AppVerName=象棋巫師 3.13 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -577,24 +577,24 @@ Source: "jsboart\br.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
 Source: "jsboart\bc.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
 Source: "jsboart\bp.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
 ; 幫助文件
-Source: "HELT\CONTENTS.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\OUTLINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\RUNTIME.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\PGNFILE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\MOVES.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\POSITION.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\WIZARD.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\OPENING.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\ENGINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\GUI.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\SUPPORT.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\PURCHASE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\FREEREG.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\LOGO.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\XQWIZARD.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\RBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\BBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELT\BGROUND.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\CONTENTS.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\OUTLINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\RUNTIME.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\PGNFILE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\MOVES.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\POSITION.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\WIZARD.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\OPENING.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\ENGINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\GUI.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\SUPPORT.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\PURCHASE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\FREEREG.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\LOGO.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\XQWIZARD.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\RBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\BBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\BGROUND.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
