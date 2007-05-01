@@ -1784,7 +1784,7 @@ Private Sub mnMoveImport_Click()
 
 Dim nFileNo As Integer, szFileName As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
-szFileName = FileDialog("从文本文件导入", "文本文件", "TXT")
+szFileName = FileDialog("从文本文件导入", "文本文件", , "TXT")
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -1923,7 +1923,7 @@ If App_bUpdated Then
         Exit Sub
     End If
 End If
-szFileName = FileDialog("从FEN文件导入", "FEN文件", "FEN")
+szFileName = FileDialog("从FEN文件导入", "FEN文件", , "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -1933,7 +1933,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "FEN文件", "FEN", , SHOW_SAVE)
+szFileName = FileDialog("导出到FEN文件", "FEN文件", SHOW_SAVE, "FEN")
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -2027,7 +2027,7 @@ End Sub
 Private Sub mnEngineLoad_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("加载引擎", "引擎文件", "EXE")
+szFileName = FileDialog("加载引擎", "引擎文件", , "EXE")
 If szFileName <> "" Then
     Engine_szFile = szFileName
     OpenEngine LOAD_WITH_INFO

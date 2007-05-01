@@ -450,7 +450,7 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", , SHOW_SAVE)
+szFileName = FileDialog("選擇日志文件", "HTM文件", SHOW_SAVE, "HTM")
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If
@@ -492,7 +492,7 @@ End Sub
 Private Sub btnSelectFile_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇開局庫", "開局庫文件", "DAT")
+szFileName = FileDialog("選擇開局庫", "開局庫文件", , "DAT")
 If szFileName <> "" Then
     txtBookFile.Text = szFileName
 End If

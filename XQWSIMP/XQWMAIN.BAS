@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.12, Last Modified: Apr. 2007
+' Designed by Morning Yellow, Version: 3.14, Last Modified: Mar. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.13"
+Public Const STRING_VERSION     As String = "3.14"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -337,10 +337,10 @@ NumberText = IIf(sd = 0, LTrim(Str(cnt)) + ".", Space(Len(Str(cnt))))
 End Function
 
 ' 打开文件对话框
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt1 As String, Optional ByVal szExt2 As String = "", Optional ByVal bShowSave As Boolean = False) As String
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, Optional ByVal bShowSave As Boolean = False, Optional ByVal szExt1 As String = "TXT", Optional ByVal szExt2 As String = "", Optional ByVal szExt3 As String = "") As String
 
 Dim szExt As String
-szExt = "*." + szExt1 + IIf(szExt2 = "", "", ";*." + szExt2)
+szExt = "*." + szExt1 + IIf(szExt2 = "", "", ";*." + szExt2) + IIf(szExt3 = "", "", ";*." + szExt3)
 frmHide.comdlg.FileName = ""
 frmHide.comdlg.DialogTitle = szTitle
 frmHide.comdlg.DefaultExt = "." + szExt1
@@ -517,6 +517,12 @@ If UCase(Right(App_szFileName, 4)) = ".XQF" Then
     On Error GoTo 0
     Sleep 1000
     App_szFileName = App_szPath + "XQF2PGN.PGN"
+ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
+    On Error GoTo lnErrorOpen
+    Shell App_szPath + "MXQ2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "MXQ2PGN.PGN" + Chr(34), vbHide
+    On Error GoTo 0
+    Sleep 1000
+    App_szFileName = App_szPath + "MXQ2PGN.PGN"
 End If
 
 RestartGame
@@ -704,7 +710,7 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = FileDialog("打开棋谱文件", "棋谱文件", "PGN", "XQF")
+szFileName = FileDialog("打开棋谱文件", "棋谱文件", , "PGN", "XQF", "MXQ")
 If szFileName <> "" Then
     App_szFileName = szFileName
     ReadFile
@@ -740,7 +746,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim szFileName As String
-szFileName = FileDialog("保存棋谱文件", "PGN文件", "PGN", , SHOW_SAVE)
+szFileName = FileDialog("保存棋谱文件", "PGN文件", SHOW_SAVE, "PGN")
 If szFileName <> "" Then
     App_szFileName = szFileName
     App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
@@ -2263,7 +2269,7 @@ Dim lpStr As Long, szReceived As String
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
 End If
-szEngineFile = FileDialog("加载副引擎", "引擎文件", "EXE")
+szEngineFile = FileDialog("加载副引擎", "引擎文件", , "EXE")
 If szEngineFile = "" Then
     MsgBox "没有加载引擎！", vbExclamation
 Else
@@ -2780,12 +2786,12 @@ End If
 If Options_bCheckUpdate Then
     sz = STRING_VERSION
     On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
+    sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
     On Error GoTo 0
     If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then

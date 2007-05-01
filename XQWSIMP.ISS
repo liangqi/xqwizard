@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.13 (简体中文版)
+AppVerName=象棋巫师 3.14 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -39,6 +39,7 @@ Source: "ELEEYE.BIN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
@@ -620,6 +621,12 @@ Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{
 Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
+Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\ELEEYE.BIN"
 
