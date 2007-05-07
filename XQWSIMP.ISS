@@ -35,7 +35,7 @@ Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ELEEYE.BIN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
@@ -628,7 +628,7 @@ Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\ELEEYE.BIN"
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"
 
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"

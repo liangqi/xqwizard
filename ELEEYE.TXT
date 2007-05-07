@@ -1,6 +1,6 @@
-中国象棋对弈程序ElephantEye(象眼)　版本：2.0
+中国象棋对弈程序ElephantEye(象眼)　版本：2.03
 
-黄晨 *　2007年4月
+黄晨 *　2007年5月
 ( * 联系地址：复旦大学化学系表面化学实验室，eMail：webmaster@elephantbase.net)
 
 一、简介
@@ -31,7 +31,7 @@
 
 　　ElephantEye 作为UCCI引擎，有若干可以设置的参数(可以直接在《象棋巫师》中设置)。
 (1) 开局库：
-　　默认的开局库为 ElephantEye 程序(ELEEYE.EXE)当前目录下的 ELEEYE.BIN，含有10,000个对称局面的着法。
+　　默认的开局库为 ElephantEye 程序(ELEEYE.EXE)当前目录下的 BOOK.DAT，含有10,000个对称局面的着法。
 (2) 思考时间：
 　　限定思考深度通常不是很好的选择，建议给定限时让程序自动分配时间。而在解杀局或分析局面时，则可让程序无限制思考，并可随时中止思考。
 (3) 置换表大小：
@@ -128,7 +128,7 @@
 　　ElephantEye 的源程序包除了 ElephantEye 本身的源程序外，还包括以下几个附加模块：
 　　(1) 通用低级接口(utility)：提供了汇编指令、位棋盘、数值计算、Visual Basic 下的原子语句等功能；
 　　(2) 中国象棋规则模块(cchess)：为其他软件使用 ElephantEye 代码提供了接口；
-　　(3) 开局库制作模块(MAKEBOOK)：制作开局库ELEEYE.BIN的代码；
+　　(3) 开局库制作模块(MAKEBOOK)：制作开局库BOOK.DAT的代码；
 　　(4) 浅红象棋适配器(UCCI2QH)：为浅红象棋调用UCCI引擎提供了接口；
 　　(5) UCCI引擎联赛模拟器(UCCILEAG)：为UCCI引擎测试和比赛提供了自动批量对局的平台；
 　　(6) 浅红象棋引擎支持UCCI的适配器(QH2UCCI)：为“梦入神蛋”浅红象棋加入UCCI引擎测试提供了接口；
