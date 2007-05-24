@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.14 (简体中文版)
+AppVerName=象棋巫师 3.15 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -38,6 +38,8 @@ Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
@@ -632,6 +634,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
+Name: "{group}\象棋演播室和弈天棋谱转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"

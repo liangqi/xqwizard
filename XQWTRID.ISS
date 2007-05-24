@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.14 (繁體中文版)
+AppVerName=象棋巫師 3.15 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -34,10 +34,12 @@ Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
@@ -632,6 +634,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
+Name: "{group}\象棋演播室和弈天棋譜轉換工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 開局庫制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"
