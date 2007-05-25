@@ -1419,6 +1419,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnEngineSep3 
          Caption         =   "-"
       End
+      Begin VB.Menu mnEngineRetract 
+         Caption         =   "悔棋(&T)"
+      End
       Begin VB.Menu mnEngineBan 
          Caption         =   "设为禁着(&N)"
       End
@@ -1609,7 +1612,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 2.3, Last Modified: Oct. 2006
+' Designed by Morning Yellow, Version: 3.15, Last Modified: May 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1784,7 +1787,7 @@ Private Sub mnMoveImport_Click()
 
 Dim nFileNo As Integer, szFileName As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
-szFileName = FileDialog("从文本文件导入", "文本文件", , "TXT")
+szFileName = FileDialog("从文本文件导入", "文本文件", "TXT")
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -1923,7 +1926,7 @@ If App_bUpdated Then
         Exit Sub
     End If
 End If
-szFileName = FileDialog("从FEN文件导入", "FEN文件", , "FEN")
+szFileName = FileDialog("从FEN文件导入", "局面文件", "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -1933,7 +1936,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "FEN文件", SHOW_SAVE, "FEN")
+szFileName = FileDialog("导出到FEN文件", "局面文件", "FEN", SHOW_SAVE)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -2027,7 +2030,7 @@ End Sub
 Private Sub mnEngineLoad_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("加载引擎", "引擎文件", , "EXE")
+szFileName = FileDialog("加载引擎", "引擎文件", "EXE")
 If szFileName <> "" Then
     Engine_szFile = szFileName
     OpenEngine LOAD_WITH_INFO
@@ -2106,6 +2109,26 @@ Else
     tlb.Buttons("EngineAnalyze").Value = tbrPressed
 End If
     
+End Sub
+
+Private Sub mnEngineRetract_Click()
+
+If Engine_nStatus > IDLE_UNLOAD Then
+    If Engine_nStatus > BUSY_WAIT Then
+        Engine_nStatus = BUSY_WAIT
+        StopEngine
+    End If
+    Engine_nStatus = IDLE_READY
+End If
+MoveBack
+If Game_nCurrMove > 0 Then
+    MoveBack
+End If
+MoveCut
+MoveFlush
+FileUpdated
+AnalyzeEcco
+
 End Sub
 
 Private Sub mnEngineBan_Click()

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.14, Last Modified: Mar. 2007
+' Designed by Morning Yellow, Version: 3.15, Last Modified: May 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.14"
+Public Const STRING_VERSION     As String = "3.15"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數
@@ -337,14 +337,12 @@ NumberText = IIf(sd = 0, LTrim(Str(cnt)) + ".", Space(Len(Str(cnt))))
 End Function
 
 ' 打開文件對話框
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, Optional ByVal bShowSave As Boolean = False, Optional ByVal szExt1 As String = "TXT", Optional ByVal szExt2 As String = "", Optional ByVal szExt3 As String = "") As String
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal bShowSave As Boolean = False) As String
 
-Dim szExt As String
-szExt = "*." + szExt1 + IIf(szExt2 = "", "", ";*." + szExt2) + IIf(szExt3 = "", "", ";*." + szExt3)
 frmHide.comdlg.FileName = ""
 frmHide.comdlg.DialogTitle = szTitle
-frmHide.comdlg.DefaultExt = "." + szExt1
-frmHide.comdlg.Filter = szFileType + "(" + szExt + ")|" + szExt + "|所有文件 (*.*)|*.*"
+frmHide.comdlg.DefaultExt = "." + szExt
+frmHide.comdlg.Filter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
 frmHide.comdlg.Flags = IIf(bShowSave, cdlOFNOverwritePrompt, 0) + cdlOFNHideReadOnly
 If bShowSave Then
     frmHide.comdlg.ShowSave
@@ -710,9 +708,14 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = FileDialog("打開棋譜文件", "棋譜文件", , "PGN", "XQF", "MXQ")
-If szFileName <> "" Then
-    App_szFileName = szFileName
+frmHide.comdlg.FileName = ""
+frmHide.comdlg.DialogTitle = "打開棋譜文件"
+frmHide.comdlg.DefaultExt = ".PGN"
+frmHide.comdlg.Filter = "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|所有文件 (*.*)|*.*"
+frmHide.comdlg.Flags = cdlOFNHideReadOnly
+frmHide.comdlg.ShowOpen
+If frmHide.comdlg.FileName <> "" Then
+    App_szFileName = frmHide.comdlg.FileName
     ReadFile
     LabelFlush
 End If
@@ -746,7 +749,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim szFileName As String
-szFileName = FileDialog("保存棋譜文件", "PGN文件", SHOW_SAVE, "PGN")
+szFileName = FileDialog("保存棋譜文件", "可移植棋譜", "PGN", SHOW_SAVE)
 If szFileName <> "" Then
     App_szFileName = szFileName
     App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
@@ -1046,6 +1049,7 @@ App_frmMain.mnMoveForward.Enabled = bNotEnd
 App_frmMain.tlb.Buttons("MoveForward").Enabled = bNotEnd
 App_frmMain.mnMoveEnd.Enabled = bNotEnd
 App_frmMain.tlb.Buttons("MoveEnd").Enabled = bNotEnd
+App_frmMain.mnEngineRetract.Enabled = bNotBegin And Not bNotEnd
 App_frmMain.mnEngineBan.Enabled = bNotBegin And Not bNotEnd
 If Not bNotEnd Then
     App_bPlay = False
@@ -2100,6 +2104,7 @@ End If
 App_frmMain.mnEngineAnalyze.Enabled = bLoaded
 App_frmMain.tlb.Buttons("EngineAnalyze").Enabled = bLoaded
 App_frmMain.mnEngineStop.Enabled = False
+App_frmMain.mnEngineRetract.Enabled = bLoaded
 App_frmMain.mnEngineBan.Enabled = bLoaded
 App_frmMain.mnEngineDraw.Enabled = bLoaded
 App_frmMain.mnEngineDraw.Checked = False
@@ -2269,7 +2274,7 @@ Dim lpStr As Long, szReceived As String
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
 End If
-szEngineFile = FileDialog("加載副引擎", "引擎文件", , "EXE")
+szEngineFile = FileDialog("加載副引擎", "引擎文件", "EXE")
 If szEngineFile = "" Then
     MsgBox "沒有加載引擎！", vbExclamation
 Else

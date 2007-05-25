@@ -323,7 +323,7 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 2.1, Last Modified: Mar. 2006
+' Designed by Morning Yellow, Version: 3.15, Last Modified: May 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -450,7 +450,7 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇日志文件", "HTM文件", SHOW_SAVE, "HTM")
+szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", SHOW_SAVE)
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If
@@ -492,7 +492,7 @@ End Sub
 Private Sub btnSelectFile_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇開局庫", "開局庫文件", , "DAT")
+szFileName = FileDialog("選擇開局庫", "開局庫文件", "DAT")
 If szFileName <> "" Then
     txtBookFile.Text = szFileName
 End If
