@@ -24,6 +24,7 @@ Form=XQWTRID\OPTIONS.FRM
 Form=XQWTRID\REGCODE.FRM
 Form=XQWTRID\HOWTO.FRM
 Form=HIDEFORM.FRM
+ResFile32="XQWIZARD.RES"
 IconForm="frmMainSmall"
 Startup="Sub Main"
 HelpFile=""
