@@ -27,7 +27,7 @@ http://www.skycn.net/soft/35392.html (繁体中文版)
 http://www.onlinedown.net/soft/38287.htm (简体中文版)
 http://www.onlinedown.net/soft/47666.htm (繁体中文版)
 (3) eNet硅谷动力下载站
-http://download.enet.com.cn/html/080582005072501.html (简体中文版)
+http://download.enet.com.cn/html/080582007060201.html (简体中文版)
 http://download.enet.com.cn/html/080582006030701.html (繁体中文版)
 (4) SourceForge
 http://sourceforge.net/projects/xqwizard/ (简体、繁体及其免安装版)
