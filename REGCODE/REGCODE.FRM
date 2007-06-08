@@ -15,7 +15,6 @@ Begin VB.Form frmRegister
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "REGCODE.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   1650
@@ -27,21 +26,21 @@ Begin VB.Form frmRegister
       Caption         =   "注册"
       Height          =   375
       Left            =   600
-      TabIndex        =   5
+      TabIndex        =   4
       Top             =   1200
       Width           =   1215
    End
    Begin VB.TextBox txtRegCode 
       Height          =   285
       Left            =   720
-      TabIndex        =   4
+      TabIndex        =   3
       Top             =   840
       Width           =   1575
    End
    Begin VB.TextBox txtUser 
       Height          =   285
       Left            =   720
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   480
       Width           =   1575
    End
@@ -49,7 +48,7 @@ Begin VB.Form frmRegister
       Caption         =   "您还没有注册"
       Height          =   255
       Left            =   120
-      TabIndex        =   0
+      TabIndex        =   5
       Top             =   120
       Width           =   1215
    End
@@ -57,7 +56,7 @@ Begin VB.Form frmRegister
       Caption         =   "注册码"
       Height          =   255
       Left            =   120
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   840
       Width           =   615
    End
@@ -65,7 +64,7 @@ Begin VB.Form frmRegister
       Caption         =   "用户名"
       Height          =   255
       Left            =   120
-      TabIndex        =   1
+      TabIndex        =   0
       Top             =   480
       Width           =   615
    End
@@ -78,8 +77,8 @@ Attribute VB_Exposed = False
 ' REGCODE.FRM - Source Code for XiangQi Wizard, Part IX
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.02, Last Modified: Oct. 2006
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.15, Last Modified: Jun 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -97,28 +96,9 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Sub Form_Load()
+Private Sub txtUser_Change()
 
-txtUser.Text = Gui_szUser
-txtRegCode.Text = Gui_szRegCode
-If App_bRegistered Then
-    lblWelcome.Caption = "您是注册用户"
-    btnRegister.Caption = "再次注册"
-End If
-
-End Sub
-
-Private Sub Form_UnLoad(nCancel As Integer)
-
-Gui_szUser = Replace(txtUser.Text, vbCrLf, "")
-Gui_szRegCode = Replace(txtRegCode.Text, vbCrLf, "")
-App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
-If App_bRegistered Then
-    MsgBox "恭喜你注册成功！", vbInformation
-Else
-    App_bRegistered = False
-    ShellExecuteA 0, vbNullString, App_szPath + "HELP\PURCHASE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
-End If
+txtRegCode.Text = Crc32Hex(Replace(txtUser.Text, vbCrLf, ""))
 
 End Sub
 
@@ -127,3 +107,4 @@ Private Sub btnRegister_Click()
 Unload Me
 
 End Sub
+

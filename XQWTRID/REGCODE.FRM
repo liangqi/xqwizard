@@ -97,8 +97,6 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-' Private Gui_szUser As String, Gui_szRegCode As String, App_bRegistered As Boolean ' For RegCode
-
 Private Sub Form_Load()
 
 txtUser.Text = Gui_szUser
@@ -119,15 +117,8 @@ If App_bRegistered Then
     MsgBox "¹§Ï²Äã×¢ƒÔ³É¹¦£¡", vbInformation
 Else
     App_bRegistered = False
-    ShellExecuteA 0, vbNullString, App_szPath + "HELP\PURCHASE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL ' Not for RegCode
+    ShellExecuteA 0, vbNullString, App_szPath + "HELP\PURCHASE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
 End If
-Unload Me
-
-End Sub
-
-Private Sub txtUser_Change()
-
-' txtRegCode.Text = Crc32Hex(Replace(txtUser.Text, vbCrLf, "")) ' For RegCode
 
 End Sub
 

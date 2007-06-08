@@ -1,7 +1,7 @@
 Type=Exe
-Form=XQWSIMP\REGCODE.FRM
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
-Module=mdlCrc32; ..\ELEEYE\utility\CRC32.BAS
+Form=REGCODE.FRM
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\STDOLE2.TLB#OLE Automation
+Module=mdlCrc32; ..\CRC32.BAS
 IconForm="frmRegister"
 Startup="frmRegister"
 HelpFile=""
