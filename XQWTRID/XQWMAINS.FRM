@@ -2449,7 +2449,7 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon "品味象棋巫師　感受智慧魔力" + vbCrLf + vbCrLf + ProductName + " " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
+MsgBoxWithIcon ProductName + " " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
 
 End Sub
 

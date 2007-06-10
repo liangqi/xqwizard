@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.15 (繁體中文版)
+AppVerName=象棋巫師 3.2 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -634,6 +634,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
+Name: "{group}\象棋巫師幫助主題"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\象棋演播室和弈天棋譜轉換工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 開局庫制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
