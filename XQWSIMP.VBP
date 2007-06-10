@@ -25,6 +25,7 @@ Form=XQWSIMP\REGCODE.FRM
 Form=XQWSIMP\HOWTO.FRM
 Form=HIDEFORM.FRM
 ResFile32="XQWIZARD.RES"
+Form=STARTUP.FRM
 IconForm="frmMainSmall"
 Startup="Sub Main"
 HelpFile=""

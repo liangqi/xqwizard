@@ -2738,6 +2738,8 @@ Public Sub Main()
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
 Dim i As Integer, sz As String, szWhatsNew As String
 
+frmStartUp.Show
+frmStartUp.Refresh
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit True
@@ -2856,6 +2858,8 @@ Else
         LabelFlush
     End If
 End If
+Unload frmStartUp
+
 nEventIndex = EVENT_TIMER
 Do While App_bRunning
     ' 始終把接收引擎的事件放在第一位(高优先級)
