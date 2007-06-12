@@ -2738,8 +2738,10 @@ Public Sub Main()
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
 Dim i As Integer, sz As String, szWhatsNew As String
 
+' 弹出启动画面
 frmStartUp.Show
 frmStartUp.Refresh
+' 初始化，可能有等待，启动画面保持
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit True
@@ -2784,40 +2786,9 @@ Else
     BoardSettingSmall Options_nBoardS
     PiecesSettingSmall Options_nPiecesS
 End If
-App_frmMain.Show
-App_frmMain.txtMove.SetFocus
 MusicSetting Options_nMusic
 Timer_bEnabled = False
-
-App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
-If Gui_bShowHowTo Or Not App_bRegistered Then
-    frmHowTo.Show vbModal, App_frmMain
-End If
-If Options_bCheckUpdate And Gui_szDate <> Date Then
-    sz = ""
-    On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
-    On Error GoTo 0
-    If sz <> "" Then ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-        Gui_szDate = Date
-    End If
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
-        szWhatsNew = ""
-        On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
-        On Error GoTo 0
-        If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.5 Then
-                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
-            Else
-                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
-            End If
-        Else
-            Gui_szUpgrade = sz
-        End If
-    End If
-End If
-
+' 加载引擎，可能有等待，启动画面保持
 Engine_nStatus = IDLE_UNLOAD
 If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
@@ -2827,7 +2798,6 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     On Error GoTo 0
 End If
 OpenEngine
-App_bRunning = True
 If Command = "" Then
     App_szFileName = ""
     RestartGame
@@ -2858,9 +2828,42 @@ Else
         LabelFlush
     End If
 End If
+' 关闭启动画面，弹出日积月累
+App_frmMain.Show
+App_frmMain.txtMove.SetFocus
 Unload frmStartUp
-
+App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
+If Gui_bShowHowTo Or Not App_bRegistered Then
+    frmHowTo.Show vbModal, App_frmMain
+End If
+' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
+If Options_bCheckUpdate And Gui_szDate <> Date Then
+    sz = ""
+    On Error Resume Next
+    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
+    On Error GoTo 0
+    If sz <> "" Then ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+        Gui_szDate = Date
+    End If
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
+        szWhatsNew = ""
+        On Error Resume Next
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
+        On Error GoTo 0
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+            If Rnd < 0.5 Then
+                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
+            Else
+                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+            End If
+        Else
+            Gui_szUpgrade = sz
+        End If
+    End If
+End If
+' 进入用户状态，接收事件
 nEventIndex = EVENT_TIMER
+App_bRunning = True
 Do While App_bRunning
     ' 始終把接收引擎的事件放在第一位(高优先級)
     If Not ReceiveEngine Then
