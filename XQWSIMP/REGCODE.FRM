@@ -113,10 +113,10 @@ Private Sub Form_UnLoad(nCancel As Integer)
 Gui_szUser = Replace(txtUser.Text, vbCrLf, "")
 Gui_szRegCode = Replace(txtRegCode.Text, vbCrLf, "")
 App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
+SetTitle
 If App_bRegistered Then
     MsgBox "¹§Ï²Äã×¢²á³É¹¦£¡", vbInformation
 Else
-    App_bRegistered = False
     ShellExecuteA 0, vbNullString, App_szPath + "HELP\PURCHASE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
 End If
 

@@ -153,7 +153,6 @@ Option Explicit
 Private Sub Form_Load()
 
 chkShowHowTo.Enabled = App_bRegistered
-btnRegister.Enabled = Not App_bRegistered
 btnPurchase.Enabled = Not App_bRegistered
 btnFreeReg.Enabled = Not App_bRegistered
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)

@@ -45,6 +45,7 @@ Public Const MOVE_BY_ENGINE     As Boolean = True ' AddMove
 Public Const VIEW_BMP_MONO      As Boolean = True ' ViewBitmap
 Public Const LOAD_WITH_INFO     As Boolean = True ' OpenEngine
 Public Const SLAVE_ENGINE       As Boolean = True ' SetEngine / SendEngine / ReceiveEngineLog
+Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
 ' 全局常量——引擎狀態
 Public Const IDLE_UNLOAD        As Integer = 0 ' 沒有加載引擎
 Public Const IDLE_READY         As Integer = 1 ' 引擎待命(如果輪到電腦走棋，那么引擎立即工作)
@@ -274,13 +275,6 @@ Public Engine_dwTimeRatioSlave  As Long     ' 副引擎時間比例
 Public Engine_szSlaveName       As String   ' 副引擎名稱
 
 ' 以下是實用函數例程
-
-' 顯示軟件名稱
-Public Function ProductName() As String
-
-ProductName = "象棋巫師" + IIf(App_bRegistered, "", " (未注冊版)")
-
-End Function
 
 ' 把字符轉換成數字，顯示棋譜坐標時用
 Public Function Byte2Digit(ByVal szChar As String) As Integer
@@ -542,7 +536,7 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
         If Not (bCchess Or App_szFileName = "") Then
             MsgBox App_szFileName + " 可能不是中國象棋的PGN文件。", vbExclamation
             App_szFileName = ""
-            App_frmMain.Caption = ProductName
+            SetTitle
         End If
         If ImportLine(szLineStr, szRemStr, nRemLevel) Then
             Exit Do
@@ -753,7 +747,7 @@ Dim szFileName As String
 szFileName = FileDialog("保存棋譜文件", "可移植棋譜", "PGN", SHOW_SAVE)
 If szFileName <> "" Then
     App_szFileName = szFileName
-    App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + ProductName
+    SetTitle
     WriteFile
     SaveFileAs = True
 Else
@@ -930,7 +924,7 @@ If Engine_nStatus > IDLE_UNLOAD Then
 End If
 Game_szIrrevFen(0) = MkBStr(CchessStartFen) + " - - 0 1"
 CchessFen2Board Game_posIrrev(0), Game_szIrrevFen(0)
-App_frmMain.Caption = IIf(App_szFileName = "", ProductName, Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - " + ProductName)
+SetTitle
 App_frmMain.mnFileSave.Enabled = False
 App_frmMain.tlb.Buttons("FileSave").Enabled = False
 If Not bKeepLabel Then
@@ -2731,12 +2725,58 @@ End Sub
 
 ' 以上是參數設置例程
 
+' 顯示軟件名稱
+Public Sub SetTitle()
+
+App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + _
+        "象棋巫師" + IIf(App_bRegistered, "", " (未注冊版)")
+
+End Sub
+
+' 检查更新
+Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
+    
+Dim sz As String, szWhatsNew As String
+sz = ""
+On Error Resume Next
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
+On Error GoTo 0
+If sz = "" Then ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    If bManual Then
+        MsgBox "無法訪問 www.elephantbase.net，請稍后再試。", vbExclamation
+    End If
+Else
+    Gui_szDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgrade) + 0.005) Then
+        szWhatsNew = ""
+        On Error Resume Next
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
+        On Error GoTo 0
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+            If Rnd < 0.5 Then
+                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
+            Else
+                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+            End If
+        Else
+            Gui_szUpgrade = sz
+        End If
+    Else
+        If bManual Then
+            MsgBox "您的“象棋巫師”已經是最新版本了。", vbInformation
+        End If
+    End If
+
+End If
+
+End Sub
+
 ' 以下是主函數例程
 
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim i As Integer, sz As String, szWhatsNew As String
+Dim i As Integer, sz As String
 
 ' 弹出启动画面
 frmStartUp.Show
@@ -2788,6 +2828,7 @@ Else
 End If
 MusicSetting Options_nMusic
 Timer_bEnabled = False
+App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
 ' 加载引擎，可能有等待，启动画面保持
 Engine_nStatus = IDLE_UNLOAD
 If Engine_bEngineLog And Engine_szLogFile <> "" Then
@@ -2832,34 +2873,12 @@ End If
 App_frmMain.Show
 App_frmMain.txtMove.SetFocus
 Unload frmStartUp
-App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
 If Gui_bShowHowTo Or Not App_bRegistered Then
     frmHowTo.Show vbModal, App_frmMain
 End If
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
 If Options_bCheckUpdate And Gui_szDate <> Date Then
-    sz = ""
-    On Error Resume Next
-    sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
-    On Error GoTo 0
-    If sz <> "" Then ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-        Gui_szDate = Date
-    End If
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgrade) + 0.005 Then
-        szWhatsNew = ""
-        On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
-        On Error GoTo 0
-        If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.5 Then
-                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
-            Else
-                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
-            End If
-        Else
-            Gui_szUpgrade = sz
-        End If
-    End If
+    CheckUpdate
 End If
 ' 进入用户状态，接收事件
 nEventIndex = EVENT_TIMER

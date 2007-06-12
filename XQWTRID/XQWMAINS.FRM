@@ -63,6 +63,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -98,6 +99,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -119,6 +121,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -155,6 +158,7 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -475,11 +479,13 @@ Begin VB.Form frmMainSmall
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -2449,7 +2455,7 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon ProductName + " " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
+MsgBoxWithIcon "象棋巫師 " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
 
 End Sub
 

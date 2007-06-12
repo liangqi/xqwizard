@@ -81,7 +81,7 @@ Begin VB.Form frmHowTo
    End
    Begin VB.TextBox txtTips 
       BeginProperty Font 
-         Name            =   "²Ó©úÅé"
+         Name            =   "¼šÃ÷ów"
          Size            =   12
          Charset         =   136
          Weight          =   400
@@ -108,7 +108,7 @@ Begin VB.Form frmHowTo
    Begin VB.Label lblDoYouKnow 
       Caption         =   "§Aª¾¹D¶Ü¡H"
       BeginProperty Font 
-         Name            =   "²Ó©úÅé"
+         Name            =   "¼šÃ÷ów"
          Size            =   15
          Charset         =   136
          Weight          =   700
@@ -153,7 +153,6 @@ Option Explicit
 Private Sub Form_Load()
 
 chkShowHowTo.Enabled = App_bRegistered
-btnRegister.Enabled = Not App_bRegistered
 btnPurchase.Enabled = Not App_bRegistered
 btnFreeReg.Enabled = Not App_bRegistered
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)

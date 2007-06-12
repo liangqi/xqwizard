@@ -2337,7 +2337,7 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon ProductName + " " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
+MsgBoxWithIcon "象棋巫師 " + STRING_VERSION + vbCrLf + STRING_COPYRIGHT + vbCrLf + vbCrLf + "本產品使用權屬于: " + Gui_szUser, "關于象棋巫師"
 
 End Sub
 
