@@ -1587,6 +1587,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpMantis 
          Caption         =   "缺陷報告(&B)"
       End
+      Begin VB.Menu mnHelpUpdate 
+         Caption         =   "檢查最新版本(&P)"
+      End
       Begin VB.Menu mnHelpSep2 
          Caption         =   "-"
       End
@@ -2432,6 +2435,12 @@ End Sub
 Private Sub mnHelpMantis_Click()
 
 ShellExecuteA 0, vbNullString, "http://mantis.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnHelpUpdate_Click()
+
+CheckUpdate MANUAL_UPDATE
 
 End Sub
 
