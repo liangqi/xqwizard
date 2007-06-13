@@ -35,6 +35,7 @@ Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "EVALUATE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
