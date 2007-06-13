@@ -221,19 +221,20 @@ public class JavaXQ extends Applet {
 
 	/** ÏÔÊ¾Æå×Ó */
 	private void drawPiece(Graphics g, char c, int i, int j) {
+		int ii = i;
+		int jj = j;
 		if (isRedAtBottom) {
-			j = 9 - j;
+			jj = 9 - jj;
 		} else {
-			i = 8 - i;
+			ii = 8 - ii;
 		}
-		int ii = ((X0 + CX * i) - CX / 2) + 1;
-		int jj = ((Y0 + CY * j) - CY / 2) + 1;
+		ii = ((X0 + CX * ii) - CX / 2) + 1;
+		jj = ((Y0 + CY * jj) - CY / 2) + 1;
 		boolean bBlack = Character.isLowerCase(c);
 		g.setColor(bBlack ? Color.blue : Color.red);
 		g.fillOval(ii, jj, CX - 2, CY - 2);
 		g.setColor(Color.white);
-		c = Character.toUpperCase(c);
-		switch (c) {
+		switch (Character.toUpperCase(c)) {
 		case 'K':
 			if (bBlack) {
 				drawKingBlack(ii, jj, g);
