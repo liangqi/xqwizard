@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.2"
+Public Const STRING_VERSION     As String = "3.21"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
 ' 全局常量——可选参数
@@ -90,8 +90,9 @@ Public Const BOARD_S_XQSTUDIO   As Integer = 9
 Public Const BOARD_S_MOVESKY    As Integer = 10
 Public Const BOARD_S_MRSJ       As Integer = 11
 Public Const BOARD_S_ZMBL       As Integer = 12
-Public Const BOARD_S_SIMPLE     As Integer = 13
-Public Const BOARD_S_MAX        As Integer = 14
+Public Const BOARD_S_NEUCHESS   As Integer = 13
+Public Const BOARD_S_SIMPLE     As Integer = 14
+Public Const BOARD_S_MAX        As Integer = 15
 ' 全局常量——棋子(小)设置选项
 Public Const PIECES_S_NORMAL    As Integer = 0
 Public Const PIECES_S_WOOD      As Integer = 1
@@ -2425,7 +2426,7 @@ Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 On Error Resume Next
 frmMainSmall.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
         Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + ".GIF")
+        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
 frmHide.imgBoard.Picture = frmMainSmall.imgBoard.Picture
 On Error GoTo 0
 frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
@@ -2441,6 +2442,7 @@ frmMainSmall.mnOptionsBoardXQStudio.Checked = (nBoardIndex = BOARD_S_XQSTUDIO)
 frmMainSmall.mnOptionsBoardMoveSky.Checked = (nBoardIndex = BOARD_S_MOVESKY)
 frmMainSmall.mnOptionsBoardMRSJ.Checked = (nBoardIndex = BOARD_S_MRSJ)
 frmMainSmall.mnOptionsBoardZMBL.Checked = (nBoardIndex = BOARD_S_ZMBL)
+frmMainSmall.mnOptionsBoardNeuChess.Checked = (nBoardIndex = BOARD_S_NEUCHESS)
 frmMainSmall.mnOptionsBoardSimple.Checked = (nBoardIndex = BOARD_S_SIMPLE)
 Options_nBoardS = nBoardIndex
 
@@ -2739,7 +2741,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2750,7 +2752,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgrade) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2795,13 +2797,6 @@ If Options_bLargeGui Then
     Set App_picEngineRed = frmHide.imgEngineRedLarge.Picture
     Set App_picEngineBlack = frmHide.imgEngineBlackLarge.Picture
     On Error Resume Next
-    frmHide.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
-            Choose(Options_nBoardS + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-            "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + ".GIF")
-    sz = App_szPath + "IMAGES_S\" + Choose(Options_nPiecesS + 1, "NORMAL", "WOOD", "POLISH", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + "\"
-    For i = 0 To 29
-        frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
-    Next
     For i = 0 To 5
         Set App_picCoord(i) = LoadPicture(App_szPath + "\IMAGES_L\" + _
                 Choose(i + 1, "COORD", "FLIP", "WXF", "WXF", "ICCS", "ICCSFLIP") + ".GIF")

@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.2 (繁體中文版)
+AppVerName=象棋巫師 3.21 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -52,9 +52,6 @@ Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ELEBASE.URL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LEAGUE.URL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "MANTIS.URL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
 ; 棋盤文件(小)

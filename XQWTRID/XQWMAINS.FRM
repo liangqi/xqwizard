@@ -1487,7 +1487,9 @@ Begin VB.Form frmMainSmall
          Begin VB.Menu mnOptionsBoardZMBL 
             Caption         =   "縱馬奔流(&Z)"
          End
-         Begin VB.Menu mnOptionsBoardSimple 
+         Begin VB.Menu mnOptionsBoardNeuChess 
+            Caption         =   "棋天大圣(&N)"
+         End         Begin VB.Menu mnOptionsBoardSimple 
             Caption         =   "簡單(&S)"
          End
       End
@@ -2261,6 +2263,12 @@ End Sub
 Private Sub mnOptionsBoardZMBL_Click()
 
 BoardSettingSmall BOARD_S_ZMBL
+
+End Sub
+
+Private Sub mnOptionsBoardNeuChess_Click()
+
+BoardSettingSmall BOARD_S_NEUCHESS
 
 End Sub
 
