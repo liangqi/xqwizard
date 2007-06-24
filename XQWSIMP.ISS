@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.21 (简体中文版)
+AppVerName=象棋巫师 3.22 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -18,6 +18,17 @@ OutputBaseFilename=xqwizard_simp
 OutputDir=.
 Compression=lzma
 SolidCompression=yes
+
+[Types]
+Name: "default"; Description: "缺省设置"
+Name: "custom"; Description: "自定义设置"; Flags: iscustom
+
+[Components]
+Name: "pgn"; Description: "关联可移植棋谱文件(*.PGN)"; Types: default
+Name: "fen"; Description: "关联局面文件(*.FEN)"; Types: default
+Name: "xqf"; Description: "关联象棋演播室棋谱文件(*.XQF)"; Types: default
+Name: "mxq"; Description: "关联弈天棋谱文件(*.MXQ)"; Types: default
+Name: "eleeye"; Description: "加载 ElephantEye 引擎"; Types: default
 
 [Files]
 ; 系统文件
@@ -599,36 +610,36 @@ Source: "HELP\BGROUND.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
-Root: HKCR; Subkey: ".pgn"; ValueType: string; ValueData: "XQWizard.PGN"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCR; Subkey: ".fen"; ValueType: string; ValueData: "XQWizard.FEN"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "棋局文件"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,2"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\Shell"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /F {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"
+Root: HKCR; Subkey: ".pgn"; ValueType: string; ValueData: "XQWizard.PGN"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: ".fen"; ValueType: string; ValueData: "XQWizard.FEN"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "棋局文件"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,2"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /F {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "棋谱文件"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: mxq
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
