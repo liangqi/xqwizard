@@ -79,6 +79,7 @@ Source: "IMAGES_S\XQSTUDIO.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\MOVESKY.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\MRSJ.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
+Source: "IMAGES_S\NEUCHESS.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\SIMPLE.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\COORD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\FLIP.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
