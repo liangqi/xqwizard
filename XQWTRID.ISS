@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.22 (繁體中文版)
+AppVerName=象棋巫師 3.23 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -54,6 +54,7 @@ Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "CHE2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
@@ -612,7 +613,7 @@ Source: "HELP\BGROUND.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 
 [Registry]
 Root: HKCR; Subkey: ".pgn"; ValueType: string; ValueData: "XQWizard.PGN"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "棋譜文件"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "可移植棋譜"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: pgn
@@ -620,7 +621,7 @@ Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueD
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "編輯(&E)"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: ".fen"; ValueType: string; ValueData: "XQWizard.FEN"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "棋局文件"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "象棋局面文件"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,2"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: fen
@@ -628,24 +629,30 @@ Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueD
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "編輯(&E)"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey; Components: xqf
-Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "棋譜文件"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "象棋演播室棋譜"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey; Components: mxq
-Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "棋譜文件"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "弈天棋譜"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: ".che"; ValueType: string; ValueData: "XQWizard.CHE"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ象棋棋譜"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,5"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\Shell"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: che
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\象棋巫師幫助主題"; Filename: "{app}\HELP\CONTENTS.HTM"
-Name: "{group}\象棋演播室和弈天棋譜轉換工具"; Filename: "{app}\MXQFCONV.EXE"
+Name: "{group}\象棋棋譜批量轉換工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 開局庫制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"
