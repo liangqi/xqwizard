@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.22, Last Modified: Jun. 2007
+' Designed by Morning Yellow, Version: 3.23, Last Modified: Jun. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.22"
+Public Const STRING_VERSION     As String = "3.23"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數
@@ -496,7 +496,7 @@ ImportLine = False
 
 End Function
 
-' 讀PGN棋譜，如果是XQF棋譜則首先轉換為PGN棋譜
+' 讀PGN棋譜，如果是XQF、MXQ或CHE棋譜則首先轉換為PGN棋譜
 Public Sub ReadFile()
 
 Dim i As Integer, j As Integer, nFileNo As Integer
@@ -517,6 +517,12 @@ ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
     On Error GoTo 0
     Sleep 1000
     App_szFileName = App_szPath + "MXQ2PGN.PGN"
+ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
+    On Error GoTo lnErrorOpen
+    Shell App_szPath + "CHE2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "CHE2PGN.PGN" + Chr(34), vbHide
+    On Error GoTo 0
+    Sleep 1000
+    App_szFileName = App_szPath + "CHE2PGN.PGN"
 End If
 
 RestartGame
@@ -707,7 +713,7 @@ Dim szFileName As String
 frmHide.comdlg.FileName = ""
 frmHide.comdlg.DialogTitle = "打開棋譜文件"
 frmHide.comdlg.DefaultExt = ".PGN"
-frmHide.comdlg.Filter = "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|所有文件 (*.*)|*.*"
+frmHide.comdlg.Filter = "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|QQ象棋棋譜 (*.CHE)|*.CHE|所有文件 (*.*)|*.*"
 frmHide.comdlg.Flags = cdlOFNHideReadOnly
 frmHide.comdlg.ShowOpen
 If frmHide.comdlg.FileName <> "" Then

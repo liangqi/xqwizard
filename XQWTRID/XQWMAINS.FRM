@@ -1931,7 +1931,7 @@ If App_bUpdated Then
         Exit Sub
     End If
 End If
-szFileName = FileDialog("從FEN文件導入", "局面文件", "FEN")
+szFileName = FileDialog("從FEN文件導入", "象棋局面文件", "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -1941,7 +1941,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("導出到FEN文件", "局面文件", "FEN", SHOW_SAVE)
+szFileName = FileDialog("導出到FEN文件", "象棋局面文件", "FEN", SHOW_SAVE)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
