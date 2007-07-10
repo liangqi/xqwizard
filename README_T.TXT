@@ -37,7 +37,7 @@ http://www.elephantbase.net/resource.htm (簡体、繁体及其免安裝版)
 《象棋巫師》是自由軟件，你可以遵照自由軟件基金會出版的GNU通用公共許可証條款來修改和重新發布這一程序。源程序已發布在 SourceForge 网站上，下載頁面是：
 http://sourceforge.net/projects/xqwizard/
 《象棋巫師》的版本改進，實時同步地發布在 SourceForge 的SVN站點上，獲取地址是：
-https://svn.sourceforge.net/svnroot/xqwizard/
+https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 你可以使用 TortoiseSVN 等SVN客戶端程序獲取到最新的(跟開發者完全同步的)代碼，TortoiseSVN 的使用介紹和下載地址是：
 http://sourceforge.net/projects/tortoisesvn/
 
