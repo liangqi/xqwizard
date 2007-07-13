@@ -1,6 +1,6 @@
-中国象棋对弈程序ElephantEye(象眼)　版本：2.1
+中国象棋对弈程序ElephantEye(象眼)　版本：2.2
 
-黄晨 *　2007年5月
+黄晨 *　2007年7月
 ( * 联系地址：复旦大学化学系表面化学实验室，eMail：webmaster@elephantbase.net)
 
 一、简介
@@ -10,14 +10,15 @@
 
 二、引擎协议
 
-　　ElephantEye 支持UCCI 2.1，浅红象棋用户可通过UCCI引擎适配器(UCCI2QH)调用ElephantEye引擎。
+　　ElephantEye 支持UCCI 2.2，浅红象棋用户可通过UCCI引擎适配器(UCCI2QH)调用ElephantEye引擎。
 (1) 支持的UCCI命令有：
 　　ucci
 　　setoption ...
-　　position {<special_position> | fen <fen_str>} [moves <move_list>]
+　　position {fen <fen_str> | startpos} [moves <move_list>]
 　　banmoves <move_list>
-　　go [ponder | draw] {time <time> [movestogo <moves_to_go> | increment <increment>] | depth <depth> | infinite}
+　　go [ponder | draw] ...
 　　ponderhit [draw] | stop
+　　probe {fen <fen_str> | startpos} [moves <move_list>]
 　　quit
 (2) 可以返回的UCCI信息有：
 　　id {name <engine_name> | copyright <copyright_info> | author <author_name> | user <user_name>}
@@ -25,6 +26,7 @@
 　　ucciok
 　　info ...
 　　{nobestmove | bestmove <best_move> [ponder <ponder_move>] [draw | resign]}
+    pophash [bestmove <best_move>] [lowerbound <value> depth <depth>] [upperbound <value> depth <depth>]
 　　bye
 
 三、参数设置
