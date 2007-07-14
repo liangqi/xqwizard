@@ -20,11 +20,11 @@ Public Type PositionStruct
 End Type
 
 Public Declare Function CchessVersion Lib "CCHESS.DLL" Alias "_CchessVersion@0" () As Long
-Public Declare Function CchessStartFen Lib "CCHESS.DLL" Alias "_CchessStartFen@0" () As Long
 Public Declare Sub CchessInit Lib "CCHESS.DLL" Alias "_CchessInit@4" (Optional ByVal bTriditional As Long = 0)
 Public Declare Sub CchessAddPiece Lib "CCHESS.DLL" Alias "_CchessAddPiece@16" (ByRef pos As PositionStruct, ByVal sq As Long, ByVal pc As Long, Optional ByVal bDel As Long = 0)
 Public Declare Function CchessTryMove Lib "CCHESS.DLL" Alias "_CchessTryMove@12" (ByRef pos As PositionStruct, ByRef nStatus As Long, ByVal mv As Long) As Long
 Public Declare Sub CchessUndoMove Lib "CCHESS.DLL" Alias "_CchessUndoMove@4" (ByRef pos As PositionStruct)
+Public Declare Function CchessGenMoves Lib "CCHESS.DLL" Alias "_CchessGenMoves@8" (ByRef pos As PositionStruct, ByRef lpmv As Long) As Long
 Public Declare Sub CchessSetIrrev Lib "CCHESS.DLL" Alias "_CchessSetIrrev@4" (ByRef pos As PositionStruct)
 Public Declare Sub CchessClearBoard Lib "CCHESS.DLL" Alias "_CchessClearBoard@4" (ByRef pos As PositionStruct)
 Public Declare Sub CchessBoardMirror Lib "CCHESS.DLL" Alias "_CchessBoardMirror@4" (ByRef pos As PositionStruct)
@@ -58,6 +58,8 @@ Public Const MOVE_CAPTURE           As Long = 1
 Public Const CCHESS_TRIDITIONAL     As Long = 1
 Public Const CCHESS_DELETE_PIECE    As Long = 1
 Public Const CCHESS_ANSI_TEXT       As Long = 1
+
+Public Const CCHESS_START_FEN       As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w"
 
 Public Function PieceType(ByVal nArg As Integer) As Integer
 

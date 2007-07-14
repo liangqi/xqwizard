@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.23, Last Modified: Jun. 2007
+' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.23"
+Public Const STRING_VERSION     As String = "3.3"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
 ' 全局常量——可選參數
@@ -929,7 +929,7 @@ If Engine_nStatus > IDLE_UNLOAD Then
     End If
     EngineLoaded True
 End If
-Game_szIrrevFen(0) = MkBStr(CchessStartFen) + " - - 0 1"
+Game_szIrrevFen(0) = CCHESS_START_FEN + " - - 0 1"
 CchessFen2Board Game_posIrrev(0), Game_szIrrevFen(0)
 SetTitle
 App_frmMain.mnFileSave.Enabled = False
@@ -1095,7 +1095,7 @@ Public Sub MoveForward()
 
 Dim nMoveStatus As Long
 Game_nCurrMove = Game_nCurrMove + 1
-CchessTryMove Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(Game_mvMove(Game_nCurrMove))
+CchessTryMove Game_posIrrev(Game_nCurrIrrev), nMoveStatus, Game_mvMove(Game_nCurrMove)
 If (nMoveStatus And MOVE_CAPTURE) <> 0 Then
     CchessUndoMove Game_posIrrev(Game_nCurrIrrev)
     Game_nCurrIrrev = Game_nCurrIrrev + 1
@@ -1138,9 +1138,9 @@ If Game_cntCurr = 1000 Or Game_posIrrev(Game_nCurrIrrev).nMoveNum = 200 Then
     Exit Function
 End If
 szMoveIccsText = Move2Iccs(mv)
-szMoveFileText = MkL(CchessMove2File(CvLng(mv), Game_posIrrev(Game_nCurrIrrev)))
+szMoveFileText = MkL(CchessMove2File(mv, Game_posIrrev(Game_nCurrIrrev)))
 szMoveChinText = MkC(CchessFile2Chin(CvL(szMoveFileText), Game_sdCurr))
-If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
+If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     CchessUndoMove Game_posIrrev(Game_nCurrIrrev)
     If Engine_nStatus > BUSY_WAIT Then
         If Engine_nStatus = BUSY_PONDER And mv = Engine_mvPonder Then
@@ -1162,7 +1162,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, CvLng(mv)) Then
     If (nMoveStatus And MOVE_CAPTURE) <> 0 Then
         Game_posIrrev(Game_nMaxIrrev + 1) = Game_posIrrev(Game_nMaxIrrev)
         Game_nMaxIrrev = Game_nMaxIrrev + 1
-        CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, CvLng(mv)
+        CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
         CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
         Game_szIrrevFen(Game_nMaxIrrev) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + _
                 Str(IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1))
@@ -1782,13 +1782,13 @@ szGoPonder = "go"
 If Engine_nStatus = BUSY_PONDER Then
     Select Case Game_nFormat
     Case 0
-        Engine_szPonderStr = MkC(CchessFile2Chin(CchessMove2File(CvLng(Engine_mvPonder), Engine_posBoard), Engine_posBoard.sdPlayer))
+        Engine_szPonderStr = MkC(CchessFile2Chin(CchessMove2File(Engine_mvPonder, Engine_posBoard), Engine_posBoard.sdPlayer))
     Case 1
-        Engine_szPonderStr = MkL(CchessMove2File(CvLng(Engine_mvPonder), Engine_posBoard))
+        Engine_szPonderStr = MkL(CchessMove2File(Engine_mvPonder, Engine_posBoard))
     Case 2
         Engine_szPonderStr = Move2Iccs(Engine_mvPonder)
     End Select
-    If CchessTryMove(Engine_posBoard, nMoveStatus, CvLng(Engine_mvPonder)) <> 0 Then
+    If CchessTryMove(Engine_posBoard, nMoveStatus, Engine_mvPonder) <> 0 Then
         szFenStr = szFenStr + IIf(Game_nCurrMove > nIrrevMove, "", " moves")
         szFenStr = szFenStr + " " + Move2Coord(Engine_mvPonder)
         szGoPonder = szGoPonder + " ponder"
@@ -1846,9 +1846,9 @@ If Options_bStatusBar Then
         mv = Coord2Move(Mid(szReceived, i + 10))
         Select Case Game_nFormat
         Case 0
-            szMoveList = MkC(CchessFile2Chin(CchessMove2File(CvLng(mv), Engine_posBoard), Engine_posBoard.sdPlayer))
+            szMoveList = MkC(CchessFile2Chin(CchessMove2File(mv, Engine_posBoard), Engine_posBoard.sdPlayer))
         Case 1
-            szMoveList = MkL(CchessMove2File(CvLng(mv), Engine_posBoard))
+            szMoveList = MkL(CchessMove2File(mv, Engine_posBoard))
         Case 2
             szMoveList = Move2Iccs(mv)
         End Select
@@ -1901,13 +1901,13 @@ If i > 0 Then
                 mv = Coord2Move(Mid(szReceived, i))
                 Select Case Game_nFormat
                 Case 0
-                    szMoveList = szMoveList + " " + MkC(CchessFile2Chin(CchessMove2File(CvLng(mv), pos), pos.sdPlayer))
+                    szMoveList = szMoveList + " " + MkC(CchessFile2Chin(CchessMove2File(mv, pos), pos.sdPlayer))
                 Case 1
-                    szMoveList = szMoveList + " " + MkL(CchessMove2File(CvLng(mv), pos))
+                    szMoveList = szMoveList + " " + MkL(CchessMove2File(mv, pos))
                 Case 2
                     szMoveList = szMoveList + " " + Move2Iccs(mv)
                 End Select
-                CchessTryMove pos, nMoveStatus, CvLng(mv)
+                CchessTryMove pos, nMoveStatus, mv
                 i = i + 5
             Loop
         End If
