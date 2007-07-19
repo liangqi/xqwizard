@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.23 (简体中文版)
+AppVerName=象棋巫师 3.3 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -83,11 +83,6 @@ Source: "IMAGES_S\MRSJ.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\NEUCHESS.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\SIMPLE.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
-Source: "IMAGES_S\COORD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
-Source: "IMAGES_S\FLIP.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
-Source: "IMAGES_S\WXF.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
-Source: "IMAGES_S\ICCS.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
-Source: "IMAGES_S\ICCSFLIP.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 ; 棋子文件(小)——普通
 Source: "IMAGES_S\NORMAL\OO.GIF"; DestDir: "{app}\IMAGES_S\NORMAL"; Flags: ignoreversion
 Source: "IMAGES_S\NORMAL\RK.GIF"; DestDir: "{app}\IMAGES_S\NORMAL"; Flags: ignoreversion
@@ -374,11 +369,6 @@ Source: "IMAGES_L\SHEET.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\CANVAS.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\DROPS.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\SIMPLE.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
-Source: "IMAGES_L\COORD.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
-Source: "IMAGES_L\FLIP.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
-Source: "IMAGES_L\WXF.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
-Source: "IMAGES_L\ICCS.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
-Source: "IMAGES_L\ICCSFLIP.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 ; 棋子文件(大)——木制
 Source: "IMAGES_L\WOOD\OO.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
 Source: "IMAGES_L\WOOD\RK.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion

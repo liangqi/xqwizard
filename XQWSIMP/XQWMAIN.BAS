@@ -142,7 +142,6 @@ Public Const EVENT_GUI          As Integer = 4
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
-Public App_picCoord(0 To 5)     As Picture  ' 坐标图片对象引用
 Public App_picPieces(0 To 29)   As Picture  ' 棋子图片对象引用
 Public App_picEngineRed         As Picture  ' 引擎执红的图片对象引用
 Public App_picEngineBlack       As Picture  ' 引擎执黑的图片对象引用
@@ -174,7 +173,6 @@ Public Options_bAlwaysPonder    As Boolean  ' 启用後台思考
 Public Options_bEngineTime      As Boolean  ' 显示引擎速度
 Public Options_bStatusBar       As Boolean  ' 输出到状态栏
 Public Options_nEnginePlay      As Integer  ' 新局引擎状态
-Public Options_bShowCoord       As Boolean  ' 显示坐标
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
 Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盘
@@ -591,7 +589,6 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
     End If
 Loop
 BoardFlush
-CoordFlush
 LabelFlush
 Do While Game_nCurrMove > 0
     MoveBack
@@ -803,7 +800,6 @@ Game_sdStart = Game_sdCurr
 Game_cntStart = Game_cntCurr
 Game_sdMax = Game_sdStart
 BoardFlush
-CoordFlush
 LabelFlush
 MoveFlush
 
@@ -1007,17 +1003,6 @@ For i = 3 To 12
         DrawSquare i * 16 + j
     Next
 Next
-
-End Sub
-
-' 显示棋盘的坐标
-Public Sub CoordFlush()
-
-If Options_bShowCoord Then
-    App_frmMain.imgCoord.Picture = App_picCoord(Game_nFormat * 2 + IIf(App_bFlipped, 1, 0))
-Else
-    App_frmMain.imgCoord.Picture = LoadPicture()
-End If
 
 End Sub
 
@@ -1682,7 +1667,6 @@ Else
     If Options_bAutoFlip Then
         App_bFlipped = Engine_bRed
         BoardFlush
-        CoordFlush
     End If
 End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
@@ -2398,7 +2382,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrPressed
 App_frmMain.strpRight.Tabs.Item(2).Selected = True
 App_frmMain.frmInfo.Visible = False
 App_frmMain.frmThink.Visible = True
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + IIf(Options_bLargeGui, 3360, 2040)
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + IIf(Options_bLargeGui, 2760, 1440)
 
 End Sub
 
@@ -2418,7 +2402,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
 App_frmMain.strpRight.Tabs.Item(1).Selected = True
 App_frmMain.frmInfo.Visible = True
 App_frmMain.frmThink.Visible = False
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - IIf(Options_bLargeGui, 3360, 2040)
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - IIf(Options_bLargeGui, 2760, 1440)
 
 End Sub
 
@@ -2639,7 +2623,6 @@ Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign",
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
-Options_bShowCoord = (Str2Int(GetSetting("XQWizard", "Options", "ShowCoord", "0")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
@@ -2694,7 +2677,6 @@ SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1",
 SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
 SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
 SaveSetting "XQWizard", "Options", "EnginePlay", LTrim(Str(Options_nEnginePlay))
-SaveSetting "XQWizard", "Options", "ShowCoord", IIf(Options_bShowCoord, "1", "0")
 SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
 SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
@@ -2747,7 +2729,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2758,7 +2740,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgrade) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2802,12 +2784,6 @@ If Options_bLargeGui Then
     Next
     Set App_picEngineRed = frmHide.imgEngineRedLarge.Picture
     Set App_picEngineBlack = frmHide.imgEngineBlackLarge.Picture
-    On Error Resume Next
-    For i = 0 To 5
-        Set App_picCoord(i) = LoadPicture(App_szPath + "\IMAGES_L\" + _
-                Choose(i + 1, "COORD", "FLIP", "WXF", "WXF", "ICCS", "ICCSFLIP") + ".GIF")
-    Next
-    On Error GoTo 0
     BoardSettingLarge Options_nBoardL
     PiecesSettingLarge Options_nPiecesL
 Else
@@ -2817,12 +2793,6 @@ Else
     Next
     Set App_picEngineRed = frmHide.imgEngineRed.Picture
     Set App_picEngineBlack = frmHide.imgEngineBlack.Picture
-    On Error Resume Next
-    For i = 0 To 5
-        Set App_picCoord(i) = LoadPicture(App_szPath + "\IMAGES_S\" + _
-                Choose(i + 1, "COORD", "FLIP", "WXF", "WXF", "ICCS", "ICCSFLIP") + ".GIF")
-    Next
-    On Error GoTo 0
     BoardSettingSmall Options_nBoardS
     PiecesSettingSmall Options_nPiecesS
 End If
@@ -2843,7 +2813,6 @@ If Command = "" Then
     App_szFileName = ""
     RestartGame
     BoardFlush
-    CoordFlush
     LabelFlush
     MoveFlush
     EngineNewGame

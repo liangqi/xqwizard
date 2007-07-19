@@ -1,9 +1,10 @@
 VERSION 5.00
 Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "COMCTL32.OCX"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
-   ClientHeight    =   9480
+   ClientHeight    =   9960
    ClientLeft      =   150
    ClientTop       =   720
    ClientWidth     =   12360
@@ -18,7 +19,7 @@ Begin VB.Form frmMainLarge
    EndProperty
    Icon            =   "XQWMAINL.frx":0000
    MaxButton       =   0   'False
-   ScaleHeight     =   9480
+   ScaleHeight     =   9960
    ScaleWidth      =   12360
    StartUpPosition =   3  'Windows Default
    Begin ComctlLib.Toolbar tlb 
@@ -201,6 +202,381 @@ Begin VB.Form frmMainLarge
       EndProperty
       BorderStyle     =   1
    End
+   Begin VB.Frame frmWeb 
+      BorderStyle     =   0  'None
+      Height          =   975
+      Left            =   8280
+      TabIndex        =   50
+      Top             =   8520
+      Width           =   3615
+      Begin SHDocVwCtl.WebBrowser web 
+         Height          =   1335
+         Left            =   -120
+         TabIndex        =   51
+         Top             =   -240
+         Width           =   4095
+         ExtentX         =   7223
+         ExtentY         =   2355
+         ViewMode        =   0
+         Offline         =   0
+         Silent          =   0
+         RegisterAsBrowser=   0
+         RegisterAsDropTarget=   1
+         AutoArrange     =   0   'False
+         NoClientEdge    =   0   'False
+         AlignLeft       =   0   'False
+         NoWebView       =   0   'False
+         HideFileNames   =   0   'False
+         SingleClick     =   0   'False
+         SingleSelection =   0   'False
+         NoFolders       =   0   'False
+         Transparent     =   0   'False
+         ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
+         Location        =   ""
+      End
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "1"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   17
+      Left            =   6960
+      TabIndex        =   49
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "2"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   16
+      Left            =   6120
+      TabIndex        =   48
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "3"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   15
+      Left            =   5280
+      TabIndex        =   47
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "4"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   14
+      Left            =   4440
+      TabIndex        =   46
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "5"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   13
+      Left            =   3600
+      TabIndex        =   45
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "6"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   12
+      Left            =   2760
+      TabIndex        =   44
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "7"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   11
+      Left            =   1920
+      TabIndex        =   43
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "8"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   10
+      Left            =   1080
+      TabIndex        =   42
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "9"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   9
+      Left            =   240
+      TabIndex        =   41
+      Top             =   9480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "9"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   8
+      Left            =   6960
+      TabIndex        =   40
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "8"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   7
+      Left            =   6120
+      TabIndex        =   39
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "7"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   6
+      Left            =   5280
+      TabIndex        =   38
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "6"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   5
+      Left            =   4440
+      TabIndex        =   37
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "5"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   4
+      Left            =   3600
+      TabIndex        =   36
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "4"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   3
+      Left            =   2760
+      TabIndex        =   35
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "3"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   2
+      Left            =   1920
+      TabIndex        =   34
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "2"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   1
+      Left            =   1080
+      TabIndex        =   33
+      Top             =   480
+      Width           =   855
+   End
+   Begin VB.CommandButton btnCoord 
+      Caption         =   "1"
+      Enabled         =   0   'False
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   180
+      Index           =   0
+      Left            =   240
+      TabIndex        =   32
+      Top             =   480
+      Width           =   855
+   End
    Begin VB.Frame frmMove2 
       BorderStyle     =   0  'None
       Height          =   3615
@@ -361,13 +737,13 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.Frame frmInfo 
       BorderStyle     =   0  'None
-      Height          =   8175
+      Height          =   7575
       Left            =   8160
       TabIndex        =   2
       Top             =   840
       Width           =   3975
       Begin VB.TextBox txtComment 
-         Height          =   3015
+         Height          =   2415
          Left            =   0
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
@@ -422,14 +798,14 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.Frame frmThink 
       BorderStyle     =   0  'None
-      Height          =   8175
+      Height          =   7575
       Left            =   8160
       TabIndex        =   10
       Top             =   840
       Visible         =   0   'False
       Width           =   3975
       Begin VB.TextBox txtThink 
-         Height          =   4095
+         Height          =   3615
          Left            =   0
          Locked          =   -1  'True
          MultiLine       =   -1  'True
@@ -467,13 +843,13 @@ Begin VB.Form frmMainLarge
       End
    End
    Begin ComctlLib.TabStrip strpRight 
-      Height          =   8655
+      Height          =   9135
       Left            =   8040
       TabIndex        =   1
       Top             =   480
       Width           =   4215
       _ExtentX        =   7435
-      _ExtentY        =   15266
+      _ExtentY        =   16113
       _Version        =   327682
       BeginProperty Tabs {0713E432-850A-101B-AFC0-4210102A8DA7} 
          NumTabs         =   2
@@ -496,7 +872,7 @@ Begin VB.Form frmMainLarge
       Height          =   240
       Left            =   0
       TabIndex        =   9
-      Top             =   9240
+      Top             =   9720
       Width           =   12360
       _ExtentX        =   21802
       _ExtentY        =   423
@@ -505,41 +881,37 @@ Begin VB.Form frmMainLarge
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   4
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Key             =   "Curr"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Key             =   "Nps"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   10160
             MinWidth        =   10160
+            TextSave        =   ""
             Key             =   "Pv"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   7620
             MinWidth        =   7620
+            TextSave        =   ""
             Key             =   "Msg"
             Object.Tag             =   ""
          EndProperty
       EndProperty
-   End
-   Begin VB.Image imgCoord 
-      Enabled         =   0   'False
-      Height          =   8655
-      Left            =   120
-      Stretch         =   -1  'True
-      Top             =   480
-      Width           =   7815
    End
    Begin VB.Image imgSquares 
       Height          =   855
       Index           =   89
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -547,7 +919,7 @@ Begin VB.Form frmMainLarge
       Index           =   88
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -555,7 +927,7 @@ Begin VB.Form frmMainLarge
       Index           =   87
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -563,7 +935,7 @@ Begin VB.Form frmMainLarge
       Index           =   86
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -571,7 +943,7 @@ Begin VB.Form frmMainLarge
       Index           =   85
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -579,7 +951,7 @@ Begin VB.Form frmMainLarge
       Index           =   84
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -587,7 +959,7 @@ Begin VB.Form frmMainLarge
       Index           =   83
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -595,7 +967,7 @@ Begin VB.Form frmMainLarge
       Index           =   82
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -603,7 +975,7 @@ Begin VB.Form frmMainLarge
       Index           =   81
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   8160
+      Top             =   8400
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -611,7 +983,7 @@ Begin VB.Form frmMainLarge
       Index           =   80
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -619,7 +991,7 @@ Begin VB.Form frmMainLarge
       Index           =   79
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -627,7 +999,7 @@ Begin VB.Form frmMainLarge
       Index           =   78
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -635,7 +1007,7 @@ Begin VB.Form frmMainLarge
       Index           =   77
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -643,7 +1015,7 @@ Begin VB.Form frmMainLarge
       Index           =   76
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -651,7 +1023,7 @@ Begin VB.Form frmMainLarge
       Index           =   75
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -659,7 +1031,7 @@ Begin VB.Form frmMainLarge
       Index           =   74
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -667,7 +1039,7 @@ Begin VB.Form frmMainLarge
       Index           =   73
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -675,7 +1047,7 @@ Begin VB.Form frmMainLarge
       Index           =   72
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   7320
+      Top             =   7560
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -683,7 +1055,7 @@ Begin VB.Form frmMainLarge
       Index           =   71
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -691,7 +1063,7 @@ Begin VB.Form frmMainLarge
       Index           =   70
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -699,7 +1071,7 @@ Begin VB.Form frmMainLarge
       Index           =   69
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -707,7 +1079,7 @@ Begin VB.Form frmMainLarge
       Index           =   68
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -715,7 +1087,7 @@ Begin VB.Form frmMainLarge
       Index           =   67
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -723,7 +1095,7 @@ Begin VB.Form frmMainLarge
       Index           =   66
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -731,7 +1103,7 @@ Begin VB.Form frmMainLarge
       Index           =   65
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -739,7 +1111,7 @@ Begin VB.Form frmMainLarge
       Index           =   64
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -747,7 +1119,7 @@ Begin VB.Form frmMainLarge
       Index           =   63
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   6480
+      Top             =   6720
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -755,7 +1127,7 @@ Begin VB.Form frmMainLarge
       Index           =   62
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -763,7 +1135,7 @@ Begin VB.Form frmMainLarge
       Index           =   61
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -771,7 +1143,7 @@ Begin VB.Form frmMainLarge
       Index           =   60
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -779,7 +1151,7 @@ Begin VB.Form frmMainLarge
       Index           =   59
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -787,7 +1159,7 @@ Begin VB.Form frmMainLarge
       Index           =   58
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -795,7 +1167,7 @@ Begin VB.Form frmMainLarge
       Index           =   57
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -803,7 +1175,7 @@ Begin VB.Form frmMainLarge
       Index           =   56
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -811,7 +1183,7 @@ Begin VB.Form frmMainLarge
       Index           =   55
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -819,7 +1191,7 @@ Begin VB.Form frmMainLarge
       Index           =   54
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   5640
+      Top             =   5880
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -827,7 +1199,7 @@ Begin VB.Form frmMainLarge
       Index           =   53
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -835,7 +1207,7 @@ Begin VB.Form frmMainLarge
       Index           =   52
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -843,7 +1215,7 @@ Begin VB.Form frmMainLarge
       Index           =   51
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -851,7 +1223,7 @@ Begin VB.Form frmMainLarge
       Index           =   50
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -859,7 +1231,7 @@ Begin VB.Form frmMainLarge
       Index           =   49
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -867,7 +1239,7 @@ Begin VB.Form frmMainLarge
       Index           =   48
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -875,7 +1247,7 @@ Begin VB.Form frmMainLarge
       Index           =   47
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -883,7 +1255,7 @@ Begin VB.Form frmMainLarge
       Index           =   46
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -891,7 +1263,7 @@ Begin VB.Form frmMainLarge
       Index           =   45
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   4800
+      Top             =   5040
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -899,7 +1271,7 @@ Begin VB.Form frmMainLarge
       Index           =   44
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -907,7 +1279,7 @@ Begin VB.Form frmMainLarge
       Index           =   43
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -915,7 +1287,7 @@ Begin VB.Form frmMainLarge
       Index           =   42
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -923,7 +1295,7 @@ Begin VB.Form frmMainLarge
       Index           =   41
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -931,7 +1303,7 @@ Begin VB.Form frmMainLarge
       Index           =   40
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -939,7 +1311,7 @@ Begin VB.Form frmMainLarge
       Index           =   39
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -947,7 +1319,7 @@ Begin VB.Form frmMainLarge
       Index           =   38
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -955,7 +1327,7 @@ Begin VB.Form frmMainLarge
       Index           =   37
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -963,7 +1335,7 @@ Begin VB.Form frmMainLarge
       Index           =   36
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   3960
+      Top             =   4200
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -971,7 +1343,7 @@ Begin VB.Form frmMainLarge
       Index           =   35
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -979,7 +1351,7 @@ Begin VB.Form frmMainLarge
       Index           =   34
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -987,7 +1359,7 @@ Begin VB.Form frmMainLarge
       Index           =   33
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -995,7 +1367,7 @@ Begin VB.Form frmMainLarge
       Index           =   32
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1003,7 +1375,7 @@ Begin VB.Form frmMainLarge
       Index           =   31
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1011,7 +1383,7 @@ Begin VB.Form frmMainLarge
       Index           =   30
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1019,7 +1391,7 @@ Begin VB.Form frmMainLarge
       Index           =   29
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1027,7 +1399,7 @@ Begin VB.Form frmMainLarge
       Index           =   28
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1035,7 +1407,7 @@ Begin VB.Form frmMainLarge
       Index           =   27
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   3120
+      Top             =   3360
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1043,7 +1415,7 @@ Begin VB.Form frmMainLarge
       Index           =   26
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1051,7 +1423,7 @@ Begin VB.Form frmMainLarge
       Index           =   25
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1059,7 +1431,7 @@ Begin VB.Form frmMainLarge
       Index           =   24
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1067,7 +1439,7 @@ Begin VB.Form frmMainLarge
       Index           =   23
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1075,7 +1447,7 @@ Begin VB.Form frmMainLarge
       Index           =   22
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1083,7 +1455,7 @@ Begin VB.Form frmMainLarge
       Index           =   21
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1091,7 +1463,7 @@ Begin VB.Form frmMainLarge
       Index           =   20
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1099,7 +1471,7 @@ Begin VB.Form frmMainLarge
       Index           =   19
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1107,7 +1479,7 @@ Begin VB.Form frmMainLarge
       Index           =   18
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   2280
+      Top             =   2520
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1115,7 +1487,7 @@ Begin VB.Form frmMainLarge
       Index           =   17
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1123,7 +1495,7 @@ Begin VB.Form frmMainLarge
       Index           =   16
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1131,7 +1503,7 @@ Begin VB.Form frmMainLarge
       Index           =   15
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1139,7 +1511,7 @@ Begin VB.Form frmMainLarge
       Index           =   14
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1147,7 +1519,7 @@ Begin VB.Form frmMainLarge
       Index           =   13
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1155,7 +1527,7 @@ Begin VB.Form frmMainLarge
       Index           =   12
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1163,7 +1535,7 @@ Begin VB.Form frmMainLarge
       Index           =   11
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1171,7 +1543,7 @@ Begin VB.Form frmMainLarge
       Index           =   10
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1179,7 +1551,7 @@ Begin VB.Form frmMainLarge
       Index           =   9
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   1440
+      Top             =   1680
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1187,7 +1559,7 @@ Begin VB.Form frmMainLarge
       Index           =   8
       Left            =   6960
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1195,7 +1567,7 @@ Begin VB.Form frmMainLarge
       Index           =   7
       Left            =   6120
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1203,7 +1575,7 @@ Begin VB.Form frmMainLarge
       Index           =   6
       Left            =   5280
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1211,7 +1583,7 @@ Begin VB.Form frmMainLarge
       Index           =   5
       Left            =   4440
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1219,7 +1591,7 @@ Begin VB.Form frmMainLarge
       Index           =   4
       Left            =   3600
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1227,7 +1599,7 @@ Begin VB.Form frmMainLarge
       Index           =   3
       Left            =   2760
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1235,7 +1607,7 @@ Begin VB.Form frmMainLarge
       Index           =   2
       Left            =   1920
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1243,7 +1615,7 @@ Begin VB.Form frmMainLarge
       Index           =   1
       Left            =   1080
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgSquares 
@@ -1251,14 +1623,14 @@ Begin VB.Form frmMainLarge
       Index           =   0
       Left            =   240
       Stretch         =   -1  'True
-      Top             =   600
+      Top             =   840
       Width           =   855
    End
    Begin VB.Image imgBoard 
       Height          =   8655
       Left            =   120
       Stretch         =   -1  'True
-      Top             =   480
+      Top             =   720
       Width           =   7815
    End
    Begin VB.Menu mnFile 
@@ -1443,9 +1815,6 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnOptionsCoord 
-         Caption         =   "显示坐标(&C)"
-      End
       Begin VB.Menu mnOptionsBoard 
          Caption         =   "棋盘(&B)"
          Begin VB.Menu mnOptionsBoardWhite 
@@ -1603,11 +1972,11 @@ lstMoveText.AddItem "===开始===", 0
 cmbFormat.AddItem "炮二平五", 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
-mnOptionsCoord.Checked = Options_bShowCoord
 tlb.ImageList = frmHide.imglst
 For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
+web.Navigate "file://D:\A.HTM"
 
 End Sub
 
@@ -1639,7 +2008,6 @@ End If
 App_szFileName = ""
 RestartGame
 BoardFlush
-CoordFlush
 LabelFlush
 MoveFlush
 EngineNewGame
@@ -1815,7 +2183,6 @@ App_bFlipped = Not App_bFlipped
 mnPosFlip.Checked = App_bFlipped
 tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 BoardFlush
-CoordFlush
 LabelFlush
 
 End Sub
@@ -2135,14 +2502,6 @@ End Sub
 Private Sub mnOptionsSettings_Click()
 
 frmOptions.Show vbModal, Me
-
-End Sub
-
-Private Sub mnOptionsCoord_Click()
-
-Options_bShowCoord = Not Options_bShowCoord
-mnOptionsCoord.Checked = Options_bShowCoord
-CoordFlush
 
 End Sub
 
@@ -2483,7 +2842,6 @@ If Game_nFormat <> cmbFormat.ListIndex Then
         sd = 1 - sd
         cnt = cnt + 1 - sd
     Next
-    CoordFlush
     FileUpdated
 End If
 
