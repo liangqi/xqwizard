@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.23 (繁體中文版)
+AppVerName=象棋巫師 3.3 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -45,7 +45,6 @@ Source: "ATOM.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CRC32.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EVALUATE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
@@ -593,8 +592,6 @@ Source: "HELP\OPENING.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\ENGINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\GUI.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\SUPPORT.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELP\PURCHASE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
-Source: "HELP\FREEREG.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\LOGO.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\XQWIZARD.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\RBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion

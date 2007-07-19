@@ -156,7 +156,6 @@ Public App_bFlipped             As Boolean  ' 是否已经翻转棋盘
 Public App_mvNewMove            As Long     ' 最新的一个着法，棋盘上有标记
 Public App_sqSelected           As Integer  ' 鼠标选中的棋子
 Public App_bPlay                As Integer  ' 播放棋局
-Public App_bRegistered          As Integer  ' 是否已注册
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -185,8 +184,6 @@ Public Gui_szUser               As String   ' 用户注册名称
 Public Gui_szRegCode            As String   ' 注册码
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
-Public Gui_szRegTip1            As String   ' “日积月累”的注册提示一
-Public Gui_szRegTip2            As String   ' “日积月累”的注册提示二
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
 Public Gui_szUpgrade            As String   ' 检查升级的版本
 Public Gui_szDate               As String   ' 检查升级的日期
@@ -2410,15 +2407,22 @@ End Sub
 
 ' 以下是图片和声音的处理例程
 
+' 设置隐藏棋盘(小)
+Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
+
+On Error Resume Next
+frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
+        Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
+        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
+On Error GoTo 0
+
+End Sub
+
 ' 设置棋盘(小)
 Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 
-On Error Resume Next
-frmMainSmall.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
-        Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
-frmHide.imgBoard.Picture = frmMainSmall.imgBoard.Picture
-On Error GoTo 0
+BoardSettingSmallHide nBoardIndex
+frmMainSmall.imgBoard.Picture = frmHide.imgBoardSmall.Picture
 frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
 frmMainSmall.mnOptionsBoardRed.Checked = (nBoardIndex = BOARD_S_RED)
 frmMainSmall.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_S_WHITE)
@@ -2438,13 +2442,21 @@ Options_nBoardS = nBoardIndex
 
 End Sub
 
+' 设置隐藏棋盘(大)
+Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
+
+On Error Resume Next
+frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
+        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "SIMPLE") + ".GIF")
+On Error GoTo 0
+
+End Sub
+
 ' 设置棋盘(大)
 Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
 
-On Error Resume Next
-frmMainLarge.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "SIMPLE") + ".GIF")
-On Error GoTo 0
+BoardSettingLargeHide nBoardIndex
+frmMainLarge.imgBoard.Picture = frmHide.imgBoardLarge
 frmMainLarge.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_L_WHITE)
 frmMainLarge.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_L_WOOD)
 frmMainLarge.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_L_SHEET)
@@ -2474,17 +2486,27 @@ End If
 
 End Function
 
-' 设置棋子(小)
-Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
+' 设置隐藏棋子(小)
+Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "NORMAL", "WOOD", "POLISH", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + "\"
 On Error Resume Next
 For i = 0 To 29
-    Set App_picPieces(i) = LoadPicture(sz + PieceFileName(i) + ".GIF")
-    frmHide.imgPiecesSmall(i).Picture = App_picPieces(i)
+    frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
+
+End Sub
+
+' 设置棋子(小)
+Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
+
+Dim i As Integer
+PiecesSettingSmallHide nPiecesIndex
+For i = 0 To 29
+    Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
+Next
 frmMainSmall.mnOptionsPiecesNormal.Checked = (nPiecesIndex = PIECES_S_NORMAL)
 frmMainSmall.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_S_WOOD)
 frmMainSmall.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_S_POLISH)
@@ -2500,16 +2522,27 @@ Options_nPiecesS = nPiecesIndex
 
 End Sub
 
-' 设置棋子(大)
-Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
+' 设置隐藏棋子(大)
+Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "POLISH", "coin", "SIMPLE") + "\"
 On Error Resume Next
 For i = 0 To 29
-    Set App_picPieces(i) = LoadPicture(sz + PieceFileName(i) + ".GIF")
+    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
+
+End Sub
+
+' 设置棋子(大)
+Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
+
+Dim i As Integer
+PiecesSettingLargeHide nPiecesIndex
+For i = 0 To 29
+    Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
+Next
 frmMainLarge.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_L_WOOD)
 frmMainLarge.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_L_POLISH)
 frmMainLarge.mnOptionsPiecesCoin.Checked = (nPiecesIndex = PIECES_L_COIN)
@@ -2555,16 +2588,6 @@ End Sub
 ' 加载“日积月累”
 Public Sub LoadTips()
 
-Gui_szRegTip1 = "　　为使广大棋迷更加方便地使用和收藏象棋巫师软件，象棋巫师光盘版开始正式发售，售价28元(另加邮费10元)。" + vbCrLf + _
-        "　　光盘版除了含有象棋巫师安装包外，还包括趣味象棋、象棋百科全书选萃等精彩内容。" + vbCrLf + _
-        "　　光盘版由著名网络象棋记者北方好汉担任发行代理，愿意订购者可采用下列联系方式：" + vbCrLf + _
-        "　　QQ：113844662" + vbCrLf + "　　Email：herojang@126.com" + vbCrLf + "　　电话：0419-3224582"
-Gui_szRegTip2 = "　　象棋巫师是款自由软件，您可以通过以下网站对象棋巫师资助28元，成为该软件的注册用户：" + vbCrLf + _
-        "　　(1) 天空软件站：http://shareware.skycn.com/soft/6752.htm" + vbCrLf + _
-        "　　(2) 中国共享软件注册中心：http://www.softreg.com.cn/Detail.aspx?id=/B20ED382-82CB-48F5-9334-2D5FF85E482D/" + vbCrLf + _
-        "　　以上网站支持网上银行、手机银行等多种安全付费方式，非常便捷。" + vbCrLf + _
-        "　　注册後您将获得一个和您的用户名对应的注册码，该注册码在象棋巫师的以後版本中仍然有效。" + vbCrLf + _
-        "　　象棋巫师开发团队将把您的资助款用于该软件的推广工作中，让象棋巫师为更多的棋迷朋友服务。"
 Gui_szTips(1) = "　　象棋巫师是一款功能强大的电脑对弈和棋谱编辑软件，具有方便的人机对战、棋谱记录、欣赏、管理棋局的功能，完全可以满足各层次象棋爱好者、棋手、裁判员及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫师支持多个通用象棋引擎，他们大都具有专业棋手的水平，是象棋爱好者和专业棋手提高棋艺的良师益友。" + vbCrLf + _
         "　　如果您对象棋巫师自带的引擎 ElephantEye 的表现不满意，可以登录 http://www.elephantbase.net/league.htm ，下载到其他各具特色的引擎。"
@@ -2718,8 +2741,7 @@ End Sub
 ' 显示软件名称
 Public Sub SetTitle()
 
-App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + _
-        "象棋巫师" + IIf(App_bRegistered, "", " (未注册版)")
+App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + "象棋巫师"
 
 End Sub
 
@@ -2786,6 +2808,9 @@ If Options_bLargeGui Then
     Set App_picEngineBlack = frmHide.imgEngineBlackLarge.Picture
     BoardSettingLarge Options_nBoardL
     PiecesSettingLarge Options_nPiecesL
+    ' 初始化 frmHide 中的小棋盘和小棋子，这些图片会被 frmPosEdit 用到
+    BoardSettingSmallHide Options_nBoardS
+    PiecesSettingSmallHide Options_nPiecesS
 Else
     Set App_frmMain = frmMainSmall
     For i = 0 To 29
@@ -2798,7 +2823,6 @@ Else
 End If
 MusicSetting Options_nMusic
 Timer_bEnabled = False
-App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
 ' 加载引擎，可能有等待，启动画面保持
 Engine_nStatus = IDLE_UNLOAD
 If Engine_bEngineLog And Engine_szLogFile <> "" Then
@@ -2842,7 +2866,7 @@ End If
 App_frmMain.Show
 App_frmMain.txtMove.SetFocus
 Unload frmStartUp
-If Gui_bShowHowTo Or Not App_bRegistered Then
+If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前

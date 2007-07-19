@@ -64,7 +64,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -100,7 +99,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -122,7 +120,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -159,7 +156,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -208,15 +204,15 @@ Begin VB.Form frmMainSmall
       Left            =   6000
       TabIndex        =   50
       Top             =   6120
-      Width           =   3615
+      Width           =   3735
       Begin SHDocVwCtl.WebBrowser web 
-         Height          =   1335
+         Height          =   1215
          Left            =   -120
          TabIndex        =   51
-         Top             =   -240
-         Width           =   4095
-         ExtentX         =   7223
-         ExtentY         =   2355
+         Top             =   -120
+         Width           =   4215
+         ExtentX         =   7435
+         ExtentY         =   2143
          ViewMode        =   0
          Offline         =   0
          Silent          =   0
@@ -855,13 +851,11 @@ Begin VB.Form frmMainSmall
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -881,26 +875,22 @@ Begin VB.Form frmMainSmall
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   4
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            TextSave        =   ""
             Key             =   "Curr"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            TextSave        =   ""
             Key             =   "Nps"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   7620
             MinWidth        =   7620
-            TextSave        =   ""
             Key             =   "Pv"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   5080
             MinWidth        =   5080
-            TextSave        =   ""
             Key             =   "Msg"
             Object.Tag             =   ""
          EndProperty
@@ -1987,8 +1977,8 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.15, Last Modified: May 2007
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -2009,7 +1999,7 @@ Option Explicit
 Private Sub Form_Load()
 
 Dim i As Integer
-imgBoard.Picture = frmHide.imgBoard.Picture
+' imgBoard.Picture = frmHide.imgBoardSmall.Picture
 lstMoveText.Clear
 lstMoveText.AddItem "===开始===", 0
 cmbFormat.AddItem "炮二平五", 0
@@ -2019,7 +2009,7 @@ tlb.ImageList = frmHide.imglst
 For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
-web.Navigate "file://D:\A.HTM"
+web.Navigate "file://" + App_szPath + "ADVERT\advert.htm"
 
 End Sub
 

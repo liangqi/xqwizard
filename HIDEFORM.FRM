@@ -5,10 +5,10 @@ Object = "{C1A8AF28-1257-101B-8FB0-0020AF039CA3}#1.1#0"; "MCI32.OCX"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmHide 
    BorderStyle     =   3  'Fixed Dialog
-   ClientHeight    =   7440
+   ClientHeight    =   8880
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   6960
+   ClientWidth     =   8040
    BeginProperty Font 
       Name            =   "ËÎÌו"
       Size            =   9
@@ -21,8 +21,8 @@ Begin VB.Form frmHide
    Icon            =   "HIDEFORM.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   7440
-   ScaleWidth      =   6960
+   ScaleHeight     =   8880
+   ScaleWidth      =   8040
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin InetCtlsObjects.Inet inet 
@@ -708,12 +708,19 @@ Begin VB.Form frmHide
       Top             =   960
       Width           =   480
    End
-   Begin VB.Image imgBoard 
+   Begin VB.Image imgBoardSmall 
       Height          =   6255
       Left            =   120
       Picture         =   "HIDEFORM.frx":14B76
       Top             =   120
       Width           =   5655
+   End
+   Begin VB.Image imgBoardLarge 
+      Height          =   8655
+      Left            =   120
+      Picture         =   "HIDEFORM.frx":16C3B
+      Top             =   120
+      Width           =   7815
    End
 End
 Attribute VB_Name = "frmHide"
