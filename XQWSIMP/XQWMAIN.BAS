@@ -140,7 +140,8 @@ Public Const EVENT_TIMER        As Integer = 0
 Public Const EVENT_PLAY         As Integer = 1
 Public Const EVENT_ENGINE       As Integer = 2
 Public Const EVENT_MUSIC        As Integer = 3
-Public Const EVENT_GUI          As Integer = 4
+Public Const EVENT_ADVERT       As Integer = 4
+Public Const EVENT_GUI          As Integer = 5
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
@@ -2802,7 +2803,46 @@ End Sub
 ' 检查下载广告
 Public Sub DownloadAdvert()
 
+Dim Buffer() As Byte, nFileNo As Integer, sz As String
+nFileNo = FreeFile
 
+App_szPath = "D:\My Documents\XQWIZARD\" ' DEBUG
+
+
+On Error GoTo lnErrorOpen
+Buffer() = frmHide.inet.OpenURL("http://localhost/advert.txt", icByteArray)
+
+On Error Resume Next
+MkDir App_szPath + "ADVERT"
+Kill App_szPath + "ADVERT\advert.txt"
+
+On Error GoTo lnErrorOpen
+Open App_szPath + "ADVERT\advert.txt" For Binary Access Write As #nFileNo
+On Error GoTo 0
+Put #nFileNo, , Buffer()
+Close #nFileNo
+
+On Error GoTo lnErrorOpen
+Open App_szPath + "ADVERT\advert.txt" For Input As #nFileNo
+On Error GoTo 0
+If Not EOF(nFileNo) Then
+    Line Input #nFileNo, sz
+    If sz = "XQWizard Advert List" Then
+        Do While Not EOF(nFileNo)
+            Line Input #nFileNo, sz
+            MsgBox sz
+        Loop
+    End If
+End If
+Close #nFileNo
+
+Exit Sub
+
+lnErrorOpen:
+On Error GoTo 0
+Gui_nAdvertIndex = 1
+Gui_nAdvertTimes(1) = 86400
+Gui_nAdvertFiles(1) = "elephantbase"
 
 End Sub
 
@@ -2975,10 +3015,9 @@ Do While App_bRunning
                 If Gui_nAdvertIndex > Gui_nAdvertNum Then
                     Gui_nAdvertIndex = 1
                 End If
-                frmMain.web.Navigate App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
+                App_frmMain.web.Navigate App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
             End If
             nEventIndex = EVENT_GUI
-        End Select
         Case EVENT_GUI ' 界面
             DoEvents
             nEventIndex = EVENT_TIMER

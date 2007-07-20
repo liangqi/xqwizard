@@ -2015,7 +2015,7 @@ tlb.ImageList = frmHide.imglst
 For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
-web.Navigate "file://" + App_szPath + "ADVERT\advert.htm"
+web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 
 End Sub
 
