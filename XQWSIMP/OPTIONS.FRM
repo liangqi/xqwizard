@@ -30,27 +30,18 @@ Begin VB.Form frmOptions
       TabIndex        =   24
       Top             =   1920
       Width           =   3255
-      Begin VB.OptionButton optEngineUser 
-         Caption         =   "引擎"
-         Height          =   255
-         Left            =   2400
-         TabIndex        =   27
-         Top             =   240
-         Width           =   735
-      End
-      Begin VB.OptionButton optAppUser 
-         Caption         =   "象棋巫师"
-         Height          =   255
+      Begin VB.TextBox txtUser 
+         Height          =   270
          Left            =   1320
          TabIndex        =   26
          Top             =   240
-         Width           =   1095
+         Width           =   1815
       End
       Begin VB.CheckBox chkCheckUpdate 
          Caption         =   "检查最新版本"
          Height          =   255
          Left            =   120
-         TabIndex        =   28
+         TabIndex        =   27
          Top             =   480
          Width           =   1455
       End
@@ -140,7 +131,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   5280
-      TabIndex        =   30
+      TabIndex        =   29
       Top             =   2880
       Width           =   975
    End
@@ -148,7 +139,7 @@ Begin VB.Form frmOptions
       Caption         =   "确定"
       Height          =   375
       Left            =   3960
-      TabIndex        =   29
+      TabIndex        =   28
       Top             =   2880
       Width           =   975
    End
@@ -203,7 +194,7 @@ Begin VB.Form frmOptions
          Caption         =   "用两个Esc输入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   31
+         TabIndex        =   30
          Top             =   1200
          Width           =   1935
       End
@@ -241,7 +232,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196633
+         BuddyDispid     =   196635
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -327,7 +318,8 @@ cmbEnginePlay.Clear
 cmbEnginePlay.AddItem "不启用引擎", 0
 cmbEnginePlay.AddItem "引擎执红", 1
 cmbEnginePlay.AddItem "引擎执黑", 2
-cmbEnginePlay.AddItem "随机选择红黑", 3
+cmbEnginePlay.AddItem "红黑轮流", 3
+cmbEnginePlay.AddItem "红黑随机", 4
 
 optSmallGui.Value = Not Options_bLargeGui
 optLargeGui.Value = Options_bLargeGui
@@ -346,9 +338,8 @@ chkAllowResign.Value = IIf(Options_bAllowResign, 1, 0)
 chkEngineTime.Value = IIf(Options_bEngineTime, 1, 0)
 chkStatusBar.Value = IIf(Options_bStatusBar, 1, 0)
 cmbEnginePlay.ListIndex = Options_nEnginePlay
+txtUser.Text = Options_szUser
 chkCheckUpdate.Value = IIf(Options_bCheckUpdate, 1, 0)
-optAppUser.Value = Not Options_bEngineUser
-optEngineUser.Value = Options_bEngineUser
 
 End Sub
 
@@ -381,8 +372,8 @@ Options_bAllowResign = (chkAllowResign.Value = 1)
 Options_bEngineTime = (chkEngineTime.Value = 1)
 Options_bStatusBar = (chkStatusBar.Value = 1)
 Options_nEnginePlay = cmbEnginePlay.ListIndex
+Options_szUser = txtUser.Text
 Options_bCheckUpdate = (chkCheckUpdate.Value = 1)
-Options_bEngineUser = optEngineUser.Value
 Unload Me
 
 End Sub

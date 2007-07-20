@@ -34,7 +34,8 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "3.3"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 29 ' 日积月累条目数
+Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
+Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
 ' 全局常量——可选参数
 Public Const SHOW_SAVE          As Boolean = True ' FileDialog
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -74,8 +75,9 @@ Public Const LEVEL_INFINITE     As Integer = 100
 Public Const ENGINE_PLAY_NONE   As Integer = 0
 Public Const ENGINE_PLAY_RED    As Integer = 1
 Public Const ENGINE_PLAY_BLACK  As Integer = 2
-Public Const ENGINE_PLAY_RANDOM As Integer = 3
-Public Const ENGINE_PLAY_MAX    As Integer = 4
+Public Const ENGINE_PLAY_TURN   As Integer = 3
+Public Const ENGINE_PLAY_RANDOM As Integer = 4
+Public Const ENGINE_PLAY_MAX    As Integer = 5
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_GREEN      As Integer = 0
 Public Const BOARD_S_RED        As Integer = 1
@@ -156,6 +158,7 @@ Public App_bFlipped             As Boolean  ' 是否已经翻转棋盘
 Public App_mvNewMove            As Long     ' 最新的一个着法，棋盘上有标记
 Public App_sqSelected           As Integer  ' 鼠标选中的棋子
 Public App_bPlay                As Integer  ' 播放棋局
+Public App_bRedTurn             As Boolean  ' 红黑轮流标志
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -178,15 +181,20 @@ Public Options_nBoardL          As Integer  ' 大界面的棋盘
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音乐
 Public Options_bCheckUpdate     As Boolean  ' 检查最新版本
-Public Options_bEngineUser      As Boolean  ' 人机对弈用户
+Public Options_szUser           As String   ' 人机对弈用户
 ' 全局变量——界面
-Public Gui_szUser               As String   ' 用户注册名称
-Public Gui_szRegCode            As String   ' 注册码
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
-Public Gui_szUpgrade            As String   ' 检查升级的版本
-Public Gui_szDate               As String   ' 检查升级的日期
+Public Gui_szUpgradeVer         As String   ' 检查升级的版本
+Public Gui_szUpgradeDate        As String   ' 检查升级的日期
+Public Gui_szAdvertSN           As String   ' 广告的序列号
+Public Gui_szAdvertDate         As String   ' 检查广告的日期
+Public Gui_dfLastTime           As Integer  ' 当前时间(每天00:00过去的秒数)
+Public Gui_nAdvertNum           As Integer  ' 广告数量
+Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
+Public Gui_nAdvertTimes(1 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
+Public Gui_nAdvertFiles(1 To MAX_ADVERTS) As Integer ' 每个广告的文件
 ' 全局变量——棋局
 Public Game_szEvent             As String   ' 赛事
 Public Game_szRound             As String   ' 轮次
@@ -1669,8 +1677,8 @@ End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
 App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 If Options_bEngineName Then
-    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), IIf(Options_bEngineUser, Engine_szUser, Gui_szUser))
-    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), IIf(Options_bEngineUser, Engine_szUser, Gui_szUser))
+    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), Options_szUser)
+    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), Options_szUser)
 End If
 LabelFlush
 StartTimer
@@ -2350,6 +2358,15 @@ If Engine_nStatus > IDLE_UNLOAD Then
     Case ENGINE_PLAY_BLACK
         Engine_bRed = False
         Engine_bBlack = True
+    Case ENGINE_PLAY_TURN
+        If App_bRedTurn Then
+            Engine_bRed = True
+            Engine_bBlack = False
+        Else
+            Engine_bRed = False
+            Engine_bBlack = True
+        End If
+        App_bRedTurn = Not App_bRedTurn
     Case ENGINE_PLAY_RANDOM
         If Rnd < 0.5 Then
             Engine_bRed = True
@@ -2645,20 +2662,20 @@ Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
-Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
+Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
-Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "CheckUpdate", "1")) <> 0)
-Options_bEngineUser = (Str2Int(GetSetting("XQWizard", "Options", "EngineUser", "0")) <> 0)
-Gui_szUser = GetSetting("XQWizard", "Register", "User", "象棋巫师测试团队")
-Gui_szRegCode = GetSetting("XQWizard", "Register", "Code", "")
+Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
+Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "Update", "1")) <> 0)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUpgrade = GetSetting("XQWizard", "Gui", "Upgrade", STRING_VERSION)
-Gui_szDate = GetSetting("XQWizard", "Gui", "Date", "")
+Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
+Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
+Gui_szAdvertSN = GetSetting("XQWizard", "Gui", "AdvertSN", "")
+Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "2"), 1, 480)
@@ -2705,14 +2722,14 @@ SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
-SaveSetting "XQWizard", "Options", "CheckUpdate", IIf(Options_bCheckUpdate, "1", "0")
-SaveSetting "XQWizard", "Options", "EngineUser", IIf(Options_bEngineUser, "1", "0")
-SaveSetting "XQWizard", "Register", "User", Gui_szUser
-SaveSetting "XQWizard", "Register", "Code", Gui_szRegCode
+SaveSetting "XQWizard", "Options", "Update", IIf(Options_bCheckUpdate, "1", "0")
+SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-SaveSetting "XQWizard", "Gui", "Upgrade", Gui_szUpgrade
-SaveSetting "XQWizard", "Gui", "Date", Gui_szDate
+SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
+SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
+SaveSetting "XQWizard", "Gui", "AdvertSN", Gui_szAdvertSN
+SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
@@ -2758,8 +2775,8 @@ If sz = "" Then
         MsgBox "无法访问 www.elephantbase.net，请稍后再试。", vbExclamation
     End If
 Else
-    Gui_szDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgrade) + 0.005) Then
+    Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
         szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
@@ -2771,7 +2788,7 @@ Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
             End If
         Else
-            Gui_szUpgrade = sz
+            Gui_szUpgradeVer = sz
         End If
     Else
         If bManual Then
@@ -2779,6 +2796,13 @@ Else
         End If
     End If
 End If
+
+End Sub
+
+' 检查下载广告
+Public Sub DownloadAdvert()
+
+
 
 End Sub
 
@@ -2833,6 +2857,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     On Error GoTo 0
 End If
 OpenEngine
+App_bRedTurn = False
 If Command = "" Then
     App_szFileName = ""
     RestartGame
@@ -2870,7 +2895,7 @@ If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
-If Options_bCheckUpdate And Gui_szDate <> Date Then
+If Options_bCheckUpdate And Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
 ' 进入用户状态，接收事件
@@ -2939,7 +2964,21 @@ Do While App_bRunning
                     frmHide.mci.Command = "Play"
                 End If
             End If
+            nEventIndex = EVENT_ADVERT
+        Case EVENT_ADVERT ' 广告
+            ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
+            dfThisTime = Timer
+            dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
+            If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
+                Gui_dfLastTime = Timer
+                Gui_nAdvertIndex = Gui_nAdvertIndex + 1
+                If Gui_nAdvertIndex > Gui_nAdvertNum Then
+                    Gui_nAdvertIndex = 1
+                End If
+                frmMain.web.Navigate App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
+            End If
             nEventIndex = EVENT_GUI
+        End Select
         Case EVENT_GUI ' 界面
             DoEvents
             nEventIndex = EVENT_TIMER
