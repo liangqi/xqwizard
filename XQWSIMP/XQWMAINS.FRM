@@ -232,7 +232,7 @@ Begin VB.Form frmMainSmall
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -2005,7 +2005,6 @@ Option Explicit
 Private Sub Form_Load()
 
 Dim i As Integer
-' imgBoard.Picture = frmHide.imgBoardSmall.Picture
 lstMoveText.Clear
 lstMoveText.AddItem "===开始===", 0
 cmbFormat.AddItem "炮二平五", 0

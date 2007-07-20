@@ -194,7 +194,7 @@ Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_dfLastTime           As Integer  ' 当前时间(每天00:00过去的秒数)
 Public Gui_nAdvertNum           As Integer  ' 广告数量
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
-Public Gui_nAdvertTimes(1 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
+Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
 Public Gui_nAdvertFiles(1 To MAX_ADVERTS) As Integer ' 每个广告的文件
 ' 全局变量——棋局
 Public Game_szEvent             As String   ' 赛事
@@ -2769,7 +2769,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2780,7 +2780,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2810,16 +2810,17 @@ App_szPath = "D:\My Documents\XQWIZARD\" ' DEBUG
 
 
 On Error GoTo lnErrorOpen
-Buffer() = frmHide.inet.OpenURL("http://localhost/advert.txt", icByteArray)
+sz = frmHide.Inet.OpenURL("http://localhost/advert.txt", icByteArray)
 
 On Error Resume Next
 MkDir App_szPath + "ADVERT"
-Kill App_szPath + "ADVERT\advert.txt"
 
 On Error GoTo lnErrorOpen
-Open App_szPath + "ADVERT\advert.txt" For Binary Access Write As #nFileNo
+Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
 On Error GoTo 0
-Put #nFileNo, , Buffer()
+sz = Replace(sz, Chr(10), vbCrLf)
+sz = Replace(sz, vbCrLf + Chr(13), vbCrLf)
+Print #nFileNo, sz;
 Close #nFileNo
 
 On Error GoTo lnErrorOpen
@@ -2840,7 +2841,7 @@ Exit Sub
 
 lnErrorOpen:
 On Error GoTo 0
-Gui_nAdvertIndex = 1
+Gui_nAdvertNum = 1
 Gui_nAdvertTimes(1) = 86400
 Gui_nAdvertFiles(1) = "elephantbase"
 
@@ -2938,6 +2939,10 @@ End If
 If Options_bCheckUpdate And Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
+' 加载广告
+Gui_nAdvertIndex = 0
+Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
+
 ' 进入用户状态，接收事件
 nEventIndex = EVENT_TIMER
 App_bRunning = True

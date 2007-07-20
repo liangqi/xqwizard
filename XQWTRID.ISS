@@ -66,6 +66,10 @@ Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
+; 廣告文件
+Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; 棋盤文件(小)
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\RED.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
