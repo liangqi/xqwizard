@@ -210,13 +210,13 @@ Begin VB.Form frmMainSmall
       Top             =   6120
       Width           =   3735
       Begin SHDocVwCtl.WebBrowser web 
-         Height          =   1215
+         Height          =   1335
          Left            =   -120
          TabIndex        =   51
          Top             =   -120
          Width           =   4215
          ExtentX         =   7435
-         ExtentY         =   2143
+         ExtentY         =   2355
          ViewMode        =   0
          Offline         =   0
          Silent          =   0
@@ -881,22 +881,26 @@ Begin VB.Form frmMainSmall
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   4
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Key             =   "Curr"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+            TextSave        =   ""
             Key             =   "Nps"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   7620
             MinWidth        =   7620
+            TextSave        =   ""
             Key             =   "Pv"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   5080
             MinWidth        =   5080
+            TextSave        =   ""
             Key             =   "Msg"
             Object.Tag             =   ""
          EndProperty

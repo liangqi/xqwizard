@@ -210,13 +210,13 @@ Begin VB.Form frmMainLarge
       Top             =   8520
       Width           =   3735
       Begin SHDocVwCtl.WebBrowser web 
-         Height          =   1215
+         Height          =   1335
          Left            =   -120
          TabIndex        =   51
          Top             =   -120
          Width           =   4215
          ExtentX         =   7435
-         ExtentY         =   2143
+         ExtentY         =   2355
          ViewMode        =   0
          Offline         =   0
          Silent          =   0
