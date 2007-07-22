@@ -1124,8 +1124,8 @@ Attribute VB_Exposed = False
 ' POSEDIT.FRM - Source Code for XiangQi Wizard, Part III
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 2.2, Last Modified: Mar. 2006
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -1198,7 +1198,7 @@ Edit_cnt = Game_cntCurr
 Edit_sqSelected = 0
 Edit_pcSelected = 0
 Edit_posBoard = Game_posIrrev(Game_nCurrIrrev)
-imgBoard.Picture = frmHide.imgBoard.Picture
+imgBoard.Picture = frmHide.imgBoardSmall.Picture
 PosBoardFlush
 Edit_szFen = MkBStr(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
 txtFen.Text = Edit_szFen

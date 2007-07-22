@@ -478,7 +478,7 @@ End Sub
 Private Sub btnSend_Click()
 
 If txtCommand.Text <> vbNullString Then
-    If txtCommand.Text = "quit" Then
+    If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
         MsgBox "ÑeÈ_ﬂ@÷÷ÕÊ–¶£°", vbExclamation
     Else
         SendEngine txtCommand.Text
