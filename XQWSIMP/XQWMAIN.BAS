@@ -142,6 +142,8 @@ Public Const EVENT_ENGINE       As Integer = 2
 Public Const EVENT_MUSIC        As Integer = 3
 Public Const EVENT_ADVERT       As Integer = 4
 Public Const EVENT_GUI          As Integer = 5
+' 全局常量——棋盘坐标
+Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
@@ -964,6 +966,7 @@ MoveCut
 Game_szComment(0) = ""
 App_bUpdated = False
 App_bFlipped = False
+CoordFlush
 App_mvNewMove = 0
 App_frmMain.mnPosFlip.Checked = False
 App_frmMain.tlb.Buttons("PosFlip").Value = tbrUnpressed
@@ -1009,6 +1012,22 @@ For i = 3 To 12
         DrawSquare i * 16 + j
     Next
 Next
+
+End Sub
+
+' 显示坐标
+Public Sub CoordFlush()
+
+Dim i As Integer
+If App_bFlipped Then
+    For i = 0 To 17
+        App_frmMain.btnCoord(i).Caption = Mid(COORD_CHAR, 18 - i, 1)
+    Next
+Else
+    For i = 0 To 17
+        App_frmMain.btnCoord(i).Caption = Mid(COORD_CHAR, i + 1, 1)
+    Next
+End If
 
 End Sub
 
@@ -1672,6 +1691,7 @@ Else
     End If
     If Options_bAutoFlip Then
         App_bFlipped = Engine_bRed
+        CoordFlush
         BoardFlush
     End If
 End If
