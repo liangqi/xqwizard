@@ -24,6 +24,8 @@ Public Declare Sub CchessInit Lib "CCHESS.DLL" Alias "_CchessInit@4" (Optional B
 Public Declare Sub CchessAddPiece Lib "CCHESS.DLL" Alias "_CchessAddPiece@16" (ByRef pos As PositionStruct, ByVal sq As Long, ByVal pc As Long, Optional ByVal bDel As Long = 0)
 Public Declare Function CchessTryMove Lib "CCHESS.DLL" Alias "_CchessTryMove@12" (ByRef pos As PositionStruct, ByRef nStatus As Long, ByVal mv As Long) As Long
 Public Declare Sub CchessUndoMove Lib "CCHESS.DLL" Alias "_CchessUndoMove@4" (ByRef pos As PositionStruct)
+Public Declare Function CchessTryNull Lib "CCHESS.DLL" Alias "_CchessTryNull@4" (ByRef pos As PositionStruct) As Long
+Public Declare Sub CchessUndoNull Lib "CCHESS.DLL" Alias "_CchessUndoNull@4" (ByRef pos As PositionStruct)
 Public Declare Function CchessGenMoves Lib "CCHESS.DLL" Alias "_CchessGenMoves@8" (ByRef pos As PositionStruct, ByRef lpmv As Long) As Long
 Public Declare Sub CchessSetIrrev Lib "CCHESS.DLL" Alias "_CchessSetIrrev@4" (ByRef pos As PositionStruct)
 Public Declare Sub CchessClearBoard Lib "CCHESS.DLL" Alias "_CchessClearBoard@4" (ByRef pos As PositionStruct)
@@ -31,8 +33,8 @@ Public Declare Sub CchessBoardMirror Lib "CCHESS.DLL" Alias "_CchessBoardMirror@
 Public Declare Sub CchessExchangeSide Lib "CCHESS.DLL" Alias "_CchessExchangeSide@4" (ByRef pos As PositionStruct)
 Public Declare Function CchessBoardText Lib "CCHESS.DLL" Alias "_CchessBoardText@8" (ByRef pos As PositionStruct, Optional ByVal bAnsi As Long = 0) As Long
 Public Declare Function CchessBoard2Fen Lib "CCHESS.DLL" Alias "_CchessBoard2Fen@4" (ByRef pos As PositionStruct) As Long
-Public Declare Sub CchessFen2Board Lib "CCHESS.DLL" Alias "_CchessFen2Board@8" (ByRef pos As PositionStruct, ByVal szFenStr As String)
-Public Declare Function CchessFenMirror Lib "CCHESS.DLL" Alias "_CchessFenMirror@4" (ByVal szFenStr As String) As Long
+Public Declare Sub CchessFen2Board Lib "CCHESS.DLL" Alias "_CchessFen2Board@8" (ByRef pos As PositionStruct, ByVal szFen As String)
+Public Declare Function CchessFenMirror Lib "CCHESS.DLL" Alias "_CchessFenMirror@4" (ByVal szFenSrc As String) As Long
 Public Declare Function CchessFileMirror Lib "CCHESS.DLL" Alias "_CchessFileMirror@4" (ByVal dwFileStr As Long) As Long
 Public Declare Function CchessChin2File Lib "CCHESS.DLL" Alias "_CchessChin2File@8" (ByVal qwChinStr As Currency) As Long
 Public Declare Function CchessFile2Chin Lib "CCHESS.DLL" Alias "_CchessFile2Chin@8" (ByVal dwFileStr As Long, ByVal sd As Long) As Currency
@@ -43,7 +45,7 @@ Public Declare Function EccoVersion Lib "ECCO.DLL" Alias "_EccoVersion@0" () As 
 Public Declare Function EccoInitOpenVar Lib "ECCO.DLL" Alias "_EccoInitOpenVar@4" (Optional ByVal bTriditional As Long = 0) As Long
 Public Declare Function EccoOpening Lib "ECCO.DLL" Alias "_EccoOpening@4" (ByVal dwEccoIndex As Long) As Long
 Public Declare Function EccoVariation Lib "ECCO.DLL" Alias "_EccoVariation@4" (ByVal dwEccoIndex As Long) As Long
-Public Declare Function EccoIndex Lib "ECCO.DLL" Alias "_EccoIndex@4" (ByVal szFileMoveStr As String) As Long
+Public Declare Function EccoIndex Lib "ECCO.DLL" Alias "_EccoIndex@4" (ByVal szFileMove As String) As Long
 
 Public Const MOVE_ILLEGAL           As Long = 256
 Public Const MOVE_INCHECK           As Long = 128
@@ -127,14 +129,14 @@ Move2Coord = Chr(Src(mv) Mod 16 + 94) + Chr(60 - Src(mv) \ 16) + Chr(Dst(mv) Mod
 
 End Function
 
-Public Function Iccs2Move(ByVal szIccsStr As String) As Long
+Public Function Iccs2Move(ByVal szIccs As String) As Long
 
 Dim sqSrc As Integer, sqDst As Integer
-If Len(szIccsStr) < 5 Then
+If Len(szIccs) < 5 Then
     Iccs2Move = 0
 Else
-    sqSrc = (60 - Asc(Mid(szIccsStr, 2, 1))) * 16 + Asc(Mid(szIccsStr, 1, 1)) - 62
-    sqDst = (60 - Asc(Mid(szIccsStr, 5, 1))) * 16 + Asc(Mid(szIccsStr, 4, 1)) - 62
+    sqSrc = (60 - Asc(Mid(szIccs, 2, 1))) * 16 + Asc(Mid(szIccs, 1, 1)) - 62
+    sqDst = (60 - Asc(Mid(szIccs, 5, 1))) * 16 + Asc(Mid(szIccs, 4, 1)) - 62
     If sqSrc >= 0 And sqSrc <= 255 And sqDst >= 0 And sqDst <= 255 Then
         Iccs2Move = Move(sqSrc, sqDst)
     Else
