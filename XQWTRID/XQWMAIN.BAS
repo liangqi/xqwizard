@@ -34,7 +34,8 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 ' 全局常量——象棋巫師信息
 Public Const STRING_VERSION     As String = "3.3"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 29 ' 日積月累條目數
+Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
+Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 ' 全局常量——可選參數
 Public Const SHOW_SAVE          As Boolean = True ' FileDialog
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -74,8 +75,9 @@ Public Const LEVEL_INFINITE     As Integer = 100
 Public Const ENGINE_PLAY_NONE   As Integer = 0
 Public Const ENGINE_PLAY_RED    As Integer = 1
 Public Const ENGINE_PLAY_BLACK  As Integer = 2
-Public Const ENGINE_PLAY_RANDOM As Integer = 3
-Public Const ENGINE_PLAY_MAX    As Integer = 4
+Public Const ENGINE_PLAY_TURN   As Integer = 3
+Public Const ENGINE_PLAY_RANDOM As Integer = 4
+Public Const ENGINE_PLAY_MAX    As Integer = 5
 ' 全局常量——棋盤(小)設置選項
 Public Const BOARD_S_GREEN      As Integer = 0
 Public Const BOARD_S_RED        As Integer = 1
@@ -138,11 +140,13 @@ Public Const EVENT_TIMER        As Integer = 0
 Public Const EVENT_PLAY         As Integer = 1
 Public Const EVENT_ENGINE       As Integer = 2
 Public Const EVENT_MUSIC        As Integer = 3
-Public Const EVENT_GUI          As Integer = 4
+Public Const EVENT_ADVERT       As Integer = 4
+Public Const EVENT_GUI          As Integer = 5
+' 全局常量——棋盤坐標
+Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
 
 ' 全局變量——程序
 Public App_frmMain              As Form     ' 主窗口對象引用
-Public App_picCoord(0 To 5)     As Picture  ' 坐標圖片對象引用
 Public App_picPieces(0 To 29)   As Picture  ' 棋子圖片對象引用
 Public App_picEngineRed         As Picture  ' 引擎執紅的圖片對象引用
 Public App_picEngineBlack       As Picture  ' 引擎執黑的圖片對象引用
@@ -157,7 +161,7 @@ Public App_bFlipped             As Boolean  ' 是否已經翻轉棋盤
 Public App_mvNewMove            As Long     ' 最新的一個著法，棋盤上有標記
 Public App_sqSelected           As Integer  ' 鼠標選中的棋子
 Public App_bPlay                As Integer  ' 播放棋局
-Public App_bRegistered          As Integer  ' 是否已注冊
+Public App_bRedTurn             As Boolean  ' 紅黑輪流標志
 ' 全局變量——選項
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 聲音
@@ -174,24 +178,26 @@ Public Options_bAlwaysPonder    As Boolean  ' 啟用後台思考
 Public Options_bEngineTime      As Boolean  ' 顯示引擎速度
 Public Options_bStatusBar       As Boolean  ' 輸出到狀態欄
 Public Options_nEnginePlay      As Integer  ' 新局引擎狀態
-Public Options_bShowCoord       As Boolean  ' 顯示坐標
 Public Options_nBoardS          As Integer  ' 小界面的棋盤
 Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音樂
 Public Options_bCheckUpdate     As Boolean  ' 檢查最新版本
-Public Options_bEngineUser      As Boolean  ' 人机對弈用戶
+Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
-Public Gui_szUser               As String   ' 用戶注冊名稱
-Public Gui_szRegCode            As String   ' 注冊碼
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
-Public Gui_szRegTip1            As String   ' “日積月累”的注冊提示一
-Public Gui_szRegTip2            As String   ' “日積月累”的注冊提示二
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
-Public Gui_szUpgrade            As String   ' 檢查升級的版本
-Public Gui_szDate               As String   ' 檢查升級的日期
+Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
+Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
+Public Gui_szAdvertSN           As String   ' 廣告的序列號
+Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
+Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
+Public Gui_nAdvertNum           As Integer  ' 廣告數量
+Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
+Public Gui_nAdvertFiles(1 To MAX_ADVERTS) As String  ' 每個廣告的文件
+Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每個廣告的時間(秒)
 ' 全局變量——棋局
 Public Game_szEvent             As String   ' 賽事
 Public Game_szRound             As String   ' 輪次
@@ -591,7 +597,6 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
     End If
 Loop
 BoardFlush
-CoordFlush
 LabelFlush
 Do While Game_nCurrMove > 0
     MoveBack
@@ -706,7 +711,7 @@ App_frmMain.tlb.Buttons("FileSave").Enabled = True
 
 End Sub
 
-' 打開PGN棋譜
+' 打開棋譜
 Public Sub OpenFile()
 
 Dim szFileName As String
@@ -803,7 +808,6 @@ Game_sdStart = Game_sdCurr
 Game_cntStart = Game_cntCurr
 Game_sdMax = Game_sdStart
 BoardFlush
-CoordFlush
 LabelFlush
 MoveFlush
 
@@ -962,6 +966,7 @@ MoveCut
 Game_szComment(0) = ""
 App_bUpdated = False
 App_bFlipped = False
+CoordFlush
 App_mvNewMove = 0
 App_frmMain.mnPosFlip.Checked = False
 App_frmMain.tlb.Buttons("PosFlip").Value = tbrUnpressed
@@ -1010,13 +1015,18 @@ Next
 
 End Sub
 
-' 顯示棋盤的坐標
+' 顯示坐標
 Public Sub CoordFlush()
 
-If Options_bShowCoord Then
-    App_frmMain.imgCoord.Picture = App_picCoord(Game_nFormat * 2 + IIf(App_bFlipped, 1, 0))
+Dim i As Integer
+If App_bFlipped Then
+    For i = 0 To 17
+        App_frmMain.btnCoord(i).Caption = Mid(COORD_CHAR, 18 - i, 1)
+    Next
 Else
-    App_frmMain.imgCoord.Picture = LoadPicture()
+    For i = 0 To 17
+        App_frmMain.btnCoord(i).Caption = Mid(COORD_CHAR, i + 1, 1)
+    Next
 End If
 
 End Sub
@@ -1681,15 +1691,15 @@ Else
     End If
     If Options_bAutoFlip Then
         App_bFlipped = Engine_bRed
-        BoardFlush
         CoordFlush
+        BoardFlush
     End If
 End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
 App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 If Options_bEngineName Then
-    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), IIf(Options_bEngineUser, Engine_szUser, Gui_szUser))
-    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), IIf(Options_bEngineUser, Engine_szUser, Gui_szUser))
+    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), Options_szUser)
+    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), Options_szUser)
 End If
 LabelFlush
 StartTimer
@@ -1736,7 +1746,6 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     Close #nLogFileNo
 End If
 
-Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 
@@ -1754,7 +1763,6 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     Close #nLogFileNo
 End If
 
-Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 
@@ -2369,6 +2377,15 @@ If Engine_nStatus > IDLE_UNLOAD Then
     Case ENGINE_PLAY_BLACK
         Engine_bRed = False
         Engine_bBlack = True
+    Case ENGINE_PLAY_TURN
+        If App_bRedTurn Then
+            Engine_bRed = True
+            Engine_bBlack = False
+        Else
+            Engine_bRed = False
+            Engine_bBlack = True
+        End If
+        App_bRedTurn = Not App_bRedTurn
     Case ENGINE_PLAY_RANDOM
         If Rnd < 0.5 Then
             Engine_bRed = True
@@ -2398,7 +2415,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrPressed
 App_frmMain.strpRight.Tabs.Item(2).Selected = True
 App_frmMain.frmInfo.Visible = False
 App_frmMain.frmThink.Visible = True
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + IIf(Options_bLargeGui, 3360, 2040)
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + IIf(Options_bLargeGui, 2760, 1440)
 
 End Sub
 
@@ -2418,7 +2435,7 @@ App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
 App_frmMain.strpRight.Tabs.Item(1).Selected = True
 App_frmMain.frmInfo.Visible = True
 App_frmMain.frmThink.Visible = False
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - IIf(Options_bLargeGui, 3360, 2040)
+App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - IIf(Options_bLargeGui, 2760, 1440)
 
 End Sub
 
@@ -2426,15 +2443,22 @@ End Sub
 
 ' 以下是圖片和聲音的處理例程
 
+' 設置隱藏棋盤(小)
+Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
+
+On Error Resume Next
+frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
+        Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
+        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
+On Error GoTo 0
+
+End Sub
+
 ' 設置棋盤(小)
 Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 
-On Error Resume Next
-frmMainSmall.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
-        Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
-frmHide.imgBoard.Picture = frmMainSmall.imgBoard.Picture
-On Error GoTo 0
+BoardSettingSmallHide nBoardIndex
+frmMainSmall.imgBoard.Picture = frmHide.imgBoardSmall.Picture
 frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
 frmMainSmall.mnOptionsBoardRed.Checked = (nBoardIndex = BOARD_S_RED)
 frmMainSmall.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_S_WHITE)
@@ -2454,13 +2478,21 @@ Options_nBoardS = nBoardIndex
 
 End Sub
 
+' 設置隱藏棋盤(大)
+Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
+
+On Error Resume Next
+frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
+        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "SIMPLE") + ".GIF")
+On Error GoTo 0
+
+End Sub
+
 ' 設置棋盤(大)
 Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
 
-On Error Resume Next
-frmMainLarge.imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "SIMPLE") + ".GIF")
-On Error GoTo 0
+BoardSettingLargeHide nBoardIndex
+frmMainLarge.imgBoard.Picture = frmHide.imgBoardLarge
 frmMainLarge.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_L_WHITE)
 frmMainLarge.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_L_WOOD)
 frmMainLarge.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_L_SHEET)
@@ -2490,17 +2522,27 @@ End If
 
 End Function
 
-' 設置棋子(小)
-Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
+' 設置隱藏棋子(小)
+Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "NORMAL", "WOOD", "POLISH", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + "\"
 On Error Resume Next
 For i = 0 To 29
-    Set App_picPieces(i) = LoadPicture(sz + PieceFileName(i) + ".GIF")
-    frmHide.imgPiecesSmall(i).Picture = App_picPieces(i)
+    frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
+
+End Sub
+
+' 設置棋子(小)
+Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
+
+Dim i As Integer
+PiecesSettingSmallHide nPiecesIndex
+For i = 0 To 29
+    Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
+Next
 frmMainSmall.mnOptionsPiecesNormal.Checked = (nPiecesIndex = PIECES_S_NORMAL)
 frmMainSmall.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_S_WOOD)
 frmMainSmall.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_S_POLISH)
@@ -2516,16 +2558,27 @@ Options_nPiecesS = nPiecesIndex
 
 End Sub
 
-' 設置棋子(大)
-Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
+' 設置隱藏棋子(大)
+Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "POLISH", "coin", "SIMPLE") + "\"
 On Error Resume Next
 For i = 0 To 29
-    Set App_picPieces(i) = LoadPicture(sz + PieceFileName(i) + ".GIF")
+    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
+
+End Sub
+
+' 設置棋子(大)
+Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
+
+Dim i As Integer
+PiecesSettingLargeHide nPiecesIndex
+For i = 0 To 29
+    Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
+Next
 frmMainLarge.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_L_WOOD)
 frmMainLarge.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_L_POLISH)
 frmMainLarge.mnOptionsPiecesCoin.Checked = (nPiecesIndex = PIECES_L_COIN)
@@ -2571,20 +2624,10 @@ End Sub
 ' 加載“日積月累”
 Public Sub LoadTips()
 
-Gui_szRegTip1 = "　　為使廣大棋迷更加方便地使用和收藏象棋巫師軟件，象棋巫師光盤版開始正式發售，售价28元(另加郵費10元)。" + vbCrLf + _
-        "　　光盤版除了含有象棋巫師安裝包外，還包括趣味象棋、象棋百科全書選萃等精彩內容。" + vbCrLf + _
-        "　　光盤版由著名网絡象棋記者北方好漢擔任發行代理，愿意訂購者可采用下列聯系方式：" + vbCrLf + _
-        "　　QQ：113844662" + vbCrLf + "　　Email：herojang@126.com" + vbCrLf + "　　電話：0419-3224582"
-Gui_szRegTip2 = "　　象棋巫師是款自由軟件，您可以通過以下网站對象棋巫師資助28元，成為該軟件的注冊用戶：" + vbCrLf + _
-        "　　(1) 天空軟件站：http://shareware.skycn.com/soft/6752.htm" + vbCrLf + _
-        "　　(2) 中國共享軟件注冊中心：http://www.softreg.com.cn/Detail.aspx?id=/B20ED382-82CB-48F5-9334-2D5FF85E482D/" + vbCrLf + _
-        "　　以上网站支持网上銀行、手机銀行等多种安全付費方式，非常便捷。" + vbCrLf + _
-        "　　注冊後您將獲得一個和您的用戶名對應的注冊碼，該注冊碼在象棋巫師的以後版本中仍然有效。" + vbCrLf + _
-        "　　象棋巫師開發團隊將把您的資助款用于該軟件的推廣工作中，讓象棋巫師為更多的棋迷朋友服務。"
 Gui_szTips(1) = "　　象棋巫師是一款功能強大的電腦對弈和棋譜編輯軟件，具有方便的人机對戰、棋譜記錄、欣賞、管理棋局的功能，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
         "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.elephantbase.net/league.htm ，下載到其他各具特色的引擎。"
-Gui_szTips(3) = "　　點擊“引擎執紅”或“引擎執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶體驗。"
+Gui_szTips(3) = "　　點擊“引擎執紅”或“引擎執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶体驗。"
 Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“引擎分析”按鈕，打開思考細節窗口。" + vbCrLf + _
         "　　您可以把思考細節窗口中的思考路線复制下來，粘貼到主窗口中，對思考線路進行推演。"
 Gui_szTips(5) = "　　象棋巫師強大的棋譜、棋圖導入和導出功能為您在网絡上和棋友交流提供了极大的方便。"
@@ -2638,21 +2681,20 @@ Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
-Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "2"), 0, ENGINE_PLAY_MAX - 1)
-Options_bShowCoord = (Str2Int(GetSetting("XQWizard", "Options", "ShowCoord", "0")) <> 0)
+Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
-Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "CheckUpdate", "1")) <> 0)
-Options_bEngineUser = (Str2Int(GetSetting("XQWizard", "Options", "EngineUser", "0")) <> 0)
-Gui_szUser = GetSetting("XQWizard", "Register", "User", "象棋巫師測試團隊")
-Gui_szRegCode = GetSetting("XQWizard", "Register", "Code", "")
+Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
+Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "Update", "1")) <> 0)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUpgrade = GetSetting("XQWizard", "Gui", "Upgrade", STRING_VERSION)
-Gui_szDate = GetSetting("XQWizard", "Gui", "Date", "")
+Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
+Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
+Gui_szAdvertSN = GetSetting("XQWizard", "Gui", "AdvertSN", "")
+Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "2"), 1, 480)
@@ -2694,20 +2736,19 @@ SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1",
 SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
 SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
 SaveSetting "XQWizard", "Options", "EnginePlay", LTrim(Str(Options_nEnginePlay))
-SaveSetting "XQWizard", "Options", "ShowCoord", IIf(Options_bShowCoord, "1", "0")
 SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
 SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
-SaveSetting "XQWizard", "Options", "CheckUpdate", IIf(Options_bCheckUpdate, "1", "0")
-SaveSetting "XQWizard", "Options", "EngineUser", IIf(Options_bEngineUser, "1", "0")
-SaveSetting "XQWizard", "Register", "User", Gui_szUser
-SaveSetting "XQWizard", "Register", "Code", Gui_szRegCode
+SaveSetting "XQWizard", "Options", "Update", IIf(Options_bCheckUpdate, "1", "0")
+SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-SaveSetting "XQWizard", "Gui", "Upgrade", Gui_szUpgrade
-SaveSetting "XQWizard", "Gui", "Date", Gui_szDate
+SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
+SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
+SaveSetting "XQWizard", "Gui", "AdvertSN", Gui_szAdvertSN
+SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
@@ -2736,48 +2777,165 @@ End Sub
 ' 顯示軟件名稱
 Public Sub SetTitle()
 
-App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + _
-        "象棋巫師" + IIf(App_bRegistered, "", " (未注冊版)")
+App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + "象棋巫師"
 
 End Sub
 
-' 检查更新
+' 檢查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
-    
+
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/version_trid.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trid.php")
 On Error GoTo 0
-If sz = "" Then ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+If sz = "" Then
     If bManual Then
         MsgBox "無法訪問 www.elephantbase.net，請稍后再試。", vbExclamation
     End If
 Else
-    Gui_szDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgrade) + 0.005) Then
+    Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.5 Then
+            If Rnd < 0.05 Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
             End If
         Else
-            Gui_szUpgrade = sz
+            Gui_szUpgradeVer = sz
         End If
     Else
         If bManual Then
             MsgBox "您的“象棋巫師”已經是最新版本了。", vbInformation
         End If
     End If
-
 End If
 
 End Sub
+
+' 以下是廣告例程
+
+' 下載廣告列表
+Public Sub DownloadAdvertList()
+
+Dim buffer() As Byte, nFileNo As Integer, sz As String
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+On Error Resume Next
+MkDir App_szPath + "ADVERT"
+On Error GoTo lnErrorOpen
+Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
+On Error GoTo 0
+sz = Replace(sz, Chr(10), vbCrLf)
+sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+Print #nFileNo, sz;
+Close #nFileNo
+
+lnErrorOpen:
+On Error GoTo 0
+
+End Sub
+
+' 獲取文件長度
+Public Function GetFileSize(ByVal szFileName As String) As Long
+
+Dim nFileNo As Integer
+GetFileSize = 0
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open szFileName For Binary Access Read As #nFileNo
+On Error GoTo 0
+GetFileSize = LOF(nFileNo)
+Close #nFileNo
+
+lnErrorOpen:
+On Error GoTo 0
+
+End Function
+
+' 檢查廣告(htm和gif文件)
+Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Integer, ByVal nGifSize As Integer)
+
+Dim nFileNo As Integer, sz As String, buffer() As Byte
+' 判斷文件字節數，如果跟廣告列表中的一致，就不需要下載了
+If GetFileSize("ADVERT\" + szFileName + ".htm") = nHtmSize Then
+    If GetFileSize("ADVERT\" + szFileName + ".gif") = nGifSize Then
+        Exit Sub
+    End If
+End If
+
+nFileNo = FreeFile
+' 下載htm文件，文本方式
+On Error GoTo lnErrorOpen
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
+On Error GoTo 0
+sz = Replace(sz, Chr(10), vbCrLf)
+sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+Print #nFileNo, sz;
+Close #nFileNo
+' 下載gif文件，二進制方式
+On Error GoTo lnErrorOpen
+buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+On Error Resume Next
+Kill App_szPath + "ADVERT\" + szFileName + ".gif"
+On Error GoTo lnErrorOpen
+Open App_szPath + "ADVERT\" + szFileName + ".gif" For Binary Access Write As #nFileNo
+On Error GoTo 0
+Put #nFileNo, , buffer()
+Close #nFileNo
+
+lnErrorOpen:
+On Error GoTo 0
+
+End Sub
+
+' 加載廣告列表
+Public Sub LoadAdvertList()
+
+Dim nFileNo As Integer, sz As String, szs() As String
+Gui_nAdvertNum = 0
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + "ADVERT\advert.txt" For Input As #nFileNo
+On Error GoTo 0
+If Not EOF(nFileNo) Then
+    Line Input #nFileNo, sz
+    If sz = "XQWizard Advert List" Then
+        Do While Not EOF(nFileNo)
+            Line Input #nFileNo, sz
+            ' 每一行包含的信息有：文件名，播放時間，htm文件大小，gif文件大小
+            ' 四項用逗號隔開，如“elephantbase,10,183,5618”
+            szs = Split(sz, ",")
+            If UBound(szs) >= 0 Then
+                Gui_nAdvertNum = Gui_nAdvertNum + 1
+                Gui_nAdvertFiles(Gui_nAdvertNum) = szs(0)
+                If UBound(szs) >= 1 Then
+                    Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
+                    If UBound(szs) >= 3 Then
+                        CheckAdvert szs(0), Str2Int(szs(2)), Str2Int(szs(3))
+                    End If
+                Else
+                    Gui_nAdvertTimes(Gui_nAdvertNum) = 10
+                End If
+            End If
+        Loop
+    End If
+End If
+Close #nFileNo
+
+lnErrorOpen:
+On Error GoTo 0
+
+End Sub
+
+' 以上是廣告例程
 
 ' 以下是主函數例程
 
@@ -2786,14 +2944,16 @@ Public Sub Main()
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
 Dim i As Integer, sz As String
 
-' 弹出启动画面
+' 彈出啟動畫面
 frmStartUp.Show
+frmStartUp.Width = frmStartUp.imgStartUp.Width
+frmStartUp.Height = frmStartUp.imgStartUp.Height
 frmStartUp.Refresh
-' 初始化，可能有等待，启动画面保持
+' 初始化，可能有等待，啟動畫面保持
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
-CchessInit True
-EccoInitOpenVar True
+CchessInit CCHESS_TRIDITIONAL
+EccoInitOpenVar CCHESS_TRIDITIONAL
 LoadRegs
 LoadTips
 If Options_bLargeGui Then
@@ -2803,17 +2963,11 @@ If Options_bLargeGui Then
     Next
     Set App_picEngineRed = frmHide.imgEngineRedLarge.Picture
     Set App_picEngineBlack = frmHide.imgEngineBlackLarge.Picture
-    On Error Resume Next
-    For i = 0 To 29
-        frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
-    Next
-    For i = 0 To 5
-        Set App_picCoord(i) = LoadPicture(App_szPath + "\IMAGES_L\" + _
-                Choose(i + 1, "COORD", "FLIP", "WXF", "WXF", "ICCS", "ICCSFLIP") + ".GIF")
-    Next
-    On Error GoTo 0
     BoardSettingLarge Options_nBoardL
     PiecesSettingLarge Options_nPiecesL
+    ' 初始化 frmHide 中的小棋盤和小棋子，這些圖片會被 frmPosEdit 用到
+    BoardSettingSmallHide Options_nBoardS
+    PiecesSettingSmallHide Options_nPiecesS
 Else
     Set App_frmMain = frmMainSmall
     For i = 0 To 29
@@ -2821,19 +2975,12 @@ Else
     Next
     Set App_picEngineRed = frmHide.imgEngineRed.Picture
     Set App_picEngineBlack = frmHide.imgEngineBlack.Picture
-    On Error Resume Next
-    For i = 0 To 5
-        Set App_picCoord(i) = LoadPicture(App_szPath + "\IMAGES_S\" + _
-                Choose(i + 1, "COORD", "FLIP", "WXF", "WXF", "ICCS", "ICCSFLIP") + ".GIF")
-    Next
-    On Error GoTo 0
     BoardSettingSmall Options_nBoardS
     PiecesSettingSmall Options_nPiecesS
 End If
 MusicSetting Options_nMusic
 Timer_bEnabled = False
-App_bRegistered = (UCase(Gui_szRegCode) = Crc32Hex(Gui_szUser))
-' 加载引擎，可能有等待，启动画面保持
+' 加載引擎，可能有等待，啟動畫面保持
 Engine_nStatus = IDLE_UNLOAD
 If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
@@ -2843,11 +2990,11 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     On Error GoTo 0
 End If
 OpenEngine
+App_bRedTurn = False
 If Command = "" Then
     App_szFileName = ""
     RestartGame
     BoardFlush
-    CoordFlush
     LabelFlush
     MoveFlush
     EngineNewGame
@@ -2873,18 +3020,40 @@ Else
         LabelFlush
     End If
 End If
-' 关闭启动画面，弹出日积月累
+' 打開日積月累，調整廣告框大小，關閉啟動畫面
+On Error Resume Next
+frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
+On Error GoTo 0
 App_frmMain.Show
+App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
+App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
+App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 Unload frmStartUp
-If Gui_bShowHowTo Or Not App_bRegistered Then
+If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
-' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
-If Options_bCheckUpdate And Gui_szDate <> Date Then
+' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
+If Options_bCheckUpdate And Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
-' 进入用户状态，接收事件
+' 加載廣告，如果加載失敗，則下載廣告列表，再次加載失敗則放棄
+Gui_nAdvertIndex = 0
+Gui_nAdvertTimes(0) = 10 ' 10秒鐘后開始播放廣告
+LoadAdvertList
+If Gui_nAdvertNum = 0 Then
+    DownloadAdvertList
+    LoadAdvertList
+    If Gui_nAdvertNum = 0 Then
+        Gui_nAdvertNum = 1
+        Gui_nAdvertFiles(1) = "elephantbase"
+        Gui_nAdvertTimes(1) = 32767
+    Else
+        Gui_szAdvertDate = Date
+    End If
+End If
+
+' 進入用戶狀態，接收事件
 nEventIndex = EVENT_TIMER
 App_bRunning = True
 Do While App_bRunning
@@ -2950,6 +3119,19 @@ Do While App_bRunning
                     frmHide.mci.Command = "Play"
                 End If
             End If
+            nEventIndex = EVENT_ADVERT
+        Case EVENT_ADVERT ' 廣告
+            ' 播放廣告可以跟引擎和播放棋局同時進行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
+            dfThisTime = Timer
+            dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
+            If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
+                Gui_dfLastTime = Timer
+                Gui_nAdvertIndex = Gui_nAdvertIndex + 1
+                If Gui_nAdvertIndex > Gui_nAdvertNum Then
+                    Gui_nAdvertIndex = 1
+                End If
+                App_frmMain.web.Navigate App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
+            End If
             nEventIndex = EVENT_GUI
         Case EVENT_GUI ' 界面
             DoEvents
@@ -2958,6 +3140,14 @@ Do While App_bRunning
         Sleep 1
     End If
 Loop
+' 退出前下載廣告列表
+If Gui_szAdvertDate <> Date Then
+    DownloadAdvertList
+    LoadAdvertList
+    If Gui_nAdvertNum > 0 Then
+        Gui_szAdvertDate = Date
+    End If
+End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
 frmHide.mci.Command = "Close"

@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmHowTo 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "日積月累"
-   ClientHeight    =   3195
+   ClientHeight    =   3210
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4680
@@ -18,7 +18,7 @@ Begin VB.Form frmHowTo
    Icon            =   "HOWTO.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3195
+   ScaleHeight     =   3210
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
@@ -28,7 +28,7 @@ Begin VB.Form frmHowTo
       Height          =   375
       Left            =   3600
       TabIndex        =   5
-      Top             =   2280
+      Top             =   2760
       Width           =   855
    End
    Begin VB.CommandButton btnNext 
@@ -36,7 +36,7 @@ Begin VB.Form frmHowTo
       Height          =   375
       Left            =   2520
       TabIndex        =   4
-      Top             =   2280
+      Top             =   2760
       Width           =   975
    End
    Begin VB.CommandButton btnPrev 
@@ -44,39 +44,15 @@ Begin VB.Form frmHowTo
       Height          =   375
       Left            =   1440
       TabIndex        =   3
-      Top             =   2280
+      Top             =   2760
       Width           =   975
-   End
-   Begin VB.CommandButton btnFreeReg 
-      Caption         =   "免費注冊"
-      Height          =   375
-      Left            =   3240
-      TabIndex        =   8
-      Top             =   2760
-      Width           =   1215
-   End
-   Begin VB.CommandButton btnPurchase 
-      Caption         =   "如何注冊"
-      Height          =   375
-      Left            =   1800
-      TabIndex        =   7
-      Top             =   2760
-      Width           =   1215
-   End
-   Begin VB.CommandButton btnRegister 
-      Caption         =   "輸入注冊碼"
-      Height          =   375
-      Left            =   240
-      TabIndex        =   6
-      Top             =   2760
-      Width           =   1335
    End
    Begin VB.CheckBox chkShowHowTo 
       Caption         =   "啟動時顯示"
       Height          =   255
       Left            =   120
       TabIndex        =   2
-      Top             =   2280
+      Top             =   2760
       Width           =   1215
    End
    Begin VB.TextBox txtTips 
@@ -89,7 +65,7 @@ Begin VB.Form frmHowTo
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   1575
+      Height          =   2055
       Left            =   120
       Locked          =   -1  'True
       MultiLine       =   -1  'True
@@ -131,8 +107,8 @@ Attribute VB_Exposed = False
 ' HOWTO.FRM - Source Code for XiangQi Wizard, Part VIII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.02, Last Modified: Oct. 2006
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -152,11 +128,8 @@ Option Explicit
 
 Private Sub Form_Load()
 
-chkShowHowTo.Enabled = App_bRegistered
-btnPurchase.Enabled = Not App_bRegistered
-btnFreeReg.Enabled = Not App_bRegistered
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
-txtTips.Text = IIf(App_bRegistered, Gui_szTips(Gui_nTipIndex), IIf(Rnd < 0.5, Gui_szRegTip1, Gui_szRegTip2))
+txtTips.Text = Gui_szTips(Gui_nTipIndex)
 
 End Sub
 
@@ -189,23 +162,5 @@ End Sub
 Private Sub btnCancel_Click()
 
 Unload Me
-
-End Sub
-
-Private Sub btnRegister_Click()
-
-frmRegister.Show vbModal, Me
-
-End Sub
-
-Private Sub btnPurchase_Click()
-
-ShellExecuteA 0, vbNullString, App_szPath + "HELP\PURCHASE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
-
-End Sub
-
-Private Sub btnFreeReg_Click()
-
-ShellExecuteA 0, vbNullString, App_szPath + "HELP\FREEREG.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
