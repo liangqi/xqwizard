@@ -722,6 +722,12 @@ Begin VB.Form frmHide
       Top             =   120
       Width           =   7815
    End
+   Begin VB.Image imgAdvert 
+      Height          =   975
+      Left            =   120
+      Top             =   120
+      Width           =   3735
+   End
 End
 Attribute VB_Name = "frmHide"
 Attribute VB_GlobalNameSpace = False

@@ -2946,6 +2946,8 @@ Dim i As Integer, sz As String
 
 ' 弹出启动画面
 frmStartUp.Show
+frmStartUp.Width = frmStartUp.imgStartUp.Width
+frmStartUp.Height = frmStartUp.imgStartUp.Height
 frmStartUp.Refresh
 ' 初始化，可能有等待，启动画面保持
 Randomize Timer
@@ -3018,8 +3020,14 @@ Else
         LabelFlush
     End If
 End If
-' 关闭启动画面，弹出日积月累
+' 打开日积月累，调整广告框大小，关闭启动画面
+On Error Resume Next
+frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
+On Error GoTo 0
 App_frmMain.Show
+App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
+App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
+App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 Unload frmStartUp
 If Gui_bShowHowTo Then

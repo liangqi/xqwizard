@@ -232,7 +232,7 @@ Begin VB.Form frmMainSmall
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1996,7 +1996,6 @@ tlb.ImageList = frmHide.imglst
 For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
-web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 
 End Sub
 

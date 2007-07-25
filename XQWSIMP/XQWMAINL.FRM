@@ -64,6 +64,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -99,6 +100,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -120,6 +122,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -156,6 +159,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -228,7 +232,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -829,11 +833,13 @@ Begin VB.Form frmMainLarge
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -1947,7 +1953,6 @@ tlb.ImageList = frmHide.imglst
 For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
-web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 
 End Sub
 
