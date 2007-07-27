@@ -2798,7 +2798,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/whatsnew_trid.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trid.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2826,7 +2826,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error Resume Next
 MkDir App_szPath + "ADVERT"
 On Error GoTo lnErrorOpen
@@ -2873,7 +2873,7 @@ End If
 nFileNo = FreeFile
 ' 下載htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
 On Error GoTo 0
 sz = Replace(sz, Chr(10), vbCrLf)
@@ -2882,7 +2882,7 @@ Print #nFileNo, sz;
 Close #nFileNo
 ' 下載gif文件，二進制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error Resume Next
 Kill App_szPath + "ADVERT\" + szFileName + ".gif"
 On Error GoTo lnErrorOpen
