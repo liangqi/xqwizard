@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Designed by Morning Yellow, Version: 3.31, Last Modified: Jul. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.3"
+Public Const STRING_VERSION     As String = "3.31"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -2827,15 +2827,18 @@ Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
 sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
-On Error Resume Next
-MkDir App_szPath + "ADVERT"
-On Error GoTo lnErrorOpen
-Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
 On Error GoTo 0
-sz = Replace(sz, Chr(10), vbCrLf)
-sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
-Print #nFileNo, sz;
-Close #nFileNo
+If sz <> "" Then
+    On Error Resume Next
+    MkDir App_szPath + "ADVERT"
+    On Error GoTo lnErrorOpen
+    Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
+    On Error GoTo 0
+    sz = Replace(sz, Chr(10), vbCrLf)
+    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+    Print #nFileNo, sz;
+    Close #nFileNo
+End If
 
 lnErrorOpen:
 On Error GoTo 0
@@ -2864,8 +2867,8 @@ Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Integer, By
 
 Dim nFileNo As Integer, sz As String, buffer() As Byte
 ' 判斷文件字節數，如果跟廣告列表中的一致，就不需要下載了
-If GetFileSize("ADVERT\" + szFileName + ".htm") = nHtmSize Then
-    If GetFileSize("ADVERT\" + szFileName + ".gif") = nGifSize Then
+If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".htm") = nHtmSize Then
+    If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".gif") = nGifSize Then
         Exit Sub
     End If
 End If
@@ -2874,22 +2877,29 @@ nFileNo = FreeFile
 ' 下載htm文件，文本方式
 On Error GoTo lnErrorOpen
 sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
-Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
 On Error GoTo 0
-sz = Replace(sz, Chr(10), vbCrLf)
-sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
-Print #nFileNo, sz;
-Close #nFileNo
+If sz <> "" Then
+    On Error GoTo lnErrorOpen
+    Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
+    On Error GoTo 0
+    sz = Replace(sz, Chr(10), vbCrLf)
+    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+    Print #nFileNo, sz;
+    Close #nFileNo
+End If
 ' 下載gif文件，二進制方式
 On Error GoTo lnErrorOpen
 buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
-On Error Resume Next
-Kill App_szPath + "ADVERT\" + szFileName + ".gif"
-On Error GoTo lnErrorOpen
-Open App_szPath + "ADVERT\" + szFileName + ".gif" For Binary Access Write As #nFileNo
 On Error GoTo 0
-Put #nFileNo, , buffer()
-Close #nFileNo
+If UBound(buffer) >= 0 Then
+    On Error Resume Next
+    Kill App_szPath + "ADVERT\" + szFileName + ".gif"
+    On Error GoTo lnErrorOpen
+    Open App_szPath + "ADVERT\" + szFileName + ".gif" For Binary Access Write As #nFileNo
+    On Error GoTo 0
+    Put #nFileNo, , buffer()
+    Close #nFileNo
+End If
 
 lnErrorOpen:
 On Error GoTo 0
