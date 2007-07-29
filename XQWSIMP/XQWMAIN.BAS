@@ -615,13 +615,9 @@ End Sub
 ' ´æ´¢±êÇ©
 Public Function PutLabel(ByVal LabelName As String, ByVal LabelValue As String) As String
 
-Dim i As Integer
-i = InStr(LabelValue, vbCrLf)
-If i > 0 Then
-    PutLabel = "[" + LabelName + " " + Chr(34) + Left(LabelValue, i - 1) + Chr(34) + "]"
-Else
-    PutLabel = "[" + LabelName + " " + Chr(34) + LabelValue + Chr(34) + "]"
-End If
+LabelValue = Replace(LabelValue, Chr(13), "")
+LabelValue = Replace(LabelValue, Chr(10), "")
+PutLabel = "[" + LabelName + " " + Chr(34) + LabelValue + Chr(34) + "]"
 
 End Function
 
@@ -797,6 +793,8 @@ Public Sub LoadFenStr(ByVal szFenStr As String)
 If szFenStr = "" Then
     Exit Sub
 End If
+szFenStr = Replace(szFenStr, Chr(13), "")
+szFenStr = Replace(szFenStr, Chr(10), "")
 App_szFileName = ""
 RestartGame
 Game_bStartPos = False
