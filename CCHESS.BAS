@@ -1,6 +1,15 @@
 Attribute VB_Name = "mdlCChess"
 Option Explicit
 
+Public Type RollbackStruct
+    dwZobristKey    As Long
+    dwZobristLock0  As Long
+    dwZobristLock1  As Long
+    vlWhiteValue    As Long
+    vlBlackValue    As Long
+    mvs             As Long
+End Type
+
 Public Type PositionStruct
     sdPlayer                As Long
     ucpcSquares(0 To 255)   As Byte
@@ -11,12 +20,12 @@ Public Type PositionStruct
     dwBitPiece              As Long
     wBitRanks(0 To 15)      As Integer
     wBitFiles(0 To 15)      As Integer
-    nMoveNum                As Long
-    nStartMove              As Long
-    mvs(0 To 1023)          As Long
-    ucRepHash(0 To 4095)    As Byte
     vlWhiteValue            As Long
     vlBlackValue            As Long
+    nMoveNum                As Long
+    nDistance               As Long
+    rbsList(0 To 255)       As RollbackStruct
+    ucRepHash(0 To 1023)    As Byte
 End Type
 
 Public Declare Function CchessVersion Lib "CCHESS.DLL" Alias "_CchessVersion@0" () As Long
