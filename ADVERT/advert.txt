@@ -1,2 +1,5 @@
 XQWizard Advert List
 elephantbase,10,183,5618
+qiyi_ad,10,195,4758
+elephantbase,10,183,5618
+teachvcd,10,182,61878

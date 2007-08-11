@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.32, Last Modified: Aug. 2007
+' Designed by Morning Yellow, Version: 3.33, Last Modified: Aug. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.32"
+Public Const STRING_VERSION     As String = "3.33"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -191,7 +191,6 @@ Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
-Public Gui_szAdvertSN           As String   ' 廣告的序列號
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 Public Gui_nAdvertNum           As Integer  ' 廣告數量
@@ -2691,7 +2690,6 @@ Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
-Gui_szAdvertSN = GetSetting("XQWizard", "Gui", "AdvertSN", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
@@ -2745,7 +2743,6 @@ SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
-SaveSetting "XQWizard", "Gui", "AdvertSN", Gui_szAdvertSN
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
@@ -2861,7 +2858,7 @@ On Error GoTo 0
 End Function
 
 ' 檢查廣告(htm和gif文件)
-Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Integer, ByVal nGifSize As Integer)
+Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Long, ByVal nGifSize As Long)
 
 Dim nFileNo As Integer, sz As String, buffer() As Byte
 ' 判斷文件字節數，如果跟廣告列表中的一致，就不需要下載了
@@ -2927,7 +2924,7 @@ If Not EOF(nFileNo) Then
                 If UBound(szs) >= 1 Then
                     Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
                     If UBound(szs) >= 3 Then
-                        CheckAdvert szs(0), Str2Int(szs(2)), Str2Int(szs(3))
+                        CheckAdvert szs(0), Str2Lng(szs(2)), Str2Lng(szs(3))
                     End If
                 Else
                     Gui_nAdvertTimes(Gui_nAdvertNum) = 10

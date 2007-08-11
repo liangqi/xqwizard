@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.32 (简体中文版)
+AppVerName=象棋巫师 3.33 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -70,6 +70,10 @@ Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\qiyi_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\qiyi_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\teachvcd.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\teachvcd.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; 棋盘文件(小)
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\RED.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
