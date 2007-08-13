@@ -20,7 +20,7 @@ public class StartUp extends Form implements CommandListener {
 
 	private Command cmdAbout;
 	private Command cmdStart;
-	private Command cmdExit;
+	// private Command cmdExit;
 
 	private Alert altAbout;
 
@@ -51,7 +51,7 @@ public class StartUp extends Form implements CommandListener {
 
 		cmdAbout = new Command("关于\"象棋小巫师\"", Command.BACK, 1);
 		cmdStart = new Command("开始", Command.OK, 2);
-		cmdExit = new Command("退出", Command.CANCEL, 3);
+		// cmdExit = new Command("退出", Command.CANCEL, 3);
 
 		addCommand(cmdAbout);
 		addCommand(cmdStart);
@@ -82,8 +82,8 @@ public class StartUp extends Form implements CommandListener {
         	midlet.setHandicap(cgHandicap.getSelectedIndex());
         	midlet.setLevel(cgLevel.getSelectedIndex());
             Display.getDisplay(midlet).setCurrent(midlet.getMainForm());
-    	} else if (c == cmdExit) {
-    		midlet.notifyDestroyed();
+    	// } else if (c == cmdExit) {
+    		// midlet.notifyDestroyed();
     	}
     }
 
