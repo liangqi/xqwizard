@@ -1237,6 +1237,9 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             Timer_bEnabled = False
             App_frmMain.mnEngineLevel.Checked = False
             App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+            If Engine_bRed Or Engine_bBlack Then
+                EngineLoaded True
+            End If
         ElseIf (nMoveStatus And MOVE_PERPETUAL) <> 0 Then
             Game_nResult = RESULT_DRAW
             If (nMoveStatus And MOVE_PERPETUAL_WIN) <> 0 Then
@@ -1252,6 +1255,9 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             Timer_bEnabled = False
             App_frmMain.mnEngineLevel.Checked = False
             App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+            If Engine_bRed Or Engine_bBlack Then
+                EngineLoaded True
+            End If
         End If
     End If
     If App_frmMain.mnEngineDraw.Checked Then
@@ -1664,8 +1670,10 @@ End Sub
 ' 顯示引擎信息的對話框
 Public Sub AboutEngine()
 
-MsgBoxWithIcon "引擎：" + Engine_szName + vbCrLf + "版權：" + Engine_szCopyright + vbCrLf + _
-        "作者：" + Engine_szAuthor + vbCrLf + "用戶：" + Engine_szUser, "關于UCCI引擎", Engine_szFile
+MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" + Engine_szName + vbCrLf) + _
+        IIf(Engine_szCopyright = "", "", "版權：" + Engine_szCopyright + vbCrLf) + _
+        IIf(Engine_szAuthor = "", "", "作者：" + Engine_szAuthor + vbCrLf) + _
+        IIf(Engine_szUser = "", "", "用戶：" + Engine_szUser), "關于UCCI引擎", Engine_szFile
 
 End Sub
 
@@ -2213,10 +2221,10 @@ Else
     PipeOpen Engine_pipe, Engine_szFile
     SendEngine "ucci"
     dfLastTime = Timer
-    Engine_szName = "N/A"
-    Engine_szCopyright = "N/A"
-    Engine_szAuthor = "N/A"
-    Engine_szUser = "N/A"
+    Engine_szName = ""
+    Engine_szCopyright = ""
+    Engine_szAuthor = ""
+    Engine_szUser = ""
     Engine_dwTimeRatio = 1
     Do While Engine_nStatus = IDLE_UNLOAD
         lpStr = PipeLineInput(Engine_pipe)
@@ -2288,10 +2296,10 @@ Else
     PipeOpen Engine_pipeSlave, szEngineFile
     SendEngine "ucci", SLAVE_ENGINE
     dfLastTime = Timer
-    Engine_szSlaveName = "N/A"
-    szCopyright = "N/A"
-    szAuthor = "N/A"
-    szUser = "N/A"
+    Engine_szSlaveName = ""
+    szCopyright = ""
+    szAuthor = ""
+    szUser = ""
     Engine_dwTimeRatioSlave = 1
     Do While Not Engine_bSlaveBlack
         lpStr = PipeLineInput(Engine_pipeSlave)
@@ -2321,8 +2329,10 @@ Else
         End If
     Loop
     If Engine_bSlaveBlack Then
-        MsgBoxWithIcon "引擎：" + Engine_szSlaveName + vbCrLf + "版權：" + szCopyright + vbCrLf + _
-                "作者：" + szAuthor + vbCrLf + "用戶：" + szUser, "關于UCCI引擎", szEngineFile
+        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" + Engine_szSlaveName + vbCrLf) + _
+                IIf(szCopyright = "", "", "版權：" + szCopyright + vbCrLf) + _
+                IIf(szAuthor = "", "", "作者：" + szAuthor + vbCrLf) + _
+                IIf(szUser = "", "", "用戶：" + szUser), "關于UCCI引擎", szEngineFile
         If Engine_dwTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
