@@ -317,14 +317,31 @@ public class MainForm extends GameCanvas implements CommandListener {
 
             break;
 */
+	private static Image imgBoard, imgBackground;
+
+	static {
+		try {
+			imgBoard = Image.createImage("/images/board.gif");
+			imgBackground = Image.createImage("/images/background.gif");
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 
 	public void paint(Graphics g) {
-		g.setColor(0xffffff);
-        g.fillRect(0, 0, getWidth(), getHeight());
+		int widthScreen = getWidth();
+		int heightScreen = getHeight();
+		int widthBackground = imgBackground.getWidth();
+		int heightBackground = imgBackground.getHeight();
+		for (int x = 0; x < widthScreen; x += widthBackground) {
+			for (int y = 0; y < heightScreen; y += heightBackground) {
+				g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
+			}
+		}
 		int left = (getWidth() - 144) / 2;
 		int top = (getHeight() - 160) / 2;
+		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
 		try {
-			g.drawImage(Image.createImage("/images/board.gif"), left, top, Graphics.LEFT + Graphics.TOP);
 			g.drawImage(Image.createImage("/images/ba.gif"), left, top, Graphics.LEFT + Graphics.TOP);
 		} catch (Exception e) {
 			// Ignored
