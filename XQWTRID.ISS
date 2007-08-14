@@ -70,6 +70,10 @@ Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\ccgc.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\ccgc.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\aigames.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\aigames.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\qiyi_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\qiyi_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\teachvcd.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
