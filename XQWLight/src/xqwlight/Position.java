@@ -1,17 +1,47 @@
+/*
+Position.java - Source Code for XiangQi Wizard Light, Part I
+
+XiangQi Wizard Light - a Chinese Chess Program for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+Copyright (C) 2004-2007 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 package xqwlight;
 
 public class Position {
-	private static final int MAX_MOVE_NUM = 256;
+	public static final int MATE_VALUE = 1000;
+	public static final int WIN_VALUE = MATE_VALUE - 100;
+	public static final int NULL_SAFE_MARGIN = 300;
+	public static final int NULL_OKAY_MARGIN = 120;
+	public static final int CONTEMPT_VALUE = 20;
+	public static final int ADVANCED_VALUE = 3;
 
-	private static final int PIECE_KING = 1;
-	private static final int PIECE_ADVISOR = 2;
-	private static final int PIECE_BISHOP = 3;
-	private static final int PIECE_KNIGHT = 4;
-	private static final int PIECE_ROOK = 5;
-	private static final int PIECE_CANNON = 6;
-	private static final int PIECE_PAWN = 7;
+    public static final int MAX_GEN_MOVES = 128;
 
-	private static final byte[] IN_BOARD = new byte[] {
+	public static final int MAX_MOVE_NUM = 256;
+
+	public static final int PIECE_KING = 1;
+	public static final int PIECE_ADVISOR = 2;
+	public static final int PIECE_BISHOP = 3;
+	public static final int PIECE_KNIGHT = 4;
+	public static final int PIECE_ROOK = 5;
+	public static final int PIECE_CANNON = 6;
+	public static final int PIECE_PAWN = 7;
+
+	public static final byte[] IN_BOARD = new byte[] {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,26 +60,26 @@ public class Position {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	private static final byte[] IN_FORT = new byte[] {
+	public static final byte[] IN_FORT = new byte[] {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	private static final byte[] LEGAL_SPAN = new byte[] {
+	public static final byte[] LEGAL_SPAN = new byte[] {
 							 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -85,7 +115,7 @@ public class Position {
 		0, 0, 0, 0, 0, 0, 0,
 	};
 
-	private static final byte[] KNIGHT_PIN = new byte[] {
+	public static final byte[] KNIGHT_PIN = new byte[] {
 									0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -121,13 +151,13 @@ public class Position {
 		0,  0,  0,  0,  0,  0,  0
 	};
 
-	private static final int[] KING_DELTA = {-16, -1, 1, 16}; 
-	private static final int[] ADVISOR_DELTA = {-17, -15, 15, 17}; 
-	private static final int[][] KNIGHT_DELTA = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 33}}; 
-	private static final int[][] KNIGHT_CHECK_DELTA = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
-	private static final int[] MVV_VALUE = {0, 50, 10, 10, 30, 40, 30, 20};
+	public static final int[] KING_DELTA = {-16, -1, 1, 16}; 
+	public static final int[] ADVISOR_DELTA = {-17, -15, 15, 17}; 
+	public static final int[][] KNIGHT_DELTA = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 33}}; 
+	public static final int[][] KNIGHT_CHECK_DELTA = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
+	public static final int[] MVV_VALUE = {0, 50, 10, 10, 30, 40, 30, 20};
 
-	private static final short PIECE_VALUE[][] = {
+	public static final short PIECE_VALUE[][] = {
 		{
 			0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 			0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -250,7 +280,7 @@ public class Position {
 		},
 	};
 
-	private static final int BOARD_HANDICAP[][] = {
+	public static final int BOARD_HANDICAP[][] = {
 		{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0,
@@ -290,114 +320,130 @@ public class Position {
 		}
 	};
 
-	public static boolean IN_BOARD(int sq) {
+	public static final boolean IN_BOARD(int sq) {
 		return IN_BOARD[sq] != 0;
 	}
 
-	private static boolean IN_FORT(int sq) {
+	public static final boolean IN_FORT(int sq) {
 		return IN_FORT[sq] != 0;
 	}
 
-//	private static int RANK_Y(int sq) {
-//		return sq >> 4;
-//	}
+	public static final int RANK_Y(int sq) {
+		return sq >> 4;
+	}
 
-//	private static int FILE_X(int sq) {
-//		return sq & 15;
-//	}
+	public static final int FILE_X(int sq) {
+		return sq & 15;
+	}
 
-//	private static int COORD_XY(int x, int y) {
-//		return x + (y << 4);
-//	}
+	public static final int COORD_XY(int x, int y) {
+		return x + (y << 4);
+	}
 
-	private static int SQUARE_FLIP(int sq) {
+	public static final int SQUARE_FLIP(int sq) {
 		return 254 - sq;
 	}
 
-//	private static int FILE_FLIP(int x) {
-//		return 15 - x;
-//	}
+	public static final int FILE_FLIP(int x) {
+		return 14 - x;
+	}
 
-//	private static int RANK_FLIP(int y) {
-//		return 15 - y;
-//	}
+	public static final int RANK_FLIP(int y) {
+		return 15 - y;
+	}
 
-	private static int SQUARE_FORWARD(int sq, int sd) {
+	public static final int MIRROR_SQUARE(int sq) {
+		return COORD_XY(FILE_FLIP(FILE_X(sq)), RANK_Y(sq));
+	}
+
+	public static final int SQUARE_FORWARD(int sq, int sd) {
 		return sq - 16 + (sd << 5);
 	}
 
-//	private static int SQUARE_BACKWARD(int sq, int sd) {
-//		return sq + 16 - (sd << 5);
-//	}
+	public static final int SQUARE_BACKWARD(int sq, int sd) {
+		return sq + 16 - (sd << 5);
+	}
 
-	private static boolean KING_SPAN(int sqSrc, int sqDst) {
+	public static final boolean KING_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 1;
 	}
 
-	private static boolean ADVISOR_SPAN(int sqSrc, int sqDst) {
+	public static final boolean ADVISOR_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 2;
 	}
 
-	private static boolean BISHOP_SPAN(int sqSrc, int sqDst) {
+	public static final boolean BISHOP_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 3;
 	}
 
-	private static int BISHOP_PIN(int sqSrc, int sqDst) {
+	public static final int BISHOP_PIN(int sqSrc, int sqDst) {
 		return (sqSrc + sqDst) >> 1;
 	}
 
-	private static int KNIGHT_PIN(int sqSrc, int sqDst) {
+	public static final int KNIGHT_PIN(int sqSrc, int sqDst) {
 		return sqSrc + KNIGHT_PIN[sqDst - sqSrc + 256];
 	}
 
-	private static boolean HOME_HALF(int sq, int sd) {
+	public static final boolean HOME_HALF(int sq, int sd) {
 		return (sq & 0x80) != (sd << 7);
 	}
 
-	private static boolean AWAY_HALF(int sq, int sd) {
+	public static final boolean AWAY_HALF(int sq, int sd) {
 		return (sq & 0x80) == (sd << 7);
 	}
 
-	private static boolean SAME_HALF(int sqSrc, int sqDst) {
+	public static final boolean SAME_HALF(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x80) == 0;
 	}
 
-//	private static boolean DIFF_HALF(int sqSrc, int sqDst) {
-//		return ((sqSrc ^ sqDst) & 0x80) != 0;
-//	}
+	public static final boolean DIFF_HALF(int sqSrc, int sqDst) {
+		return ((sqSrc ^ sqDst) & 0x80) != 0;
+	}
 
-	private static boolean SAME_RANK(int sqSrc, int sqDst) {
+	public static final boolean SAME_RANK(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0xf0) == 0;
 	}
 
-	private static boolean SAME_FILE(int sqSrc, int sqDst) {
+	public static final boolean SAME_FILE(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x0f) == 0;
 	}
 
-	private static int SIDE_TAG(int sd) {
+	public static final int SIDE_TAG(int sd) {
 		return 8 + (sd << 3);
 	}
 
-	private static int OPP_SIDE_TAG(int sd) {
+	public static final int OPP_SIDE_TAG(int sd) {
 		return 16 - (sd << 3);
 	}
 
-	private static int SRC(int mv) {
+	public static final int SRC(int mv) {
 		return mv & 255;
 	}
 
-	private static int DST(int mv) {
+	public static final int DST(int mv) {
 		return mv >> 8;
 	}
 
-	private static int PreGen_zobristKeyPlayer;
-	private static int PreGen_zobristLockPlayer0;
-	private static int PreGen_zobristLockPlayer1;
-	private static int[][] PreGen_zobristKeyTable = new int[14][256];
-	private static int[][] PreGen_zobristLockTable0 = new int[14][256];
-	private static int[][] PreGen_zobristLockTable1 = new int[14][256];
+	public static final int MOVE(int sqSrc, int sqDst) {
+		return sqSrc + (sqDst << 8);
+	}
 
-	private static int longRand(int[] seed) {
+	public static final int MIRROR_MOVE(int mv) {
+		return MOVE(MIRROR_SQUARE(SRC(mv)), MIRROR_SQUARE(DST(mv)));
+	}
+
+	public static final int MVV_LVA(int pc, int lva) {
+		return MVV_VALUE[pc & 7] - lva;
+	}
+
+	public static int PreGen_zobristKeyPlayer;
+	public static int PreGen_zobristLockPlayer0;
+	public static int PreGen_zobristLockPlayer1;
+	public static int[][] PreGen_zobristKeyTable = new int[14][256];
+	public static int[][] PreGen_zobristLockTable0 = new int[14][256];
+	public static int[][] PreGen_zobristLockTable1 = new int[14][256];
+
+	public static int longRand(int[] seed) {
 		long longSeed = seed[0];
 		longSeed *= 16807;
 		seed[0] = (int) (longSeed % 0x7fffffff);
@@ -423,35 +469,20 @@ public class Position {
 		}
 	}
 
-	private int sdPlayer;
-	private byte[] squares = new byte[256];
+	public int sdPlayer;
+	public byte[] squares = new byte[256];
 
-	private int zobristKey, zobristLock0, zobristLock1;
-	private int vlWhite, vlBlack;
-	private int moveNum, distance;
+	public int zobristKey;
+	public int zobristLock0;
+	public int zobristLock1;
+	public int vlWhite, vlBlack;
+	public int moveNum, distance;
 
-	private int[] mvList = new int[MAX_MOVE_NUM];
-	private int[] pcList = new int[MAX_MOVE_NUM];
-	private int[] keyList = new int[MAX_MOVE_NUM];
-	private boolean[] chkList = new boolean[MAX_MOVE_NUM];
+	public int[] mvList = new int[MAX_MOVE_NUM];
+	public int[] pcList = new int[MAX_MOVE_NUM];
+	public int[] keyList = new int[MAX_MOVE_NUM];
+	public boolean[] chkList = new boolean[MAX_MOVE_NUM];
 
-/*
-	public int getPiece(int sq) {
-		return squares[sq];
-	}
-
-	public void setPiece(int sq, int pc) {
-		squares[sq] = (byte) pc;
-	}
-
-	public int getPlayer() {
-		return sdPlayer;
-	}
-
-	public void setPlayer(int sd) {
-		sdPlayer = sd;
-	}
-*/
 	public void clearBoard() {
 		sdPlayer = 0;
 		for (int sq = 0; sq < 256; sq ++) {
@@ -588,12 +619,12 @@ public class Position {
 		int pcOppSide = OPP_SIDE_TAG(sdPlayer);
 		for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
 			int pcSrc = squares[sqSrc];
-			if ((pcSrc & pcSelfSide) != 0) {
+			if ((pcSrc & pcSelfSide) == 0) {
 				continue;
 			}
 			switch (pcSrc - pcSelfSide) {
 			case PIECE_KING:
-				for (int i = 0; i < KING_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int sqDst = sqSrc + KING_DELTA[i];
 					if (!IN_FORT(sqDst)) {
 						continue;
@@ -601,37 +632,37 @@ public class Position {
 					int pcDst = squares[sqDst];
 					if (vls == null) {
 						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = sqSrc + (sqDst << 8);
+							mvs[moves] = MOVE(sqSrc, sqDst);
 							moves ++;
 						}
 					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = sqSrc + (sqDst << 8);
-						vls[moves] = MVV_VALUE[pcDst & 7] - 5;
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 5);
 						moves ++;
 					}
 				}
 				break;
 			case PIECE_ADVISOR:
-				for (int i = 0; i < ADVISOR_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int sqDst = sqSrc + ADVISOR_DELTA[i];
-					if (IN_FORT(sqDst)) {
+					if (!IN_FORT(sqDst)) {
 						continue;
 					}
 					int pcDst = squares[sqDst];
 					if (vls == null) {
 						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = sqSrc + (sqDst << 8);
+							mvs[moves] = MOVE(sqSrc, sqDst);
 							moves ++;
 						}
 					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = sqSrc + (sqDst << 8);
-						vls[moves] = MVV_VALUE[pcDst & 7] - 1;
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 1);
 						moves ++;
 					}
 				}
 				break;
 			case PIECE_BISHOP:
-				for (int i = 0; i < ADVISOR_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int sqDst = sqSrc + ADVISOR_DELTA[i];
 					if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) && squares[sqDst] == 0)) {
 						continue;
@@ -640,20 +671,20 @@ public class Position {
 					int pcDst = squares[sqDst];
 					if (vls == null) {
 						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = sqSrc + (sqDst << 8);
+							mvs[moves] = MOVE(sqSrc, sqDst);
 							moves ++;
 						}
 					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = sqSrc + (sqDst << 8);
-						vls[moves] = MVV_VALUE[pcDst & 7] - 1;
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 1);
 						moves ++;
 					}
 				}
 				break;
 			case PIECE_KNIGHT:
-				for (int i = 0; i < KING_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int sqDst = sqSrc + KING_DELTA[i];
-					if (squares[sqDst] != 0) {
+					if (squares[sqDst] > 0) {
 						continue;
 					}
 					for (int j = 0; j < 2; j ++) {
@@ -664,33 +695,33 @@ public class Position {
 						int pcDst = squares[sqDst];
 						if (vls == null) {
 							if ((pcDst & pcSelfSide) == 0) {
-								mvs[moves] = sqSrc + (sqDst << 8);
+								mvs[moves] = MOVE(sqSrc, sqDst);
 								moves ++;
 							}
 						} else if ((pcDst & pcOppSide) != 0) {
-							mvs[moves] = sqSrc + (sqDst << 8);
-							vls[moves] = MVV_VALUE[pcDst & 7] - 1;
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							vls[moves] = MVV_LVA(pcDst, 1);
 							moves ++;
 						}
 					}
 				}
 				break;
 			case PIECE_ROOK:
-				for (int i = 0; i < KING_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int delta = KING_DELTA[i];
 					int sqDst = sqSrc + delta;
 					while (IN_BOARD(sqDst)) {
 						int pcDst = squares[sqDst];
 						if (pcDst == 0) {
 							if (vls == null) {
-								mvs[moves] = sqSrc + (sqDst << 8);
+								mvs[moves] = MOVE(sqSrc, sqDst);
 								moves ++;
 							}
 						} else {
 							if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = sqSrc + (sqDst << 8);
+								mvs[moves] = MOVE(sqSrc, sqDst);
 								if (vls != null) {
-									vls[moves] = MVV_VALUE[pcDst & 7] - 4;
+									vls[moves] = MVV_LVA(pcDst, 4);
 								}
 								moves ++;
 							}
@@ -701,14 +732,14 @@ public class Position {
 				}
 				break;
 			case PIECE_CANNON:
-				for (int i = 0; i < KING_DELTA.length; i ++) {
+				for (int i = 0; i < 4; i ++) {
 					int delta = KING_DELTA[i];
 					int sqDst = sqSrc + delta;
 					while (IN_BOARD(sqDst)) {
 						int pcDst = squares[sqDst];
 						if (pcDst == 0) {
 							if (vls == null) {
-								mvs[moves] = sqSrc + (sqDst << 8);
+								mvs[moves] = MOVE(sqSrc, sqDst);
 								moves ++;
 							}
 						} else {
@@ -721,9 +752,9 @@ public class Position {
 						int pcDst = squares[sqDst];
 						if (pcDst > 0) {
 							if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = sqSrc + (sqDst << 8);
+								mvs[moves] = MOVE(sqSrc, sqDst);
 								if (vls != null) {
-									vls[moves] = MVV_VALUE[pcDst & 7] - 4;
+									vls[moves] = MVV_LVA(pcDst, 4);
 								}
 								moves ++;
 							}
@@ -739,12 +770,12 @@ public class Position {
 					int pcDst = squares[sqDst];
 					if (vls == null) {
 						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = sqSrc + (sqDst << 8);
+							mvs[moves] = MOVE(sqSrc, sqDst);
 							moves ++;
 						}
 					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = sqSrc + (sqDst << 8);
-						vls[moves] = MVV_VALUE[pcDst & 7] - 1;
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 2);
 						moves ++;
 					}
 				}
@@ -755,12 +786,12 @@ public class Position {
 							int pcDst = squares[sqDst];
 							if (vls == null) {
 								if ((pcDst & pcSelfSide) == 0) {
-									mvs[moves] = sqSrc + (sqDst << 8);
+									mvs[moves] = MOVE(sqSrc, sqDst);
 									moves ++;
 								}
 							} else if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = sqSrc + (sqDst << 8);
-								vls[moves] = MVV_VALUE[pcDst & 7] - 1;
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								vls[moves] = MVV_LVA(pcDst, 2);
 								moves ++;
 							}
 						}
@@ -773,14 +804,14 @@ public class Position {
 	}
 
 	public boolean legalMove(int mv) {
-		int sqSrc = mv & 0xff;
+		int sqSrc = SRC(mv);
 		int pcSrc = squares[sqSrc];
 		int pcSelfSide = SIDE_TAG(sdPlayer);
 		if ((pcSrc & pcSelfSide) == 0) {
 			return false;
 		}
 
-		int sqDst = mv >> 8;
+		int sqDst = DST(mv);
 		int pcDst = squares[sqDst];
 		if ((pcDst & pcSelfSide) != 0) {
 			return false;
@@ -807,20 +838,14 @@ public class Position {
 				return false;
 			}
 			sqPin = sqSrc + delta;
-			while (sqPin != sqDst) {
-				if (squares[sqPin] > 0) {
-					break;
-				}
+			while (sqPin != sqDst && squares[sqPin] == 0) {
 				sqPin += delta;
 			}
 			if (sqPin == sqDst) {
-				return sqDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
+				return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
 			} else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
 				sqPin += delta;
-				while (sqPin != sqDst) {
-					if (squares[sqPin] > 0) {
-						break;
-					}
+				while (sqPin != sqDst && squares[sqPin] == 0) {
 					sqPin += delta;
 				}
 				return sqPin == sqDst;
@@ -891,5 +916,84 @@ public class Position {
 			}
 		}
 		return false;
+	}
+
+	public boolean isMate() {
+		int[] mvs = new int[MAX_GEN_MOVES];
+		int moves = generateAllMoves(mvs);
+		for (int i = 0; i < moves; i ++) {
+			if (makeMove(mvs[i])) {
+				undoMakeMove();
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public int mateValue() {
+		return distance - MATE_VALUE;
+	}
+
+	public int drawValue() {
+		return (distance & 1) == 0 ? -CONTEMPT_VALUE : CONTEMPT_VALUE;
+	}
+
+	public int evaluate() {
+		return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+	}
+
+	public boolean nullOkay() {
+		return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_OKAY_MARGIN;
+	}
+
+	public boolean nullSafe() {
+		return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_SAFE_MARGIN;
+	}
+
+	public int repValue(int vlRep) {
+		int vlReturn = ((vlRep & 2) == 0 ? 0 : mateValue()) + ((vlRep & 4) == 0 ? 0 : -mateValue());
+	    return vlReturn == 0 ? drawValue() : vlReturn;
+	}
+
+	public int isRep() {
+		return isRep(1);
+	}
+
+	public int isRep(int recur) {
+		int recurLocal = recur;
+		boolean selfSide = false;
+		boolean perpCheck = true, oppPerpCheck = true;
+		int index = moveNum - 1;
+		while (mvList[index] > 0 && pcList[index] == 0) {
+			if (selfSide) {
+				perpCheck = perpCheck && chkList[index];
+				if (keyList[index] == zobristKey) {
+					recurLocal --;
+					if (recurLocal == 0) {
+						return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
+					}
+				}
+			} else {
+				oppPerpCheck = oppPerpCheck && chkList[index];
+			}
+			selfSide = !selfSide;
+			index --;
+		}
+		return 0;
+	}
+
+	public Position mirror() {
+		Position pos = new Position();
+		pos.clearBoard();
+		for (int sq = 0; sq < 256; sq ++) {
+			int pc = squares[sq];
+			if (pc > 0) {
+				pos.addPiece(MIRROR_SQUARE(sq), pc);
+			}
+		}
+		if (sdPlayer == 1) {
+			pos.changeSide();
+		}
+		return pos;
 	}
 }
