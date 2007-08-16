@@ -21,6 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import java.util.Random;
+
+import com.sun.midp.io.ResourceInputStream;
+
 public class Position {
 	public static final int MATE_VALUE = 1000;
 	public static final int WIN_VALUE = MATE_VALUE - 100;
@@ -443,6 +447,20 @@ public class Position {
 	public static int[][] PreGen_zobristLockTable0 = new int[14][256];
 	public static int[][] PreGen_zobristLockTable1 = new int[14][256];
 
+	public static class BookItem {
+		public int zobristLock, mv, vl;
+
+		public BookItem(int zobristLock, int mv, int vl) {
+			this.zobristLock = zobristLock;
+			this.mv = mv;
+			this.vl = vl;
+		}
+	}
+
+	public static int bookMoveNum;
+	public static int[] bookLockTable, bookMoveTable, bookValueTable;
+	public static Random random = new Random();
+
 	public static int longRand(int[] seed) {
 		long longSeed = seed[0];
 		longSeed *= 16807;
@@ -467,6 +485,38 @@ public class Position {
 				PreGen_zobristLockTable1[i][j] = longRand(seed);
 			}
 		}
+
+		try {
+			ResourceInputStream in = new ResourceInputStream("/book/BOOK.DAT");
+			bookMoveNum = in.available() / 8;
+			bookLockTable = new int[bookMoveNum];
+			bookMoveTable = new int[bookMoveNum];
+			bookValueTable = new int[bookMoveNum];
+			for (int i = 0; i < bookMoveNum; i ++) {
+				bookLockTable[i] = in.read() + (in.read() << 8) + (in.read() << 16) + (in.read() << 24);
+				bookMoveTable[i] = in.read() + (in.read() << 8);
+				bookValueTable[i] = in.read() + (in.read() << 8);
+			}
+			in.close();
+		} catch (Exception e) {
+			bookMoveNum = 0;
+		}
+	}
+
+	public static int binarySearch(int vl, int[] vls, int from, int to) {
+		int low = from;
+		int high = to - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (vls[mid] < vl) {
+				low = mid + 1;
+			} else if (vls[mid] > vl) {
+				high = mid - 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
 	}
 
 	public int sdPlayer;
@@ -950,6 +1000,10 @@ public class Position {
 		return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_SAFE_MARGIN;
 	}
 
+	public boolean inCheck() {
+		return chkList[moveNum - 1];
+	}
+
 	public int repValue(int vlRep) {
 		int vlReturn = ((vlRep & 2) == 0 ? 0 : mateValue()) + ((vlRep & 4) == 0 ? 0 : -mateValue());
 	    return vlReturn == 0 ? drawValue() : vlReturn;
@@ -995,5 +1049,55 @@ public class Position {
 			pos.changeSide();
 		}
 		return pos;
+	}
+
+	public int bookMove() {
+		if (bookMoveNum == 0) {
+			return 0;
+		}
+		boolean mirror = false;
+		int lock = zobristLock1;
+		int index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
+		if (index < 0) {
+			mirror = true;
+			lock = mirror().zobristLock1;
+			index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
+		}
+		if (index < 0) {
+			return 0;
+		}
+		index --;
+		while (index >= 0 && bookLockTable[index] == lock) {
+			index --;
+		}
+		int[] mvs = new int[MAX_GEN_MOVES];
+		int[] vls = new int[MAX_GEN_MOVES];
+		int value = 0;
+		int moves = 0;
+		index ++;
+		while (index < bookMoveNum && bookLockTable[index] == lock) {
+			int mv = (mirror ? MIRROR_MOVE(bookMoveTable[index]) : bookMoveTable[index]);
+			if (legalMove(mv)) {
+				mvs[moves] = mv;
+				vls[moves] = bookValueTable[index];
+				value += vls[moves];
+				moves ++;
+				if (moves == MAX_GEN_MOVES) {
+					break;
+				}
+			}
+			index ++;
+		}
+		if (value == 0) {
+			return 0;
+		}
+		value = (int) (random.nextLong() % value);
+		for (index = 0; index < moves; index ++) {
+			value -= vls[index];
+			if (value < 0) {
+				break;
+			}
+		}
+		return mvs[index];
 	}
 }
