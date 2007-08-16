@@ -37,6 +37,7 @@ public class MainForm extends Canvas implements CommandListener {
 		null, "rk", "ra", "rb", "rn", "rr", "rc", "rp",
 		null, "bk", "ba", "bb", "bn", "br", "bc", "bp",
 	};
+	private static int widthBackground, heightBackground;
 
 	static {
 		try {
@@ -54,44 +55,72 @@ public class MainForm extends Canvas implements CommandListener {
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+		widthBackground = imgBackground.getWidth();
+		heightBackground = imgBackground.getHeight();
 	}
 
 	private XQWLight midlet;
+	private Search search;
 	private int cursorX, cursorY;
 	private boolean clicking;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
+		search = new Search();
+		search.pos = new Position();
 
 		addCommand(new Command("ÍË³ö", Command.EXIT, 1));
-
-		cursorX = cursorY = 8;
-		clicking = false;
 
 		setCommandListener(this);
 	}
 
+	public void reset() {
+		search.pos.loadBoard(midlet.handicap);
+		cursorX = cursorY = 7;
+		clicking = false;
+	}
+
 	public void commandAction(Command c, Displayable d) {
 		if (!clicking) {
-			Display.getDisplay(midlet).setCurrent(midlet.getStartUp());
+			Display.getDisplay(midlet).setCurrent(midlet.startUp);
 		}
+	}
+
+	private int sqSelected, mvLast;
+	private int left, top;
+
+	private void drawSquare(Graphics g, Image image, int sq) {
+		int sqX = left + (Position.FILE_X(sq) - 3) * 16;
+		int sqY = top + (Position.RANK_Y(sq) - 3) * 16;
+		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
 	public void paint(Graphics g) {
 		int widthScreen = getWidth();
 		int heightScreen = getHeight();
-		int widthBackground = imgBackground.getWidth();
-		int heightBackground = imgBackground.getHeight();
 		for (int x = 0; x < widthScreen; x += widthBackground) {
 			for (int y = 0; y < heightScreen; y += heightBackground) {
 				g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
 			}
 		}
-		int left = (widthScreen - 144) / 2;
-		int top = (heightScreen - 160) / 2;
+		left = (widthScreen - 144) / 2;
+		top = (heightScreen - 160) / 2;
 		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
-		g.drawImage(imgSelected, left, top, Graphics.LEFT + Graphics.TOP);
-		g.drawImage(imgCursor, left + cursorX * 16, top + cursorY * 16, Graphics.LEFT + Graphics.TOP);
+		for (int sq = 0; sq < 256; sq ++) {
+			if (Position.IN_BOARD(sq)) {
+				int pc = search.pos.squares[sq];
+				if (pc > 0) {
+					drawSquare(g, imgPieces[pc], sq);
+				}
+			}
+		}
+		if (mvLast > 0) {
+			drawSquare(g, imgSelected, Position.SRC(mvLast));
+			drawSquare(g, imgSelected, Position.DST(mvLast));
+		} else if (sqSelected > 0) {
+			drawSquare(g, imgSelected, sqSelected);
+		}
+		drawSquare(g, imgCursor, Position.COORD_XY(cursorX + 3, cursorY + 3));
 	}
 
 	public void keyPressed(int code) {
@@ -99,27 +128,30 @@ public class MainForm extends Canvas implements CommandListener {
 			return;
 		}
 		int deltaX = 0, deltaY = 0;
-		switch (getGameAction(code)) {
-		case UP:
-			deltaY = -1;
-			break;
-		case DOWN:
-			deltaY = 1;
-			break;
-		case LEFT:
-			deltaX = -1;
-			break;
-		case RIGHT:
-			deltaX = 1;
-			break;
-		case FIRE:
-			break;
+		int action = getGameAction(code);
+		if (action == FIRE) {
+			mvLast = 0;
+			sqSelected = Position.COORD_XY(cursorX + 3, cursorY + 3);
+		} else {
+			switch (action) {
+			case UP:
+				deltaY = -1;
+				break;
+			case DOWN:
+				deltaY = 1;
+				break;
+			case LEFT:
+				deltaX = -1;
+				break;
+			case RIGHT:
+				deltaX = 1;
+				break;
+			case FIRE:
+				break;
+			}
+			cursorX = (cursorX + deltaX + 9) % 9;
+			cursorY = (cursorY + deltaY + 10) % 10;
 		}
-		cursorX = (cursorX + deltaX) % 9;
-		cursorY = (cursorY + deltaY) % 10;
-
-		// ...
-
 		repaint();
     }
 }

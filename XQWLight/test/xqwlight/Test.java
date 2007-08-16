@@ -33,7 +33,7 @@ public class Test {
 					}
 				}
 			}
-			checkPos += (pos.checked(pos.getPlayer()) ? 1 : 0);
+			checkPos += (pos.checked(pos.sdPlayer) ? 1 : 0);
 			sd = in.read();
 		}
 		System.out.println("GenerateMoves 识别的着法：" + genMoves);

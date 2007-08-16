@@ -21,6 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
+import javax.microedition.lcdui.Display;
+
 public class Search {
 	public static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
 
@@ -387,5 +391,8 @@ public class Search {
 				break;
 			}
 		}
+		Display.getDisplay(midlet).setCurrent(new Alert("", "Nodes " + allNodes, null, AlertType.INFO));
 	}
+
+	public XQWLight midlet;
 }

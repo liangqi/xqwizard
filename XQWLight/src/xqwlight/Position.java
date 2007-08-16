@@ -499,7 +499,7 @@ public class Position {
 			}
 			in.close();
 		} catch (Exception e) {
-			bookMoveNum = 0;
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -928,7 +928,7 @@ public class Position {
 					return true;
 				}
 			}
-			for (int i = 0; i < ADVISOR_DELTA.length; i ++) {
+			for (int i = 0; i < 4; i ++) {
 				if (squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
 					continue;
 				}
@@ -939,7 +939,7 @@ public class Position {
 					}
 				}
 			}
-			for (int i = 0; i < KING_DELTA.length; i ++) {
+			for (int i = 0; i < 4; i ++) {
 				int delta = KING_DELTA[i];
 				int sqDst = sqSrc + delta;
 				while (IN_BOARD(sqDst)) {

@@ -33,6 +33,19 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 
 public class StartUp extends Form implements CommandListener {
+	private static Alert altAbout;
+
+	static {
+		try {
+			Image image = Image.createImage("/images/xqwlarge.gif");
+			altAbout = new Alert("关于\"象棋小巫师\"", "象棋小巫师 1.0\n象棋百科全书 荣誉出品\n\n" +
+	                "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师", image, AlertType.INFO);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		altAbout.setTimeout(Alert.FOREVER);
+	}
+
 	private XQWLight midlet;
 
 	private ChoiceGroup cgToMove;
@@ -41,9 +54,6 @@ public class StartUp extends Form implements CommandListener {
 
 	private Command cmdAbout;
 	private Command cmdStart;
-	// private Command cmdExit;
-
-	private Alert altAbout;
 
 	public StartUp(XQWLight midlet) {
 		super("开始 - 象棋小巫师");
@@ -72,45 +82,28 @@ public class StartUp extends Form implements CommandListener {
 
 		cmdAbout = new Command("关于\"象棋小巫师\"", Command.BACK, 1);
 		cmdStart = new Command("开始", Command.OK, 2);
-		// cmdExit = new Command("退出", Command.CANCEL, 3);
 
 		addCommand(cmdAbout);
 		addCommand(cmdStart);
-		// addCommand(cmdExit);
 
-		reset();
-
-		Image image = null;
-		try {
-			image = Image.createImage("/images/xqwlarge.gif");
-		} catch (Exception e) {
-			// Ignored
-		}
-		altAbout = new Alert("关于\"象棋小巫师\"", "象棋小巫师 1.0\n象棋百科全书 荣誉出品\n\n" +
-                "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师", image, AlertType.INFO);
-		altAbout.setTimeout(Alert.FOREVER);
-
-		setCommandListener(this);
-    }
-
-    public void commandAction(Command c, Displayable d) {
-    	if (false) {
-    		// Code Style
-    	} else if (c == cmdAbout) {
-    		Display.getDisplay(midlet).setCurrent(altAbout);
-    	} else if (c == cmdStart) {
-        	midlet.setFlipped(cgToMove.isSelected(1));
-        	midlet.setHandicap(cgHandicap.getSelectedIndex());
-        	midlet.setLevel(cgLevel.getSelectedIndex());
-            Display.getDisplay(midlet).setCurrent(midlet.getMainForm());
-    	// } else if (c == cmdExit) {
-    		// midlet.notifyDestroyed();
-    	}
-    }
-
-    public void reset() {
 		cgLevel.setSelectedIndex(0, true);
 		cgToMove.setSelectedIndex(0, true);
 		cgHandicap.setSelectedIndex(0, true);
+
+		setCommandListener(this);
+	}
+
+	public void commandAction(Command c, Displayable d) {
+		if (false) {
+			// Code Style
+		} else if (c == cmdAbout) {
+			Display.getDisplay(midlet).setCurrent(altAbout);
+		} else if (c == cmdStart) {
+			midlet.flipped = cgToMove.isSelected(1);
+			midlet.handicap = cgHandicap.getSelectedIndex();
+			midlet.level = cgLevel.getSelectedIndex();
+			midlet.mainForm.reset();
+			Display.getDisplay(midlet).setCurrent(midlet.mainForm);
+		}
 	}
 }
