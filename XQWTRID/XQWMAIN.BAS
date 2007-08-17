@@ -38,6 +38,7 @@ Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 ' 全局常量——可選參數
 Public Const SHOW_SAVE          As Boolean = True ' FileDialog
+Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
 Public Const DRAW_SELECTED      As Boolean = True ' Draw...Square
 Public Const RESTART_KEEP_LABEL As Boolean = True ' RestartGame
@@ -171,6 +172,7 @@ Public Options_szJavaPath       As String   ' Java棋盤路徑
 Public Options_bEscapeDouble    As Boolean  ' 用兩個Esc輸入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盤
 Public Options_bMonoBitmap      As Boolean  ' 圖片棋盤的紅子用白底紅字表示
+Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自動翻轉棋盤
 Public Options_bEngineName      As Boolean  ' 顯示引擎名稱
 Public Options_bAllowResign     As Boolean  ' 允許引擎認輸
@@ -184,6 +186,7 @@ Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音樂
 Public Options_bCheckUpdate     As Boolean  ' 檢查最新版本
+Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
@@ -502,35 +505,35 @@ ImportLine = False
 End Function
 
 ' 讀PGN棋譜，如果是XQF、MXQ或CHE棋譜則首先轉換為PGN棋譜
-Public Sub ReadFile()
+Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 
 Dim i As Integer, j As Integer, nFileNo As Integer
-Dim bCchess As Boolean, bDetail As Boolean
+Dim bNoTitle As Boolean, bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
 
-
+bNoTitle = False
+On Error GoTo lnErrorOpen
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    On Error GoTo lnErrorOpen
-    Shell App_szPath + "XQF2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "XQF2PGN.PGN" + Chr(34), vbHide
-    On Error GoTo 0
-    Sleep 1000
-    App_szFileName = App_szPath + "XQF2PGN.PGN"
+    Shell App_szPath + "XQF2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
-    On Error GoTo lnErrorOpen
-    Shell App_szPath + "MXQ2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "MXQ2PGN.PGN" + Chr(34), vbHide
-    On Error GoTo 0
-    Sleep 1000
-    App_szFileName = App_szPath + "MXQ2PGN.PGN"
+    Shell App_szPath + "MXQ2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
-    On Error GoTo lnErrorOpen
-    Shell App_szPath + "CHE2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "CHE2PGN.PGN" + Chr(34), vbHide
-    On Error GoTo 0
+    Shell App_szPath + "CHE2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    bNoTitle = True
+End If
+On Error GoTo 0
+If bAutoSave Or bNoTitle Then
     Sleep 1000
-    App_szFileName = App_szPath + "CHE2PGN.PGN"
+    App_szFileName = ""
+    RestartGame
+    App_szFileName = App_szPath + "AUTOSAVE.PGN"
+Else
+    RestartGame
 End If
 
-RestartGame
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
 Open App_szFileName For Input As #nFileNo
@@ -595,19 +598,32 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
         End If
     End If
 Loop
+Close #nFileNo
 BoardFlush
 LabelFlush
-Do While Game_nCurrMove > 0
-    MoveBack
-Loop
+If bAutoSave Then
+    If Game_nMaxMove = 0 Then
+        EngineNewGame
+    End If
+Else
+    Do While Game_nCurrMove > 0
+        MoveBack
+    Loop
+End If
 MoveFlush
-Close #nFileNo
 
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "無法打開文件 " + App_szFileName, vbExclamation
+If Not bAutoSave Then
+    MsgBox "无法打开文件 " + App_szFileName, vbExclamation
+End If
 BoardFlush
+LabelFlush
+MoveFlush
+If bAutoSave Then
+    EngineNewGame
+End If
 
 End Sub
 
@@ -719,7 +735,6 @@ frmHide.comdlg.ShowOpen
 If frmHide.comdlg.FileName <> "" Then
     App_szFileName = frmHide.comdlg.FileName
     ReadFile
-    LabelFlush
 End If
 
 End Sub
@@ -1989,6 +2004,9 @@ Else
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
             Engine_nStatus = IDLE_REST
+            If Options_nMoveDelay > 0 Then
+                Sleep Options_nMoveDelay * 1000
+            End If
             Do While Game_nCurrMove < Game_nMaxMove
                 MoveForward
             Loop
@@ -2682,6 +2700,7 @@ Options_szJavaPath = GetSetting("XQWizard", "Options", "JavaPath", "http://www.e
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
+Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
 Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
@@ -2696,6 +2715,7 @@ Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0")
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
 Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "Update", "1")) <> 0)
+Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -3008,11 +3028,15 @@ OpenEngine
 App_bRedTurn = False
 If Command = "" Then
     App_szFileName = ""
-    RestartGame
-    BoardFlush
-    LabelFlush
-    MoveFlush
-    EngineNewGame
+    If Options_bAutoSave Then
+        ReadFile AUTO_SAVE
+    Else
+        RestartGame
+        BoardFlush
+        LabelFlush
+        MoveFlush
+        EngineNewGame
+    End If
 Else
     If UCase(Left(Command, 3)) = "/S " Or UCase(Left(Command, 3)) = "-S " Then
         sz = Mid(Command, 4)
@@ -3032,7 +3056,6 @@ Else
             App_szFileName = Mid(App_szFileName, 2, Len(App_szFileName) - 2)
         End If
         ReadFile
-        LabelFlush
     End If
 End If
 ' 打開日積月累，調整廣告框大小，關閉啟動畫面

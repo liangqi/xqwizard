@@ -2013,6 +2013,8 @@ If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
 End If
 App_bRunning = False
+App_szFileName = App_szPath + "AUTOSAVE.PGN"
+WriteFile
 
 End Sub
 
