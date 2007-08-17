@@ -30,7 +30,8 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public class MainForm extends Canvas implements CommandListener {
-	private static Image imgBackground, imgBoard, imgSelected, imgCursor;
+	private static Image imgBackground, imgBoard;
+	private static Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private static Image[] imgPieces = new Image[24];
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
@@ -44,7 +45,9 @@ public class MainForm extends Canvas implements CommandListener {
 			imgBackground = Image.createImage("/images/background.gif");
 			imgBoard = Image.createImage("/images/board.gif");
 			imgSelected = Image.createImage("/images/selected.gif");
+			imgSelected2 = Image.createImage("/images/selected2.gif");
 			imgCursor = Image.createImage("/images/cursor.gif");
+			imgCursor2 = Image.createImage("/images/cursor2.gif");
 			for (int pc = 0; pc < 24; pc ++) {
 				if (IMAGE_NAME[pc] == null) {
 					imgPieces[pc] = null;
@@ -114,13 +117,22 @@ public class MainForm extends Canvas implements CommandListener {
 				}
 			}
 		}
+		int sqSrc = 0;
+		int sqDst = 0;
 		if (mvLast > 0) {
-			drawSquare(g, imgSelected, Position.SRC(mvLast));
-			drawSquare(g, imgSelected, Position.DST(mvLast));
+			sqSrc = Position.SRC(mvLast);
+			sqDst = Position.DST(mvLast);
+			drawSquare(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
+			drawSquare(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
 		} else if (sqSelected > 0) {
-			drawSquare(g, imgSelected, sqSelected);
+			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
-		drawSquare(g, imgCursor, Position.COORD_XY(cursorX + 3, cursorY + 3));
+		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
+		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
+			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
+		} else {
+			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
+		}
 	}
 
 	public void keyPressed(int code) {

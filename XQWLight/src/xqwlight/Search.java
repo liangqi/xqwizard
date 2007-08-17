@@ -64,8 +64,9 @@ public class Search {
 	public static final int UNKNOWN_VALUE = MATE_VALUE + 1;
 
 	public static class HashItem {
-		public int zobristLock0, zobristLock1;
+		public int zobristLock0;
 		public int depth, flag, vl, mv;
+		public int zobristLock1;
 
 		public boolean hit(Position pos) {
 			return zobristLock0 == pos.zobristLock0 && zobristLock1 == pos.zobristLock1;
@@ -73,7 +74,6 @@ public class Search {
 
 		public void set(Position pos, int flag, int depth, int vl, int mv) {
 			zobristLock0 = pos.zobristLock0;
-			zobristLock1 = pos.zobristLock1;
 			this.flag = flag;
 			this.depth = depth;
 			if (vl > WIN_VALUE) {
@@ -84,6 +84,7 @@ public class Search {
 				this.vl = vl;
 			}
 			this.mv = mv;
+			zobristLock1 = pos.zobristLock1;
 		}
 
 		public void reset() {
@@ -92,17 +93,18 @@ public class Search {
 		}
 	}
 
-	public Position pos;
-	public HashItem[] hashTable = new HashItem[HASH_SIZE];
-	public int allNodes, mvResult;
-	public int[] historyTable = new int[65536];
-	public int[][] mvKiller = new int[LIMIT_DEPTH][2];
+	public static HashItem[] hashTable = new HashItem[HASH_SIZE];
 
-	public Search() {
+	static {
 		for (int i = 0; i < HASH_SIZE; i ++) {
 			hashTable[i] = new HashItem();
 		}
 	}
+
+	public Position pos;
+	public int allNodes, mvResult;
+	public int[] historyTable = new int[65536];
+	public int[][] mvKiller = new int[LIMIT_DEPTH][2];
 
 	public HashItem getHashItem() {
 		return hashTable[pos.zobristKey & (HASH_SIZE - 1)];
@@ -382,16 +384,17 @@ public class Search {
 		pos.distance = 0;
 		allNodes = 0;
 		long timer = System.currentTimeMillis();
-		for (int i = 0; i <= LIMIT_DEPTH; i ++) {
+		for (int i = 0; i <= 2; i ++) {
 			vl = searchNoNull(-MATE_VALUE, MATE_VALUE, i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}
 			if (System.currentTimeMillis() - timer > seconds * 1000) {
-				break;
+				// break;
 			}
 		}
-		Display.getDisplay(midlet).setCurrent(new Alert("", "Nodes " + allNodes, null, AlertType.INFO));
+		timer = System.currentTimeMillis() - timer;
+		Display.getDisplay(midlet).setCurrent(new Alert("NPS", "" + allNodes + "/" + timer + "=" + (double) allNodes / timer, null, AlertType.INFO));
 	}
 
 	public XQWLight midlet;

@@ -45,6 +45,6 @@ public class XQWLight extends MIDlet {
     }
 
     public void destroyApp(boolean unc) {
-    	// Do Nothing
+    	Display.getDisplay(this).setCurrent(null);
     }
 }
