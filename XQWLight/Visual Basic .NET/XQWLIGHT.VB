@@ -33,19 +33,20 @@ Module XQWLight
     Public Function AddMove(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
         Dim mv As Integer, pcCaptured As Integer
         mv = sqSrc + (sqDst << 8)
-        If Search_pos.LegalMove(mv) AndAlso Search_pos.MakeMove(mv) Then
+        If Search_pos.LegalMove(mv) Then
             pcCaptured = Search_pos.pcSquares(sqDst)
-            If pcCaptured > 0 Then
-                Search_pos.SetIrrev()
+            If Search_pos.MakeMove(mv) Then
+                If pcCaptured > 0 Then
+                    Search_pos.SetIrrev()
+                End If
+                App_sqSelected = 0
+                App_mvLast = mv
+                App_frm.DrawSquare(sqSrc, DRAW_SELECTED)
+                App_frm.DrawSquare(sqDst, DRAW_SELECTED)
+                Return True
             End If
-            App_sqSelected = 0
-            App_mvLast = mv
-            App_frm.DrawSquare(sqSrc, DRAW_SELECTED)
-            App_frm.DrawSquare(sqDst, DRAW_SELECTED)
-            Return True
-        Else
-            Return False
         End If
+        Return False
     End Function
 
     Public Function GetResult(Optional ByVal bComputer As Boolean = False) As Boolean

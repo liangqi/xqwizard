@@ -38,7 +38,7 @@ public class StartUp extends Form implements CommandListener {
 	static {
 		try {
 			Image image = Image.createImage("/images/xqwlarge.gif");
-			altAbout = new Alert("关于\"象棋小巫师\"", "象棋小巫师 1.0\n象棋百科全书 荣誉出品\n\n" +
+			altAbout = new Alert("关于\"象棋小巫师\"", "象棋小巫师 1.0 Beta1\n象棋百科全书 荣誉出品\n\n" +
 	                "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师", image, AlertType.INFO);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());

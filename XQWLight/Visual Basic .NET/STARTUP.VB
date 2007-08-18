@@ -174,7 +174,7 @@ Public Class StartUp
     End Sub
 
     Private Sub btnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAbout.Click
-        MsgBox("象棋小巫师 1.0" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
+        MsgBox("象棋小巫师 1.0 Beta1" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
                 "欢迎登录 www.elephantbase.net" + vbCrLf + "免费下载PC版 象棋巫师" + vbCrLf, MsgBoxStyle.Information, "关于象棋小巫师")
     End Sub
 End Class

@@ -21,10 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Display;
-
 public class Search {
 	public static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
 
@@ -158,8 +154,8 @@ public class Search {
 
 		public SortItem(int mvHash) {
 			this.mvHash = mvHash;
-			this.mvKiller1 = mvKiller[pos.distance][1];
-			this.mvKiller2 = mvKiller[pos.distance][2];
+			this.mvKiller1 = mvKiller[pos.distance][0];
+			this.mvKiller2 = mvKiller[pos.distance][1];
 		}
 
 		public int next() {
@@ -251,6 +247,7 @@ public class Search {
 				continue;
 			}
 			vl = -searchQuiesc(-vlBeta, -vlAlphaLocal);
+			pos.undoMakeMove();
 			if (vl > vlBest) {
 				if (vl >= vlBeta) {
 					return vl;
@@ -331,7 +328,7 @@ public class Search {
 			}
 		}
 		if (pos.distance == 0) {
-			mvResult = mv;
+			mvResult = mvBest;
 		}
 		if (vlBest == -MATE_VALUE) {
 			return pos.mateValue();
@@ -384,18 +381,14 @@ public class Search {
 		pos.distance = 0;
 		allNodes = 0;
 		long timer = System.currentTimeMillis();
-		for (int i = 0; i <= 2; i ++) {
+		for (int i = 1; i <= LIMIT_DEPTH; i ++) {
 			vl = searchNoNull(-MATE_VALUE, MATE_VALUE, i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}
 			if (System.currentTimeMillis() - timer > seconds * 1000) {
-				// break;
+				break;
 			}
 		}
-		timer = System.currentTimeMillis() - timer;
-		Display.getDisplay(midlet).setCurrent(new Alert("NPS", "" + allNodes + "/" + timer + "=" + (double) allNodes / timer, null, AlertType.INFO));
 	}
-
-	public XQWLight midlet;
 }

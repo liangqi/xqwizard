@@ -1016,7 +1016,8 @@ public class Position {
 	public int isRep(int recur) {
 		int recurLocal = recur;
 		boolean selfSide = false;
-		boolean perpCheck = true, oppPerpCheck = true;
+		boolean perpCheck = true;
+		boolean oppPerpCheck = true;
 		int index = moveNum - 1;
 		while (mvList[index] > 0 && pcList[index] == 0) {
 			if (selfSide) {

@@ -26,10 +26,16 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public class MainForm extends Canvas implements CommandListener {
+	private static final int PHASE_STARTING = 0;
+	private static final int PHASE_WAITING = 1;
+	private static final int PHASE_THINKING = 2;
+	private static final int PHASE_EXITTING = 3;
+
 	private static Image imgBackground, imgBoard, imgThinking;
 	private static Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private static Image[] imgPieces = new Image[24];
@@ -39,6 +45,9 @@ public class MainForm extends Canvas implements CommandListener {
 		null, "bk", "ba", "bb", "bn", "br", "bc", "bp",
 	};
 	private static int widthBackground, heightBackground;
+	private static Font font = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD + Font.STYLE_ITALIC, Font.SIZE_LARGE);
+	private static int fontWidth = font.charWidth('　');
+	private static int fontHeight = font.getHeight();
 
 	static {
 		try {
@@ -66,13 +75,12 @@ public class MainForm extends Canvas implements CommandListener {
 	private XQWLight midlet;
 	private Search search;
 	private int cursorX, cursorY;
-	private boolean clicking, quiting, thinking;
 	private int sqSelected, mvLast;
 	private String message;
-	private int left, top;
+	private int width, height, left, top;
+	private int phase;
 
 	public MainForm(XQWLight midlet) {
-		setTitle("象棋小巫师");
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
@@ -83,28 +91,36 @@ public class MainForm extends Canvas implements CommandListener {
 	}
 
 	public void reset() {
+		setTitle("象棋小巫师");
 		search.pos.loadBoard(midlet.handicap);
 		cursorX = cursorY = 7;
-		clicking = quiting = thinking = false;
-		message = null;
+		sqSelected = mvLast = 0;
+		width = getWidth();
+		height = getHeight();
+		left = (width - 144) / 2;
+		top = (height - 160) / 2;
+		phase = PHASE_STARTING;
 	}
 
 	public void commandAction(Command c, Displayable d) {
-		if (!clicking) {
+		if (phase == PHASE_WAITING) {
 			Display.getDisplay(midlet).setCurrent(midlet.startUp);
 		}
 	}
 
-	public void paint(Graphics g) {
-		int widthScreen = getWidth();
-		int heightScreen = getHeight();
-		for (int x = 0; x < widthScreen; x += widthBackground) {
-			for (int y = 0; y < heightScreen; y += heightBackground) {
+	protected void paint(Graphics g) {
+		if (phase == PHASE_STARTING) {
+			phase = PHASE_WAITING;
+			if (midlet.flipped) {
+				responseMove();
+				return;
+			}
+		}
+		for (int x = 0; x < width; x += widthBackground) {
+			for (int y = 0; y < height; y += heightBackground) {
 				g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
 			}
 		}
-		left = (widthScreen - 144) / 2;
-		top = (heightScreen - 160) / 2;
 		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
 		for (int sq = 0; sq < 256; sq ++) {
 			if (Position.IN_BOARD(sq)) {
@@ -133,37 +149,29 @@ public class MainForm extends Canvas implements CommandListener {
 		} else {
 			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
 		}
-		if (thinking) {
-			sqDst = Position.DST(mvLast);
+		if (phase == PHASE_THINKING) {
 			int x, y;
 			if (midlet.flipped) {
 				x = (Position.FILE_X(sqDst) < 8 ? left : left + 112);
-				y = (Position.FILE_X(sqDst) < 8 ? top : top + 128); 
+				y = (Position.RANK_Y(sqDst) < 8 ? top : top + 128); 
 			} else {
 				x = (Position.FILE_X(sqDst) < 8 ? left + 112: left);
-				y = (Position.FILE_X(sqDst) < 8 ? top + 128: top); 
+				y = (Position.RANK_Y(sqDst) < 8 ? top + 128: top); 
 			}
 			g.drawImage(imgThinking, x, y, Graphics.LEFT + Graphics.TOP);
-		}
-		if (message != null) {
-			//
+		} else if (phase == PHASE_EXITTING) {
+			g.setFont(font);
+			g.setColor(0x0000ff);
+			g.drawString(message, (width - message.length() * fontWidth) / 2, (height - fontHeight) / 2, Graphics.LEFT + Graphics.TOP);
+			setTitle("棋局结束");
 		}
 	}
 
-	public void keyPressed(int code) {
-		if (clicking) {
+	protected void keyPressed(int code) {
+		if (phase == PHASE_EXITTING) {
+			Display.getDisplay(midlet).setCurrent(midlet.startUp);			
 			return;
 		}
-		if (thinking) {
-			thinking = false;
-			repaint();
-			return;
-		} else if (quiting) {
-			quiting = false;
-			Display.getDisplay(midlet).setCurrent(midlet.startUp);
-			return;
-		}
-		clicking = true;
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
 		if (action == FIRE) {
@@ -177,7 +185,9 @@ public class MainForm extends Canvas implements CommandListener {
 				sqSelected = sq;
 			} else {
 				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
-					quiting = true;
+					phase = PHASE_EXITTING;
+					repaint();
+					return;
 				}
 			}
 		} else {
@@ -199,7 +209,6 @@ public class MainForm extends Canvas implements CommandListener {
 			cursorY = (cursorY + deltaY + 10) % 10;
 		}
 		repaint();
-		clicking = false;
     }
 
 	private void drawSquare(Graphics g, Image image, int sq) {
@@ -209,29 +218,53 @@ public class MainForm extends Canvas implements CommandListener {
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
-	private boolean getResult() {
+	private boolean getResult(boolean computer) {
+		if (search.pos.isMate()) {
+			message = computer ? "请再接再厉！" : "祝贺你取得胜利！";
+			return true;
+		}
+		int vlRep = search.pos.isRep(3);
+		if (vlRep > 0) {
+			vlRep = (computer ? -search.pos.repValue(vlRep) : search.pos.repValue(vlRep));
+			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+			return true;
+		}
+		if (search.pos.moveNum == 100) {
+			message = "超过自然限着作和，辛苦了！";
+			return true;
+		}
 		return false;
 	}
 
-	private boolean responseMove() {
-		if (getResult()) {
-			return false;
+	private boolean addMove(int mv) {
+		if (search.pos.legalMove(mv)) {
+			int pc = search.pos.squares[Position.DST(mv)];
+			if (search.pos.makeMove(mv)) {
+				if (pc > 0) {
+					search.pos.setIrrev();
+				}
+				sqSelected = 0;
+				mvLast = mv;
+				return true;
+			}
 		}
-		thinking = true;
-		return true;
+		return false;
 	}
 
-	private boolean addMove(int mv) {
-		if (search.pos.legalMove(mv) && search.pos.makeMove(mv)) {
-			int pc = search.pos.squares[Position.DST(mv)];
-			if (pc > 0) {
-				search.pos.setIrrev();
-			}
-			sqSelected = 0;
-			mvLast = mv;
-			return true;
-		} else {
+	public boolean responseMove() {
+		if (getResult(false)) {
 			return false;
 		}
+		phase = PHASE_THINKING;
+		repaint();
+		serviceRepaints();
+		search.searchMain(1 << (midlet.level << 1));
+		search.pos.makeMove(search.mvResult);
+		mvLast = search.mvResult;
+		phase = PHASE_WAITING;
+		if (getResult(true)) {
+			return false;
+		}
+		return true;
 	}
 }
