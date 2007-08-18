@@ -30,7 +30,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public class MainForm extends Canvas implements CommandListener {
-	private static Image imgBackground, imgBoard;
+	private static Image imgBackground, imgBoard, imgThinking;
 	private static Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private static Image[] imgPieces = new Image[24];
 	private static final String[] IMAGE_NAME = {
@@ -44,6 +44,7 @@ public class MainForm extends Canvas implements CommandListener {
 		try {
 			imgBackground = Image.createImage("/images/background.gif");
 			imgBoard = Image.createImage("/images/board.gif");
+			imgThinking = Image.createImage("/images/thinking.gif");
 			imgSelected = Image.createImage("/images/selected.gif");
 			imgSelected2 = Image.createImage("/images/selected2.gif");
 			imgCursor = Image.createImage("/images/cursor.gif");
@@ -65,9 +66,13 @@ public class MainForm extends Canvas implements CommandListener {
 	private XQWLight midlet;
 	private Search search;
 	private int cursorX, cursorY;
-	private boolean clicking;
+	private boolean clicking, quiting, thinking;
+	private int sqSelected, mvLast;
+	private String message;
+	private int left, top;
 
 	public MainForm(XQWLight midlet) {
+		setTitle("ÏóÆåÐ¡Î×Ê¦");
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
@@ -80,22 +85,14 @@ public class MainForm extends Canvas implements CommandListener {
 	public void reset() {
 		search.pos.loadBoard(midlet.handicap);
 		cursorX = cursorY = 7;
-		clicking = false;
+		clicking = quiting = thinking = false;
+		message = null;
 	}
 
 	public void commandAction(Command c, Displayable d) {
 		if (!clicking) {
 			Display.getDisplay(midlet).setCurrent(midlet.startUp);
 		}
-	}
-
-	private int sqSelected, mvLast;
-	private int left, top;
-
-	private void drawSquare(Graphics g, Image image, int sq) {
-		int sqX = left + (Position.FILE_X(sq) - 3) * 16;
-		int sqY = top + (Position.RANK_Y(sq) - 3) * 16;
-		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
 	public void paint(Graphics g) {
@@ -128,10 +125,28 @@ public class MainForm extends Canvas implements CommandListener {
 			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
 		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
+		if (midlet.flipped) {
+			sq = Position.SQUARE_FLIP(sq);
+		}
 		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
 			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
 		} else {
 			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
+		}
+		if (thinking) {
+			sqDst = Position.DST(mvLast);
+			int x, y;
+			if (midlet.flipped) {
+				x = (Position.FILE_X(sqDst) < 8 ? left : left + 112);
+				y = (Position.FILE_X(sqDst) < 8 ? top : top + 128); 
+			} else {
+				x = (Position.FILE_X(sqDst) < 8 ? left + 112: left);
+				y = (Position.FILE_X(sqDst) < 8 ? top + 128: top); 
+			}
+			g.drawImage(imgThinking, x, y, Graphics.LEFT + Graphics.TOP);
+		}
+		if (message != null) {
+			//
 		}
 	}
 
@@ -139,11 +154,32 @@ public class MainForm extends Canvas implements CommandListener {
 		if (clicking) {
 			return;
 		}
+		if (thinking) {
+			thinking = false;
+			repaint();
+			return;
+		} else if (quiting) {
+			quiting = false;
+			Display.getDisplay(midlet).setCurrent(midlet.startUp);
+			return;
+		}
+		clicking = true;
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
 		if (action == FIRE) {
 			mvLast = 0;
-			sqSelected = Position.COORD_XY(cursorX + 3, cursorY + 3);
+			int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
+			if (midlet.flipped) {
+				sq = Position.SQUARE_FLIP(sq);
+			}
+			int pc = search.pos.squares[sq];
+			if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
+				sqSelected = sq;
+			} else {
+				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
+					quiting = true;
+				}
+			}
 		} else {
 			switch (action) {
 			case UP:
@@ -158,12 +194,44 @@ public class MainForm extends Canvas implements CommandListener {
 			case RIGHT:
 				deltaX = 1;
 				break;
-			case FIRE:
-				break;
 			}
 			cursorX = (cursorX + deltaX + 9) % 9;
 			cursorY = (cursorY + deltaY + 10) % 10;
 		}
 		repaint();
+		clicking = false;
     }
+
+	private void drawSquare(Graphics g, Image image, int sq) {
+		int sqLocal = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
+		int sqX = left + (Position.FILE_X(sqLocal) - 3) * 16;
+		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * 16;
+		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
+	}
+
+	private boolean getResult() {
+		return false;
+	}
+
+	private boolean responseMove() {
+		if (getResult()) {
+			return false;
+		}
+		thinking = true;
+		return true;
+	}
+
+	private boolean addMove(int mv) {
+		if (search.pos.legalMove(mv) && search.pos.makeMove(mv)) {
+			int pc = search.pos.squares[Position.DST(mv)];
+			if (pc > 0) {
+				search.pos.setIrrev();
+			}
+			sqSelected = 0;
+			mvLast = mv;
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
