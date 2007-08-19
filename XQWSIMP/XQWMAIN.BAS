@@ -507,7 +507,7 @@ End Function
 ' 读PGN棋谱，如果是XQF、MXQ或CHE棋谱则首先转换为PGN棋谱
 Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 
-Dim i As Integer, j As Integer, nFileNo As Integer
+Dim i As Integer, nFileNo As Integer
 Dim bNoTitle As Boolean, bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
@@ -586,7 +586,12 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
                 Game_szIrrevFen(0) = szFenStr
                 CchessFen2Board Game_posIrrev(0), szFenStr
                 Game_sdCurr = Game_posIrrev(0).sdPlayer
-                Game_cntCurr = Str2Int(Mid(szFenStr, InStr(szFenStr, " - - 0 ") + 7), 1, 999)
+                i = InStr(szFenStr, " - - 0 ")
+                If i > 0 Then
+                    Game_cntCurr = Str2Int(Mid(szFenStr, i + 7), 1, 999)
+                Else
+                    Game_cntCurr = 1
+                End If
                 Game_sdStart = Game_sdCurr
                 Game_cntStart = Game_cntCurr
                 Game_sdMax = Game_sdStart
@@ -804,6 +809,7 @@ End Sub
 ' 装入FEN字符串
 Public Sub LoadFenStr(ByVal szFenStr As String)
 
+Dim i As Integer
 If szFenStr = "" Then
     Exit Sub
 End If
@@ -815,7 +821,12 @@ Game_bStartPos = False
 Game_szIrrevFen(0) = szFenStr
 CchessFen2Board Game_posIrrev(0), szFenStr
 Game_sdCurr = Game_posIrrev(0).sdPlayer
-Game_cntCurr = Str2Int(Mid(szFenStr, InStr(szFenStr, " - - 0 ") + 7), 1, 999)
+i = InStr(szFenStr, " - - 0 ")
+If i > 0 Then
+    Game_cntCurr = Str2Int(Mid(szFenStr, i + 7), 1, 999)
+Else
+    Game_cntCurr = 1
+End If
 Game_sdStart = Game_sdCurr
 Game_cntStart = Game_cntCurr
 Game_sdMax = Game_sdStart
@@ -2814,7 +2825,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2825,7 +2836,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2853,7 +2864,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2903,7 +2914,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2916,7 +2927,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

@@ -507,7 +507,7 @@ End Function
 ' 讀PGN棋譜，如果是XQF、MXQ或CHE棋譜則首先轉換為PGN棋譜
 Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 
-Dim i As Integer, j As Integer, nFileNo As Integer
+Dim i As Integer, nFileNo As Integer
 Dim bNoTitle As Boolean, bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
@@ -586,7 +586,12 @@ Do While Not (EOF(nFileNo) And szLineStr = "")
                 Game_szIrrevFen(0) = szFenStr
                 CchessFen2Board Game_posIrrev(0), szFenStr
                 Game_sdCurr = Game_posIrrev(0).sdPlayer
-                Game_cntCurr = Str2Int(Mid(szFenStr, InStr(szFenStr, " - - 0 ") + 7), 1, 999)
+                i = InStr(szFenStr, " - - 0 ")
+                If i > 0 Then
+                    Game_cntCurr = Str2Int(Mid(szFenStr, i + 7), 1, 999)
+                Else
+                    Game_cntCurr = 1
+                End If
                 Game_sdStart = Game_sdCurr
                 Game_cntStart = Game_cntCurr
                 Game_sdMax = Game_sdStart
@@ -804,6 +809,7 @@ End Sub
 ' 裝入FEN字符串
 Public Sub LoadFenStr(ByVal szFenStr As String)
 
+Dim i As Integer
 If szFenStr = "" Then
     Exit Sub
 End If
@@ -815,7 +821,12 @@ Game_bStartPos = False
 Game_szIrrevFen(0) = szFenStr
 CchessFen2Board Game_posIrrev(0), szFenStr
 Game_sdCurr = Game_posIrrev(0).sdPlayer
-Game_cntCurr = Str2Int(Mid(szFenStr, InStr(szFenStr, " - - 0 ") + 7), 1, 999)
+i = InStr(szFenStr, " - - 0 ")
+If i > 0 Then
+    Game_cntCurr = Str2Int(Mid(szFenStr, i + 7), 1, 999)
+Else
+    Game_cntCurr = 1
+End If
 Game_sdStart = Game_sdCurr
 Game_cntStart = Game_cntCurr
 Game_sdMax = Game_sdStart
