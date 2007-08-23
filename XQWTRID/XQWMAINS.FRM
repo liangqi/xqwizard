@@ -1836,6 +1836,9 @@ Begin VB.Form frmMainSmall
          Begin VB.Menu mnOptionsBoardNeuChess 
             Caption         =   "棋天大圣(&N)"
          End
+         Begin VB.Menu mnOptionsBoardQianHong 
+            Caption         =   "淺紅象棋(&Q)"
+         End
          Begin VB.Menu mnOptionsBoardSimple 
             Caption         =   "簡單(&S)"
          End
@@ -2607,6 +2610,12 @@ End Sub
 Private Sub mnOptionsBoardNeuChess_Click()
 
 BoardSettingSmall BOARD_S_NEUCHESS
+
+End Sub
+
+Private Sub mnOptionsBoardQianHong_Click()
+
+BoardSettingSmall BOARD_S_QIANHONG
 
 End Sub
 

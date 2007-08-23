@@ -2,6 +2,6 @@ XQWizard Advert List
 elephantbase,10,183,5618
 ccgc,10,169,18020
 aigames,10,209,5618
-xqwlight_ad,10,203,11660
+xqwlight_ad,10,203,11651
 qiyi_ad,10,195,4758
 teachvcd,10,182,61878

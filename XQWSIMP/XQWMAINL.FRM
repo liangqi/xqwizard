@@ -1809,6 +1809,9 @@ Begin VB.Form frmMainLarge
          Begin VB.Menu mnOptionsBoardDrops 
             Caption         =   "Ë®µÎ(&D)"
          End
+         Begin VB.Menu mnOptionsBoardQianHong 
+            Caption         =   "Ç³ºìÏóÆå(&Q)"
+         End
          Begin VB.Menu mnOptionsBoardSimple 
             Caption         =   "¼òµ¥(&S)"
          End
@@ -2511,6 +2514,12 @@ End Sub
 Private Sub mnOptionsBoardDrops_Click()
 
 BoardSettingLarge BOARD_L_DROPS
+
+End Sub
+
+Private Sub mnOptionsBoardQianHong_Click()
+
+BoardSettingLarge BOARD_L_QIANHONG
 
 End Sub
 

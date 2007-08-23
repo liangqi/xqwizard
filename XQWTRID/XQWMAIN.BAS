@@ -94,8 +94,9 @@ Public Const BOARD_S_MOVESKY    As Integer = 10
 Public Const BOARD_S_MRSJ       As Integer = 11
 Public Const BOARD_S_ZMBL       As Integer = 12
 Public Const BOARD_S_NEUCHESS   As Integer = 13
-Public Const BOARD_S_SIMPLE     As Integer = 14
-Public Const BOARD_S_MAX        As Integer = 15
+Public Const BOARD_S_QIANHONG   As Integer = 14
+Public Const BOARD_S_SIMPLE     As Integer = 15
+Public Const BOARD_S_MAX        As Integer = 16
 ' 全局常量——棋子(小)設置選項
 Public Const PIECES_S_NORMAL    As Integer = 0
 Public Const PIECES_S_WOOD      As Integer = 1
@@ -113,8 +114,9 @@ Public Const BOARD_L_WOOD       As Integer = 1
 Public Const BOARD_L_SHEET      As Integer = 2
 Public Const BOARD_L_CANVAS     As Integer = 3
 Public Const BOARD_L_DROPS      As Integer = 4
-Public Const BOARD_L_SIMPLE     As Integer = 5
-Public Const BOARD_L_MAX        As Integer = 6
+Public Const BOARD_L_QIANHONG   As Integer = 5
+Public Const BOARD_L_SIMPLE     As Integer = 6
+Public Const BOARD_L_MAX        As Integer = 7
 ' 全局常量——棋子(大)設置選項
 Public Const PIECES_L_WOOD      As Integer = 0
 Public Const PIECES_L_POLISH    As Integer = 1
@@ -2484,7 +2486,7 @@ Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
 On Error Resume Next
 frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
         Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "SIMPLE") + ".GIF")
+        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "QIANHONG", "SIMPLE") + ".GIF")
 On Error GoTo 0
 
 End Sub
@@ -2508,6 +2510,7 @@ frmMainSmall.mnOptionsBoardMoveSky.Checked = (nBoardIndex = BOARD_S_MOVESKY)
 frmMainSmall.mnOptionsBoardMRSJ.Checked = (nBoardIndex = BOARD_S_MRSJ)
 frmMainSmall.mnOptionsBoardZMBL.Checked = (nBoardIndex = BOARD_S_ZMBL)
 frmMainSmall.mnOptionsBoardNeuChess.Checked = (nBoardIndex = BOARD_S_NEUCHESS)
+frmMainSmall.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_S_QIANHONG)
 frmMainSmall.mnOptionsBoardSimple.Checked = (nBoardIndex = BOARD_S_SIMPLE)
 Options_nBoardS = nBoardIndex
 
@@ -2518,7 +2521,7 @@ Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
 frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "SIMPLE") + ".GIF")
+        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "QIANHONG", "SIMPLE") + ".GIF")
 On Error GoTo 0
 
 End Sub
@@ -2533,6 +2536,7 @@ frmMainLarge.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_L_WOOD)
 frmMainLarge.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_L_SHEET)
 frmMainLarge.mnOptionsBoardCanvas.Checked = (nBoardIndex = BOARD_L_CANVAS)
 frmMainLarge.mnOptionsBoardDrops.Checked = (nBoardIndex = BOARD_L_DROPS)
+frmMainLarge.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_L_QIANHONG)
 frmMainLarge.mnOptionsBoardSimple.Checked = (nBoardIndex = BOARD_L_SIMPLE)
 Options_nBoardL = nBoardIndex
 

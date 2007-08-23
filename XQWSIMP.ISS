@@ -74,6 +74,8 @@ Source: "ADVERT\ccgc.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\ccgc.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\aigames.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\aigames.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqwlight_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqwlight_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\qiyi_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\qiyi_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\teachvcd.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -93,6 +95,7 @@ Source: "IMAGES_S\MOVESKY.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\MRSJ.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\NEUCHESS.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
+Source: "IMAGES_S\QIANHONG.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\SIMPLE.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 ; 棋子文件(小)——普通
 Source: "IMAGES_S\NORMAL\OO.GIF"; DestDir: "{app}\IMAGES_S\NORMAL"; Flags: ignoreversion
@@ -379,6 +382,7 @@ Source: "IMAGES_L\WOOD.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\SHEET.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\CANVAS.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\DROPS.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
+Source: "IMAGES_L\QIANHONG.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\SIMPLE.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 ; 棋子文件(大)——木制
 Source: "IMAGES_L\WOOD\OO.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
