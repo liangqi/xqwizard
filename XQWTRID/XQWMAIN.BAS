@@ -185,7 +185,6 @@ Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音樂
-Public Options_bCheckUpdate     As Boolean  ' 檢查最新版本
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
@@ -2725,7 +2724,6 @@ Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
-Options_bCheckUpdate = (Str2Int(GetSetting("XQWizard", "Options", "Update", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
@@ -2779,7 +2777,6 @@ SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
-SaveSetting "XQWizard", "Options", "Update", IIf(Options_bCheckUpdate, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
@@ -3085,7 +3082,7 @@ If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
 ' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
-If Options_bCheckUpdate And Gui_szUpgradeDate <> Date Then
+If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
 ' 加載廣告，如果加載失敗，則下載廣告列表，再次加載失敗則放棄

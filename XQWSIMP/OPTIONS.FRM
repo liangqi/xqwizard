@@ -33,14 +33,6 @@ Begin VB.Form frmOptions
       Begin VB.CheckBox chkAutoSave 
          Caption         =   "自动保存棋局"
          Height          =   255
-         Left            =   1680
-         TabIndex        =   32
-         Top             =   240
-         Width           =   1455
-      End
-      Begin VB.CheckBox chkCheckUpdate 
-         Caption         =   "检查最新版本"
-         Height          =   255
          Left            =   120
          TabIndex        =   31
          Top             =   240
@@ -135,7 +127,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196613
+         BuddyDispid     =   196612
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -183,7 +175,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3840
-      TabIndex        =   34
+      TabIndex        =   33
       Top             =   3360
       Width           =   975
    End
@@ -191,7 +183,7 @@ Begin VB.Form frmOptions
       Caption         =   "确定"
       Height          =   375
       Left            =   2040
-      TabIndex        =   33
+      TabIndex        =   32
       Top             =   3360
       Width           =   975
    End
@@ -246,7 +238,7 @@ Begin VB.Form frmOptions
          Caption         =   "用两个Esc输入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   35
+         TabIndex        =   34
          Top             =   1200
          Width           =   1935
       End
@@ -284,7 +276,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196638
+         BuddyDispid     =   196637
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -343,7 +335,7 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 2.2, Last Modified: Mar. 2006
+' Designed by Morning Yellow, Version: 3.33, Last Modified: Aug. 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -393,7 +385,6 @@ chkEngineTime.Value = IIf(Options_bEngineTime, 1, 0)
 chkStatusBar.Value = IIf(Options_bStatusBar, 1, 0)
 cmbEnginePlay.ListIndex = Options_nEnginePlay
 txtUser.Text = Options_szUser
-chkCheckUpdate.Value = IIf(Options_bCheckUpdate, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 
 End Sub
@@ -438,7 +429,6 @@ Options_bEngineTime = (chkEngineTime.Value = 1)
 Options_bStatusBar = (chkStatusBar.Value = 1)
 Options_nEnginePlay = cmbEnginePlay.ListIndex
 Options_szUser = txtUser.Text
-Options_bCheckUpdate = (chkCheckUpdate.Value = 1)
 Options_bAutoSave = (chkAutoSave.Value = 1)
 Unload Me
 
