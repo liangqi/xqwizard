@@ -36,7 +36,7 @@ Begin VB.Form frmMainLarge
       Appearance      =   1
       _Version        =   327682
       BeginProperty Buttons {0713E452-850A-101B-AFC0-4210102A8DA7} 
-         NumButtons      =   30
+         NumButtons      =   29
          BeginProperty Button1 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新建"
@@ -133,67 +133,63 @@ Begin VB.Form frmMainLarge
             Style           =   1
          EndProperty
          BeginProperty Button19 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Enabled         =   0   'False
+            Key             =   "WizardFunny"
+            Object.ToolTipText     =   "趣味象棋"
+            Object.Tag             =   ""
+         EndProperty
+         BeginProperty Button20 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardJava"
             Object.ToolTipText     =   "复制Java棋盤代碼"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button20 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   "WizardWeb"
-            Object.ToolTipText     =   "生成Web棋盤"
-            Object.Tag             =   ""
-         EndProperty
          BeginProperty Button21 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   "WizardAnsi"
-            Object.ToolTipText     =   "复制ANSI動態棋盤"
-            Object.Tag             =   ""
-         EndProperty
-         BeginProperty Button22 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardText"
             Object.ToolTipText     =   "复制文本棋盤"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button22 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardBitmap"
             Object.ToolTipText     =   "查看圖片棋盤"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button25 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "設置級別"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button26 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button25 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "引擎執紅"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button27 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button26 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "引擎執黑"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button27 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "後台思考"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button29 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "引擎分析"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button30 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button29 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考"
             Object.Tag             =   ""
@@ -237,7 +233,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -248,6 +244,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   17
       Left            =   6960
+      Style           =   1  'Graphical
       TabIndex        =   49
       Top             =   9480
       Width           =   855
@@ -255,7 +252,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -266,6 +263,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   16
       Left            =   6120
+      Style           =   1  'Graphical
       TabIndex        =   48
       Top             =   9480
       Width           =   855
@@ -273,7 +271,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -284,6 +282,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   15
       Left            =   5280
+      Style           =   1  'Graphical
       TabIndex        =   47
       Top             =   9480
       Width           =   855
@@ -291,7 +290,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -302,6 +301,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   14
       Left            =   4440
+      Style           =   1  'Graphical
       TabIndex        =   46
       Top             =   9480
       Width           =   855
@@ -309,7 +309,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -320,6 +320,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   13
       Left            =   3600
+      Style           =   1  'Graphical
       TabIndex        =   45
       Top             =   9480
       Width           =   855
@@ -327,7 +328,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -338,6 +339,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   12
       Left            =   2760
+      Style           =   1  'Graphical
       TabIndex        =   44
       Top             =   9480
       Width           =   855
@@ -345,7 +347,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -356,6 +358,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   11
       Left            =   1920
+      Style           =   1  'Graphical
       TabIndex        =   43
       Top             =   9480
       Width           =   855
@@ -363,7 +366,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -374,6 +377,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   10
       Left            =   1080
+      Style           =   1  'Graphical
       TabIndex        =   42
       Top             =   9480
       Width           =   855
@@ -381,7 +385,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -392,6 +396,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   9
       Left            =   240
+      Style           =   1  'Graphical
       TabIndex        =   41
       Top             =   9480
       Width           =   855
@@ -399,7 +404,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -410,6 +415,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   8
       Left            =   6960
+      Style           =   1  'Graphical
       TabIndex        =   40
       Top             =   480
       Width           =   855
@@ -417,7 +423,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -428,6 +434,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   7
       Left            =   6120
+      Style           =   1  'Graphical
       TabIndex        =   39
       Top             =   480
       Width           =   855
@@ -435,7 +442,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -446,6 +453,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   6
       Left            =   5280
+      Style           =   1  'Graphical
       TabIndex        =   38
       Top             =   480
       Width           =   855
@@ -453,7 +461,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -464,6 +472,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   5
       Left            =   4440
+      Style           =   1  'Graphical
       TabIndex        =   37
       Top             =   480
       Width           =   855
@@ -471,7 +480,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -482,6 +491,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   4
       Left            =   3600
+      Style           =   1  'Graphical
       TabIndex        =   36
       Top             =   480
       Width           =   855
@@ -489,7 +499,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -500,6 +510,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   3
       Left            =   2760
+      Style           =   1  'Graphical
       TabIndex        =   35
       Top             =   480
       Width           =   855
@@ -507,7 +518,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -518,6 +529,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   2
       Left            =   1920
+      Style           =   1  'Graphical
       TabIndex        =   34
       Top             =   480
       Width           =   855
@@ -525,7 +537,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -536,6 +548,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   1
       Left            =   1080
+      Style           =   1  'Graphical
       TabIndex        =   33
       Top             =   480
       Width           =   855
@@ -543,7 +556,7 @@ Begin VB.Form frmMainLarge
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
       BeginProperty Font 
-         Name            =   "Ш蔨"
+         Name            =   "細明體"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -554,6 +567,7 @@ Begin VB.Form frmMainLarge
       Height          =   225
       Index           =   0
       Left            =   240
+      Style           =   1  'Graphical
       TabIndex        =   32
       Top             =   480
       Width           =   855
@@ -1710,6 +1724,37 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnWizardHandicap 
+         Caption         =   "琵(&H)"
+         Begin VB.Menu mnWizardHandicapA 
+            Caption         =   "砆琵虫皑(&A)"
+         End
+         Begin VB.Menu mnWizardHandicapB 
+            Caption         =   "砆琵蛮皑(&B)"
+         End
+         Begin VB.Menu mnWizardHandicapC 
+            Caption         =   "砆琵(&C)"
+         End
+         Begin VB.Menu mnWizardHandicapSep1 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnWizardHandicapD 
+            Caption         =   "琵虫皑(&D)"
+         End
+         Begin VB.Menu mnWizardHandicapE 
+            Caption         =   "琵蛮皑(&E)"
+         End
+         Begin VB.Menu mnWizardHandicapF 
+            Caption         =   "琵(&F)"
+         End
+      End
+      Begin VB.Menu mnWizardFunny 
+         Caption         =   "届禜囱(&F)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnWizardSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnWizardJava 
          Caption         =   "蝋&Java囱絃絏"
       End
@@ -1719,7 +1764,7 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardAnsi 
          Caption         =   "蝋&ANSI笆篈囱絃"
       End
-      Begin VB.Menu mnWizardSep2 
+      Begin VB.Menu mnWizardSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnWizardText 
@@ -1952,7 +1997,7 @@ cmbFormat.AddItem "炮二平五", 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 tlb.ImageList = frmHide.imglst
-For i = 1 To 30
+For i = 1 To 29
     tlb.Buttons(i).Image = i
 Next
 
@@ -2275,6 +2320,12 @@ Else
     mnWizardPlay.Checked = False
     tlb.Buttons("WizardPlay").Value = tbrUnpressed
 End If
+
+End Sub
+
+Private Sub mnWizardFunny_Click()
+
+' TODO
 
 End Sub
 
@@ -2732,12 +2783,10 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
+Case "WizardFunny"
+    mnWizardFunny_Click
 Case "WizardJava"
     mnWizardJava_Click
-Case "WizardWeb"
-    mnWizardWeb_Click
-Case "WizardAnsi"
-    mnWizardAnsi_Click
 Case "WizardText"
     mnWizardText_Click
 Case "WizardBitmap"

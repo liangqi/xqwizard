@@ -37,7 +37,7 @@ Begin VB.Form frmMainSmall
       Appearance      =   1
       _Version        =   327682
       BeginProperty Buttons {0713E452-850A-101B-AFC0-4210102A8DA7} 
-         NumButtons      =   30
+         NumButtons      =   29
          BeginProperty Button1 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新建"
@@ -64,7 +64,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -100,7 +99,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -122,7 +120,6 @@ Begin VB.Form frmMainSmall
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -134,67 +131,62 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button19 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Enabled         =   0   'False
+            Key             =   "WizardFunny"
+            Object.ToolTipText     =   "趣味象棋"
+            Object.Tag             =   ""
+         EndProperty
+         BeginProperty Button20 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardJava"
             Object.ToolTipText     =   "复制Java棋盘代码"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button20 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   "WizardWeb"
-            Object.ToolTipText     =   "生成Web棋盘"
-            Object.Tag             =   ""
-         EndProperty
          BeginProperty Button21 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   "WizardAnsi"
-            Object.ToolTipText     =   "复制ANSI动态棋盘"
-            Object.Tag             =   ""
-         EndProperty
-         BeginProperty Button22 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardText"
             Object.ToolTipText     =   "复制文本棋盘"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button22 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "WizardBitmap"
             Object.ToolTipText     =   "查看图片棋盘"
             Object.Tag             =   ""
          EndProperty
-         BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
+         BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button25 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button26 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button25 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "引擎执红"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button27 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button26 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "引擎执黑"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button27 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "後台思考"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button29 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "引擎分析"
             Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button30 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button29 {0713F354-850A-101B-AFC0-4210102A8DA7} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考"
             Object.Tag             =   ""
@@ -232,7 +224,7 @@ Begin VB.Form frmMainSmall
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -249,6 +241,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   17
       Left            =   5040
+      Style           =   1  'Graphical
       TabIndex        =   49
       Top             =   7080
       Width           =   615
@@ -267,6 +260,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   16
       Left            =   4440
+      Style           =   1  'Graphical
       TabIndex        =   48
       Top             =   7080
       Width           =   615
@@ -285,6 +279,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   15
       Left            =   3840
+      Style           =   1  'Graphical
       TabIndex        =   47
       Top             =   7080
       Width           =   615
@@ -303,6 +298,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   14
       Left            =   3240
+      Style           =   1  'Graphical
       TabIndex        =   46
       Top             =   7080
       Width           =   615
@@ -321,6 +317,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   13
       Left            =   2640
+      Style           =   1  'Graphical
       TabIndex        =   45
       Top             =   7080
       Width           =   615
@@ -339,6 +336,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   12
       Left            =   2040
+      Style           =   1  'Graphical
       TabIndex        =   44
       Top             =   7080
       Width           =   615
@@ -357,6 +355,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   11
       Left            =   1440
+      Style           =   1  'Graphical
       TabIndex        =   43
       Top             =   7080
       Width           =   615
@@ -375,6 +374,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   10
       Left            =   840
+      Style           =   1  'Graphical
       TabIndex        =   42
       Top             =   7080
       Width           =   615
@@ -393,6 +393,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   9
       Left            =   240
+      Style           =   1  'Graphical
       TabIndex        =   41
       Top             =   7080
       Width           =   615
@@ -411,6 +412,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   8
       Left            =   5040
+      Style           =   1  'Graphical
       TabIndex        =   40
       Top             =   480
       Width           =   615
@@ -429,6 +431,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   7
       Left            =   4440
+      Style           =   1  'Graphical
       TabIndex        =   39
       Top             =   480
       Width           =   615
@@ -447,6 +450,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   6
       Left            =   3840
+      Style           =   1  'Graphical
       TabIndex        =   38
       Top             =   480
       Width           =   615
@@ -465,6 +469,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   5
       Left            =   3240
+      Style           =   1  'Graphical
       TabIndex        =   37
       Top             =   480
       Width           =   615
@@ -483,6 +488,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   4
       Left            =   2640
+      Style           =   1  'Graphical
       TabIndex        =   36
       Top             =   480
       Width           =   615
@@ -501,6 +507,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   3
       Left            =   2040
+      Style           =   1  'Graphical
       TabIndex        =   35
       Top             =   480
       Width           =   615
@@ -519,6 +526,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   2
       Left            =   1440
+      Style           =   1  'Graphical
       TabIndex        =   34
       Top             =   480
       Width           =   615
@@ -537,6 +545,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   1
       Left            =   840
+      Style           =   1  'Graphical
       TabIndex        =   33
       Top             =   480
       Width           =   615
@@ -555,6 +564,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   0
       Left            =   240
+      Style           =   1  'Graphical
       TabIndex        =   32
       Top             =   480
       Width           =   615
@@ -833,13 +843,11 @@ Begin VB.Form frmMainSmall
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
-            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -859,26 +867,22 @@ Begin VB.Form frmMainSmall
       BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
          NumPanels       =   4
          BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            TextSave        =   ""
             Key             =   "Curr"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
-            TextSave        =   ""
             Key             =   "Nps"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   7620
             MinWidth        =   7620
-            TextSave        =   ""
             Key             =   "Pv"
             Object.Tag             =   ""
          EndProperty
          BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
             Object.Width           =   5080
             MinWidth        =   5080
-            TextSave        =   ""
             Key             =   "Msg"
             Object.Tag             =   ""
          EndProperty
@@ -1712,6 +1716,37 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnWizardHandicap 
+         Caption         =   "让子(&H)"
+         Begin VB.Menu mnWizardHandicapA 
+            Caption         =   "被让单马(&A)"
+         End
+         Begin VB.Menu mnWizardHandicapB 
+            Caption         =   "被让双马(&B)"
+         End
+         Begin VB.Menu mnWizardHandicapC 
+            Caption         =   "被让九子(&C)"
+         End
+         Begin VB.Menu mnWizardHandicapSep1 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnWizardHandicapD 
+            Caption         =   "让单马(&D)"
+         End
+         Begin VB.Menu mnWizardHandicapE 
+            Caption         =   "让双马(&E)"
+         End
+         Begin VB.Menu mnWizardHandicapF 
+            Caption         =   "让九子(&F)"
+         End
+      End
+      Begin VB.Menu mnWizardFunny 
+         Caption         =   "趣味象棋(&F)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnWizardSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnWizardJava 
          Caption         =   "复制&Java棋盘代码"
       End
@@ -1721,7 +1756,7 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardAnsi 
          Caption         =   "复制&ANSI动态棋盘"
       End
-      Begin VB.Menu mnWizardSep2 
+      Begin VB.Menu mnWizardSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnWizardText 
@@ -1996,7 +2031,7 @@ cmbFormat.AddItem "炮二平五", 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 tlb.ImageList = frmHide.imglst
-For i = 1 To 30
+For i = 1 To 29
     tlb.Buttons(i).Image = i
 Next
 
@@ -2319,6 +2354,12 @@ Else
     mnWizardPlay.Checked = False
     tlb.Buttons("WizardPlay").Value = tbrUnpressed
 End If
+
+End Sub
+
+Private Sub mnWizardFunny_Click()
+
+' TODO
 
 End Sub
 
@@ -2860,12 +2901,10 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
+Case "WizardFunny"
+    mnWizardFunny_Click
 Case "WizardJava"
     mnWizardJava_Click
-Case "WizardWeb"
-    mnWizardWeb_Click
-Case "WizardAnsi"
-    mnWizardAnsi_Click
 Case "WizardText"
     mnWizardText_Click
 Case "WizardBitmap"

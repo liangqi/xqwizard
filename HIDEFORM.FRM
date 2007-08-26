@@ -571,7 +571,7 @@ Begin VB.Form frmHide
       MaskColor       =   -2147483633
       _Version        =   327682
       BeginProperty Images {0713E8C2-850A-101B-AFC0-4210102A8DA7} 
-         NumListImages   =   30
+         NumListImages   =   29
          BeginProperty ListImage1 {0713E8C3-850A-101B-AFC0-4210102A8DA7} 
             Picture         =   "HIDEFORM.frx":11CD6
             Key             =   ""
@@ -688,37 +688,33 @@ Begin VB.Form frmHide
             Picture         =   "HIDEFORM.frx":142AE
             Key             =   ""
          EndProperty
-         BeginProperty ListImage30 {0713E8C3-850A-101B-AFC0-4210102A8DA7} 
-            Picture         =   "HIDEFORM.frx":14408
-            Key             =   ""
-         EndProperty
       EndProperty
    End
    Begin VB.Image imgFormRed 
       Height          =   480
       Left            =   3840
-      Picture         =   "HIDEFORM.frx":14562
+      Picture         =   "HIDEFORM.frx":14408
       Top             =   960
       Width           =   480
    End
    Begin VB.Image imgFormBlack 
       Height          =   480
       Left            =   4440
-      Picture         =   "HIDEFORM.frx":1486C
+      Picture         =   "HIDEFORM.frx":14712
       Top             =   960
       Width           =   480
    End
    Begin VB.Image imgBoardSmall 
       Height          =   6255
       Left            =   120
-      Picture         =   "HIDEFORM.frx":14B76
+      Picture         =   "HIDEFORM.frx":14A1C
       Top             =   120
       Width           =   5655
    End
    Begin VB.Image imgBoardLarge 
       Height          =   8655
       Left            =   120
-      Picture         =   "HIDEFORM.frx":16C3B
+      Picture         =   "HIDEFORM.frx":16AE1
       Top             =   120
       Width           =   7815
    End
