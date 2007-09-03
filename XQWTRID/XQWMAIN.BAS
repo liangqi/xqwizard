@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.33, Last Modified: Aug. 2007
+' Designed by Morning Yellow, Version: 3.34, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.33"
+Public Const STRING_VERSION     As String = "3.34"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -2736,8 +2736,8 @@ Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
-Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "2"), 1, 480)
-Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "120"), 1, 120)
+Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
+Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "999"), 1, 999)
 Timer_nIncTime = Str2Int(GetSetting("XQWizard", "Timer", "IncTime", "1"), -60, 600)
 Engine_bEngineLog = (Str2Int(GetSetting("XQWizard", "Engine", "EngineLog", "0")) <> 0)
 Engine_szLogFile = GetSetting("XQWizard", "Engine", "LogFile", "")

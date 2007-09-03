@@ -227,7 +227,7 @@ Begin VB.Form frmLevelSet
          OrigTop         =   480
          OrigRight       =   1395
          OrigBottom      =   750
-         Max             =   120
+         Max             =   999
          Min             =   1
          SyncBuddy       =   -1  'True
          BuddyProperty   =   0
@@ -353,12 +353,12 @@ End Sub
 Private Sub LevelSetting(ByVal nInitTime As Integer, Optional ByVal bIncMode As Boolean = True, Optional ByVal nIncMove As Integer = 0, Optional ByVal nIncTime As Integer = 0)
 
 If nIncMove = 0 Then
-    Level_nInitTime = 2
-    txtInitTime.Text = 2
+    Level_nInitTime = 1
+    txtInitTime.Text = 1
     frmTimer.Visible = False
     frmDepth.Visible = False
     optIncMove.Value = True
-    Level_nIncMove = 120 / nInitTime
+    Level_nIncMove = nInitTime
     txtIncTime.Text = 1
     IncModeSetting False
 Else
@@ -424,35 +424,35 @@ End Sub
 
 Private Sub optBeginner_Click()
 
-LevelSetting 1
+LevelSetting 999
 Level_nDepth = LEVEL_BEGINNER
 
 End Sub
 
 Private Sub optAmateur_Click()
 
-LevelSetting 2
+LevelSetting 216
 Level_nDepth = LEVEL_AMATEUR
 
 End Sub
 
 Private Sub optExpert_Click()
 
-LevelSetting 6
+LevelSetting 36
 Level_nDepth = LEVEL_EXPERT
 
 End Sub
 
 Private Sub optMaster_Click()
 
-LevelSetting 24
+LevelSetting 6
 Level_nDepth = LEVEL_MASTER
 
 End Sub
 
 Private Sub optGrandMaster_Click()
 
-LevelSetting 120
+LevelSetting 1
 Level_nDepth = LEVEL_GRANDMASTER
 
 End Sub
@@ -508,7 +508,7 @@ End Sub
 Private Sub txtIncMove_Change()
 
 If Level_nIncMove <> Str2Int(txtIncMove.Text) Then
-    Level_nIncMove = Str2Int(txtIncMove.Text, 1, 120)
+    Level_nIncMove = Str2Int(txtIncMove.Text, 1, 999)
     txtIncMove.Text = Level_nIncMove
 End If
 
