@@ -64,6 +64,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -99,6 +100,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -120,6 +122,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -152,6 +155,7 @@ Begin VB.Form frmMainLarge
             Object.Tag             =   ""
          EndProperty
          BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+            Key             =   ""
             Object.Tag             =   ""
             Style           =   3
             MixedState      =   -1  'True
@@ -843,11 +847,13 @@ Begin VB.Form frmMainLarge
          NumTabs         =   2
          BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "棋局信息"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
             Caption         =   "引擎分析"
+            Key             =   ""
             Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
@@ -1961,7 +1967,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Designed by Morning Yellow, Version: 3.34, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2256,7 +2262,6 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-Dim szFenStr As String
 If App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
@@ -2312,6 +2317,78 @@ Else
     mnWizardPlay.Checked = False
     tlb.Buttons("WizardPlay").Value = tbrUnpressed
 End If
+
+End Sub
+
+Private Sub mnWizardHandicapA_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_A
+EngineNewGame ENGINE_PLAY_RED
+
+End Sub
+
+Private Sub mnWizardHandicapB_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_B
+EngineNewGame ENGINE_PLAY_RED
+
+End Sub
+
+Private Sub mnWizardHandicapC_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_C
+EngineNewGame ENGINE_PLAY_RED
+
+End Sub
+
+Private Sub mnWizardHandicapD_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_A
+EngineNewGame ENGINE_PLAY_BLACK
+
+End Sub
+
+Private Sub mnWizardHandicapE_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_B
+EngineNewGame ENGINE_PLAY_BLACK
+
+End Sub
+
+Private Sub mnWizardHandicapF_Click()
+
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+LoadFenStr HANDICAP_C
+EngineNewGame ENGINE_PLAY_BLACK
 
 End Sub
 

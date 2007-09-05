@@ -147,6 +147,10 @@ Public Const EVENT_ADVERT       As Integer = 4
 Public Const EVENT_GUI          As Integer = 5
 ' 全局常量——棋盤坐標
 Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
+' 全局常量——让子
+Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
+Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
+Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
 
 ' 全局變量——程序
 Public App_frmMain              As Form     ' 主窗口對象引用
@@ -2377,7 +2381,7 @@ End If
 End Sub
 
 ' 啟動時鐘
-Sub StartTimer()
+Public Sub StartTimer()
 
 Timer_bOver(0) = False
 Timer_bOver(1) = False
@@ -2401,10 +2405,10 @@ End If
 End Sub
 
 ' 新局時選擇引擎走哪方
-Sub EngineNewGame()
+Public Sub EngineNewGame(Optional ByVal nEnginePlay As Integer = -1)
 
 If Engine_nStatus > IDLE_UNLOAD Then
-    Select Case Options_nEnginePlay
+    Select Case IIf(nEnginePlay < 0, Options_nEnginePlay, nEnginePlay)
     Case ENGINE_PLAY_NONE
         Engine_bRed = False
         Engine_bBlack = False

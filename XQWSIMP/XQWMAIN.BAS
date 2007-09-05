@@ -147,6 +147,10 @@ Public Const EVENT_ADVERT       As Integer = 4
 Public Const EVENT_GUI          As Integer = 5
 ' 全局常量——棋盘坐标
 Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
+' 全局常量——让子
+Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
+Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
+Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
@@ -2377,7 +2381,7 @@ End If
 End Sub
 
 ' 启动时钟
-Sub StartTimer()
+Public Sub StartTimer()
 
 Timer_bOver(0) = False
 Timer_bOver(1) = False
@@ -2401,10 +2405,10 @@ End If
 End Sub
 
 ' 新局时选择引擎走哪方
-Sub EngineNewGame()
+Public Sub EngineNewGame(Optional ByVal nEnginePlay As Integer = -1)
 
 If Engine_nStatus > IDLE_UNLOAD Then
-    Select Case Options_nEnginePlay
+    Select Case IIf(nEnginePlay < 0, Options_nEnginePlay, nEnginePlay)
     Case ENGINE_PLAY_NONE
         Engine_bRed = False
         Engine_bBlack = False
@@ -2826,7 +2830,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2837,7 +2841,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -2865,7 +2869,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2915,7 +2919,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2928,7 +2932,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
