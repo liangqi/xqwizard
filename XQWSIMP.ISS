@@ -6,7 +6,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.34 (简体中文版)
+AppVerName=象棋巫师 3.35 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -540,6 +540,14 @@ Source: "MUSICS\RICH05.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\RICH06.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\RICH07.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\RICH08.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH09.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH10.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH11.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH12.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH13.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH14.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH15.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\RICH16.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 ; 图片棋盘文件
 Source: "BMPBOARD\BMPBOARD.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\RK.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
