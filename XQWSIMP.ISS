@@ -532,22 +532,6 @@ Source: "MUSICS\HUMOUR.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\JINGLE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\PAL.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\CMUSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH01.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH02.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH03.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH04.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH05.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH06.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH07.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH08.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH09.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH10.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH11.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH12.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH13.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH14.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH15.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\RICH16.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 ; Í¼Æ¬ÆåÅÌÎÄ¼þ
 Source: "BMPBOARD\BMPBOARD.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\RK.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
