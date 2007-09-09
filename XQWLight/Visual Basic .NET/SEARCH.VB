@@ -38,7 +38,7 @@ Module Search
     Public Search_hash(HASH_SIZE) As HashStruct
     Public Search_nAllNodes As Integer
     Public Search_pos As PositionStruct
-    Public Search_nHistory(65536) As Integer
+    Public Search_nHistory(4096) As Integer
     Public Search_mvKiller(LIMIT_DEPTH, 2) As Integer
     Public Search_mvResult As Integer
 
@@ -137,7 +137,7 @@ Module Search
                 ReDim mvs(MAX_GEN_MOVES)
                 nMoves = Search_pos.GenerateMoves(mvs)
                 For i = 0 To nMoves - 1
-                    mvs(i).vl = Search_nHistory(mvs(i).mv)
+                    mvs(i).vl = Search_nHistory(Search_pos.HistoryIndex(mvs(i).mv))
                 Next
                 Array.Sort(mvs, 0, nMoves, MoveComparer.Instance)
                 nIndex = 0
@@ -178,7 +178,7 @@ Module Search
         If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
             nGenMoves = Search_pos.GenerateMoves(mvs)
             For i = 0 To nGenMoves - 1
-                mvs(i).vl = Search_nHistory(mvs(i).mv)
+                mvs(i).vl = Search_nHistory(Search_pos.HistoryIndex(mvs(i).mv))
             Next
             Array.Sort(mvs, 0, nGenMoves, MoveComparer.Instance)
         Else
@@ -320,7 +320,7 @@ Module Search
         Else
             RecordHash(nHashFlag, vlBest, nDepth, mvBest)
             If mvBest > 0 Then
-                Search_nHistory(mvBest) += nDepth * nDepth
+                Search_nHistory(Search_pos.HistoryIndex(mvBest)) += nDepth * nDepth
                 If Search_mvKiller(Search_pos.nDistance, 0) <> mvBest Then
                     Search_mvKiller(Search_pos.nDistance, 1) = Search_mvKiller(Search_pos.nDistance, 0)
                     Search_mvKiller(Search_pos.nDistance, 0) = mvBest
@@ -371,7 +371,7 @@ Module Search
             Search_mvKiller(i, 1) = 0
         Next
         ' 5. 清空历史表
-        For i = 0 To 65535
+        For i = 0 To 4096
             Search_nHistory(i) = 0
         Next
         ' 6. 初始化

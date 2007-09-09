@@ -1080,5 +1080,9 @@ Module Position
             Next
             Return mvs(nIndex).mv
         End Function
+
+        Public Function HistoryIndex(ByVal mv As Integer) As Integer
+            Return ((pcSquares(mv And 255) - 8) << 8) + (mv >> 8)
+        End Function
     End Structure
 End Module
