@@ -3080,19 +3080,6 @@ End If
 On Error Resume Next
 frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
 On Error GoTo 0
-App_frmMain.Show
-App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
-App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
-App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
-App_frmMain.txtMove.SetFocus
-Unload frmStartUp
-If Gui_bShowHowTo Then
-    frmHowTo.Show vbModal, App_frmMain
-End If
-' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
-If Gui_szUpgradeDate <> Date Then
-    CheckUpdate
-End If
 ' 加載廣告，如果加載失敗，則下載廣告列表，再次加載失敗則放棄
 Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒鐘后開始播放廣告
@@ -3107,6 +3094,19 @@ If Gui_nAdvertNum = 0 Then
     Else
         Gui_szAdvertDate = Date
     End If
+End If
+' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
+If Gui_szUpgradeDate <> Date Then
+    CheckUpdate
+End If
+App_frmMain.Show
+App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
+App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
+App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
+App_frmMain.txtMove.SetFocus
+Unload frmStartUp
+If Gui_bShowHowTo Then
+    frmHowTo.Show vbModal, App_frmMain
 End If
 
 ' 進入用戶狀態，接收事件

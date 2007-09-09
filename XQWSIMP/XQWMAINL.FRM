@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "COMCTL32.OCX"
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -22,181 +22,148 @@ Begin VB.Form frmMainLarge
    ScaleHeight     =   9960
    ScaleWidth      =   12360
    StartUpPosition =   3  'Windows Default
-   Begin ComctlLib.Toolbar tlb 
+   Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
-      Height          =   420
+      Height          =   360
       Left            =   0
       TabIndex        =   0
       Top             =   0
       Width           =   12360
       _ExtentX        =   21802
-      _ExtentY        =   741
-      ButtonWidth     =   635
+      _ExtentY        =   635
+      ButtonWidth     =   609
       ButtonHeight    =   582
       AllowCustomize  =   0   'False
       Appearance      =   1
-      _Version        =   327682
-      BeginProperty Buttons {0713E452-850A-101B-AFC0-4210102A8DA7} 
+      Style           =   1
+      _Version        =   393216
+      BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   29
-         BeginProperty Button1 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新建"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button2 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileOpen"
             Object.ToolTipText     =   "打开"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button3 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileSave"
             Object.ToolTipText     =   "保存"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button4 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileViewPgn"
             Object.ToolTipText     =   "查看PGN文件"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button5 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileEditTags"
             Object.ToolTipText     =   "编辑标签"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button6 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
-            Object.Tag             =   ""
+         BeginProperty Button6 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button7 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button7 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveDel"
             Object.ToolTipText     =   "删除"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button8 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button8 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveStart"
             Object.ToolTipText     =   "起始局面"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button9 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveBack"
             Object.ToolTipText     =   "上一着"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button10 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveForward"
             Object.ToolTipText     =   "下一着"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button11 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveEnd"
             Object.ToolTipText     =   "最後局面"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button12 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MovePaste"
             Object.ToolTipText     =   "从剪贴板导入"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button13 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
-            Object.Tag             =   ""
+         BeginProperty Button13 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button14 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button14 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosFlip"
             Object.ToolTipText     =   "翻转棋盘"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button15 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button15 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosAnalyze"
             Object.ToolTipText     =   "分析局面"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button16 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button16 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosEdit"
             Object.ToolTipText     =   "编辑局面"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button17 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
-            Object.Tag             =   ""
+         BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button18 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button18 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPlay"
             Object.ToolTipText     =   "播放棋局"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button19 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Enabled         =   0   'False
             Key             =   "WizardFunny"
             Object.ToolTipText     =   "趣味象棋"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button20 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardJava"
             Object.ToolTipText     =   "复制Java棋盘代码"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button21 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
             Object.ToolTipText     =   "复制文本棋盘"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button22 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardBitmap"
             Object.ToolTipText     =   "查看图片棋盘"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Button23 {0713F354-850A-101B-AFC0-4210102A8DA7} 
-            Key             =   ""
-            Object.Tag             =   ""
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button24 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button25 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "引擎执红"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button26 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "引擎执黑"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button27 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "後台思考"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button28 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "引擎分析"
-            Object.Tag             =   ""
             Style           =   1
          EndProperty
-         BeginProperty Button29 {0713F354-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考"
-            Object.Tag             =   ""
          EndProperty
       EndProperty
-      BorderStyle     =   1
    End
    Begin VB.Frame frmWeb 
       BorderStyle     =   0  'None
@@ -228,20 +195,11 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   17
       Left            =   6960
@@ -252,15 +210,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   16
       Left            =   6120
@@ -271,15 +220,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   15
       Left            =   5280
@@ -290,15 +230,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   14
       Left            =   4440
@@ -309,15 +240,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   13
       Left            =   3600
@@ -328,15 +250,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   12
       Left            =   2760
@@ -347,15 +260,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   11
       Left            =   1920
@@ -366,15 +270,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   10
       Left            =   1080
@@ -385,15 +280,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   9
       Left            =   240
@@ -404,15 +290,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   8
       Left            =   6960
@@ -423,15 +300,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   7
       Left            =   6120
@@ -442,15 +310,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   6
       Left            =   5280
@@ -461,15 +320,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   5
       Left            =   4440
@@ -480,15 +330,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   4
       Left            =   3600
@@ -499,15 +340,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   3
       Left            =   2760
@@ -518,15 +350,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   2
       Left            =   1920
@@ -537,15 +360,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   1
       Left            =   1080
@@ -556,15 +370,6 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.CommandButton btnCoord 
       Enabled         =   0   'False
-      BeginProperty Font 
-         Name            =   "宋体"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   225
       Index           =   0
       Left            =   240
@@ -834,7 +639,7 @@ Begin VB.Form frmMainLarge
          Width           =   735
       End
    End
-   Begin ComctlLib.TabStrip strpRight 
+   Begin MSComctlLib.TabStrip strpRight 
       Height          =   9135
       Left            =   8040
       TabIndex        =   1
@@ -842,24 +647,20 @@ Begin VB.Form frmMainLarge
       Width           =   4215
       _ExtentX        =   7435
       _ExtentY        =   16113
-      _Version        =   327682
-      BeginProperty Tabs {0713E432-850A-101B-AFC0-4210102A8DA7} 
+      _Version        =   393216
+      BeginProperty Tabs {1EFB6598-857C-11D1-B16A-00C0F0283628} 
          NumTabs         =   2
-         BeginProperty Tab1 {0713F341-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Tab1 {1EFB659A-857C-11D1-B16A-00C0F0283628} 
             Caption         =   "棋局信息"
-            Key             =   ""
-            Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
-         BeginProperty Tab2 {0713F341-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Tab2 {1EFB659A-857C-11D1-B16A-00C0F0283628} 
             Caption         =   "引擎分析"
-            Key             =   ""
-            Object.Tag             =   ""
             ImageVarType    =   2
          EndProperty
       EndProperty
    End
-   Begin ComctlLib.StatusBar stb 
+   Begin MSComctlLib.StatusBar stb 
       Align           =   2  'Align Bottom
       Height          =   240
       Left            =   0
@@ -868,29 +669,24 @@ Begin VB.Form frmMainLarge
       Width           =   12360
       _ExtentX        =   21802
       _ExtentY        =   423
-      SimpleText      =   ""
-      _Version        =   327682
-      BeginProperty Panels {0713E89E-850A-101B-AFC0-4210102A8DA7} 
+      _Version        =   393216
+      BeginProperty Panels {8E3867A5-8586-11D1-B16A-00C0F0283628} 
          NumPanels       =   4
-         BeginProperty Panel1 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Panel1 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Key             =   "Curr"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Panel2 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Key             =   "Nps"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Panel3 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Panel3 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Object.Width           =   10160
             MinWidth        =   10160
             Key             =   "Pv"
-            Object.Tag             =   ""
          EndProperty
-         BeginProperty Panel4 {0713E89F-850A-101B-AFC0-4210102A8DA7} 
+         BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Object.Width           =   7620
             MinWidth        =   7620
             Key             =   "Msg"
-            Object.Tag             =   ""
          EndProperty
       EndProperty
    End
@@ -2816,7 +2612,7 @@ MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" +
 
 End Sub
 
-Private Sub tlb_ButtonClick(ByVal button As ComctlLib.button)
+Private Sub tlb_ButtonClick(ByVal button As MSComctlLib.button)
 
 Select Case button.Key
 Case "FileNew"
