@@ -51,18 +51,18 @@ public class MainForm extends Canvas implements CommandListener {
 
 	static {
 		try {
-			imgBackground = Image.createImage("/images/background.gif");
-			imgBoard = Image.createImage("/images/board.gif");
-			imgThinking = Image.createImage("/images/thinking.gif");
-			imgSelected = Image.createImage("/images/selected.gif");
-			imgSelected2 = Image.createImage("/images/selected2.gif");
-			imgCursor = Image.createImage("/images/cursor.gif");
-			imgCursor2 = Image.createImage("/images/cursor2.gif");
+			imgBackground = Image.createImage("/images/background.png");
+			imgBoard = Image.createImage("/images/board.png");
+			imgThinking = Image.createImage("/images/thinking.png");
+			imgSelected = Image.createImage("/images/selected.png");
+			imgSelected2 = Image.createImage("/images/selected2.png");
+			imgCursor = Image.createImage("/images/cursor.png");
+			imgCursor2 = Image.createImage("/images/cursor2.png");
 			for (int pc = 0; pc < 24; pc ++) {
 				if (IMAGE_NAME[pc] == null) {
 					imgPieces[pc] = null;
 				} else {
-					imgPieces[pc] = Image.createImage("/images/" + IMAGE_NAME[pc] + ".gif");
+					imgPieces[pc] = Image.createImage("/images/" + IMAGE_NAME[pc] + ".png");
 				}
 			}
 		} catch (Exception e) {
