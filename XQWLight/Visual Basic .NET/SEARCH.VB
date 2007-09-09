@@ -1,7 +1,7 @@
 ' SEARCH.VB - Source Code for XiangQi Wizard Light, Part II
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 Module Search
-    Public Const HASH_SIZE As Integer = 16384
+    Public Const HASH_SIZE As Integer = 4096
     Public Const HASH_ALPHA As Integer = 1
     Public Const HASH_BETA As Integer = 2
     Public Const HASH_PV As Integer = 3
@@ -29,8 +29,10 @@ Module Search
     Public Const UNKNOWN_VALUE As Integer = MATE_VALUE + 1
 
     Public Structure HashStruct
-        Public dwZobristLock0 As Integer, dwZobristLock1 As Integer
-        Public nDepth As Integer, nFlag As Integer, vl As Integer, mv As Integer
+        ' Public dwZobristLock0 As Integer
+        Public ucDepth As Byte, ucFlag As Byte
+        Public svl As Short
+        Public mv As Integer, dwZobristLock As Integer
     End Structure
 
     Public Search_hash(HASH_SIZE) As HashStruct
@@ -44,29 +46,29 @@ Module Search
         Dim hash As HashStruct
         Dim bMate As Boolean
         hash = Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1))
-        If hash.dwZobristLock0 <> Search_pos.dwZobristLock0 Or hash.dwZobristLock1 <> Search_pos.dwZobristLock1 Then
+        If hash.dwZobristLock <> Search_pos.dwZobristLock Then
             Return UNKNOWN_VALUE
         End If
         mv = hash.mv
         bMate = False
-        If hash.vl > WIN_VALUE Then
-            hash.vl -= Search_pos.nDistance
+        If hash.svl > WIN_VALUE Then
+            hash.svl -= CShort(Search_pos.nDistance)
             bMate = True
-        ElseIf hash.vl < -WIN_VALUE Then
-            hash.vl += Search_pos.nDistance
+        ElseIf hash.svl < -WIN_VALUE Then
+            hash.svl += CShort(Search_pos.nDistance)
             bMate = True
         End If
-        If hash.nDepth >= nDepth Or bMate Then
-            If hash.nFlag = HASH_BETA Then
-                If hash.vl >= vlBeta Then
-                    Return hash.vl
+        If hash.ucDepth >= nDepth Or bMate Then
+            If hash.ucFlag = HASH_BETA Then
+                If hash.svl >= vlBeta Then
+                    Return hash.svl
                 End If
-            ElseIf hash.nFlag = HASH_ALPHA Then
-                If hash.vl <= vlAlpha Then
-                    Return hash.vl
+            ElseIf hash.ucFlag = HASH_ALPHA Then
+                If hash.svl <= vlAlpha Then
+                    Return hash.svl
                 End If
             Else
-                Return hash.vl
+                Return hash.svl
             End If
         End If
         Return UNKNOWN_VALUE
@@ -75,19 +77,18 @@ Module Search
     Public Sub RecordHash(ByVal nFlag As Integer, ByVal vl As Integer, ByVal nDepth As Integer, ByVal mv As Integer)
         Dim hash As HashStruct
         hash = Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1))
-        If hash.nDepth > nDepth Then
+        If hash.ucDepth > nDepth Then
             Return
         End If
-        hash.dwZobristLock0 = Search_pos.dwZobristLock0
-        hash.dwZobristLock1 = Search_pos.dwZobristLock1
-        hash.nFlag = nFlag
-        hash.nDepth = nDepth
+        hash.dwZobristLock = Search_pos.dwZobristLock
+        hash.ucFlag = CByte(nFlag)
+        hash.ucDepth = CByte(nDepth)
         If vl > WIN_VALUE Then
-            hash.vl = vl + Search_pos.nDistance
+            hash.svl = CShort(vl + Search_pos.nDistance)
         ElseIf vl < -WIN_VALUE Then
-            hash.vl = vl - Search_pos.nDistance
+            hash.svl = CShort(vl - Search_pos.nDistance)
         Else
-            hash.vl = vl
+            hash.svl = CShort(vl)
         End If
         hash.mv = mv
         Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1)) = hash
@@ -133,7 +134,7 @@ Module Search
             End If
             If nPhase = PHASE_GEN_MOVES Then
                 nPhase = PHASE_REST
-                ReDim mvs(128)
+                ReDim mvs(MAX_GEN_MOVES)
                 nMoves = Search_pos.GenerateMoves(mvs)
                 For i = 0 To nMoves - 1
                     mvs(i).vl = Search_nHistory(mvs(i).mv)
@@ -155,7 +156,7 @@ Module Search
     Public Function SearchQuiesc(ByVal vlAlpha As Integer, ByVal vlBeta As Integer) As Integer
         Dim vl As Integer, vlRep As Integer, vlBest As Integer
         Dim i As Integer, nGenMoves As Integer, sqSide As Integer
-        Dim mvs(128) As MoveStruct
+        Dim mvs(MAX_GEN_MOVES) As MoveStruct
 
         Search_nAllNodes += 1
         ' 1. 杀棋步数裁剪
@@ -164,7 +165,7 @@ Module Search
             Return vl
         End If
         ' 2. 重复裁剪
-        vlRep = Search_pos.IsRep()
+        vlRep = Search_pos.RepStatus()
         If vlRep > 0 Then
             Return Search_pos.RepValue(vlRep)
         End If
@@ -242,7 +243,7 @@ Module Search
             Return vl
         End If
         ' 3. 重复裁剪
-        vlRep = Search_pos.IsRep()
+        vlRep = Search_pos.RepStatus()
         If vlRep > 0 Then
             Return Search_pos.RepValue(vlRep)
         End If
@@ -337,7 +338,7 @@ Module Search
         Search_mvResult = Search_pos.BookMove()
         If Search_mvResult > 0 Then
             Search_pos.MakeMove(Search_mvResult)
-            If Search_pos.IsRep(3) = 0 Then
+            If Search_pos.RepStatus(3) = 0 Then
                 Search_pos.UndoMakeMove()
                 Return
             End If
@@ -358,12 +359,11 @@ Module Search
         End If
         ' 3. 清空置换表
         For i = 0 To HASH_SIZE - 1
-            Search_hash(i).dwZobristLock0 = 0
-            Search_hash(i).dwZobristLock1 = 0
-            Search_hash(i).nDepth = 0
-            Search_hash(i).nFlag = 0
-            Search_hash(i).vl = 0
+            Search_hash(i).ucDepth = 0
+            Search_hash(i).ucFlag = 0
+            Search_hash(i).svl = 0
             Search_hash(i).mv = 0
+            Search_hash(i).dwZobristLock = 0
         Next
         ' 4. 清空杀手着法表
         For i = 0 To LIMIT_DEPTH - 1

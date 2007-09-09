@@ -1,7 +1,7 @@
 ' XQWLMAIN.VB - Source Code for XiangQi Wizard Light, Part IV
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify

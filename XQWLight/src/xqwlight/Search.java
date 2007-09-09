@@ -2,7 +2,7 @@
 Search.java - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ public class Search {
 		}
 	}
 
-	public static final int HASH_SIZE = 16384;
+	public static final int HASH_SIZE = 4096;
 	public static final int HASH_ALPHA = 1;
 	public static final int HASH_BETA = 2;
 	public static final int HASH_PV = 3;
@@ -60,47 +60,23 @@ public class Search {
 	public static final int UNKNOWN_VALUE = MATE_VALUE + 1;
 
 	public static class HashItem {
-		public int zobristLock0;
-		public int depth, flag, vl, mv;
-		public int zobristLock1;
-
-		public boolean hit(Position pos) {
-			return zobristLock0 == pos.zobristLock0 && zobristLock1 == pos.zobristLock1;
-		}
-
-		public void set(Position pos, int flag, int depth, int vl, int mv) {
-			zobristLock0 = pos.zobristLock0;
-			this.flag = flag;
-			this.depth = depth;
-			if (vl > WIN_VALUE) {
-				this.vl = vl + pos.distance;
-			} else if (vl < -WIN_VALUE) {
-				this.vl = vl - pos.distance;
-			} else {
-				this.vl = vl;
-			}
-			this.mv = mv;
-			zobristLock1 = pos.zobristLock1;
-		}
-
-		public void reset() {
-			zobristLock0 = zobristLock1 = 0;
-			depth = flag = vl = mv = 0;
-		}
-	}
-
-	public static HashItem[] hashTable = new HashItem[HASH_SIZE];
-
-	static {
-		for (int i = 0; i < HASH_SIZE; i ++) {
-			hashTable[i] = new HashItem();
-		}
+		public byte depth, flag;
+		public short vl;
+		public int mv, zobristLock;
 	}
 
 	public Position pos;
 	public int allNodes, mvResult;
-	public int[] historyTable = new int[65536];
+	public int[] historyTable = new int[4096];
 	public int[][] mvKiller = new int[LIMIT_DEPTH][2];
+
+	public HashItem[] hashTable = new HashItem[HASH_SIZE];
+
+	{
+		for (int i = 0; i < HASH_SIZE; i ++) {
+			hashTable[i] = new HashItem();
+		}
+	}
 
 	public HashItem getHashItem() {
 		return hashTable[pos.zobristKey & (HASH_SIZE - 1)];
@@ -108,7 +84,7 @@ public class Search {
 	
 	public int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
 		HashItem hash = getHashItem();
-		if (!hash.hit(pos)) {
+		if (hash.zobristLock != pos.zobristLock) {
 			return UNKNOWN_VALUE;
 		}
 		mv[0] = hash.mv;
@@ -138,7 +114,17 @@ public class Search {
 		if (hash.depth > depth) {
 			return;
 		}
-		hash.set(pos, flag, depth, vl, mv);
+		hash.flag = (byte) flag;
+		hash.depth = (byte) depth;
+		if (vl > WIN_VALUE) {
+			hash.vl = (short) (vl + pos.distance);
+		} else if (vl < -WIN_VALUE) {
+			hash.vl = (short) (vl - pos.distance);
+		} else {
+			hash.vl = (short) vl;
+		}
+		hash.mv = mv;
+		hash.zobristLock = pos.zobristLock;
 	}
 
 	public class SortItem {
@@ -183,7 +169,7 @@ public class Search {
 				vls = new int[MAX_GEN_MOVES];
 				moves = pos.generateAllMoves(mvs);
 				for (int i = 0; i < moves; i ++) {
-					vls[i] = historyTable[mvs[i]];
+					vls[i] = historyTable[pos.historyIndex(mvs[i])];
 				}
 				shellSort(mvs, vls, 0, moves);
 				index = 0;
@@ -205,7 +191,7 @@ public class Search {
 		if (vl >= vlBeta) {
 			return vl;
 		}
-		int vlRep = pos.isRep();
+		int vlRep = pos.repStatus();
 		if (vlRep > 0) {
 			return pos.repValue(vlRep);
 		}
@@ -220,7 +206,7 @@ public class Search {
 			genMoves = pos.generateAllMoves(mvs);
 			int[] vls = new int[MAX_GEN_MOVES];
 			for (int i = 0; i < genMoves; i ++) {
-				vls[i] = historyTable[mvs[i]];
+				vls[i] = historyTable[pos.historyIndex(mvs[i])];
 			}
 			shellSort(mvs, vls, 0, genMoves);
 		} else {
@@ -276,7 +262,7 @@ public class Search {
 		if (vl >= vlBeta) {
 			return vl;
 		}
-		int vlRep = pos.isRep();
+		int vlRep = pos.repStatus();
 		if (vlRep > 0) {
 			return pos.repValue(vlRep);
 		}
@@ -335,7 +321,7 @@ public class Search {
 		} else {
 			recordHash(hashFlag, vlBest, depth, mvBest);
 			if (mvBest > 0) {
-				historyTable[mvBest] += depth * depth;
+				historyTable[pos.historyIndex(mvBest)] += depth * depth;
 				int[] killers = mvKiller[pos.distance];
 				if (killers[0] != mvBest) {
 					killers[1] = killers[0];
@@ -350,7 +336,7 @@ public class Search {
 		mvResult = pos.bookMove();
 		if (mvResult > 0) {
 			pos.makeMove(mvResult);
-			if (pos.isRep(3) == 0) {
+			if (pos.repStatus(3) == 0) {
 				pos.undoMakeMove();
 				return;
 			}
@@ -370,12 +356,15 @@ public class Search {
 			return;
 		}
 		for (int i = 0; i < HASH_SIZE; i ++) {
-			hashTable[i].reset();
+			HashItem hash = hashTable[i];
+			hash.depth = hash.flag = 0;
+			hash.vl = 0;
+			hash.mv = hash.zobristLock = 0;
 		}
 		for (int i = 0; i < LIMIT_DEPTH; i ++) {
 			mvKiller[i][0] = mvKiller[i][1] = 0;
 		}
-		for (int i = 0; i < 65536; i ++) {
+		for (int i = 0; i < 4096; i ++) {
 			historyTable[i] = 0;
 		}
 		pos.distance = 0;

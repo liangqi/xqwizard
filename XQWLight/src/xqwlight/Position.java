@@ -2,7 +2,7 @@
 Position.java - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -441,11 +441,9 @@ public class Position {
 	}
 
 	public static int PreGen_zobristKeyPlayer;
-	public static int PreGen_zobristLockPlayer0;
-	public static int PreGen_zobristLockPlayer1;
+	public static int PreGen_zobristLockPlayer;
 	public static int[][] PreGen_zobristKeyTable = new int[14][256];
-	public static int[][] PreGen_zobristLockTable0 = new int[14][256];
-	public static int[][] PreGen_zobristLockTable1 = new int[14][256];
+	public static int[][] PreGen_zobristLockTable = new int[14][256];
 
 	public static class BookItem {
 		public int zobristLock, mv, vl;
@@ -458,7 +456,8 @@ public class Position {
 	}
 
 	public static int bookMoveNum;
-	public static int[] bookLockTable, bookMoveTable, bookValueTable;
+	public static int[] bookLockTable, bookMoveTable;
+	public static short[] bookValueTable;
 	public static Random random = new Random();
 
 	public static int longRand(int[] seed) {
@@ -477,12 +476,12 @@ public class Position {
 				PreGen_zobristKeyTable[i][j] = longRand(seed);
 			}
 		}
-		PreGen_zobristLockPlayer0 = longRand(seed);
-		PreGen_zobristLockPlayer1 = longRand(seed);
+		longRand(seed); // Skip ZobristLock0
+		PreGen_zobristLockPlayer = longRand(seed);
 		for (int i = 0; i < 14; i ++) {
 			for (int j = 0; j < 256; j ++) {
-				PreGen_zobristLockTable0[i][j] = longRand(seed);
-				PreGen_zobristLockTable1[i][j] = longRand(seed);
+				longRand(seed); // Skip ZobristLock0
+				PreGen_zobristLockTable[i][j] = longRand(seed);
 			}
 		}
 
@@ -491,11 +490,11 @@ public class Position {
 			bookMoveNum = in.available() / 8;
 			bookLockTable = new int[bookMoveNum];
 			bookMoveTable = new int[bookMoveNum];
-			bookValueTable = new int[bookMoveNum];
+			bookValueTable = new short[bookMoveNum];
 			for (int i = 0; i < bookMoveNum; i ++) {
 				bookLockTable[i] = in.read() + (in.read() << 8) + (in.read() << 16) + (in.read() << 24);
 				bookMoveTable[i] = in.read() + (in.read() << 8);
-				bookValueTable[i] = in.read() + (in.read() << 8);
+				bookValueTable[i] = (short) (in.read() + (in.read() << 8));
 			}
 			in.close();
 		} catch (Exception e) {
@@ -523,8 +522,7 @@ public class Position {
 	public byte[] squares = new byte[256];
 
 	public int zobristKey;
-	public int zobristLock0;
-	public int zobristLock1;
+	public int zobristLock;
 	public int vlWhite, vlBlack;
 	public int moveNum, distance;
 
@@ -538,7 +536,7 @@ public class Position {
 		for (int sq = 0; sq < 256; sq ++) {
 			squares[sq] = 0;
 		}
-		zobristKey = zobristLock0 = zobristLock1 = 0;
+		zobristKey = zobristLock = 0;
 		vlWhite = vlBlack = 0;
 	}
 
@@ -578,8 +576,8 @@ public class Position {
 			pcAdjust += 7;
 		}
 		zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
-		zobristLock0 ^= PreGen_zobristLockTable0[pcAdjust][sq];
-		zobristLock1 ^= PreGen_zobristLockTable1[pcAdjust][sq];
+		// zobristLock0 ^= PreGen_zobristLockTable0[pcAdjust][sq];
+		zobristLock ^= PreGen_zobristLockTable[pcAdjust][sq];
 	}
 
 	public void addPiece(int sq, int pc) {
@@ -617,8 +615,7 @@ public class Position {
 	public void changeSide() {
 		sdPlayer = 1 - sdPlayer;
 		zobristKey ^= PreGen_zobristKeyPlayer;
-		zobristLock0 ^= PreGen_zobristLockPlayer0;
-		zobristLock1 ^= PreGen_zobristLockPlayer1;
+		zobristLock ^= PreGen_zobristLockPlayer;
 	}
 
 	public boolean makeMove(int mv) {
@@ -1009,11 +1006,11 @@ public class Position {
 	    return vlReturn == 0 ? drawValue() : vlReturn;
 	}
 
-	public int isRep() {
-		return isRep(1);
+	public int repStatus() {
+		return repStatus(1);
 	}
 
-	public int isRep(int recur) {
+	public int repStatus(int recur) {
 		int recurLocal = recur;
 		boolean selfSide = false;
 		boolean perpCheck = true;
@@ -1057,11 +1054,11 @@ public class Position {
 			return 0;
 		}
 		boolean mirror = false;
-		int lock = zobristLock1;
+		int lock = zobristLock;
 		int index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
 		if (index < 0) {
 			mirror = true;
-			lock = mirror().zobristLock1;
+			lock = mirror().zobristLock;
 			index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
 		}
 		if (index < 0) {
@@ -1100,5 +1097,9 @@ public class Position {
 			}
 		}
 		return mvs[index];
+	}
+
+	public int historyIndex(int mv) {
+		return ((squares[SRC(mv)] - 8) << 8) + DST(mv);
 	}
 }

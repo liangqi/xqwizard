@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -187,6 +187,7 @@ public class MainForm extends Canvas implements CommandListener {
 				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
 					phase = PHASE_EXITTING;
 					repaint();
+					serviceRepaints();
 					return;
 				}
 			}
@@ -209,6 +210,7 @@ public class MainForm extends Canvas implements CommandListener {
 			cursorY = (cursorY + deltaY + 10) % 10;
 		}
 		repaint();
+		serviceRepaints();
     }
 
 	private void drawSquare(Graphics g, Image image, int sq) {
@@ -223,7 +225,7 @@ public class MainForm extends Canvas implements CommandListener {
 			message = computer ? "请再接再厉！" : "祝贺你取得胜利！";
 			return true;
 		}
-		int vlRep = search.pos.isRep(3);
+		int vlRep = search.pos.repStatus(3);
 		if (vlRep > 0) {
 			vlRep = (computer ? -search.pos.repValue(vlRep) : search.pos.repValue(vlRep));
 			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
@@ -262,6 +264,8 @@ public class MainForm extends Canvas implements CommandListener {
 		search.pos.makeMove(search.mvResult);
 		mvLast = search.mvResult;
 		phase = PHASE_WAITING;
+		repaint();
+		serviceRepaints();
 		if (getResult(true)) {
 			return false;
 		}

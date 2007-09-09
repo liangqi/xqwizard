@@ -1,7 +1,7 @@
 ' POSITION.VB - Source Code for XiangQi Wizard Light, Part I
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -61,10 +61,8 @@ Module Position
 
     Private PreGen_dwZobristKeyPlayer As Integer
     Private PreGen_dwZobristKeyTable(14, 256) As Integer
-    Private PreGen_dwZobristLockPlayer0 As Integer
-    Private PreGen_dwZobristLockPlayer1 As Integer
-    Private PreGen_dwZobristLockTable0(14, 256) As Integer
-    Private PreGen_dwZobristLockTable1(14, 256) As Integer
+    Private PreGen_dwZobristLockPlayer As Integer
+    Private PreGen_dwZobristLockTable(14, 256) As Integer
 
     Public Function LongRand(ByRef dwRandSeed As Integer) As Integer
         Dim qwLongSeed As Long
@@ -396,19 +394,20 @@ Module Position
                 PreGen_dwZobristKeyTable(i, j) = LongRand(dwRandSeed)
             Next
         Next
-        PreGen_dwZobristLockPlayer0 = LongRand(dwRandSeed)
-        PreGen_dwZobristLockPlayer1 = LongRand(dwRandSeed)
+        LongRand(dwRandSeed) ' 跳过 ZobristLock0
+        PreGen_dwZobristLockPlayer = LongRand(dwRandSeed)
         For i = 0 To 13
             For j = 0 To 255
-                PreGen_dwZobristLockTable0(i, j) = LongRand(dwRandSeed)
-                PreGen_dwZobristLockTable1(i, j) = LongRand(dwRandSeed)
+                LongRand(dwRandSeed) ' 跳过 ZobristLock0
+                PreGen_dwZobristLockTable(i, j) = LongRand(dwRandSeed)
             Next
         Next
     End Sub
 
     Public Structure BookStruct
         Public dwZobristLock As Integer
-        Public mv As Integer, vl As Integer
+        Public mv As Integer
+        Public vl As Short
     End Structure
 
     Public Class BookComparer
@@ -447,11 +446,9 @@ Module Position
             ReDim Book_Table(Book_nMoveNum)
             For i = 0 To Book_nMoveNum - 1
                 fp.Read(Buffer, 0, 8)
-                With BookRecord
-                    .dwZobristLock = CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)
-                    .mv = CInt(Buffer(4)) + (CInt(Buffer(5)) << 8)
-                    .vl = CInt(Buffer(6)) + (CInt(Buffer(7)) << 8)
-                End With
+                BookRecord.dwZobristLock = CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)
+                BookRecord.mv = CInt(Buffer(4)) + (CInt(Buffer(5)) << 8)
+                BookRecord.vl = CShort(Buffer(6)) + (CShort(Buffer(7)) << 8)
                 Book_Table(i) = BookRecord
             Next
             fp.Close()
@@ -461,8 +458,7 @@ Module Position
     End Sub
 
     Public Structure MoveStruct
-        Public vl As Integer, mv As Integer, pcCaptured As Integer
-        Public bCheck As Boolean
+        Public vl As Integer, mv As Integer
     End Structure
 
     Public Class MoveComparer
@@ -475,6 +471,11 @@ Module Position
         End Function
     End Class
 
+    Public Structure MoveStructEx
+        Public vl As Integer, mv As Integer, pcCaptured As Integer
+        Public bCheck As Boolean
+    End Structure
+
     Public Function MirrorSquare(ByVal sq As Integer) As Integer
         Return (sq >> 4 << 4) + 14 - (sq And 15)
     End Function
@@ -482,10 +483,10 @@ Module Position
     Public Structure PositionStruct
         Public sdPlayer As Integer
         Public pcSquares() As Integer
-        Public dwZobristKey As Integer, dwZobristLock0 As Integer, dwZobristLock1 As Integer
+        Public dwZobristKey As Integer, dwZobristLock As Integer
         Public vlWhite As Integer, vlBlack As Integer
         Public nMoveNum As Integer, nDistance As Integer
-        Public mvsList() As MoveStruct
+        Public mvsList() As MoveStructEx
 
         Public Sub ClearBoard()
             Dim sq As Integer
@@ -493,8 +494,7 @@ Module Position
             ReDim mvsList(MAX_MOVE_NUM)
             sdPlayer = 0
             dwZobristKey = 0
-            dwZobristLock0 = 0
-            dwZobristLock1 = 0
+            dwZobristLock = 0
             For sq = 0 To 255
                 pcSquares(sq) = 0
             Next
@@ -534,8 +534,7 @@ Module Position
                 pcAdjust += 7
             End If
             dwZobristKey = dwZobristKey Xor PreGen_dwZobristKeyTable(pcAdjust, sq)
-            dwZobristLock0 = dwZobristLock0 Xor PreGen_dwZobristLockTable0(pcAdjust, sq)
-            dwZobristLock1 = dwZobristLock1 Xor PreGen_dwZobristLockTable1(pcAdjust, sq)
+            dwZobristLock = dwZobristLock Xor PreGen_dwZobristLockTable(pcAdjust, sq)
         End Sub
 
         Public Function MovePiece(ByVal mv As Integer) As Integer
@@ -607,8 +606,7 @@ Module Position
         Public Sub ChangeSide()
             sdPlayer = 1 - sdPlayer
             dwZobristKey = dwZobristKey Xor PreGen_dwZobristKeyPlayer
-            dwZobristLock0 = dwZobristLock0 Xor PreGen_dwZobristLockPlayer0
-            dwZobristLock1 = dwZobristLock1 Xor PreGen_dwZobristLockPlayer1
+            dwZobristLock = dwZobristLock Xor PreGen_dwZobristLockPlayer
         End Sub
 
         Public Sub LoadBoard(ByVal nHandicap As Integer)
@@ -971,7 +969,7 @@ Module Position
             End If
         End Function
 
-        Public Function IsRep(Optional ByVal nRecur As Integer = 1) As Integer
+        Public Function RepStatus(Optional ByVal nRecur As Integer = 1) As Integer
             Dim nIndex As Integer, vl As Integer
             Dim bSelfSide As Boolean, bPerpCheck As Boolean, bOppPerpCheck As Boolean
             ' 1. 初始化
@@ -1034,12 +1032,12 @@ Module Position
             End If
             ' 1. 搜索开局库表
             bMirror = False
-            bk.dwZobristLock = dwZobristLock1
+            bk.dwZobristLock = dwZobristLock
             nIndex = Array.BinarySearch(Book_Table, 0, Book_nMoveNum, bk, BookComparer.Instance)
             If nIndex < 0 Then
                 bMirror = True
                 pos = Mirror()
-                bk.dwZobristLock = pos.dwZobristLock1
+                bk.dwZobristLock = pos.dwZobristLock
                 nIndex = Array.BinarySearch(Book_Table, 0, Book_nMoveNum, bk, BookComparer.Instance)
             End If
             If nIndex < 0 Then
