@@ -23,7 +23,7 @@ package xqwlight;
 
 import java.util.Random;
 
-import com.sun.midp.io.ResourceInputStream;
+// import com.sun.midp.io.ResourceInputStream;
 
 public class Position {
 	public static final int MATE_VALUE = 1000;
@@ -33,7 +33,7 @@ public class Position {
 	public static final int CONTEMPT_VALUE = 20;
 	public static final int ADVANCED_VALUE = 3;
 
-    public static final int MAX_GEN_MOVES = 128;
+	public static final int MAX_GEN_MOVES = 128;
 
 	public static final int MAX_MOVE_NUM = 256;
 
@@ -486,6 +486,11 @@ public class Position {
 		}
 
 		try {
+			bookMoveNum = 0;
+			bookLockTable = new int[bookMoveNum];
+			bookMoveTable = new int[bookMoveNum];
+			bookValueTable = new short[bookMoveNum];
+/*
 			ResourceInputStream in = new ResourceInputStream("/book/BOOK.DAT");
 			bookMoveNum = in.available() / 8;
 			bookLockTable = new int[bookMoveNum];
@@ -497,6 +502,7 @@ public class Position {
 				bookValueTable[i] = (short) (in.read() + (in.read() << 8));
 			}
 			in.close();
+*/
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
