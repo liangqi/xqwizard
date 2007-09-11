@@ -142,7 +142,7 @@
                 />
                 <File
                     RelPath = "STARTUP.VB"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -161,7 +161,7 @@
                 />
                 <File
                     RelPath = "XQWLMAIN.VB"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -44,25 +44,25 @@ Module Position
     Public Const CONTEMPT_VALUE As Integer = 20
     Public Const ADVANCED_VALUE As Integer = 3
 
-    Public IN_BOARD(256) As Boolean
+    Public IN_BOARD(255) As Boolean
 
-    Private IN_FORT(256) As Boolean
-    Private PIECE_VALUE(7, 256) As Integer
-    Private BOARD_HANDICAP(4, 128) As Integer
+    Private IN_FORT(255) As Boolean
+    Private PIECE_VALUE(6, 255) As Integer
+    Private BOARD_HANDICAP(3, 127) As Integer
 
-    Private KING_DELTA(4) As Integer
-    Private ADVISOR_DELTA(4) As Integer
-    Private KNIGHT_DELTA(4, 2) As Integer
-    Private KNIGHT_CHECK_DELTA(4, 2) As Integer
-    Private MVV_VALUE(8) As Integer
+    Private KING_DELTA(3) As Integer
+    Private ADVISOR_DELTA(3) As Integer
+    Private KNIGHT_DELTA(3, 1) As Integer
+    Private KNIGHT_CHECK_DELTA(3, 1) As Integer
+    Private MVV_VALUE(7) As Integer
 
-    Private LEGAL_SPAN(512) As Integer
-    Private KNIGHT_PIN(512) As Integer
+    Private LEGAL_SPAN(511) As Integer
+    Private KNIGHT_PIN(511) As Integer
 
     Private PreGen_dwZobristKeyPlayer As Integer
-    Private PreGen_dwZobristKeyTable(14, 256) As Integer
+    Private PreGen_dwZobristKeyTable(13, 255) As Integer
     Private PreGen_dwZobristLockPlayer As Integer
-    Private PreGen_dwZobristLockTable(14, 256) As Integer
+    Private PreGen_dwZobristLockTable(13, 255) As Integer
 
     Public Function LongRand(ByRef dwRandSeed As Integer) As Integer
         Dim qwLongSeed As Long
@@ -425,7 +425,7 @@ Module Position
 
     Public Sub LoadBook()
         Dim szFile As String, nSlash As Integer, nBackSlash As Integer, fp As FileStream
-        Dim i As Integer, Buffer(8) As Byte, BookRecord As BookStruct
+        Dim i As Integer, Buffer(7) As Byte, BookRecord As BookStruct
 
         szFile = System.Reflection.Assembly.GetExecutingAssembly.GetName.CodeBase
         If Left(szFile, 8) = "file:///" Then
@@ -443,7 +443,7 @@ Module Position
         If File.Exists(szFile) Then
             fp = File.Open(szFile, FileMode.Open, FileAccess.Read)
             Book_nMoveNum = CInt(fp.Length \ 8)
-            ReDim Book_Table(Book_nMoveNum)
+            ReDim Book_Table(Book_nMoveNum - 1)
             For i = 0 To Book_nMoveNum - 1
                 fp.Read(Buffer, 0, 8)
                 BookRecord.dwZobristLock = CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)
@@ -490,8 +490,8 @@ Module Position
 
         Public Sub ClearBoard()
             Dim sq As Integer
-            ReDim pcSquares(256)
-            ReDim mvsList(MAX_MOVE_NUM)
+            ReDim pcSquares(255)
+            ReDim mvsList(MAX_MOVE_NUM - 1)
             sdPlayer = 0
             dwZobristKey = 0
             dwZobristLock = 0
@@ -929,7 +929,7 @@ Module Position
         End Function
 
         Public Function IsMate() As Boolean
-            Dim mvs(MAX_GEN_MOVES) As MoveStruct
+            Dim mvs(MAX_GEN_MOVES - 1) As MoveStruct
             Dim i As Integer, nMoves As Integer
             nMoves = GenerateMoves(mvs)
             For i = 0 To nMoves - 1
@@ -1024,7 +1024,7 @@ Module Position
         Public Function BookMove() As Integer
             Dim pos As PositionStruct, bMirror As Boolean
             Dim bk As BookStruct, nIndex As Integer, i As Integer
-            Dim mv As Integer, mvs(MAX_GEN_MOVES) As MoveStruct
+            Dim mv As Integer, mvs(MAX_GEN_MOVES - 1) As MoveStruct
             Dim nValue As Integer, nMoves As Integer
 
             If Book_nMoveNum = 0 Then

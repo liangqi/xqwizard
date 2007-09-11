@@ -269,6 +269,12 @@ public class MainForm extends Canvas implements CommandListener {
 		if (getResult(true)) {
 			return false;
 		}
+		int sq = Position.DST(mvLast);
+		if (midlet.flipped) {
+			sq = Position.SQUARE_FLIP(sq);
+		}
+		cursorX = Position.FILE_X(sq) - 3;
+		cursorY = Position.RANK_Y(sq) - 3;
 		return true;
 	}
 }

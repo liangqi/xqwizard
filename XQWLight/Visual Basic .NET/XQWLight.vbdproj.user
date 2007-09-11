@@ -2,7 +2,7 @@
     <EVisualBasic>
         <Build>
             <Settings
-                DeploymentDevice = "Windows CE Emulator"
+                DeploymentDevice = "Pocket PC Emulator"
                 ReferencePath = ""
             >
                 <Platform Name = "Windows CE" />
@@ -39,8 +39,8 @@
                     StartURL = ""
                     StartWorkingDirectory = ""
                     StartWithIE = "true"
-                    SelectedDevice = "Windows CE Emulator"
-                    DeploymentPlatform = "Windows CE"
+                    SelectedDevice = "Pocket PC Emulator"
+                    DeploymentPlatform = "Pocket PC"
                 />
             </Settings>
         </Build>

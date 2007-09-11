@@ -176,8 +176,8 @@ Public Class MainForm
         End Sub
     End Class
 
-    Private imgBoards(256) As Image
-    Private imgBoardsSelected(256) As Image
+    Private imgBoards(255) As Image
+    Private imgBoardsSelected(255) As Image
 
     Private Sub SetBoardImage(ByVal sq As Integer, ByVal nImage As Integer)
         imgBoards(sq) = ilBoards.Images(nImage)
@@ -263,7 +263,7 @@ Public Class MainForm
     End Sub
 
     Private bClicking As Boolean
-    Private imgSquares(256) As ImageSquare
+    Private imgSquares(255) As ImageSquare
 
     Private Sub imgSquares_Click(ByVal sender As Object, ByVal e As EventArgs)
         Dim sq As Integer, pc As Integer
@@ -289,7 +289,9 @@ Public Class MainForm
             End If
         Else
             If App_sqSelected > 0 AndAlso AddMove(App_sqSelected, sq) AndAlso Not ResponseMove() Then
+                bClicking = False
                 Close()
+                Exit Sub
             End If
         End If
         bClicking = False

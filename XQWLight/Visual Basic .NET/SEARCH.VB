@@ -35,11 +35,11 @@ Module Search
         Public mv As Integer, dwZobristLock As Integer
     End Structure
 
-    Public Search_hash(HASH_SIZE) As HashStruct
+    Public Search_hash(HASH_SIZE - 1) As HashStruct
     Public Search_nAllNodes As Integer
     Public Search_pos As PositionStruct
-    Public Search_nHistory(4096) As Integer
-    Public Search_mvKiller(LIMIT_DEPTH, 2) As Integer
+    Public Search_nHistory(4095) As Integer
+    Public Search_mvKiller(LIMIT_DEPTH - 1, 1) As Integer
     Public Search_mvResult As Integer
 
     Public Function ProbeHash(ByVal vlAlpha As Integer, ByVal vlBeta As Integer, ByVal nDepth As Integer, ByRef mv As Integer) As Integer
@@ -134,7 +134,7 @@ Module Search
             End If
             If nPhase = PHASE_GEN_MOVES Then
                 nPhase = PHASE_REST
-                ReDim mvs(MAX_GEN_MOVES)
+                ReDim mvs(MAX_GEN_MOVES - 1)
                 nMoves = Search_pos.GenerateMoves(mvs)
                 For i = 0 To nMoves - 1
                     mvs(i).vl = Search_nHistory(Search_pos.HistoryIndex(mvs(i).mv))
@@ -156,7 +156,7 @@ Module Search
     Public Function SearchQuiesc(ByVal vlAlpha As Integer, ByVal vlBeta As Integer) As Integer
         Dim vl As Integer, vlRep As Integer, vlBest As Integer
         Dim i As Integer, nGenMoves As Integer, sqSide As Integer
-        Dim mvs(MAX_GEN_MOVES) As MoveStruct
+        Dim mvs(MAX_GEN_MOVES - 1) As MoveStruct
 
         Search_nAllNodes += 1
         ' 1. 杀棋步数裁剪
@@ -333,7 +333,7 @@ Module Search
     Public Sub SearchMain(ByVal nSeconds As Integer)
         Dim i As Integer, nGenMoves As Integer, vl As Integer
         Dim nTimer As Long
-        Dim mvs(MAX_GEN_MOVES) As MoveStruct
+        Dim mvs(MAX_GEN_MOVES - 1) As MoveStruct
         ' 1. 开局库
         Search_mvResult = Search_pos.BookMove()
         If Search_mvResult > 0 Then
@@ -371,7 +371,7 @@ Module Search
             Search_mvKiller(i, 1) = 0
         Next
         ' 5. 清空历史表
-        For i = 0 To 4096
+        For i = 0 To 4095
             Search_nHistory(i) = 0
         Next
         ' 6. 初始化

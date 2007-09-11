@@ -23,8 +23,6 @@ package xqwlight;
 
 import java.util.Random;
 
-// import com.sun.midp.io.ResourceInputStream;
-
 public class Position {
 	public static final int MATE_VALUE = 1000;
 	public static final int WIN_VALUE = MATE_VALUE - 100;
@@ -455,9 +453,6 @@ public class Position {
 		}
 	}
 
-	public static int bookMoveNum;
-	public static int[] bookLockTable, bookMoveTable;
-	public static short[] bookValueTable;
 	public static Random random = new Random();
 
 	public static int longRand(int[] seed) {
@@ -483,28 +478,6 @@ public class Position {
 				longRand(seed); // Skip ZobristLock0
 				PreGen_zobristLockTable[i][j] = longRand(seed);
 			}
-		}
-
-		try {
-			bookMoveNum = 0;
-			bookLockTable = new int[bookMoveNum];
-			bookMoveTable = new int[bookMoveNum];
-			bookValueTable = new short[bookMoveNum];
-/*
-			ResourceInputStream in = new ResourceInputStream("/book/BOOK.DAT");
-			bookMoveNum = in.available() / 8;
-			bookLockTable = new int[bookMoveNum];
-			bookMoveTable = new int[bookMoveNum];
-			bookValueTable = new short[bookMoveNum];
-			for (int i = 0; i < bookMoveNum; i ++) {
-				bookLockTable[i] = in.read() + (in.read() << 8) + (in.read() << 16) + (in.read() << 24);
-				bookMoveTable[i] = in.read() + (in.read() << 8);
-				bookValueTable[i] = (short) (in.read() + (in.read() << 8));
-			}
-			in.close();
-*/
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -1056,22 +1029,22 @@ public class Position {
 	}
 
 	public int bookMove() {
-		if (bookMoveNum == 0) {
+		if (Book.BOOK_SIZE == 0) {
 			return 0;
 		}
 		boolean mirror = false;
 		int lock = zobristLock;
-		int index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
+		int index = binarySearch(lock, Book.Lock.BOOK_LOCK, 0, Book.BOOK_SIZE);
 		if (index < 0) {
 			mirror = true;
 			lock = mirror().zobristLock;
-			index = binarySearch(lock, bookLockTable, 0, bookMoveNum);
+			index = binarySearch(lock, Book.Lock.BOOK_LOCK, 0, Book.BOOK_SIZE);
 		}
 		if (index < 0) {
 			return 0;
 		}
 		index --;
-		while (index >= 0 && bookLockTable[index] == lock) {
+		while (index >= 0 && Book.Lock.BOOK_LOCK[index] == lock) {
 			index --;
 		}
 		int[] mvs = new int[MAX_GEN_MOVES];
@@ -1079,11 +1052,11 @@ public class Position {
 		int value = 0;
 		int moves = 0;
 		index ++;
-		while (index < bookMoveNum && bookLockTable[index] == lock) {
-			int mv = (mirror ? MIRROR_MOVE(bookMoveTable[index]) : bookMoveTable[index]);
+		while (index < Book.BOOK_SIZE && Book.Lock.BOOK_LOCK[index] == lock) {
+			int mv = (mirror ? MIRROR_MOVE(Book.Move.BOOK_MOVE[index]) : Book.Move.BOOK_MOVE[index]);
 			if (legalMove(mv)) {
 				mvs[moves] = mv;
-				vls[moves] = bookValueTable[index];
+				vls[moves] = Book.Value.BOOK_VALUE[index];
 				value += vls[moves];
 				moves ++;
 				if (moves == MAX_GEN_MOVES) {
