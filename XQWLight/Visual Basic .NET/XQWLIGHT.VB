@@ -61,7 +61,7 @@ Module XQWLight
             If bComputer Then
                 vlRep = -vlRep
             End If
-            MsgBox(IIf(vlRep > WIN_VALUE, "长打作负，请不要气馁！", IIf(vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", "双方不变作和，辛苦了！")), MsgBoxStyle.Information, "棋局结束")
+            MsgBox(Switch(vlRep > WIN_VALUE, "长打作负，请不要气馁！", vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", True, "双方不变作和，辛苦了！"), MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
         If Search_pos.nMoveNum = 100 Then

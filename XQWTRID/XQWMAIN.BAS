@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.34, Last Modified: Sep. 2007
+' Designed by Morning Yellow, Version: 3.35, Last Modified: Sep. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lp
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.34"
+Public Const STRING_VERSION     As String = "3.35"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -923,7 +923,7 @@ End Function
 Public Function OpenString() As String
 
 OpenString = Game_szOpen + IIf(Game_szOpen = "" Or Game_szVar = "", "", "——") + Game_szVar + _
-        IIf(Game_szEcco = "", "", IIf(Game_szOpen = "" And Game_szVar = "", "(ECCO開局編號: " + Game_szEcco + ")", "(" + Game_szEcco + ")"))
+        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", "(ECCO開局編號: " + Game_szEcco + ")", True, "(" + Game_szEcco + ")")
 
 End Function
 
@@ -2116,8 +2116,16 @@ If Engine_szEgtbPaths <> "" Then
     SendEngine "setoption egtbpaths " + Engine_szEgtbPaths, bSlaveEngine
 End If
 SendEngine "setoption hashsize" + IIf(Engine_nHash = 0, " 0", Str(16 * 2 ^ (Engine_nHash - 1))), bSlaveEngine
-SendEngine "setoption threads" + IIf(Engine_nThreads < 4, " 0", Str(2 ^ (Engine_nThreads - 4))), bSlaveEngine
-SendEngine "setoption idle " + IIf(Engine_nThreads = 1, "large", IIf(Engine_nThreads = 2, "medium", IIf(Engine_nThreads = 3, "small", "none"))), bSlaveEngine
+If Engine_nThreads = 0 Then
+    SendEngine "setoption threads 0"
+    SendEngine "setoption idle none"
+ElseIf Engine_nThreads < 4 Then
+    SendEngine "setoption threads 1"
+    SendEngine "setoption idle " + Choose(Engine_nThreads, "large", "medium", "small"), bSlaveEngine
+Else
+    SendEngine "setoption threads" + Str(2 ^ (Engine_nThreads - 4)), bSlaveEngine
+    SendEngine "setoption idle none"
+End If
 SendEngine "setoption drawmoves" + Str(100 + Engine_nDrawMoves * 20), bSlaveEngine
 SendEngine "setoption repetition " + Choose(Engine_nRepetition + 1, "alwaysdraw", "checkban", "asianrule", "chineserule"), bSlaveEngine
 SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine
