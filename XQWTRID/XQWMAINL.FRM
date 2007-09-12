@@ -690,6 +690,20 @@ Begin VB.Form frmMainLarge
          EndProperty
       EndProperty
    End
+   Begin MSComctlLib.Toolbar tlbHide 
+      Align           =   1  'Align Top
+      Height          =   360
+      Left            =   0
+      TabIndex        =   52
+      Top             =   360
+      Width           =   12360
+      _ExtentX        =   21802
+      _ExtentY        =   635
+      ButtonWidth     =   609
+      Appearance      =   1
+      Style           =   1
+      _Version        =   393216
+   End
    Begin VB.Image imgSquares 
       Height          =   855
       Index           =   0

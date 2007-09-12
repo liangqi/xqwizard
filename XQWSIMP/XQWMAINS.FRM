@@ -32,7 +32,6 @@ Begin VB.Form frmMainSmall
       _ExtentX        =   17568
       _ExtentY        =   582
       ButtonWidth     =   609
-      ButtonHeight    =   582
       AllowCustomize  =   0   'False
       Appearance      =   1
       Style           =   1
@@ -689,6 +688,20 @@ Begin VB.Form frmMainSmall
             Key             =   "Msg"
          EndProperty
       EndProperty
+   End
+   Begin MSComctlLib.Toolbar tlbHide 
+      Align           =   1  'Align Top
+      Height          =   360
+      Left            =   0
+      TabIndex        =   52
+      Top             =   330
+      Width           =   9960
+      _ExtentX        =   17568
+      _ExtentY        =   635
+      ButtonWidth     =   609
+      Appearance      =   1
+      Style           =   1
+      _Version        =   393216
    End
    Begin VB.Image imgSquares 
       Height          =   615
