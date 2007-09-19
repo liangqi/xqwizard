@@ -2838,7 +2838,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trid.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2849,7 +2849,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trid.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.05 Then
@@ -3013,8 +3013,8 @@ frmStartUp.Refresh
 ' 初始化，可能有等待，啟動畫面保持
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
-CchessInit CCHESS_TRIDITIONAL
-EccoInitOpenVar CCHESS_TRIDITIONAL
+CchessInit CCHESS_TRADITIONAL
+EccoInitOpenVar CCHESS_TRADITIONAL
 LoadRegs
 LoadTips
 If Options_bLargeGui Then

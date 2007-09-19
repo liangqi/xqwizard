@@ -29,7 +29,7 @@ Public Type PositionStruct
 End Type
 
 Public Declare Function CchessVersion Lib "CCHESS.DLL" Alias "_CchessVersion@0" () As Long
-Public Declare Sub CchessInit Lib "CCHESS.DLL" Alias "_CchessInit@4" (Optional ByVal bTriditional As Long = 0)
+Public Declare Sub CchessInit Lib "CCHESS.DLL" Alias "_CchessInit@4" (Optional ByVal bTraditional As Long = 0)
 Public Declare Sub CchessAddPiece Lib "CCHESS.DLL" Alias "_CchessAddPiece@16" (ByRef pos As PositionStruct, ByVal sq As Long, ByVal pc As Long, Optional ByVal bDel As Long = 0)
 Public Declare Function CchessTryMove Lib "CCHESS.DLL" Alias "_CchessTryMove@12" (ByRef pos As PositionStruct, ByRef nStatus As Long, ByVal mv As Long) As Long
 Public Declare Sub CchessUndoMove Lib "CCHESS.DLL" Alias "_CchessUndoMove@4" (ByRef pos As PositionStruct)
@@ -51,7 +51,7 @@ Public Declare Function CchessFile2Move Lib "CCHESS.DLL" Alias "_CchessFile2Move
 Public Declare Function CchessMove2File Lib "CCHESS.DLL" Alias "_CchessMove2File@8" (ByVal mv As Long, ByRef pos As PositionStruct) As Long
 
 Public Declare Function EccoVersion Lib "ECCO.DLL" Alias "_EccoVersion@0" () As Long
-Public Declare Function EccoInitOpenVar Lib "ECCO.DLL" Alias "_EccoInitOpenVar@4" (Optional ByVal bTriditional As Long = 0) As Long
+Public Declare Function EccoInitOpenVar Lib "ECCO.DLL" Alias "_EccoInitOpenVar@4" (Optional ByVal bTraditional As Long = 0) As Long
 Public Declare Function EccoOpening Lib "ECCO.DLL" Alias "_EccoOpening@4" (ByVal dwEccoIndex As Long) As Long
 Public Declare Function EccoVariation Lib "ECCO.DLL" Alias "_EccoVariation@4" (ByVal dwEccoIndex As Long) As Long
 Public Declare Function EccoIndex Lib "ECCO.DLL" Alias "_EccoIndex@4" (ByVal szFileMove As String) As Long
@@ -66,7 +66,7 @@ Public Const MOVE_MATE              As Long = 4
 Public Const MOVE_CHECK             As Long = 2
 Public Const MOVE_CAPTURE           As Long = 1
 
-Public Const CCHESS_TRIDITIONAL     As Long = 1
+Public Const CCHESS_TRADITIONAL     As Long = 1
 Public Const CCHESS_DELETE_PIECE    As Long = 1
 Public Const CCHESS_ANSI_TEXT       As Long = 1
 
