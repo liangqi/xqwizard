@@ -621,6 +621,9 @@ Else
     Loop
 End If
 MoveFlush
+If bAutoSave Or bNoTitle Then
+    App_szFileName = ""
+End If
 
 Exit Sub
 lnErrorOpen:
@@ -633,6 +636,9 @@ LabelFlush
 MoveFlush
 If bAutoSave Then
     EngineNewGame
+End If
+If bAutoSave Or bNoTitle Then
+    App_szFileName = ""
 End If
 
 End Sub
