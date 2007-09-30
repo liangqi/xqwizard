@@ -2694,7 +2694,7 @@ Private Sub mnOptionsTopMost_Click()
 
 Options_bTopMost = Not Options_bTopMost
 mnOptionsTopMost.Checked = Options_bTopMost
-SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
+SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
 

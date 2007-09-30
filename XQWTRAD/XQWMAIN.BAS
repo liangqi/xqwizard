@@ -22,20 +22,19 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——Windows參數常量
-Public Const SW_SHOWNORMAL      As Long = 1
-Public Const SND_ASYNC          As Long = 1
-Public Const SND_NOWAIT         As Long = 8192
-Public Const SND_FILENAME       As Long = 131072
-Public Const HWND_TOPMOST       As Long = -1
-Public Const HWND_NOTOPMOST     As Long = -2
-Public Const SWP_NOSIZE         As Long = 1
-Public Const SWP_NOMOVE         As Long = 2
-Public Const SWP_SHOWWINDOW     As Long = 64
+Public Const SW_SHOWNORMAL      As Long = 1         ' ShellExecuteA
+Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
+Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
+Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
+Public Const HWND_TOPMOST       As Long = -1        ' SetWindowPos
+Public Const HWND_NOTOPMOST     As Long = -2        ' SetWindowPos
+Public Const SWP_NOSIZE         As Long = 1         ' SetWindowPos
+Public Const SWP_NOMOVE         As Long = 2         ' SetWindowPos
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
-Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫師信息
 Public Const STRING_VERSION     As String = "3.36"
@@ -3128,7 +3127,7 @@ App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
-SetWindowPos App_frmMain.hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
+SetWindowPos App_frmMain.hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 Unload frmStartUp
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain

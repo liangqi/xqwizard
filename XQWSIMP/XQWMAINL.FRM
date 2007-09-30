@@ -195,7 +195,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1800,7 +1800,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Sub Form_load()
+Private Sub Form_Load()
 
 Dim i As Integer
 lstMoveText.Clear
@@ -2568,7 +2568,7 @@ Private Sub mnOptionsTopMost_Click()
 
 Options_bTopMost = Not Options_bTopMost
 mnOptionsTopMost.Checked = Options_bTopMost
-SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
+SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
 
