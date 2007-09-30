@@ -26,10 +26,16 @@ Public Const SW_SHOWNORMAL      As Long = 1
 Public Const SND_ASYNC          As Long = 1
 Public Const SND_NOWAIT         As Long = 8192
 Public Const SND_FILENAME       As Long = 131072
+Public Const HWND_TOPMOST       As Long = -1
+Public Const HWND_NOTOPMOST     As Long = -2
+Public Const SWP_NOSIZE         As Long = 1
+Public Const SWP_NOMOVE         As Long = 2
+Public Const SWP_SHOWWINDOW     As Long = 64
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
+Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
+Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hwnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "3.36"
@@ -191,6 +197,7 @@ Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盘
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音乐
+Public Options_bTopMost         As Integer  ' 总在最前面
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机对弈用户
 ' 全局变量——界面
@@ -2074,7 +2081,7 @@ Else
         Case BUSY_THINK
             Engine_nStatus = IDLE_REST
         Case Else
-            MsgBox "不该接收到引擎的信息: " + szReceived, vbExclamation
+            ' MsgBox "不该接收到引擎的信息: " + szReceived, vbExclamation
         End Select
     ElseIf Left(szReceived, 12) = "info string " Then
     ElseIf Left(szReceived, 5) = "info " Then
@@ -2745,8 +2752,9 @@ Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1")
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
-Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
+Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
+Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -2799,6 +2807,7 @@ SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
+SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
@@ -3118,6 +3127,8 @@ App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
 App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
+App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
+SetWindowPos App_frmMain.hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
 Unload frmStartUp
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain

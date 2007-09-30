@@ -32,6 +32,7 @@ Begin VB.Form frmMainLarge
       _ExtentX        =   21802
       _ExtentY        =   635
       ButtonWidth     =   609
+      ButtonHeight    =   582
       AllowCustomize  =   0   'False
       Appearance      =   1
       Style           =   1
@@ -194,7 +195,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -699,6 +700,7 @@ Begin VB.Form frmMainLarge
       _ExtentX        =   21802
       _ExtentY        =   635
       ButtonWidth     =   609
+      ButtonHeight    =   582
       Appearance      =   1
       Style           =   1
       _Version        =   393216
@@ -1724,6 +1726,9 @@ Begin VB.Form frmMainLarge
             Caption         =   "无声(&N)"
          End
       End
+      Begin VB.Menu mnOptionsTopMost 
+         Caption         =   "总在最前面(&T)"
+      End
    End
    Begin VB.Menu mnHelp 
       Caption         =   "帮助(&H)"
@@ -1795,7 +1800,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Sub Form_Load()
+Private Sub Form_load()
 
 Dim i As Integer
 lstMoveText.Clear
@@ -2556,6 +2561,14 @@ End Sub
 Private Sub mnOptionsMusicNone_Click()
 
 MusicSetting MUSIC_NONE
+
+End Sub
+
+Private Sub mnOptionsTopMost_Click()
+
+Options_bTopMost = Not Options_bTopMost
+mnOptionsTopMost.Checked = Options_bTopMost
+SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
 
 End Sub
 

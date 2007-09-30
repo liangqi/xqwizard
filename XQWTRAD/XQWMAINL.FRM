@@ -1725,6 +1725,9 @@ Begin VB.Form frmMainLarge
             Caption         =   "無聲(&N)"
          End
       End
+      Begin VB.Menu mnOptionsTopMost 
+         Caption         =   "總在最前面(&T)"
+      End
    End
    Begin VB.Menu mnHelp 
       Caption         =   "幫助(&H)"
@@ -2557,6 +2560,14 @@ End Sub
 Private Sub mnOptionsMusicNone_Click()
 
 MusicSetting MUSIC_NONE
+
+End Sub
+
+Private Sub mnOptionsTopMost_Click()
+
+Options_bTopMost = Not Options_bTopMost
+mnOptionsTopMost.Checked = Options_bTopMost
+SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE + SWP_SHOWWINDOW
 
 End Sub
 
