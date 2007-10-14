@@ -1,3 +1,24 @@
+/*
+Book.java - Source Code for XiangQi Wizard Light, Part V
+
+XiangQi Wizard Light - a Chinese Chess Program for Java ME
+Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Oct. 2007
+Copyright (C) 2004-2007 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 package xqwlight;
 
 public class Book {
@@ -262,7 +283,7 @@ public class Book {
 			1878244814, 1881155159, 1884230747, 1886615040, 1887007565, 1893914238, 1900689275, 1901065799,
 			1902711965, 1904249270, 1904249270, 1909429715, 1923582050, 1926775710, 1935154081, 1970775588,
 			1973366591, 1975982284, 1982212880, 2007126996, 2011256141, 2020961964, 2053912072, 2069530318,
-			2069530318,
+			2076741059,
 		};
 	}
 
@@ -527,12 +548,12 @@ public class Book {
 			43178, 30293, 26473, 13363, 51915, 25990, 33844, 17995,
 			22600, 23386, 31081, 46501, 42949, 13363, 22362, 34197,
 			51399, 30809, 23354, 22842, 25990, 13363, 33988, 39322,
-			39322,
+			21300,
 		};
 	}
 
 	public static class Value {
-		public static final short[] BOOK_VALUE = {
+		public static final int[] BOOK_VALUE = {
 			4, 3, 4, 3, 7, 4, 6, 3,
 			3, 3, 8, 4, 4, 3, 3, 16,
 			3, 11, 4, 3, 3, 24, 4, 5,
