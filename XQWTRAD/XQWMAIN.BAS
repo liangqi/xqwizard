@@ -200,6 +200,7 @@ Public Options_bTopMost         As Integer  ' 总在最前面
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
+Public Gui_nFunnyIndex          As Integer  ' “趣味象棋”的条目序号
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
@@ -2757,6 +2758,7 @@ Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUS
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
+Gui_nFunnyIndex = Str2Int(GetSetting("XQWizard", "Gui", "FunnyIndex", "1"), 1, 240)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -2812,6 +2814,7 @@ SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
+SaveSetting "XQWizard", "Gui", "FunnyIndex", LTrim(Str(Gui_nFunnyIndex))
 SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
