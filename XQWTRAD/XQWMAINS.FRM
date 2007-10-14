@@ -114,7 +114,6 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Enabled         =   0   'False
             Key             =   "WizardFunny"
             Object.ToolTipText     =   "È¤Î¶ÏóÆå"
          EndProperty
@@ -1558,7 +1557,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnWizardFunny 
          Caption         =   "½ì¨ý¶H´Ñ(&F)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
@@ -2249,7 +2247,12 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-' TODO
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+frmFunny.Show vbModal
 
 End Sub
 

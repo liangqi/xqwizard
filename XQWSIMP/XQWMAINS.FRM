@@ -24,13 +24,13 @@ Begin VB.Form frmMainSmall
    StartUpPosition =   3  'Windows Default
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
-      Height          =   330
+      Height          =   360
       Left            =   0
       TabIndex        =   0
       Top             =   0
       Width           =   9960
       _ExtentX        =   17568
-      _ExtentY        =   582
+      _ExtentY        =   635
       ButtonWidth     =   609
       ButtonHeight    =   582
       AllowCustomize  =   0   'False
@@ -114,7 +114,6 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Enabled         =   0   'False
             Key             =   "WizardFunny"
             Object.ToolTipText     =   "»§Œ∂œÛ∆Â"
          EndProperty
@@ -695,7 +694,7 @@ Begin VB.Form frmMainSmall
       Height          =   360
       Left            =   0
       TabIndex        =   52
-      Top             =   330
+      Top             =   360
       Width           =   9960
       _ExtentX        =   17568
       _ExtentY        =   635
@@ -1559,7 +1558,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnWizardFunny 
          Caption         =   "»§Œ∂œÛ∆Â(&F)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
@@ -1842,7 +1840,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Sub Form_load()
+Private Sub Form_Load()
 
 Dim i As Integer
 lstMoveText.Clear
@@ -2250,7 +2248,12 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-' TODO
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+frmFunny.Show vbModal
 
 End Sub
 
@@ -2694,7 +2697,7 @@ Private Sub mnOptionsTopMost_Click()
 
 Options_bTopMost = Not Options_bTopMost
 mnOptionsTopMost.Checked = Options_bTopMost
-SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
 

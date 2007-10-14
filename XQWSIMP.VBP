@@ -23,6 +23,7 @@ Form=XQWSIMP\HOWTO.FRM
 Form=HIDEFORM.FRM
 Form=STARTUP.FRM
 ResFile32="XQWIZARD.RES"
+Form=XQWSIMP\FUNNY.FRM
 IconForm="frmMainSmall"
 Startup="Sub Main"
 HelpFile=""

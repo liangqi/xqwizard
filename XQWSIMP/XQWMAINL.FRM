@@ -114,7 +114,6 @@ Begin VB.Form frmMainLarge
             Style           =   1
          EndProperty
          BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Enabled         =   0   'False
             Key             =   "WizardFunny"
             Object.ToolTipText     =   "»§Œ∂œÛ∆Â"
          EndProperty
@@ -195,7 +194,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1559,7 +1558,6 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnWizardFunny 
          Caption         =   "»§Œ∂œÛ∆Â(&F)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
@@ -2208,7 +2206,12 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-' TODO
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
+    End If
+End If
+frmFunny.Show vbModal
 
 End Sub
 
