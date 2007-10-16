@@ -48,9 +48,9 @@ Begin VB.Form frmFunny
    End
    Begin VB.Label lblTitle 
       BeginProperty Font 
-         Name            =   "ËÎÌו"
+         Name            =   "¿¬Ìו_GB2312"
          Size            =   15
-         Charset         =   0
+         Charset         =   134
          Weight          =   700
          Underline       =   0   'False
          Italic          =   0   'False

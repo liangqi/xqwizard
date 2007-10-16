@@ -84,9 +84,9 @@ Begin VB.Form frmHowTo
    Begin VB.Label lblDoYouKnow 
       Caption         =   "你知道吗？"
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "楷体_GB2312"
          Size            =   15
-         Charset         =   0
+         Charset         =   134
          Weight          =   700
          Underline       =   0   'False
          Italic          =   0   'False
