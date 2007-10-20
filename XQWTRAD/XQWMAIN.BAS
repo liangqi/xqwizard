@@ -924,9 +924,9 @@ End Function
 Public Function ResultString() As String
 
 If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
-    ResultString = "(著法: " + IIf(Game_sdStart = 0, "紅先", "黑先") + Choose(Game_nResult + 1, "", "胜", "和", "負") + ")"
+    ResultString = "(著法: " + IIf(Game_sdStart = 0, "紅先", "黑先") + Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "負"), "和", IIf(Game_sdStart = 0, "負", "胜")) + ")"
 Else
-    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (對) ", " (先胜) ", " (先和) ", " (先負) ") + _
+    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (對) ", IIf(Game_sdStart = 0, " (先胜) ", " (后負) "), IIf(Game_sdStart = 0, " (先和) ", " (后和) "), IIf(Game_sdStart = 0, " (先負) ", " (后胜) ")) + _
             Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
 End If
 
