@@ -2,7 +2,7 @@
 Position.java - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -453,30 +453,59 @@ public class Position {
 		}
 	}
 
-	public static Random random = new Random();
+	public static class RC4 {
+		public int[] state = new int[256];
+		public int x, y;
 
-	public static int longRand(int[] seed) {
-		long longSeed = seed[0];
-		longSeed *= 16807;
-		seed[0] = (int) (longSeed % 0x7fffffff);
-		return seed[0];
-	}
+		public void swap(int i, int j) {
+			int t = state[i];
+			state[i] = state[j];
+			state[j] = t;
+		}
 
-	static {
-		int[] seed = new int[1];
-		seed[0] = 1;
-		PreGen_zobristKeyPlayer = longRand(seed);
-		for (int i = 0; i < 14; i ++) {
-			for (int j = 0; j < 256; j ++) {
-				PreGen_zobristKeyTable[i][j] = longRand(seed);
+		public RC4(byte[] key) {
+			x = 0;
+			y = 0;
+			for (int i = 0; i < 256; i ++) {
+				state[i] = i;
+			}
+			int j = 0;
+			for (int i = 0; i < 256; i ++) {
+				j = (j + state[i] + key[i % key.length]) & 0xff;
+				swap(i, j);
 			}
 		}
-		longRand(seed); // Skip ZobristLock0
-		PreGen_zobristLockPlayer = longRand(seed);
+
+		public int nextByte() {
+			x = (x + 1) & 0xff;
+			y = (y + state[x]) & 0xff;
+			swap(x, y);
+			int t = (state[x] + state[y]) & 0xff;
+			return state[t];
+		}
+
+		public int nextLong() {
+			int n0, n1, n2, n3;
+			n0 = nextByte();
+			n1 = nextByte();
+			n2 = nextByte();
+			n3 = nextByte();
+			return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
+		}
+	}
+
+	public static Random random = new Random();
+
+	static {
+		RC4 rc4 = new RC4(new byte[] {0});
+		PreGen_zobristKeyPlayer = rc4.nextLong();
+		rc4.nextLong(); // Skip ZobristLock0
+		PreGen_zobristLockPlayer = rc4.nextLong();
 		for (int i = 0; i < 14; i ++) {
 			for (int j = 0; j < 256; j ++) {
-				longRand(seed); // Skip ZobristLock0
-				PreGen_zobristLockTable[i][j] = longRand(seed);
+				PreGen_zobristKeyTable[i][j] = rc4.nextLong();
+				rc4.nextLong(); // Skip ZobristLock0
+				PreGen_zobristLockTable[i][j] = rc4.nextLong();
 			}
 		}
 	}
@@ -486,9 +515,12 @@ public class Position {
 		int high = to - 1;
 		while (low <= high) {
 			int mid = (low + high) / 2;
-			if (vls[mid] < vl) {
+			// Convert to Unsigned
+			int vlLeft = vls[mid] >>> 1;
+			int vlRight = vl >>> 1;
+			if (vlLeft < vlRight) {
 				low = mid + 1;
-			} else if (vls[mid] > vl) {
+			} else if (vlLeft > vlRight) {
 				high = mid - 1;
 			} else {
 				return mid;
@@ -555,7 +587,6 @@ public class Position {
 			pcAdjust += 7;
 		}
 		zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
-		// zobristLock0 ^= PreGen_zobristLockTable0[pcAdjust][sq];
 		zobristLock ^= PreGen_zobristLockTable[pcAdjust][sq];
 	}
 

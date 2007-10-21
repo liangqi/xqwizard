@@ -1,7 +1,7 @@
 ' POSITION.VB - Source Code for XiangQi Wizard Light, Part I
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -58,18 +58,6 @@ Module Position
 
     Private LEGAL_SPAN(511) As Integer
     Private KNIGHT_PIN(511) As Integer
-
-    Private PreGen_dwZobristKeyPlayer As Integer
-    Private PreGen_dwZobristKeyTable(13, 255) As Integer
-    Private PreGen_dwZobristLockPlayer As Integer
-    Private PreGen_dwZobristLockTable(13, 255) As Integer
-
-    Public Function LongRand(ByRef dwRandSeed As Integer) As Integer
-        Dim qwLongSeed As Long
-        qwLongSeed = CLng(dwRandSeed) * 16807
-        dwRandSeed = CInt(qwLongSeed Mod 2147483647)
-        Return dwRandSeed
-    End Function
 
     Public Sub SetBooleanArray(ByVal bArray() As Boolean, ByVal ParamArray nData() As Integer)
         Dim i As Integer, n As Integer
@@ -378,8 +366,67 @@ Module Position
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     End Sub
 
+    Public Class RC4Struct
+        Private s(255) As Integer
+        Private x As Integer, y As Integer
+
+        Private Sub Swap(ByVal i As Integer, ByVal j As Integer)
+            Dim t As Integer
+            t = s(i)
+            s(i) = s(j)
+            s(j) = t
+        End Sub
+
+        Public Sub Init(ByVal nKey() As Integer)
+            Dim i As Integer, j As Integer, nKeyLen As Integer
+            x = 0
+            y = 0
+            For i = 0 To 255
+                s(i) = CByte(i)
+            Next
+            j = 0
+            nKeyLen = nKey.Length
+            For i = 0 To 255
+                j = (j + s(i) + nKey(i Mod nKeyLen)) And 255
+                Swap(i, j)
+            Next
+        End Sub
+
+        Public Sub InitZero()
+            Dim nKey(0) As Integer
+            nKey(0) = 0
+            Init(nKey)
+        End Sub
+
+        Public Sub InitRand()
+            ' TODO
+        End Sub
+
+        Public Function NextByte() As Integer
+            x = (x + 1) And 255
+            y = (y + s(x)) And 255
+            Swap(x, y)
+            Return s((s(x) + s(y)) And 255)
+        End Function
+
+        Public Function NextLong() As Integer
+            Dim n0 As Integer, n1 As Integer, n2 As Integer, n3 As Integer
+            n0 = NextByte()
+            n1 = NextByte()
+            n2 = NextByte()
+            n3 = NextByte()
+            Return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24)
+        End Function
+    End Class
+
+    Private PreGen_dwZobristKeyPlayer As Integer
+    Private PreGen_dwZobristLockPlayer As Integer
+    Private PreGen_dwZobristKeyTable(13, 255) As Integer
+    Private PreGen_dwZobristLockTable(13, 255) As Integer
+
     Public Sub InitArrays()
         Dim i As Integer, j As Integer, dwRandSeed As Integer
+        Dim rc4 As RC4Struct
         ' 注：由于常量过于庞大可能会导致程序崩溃，所以一些数组只能在函数中初始化
         InitBoardFort()
         InitLegalSpan()
@@ -387,19 +434,16 @@ Module Position
         InitPieceValue2()
         InitBoardHandicap()
         ' 初始化Zobrist
-        dwRandSeed = 1
-        PreGen_dwZobristKeyPlayer = LongRand(dwRandSeed)
+        rc4 = New RC4Struct
+        rc4.InitZero()
+        PreGen_dwZobristKeyPlayer = rc4.NextLong
+        rc4.NextLong()
+        PreGen_dwZobristLockPlayer = rc4.NextLong
         For i = 0 To 13
             For j = 0 To 255
-                PreGen_dwZobristKeyTable(i, j) = LongRand(dwRandSeed)
-            Next
-        Next
-        LongRand(dwRandSeed) ' 跳过 ZobristLock0
-        PreGen_dwZobristLockPlayer = LongRand(dwRandSeed)
-        For i = 0 To 13
-            For j = 0 To 255
-                LongRand(dwRandSeed) ' 跳过 ZobristLock0
-                PreGen_dwZobristLockTable(i, j) = LongRand(dwRandSeed)
+                PreGen_dwZobristKeyTable(i, j) = rc4.NextLong
+                rc4.NextLong()
+                PreGen_dwZobristLockTable(i, j) = rc4.NextLong
             Next
         Next
     End Sub
@@ -446,7 +490,7 @@ Module Position
             ReDim Book_Table(Book_nMoveNum - 1)
             For i = 0 To Book_nMoveNum - 1
                 fp.Read(Buffer, 0, 8)
-                BookRecord.dwZobristLock = CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)
+                BookRecord.dwZobristLock = ((CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)) >> 1) And &H7FFFFFFF
                 BookRecord.mv = CInt(Buffer(4)) + (CInt(Buffer(5)) << 8)
                 BookRecord.vl = CShort(Buffer(6)) + (CShort(Buffer(7)) << 8)
                 Book_Table(i) = BookRecord
@@ -1032,12 +1076,12 @@ Module Position
             End If
             ' 1. 搜索开局库表
             bMirror = False
-            bk.dwZobristLock = dwZobristLock
+            bk.dwZobristLock = (dwZobristLock >> 1) And &H7FFFFFFF
             nIndex = Array.BinarySearch(Book_Table, 0, Book_nMoveNum, bk, BookComparer.Instance)
             If nIndex < 0 Then
                 bMirror = True
                 pos = Mirror()
-                bk.dwZobristLock = pos.dwZobristLock
+                bk.dwZobristLock = (pos.dwZobristLock >> 1) And &H7FFFFFFF
                 nIndex = Array.BinarySearch(Book_Table, 0, Book_nMoveNum, bk, BookComparer.Instance)
             End If
             If nIndex < 0 Then

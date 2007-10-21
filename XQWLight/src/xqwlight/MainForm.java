@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -79,13 +79,17 @@ public class MainForm extends Canvas implements CommandListener {
 	private String message;
 	private int width, height, left, top;
 	private int phase;
+	private Command cmdBack, cmdExit;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
 
-		addCommand(new Command("ÍË³ö", Command.EXIT, 1));
+		cmdBack = new Command("·µ»Ø", Command.BACK, 1);
+		cmdExit = new Command("ÍË³ö", Command.EXIT, 2);
+		addCommand(cmdBack);
+		addCommand(cmdExit);
 
 		setCommandListener(this);
 	}
@@ -104,7 +108,11 @@ public class MainForm extends Canvas implements CommandListener {
 
 	public void commandAction(Command c, Displayable d) {
 		if (phase == PHASE_WAITING) {
-			Display.getDisplay(midlet).setCurrent(midlet.startUp);
+			if (c == cmdExit) {
+				midlet.notifyDestroyed();
+			} else {
+				Display.getDisplay(midlet).setCurrent(midlet.startUp);
+			}
 		}
 	}
 
@@ -263,18 +271,15 @@ public class MainForm extends Canvas implements CommandListener {
 		search.searchMain(1 << (midlet.level << 1));
 		search.pos.makeMove(search.mvResult);
 		mvLast = search.mvResult;
-		phase = PHASE_WAITING;
-		repaint();
-		serviceRepaints();
-		if (getResult(true)) {
-			return false;
-		}
 		int sq = Position.DST(mvLast);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		cursorX = Position.FILE_X(sq) - 3;
 		cursorY = Position.RANK_Y(sq) - 3;
-		return true;
+		phase = PHASE_WAITING;
+		repaint();
+		serviceRepaints();
+		return !getResult(true);
 	}
 }
