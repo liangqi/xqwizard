@@ -1099,7 +1099,7 @@ public class Position {
 		if (value == 0) {
 			return 0;
 		}
-		value = (int) (random.nextLong() % value);
+		value = Math.abs(random.nextInt()) % value;
 		for (index = 0; index < moves; index ++) {
 			value -= vls[index];
 			if (value < 0) {
