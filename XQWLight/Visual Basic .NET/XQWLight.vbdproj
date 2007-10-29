@@ -60,31 +60,26 @@
                     Platform = "Windows CE"
                     Name = "System"
                     AssemblyName = "System"
-                    Private = "False"
                 />
                 <Reference
                     Platform = "Windows CE"
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    Private = "False"
                 />
                 <Reference
                     Platform = "Windows CE"
                     Name = "System.Drawing"
                     AssemblyName = "System.Drawing"
-                    Private = "False"
                 />
                 <Reference
                     Platform = "Windows CE"
                     Name = "System.Windows.Forms"
                     AssemblyName = "System.Windows.Forms"
-                    Private = "False"
                 />
                 <Reference
                     Platform = "Windows CE"
-                    Name = "System.XML"
+                    Name = "System.Xml"
                     AssemblyName = "System.Xml"
-                    Private = "False"
                 />
                 <Reference
                     Platform = "Windows CE-Designer"

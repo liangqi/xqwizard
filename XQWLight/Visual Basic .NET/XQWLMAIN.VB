@@ -1,7 +1,7 @@
 ' XQWLMAIN.VB - Source Code for XiangQi Wizard Light, Part IV
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta4, Last Modified: Oct. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -369,35 +369,15 @@ Public Class MainForm
     Private imgSquares(255) As ImageSquare
 
     Private Sub imgSquares_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim sq As Integer, pc As Integer
-
-        If bClicking Then
-            Exit Sub
-        End If
-        bClicking = True
-        sq = CType(sender, ImageSquare).sq
+        Dim sqLast As Integer
+        sqLast = App_sqCursor
+        App_sqCursor = CType(sender, ImageSquare).sq
+        DrawCursor(sqLast)
         If App_bFlipped Then
-            sq = 254 - sq
-        End If
-        pc = Search_pos.pcSquares(sq)
-        If (pc And (8 + (Search_pos.sdPlayer << 3))) <> 0 Then
-            If App_sqSelected > 0 Then
-                DrawSquare(App_sqSelected)
-            End If
-            App_sqSelected = sq
-            DrawSquare(App_sqSelected, DRAW_SELECTED)
-            If App_mvLast > 0 Then
-                DrawSquare(App_mvLast And 255)
-                DrawSquare(App_mvLast >> 8)
-            End If
+            ClickSquare(254 - App_sqCursor)
         Else
-            If App_sqSelected > 0 AndAlso AddMove(App_sqSelected, sq) AndAlso Not ResponseMove() Then
-                bClicking = False
-                Close()
-                Exit Sub
-            End If
+            ClickSquare(App_sqCursor)
         End If
-        bClicking = False
     End Sub
 
     Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -424,6 +404,7 @@ Public Class MainForm
         Next
 
         Search_pos.LoadBoard(App_nHandicap)
+        App_sqCursor = &HAA
         For sq = 0 To 255
             If IN_BOARD(sq) Then
                 DrawSquare(sq)
@@ -442,9 +423,83 @@ Public Class MainForm
         e.Cancel = bClicking
     End Sub
 
-    Private Sub frmMain_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles MyBase.KeyPress
-        Select Case e.KeyChar
+    Private Sub frmMain_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyDown
+        Dim sqLast As Integer
+        sqLast = App_sqCursor
+        Select Case e.KeyCode
+            Case Keys.Enter
+                If App_bFlipped Then
+                    ClickSquare(254 - App_sqCursor)
+                Else
+                    ClickSquare(App_sqCursor)
+                End If
+            Case Keys.Left
+                App_sqCursor -= 1
+                If Not IN_BOARD(App_sqCursor) Then
+                    App_sqCursor += 9
+                End If
+                DrawCursor(sqLast)
+            Case Keys.Up
+                App_sqCursor -= 16
+                If Not IN_BOARD(App_sqCursor) Then
+                    App_sqCursor += 160
+                End If
+                DrawCursor(sqLast)
+            Case Keys.Right
+                App_sqCursor += 1
+                If Not IN_BOARD(App_sqCursor) Then
+                    App_sqCursor -= 9
+                End If
+                DrawCursor(sqLast)
+            Case Keys.Down
+                App_sqCursor += 16
+                If Not IN_BOARD(App_sqCursor) Then
+                    App_sqCursor -= 160
+                End If
+                DrawCursor(sqLast)
         End Select
+    End Sub
+
+    Private Sub ClickSquare(ByVal sq As Integer)
+        Dim sqLast As Integer, pc As Integer
+
+        If bClicking Then
+            Exit Sub
+        End If
+        bClicking = True
+        pc = Search_pos.pcSquares(sq)
+        If (pc And (8 + (Search_pos.sdPlayer << 3))) <> 0 Then
+            If App_sqSelected > 0 Then
+                DrawSquare(App_sqSelected)
+            End If
+            App_sqSelected = sq
+            DrawSquare(App_sqSelected, DRAW_SELECTED)
+            If App_mvLast > 0 Then
+                DrawSquare(App_mvLast And 255)
+                DrawSquare(App_mvLast >> 8)
+            End If
+        Else
+            If App_sqSelected > 0 AndAlso AddMove(App_sqSelected, sq) AndAlso Not ResponseMove() Then
+                bClicking = False
+                Close()
+                Exit Sub
+            End If
+        End If
+        bClicking = False
+    End Sub
+
+    Private Sub DrawCursor(ByVal sqLast As Integer)
+        Dim sq As Integer
+        sq = sqLast
+        If App_bFlipped Then
+            sq = 254 - sq
+        End If
+        DrawSquare(sq, App_sqSelected = sq OrElse (App_mvLast And 255) = sq OrElse (App_mvLast >> 8) = sq)
+        sq = App_sqCursor
+        If App_bFlipped Then
+            sq = 254 - sq
+        End If
+        DrawSquare(sq, App_sqSelected = sq OrElse (App_mvLast And 255) = sq OrElse (App_mvLast >> 8) = sq)
     End Sub
 
     Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
@@ -456,15 +511,31 @@ Public Class MainForm
         pc = Search_pos.pcSquares(sq)
         If pc = 0 Then
             If bSelected Then
-                imgSquares(sqFlipped).Image = imgBoardsSelected(sqFlipped)
+                If sqFlipped = App_sqCursor Then
+                    imgSquares(sqFlipped).Image = imgCBoardsSelected(sqFlipped)
+                Else
+                    imgSquares(sqFlipped).Image = imgBoardsSelected(sqFlipped)
+                End If
             Else
-                imgSquares(sqFlipped).Image = imgBoards(sqFlipped)
+                If sqFlipped = App_sqCursor Then
+                    imgSquares(sqFlipped).Image = imgCBoards(sqFlipped)
+                Else
+                    imgSquares(sqFlipped).Image = imgBoards(sqFlipped)
+                End If
             End If
         Else
             If bSelected Then
-                imgSquares(sqFlipped).Image = ilPiecesSelected.Images(pc - 8)
+                If sqFlipped = App_sqCursor Then
+                    imgSquares(sqFlipped).Image = ilCPiecesSelected.Images(pc - 8)
+                Else
+                    imgSquares(sqFlipped).Image = ilPiecesSelected.Images(pc - 8)
+                End If
             Else
-                imgSquares(sqFlipped).Image = ilPieces.Images(pc - 8)
+                If sqFlipped = App_sqCursor Then
+                    imgSquares(sqFlipped).Image = ilCPieces.Images(pc - 8)
+                Else
+                    imgSquares(sqFlipped).Image = ilPieces.Images(pc - 8)
+                End If
             End If
         End If
     End Sub

@@ -3,7 +3,7 @@
         <Build>
             <Settings
                 DeploymentDevice = "Pocket PC Emulator"
-                ReferencePath = ""
+                ReferencePath = "C:\Program Files\Microsoft Visual Studio .NET 2003\CompactFrameworkSDK\v1.0.5000\Windows CE\"
             >
                 <Platform Name = "Windows CE" />
                 <Config

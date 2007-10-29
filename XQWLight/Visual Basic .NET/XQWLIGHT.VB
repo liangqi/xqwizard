@@ -1,7 +1,7 @@
 ' XQWLIGHT.VB - Source Code for XiangQi Wizard Light, Part V
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 1.0 Beta4, Last Modified: Oct. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ Module XQWLight
     Public App_frm As MainForm
     Public App_bExit As Boolean, App_bFlipped As Boolean
     Public App_nHandicap As Integer, App_nLevel As Integer
-    Public App_sqSelected As Integer, App_mvLast As Integer
+    Public App_sqCursor As Integer, App_sqSelected As Integer, App_mvLast As Integer
 
     Public Function AddMove(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
         Dim mv As Integer, pcCaptured As Integer
@@ -72,7 +72,7 @@ Module XQWLight
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim mvResult As Integer
+        Dim mvResult As Integer, sqLast As Integer
         If GetResult() Then
             Return False
         End If
@@ -96,6 +96,14 @@ Module XQWLight
         End If
         Search_pos.MakeMove(Search_mvResult)
         App_mvLast = Search_mvResult
+        sqLast = App_sqCursor
+        If App_bFlipped Then
+            App_sqCursor = 254 - (App_mvLast >> 8)
+            App_frm.DrawSquare(254 - sqLast)
+        Else
+            App_sqCursor = App_mvLast >> 8
+            App_frm.DrawSquare(sqLast)
+        End If
         App_frm.DrawSquare(App_mvLast And 255, DRAW_SELECTED)
         App_frm.DrawSquare(App_mvLast >> 8, DRAW_SELECTED)
         If GetResult(RESULT_COMPUTER) Then
