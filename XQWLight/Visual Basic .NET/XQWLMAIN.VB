@@ -47,6 +47,10 @@ Public Class MainForm
     Friend WithEvents imgThinking As System.Windows.Forms.PictureBox
     Friend WithEvents ilPiecesSelected As System.Windows.Forms.ImageList
     Friend WithEvents ilPieces As System.Windows.Forms.ImageList
+    Friend WithEvents ilCPieces As System.Windows.Forms.ImageList
+    Friend WithEvents ilCPiecesSelected As System.Windows.Forms.ImageList
+    Friend WithEvents ilCBoards As System.Windows.Forms.ImageList
+    Friend WithEvents ilCBoardsSelected As System.Windows.Forms.ImageList
     Private Sub InitializeComponent()
         Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(MainForm))
         Me.ilPiecesSelected = New System.Windows.Forms.ImageList
@@ -54,6 +58,10 @@ Public Class MainForm
         Me.imgThinking = New System.Windows.Forms.PictureBox
         Me.ilBoardsSelected = New System.Windows.Forms.ImageList
         Me.ilPieces = New System.Windows.Forms.ImageList
+        Me.ilCPieces = New System.Windows.Forms.ImageList
+        Me.ilCPiecesSelected = New System.Windows.Forms.ImageList
+        Me.ilCBoards = New System.Windows.Forms.ImageList
+        Me.ilCBoardsSelected = New System.Windows.Forms.ImageList
         '
         'ilPiecesSelected
         '
@@ -154,6 +162,100 @@ Public Class MainForm
         Me.ilPieces.Images.Add(CType(resources.GetObject("resource76"), System.Drawing.Image))
         Me.ilPieces.Images.Add(CType(resources.GetObject("resource77"), System.Drawing.Image))
         Me.ilPieces.ImageSize = New System.Drawing.Size(16, 16)
+        '
+        'ilCPieces
+        '
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource78"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource79"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource80"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource81"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource82"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource83"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource84"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource85"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource86"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource87"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource88"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource89"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource90"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource91"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource92"), System.Drawing.Image))
+        Me.ilCPieces.Images.Add(CType(resources.GetObject("resource93"), System.Drawing.Image))
+        Me.ilCPieces.ImageSize = New System.Drawing.Size(16, 16)
+        '
+        'ilCPiecesSelected
+        '
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource94"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource95"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource96"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource97"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource98"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource99"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource100"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource101"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource102"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource103"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource104"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource105"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource106"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource107"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource108"), System.Drawing.Image))
+        Me.ilCPiecesSelected.Images.Add(CType(resources.GetObject("resource109"), System.Drawing.Image))
+        Me.ilCPiecesSelected.ImageSize = New System.Drawing.Size(16, 16)
+        '
+        'ilCBoards
+        '
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource110"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource111"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource112"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource113"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource114"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource115"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource116"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource117"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource118"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource119"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource120"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource121"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource122"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource123"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource124"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource125"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource126"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource127"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource128"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource129"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource130"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource131"), System.Drawing.Image))
+        Me.ilCBoards.Images.Add(CType(resources.GetObject("resource132"), System.Drawing.Image))
+        Me.ilCBoards.ImageSize = New System.Drawing.Size(16, 16)
+        '
+        'ilCBoardsSelected
+        '
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource133"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource134"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource135"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource136"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource137"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource138"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource139"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource140"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource141"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource142"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource143"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource144"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource145"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource146"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource147"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource148"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource149"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource150"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource151"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource152"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource153"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource154"), System.Drawing.Image))
+        Me.ilCBoardsSelected.Images.Add(CType(resources.GetObject("resource155"), System.Drawing.Image))
+        Me.ilCBoardsSelected.ImageSize = New System.Drawing.Size(16, 16)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         '
         'MainForm
@@ -176,12 +278,13 @@ Public Class MainForm
         End Sub
     End Class
 
-    Private imgBoards(255) As Image
-    Private imgBoardsSelected(255) As Image
+    Private imgBoards(255) As Image, imgBoardsSelected(255) As Image, imgCBoards(255) As Image, imgCBoardsSelected(255) As Image
 
     Private Sub SetBoardImage(ByVal sq As Integer, ByVal nImage As Integer)
         imgBoards(sq) = ilBoards.Images(nImage)
         imgBoardsSelected(sq) = ilBoardsSelected.Images(nImage)
+        imgCBoards(sq) = ilCBoards.Images(nImage)
+        imgCBoardsSelected(sq) = ilCBoardsSelected.Images(nImage)
     End Sub
 
     Private Sub InitializeImages()
@@ -337,6 +440,11 @@ Public Class MainForm
 
     Private Sub frmMain_Closing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
         e.Cancel = bClicking
+    End Sub
+
+    Private Sub frmMain_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles MyBase.KeyPress
+        Select Case e.KeyChar
+        End Select
     End Sub
 
     Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
