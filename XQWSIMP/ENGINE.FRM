@@ -323,7 +323,7 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.15, Last Modified: May 2007
+' Designed by Morning Yellow, Version: 3.41, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -477,15 +477,59 @@ End Sub
 
 Private Sub btnSend_Click()
 
-If txtCommand.Text <> vbNullString Then
-    If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
-        MsgBox "别开这种玩笑！", vbExclamation
-    Else
-        SendEngine txtCommand.Text
-        txtCommand.Text = ""
-        EngineSet_bCommandSent = True
+Dim sz As String, i As Integer, j As Integer
+If txtCommand.Text = vbNullString Then
+    Exit Sub
+End If
+If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
+    MsgBox "别开这种玩笑！", vbExclamation
+    Exit Sub
+End If
+SendEngine txtCommand.Text
+sz = txtCommand.Text
+txtCommand.Text = ""
+EngineSet_bCommandSent = True
+If Left(sz, 9) <> "position " Then
+    Exit Sub
+End If
+If App_bUpdated Then
+    If Not SaveFile Then
+        Exit Sub
     End If
 End If
+' 把"position fen ... moves ..."转换成棋谱
+RestartGame
+i = InStr(sz, " moves ")
+If Mid(sz, 10, 4) = "fen " Then
+    If i > 0 Then
+        Game_szIrrevFen(0) = Mid(sz, 14, i - 14)
+    Else
+        Game_szIrrevFen(0) = Mid(sz, 14)
+    End If
+ElseIf Mid(sz, 10, 8) = "startpos" Then
+    Game_szIrrevFen(0) = CCHESS_START_FEN
+End If
+CchessFen2Board Game_posIrrev(0), Game_szIrrevFen(0)
+Game_sdCurr = Game_posIrrev(0).sdPlayer
+j = InStr(Game_szIrrevFen(0), " - - 0 ")
+If j > 0 Then
+    Game_cntCurr = Str2Int(Mid(Game_szIrrevFen(0), j + 7), 1, 999)
+Else
+    Game_cntCurr = 1
+End If
+Game_sdStart = Game_sdCurr
+Game_cntStart = Game_cntCurr
+Game_sdMax = Game_sdStart
+Game_bStartPos = False
+If i > 0 Then
+    i = i + 7
+    Do While i < Len(sz)
+        AddMove Coord2Move(Mid(sz, i))
+        i = i + 5
+    Loop
+End If
+BoardFlush
+LabelFlush
 
 End Sub
 
