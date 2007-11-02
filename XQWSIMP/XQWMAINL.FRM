@@ -38,7 +38,7 @@ Begin VB.Form frmMainLarge
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   29
+         NumButtons      =   30
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新建"
@@ -64,101 +64,105 @@ Begin VB.Form frmMainLarge
             MixedState      =   -1  'True
          EndProperty
          BeginProperty Button7 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "MovePromote"
+            Object.ToolTipText     =   "升变"
+         EndProperty
+         BeginProperty Button8 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveDel"
             Object.ToolTipText     =   "删除"
          EndProperty
-         BeginProperty Button8 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveStart"
             Object.ToolTipText     =   "起始局面"
          EndProperty
-         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveBack"
             Object.ToolTipText     =   "上一着"
          EndProperty
-         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveForward"
             Object.ToolTipText     =   "下一着"
          EndProperty
-         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveEnd"
             Object.ToolTipText     =   "最後局面"
          EndProperty
-         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button13 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MovePaste"
             Object.ToolTipText     =   "从剪贴板导入"
          EndProperty
-         BeginProperty Button13 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button14 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button14 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button15 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosFlip"
             Object.ToolTipText     =   "翻转棋盘"
             Style           =   1
          EndProperty
-         BeginProperty Button15 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button16 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosAnalyze"
             Object.ToolTipText     =   "分析局面"
          EndProperty
-         BeginProperty Button16 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosEdit"
             Object.ToolTipText     =   "编辑局面"
          EndProperty
-         BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button18 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button18 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPlay"
             Object.ToolTipText     =   "播放棋局"
             Style           =   1
          EndProperty
-         BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardFunny"
             Object.ToolTipText     =   "趣味象棋"
          EndProperty
-         BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardJava"
             Object.ToolTipText     =   "复制Java棋盘代码"
          EndProperty
-         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
             Object.ToolTipText     =   "复制文本棋盘"
          EndProperty
-         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardBitmap"
             Object.ToolTipText     =   "查看图片棋盘"
          EndProperty
-         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
             Style           =   1
          EndProperty
-         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "引擎执红"
             Style           =   1
          EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "引擎执黑"
             Style           =   1
          EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "後台思考"
             Style           =   1
          EndProperty
-         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "引擎分析"
             Style           =   1
          EndProperty
-         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考"
          EndProperty
@@ -194,7 +198,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1463,10 +1467,16 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.Menu mnMove 
       Caption         =   "着法(&M)"
+      Begin VB.Menu mnMovePromote 
+         Caption         =   "升变(&P)"
+      End
+      Begin VB.Menu mnMoveSep1 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnMoveDel 
          Caption         =   "删除(&D)"
       End
-      Begin VB.Menu mnMoveSep1 
+      Begin VB.Menu mnMoveSep2 
          Caption         =   "-"
       End
       Begin VB.Menu mnMoveStart 
@@ -1481,7 +1491,7 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnMoveEnd 
          Caption         =   "最後局面(&E)"
       End
-      Begin VB.Menu mnMoveSep2 
+      Begin VB.Menu mnMoveSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnMoveImport 
@@ -1892,6 +1902,12 @@ End Sub
 Private Sub mnFileExit_Click()
 
 Unload Me
+
+End Sub
+
+Private Sub mnMovePromote_Click()
+
+' TODO
 
 End Sub
 
@@ -2655,6 +2671,8 @@ Case "FileViewPgn"
 Case "FileEditTags"
     mnFileTags_Click
 ' Separator
+Case "MovePromote"
+    mnMovePromote_Click
 Case "MoveDel"
     mnMoveDel_Click
 Case "MoveStart"
