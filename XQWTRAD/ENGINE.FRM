@@ -15,7 +15,7 @@ Begin VB.Form frmEngineSet
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "ENGINE.frx":0000
+   Icon            =   "ENGINE.FRX":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4200
@@ -93,9 +93,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbPruning 
          Height          =   300
-         ItemData        =   "ENGINE.frx":000C
+         ItemData        =   "ENGINE.FRX":000C
          Left            =   4200
-         List            =   "ENGINE.frx":000E
+         List            =   "ENGINE.FRX":000E
          Style           =   2  'Dropdown List
          TabIndex        =   24
          Top             =   960
@@ -103,9 +103,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbKnowledge 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0010
+         ItemData        =   "ENGINE.FRX":0010
          Left            =   4200
-         List            =   "ENGINE.frx":0012
+         List            =   "ENGINE.FRX":0012
          Style           =   2  'Dropdown List
          TabIndex        =   26
          Top             =   1320
@@ -113,9 +113,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbRepetition 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0014
+         ItemData        =   "ENGINE.FRX":0014
          Left            =   2640
-         List            =   "ENGINE.frx":0016
+         List            =   "ENGINE.FRX":0016
          Style           =   2  'Dropdown List
          TabIndex        =   20
          Top             =   960
@@ -123,9 +123,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbDrawMoves 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0018
+         ItemData        =   "ENGINE.FRX":0018
          Left            =   2640
-         List            =   "ENGINE.frx":001A
+         List            =   "ENGINE.FRX":001A
          Style           =   2  'Dropdown List
          TabIndex        =   22
          Top             =   1320
@@ -133,9 +133,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbThreads 
          Height          =   300
-         ItemData        =   "ENGINE.frx":001C
+         ItemData        =   "ENGINE.FRX":001C
          Left            =   720
-         List            =   "ENGINE.frx":001E
+         List            =   "ENGINE.FRX":001E
          Style           =   2  'Dropdown List
          TabIndex        =   18
          Top             =   1320
@@ -143,9 +143,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbHash 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0020
+         ItemData        =   "ENGINE.FRX":0020
          Left            =   720
-         List            =   "ENGINE.frx":0022
+         List            =   "ENGINE.FRX":0022
          Style           =   2  'Dropdown List
          TabIndex        =   16
          Top             =   960
@@ -153,9 +153,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbStyle 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0024
+         ItemData        =   "ENGINE.FRX":0024
          Left            =   5520
-         List            =   "ENGINE.frx":0026
+         List            =   "ENGINE.FRX":0026
          Style           =   2  'Dropdown List
          TabIndex        =   30
          Top             =   1320
@@ -163,9 +163,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbSelectivity 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0028
+         ItemData        =   "ENGINE.FRX":0028
          Left            =   5520
-         List            =   "ENGINE.frx":002A
+         List            =   "ENGINE.FRX":002A
          Style           =   2  'Dropdown List
          TabIndex        =   28
          Top             =   960
@@ -498,7 +498,7 @@ If App_bUpdated Then
     End If
 End If
 ' °Ñ"position fen ... moves ..."×ª»»³ÉÆåÆ×
-RestartGame
+RestartGame , RESTART_DEBUG_UCCI
 i = InStr(sz, " moves ")
 If Mid(sz, 10, 4) = "fen " Then
     If i > 0 Then

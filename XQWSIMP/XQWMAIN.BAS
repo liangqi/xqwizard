@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.4, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 3.41, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.4"
+Public Const STRING_VERSION     As String = "3.41"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -47,6 +47,7 @@ Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
 Public Const DRAW_SELECTED      As Boolean = True ' Draw...Square
 Public Const RESTART_KEEP_LABEL As Boolean = True ' RestartGame
+Public Const RESTART_DEBUG_UCCI As Boolean = True ' RestartGame
 Public Const MOVE_WITH_ECHO     As Boolean = True ' AddMove
 Public Const MOVE_BY_ENGINE     As Boolean = True ' AddMove
 Public Const VIEW_BMP_MONO      As Boolean = True ' ViewBitmap
@@ -956,7 +957,7 @@ SetTimer 1
 End Sub
 
 ' 新开一局，在新建文件、编辑棋局等功能中使用，编辑棋局要加参数"RESTART_KEEP_LABEL"，不清除标签
-Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False)
+Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False, Optional ByVal bDebugUcci As Boolean = False)
 
 If Engine_nStatus > IDLE_UNLOAD Then
     If Engine_nStatus > BUSY_WAIT Then
@@ -964,13 +965,15 @@ If Engine_nStatus > IDLE_UNLOAD Then
         StopEngine
     End If
     Engine_nStatus = IDLE_READY
-    SendEngine "setoption newgame"
-    If Engine_bSlaveRed Or Engine_bSlaveBlack Then
-        SendEngine "setoption newgame", SLAVE_ENGINE
-        SendEngine "setoption ponder false", SLAVE_ENGINE
-        SendEngine "setoption ponder false"
-    Else
-        SendEngine "setoption ponder " + IIf(Options_bAlwaysPonder, "true", "false")
+    If Not bDebugUcci Then
+        SendEngine "setoption newgame"
+        If Engine_bSlaveRed Or Engine_bSlaveBlack Then
+            SendEngine "setoption newgame", SLAVE_ENGINE
+            SendEngine "setoption ponder false", SLAVE_ENGINE
+            SendEngine "setoption ponder false"
+        Else
+            SendEngine "setoption ponder " + IIf(Options_bAlwaysPonder, "true", "false")
+        End If
     End If
     EngineLoaded True
 End If
@@ -2858,7 +2861,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2869,7 +2872,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
@@ -2897,7 +2900,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2947,7 +2950,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2960,7 +2963,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

@@ -498,7 +498,7 @@ If App_bUpdated Then
     End If
 End If
 ' °Ñ"position fen ... moves ..."×ª»»³ÉÆåÆ×
-RestartGame
+RestartGame , RESTART_DEBUG_UCCI
 i = InStr(sz, " moves ")
 If Mid(sz, 10, 4) = "fen " Then
     If i > 0 Then

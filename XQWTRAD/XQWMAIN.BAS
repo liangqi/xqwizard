@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.4, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 3.41, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.4"
+Public Const STRING_VERSION     As String = "3.41"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -47,6 +47,7 @@ Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
 Public Const DRAW_SELECTED      As Boolean = True ' Draw...Square
 Public Const RESTART_KEEP_LABEL As Boolean = True ' RestartGame
+Public Const RESTART_DEBUG_UCCI As Boolean = True ' RestartGame
 Public Const MOVE_WITH_ECHO     As Boolean = True ' AddMove
 Public Const MOVE_BY_ENGINE     As Boolean = True ' AddMove
 Public Const VIEW_BMP_MONO      As Boolean = True ' ViewBitmap
@@ -956,7 +957,7 @@ SetTimer 1
 End Sub
 
 ' 新開一局，在新建文件、編輯棋局等功能中使用，編輯棋局要加參數"RESTART_KEEP_LABEL"，不清除標簽
-Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False)
+Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False, Optional ByVal bDebugUcci As Boolean = False)
 
 If Engine_nStatus > IDLE_UNLOAD Then
     If Engine_nStatus > BUSY_WAIT Then
@@ -964,13 +965,15 @@ If Engine_nStatus > IDLE_UNLOAD Then
         StopEngine
     End If
     Engine_nStatus = IDLE_READY
-    SendEngine "setoption newgame"
-    If Engine_bSlaveRed Or Engine_bSlaveBlack Then
-        SendEngine "setoption newgame", SLAVE_ENGINE
-        SendEngine "setoption ponder false", SLAVE_ENGINE
-        SendEngine "setoption ponder false"
-    Else
-        SendEngine "setoption ponder " + IIf(Options_bAlwaysPonder, "true", "false")
+    If Not bDebugUcci Then
+        SendEngine "setoption newgame"
+        If Engine_bSlaveRed Or Engine_bSlaveBlack Then
+            SendEngine "setoption newgame", SLAVE_ENGINE
+            SendEngine "setoption ponder false", SLAVE_ENGINE
+            SendEngine "setoption ponder false"
+        Else
+            SendEngine "setoption ponder " + IIf(Options_bAlwaysPonder, "true", "false")
+        End If
     End If
     EngineLoaded True
 End If
