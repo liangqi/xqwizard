@@ -111,26 +111,6 @@ Begin VB.Form frmEngineSet
          Top             =   1320
          Width           =   615
       End
-      Begin VB.ComboBox cmbRepetition 
-         Height          =   300
-         ItemData        =   "ENGINE.FRX":0014
-         Left            =   2640
-         List            =   "ENGINE.FRX":0016
-         Style           =   2  'Dropdown List
-         TabIndex        =   20
-         Top             =   960
-         Width           =   855
-      End
-      Begin VB.ComboBox cmbDrawMoves 
-         Height          =   300
-         ItemData        =   "ENGINE.FRX":0018
-         Left            =   2640
-         List            =   "ENGINE.FRX":001A
-         Style           =   2  'Dropdown List
-         TabIndex        =   22
-         Top             =   1320
-         Width           =   855
-      End
       Begin VB.ComboBox cmbThreads 
          Height          =   300
          ItemData        =   "ENGINE.FRX":001C
@@ -179,14 +159,6 @@ Begin VB.Form frmEngineSet
          Top             =   1320
          Width           =   375
       End
-      Begin VB.Label lblDrawMoves 
-         Caption         =   "礛帝"
-         Height          =   255
-         Left            =   1800
-         TabIndex        =   21
-         Top             =   1320
-         Width           =   735
-      End
       Begin VB.Label lblPruning 
          Caption         =   "掉芭"
          Height          =   255
@@ -194,14 +166,6 @@ Begin VB.Form frmEngineSet
          TabIndex        =   23
          Top             =   960
          Width           =   375
-      End
-      Begin VB.Label lblRepetition 
-         Caption         =   "蝋﹚"
-         Height          =   255
-         Left            =   1800
-         TabIndex        =   19
-         Top             =   960
-         Width           =   735
       End
       Begin VB.Label lblHash 
          Caption         =   "竚传"
@@ -366,18 +330,6 @@ cmbThreads.AddItem "4線程", 6
 cmbThreads.AddItem "8線程", 7
 cmbThreads.AddItem "16線程", 8
 cmbThreads.AddItem "32線程", 9
-cmbDrawMoves.Clear
-cmbDrawMoves.AddItem "50回合", 0
-cmbDrawMoves.AddItem "60回合", 1
-cmbDrawMoves.AddItem "70回合", 2
-cmbDrawMoves.AddItem "80回合", 3
-cmbDrawMoves.AddItem "90回合", 4
-cmbDrawMoves.AddItem "100回合", 5
-cmbRepetition.Clear
-cmbRepetition.AddItem "不變作和", 0
-cmbRepetition.AddItem "禁止長將", 1
-cmbRepetition.AddItem "亞洲規則", 2
-cmbRepetition.AddItem "中國規則", 3
 cmbPruning.Clear
 cmbPruning.AddItem "沒有", 0
 cmbPruning.AddItem "少量", 1
@@ -406,8 +358,6 @@ txtBookFile.Text = Engine_szBookFiles
 txtEgtbPath.Text = Engine_szEgtbPaths
 cmbHash.ListIndex = Engine_nHash
 cmbThreads.ListIndex = Engine_nThreads
-cmbDrawMoves.ListIndex = Engine_nDrawMoves
-cmbRepetition.ListIndex = Engine_nRepetition
 cmbPruning.ListIndex = Engine_nPruning
 cmbKnowledge.ListIndex = Engine_nKnowledge
 cmbSelectivity.ListIndex = Engine_nSelectivity
@@ -579,8 +529,6 @@ Engine_szBookFiles = txtBookFile.Text
 Engine_szEgtbPaths = txtEgtbPath.Text
 Engine_nHash = cmbHash.ListIndex
 Engine_nThreads = cmbThreads.ListIndex
-Engine_nDrawMoves = cmbDrawMoves.ListIndex
-Engine_nRepetition = cmbRepetition.ListIndex
 Engine_nPruning = cmbPruning.ListIndex
 Engine_nKnowledge = cmbKnowledge.ListIndex
 Engine_nSelectivity = cmbSelectivity.ListIndex

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.41, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.41"
+Public Const STRING_VERSION     As String = "3.5"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -175,6 +175,7 @@ Public App_mvNewMove            As Long     ' 最新的一个着法，棋盘上有标记
 Public App_sqSelected           As Integer  ' 鼠标选中的棋子
 Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 红黑轮流标志
+Public App_bPromotion           As Boolean  ' 是否允许升变
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -204,7 +205,7 @@ Public Options_szUser           As String   ' 人机对弈用户
 Public Gui_nFunnyIndex          As Integer  ' “趣味象棋”的条目序号
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
-Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
+Public Gui_szTips(0 To TIP_NUM) As String   ' “日积月累”的条目
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
@@ -263,8 +264,6 @@ Public Engine_szBookFiles       As String   ' 开局库文件名
 Public Engine_szEgtbPaths       As String   ' 残局库文件名
 Public Engine_nHash             As Integer  ' 置换表大小
 Public Engine_nThreads          As Integer  ' 引擎使用的线程数
-Public Engine_nDrawMoves        As Integer  ' 自然限着回合数
-Public Engine_nRepetition       As Integer  ' 循环局面适用规则
 Public Engine_nPruning          As Integer  ' 裁剪
 Public Engine_nKnowledge        As Integer  ' 知识
 Public Engine_nSelectivity      As Integer  ' 随机
@@ -927,7 +926,7 @@ Public Function ResultString() As String
 If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
     ResultString = "(着法: " + IIf(Game_sdStart = 0, "红先", "黑先") + Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "负"), "和", IIf(Game_sdStart = 0, "负", "胜")) + ")"
 Else
-    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (对) ", IIf(Game_sdStart = 0, " (先胜) ", " (后负) "), IIf(Game_sdStart = 0, " (先和) ", " (后和) "), IIf(Game_sdStart = 0, " (先负) ", " (后胜) ")) + _
+    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (对) ", IIf(Game_sdStart = 0, " (先胜) ", " (後负) "), IIf(Game_sdStart = 0, " (先和) ", " (後和) "), IIf(Game_sdStart = 0, " (先负) ", " (後胜) ")) + _
             Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
 End If
 
@@ -1124,6 +1123,8 @@ End If
 Engine_bDraw = False
 Engine_mvBan = 0
 App_frmMain.lstMoveText.ListIndex = Game_nCurrMove
+App_frmMain.mnMovePromote.Enabled = False
+App_frmMain.tlb.Buttons("MovePromote").Enabled = False
 
 End Sub
 
@@ -1277,7 +1278,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                MsgBox "超过自然限着作和！", vbInformation
+                MsgBox "自然作和！", vbInformation
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -2126,6 +2127,7 @@ End Sub
 ' 设置引擎参数
 Public Sub SetEngine(Optional ByVal bSlaveEngine As Boolean = False)
 
+SendEngine "setoption promotion " + IIf(App_bPromotion, "true", "false"), bSlaveEngine
 SendEngine "setoption usebook " + IIf(Engine_bUseBook, "true", "false"), bSlaveEngine
 SendEngine "setoption useegtb " + IIf(Engine_bUseEgtb, "true", "false"), bSlaveEngine
 If Engine_szBookFiles <> "" Then
@@ -2145,8 +2147,6 @@ Else
     SendEngine "setoption threads" + Str(2 ^ (Engine_nThreads - 4)), bSlaveEngine
     SendEngine "setoption idle none"
 End If
-SendEngine "setoption drawmoves" + Str(100 + Engine_nDrawMoves * 20), bSlaveEngine
-SendEngine "setoption repetition " + Choose(Engine_nRepetition + 1, "alwaysdraw", "checkban", "asianrule", "chineserule"), bSlaveEngine
 SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption knowledge " + Choose(Engine_nKnowledge + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption selectivity " + Choose(Engine_nSelectivity + 1, "none", "small", "medium", "large"), bSlaveEngine
@@ -2694,6 +2694,14 @@ End Sub
 ' 加载“日积月累”
 Public Sub LoadTips()
 
+Gui_szTips(0) = "　　中国象棋在增加了仕(士)相(象)升变成兵(卒)的规则後，比赛将更富有趣味性和观赏性。这个规则有以下几个要点：" + vbCrLf + _
+        "　　一、仕(士)相(象)只能在原来的位置，或走到另一个仕(士)相(象)的原来位置升变；" + vbCrLf + _
+        "　　二、仕(士)相(象)升变成兵(卒)需要花一步棋，变成的兵(卒)占据原来仕(士)相(象)的位置，下一步棋才能走；" + vbCrLf + _
+        "　　三、升变是不可逆的，即兵(卒)不能变回仕(士)相(象)；" + vbCrLf + _
+        "　　四、升变後的兵(卒)同其他兵(卒)的走法一样，过河前每步只能前行一格，过河後才能横走；" + vbCrLf + _
+        "　　五、只有本方兵(卒)少于五个时，仕(士)相(象)才能升变成兵(卒)。" + vbCrLf + _
+        "　　超级象棋巫师的升变走法非常简单，选中可以升变的仕(士)或相(象)，点击“升变”按钮。" + vbCrLf + _
+        "　　关于仕(士)相(象)升变成兵(卒)的规则，请参阅 http://www.elephantbase.net/other/promotion.htm"
 Gui_szTips(1) = "　　象棋巫师是一款功能强大的电脑对弈和棋谱编辑软件，具有方便的人机对战、棋谱记录、欣赏、管理棋局的功能，完全可以满足各层次象棋爱好者、棋手、裁判员及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫师支持多个通用象棋引擎，他们大都具有专业棋手的水平，是象棋爱好者和专业棋手提高棋艺的良师益友。" + vbCrLf + _
         "　　如果您对象棋巫师自带的引擎 ElephantEye 的表现不满意，可以登录 http://www.elephantbase.net/league.htm ，下载到其他各具特色的引擎。"
@@ -2762,7 +2770,7 @@ Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
 Gui_nFunnyIndex = Str2Int(GetSetting("XQWizard", "Gui", "FunnyIndex", "1"), 1, 240)
-Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", "ShowHowTo", "1")) <> 0)
+Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
@@ -2780,8 +2788,6 @@ Engine_szBookFiles = GetSetting("XQWizard", "Engine", "BookFiles", "")
 Engine_szEgtbPaths = GetSetting("XQWizard", "Engine", "EgtbPaths", "")
 Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
 Engine_nThreads = Str2Int(GetSetting("XQWizard", "Engine", "Threads", "0"), 0, 9)
-Engine_nDrawMoves = Str2Int(GetSetting("XQWizard", "Engine", "DrawMoves", "0"), 0, 5)
-Engine_nRepetition = Str2Int(GetSetting("XQWizard", "Engine", "Repetition", "3"), 0, 3)
 Engine_nPruning = Str2Int(GetSetting("XQWizard", "Engine", "Pruning", "3"), 0, 3)
 Engine_nKnowledge = Str2Int(GetSetting("XQWizard", "Engine", "Knowledge", "3"), 0, 3)
 Engine_nSelectivity = Str2Int(GetSetting("XQWizard", "Engine", "Selectivity", "0"), 0, 3)
@@ -2818,7 +2824,7 @@ SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "FunnyIndex", LTrim(Str(Gui_nFunnyIndex))
-SaveSetting "XQWizard", "Gui", "ShowHowTo", IIf(Gui_bShowHowTo, "1", "0")
+SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
@@ -2836,8 +2842,6 @@ SaveSetting "XQWizard", "Engine", "BookFiles", Engine_szBookFiles
 SaveSetting "XQWizard", "Engine", "EgtbPaths", Engine_szEgtbPaths
 SaveSetting "XQWizard", "Engine", "Hash", LTrim(Str(Engine_nHash))
 SaveSetting "XQWizard", "Engine", "Threads", LTrim(Str(Engine_nThreads))
-SaveSetting "XQWizard", "Engine", "DrawMoves", LTrim(Str(Engine_nDrawMoves))
-SaveSetting "XQWizard", "Engine", "Repetition", LTrim(Str(Engine_nRepetition))
 SaveSetting "XQWizard", "Engine", "Pruning", LTrim(Str(Engine_nPruning))
 SaveSetting "XQWizard", "Engine", "Knowledge", LTrim(Str(Engine_nKnowledge))
 SaveSetting "XQWizard", "Engine", "Selectivity", LTrim(Str(Engine_nSelectivity))
@@ -2851,7 +2855,7 @@ End Sub
 ' 显示软件名称
 Public Sub SetTitle()
 
-App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + "象棋巫师"
+App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + IIf(App_bPromotion, "超级象棋巫师", "象棋巫师")
 
 End Sub
 
@@ -2865,7 +2869,7 @@ sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
-        MsgBox "无法访问 www.elephantbase.net，请稍后再试。", vbExclamation
+        MsgBox "无法访问 www.elephantbase.net，请稍後再试。", vbExclamation
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
@@ -3037,6 +3041,16 @@ frmStartUp.Refresh
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
+' 判断是否允许升变
+If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
+    CchessPromotion 1
+    App_bPromotion = True
+    sz = Mid(Command, 4)
+Else
+    CchessPromotion 0
+    App_bPromotion = False
+    sz = Command
+End If
 EccoInitOpenVar
 LoadRegs
 LoadTips
@@ -3075,7 +3089,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
 End If
 OpenEngine
 App_bRedTurn = False
-If Command = "" Then
+If sz = "" Then
     App_szFileName = ""
     If Options_bAutoSave Then
         ReadFile AUTO_SAVE
@@ -3087,20 +3101,20 @@ If Command = "" Then
         EngineNewGame
     End If
 Else
-    If UCase(Left(Command, 3)) = "/S " Or UCase(Left(Command, 3)) = "-S " Then
-        sz = Mid(Command, 4)
+    If UCase(Left(sz, 3)) = "/S " Or UCase(Left(sz, 3)) = "-S " Then
+        sz = Mid(sz, 4)
         If Left(sz, 1) = Chr(34) And Right(sz, 1) = Chr(34) Then
             sz = Mid(sz, 2, Len(sz) - 2)
         End If
         LoadFenStr sz
-    ElseIf UCase(Left(Command, 3)) = "/F " Or UCase(Left(Command, 3)) = "-F " Then
-        sz = Mid(Command, 4)
+    ElseIf UCase(Left(sz, 3)) = "/F " Or UCase(Left(sz, 3)) = "-F " Then
+        sz = Mid(sz, 4)
         If Left(sz, 1) = Chr(34) And Right(sz, 1) = Chr(34) Then
             sz = Mid(sz, 2, Len(sz) - 2)
         End If
         LoadFenFile sz
     Else
-        App_szFileName = Command
+        App_szFileName = sz
         If Left(App_szFileName, 1) = Chr(34) And Right(App_szFileName, 1) = Chr(34) Then
             App_szFileName = Mid(App_szFileName, 2, Len(App_szFileName) - 2)
         End If
@@ -3113,7 +3127,7 @@ frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
 On Error GoTo 0
 ' 加载广告，如果加载失败，则下载广告列表，再次加载失败则放弃
 Gui_nAdvertIndex = 0
-Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
+Gui_nAdvertTimes(0) = 10 ' 10秒钟後开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
     DownloadAdvertList

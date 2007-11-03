@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.4 (简体中文版)
+AppVerName=象棋巫师 3.5 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -648,12 +648,14 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
+Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
 Name: "{group}\象棋巫师帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\象棋棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库制作工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
+Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
 
 [Run]
 Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫师介绍"; Flags: nowait postinstall shellexec skipifsilent

@@ -107,7 +107,7 @@ Attribute VB_Exposed = False
 ' HOWTO.FRM - Source Code for XiangQi Wizard, Part VIII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.3, Last Modified: Jul. 2007
+' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -126,10 +126,13 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private bIntro As Boolean
+
 Private Sub Form_Load()
 
+bIntro = App_bPromotion
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
-txtTips.Text = Gui_szTips(Gui_nTipIndex)
+txtTips.Text = Gui_szTips(IIf(bIntro, 0, Gui_nTipIndex))
 
 End Sub
 
@@ -141,9 +144,13 @@ End Sub
 
 Private Sub btnPrev_Click()
 
-Gui_nTipIndex = Gui_nTipIndex - 1
-If Gui_nTipIndex < 1 Then
-    Gui_nTipIndex = TIP_NUM
+If bIntro Then
+    bIntro = False
+Else
+    Gui_nTipIndex = Gui_nTipIndex - 1
+    If Gui_nTipIndex < 1 Then
+        Gui_nTipIndex = TIP_NUM
+    End If
 End If
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 
@@ -151,9 +158,13 @@ End Sub
 
 Private Sub btnNext_Click()
 
-Gui_nTipIndex = Gui_nTipIndex + 1
-If Gui_nTipIndex > TIP_NUM Then
-    Gui_nTipIndex = 1
+If bIntro Then
+    bIntro = False
+Else
+    Gui_nTipIndex = Gui_nTipIndex + 1
+    If Gui_nTipIndex > TIP_NUM Then
+        Gui_nTipIndex = 1
+    End If
 End If
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 
@@ -164,4 +175,3 @@ Private Sub btnCancel_Click()
 Unload Me
 
 End Sub
-

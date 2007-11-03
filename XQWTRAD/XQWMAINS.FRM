@@ -1830,7 +1830,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.34, Last Modified: Sep. 2007
+' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1858,7 +1858,7 @@ cmbFormat.AddItem "ÅÚ¶þÆ½Îå", 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 tlb.ImageList = frmHide.imglst
-For i = 1 To 29
+For i = 1 To 30
     tlb.Buttons(i).Image = i
 Next
 
@@ -1948,7 +1948,7 @@ End Sub
 
 Private Sub mnMovePromote_Click()
 
-' TODO
+AddMove mdlCChess.Move(App_sqSelected, App_sqSelected), MOVE_WITH_ECHO
 
 End Sub
 
@@ -2105,7 +2105,7 @@ End Sub
 
 Private Sub mnPosAnalyze_Click()
 
-Shell App_szPath + App.EXEName + " /S " + Chr(34) + _
+Shell App_szPath + App.EXEName + IIf(App_bPromotion, " /P /S ", " /S ") + Chr(34) + _
         MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + Chr(34), vbNormalFocus
 
 End Sub
@@ -2847,7 +2847,7 @@ End Sub
 
 Private Sub imgSquares_Click(nIndex As Integer)
 
-Dim sq As Integer, pc As Integer, mv As Long
+Dim sq As Integer, pc As Integer, bCanPromote As Boolean, mv As Long
 sq = IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
 If (pc And (16 + Game_sdCurr * 16)) <> 0 Then
@@ -2863,6 +2863,9 @@ If (pc And (16 + Game_sdCurr * 16)) <> 0 Then
     If Options_bSounds Then
         PlayWavSound "CLICK"
     End If
+    bCanPromote = (CchessCanPromote(Game_posIrrev(Game_nCurrIrrev), sq) <> 0)
+    App_frmMain.mnMovePromote.Enabled = bCanPromote
+    App_frmMain.tlb.Buttons("MovePromote").Enabled = bCanPromote
 Else
     If App_sqSelected > 0 Then
         mv = mdlCChess.Move(App_sqSelected, sq)
