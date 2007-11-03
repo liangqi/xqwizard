@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
+Designed by Morning Yellow, Version: 1.0, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -107,11 +107,13 @@ public class MainForm extends Canvas implements CommandListener {
 	}
 
 	public void commandAction(Command c, Displayable d) {
-		if (phase == PHASE_WAITING) {
-			if (c == cmdExit) {
-				midlet.notifyDestroyed();
-			} else {
+		if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
+			if (false) {
+				// Code Style
+			} else if (c == cmdBack) {
 				Display.getDisplay(midlet).setCurrent(midlet.startUp);
+			} else if (c == cmdExit) {
+				midlet.notifyDestroyed();
 			}
 		}
 	}
@@ -183,16 +185,17 @@ public class MainForm extends Canvas implements CommandListener {
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
 		if (action == FIRE) {
-			mvLast = 0;
 			int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
 			if (midlet.flipped) {
 				sq = Position.SQUARE_FLIP(sq);
 			}
 			int pc = search.pos.squares[sq];
 			if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
+				mvLast = 0;
 				sqSelected = sq;
 			} else {
 				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
+					mvLast = 0;
 					phase = PHASE_EXITTING;
 					repaint();
 					serviceRepaints();

@@ -1,7 +1,7 @@
 ' STARTUP.VB - Source Code for XiangQi Wizard Light, Part III
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta4, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 1.0, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -170,7 +170,7 @@ Public Class StartUp
     End Sub
 
     Private Sub btnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAbout.Click
-        MsgBox("象棋小巫师 1.0 Beta4" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
+        MsgBox("象棋小巫师 1.0" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
                 "欢迎登录 www.elephantbase.net" + vbCrLf + "免费下载PC版 象棋巫师" + vbCrLf, MsgBoxStyle.Information, "关于象棋小巫师")
     End Sub
 End Class
