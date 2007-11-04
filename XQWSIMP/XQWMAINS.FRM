@@ -68,24 +68,24 @@ Begin VB.Form frmMainSmall
             Object.ToolTipText     =   "升变"
          EndProperty
          BeginProperty Button8 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "MoveDel"
-            Object.ToolTipText     =   "删除"
-         EndProperty
-         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveStart"
             Object.ToolTipText     =   "起始局面"
          EndProperty
-         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button9 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveBack"
             Object.ToolTipText     =   "上一着"
          EndProperty
-         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button10 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveForward"
             Object.ToolTipText     =   "下一着"
          EndProperty
-         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveEnd"
             Object.ToolTipText     =   "最後局面"
+         EndProperty
+         BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "MoveDel"
+            Object.ToolTipText     =   "删除"
          EndProperty
          BeginProperty Button13 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MovePaste"
@@ -1473,12 +1473,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnMoveSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnMoveDel 
-         Caption         =   "删除(&D)"
-      End
-      Begin VB.Menu mnMoveSep2 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnMoveStart 
          Caption         =   "起始局面(&S)"
       End
@@ -1490,6 +1484,12 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnMoveEnd 
          Caption         =   "最後局面(&E)"
+      End
+      Begin VB.Menu mnMoveSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnMoveDel 
+         Caption         =   "删除(&D)"
       End
       Begin VB.Menu mnMoveSep3 
          Caption         =   "-"
@@ -1852,16 +1852,11 @@ Option Explicit
 
 Private Sub Form_Load()
 
-Dim i As Integer
 lstMoveText.Clear
 lstMoveText.AddItem "===开始===", 0
 cmbFormat.AddItem "炮二平五", 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
-tlb.ImageList = frmHide.imglst
-For i = 1 To 30
-    tlb.Buttons(i).Image = i
-Next
 
 End Sub
 

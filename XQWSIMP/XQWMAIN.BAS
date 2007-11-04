@@ -3144,11 +3144,21 @@ End If
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
+' 显示并调整主窗口
 App_frmMain.Show
 App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
 App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
+App_frmMain.tlb.ImageList = frmHide.imglst
+For i = 1 To 30
+    App_frmMain.tlb.Buttons(i).Image = i
+Next
+If Not App_bPromotion Then
+    App_frmMain.mnMovePromote.Visible = False
+    App_frmMain.mnMoveSep1.Visible = False
+    App_frmMain.tlb.Buttons("MovePromote").Visible = False
+End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 SetWindowPos App_frmMain.hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 Unload frmStartUp
