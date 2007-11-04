@@ -1,3 +1,24 @@
+/*
+JavaXQ.java - Source Code for XiangQi Wizard, Java Applet Module
+
+XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
+Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+Copyright (C) 2004-2007 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 import java.applet.Applet;
 import java.awt.Button;
 import java.awt.Color;
@@ -106,8 +127,8 @@ public class JavaXQ extends Applet {
 		isPaintBusy = false;
 	}
 
+	@Deprecated
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean handleEvent(Event event) {
 		if (event.target.equals(hsbStepNo)) {
 			stepNo = hsbStepNo.getValue();
@@ -118,8 +139,8 @@ public class JavaXQ extends Applet {
 		return true;
 	}
 
+	@Deprecated
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean action(Event event, Object obj) {
 		if (obj.equals("@")) {
 			isRedAtBottom = !isRedAtBottom;
@@ -146,9 +167,31 @@ public class JavaXQ extends Applet {
 			pieceCurrXY[i] = pieceInitXY[i];
 		}
 		for (int i = 0; i < stepNo; i++) {
-			for (int j = 0; j < 32; j ++) {
+			// for (int j = 0; j < 32; j ++) {
+			// 由于兵(卒)序号总是在仕(士)相(象)后面，所以先处理兵(卒)，后处理仕(士)相(象)
+			for (int j = 31; j >= 0; j --) {
 				if (pieceCurrXY[j] == stepListXYTo[i]) {
 					pieceCurrXY[j] = 100;
+					// 增加仕(士)相(象)升变成兵(卒)的功能 {{
+					if (stepListXYFrom[i] == stepListXYTo[i]) {
+						if (j < 16) {
+							for (int k = 11; k < 16; k ++) {
+								if (pieceCurrXY[k] == 100) {
+									pieceCurrXY[k] = stepListXYTo[i];
+									break;
+								}
+							}
+						} else {
+							for (int k = 27; k < 32; k ++) {
+								if (pieceCurrXY[k] == 100) {
+									pieceCurrXY[k] = stepListXYTo[i];
+									break;
+								}
+							}
+						}
+						continue;
+					}
+					// }}
 				}
 				if (pieceCurrXY[j] == stepListXYFrom[i]) {
 					pieceCurrXY[j] = stepListXYTo[i];
