@@ -1271,7 +1271,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             If (nMoveStatus And MOVE_CHECK) <> 0 Then
                 PlayWavSound "CHECK" + IIf(bEngine, "2", "")
             ElseIf (nMoveStatus And MOVE_CAPTURE) <> 0 Then
-                PlayWavSound "CAPTURE" + IIf(bEngine, "2", "")
+                PlayWavSound IIf(Src(mv) = Dst(mv), "PROMOTE", "CAPTURE") + IIf(bEngine, "2", "")
             Else
                 PlayWavSound "MOVE" + IIf(bEngine, "2", "")
             End If

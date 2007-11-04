@@ -516,6 +516,8 @@ Source: "SOUNDS\MOVE.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\MOVE2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CAPTURE.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CAPTURE2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
+Source: "SOUNDS\PROMOTE.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
+Source: "SOUNDS\PROMOTE2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CHECK.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CHECK2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\WIN.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
