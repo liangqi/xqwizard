@@ -676,20 +676,28 @@ Begin VB.Form frmMainLarge
       BeginProperty Panels {8E3867A5-8586-11D1-B16A-00C0F0283628} 
          NumPanels       =   4
          BeginProperty Panel1 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Object.Width           =   3387
+            MinWidth        =   3387
             Key             =   "Curr"
+            Object.ToolTipText     =   "思考着法"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Object.Width           =   1693
+            MinWidth        =   1693
             Key             =   "Nps"
+            Object.ToolTipText     =   "每秒钟分析的节点数"
          EndProperty
          BeginProperty Panel3 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Object.Width           =   10160
             MinWidth        =   10160
             Key             =   "Pv"
+            Object.ToolTipText     =   "思考路线"
          EndProperty
          BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Object.Width           =   7620
             MinWidth        =   7620
             Key             =   "Msg"
+            Object.ToolTipText     =   "提示信息"
          EndProperty
       EndProperty
    End

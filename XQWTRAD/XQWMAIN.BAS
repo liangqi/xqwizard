@@ -271,12 +271,15 @@ Public Engine_nStyle            As Integer  ' 風格
 Public Engine_szFile            As String   ' 引擎文件
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 Public Engine_nStatus           As Integer  ' 引擎狀態
-Public Engine_dwTimeRatio       As Long     ' 引擎時間比例(秒制是1，毫秒制是1000)
+Public Engine_nTimeRatio        As Long     ' 引擎時間比例(秒制是1，毫秒制是1000)
 Public Engine_szName            As String   ' 引擎名稱
 Public Engine_szCopyright       As String   ' 引擎版權
 Public Engine_szAuthor          As String   ' 引擎作者
 Public Engine_szUser            As String   ' 引擎用戶
 Public Engine_posBoard  As PositionStruct   ' 引擎思考的局面
+Public Engine_nMoves            As Integer  ' 引擎思考的局面的总走法数
+Public Engine_nDepth            As Integer  ' 引擎思考的深度
+Public Engine_nCurrMove         As Integer  ' 引擎思考的局面的当前走法数
 Public Engine_bRed              As Boolean  ' 引擎執紅
 Public Engine_bBlack            As Boolean  ' 引擎執黑
 Public Engine_bPonder           As Boolean  ' 後台思考
@@ -292,7 +295,7 @@ Public Engine_mvBan             As Long     ' 禁著
 Public Engine_bSlaveRed         As Boolean  ' 副引擎執紅
 Public Engine_bSlaveBlack       As Boolean  ' 副引擎執黑
 Public Engine_pipeSlave     As PipeStruct   ' 副引擎管道
-Public Engine_dwTimeRatioSlave  As Long     ' 副引擎時間比例
+Public Engine_nTimeRatioSlave   As Long     ' 副引擎時間比例
 Public Engine_szSlaveName       As String   ' 副引擎名稱
 
 ' 以下是實用函數例程
@@ -1827,10 +1830,14 @@ End Sub
 ' 讓引擎思考，思考前必須設置思考狀態(BUSY_ANALYZE/BUSY_THINK/BUSY_PONDER)
 Public Sub RunEngine()
 
-Dim i As Integer, nIrrevMove As Integer, bSlaveEngine As Boolean, dwTimeRatio As Long
-Dim nMoveStatus As Long
+Dim i As Integer, nIrrevMove As Integer, bSlaveEngine As Boolean
+Dim nTimeRatio As Long, nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
+Dim nMoveList(1 To 128) As Long
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
+Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
+Engine_nDepth = 0
+Engine_nCurrMove = 0
 If Engine_bAnalyze Then
     App_frmMain.txtThink.Text = ""
 End If
@@ -1863,7 +1870,7 @@ Else
     End If
 End If
 bSlaveEngine = IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack)
-dwTimeRatio = IIf(bSlaveEngine, Engine_dwTimeRatioSlave, Engine_dwTimeRatio)
+nTimeRatio = IIf(bSlaveEngine, Engine_nTimeRatioSlave, Engine_nTimeRatio)
 SendEngine "position fen " + szFenStr, bSlaveEngine
 If Engine_mvBan <> 0 Then
     SendEngine "banmoves " + Move2Coord(Engine_mvBan), bSlaveEngine
@@ -1873,14 +1880,14 @@ If Engine_nStatus = BUSY_ANALYZE Then
 Else
     If Timer_nDepth <= 0 Then
         If Timer_bIncMode Then
-            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
-                    " increment" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)) + _
-                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
-                    " oppincrement" + Str(IIf(Timer_nIncTime < 0, 0, dwTimeRatio * Timer_nIncTime)), bSlaveEngine
+            SendEngine szGoPonder + " time" + Str(nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
+                    " increment" + Str(IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime)) + _
+                    " opptime" + Str(nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
+                    " oppincrement" + Str(IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime)), bSlaveEngine
         Else
-            SendEngine szGoPonder + " time" + Str(dwTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
+            SendEngine szGoPonder + " time" + Str(nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
                     " movestogo" + Str(Timer_nMoveLeft(Engine_posBoard.sdPlayer)) + _
-                    " opptime" + Str(dwTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
+                    " opptime" + Str(nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
                     " oppmovestogo" + Str(Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
         End If
     Else
@@ -1898,15 +1905,16 @@ End Sub
 ' 輸出引擎的信息，顯示到顯示思考窗口和狀態欄
 Public Sub PopEngine(ByVal szReceived As String)
 
-Dim i As Integer, nDepth As Integer, nScore As Integer
+Dim i As Integer, nScore As Integer
 Dim nTime As Long, nNodes As Long
 Dim szMoveList As String, nMoveStatus As Long, mv As Long
 Dim pos As PositionStruct
 
 ' 輸出當前思考著法
-If Options_bStatusBar Then
-    i = InStr(szReceived, " currmove ")
-    If i > 0 Then
+i = InStr(szReceived, " currmove ")
+If i > 0 Then
+    Engine_nCurrMove = Engine_nCurrMove + 1
+    If Options_bStatusBar Then
         mv = Coord2Move(Mid(szReceived, i + 10))
         Select Case Game_nFormat
         Case 0
@@ -1916,7 +1924,7 @@ If Options_bStatusBar Then
         Case 2
             szMoveList = Move2Iccs(mv)
         End Select
-        App_frmMain.stb.Panels("Curr").Text = "-> " + szMoveList
+        App_frmMain.stb.Panels("Curr").Text = LTrim(Str(Engine_nDepth)) + " (" + LTrim(Str(Engine_nCurrMove)) + "/" + LTrim(Str(Engine_nMoves)) + ") " + szMoveList
     End If
 End If
 
@@ -1942,8 +1950,8 @@ End If
 ' 輸出主要變例
 i = InStr(szReceived, " depth ")
 If i > 0 Then
-    nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
-    szMoveList = Space(4 - Len(Str(nDepth))) + LTrim(Str(nDepth))
+    Engine_nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
+    szMoveList = Space(4 - Len(Str(Engine_nDepth))) + LTrim(Str(Engine_nDepth))
     i = InStr(szReceived, " score ")
     If i > 0 Then
         nScore = Str2Int(Mid(szReceived, i + 7))
@@ -1975,9 +1983,12 @@ If i > 0 Then
                 i = i + 5
             Loop
         End If
-        If Options_bStatusBar And nDepth > 0 Then
+        If Options_bStatusBar And Engine_nDepth > 0 Then
             App_frmMain.stb.Panels("Pv").Text = szMoveList
         End If
+    Else
+        ' 只有"info depth n"时，说明新的一层已经开始
+        Engine_nCurrMove = 0
     End If
     If Engine_bAnalyze Then
         App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
@@ -2076,6 +2087,9 @@ Else
         Case Else
             MsgBox "不該接收到引擎的信息: " + szReceived, vbExclamation
         End Select
+        If Options_bStatusBar Then
+            App_frmMain.stb.Panels("Curr").Text = ""
+        End If
     ElseIf Left(szReceived, 10) = "nobestmove" Then
         EngineBusy False
         Select Case Engine_nStatus
@@ -2090,6 +2104,9 @@ Else
         Case Else
             ' MsgBox "不該接收到引擎的信息: " + szReceived, vbExclamation
         End Select
+        If Options_bStatusBar Then
+            App_frmMain.stb.Panels("Curr").Text = ""
+        End If
     ElseIf Left(szReceived, 12) = "info string " Then
     ElseIf Left(szReceived, 5) = "info " Then
         PopEngine szReceived
@@ -2286,7 +2303,7 @@ Else
     Engine_szCopyright = ""
     Engine_szAuthor = ""
     Engine_szUser = ""
-    Engine_dwTimeRatio = 1
+    Engine_nTimeRatio = 1
     Do While Engine_nStatus = IDLE_UNLOAD
         lpStr = PipeLineInput(Engine_pipe)
         If lpStr = 0 Then
@@ -2308,7 +2325,7 @@ Else
             ElseIf Left(szReceived, 8) = "id user " Then
                 Engine_szUser = Mid(szReceived, 9)
             ElseIf Left(szReceived, 19) = "option usemillisec " Then
-                Engine_dwTimeRatio = 1000
+                Engine_nTimeRatio = 1000
             ElseIf szReceived = "ucciok" Then
                 Engine_nStatus = IDLE_READY
             End If
@@ -2318,7 +2335,7 @@ Else
         bLoaded = True
         Engine_bSlaveRed = False
         Engine_bSlaveBlack = False
-        If Engine_dwTimeRatio = 1000 Then
+        If Engine_nTimeRatio = 1000 Then
             SendEngine "setoption usemillisec true"
         End If
         SetEngine
@@ -2361,7 +2378,7 @@ Else
     szCopyright = ""
     szAuthor = ""
     szUser = ""
-    Engine_dwTimeRatioSlave = 1
+    Engine_nTimeRatioSlave = 1
     Do While Not Engine_bSlaveBlack
         lpStr = PipeLineInput(Engine_pipeSlave)
         If lpStr = 0 Then
@@ -2383,7 +2400,7 @@ Else
             ElseIf Left(szReceived, 8) = "id user " Then
                 szUser = Mid(szReceived, 9)
             ElseIf Left(szReceived, 19) = "option usemillisec " Then
-                Engine_dwTimeRatioSlave = 1000
+                Engine_nTimeRatioSlave = 1000
             ElseIf szReceived = "ucciok" Then
                 Engine_bSlaveBlack = True
             End If
@@ -2394,7 +2411,7 @@ Else
                 IIf(szCopyright = "", "", "版權：" + szCopyright + vbCrLf) + _
                 IIf(szAuthor = "", "", "作者：" + szAuthor + vbCrLf) + _
                 IIf(szUser = "", "", "用戶：" + szUser), "關于UCCI引擎", szEngineFile
-        If Engine_dwTimeRatioSlave = 1000 Then
+        If Engine_nTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
         SetEngine SLAVE_ENGINE
@@ -2855,7 +2872,8 @@ End Sub
 ' 顯示軟件名稱
 Public Sub SetTitle()
 
-App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + "象棋巫師"
+App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + _
+        IIf(App_bPromotion, "超級象棋巫師", "象棋巫師")
 
 End Sub
 
