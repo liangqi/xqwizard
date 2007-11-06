@@ -1841,8 +1841,10 @@ If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
 End If
 App_bRunning = False
-App_szFileName = App_szPath + "AUTOSAVE.PGN"
-WriteFile
+If Options_bAutoSave Then
+    App_szFileName = App_szPath + "AUTOSAVE.PGN"
+    WriteFile
+End If
 
 End Sub
 
@@ -2120,7 +2122,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "象棋局面文件", "FEN", SHOW_SAVE)
+szFileName = FileDialog("导出到FEN文件", "象棋局面文件", "FEN", DefaultFileName)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen

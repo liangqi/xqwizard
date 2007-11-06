@@ -141,7 +141,7 @@ Begin VB.Form frmEngineSet
          Top             =   1320
          Width           =   615
       End
-      Begin VB.ComboBox cmbSelectivity 
+      Begin VB.ComboBox cmbRandomness 
          Height          =   300
          ItemData        =   "ENGINE.FRX":0028
          Left            =   5520
@@ -183,7 +183,7 @@ Begin VB.Form frmEngineSet
          Top             =   1320
          Width           =   375
       End
-      Begin VB.Label lblSelectivity 
+      Begin VB.Label lblRandomness 
          Caption         =   "繦审"
          Height          =   255
          Left            =   5040
@@ -287,7 +287,7 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.41, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -340,11 +340,11 @@ cmbKnowledge.AddItem "沒有", 0
 cmbKnowledge.AddItem "少量", 1
 cmbKnowledge.AddItem "适中", 2
 cmbKnowledge.AddItem "充分", 3
-cmbSelectivity.Clear
-cmbSelectivity.AddItem "沒有", 0
-cmbSelectivity.AddItem "少量", 1
-cmbSelectivity.AddItem "适中", 2
-cmbSelectivity.AddItem "充分", 3
+cmbRandomness.Clear
+cmbRandomness.AddItem "沒有", 0
+cmbRandomness.AddItem "少量", 1
+cmbRandomness.AddItem "适中", 2
+cmbRandomness.AddItem "充分", 3
 cmbStyle.Clear
 cmbStyle.AddItem "保守", 0
 cmbStyle.AddItem "均衡", 1
@@ -360,7 +360,7 @@ cmbHash.ListIndex = Engine_nHash
 cmbThreads.ListIndex = Engine_nThreads
 cmbPruning.ListIndex = Engine_nPruning
 cmbKnowledge.ListIndex = Engine_nKnowledge
-cmbSelectivity.ListIndex = Engine_nSelectivity
+cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
 chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
 chkSlaveRed.Enabled = (Engine_bSlaveRed Or Engine_bSlaveBlack)
@@ -400,7 +400,7 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", SHOW_SAVE)
+szFileName = FileDialog("選擇日志文件", "HTM文件", "HTM", DefaultFileName)
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If
@@ -531,7 +531,7 @@ Engine_nHash = cmbHash.ListIndex
 Engine_nThreads = cmbThreads.ListIndex
 Engine_nPruning = cmbPruning.ListIndex
 Engine_nKnowledge = cmbKnowledge.ListIndex
-Engine_nSelectivity = cmbSelectivity.ListIndex
+Engine_nRandomness = cmbRandomness.ListIndex
 Engine_nStyle = cmbStyle.ListIndex
 SetEngine
 Unload Me

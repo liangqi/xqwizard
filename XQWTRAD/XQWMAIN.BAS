@@ -42,7 +42,6 @@ Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 ' 全局常量——可選參數
-Public Const SHOW_SAVE          As Boolean = True ' FileDialog
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
 Public Const DRAW_SELECTED      As Boolean = True ' Draw...Square
@@ -266,7 +265,7 @@ Public Engine_nHash             As Integer  ' 置換表大小
 Public Engine_nThreads          As Integer  ' 引擎使用的線程數
 Public Engine_nPruning          As Integer  ' 裁剪
 Public Engine_nKnowledge        As Integer  ' 知識
-Public Engine_nSelectivity      As Integer  ' 隨机
+Public Engine_nRandomness       As Integer  ' 隨机
 Public Engine_nStyle            As Integer  ' 風格
 Public Engine_szFile            As String   ' 引擎文件
 Public Engine_pipe          As PipeStruct   ' 引擎管道
@@ -356,19 +355,38 @@ NumberText = IIf(sd = 0, LTrim(Str(cnt)) + ".", Space(Len(Str(cnt))))
 End Function
 
 ' 打開文件對話框
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal bShowSave As Boolean = False) As String
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
-frmHide.comdlg.FileName = ""
+Dim sz As String
+sz = szSave
+sz = Replace(sz, "\", "＼")
+sz = Replace(sz, "/", "／")
+sz = Replace(sz, ":", "：")
+sz = Replace(sz, "*", "＊")
+sz = Replace(sz, "?", "？")
+sz = Replace(sz, Chr(34), Chr(&HA3A2))
+sz = Replace(sz, "<", "＜")
+sz = Replace(sz, ">", "＞")
+sz = Replace(sz, "|", "｜")
+frmHide.comdlg.FileName = IIf(szSave = "", "", sz + "." + szExt)
 frmHide.comdlg.DialogTitle = szTitle
 frmHide.comdlg.DefaultExt = "." + szExt
 frmHide.comdlg.Filter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
-frmHide.comdlg.Flags = IIf(bShowSave, cdlOFNOverwritePrompt, 0) + cdlOFNHideReadOnly
-If bShowSave Then
-    frmHide.comdlg.ShowSave
-Else
+frmHide.comdlg.Flags = IIf(szSave = "", 0, cdlOFNOverwritePrompt) + cdlOFNHideReadOnly
+frmHide.comdlg.CancelError = True
+On Error GoTo lnErrorOpen
+If szSave = "" Then
     frmHide.comdlg.ShowOpen
+Else
+    frmHide.comdlg.ShowSave
 End If
+On Error GoTo 0
 FileDialog = frmHide.comdlg.FileName
+Exit Function
+
+lnErrorOpen:
+On Error GoTo 0
+FileDialog = ""
 
 End Function
 
@@ -757,6 +775,7 @@ frmHide.comdlg.DialogTitle = "打開棋譜文件"
 frmHide.comdlg.DefaultExt = ".PGN"
 frmHide.comdlg.Filter = "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|QQ象棋棋譜 (*.CHE)|*.CHE|所有文件 (*.*)|*.*"
 frmHide.comdlg.Flags = cdlOFNHideReadOnly
+frmHide.comdlg.CancelError = False
 frmHide.comdlg.ShowOpen
 If frmHide.comdlg.FileName <> "" Then
     App_szFileName = frmHide.comdlg.FileName
@@ -791,10 +810,10 @@ End Function
 ' 實現“另存為”功能
 Public Function SaveFileAs()
 
-Dim szFileName As String
-szFileName = FileDialog("保存棋譜文件", "可移植棋譜", "PGN", SHOW_SAVE)
-If szFileName <> "" Then
-    App_szFileName = szFileName
+Dim sz As String
+sz = FileDialog("保存棋譜文件", "可移植棋譜", "PGN", DefaultFileName)
+If sz <> "" Then
+    App_szFileName = sz
     SetTitle
     WriteFile
     SaveFileAs = True
@@ -912,7 +931,19 @@ EventString = sz
 
 End Function
 
-' 時間和日期字符串
+' 比賽結果字符串
+Public Function ResultString() As String
+
+If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
+    ResultString = "(著法：" + IIf(Game_sdStart = 0, "紅先", "黑先") + Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "負"), "和", IIf(Game_sdStart = 0, "負", "胜")) + ")"
+Else
+    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (對) ", IIf(Game_sdStart = 0, " (先胜) ", " (後負) "), IIf(Game_sdStart = 0, " (先和) ", " (後和) "), IIf(Game_sdStart = 0, " (先負) ", " (後胜) ")) + _
+            Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
+End If
+
+End Function
+
+' 日期和地点字符串
 Public Function DateSiteString() As String
 
 If Game_szDate = "" Then
@@ -923,23 +954,25 @@ End If
 
 End Function
 
-' 比賽結果字符串
-Public Function ResultString() As String
-
-If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
-    ResultString = "(著法: " + IIf(Game_sdStart = 0, "紅先", "黑先") + Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "負"), "和", IIf(Game_sdStart = 0, "負", "胜")) + ")"
-Else
-    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + Choose(Game_nResult + 1, " (對) ", IIf(Game_sdStart = 0, " (先胜) ", " (後負) "), IIf(Game_sdStart = 0, " (先和) ", " (後和) "), IIf(Game_sdStart = 0, " (先負) ", " (後胜) ")) + _
-            Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
-End If
-
-End Function
-
 ' 開局字符串
 Public Function OpenString() As String
 
 OpenString = Game_szOpen + IIf(Game_szOpen = "" Or Game_szVar = "", "", "——") + Game_szVar + _
-        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", "(ECCO開局編號: " + Game_szEcco + ")", True, "(" + Game_szEcco + ")")
+        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", "(ECCO開局編號：" + Game_szEcco + ")", True, "(" + Game_szEcco + ")")
+
+End Function
+
+' 缺省文件名
+Public Function DefaultFileName() As String
+
+Dim sz As String
+sz = EventString
+If sz = "" Then
+    sz = ResultString
+Else
+    sz = sz + " - " + ResultString
+End If
+DefaultFileName = sz
 
 End Function
 
@@ -2085,7 +2118,7 @@ Else
                 End If
             End If
         Case Else
-            MsgBox "不該接收到引擎的信息: " + szReceived, vbExclamation
+            MsgBox "不該接收到引擎的信息：" + szReceived, vbExclamation
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -2102,7 +2135,7 @@ Else
         Case BUSY_THINK
             Engine_nStatus = IDLE_REST
         Case Else
-            ' MsgBox "不該接收到引擎的信息: " + szReceived, vbExclamation
+            ' MsgBox "不該接收到引擎的信息：" + szReceived, vbExclamation
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -2166,7 +2199,7 @@ Else
 End If
 SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption knowledge " + Choose(Engine_nKnowledge + 1, "none", "small", "medium", "large"), bSlaveEngine
-SendEngine "setoption selectivity " + Choose(Engine_nSelectivity + 1, "none", "small", "medium", "large"), bSlaveEngine
+SendEngine "setoption randomness " + Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption style " + Choose(Engine_nStyle + 1, "solid", "normal", "risky"), bSlaveEngine
 
 End Sub
@@ -2807,7 +2840,7 @@ Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
 Engine_nThreads = Str2Int(GetSetting("XQWizard", "Engine", "Threads", "0"), 0, 9)
 Engine_nPruning = Str2Int(GetSetting("XQWizard", "Engine", "Pruning", "3"), 0, 3)
 Engine_nKnowledge = Str2Int(GetSetting("XQWizard", "Engine", "Knowledge", "3"), 0, 3)
-Engine_nSelectivity = Str2Int(GetSetting("XQWizard", "Engine", "Selectivity", "0"), 0, 3)
+Engine_nRandomness = Str2Int(GetSetting("XQWizard", "Engine", "Randomness", "0"), 0, 3)
 Engine_nStyle = Str2Int(GetSetting("XQWizard", "Engine", "Style", "1"), 0, 2)
 Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", "")
 
@@ -2861,7 +2894,7 @@ SaveSetting "XQWizard", "Engine", "Hash", LTrim(Str(Engine_nHash))
 SaveSetting "XQWizard", "Engine", "Threads", LTrim(Str(Engine_nThreads))
 SaveSetting "XQWizard", "Engine", "Pruning", LTrim(Str(Engine_nPruning))
 SaveSetting "XQWizard", "Engine", "Knowledge", LTrim(Str(Engine_nKnowledge))
-SaveSetting "XQWizard", "Engine", "Selectivity", LTrim(Str(Engine_nSelectivity))
+SaveSetting "XQWizard", "Engine", "Randomness", LTrim(Str(Engine_nRandomness))
 SaveSetting "XQWizard", "Engine", "Style", LTrim(Str(Engine_nStyle))
 SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
 
@@ -2872,8 +2905,12 @@ End Sub
 ' 顯示軟件名稱
 Public Sub SetTitle()
 
-App_frmMain.Caption = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1) + " - ") + _
-        IIf(App_bPromotion, "超級象棋巫師", "象棋巫師")
+Dim sz As String
+sz = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "\") + 1))
+If UCase(Right(sz, 4)) = ".PGN" Then
+    sz = Left(sz, Len(sz) - 4)
+End If
+App_frmMain.Caption = IIf(sz = "", "", sz + " - ") + IIf(App_bPromotion, "超級象棋巫師", "象棋巫師")
 
 End Sub
 
