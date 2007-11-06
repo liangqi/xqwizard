@@ -276,6 +276,7 @@ Public Engine_szCopyright       As String   ' 引擎版权
 Public Engine_szAuthor          As String   ' 引擎作者
 Public Engine_szUser            As String   ' 引擎用户
 Public Engine_posBoard  As PositionStruct   ' 引擎思考的局面
+Public Engine_dwTime            As Double   ' 引擎思考的时间
 Public Engine_nMoves            As Integer  ' 引擎思考的局面的总走法数
 Public Engine_nDepth            As Integer  ' 引擎思考的深度
 Public Engine_nCurrMove         As Integer  ' 引擎思考的局面的当前走法数
@@ -812,7 +813,7 @@ Public Function SaveFileAs()
 
 Dim sz As String
 sz = FileDialog("保存棋谱文件", "可移植棋谱", "PGN", DefaultFileName)
-If szFileName <> "" Then
+If sz <> "" Then
     App_szFileName = sz
     SetTitle
     WriteFile
@@ -881,7 +882,7 @@ End Sub
 ' 以下是界面控制例程
 
 ' 输出时间格式："hh:mm:ss"
-Public Function TimeText(ByVal nSeconds As Integer) As String
+Public Function TimeText(ByVal nSeconds As Long) As String
 
 Dim sz As String
 sz = Chr((nSeconds \ 36000) Mod 6 + 48) + Chr((nSeconds \ 3600) Mod 10 + 48) + ":"
@@ -1868,6 +1869,7 @@ Dim nTimeRatio As Long, nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
+Engine_dwTime = Timer
 Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
 Engine_nDepth = 0
 Engine_nCurrMove = 0
@@ -1961,21 +1963,15 @@ If i > 0 Then
     End If
 End If
 
-' 输出时间和速度
-i = InStr(szReceived, " time ")
-If i > 0 Then
-    nTime = Str2Lng(Mid(szReceived, i + 6), -28800000, 28800000)
-    If Engine_bAnalyze And Options_bEngineTime Then
-        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->" + vbCrLf
-        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
-    End If
-    If Options_bStatusBar Then
-        i = InStr(szReceived, " nodes ")
-        If i > 0 Then
-            nNodes = Str2Lng(Mid(szReceived, i + 7))
-            If nTime > 0 Then
-                App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"
-            End If
+' 输出速度
+If Options_bStatusBar Then
+    i = InStr(szReceived, " nodes ")
+    If i > 0 Then
+        nNodes = Str2Lng(Mid(szReceived, i + 7))
+        nTime = (Timer - Engine_dwTime) * 1000
+        nTime = IIf(nTime < 0, nTime + 86400000, nTime)
+        If nTime > 0 Then
+            App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"
         End If
     End If
 End If
@@ -1984,6 +1980,14 @@ End If
 i = InStr(szReceived, " depth ")
 If i > 0 Then
     Engine_nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
+    If Engine_nDepth > 0 Then
+        If Engine_bAnalyze And Options_bEngineTime Then
+            nTime = Int((Timer - Engine_dwTime) * 1000)
+            nTime = IIf(nTime < 0, nTime + 86400000, nTime)
+            App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->" + vbCrLf
+            App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+        End If
+    End If
     szMoveList = Space(4 - Len(Str(Engine_nDepth))) + LTrim(Str(Engine_nDepth))
     i = InStr(szReceived, " score ")
     If i > 0 Then
@@ -2920,7 +2924,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2931,7 +2935,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
@@ -2959,7 +2963,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -3009,7 +3013,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -3022,7 +3026,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
