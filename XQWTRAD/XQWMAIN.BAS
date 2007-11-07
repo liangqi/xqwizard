@@ -1970,7 +1970,7 @@ If Options_bStatusBar Then
         nTime = (Timer - Engine_dwTime) * 1000
         nTime = IIf(nTime < 0, nTime + 86400000, nTime)
         If nTime > 0 Then
-            App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"            End If
+            App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"
         End If
     End If
 End If
