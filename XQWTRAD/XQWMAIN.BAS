@@ -1869,6 +1869,7 @@ Dim nTimeRatio As Long, nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
+Engine_dwTime = Timer
 Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
 Engine_nDepth = 0
 Engine_nCurrMove = 0
