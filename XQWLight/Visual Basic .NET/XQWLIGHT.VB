@@ -1,7 +1,7 @@
 ' XQWLIGHT.VB - Source Code for XiangQi Wizard Light, Part V
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta4, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 1.01, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ Module XQWLight
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim mvResult As Integer, sqLast As Integer
+        Dim mvResult As Integer, sqLast As Integer, pcCaptured As Integer
         If GetResult() Then
             Return False
         End If
@@ -94,7 +94,11 @@ Module XQWLight
             App_frm.DrawSquare(App_mvLast And 255)
             App_frm.DrawSquare(App_mvLast >> 8)
         End If
+        pcCaptured = Search_pos.pcSquares(Search_mvResult >> 8)
         Search_pos.MakeMove(Search_mvResult)
+        If pcCaptured > 0 Then
+            Search_pos.SetIrrev()
+        End If
         App_mvLast = Search_mvResult
         sqLast = App_sqCursor
         If App_bFlipped Then

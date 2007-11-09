@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 1.01, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -272,7 +272,11 @@ public class MainForm extends Canvas implements CommandListener {
 		repaint();
 		serviceRepaints();
 		search.searchMain(1 << (midlet.level << 1));
+		int pc = search.pos.squares[Position.DST(search.mvResult)];
 		search.pos.makeMove(search.mvResult);
+		if (pc > 0) {
+			search.pos.setIrrev();
+		}
 		mvLast = search.mvResult;
 		int sq = Position.DST(mvLast);
 		if (midlet.flipped) {
