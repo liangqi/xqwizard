@@ -1940,7 +1940,7 @@ End Sub
 ' 輸出引擎的信息，顯示到顯示思考窗口和狀態欄
 Public Sub PopEngine(ByVal szReceived As String)
 
-Dim i As Integer, nScore As Integer
+Dim i As Integer, nScore As Integer, nOldDepth As Integer
 Dim nTime As Long, nNodes As Long
 Dim szMoveList As String, nMoveStatus As Long, mv As Long
 Dim pos As PositionStruct
@@ -1979,7 +1979,11 @@ End If
 ' 輸出主要變例
 i = InStr(szReceived, " depth ")
 If i > 0 Then
+    nOldDepth = Engine_nDepth
     Engine_nDepth = Str2Int(Mid(szReceived, i + 7), -999, 999)
+    If Engine_nDepth > nOldDepth Then
+        Engine_nCurrMove = 0
+    End If
     If Engine_nDepth > 0 Then
         If Engine_bAnalyze And Options_bEngineTime Then
             nTime = Int((Timer - Engine_dwTime) * 1000)
@@ -2023,9 +2027,6 @@ If i > 0 Then
         If Options_bStatusBar And Engine_nDepth > 0 Then
             App_frmMain.stb.Panels("Pv").Text = szMoveList
         End If
-    Else
-        ' 只有"info depth n"时，说明新的一层已经开始
-        Engine_nCurrMove = 0
     End If
     If Engine_bAnalyze Then
         App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
