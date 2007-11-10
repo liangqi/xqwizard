@@ -79,7 +79,7 @@ public class MainForm extends Canvas implements CommandListener {
 	private String message;
 	private int width, height, left, top;
 	private int phase;
-	private Command cmdBack, cmdExit;
+	private Command cmdBack;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
@@ -87,15 +87,12 @@ public class MainForm extends Canvas implements CommandListener {
 		search.pos = new Position();
 
 		cmdBack = new Command("返回", Command.BACK, 1);
-		cmdExit = new Command("退出", Command.EXIT, 2);
 		addCommand(cmdBack);
-		addCommand(cmdExit);
 
 		setCommandListener(this);
 	}
 
 	public void reset() {
-		setTitle("象棋小巫师");
 		search.pos.loadBoard(midlet.handicap);
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
@@ -112,8 +109,8 @@ public class MainForm extends Canvas implements CommandListener {
 				// Code Style
 			} else if (c == cmdBack) {
 				Display.getDisplay(midlet).setCurrent(midlet.startUp);
-			} else if (c == cmdExit) {
-				midlet.notifyDestroyed();
+			// } else if (c == cmdExit) {
+				// midlet.notifyDestroyed();
 			}
 		}
 	}
@@ -173,7 +170,6 @@ public class MainForm extends Canvas implements CommandListener {
 			g.setFont(font);
 			g.setColor(0x0000ff);
 			g.drawString(message, (width - message.length() * fontWidth) / 2, (height - fontHeight) / 2, Graphics.LEFT + Graphics.TOP);
-			setTitle("棋局结束");
 		}
 	}
 
@@ -184,7 +180,7 @@ public class MainForm extends Canvas implements CommandListener {
 		}
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
-		if (action == FIRE) {
+		if (action == FIRE || code == KEY_NUM5) {
 			int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
 			if (midlet.flipped) {
 				sq = Position.SQUARE_FLIP(sq);
@@ -207,15 +203,46 @@ public class MainForm extends Canvas implements CommandListener {
 			case UP:
 				deltaY = -1;
 				break;
-			case DOWN:
-				deltaY = 1;
-				break;
 			case LEFT:
 				deltaX = -1;
 				break;
 			case RIGHT:
 				deltaX = 1;
 				break;
+			case DOWN:
+				deltaY = 1;
+				break;
+			default:
+				switch (code) {
+				case KEY_NUM1:
+					deltaX = -1;
+					deltaY = -1;
+					break;
+				case KEY_NUM2:
+					deltaY = -1;
+					break;
+				case KEY_NUM3:
+					deltaX = 1;
+					deltaY = -1;
+					break;
+				case KEY_NUM4:
+					deltaX = -1;
+					break;
+				case KEY_NUM6:
+					deltaX = 1;
+					break;
+				case KEY_NUM7:
+					deltaX = -1;
+					deltaY = 1;
+					break;
+				case KEY_NUM8:
+					deltaY = 1;
+					break;
+				case KEY_NUM9:
+					deltaX = 1;
+					deltaY = 1;
+					break;
+				}
 			}
 			cursorX = (cursorX + deltaX + 9) % 9;
 			cursorY = (cursorY + deltaY + 10) % 10;

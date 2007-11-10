@@ -47,8 +47,9 @@ public class StartUp extends Form implements CommandListener {
 	}
 
 	private XQWLight midlet;
-	private ChoiceGroup cgToMove, cgHandicap, cgLevel;
-	private Command cmdAbout, cmdStart;
+	private ChoiceGroup cgToMove;
+	private ChoiceGroup cgHandicap, cgLevel;
+	private Command cmdAbout, cmdExit, cmdStart;
 
 	public StartUp(XQWLight midlet) {
 		super("开始 - 象棋小巫师");
@@ -61,7 +62,7 @@ public class StartUp extends Form implements CommandListener {
 		append(cgToMove);
 
 		append("先走让子：");
-		cgHandicap = new ChoiceGroup(null, Choice.POPUP);
+		cgHandicap = new ChoiceGroup(null, Choice.EXCLUSIVE);
 		cgHandicap.append("不让子", null);
 		cgHandicap.append("让单马", null);
 		cgHandicap.append("让双马", null);
@@ -69,16 +70,18 @@ public class StartUp extends Form implements CommandListener {
 		append(cgHandicap);
 
 		append("电脑水平：");
-		cgLevel = new ChoiceGroup(null, Choice.POPUP);
+		cgLevel = new ChoiceGroup(null, Choice.EXCLUSIVE);
 		cgLevel.append("入门", null);
 		cgLevel.append("业余", null);
 		cgLevel.append("专业", null);
 		append(cgLevel);
 
-		cmdAbout = new Command("关于\"象棋小巫师\"", Command.BACK, 1);
-		cmdStart = new Command("开始", Command.OK, 2);
+		cmdAbout = new Command("关于\"象棋小巫师\"", Command.ITEM, 1);
+		cmdExit = new Command("退出", Command.ITEM, 1);
+		cmdStart = new Command("开始", Command.BACK, 1);
 
 		addCommand(cmdAbout);
+		addCommand(cmdExit);
 		addCommand(cmdStart);
 
 		cgLevel.setSelectedIndex(0, true);
@@ -93,6 +96,8 @@ public class StartUp extends Form implements CommandListener {
 			// Code Style
 		} else if (c == cmdAbout) {
 			Display.getDisplay(midlet).setCurrent(altAbout);
+		} else if (c == cmdExit) {
+			midlet.notifyDestroyed();
 		} else if (c == cmdStart) {
 			midlet.flipped = cgToMove.isSelected(1);
 			midlet.handicap = cgHandicap.getSelectedIndex();
