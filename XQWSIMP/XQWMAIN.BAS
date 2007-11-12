@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.5"
+Public Const STRING_VERSION     As String = "3.51"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -236,8 +236,8 @@ Public Game_nFormat             As Integer  ' 记谱格式
 Public Game_mvMove(1 To 1998)   As Long     ' 着法列表
 Public Game_szMoveText(0 To 2, 1 To 1998) As String ' 记谱列表
 Public Game_szComment(0 To 1998) As String          ' 注释列表
-Public Game_szIrrevFen(0 To 32) As String           ' 不可逆局面FEN串列表
-Public Game_posIrrev(0 To 32)   As PositionStruct   ' 不可逆局面列表
+Public Game_szIrrevFen(0 To 40) As String           ' 不可逆局面FEN串列表
+Public Game_posIrrev(0 To 40)   As PositionStruct   ' 不可逆局面列表
 Public Game_nCurrMove           As Integer  ' 当前着法序号(第一个着法序号是1)
 Public Game_nMaxMove            As Integer  ' 最大着法序号
 Public Game_nCurrIrrev          As Integer  ' 当前不可逆局面序号
