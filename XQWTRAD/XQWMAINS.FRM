@@ -1662,20 +1662,17 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnOptionsBoard 
          Caption         =   "棋盤(&B)"
+         Begin VB.Menu mnOptionsBoardWood 
+            Caption         =   "櫟木(&W)"
+         End
          Begin VB.Menu mnOptionsBoardGreen 
             Caption         =   "綠色大理石(&G)"
          End
-         Begin VB.Menu mnOptionsBoardRed 
-            Caption         =   "紅色大理石(&R)"
-         End
          Begin VB.Menu mnOptionsBoardWhite 
-            Caption         =   "白色大理石(&W)"
-         End
-         Begin VB.Menu mnOptionsBoardWood 
-            Caption         =   "櫟木(&O)"
+            Caption         =   "白色大理石(&H)"
          End
          Begin VB.Menu mnOptionsBoardSheet 
-            Caption         =   "再生紙(&H)"
+            Caption         =   "再生紙(&S)"
          End
          Begin VB.Menu mnOptionsBoardCanvas 
             Caption         =   "畫布(&C)"
@@ -1686,9 +1683,6 @@ Begin VB.Form frmMainSmall
          Begin VB.Menu mnOptionsBoardClouds 
             Caption         =   "藍天白云(&L)"
          End
-         Begin VB.Menu mnOptionsBoardStone 
-            Caption         =   "石刻(&T)"
-         End
          Begin VB.Menu mnOptionsBoardXQStudio 
             Caption         =   "象棋演播室(&X)"
          End
@@ -1696,34 +1690,25 @@ Begin VB.Form frmMainSmall
             Caption         =   "弈天棋緣(&M)"
          End
          Begin VB.Menu mnOptionsBoardMRSJ 
-            Caption         =   "夢入神机(&J)"
+            Caption         =   "夢入神机(&R)"
          End
          Begin VB.Menu mnOptionsBoardZMBL 
             Caption         =   "縱馬奔流(&Z)"
          End
-         Begin VB.Menu mnOptionsBoardNeuChess 
-            Caption         =   "棋天大圣(&N)"
-         End
          Begin VB.Menu mnOptionsBoardQianHong 
             Caption         =   "淺紅象棋(&Q)"
-         End
-         Begin VB.Menu mnOptionsBoardSimple 
-            Caption         =   "簡單(&S)"
          End
       End
       Begin VB.Menu mnOptionsPieces 
          Caption         =   "棋子(&P)"
-         Begin VB.Menu mnOptionsPiecesNormal 
-            Caption         =   "普通(&N)"
-         End
          Begin VB.Menu mnOptionsPiecesWood 
             Caption         =   "木刻(&W)"
          End
+         Begin VB.Menu mnOptionsPiecesDelicate 
+            Caption         =   "精致(&D)"
+         End
          Begin VB.Menu mnOptionsPiecesPolish 
             Caption         =   "光澤(&P)"
-         End
-         Begin VB.Menu mnOptionsPiecesStone 
-            Caption         =   "石刻(&T)"
          End
          Begin VB.Menu mnOptionsPiecesXQStudio 
             Caption         =   "象棋演播室(&X)"
@@ -1732,13 +1717,10 @@ Begin VB.Form frmMainSmall
             Caption         =   "弈天棋緣(&M)"
          End
          Begin VB.Menu mnOptionsPiecesMRSJ 
-            Caption         =   "夢入神机(&J)"
+            Caption         =   "夢入神机(&R)"
          End
          Begin VB.Menu mnOptionsPiecesZMBL 
             Caption         =   "縱馬奔流(&Z)"
-         End
-         Begin VB.Menu mnOptionsPiecesSimple 
-            Caption         =   "簡單(&S)"
          End
       End
       Begin VB.Menu mnOptionsMusic 
@@ -1838,7 +1820,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2485,27 +2467,21 @@ frmOptions.Show vbModal, Me
 
 End Sub
 
+Private Sub mnOptionsBoardWood_Click()
+
+BoardSettingSmall BOARD_S_WOOD
+
+End Sub
+
 Private Sub mnOptionsBoardGreen_Click()
 
 BoardSettingSmall BOARD_S_GREEN
 
 End Sub
 
-Private Sub mnOptionsBoardRed_Click()
-
-BoardSettingSmall BOARD_S_RED
-
-End Sub
-
 Private Sub mnOptionsBoardWhite_Click()
 
 BoardSettingSmall BOARD_S_WHITE
-
-End Sub
-
-Private Sub mnOptionsBoardWood_Click()
-
-BoardSettingSmall BOARD_S_WOOD
 
 End Sub
 
@@ -2533,12 +2509,6 @@ BoardSettingSmall BOARD_S_CLOUDS
 
 End Sub
 
-Private Sub mnOptionsBoardStone_Click()
-
-BoardSettingSmall BOARD_S_STONE
-
-End Sub
-
 Private Sub mnOptionsBoardXQStudio_Click()
 
 BoardSettingSmall BOARD_S_XQSTUDIO
@@ -2563,27 +2533,9 @@ BoardSettingSmall BOARD_S_ZMBL
 
 End Sub
 
-Private Sub mnOptionsBoardNeuChess_Click()
-
-BoardSettingSmall BOARD_S_NEUCHESS
-
-End Sub
-
 Private Sub mnOptionsBoardQianHong_Click()
 
 BoardSettingSmall BOARD_S_QIANHONG
-
-End Sub
-
-Private Sub mnOptionsBoardSimple_Click()
-
-BoardSettingSmall BOARD_S_SIMPLE
-
-End Sub
-
-Private Sub mnOptionsPiecesNormal_Click()
-
-PiecesSettingSmall PIECES_S_NORMAL
 
 End Sub
 
@@ -2593,15 +2545,15 @@ PiecesSettingSmall PIECES_S_WOOD
 
 End Sub
 
-Private Sub mnOptionsPiecesPolish_Click()
+Private Sub mnOptionsPiecesDelicate_Click()
 
-PiecesSettingSmall PIECES_S_POLISH
+PiecesSettingSmall PIECES_S_DELICATE
 
 End Sub
 
-Private Sub mnOptionsPiecesStone_Click()
+Private Sub mnOptionsPiecesPolish_Click()
 
-PiecesSettingSmall PIECES_S_STONE
+PiecesSettingSmall PIECES_S_POLISH
 
 End Sub
 
@@ -2626,12 +2578,6 @@ End Sub
 Private Sub mnOptionsPiecesZMBL_Click()
 
 PiecesSettingSmall PIECES_S_ZMBL
-
-End Sub
-
-Private Sub mnOptionsPiecesSimple_Click()
-
-PiecesSettingSmall PIECES_S_SIMPLE
 
 End Sub
 

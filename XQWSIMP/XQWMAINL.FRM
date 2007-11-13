@@ -198,7 +198,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1663,14 +1663,17 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnOptionsBoard 
          Caption         =   "棋盘(&B)"
-         Begin VB.Menu mnOptionsBoardWhite 
-            Caption         =   "白色大理石(&W)"
-         End
          Begin VB.Menu mnOptionsBoardWood 
-            Caption         =   "栎木(&O)"
+            Caption         =   "栎木(&W)"
+         End
+         Begin VB.Menu mnOptionsBoardGreen 
+            Caption         =   "绿色大理石(&G)"
+         End
+         Begin VB.Menu mnOptionsBoardWhite 
+            Caption         =   "白色大理石(&H)"
          End
          Begin VB.Menu mnOptionsBoardSheet 
-            Caption         =   "再生纸(&H)"
+            Caption         =   "再生纸(&S)"
          End
          Begin VB.Menu mnOptionsBoardCanvas 
             Caption         =   "画布(&C)"
@@ -1681,23 +1684,17 @@ Begin VB.Form frmMainLarge
          Begin VB.Menu mnOptionsBoardQianHong 
             Caption         =   "浅红象棋(&Q)"
          End
-         Begin VB.Menu mnOptionsBoardSimple 
-            Caption         =   "简单(&S)"
-         End
       End
       Begin VB.Menu mnOptionsPieces 
          Caption         =   "棋子(&P)"
          Begin VB.Menu mnOptionsPiecesWood 
             Caption         =   "木刻(&W)"
          End
+         Begin VB.Menu mnOptionsPiecesDelicate 
+            Caption         =   "精致(&D)"
+         End
          Begin VB.Menu mnOptionsPiecesPolish 
             Caption         =   "光泽(&P)"
-         End
-         Begin VB.Menu mnOptionsPiecesCoin 
-            Caption         =   "金币(&C)"
-         End
-         Begin VB.Menu mnOptionsPiecesSimple 
-            Caption         =   "简单(&S)"
          End
       End
       Begin VB.Menu mnOptionsMusic 
@@ -1797,7 +1794,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2444,15 +2441,21 @@ frmOptions.Show vbModal, Me
 
 End Sub
 
-Private Sub mnOptionsBoardWhite_Click()
-
-BoardSettingLarge BOARD_L_WHITE
-
-End Sub
-
 Private Sub mnOptionsBoardWood_Click()
 
 BoardSettingLarge BOARD_L_WOOD
+
+End Sub
+
+Private Sub mnOptionsBoardGreen_Click()
+
+BoardSettingLarge BOARD_L_GREEN
+
+End Sub
+
+Private Sub mnOptionsBoardWhite_Click()
+
+BoardSettingLarge BOARD_L_WHITE
 
 End Sub
 
@@ -2480,33 +2483,21 @@ BoardSettingLarge BOARD_L_QIANHONG
 
 End Sub
 
-Private Sub mnOptionsBoardSimple_Click()
-
-BoardSettingLarge BOARD_L_SIMPLE
-
-End Sub
-
 Private Sub mnOptionsPiecesWood_Click()
 
 PiecesSettingLarge PIECES_L_WOOD
 
 End Sub
 
-Private Sub mnOptionsPiecesCoin_Click()
+Private Sub mnOptionsPiecesDelicate_Click()
 
-PiecesSettingLarge PIECES_L_COIN
+PiecesSettingLarge PIECES_L_DELICATE
 
 End Sub
 
 Private Sub mnOptionsPiecesPolish_Click()
 
 PiecesSettingLarge PIECES_L_POLISH
-
-End Sub
-
-Private Sub mnOptionsPiecesSimple_Click()
-
-PiecesSettingLarge PIECES_L_SIMPLE
 
 End Sub
 

@@ -84,50 +84,43 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
-' 全局常量——棋盤(小)設置選項
-Public Const BOARD_S_GREEN      As Integer = 0
-Public Const BOARD_S_RED        As Integer = 1
+' 全局常量——棋盘(小)设置选项
+Public Const BOARD_S_WOOD       As Integer = 0
+Public Const BOARD_S_GREEN      As Integer = 1
 Public Const BOARD_S_WHITE      As Integer = 2
-Public Const BOARD_S_WOOD       As Integer = 3
-Public Const BOARD_S_SHEET      As Integer = 4
-Public Const BOARD_S_CANVAS     As Integer = 5
-Public Const BOARD_S_DROPS      As Integer = 6
-Public Const BOARD_S_CLOUDS     As Integer = 7
-Public Const BOARD_S_STONE      As Integer = 8
-Public Const BOARD_S_XQSTUDIO   As Integer = 9
-Public Const BOARD_S_MOVESKY    As Integer = 10
-Public Const BOARD_S_MRSJ       As Integer = 11
-Public Const BOARD_S_ZMBL       As Integer = 12
-Public Const BOARD_S_NEUCHESS   As Integer = 13
-Public Const BOARD_S_QIANHONG   As Integer = 14
-Public Const BOARD_S_SIMPLE     As Integer = 15
-Public Const BOARD_S_MAX        As Integer = 16
-' 全局常量——棋子(小)設置選項
-Public Const PIECES_S_NORMAL    As Integer = 0
-Public Const PIECES_S_WOOD      As Integer = 1
+Public Const BOARD_S_SHEET      As Integer = 3
+Public Const BOARD_S_CANVAS     As Integer = 4
+Public Const BOARD_S_DROPS      As Integer = 5
+Public Const BOARD_S_CLOUDS     As Integer = 6
+Public Const BOARD_S_XQSTUDIO   As Integer = 7
+Public Const BOARD_S_MOVESKY    As Integer = 8
+Public Const BOARD_S_MRSJ       As Integer = 9
+Public Const BOARD_S_ZMBL       As Integer = 10
+Public Const BOARD_S_QIANHONG   As Integer = 11
+Public Const BOARD_S_MAX        As Integer = 12
+' 全局常量——棋子(小)设置选项
+Public Const PIECES_S_WOOD      As Integer = 0
+Public Const PIECES_S_DELICATE  As Integer = 1
 Public Const PIECES_S_POLISH    As Integer = 2
-Public Const PIECES_S_STONE     As Integer = 3
-Public Const PIECES_S_XQSTUDIO  As Integer = 4
-Public Const PIECES_S_MOVESKY   As Integer = 5
-Public Const PIECES_S_MRSJ      As Integer = 6
-Public Const PIECES_S_ZMBL      As Integer = 7
-Public Const PIECES_S_SIMPLE    As Integer = 8
-Public Const PIECES_S_MAX       As Integer = 9
-' 全局常量——棋盤(大)設置選項
-Public Const BOARD_L_WHITE      As Integer = 0
-Public Const BOARD_L_WOOD       As Integer = 1
-Public Const BOARD_L_SHEET      As Integer = 2
-Public Const BOARD_L_CANVAS     As Integer = 3
-Public Const BOARD_L_DROPS      As Integer = 4
-Public Const BOARD_L_QIANHONG   As Integer = 5
-Public Const BOARD_L_SIMPLE     As Integer = 6
+Public Const PIECES_S_XQSTUDIO  As Integer = 3
+Public Const PIECES_S_MOVESKY   As Integer = 4
+Public Const PIECES_S_MRSJ      As Integer = 5
+Public Const PIECES_S_ZMBL      As Integer = 6
+Public Const PIECES_S_MAX       As Integer = 7
+' 全局常量——棋盘(大)设置选项
+Public Const BOARD_L_WOOD       As Integer = 0
+Public Const BOARD_L_GREEN      As Integer = 1
+Public Const BOARD_L_WHITE      As Integer = 2
+Public Const BOARD_L_SHEET      As Integer = 3
+Public Const BOARD_L_CANVAS     As Integer = 4
+Public Const BOARD_L_DROPS      As Integer = 5
+Public Const BOARD_L_QIANHONG   As Integer = 6
 Public Const BOARD_L_MAX        As Integer = 7
-' 全局常量——棋子(大)設置選項
+' 全局常量——棋子(大)设置选项
 Public Const PIECES_L_WOOD      As Integer = 0
-Public Const PIECES_L_POLISH    As Integer = 1
-Public Const PIECES_L_COIN      As Integer = 2
-Public Const PIECES_L_SIMPLE    As Integer = 3
-Public Const PIECES_L_MAX       As Integer = 4
+Public Const PIECES_L_DELICATE  As Integer = 1
+Public Const PIECES_L_POLISH    As Integer = 2
+Public Const PIECES_L_MAX       As Integer = 3
 ' 全局常量——音樂設置選項
 Public Const MUSIC_CLASSIC      As Integer = 0
 Public Const MUSIC_EXPRESS      As Integer = 1
@@ -2566,69 +2559,65 @@ End Sub
 
 ' 以下是圖片和聲音的處理例程
 
-' 設置隱藏棋盤(小)
+' 设置隐藏棋盘(小)
 Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
 frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
-        Choose(nBoardIndex + 1, "GREEN", "RED", "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "NEUCHESS", "QIANHONG", "SIMPLE") + ".GIF")
+        Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", _
+        "CLOUDS", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "QIANHONG") + ".GIF")
 On Error GoTo 0
 
 End Sub
 
-' 設置棋盤(小)
+' 设置棋盘(小)
 Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 
 BoardSettingSmallHide nBoardIndex
 frmMainSmall.imgBoard.Picture = frmHide.imgBoardSmall.Picture
-frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
-frmMainSmall.mnOptionsBoardRed.Checked = (nBoardIndex = BOARD_S_RED)
-frmMainSmall.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_S_WHITE)
 frmMainSmall.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_S_WOOD)
+frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
+frmMainSmall.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_S_WHITE)
 frmMainSmall.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_S_SHEET)
 frmMainSmall.mnOptionsBoardCanvas.Checked = (nBoardIndex = BOARD_S_CANVAS)
 frmMainSmall.mnOptionsBoardDrops.Checked = (nBoardIndex = BOARD_S_DROPS)
 frmMainSmall.mnOptionsBoardClouds.Checked = (nBoardIndex = BOARD_S_CLOUDS)
-frmMainSmall.mnOptionsBoardStone.Checked = (nBoardIndex = BOARD_S_STONE)
 frmMainSmall.mnOptionsBoardXQStudio.Checked = (nBoardIndex = BOARD_S_XQSTUDIO)
 frmMainSmall.mnOptionsBoardMoveSky.Checked = (nBoardIndex = BOARD_S_MOVESKY)
 frmMainSmall.mnOptionsBoardMRSJ.Checked = (nBoardIndex = BOARD_S_MRSJ)
 frmMainSmall.mnOptionsBoardZMBL.Checked = (nBoardIndex = BOARD_S_ZMBL)
-frmMainSmall.mnOptionsBoardNeuChess.Checked = (nBoardIndex = BOARD_S_NEUCHESS)
 frmMainSmall.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_S_QIANHONG)
-frmMainSmall.mnOptionsBoardSimple.Checked = (nBoardIndex = BOARD_S_SIMPLE)
 Options_nBoardS = nBoardIndex
 
 End Sub
 
-' 設置隱藏棋盤(大)
+' 设置隐藏棋盘(大)
 Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
 frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nBoardIndex + 1, "WHITE", "WOOD", "SHEET", "CANVAS", "DROPS", "QIANHONG", "SIMPLE") + ".GIF")
+        Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") + ".GIF")
 On Error GoTo 0
 
 End Sub
 
-' 設置棋盤(大)
+' 设置棋盘(大)
 Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
 
 BoardSettingLargeHide nBoardIndex
 frmMainLarge.imgBoard.Picture = frmHide.imgBoardLarge
-frmMainLarge.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_L_WHITE)
 frmMainLarge.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_L_WOOD)
+frmMainLarge.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_L_GREEN)
+frmMainLarge.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_L_WHITE)
 frmMainLarge.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_L_SHEET)
 frmMainLarge.mnOptionsBoardCanvas.Checked = (nBoardIndex = BOARD_L_CANVAS)
 frmMainLarge.mnOptionsBoardDrops.Checked = (nBoardIndex = BOARD_L_DROPS)
 frmMainLarge.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_L_QIANHONG)
-frmMainLarge.mnOptionsBoardSimple.Checked = (nBoardIndex = BOARD_L_SIMPLE)
 Options_nBoardL = nBoardIndex
 
 End Sub
 
-' 獲得棋子圖片的文件名
+' 获得棋子图片的文件名
 Public Function PieceFileName(ByVal nIndex As Integer) As String
 
 If nIndex >= 15 Then
@@ -2647,11 +2636,11 @@ End If
 
 End Function
 
-' 設置隱藏棋子(小)
+' 设置隐藏棋子(小)
 Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "NORMAL", "WOOD", "POLISH", "STONE", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "SIMPLE") + "\"
+sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
 On Error Resume Next
 For i = 0 To 29
     frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
@@ -2660,7 +2649,7 @@ On Error GoTo 0
 
 End Sub
 
-' 設置棋子(小)
+' 设置棋子(小)
 Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
@@ -2668,26 +2657,24 @@ PiecesSettingSmallHide nPiecesIndex
 For i = 0 To 29
     Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
 Next
-frmMainSmall.mnOptionsPiecesNormal.Checked = (nPiecesIndex = PIECES_S_NORMAL)
 frmMainSmall.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_S_WOOD)
+frmMainSmall.mnOptionsPiecesDelicate.Checked = (nPiecesIndex = PIECES_S_DELICATE)
 frmMainSmall.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_S_POLISH)
-frmMainSmall.mnOptionsPiecesStone.Checked = (nPiecesIndex = PIECES_S_STONE)
 frmMainSmall.mnOptionsPiecesXQStudio.Checked = (nPiecesIndex = PIECES_S_XQSTUDIO)
 frmMainSmall.mnOptionsPiecesMoveSky.Checked = (nPiecesIndex = PIECES_S_MOVESKY)
 frmMainSmall.mnOptionsPiecesMRSJ.Checked = (nPiecesIndex = PIECES_S_MRSJ)
 frmMainSmall.mnOptionsPiecesZMBL.Checked = (nPiecesIndex = PIECES_S_ZMBL)
-frmMainSmall.mnOptionsPiecesSimple.Checked = (nPiecesIndex = PIECES_S_SIMPLE)
 BoardFlush
 LabelFlush
 Options_nPiecesS = nPiecesIndex
 
 End Sub
 
-' 設置隱藏棋子(大)
+' 设置隐藏棋子(大)
 Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "POLISH", "coin", "SIMPLE") + "\"
+sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH") + "\"
 On Error Resume Next
 For i = 0 To 29
     frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
@@ -2696,7 +2683,7 @@ On Error GoTo 0
 
 End Sub
 
-' 設置棋子(大)
+' 设置棋子(大)
 Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
@@ -2705,9 +2692,8 @@ For i = 0 To 29
     Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
 Next
 frmMainLarge.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_L_WOOD)
+frmMainLarge.mnOptionsPiecesDelicate.Checked = (nPiecesIndex = PIECES_L_DELICATE)
 frmMainLarge.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_L_POLISH)
-frmMainLarge.mnOptionsPiecesCoin.Checked = (nPiecesIndex = PIECES_L_COIN)
-frmMainLarge.mnOptionsPiecesSimple.Checked = (nPiecesIndex = PIECES_L_SIMPLE)
 BoardFlush
 LabelFlush
 Options_nPiecesL = nPiecesIndex
@@ -2816,9 +2802,9 @@ Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign",
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
-Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "3"), 0, BOARD_S_MAX - 1)
-Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "1"), 0, PIECES_S_MAX - 1)
-Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "1"), 0, BOARD_L_MAX - 1)
+Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
+Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
+Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)

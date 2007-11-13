@@ -318,7 +318,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   28
       Left            =   5160
-      Picture         =   "HIDEFORM.frx":61C9
+      Picture         =   "HIDEFORM.frx":686B
       Top             =   6480
       Width           =   855
    End
@@ -326,7 +326,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   27
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":66D5
+      Picture         =   "HIDEFORM.frx":7440
       Top             =   6480
       Width           =   855
    End
@@ -334,7 +334,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   26
       Left            =   3480
-      Picture         =   "HIDEFORM.frx":6BA6
+      Picture         =   "HIDEFORM.frx":7FA0
       Top             =   6480
       Width           =   855
    End
@@ -342,7 +342,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   25
       Left            =   2640
-      Picture         =   "HIDEFORM.frx":708A
+      Picture         =   "HIDEFORM.frx":8B30
       Top             =   6480
       Width           =   855
    End
@@ -350,7 +350,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   24
       Left            =   1800
-      Picture         =   "HIDEFORM.frx":755F
+      Picture         =   "HIDEFORM.frx":96F2
       Top             =   6480
       Width           =   855
    End
@@ -358,7 +358,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   23
       Left            =   960
-      Picture         =   "HIDEFORM.frx":7A1A
+      Picture         =   "HIDEFORM.frx":A20E
       Top             =   6480
       Width           =   855
    End
@@ -366,7 +366,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   22
       Left            =   6000
-      Picture         =   "HIDEFORM.frx":7F20
+      Picture         =   "HIDEFORM.frx":ADF7
       Top             =   5640
       Width           =   855
    End
@@ -374,7 +374,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   21
       Left            =   5160
-      Picture         =   "HIDEFORM.frx":83F7
+      Picture         =   "HIDEFORM.frx":B942
       Top             =   5640
       Width           =   855
    End
@@ -382,7 +382,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   20
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":8903
+      Picture         =   "HIDEFORM.frx":C4C8
       Top             =   5640
       Width           =   855
    End
@@ -390,7 +390,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   19
       Left            =   3480
-      Picture         =   "HIDEFORM.frx":8DD4
+      Picture         =   "HIDEFORM.frx":D01E
       Top             =   5640
       Width           =   855
    End
@@ -398,7 +398,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   18
       Left            =   2640
-      Picture         =   "HIDEFORM.frx":92B8
+      Picture         =   "HIDEFORM.frx":DB98
       Top             =   5640
       Width           =   855
    End
@@ -406,7 +406,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   17
       Left            =   1800
-      Picture         =   "HIDEFORM.frx":97A6
+      Picture         =   "HIDEFORM.frx":E700
       Top             =   5640
       Width           =   855
    End
@@ -414,7 +414,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   16
       Left            =   960
-      Picture         =   "HIDEFORM.frx":9C7F
+      Picture         =   "HIDEFORM.frx":F259
       Top             =   5640
       Width           =   855
    End
@@ -422,7 +422,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   15
       Left            =   120
-      Picture         =   "HIDEFORM.frx":A182
+      Picture         =   "HIDEFORM.frx":FDDE
       Top             =   5640
       Width           =   855
    End
@@ -430,7 +430,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   14
       Left            =   6000
-      Picture         =   "HIDEFORM.frx":A559
+      Picture         =   "HIDEFORM.frx":101AF
       Top             =   4800
       Width           =   855
    End
@@ -438,7 +438,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   13
       Left            =   5160
-      Picture         =   "HIDEFORM.frx":A9ED
+      Picture         =   "HIDEFORM.frx":10CDA
       Top             =   4800
       Width           =   855
    End
@@ -446,7 +446,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   12
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":AEB0
+      Picture         =   "HIDEFORM.frx":1185F
       Top             =   4800
       Width           =   855
    End
@@ -454,7 +454,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   11
       Left            =   3480
-      Picture         =   "HIDEFORM.frx":B33E
+      Picture         =   "HIDEFORM.frx":12374
       Top             =   4800
       Width           =   855
    End
@@ -462,7 +462,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   10
       Left            =   2640
-      Picture         =   "HIDEFORM.frx":B7E3
+      Picture         =   "HIDEFORM.frx":12EB4
       Top             =   4800
       Width           =   855
    End
@@ -470,7 +470,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   9
       Left            =   1800
-      Picture         =   "HIDEFORM.frx":BC77
+      Picture         =   "HIDEFORM.frx":13A27
       Top             =   4800
       Width           =   855
    End
@@ -478,7 +478,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   8
       Left            =   960
-      Picture         =   "HIDEFORM.frx":C0EF
+      Picture         =   "HIDEFORM.frx":144F4
       Top             =   4800
       Width           =   855
    End
@@ -486,7 +486,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   7
       Left            =   6000
-      Picture         =   "HIDEFORM.frx":C5B0
+      Picture         =   "HIDEFORM.frx":1508B
       Top             =   3960
       Width           =   855
    End
@@ -494,7 +494,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   6
       Left            =   5160
-      Picture         =   "HIDEFORM.frx":CA41
+      Picture         =   "HIDEFORM.frx":15BC3
       Top             =   3960
       Width           =   855
    End
@@ -502,7 +502,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   5
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":CF04
+      Picture         =   "HIDEFORM.frx":166FB
       Top             =   3960
       Width           =   855
    End
@@ -510,7 +510,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   4
       Left            =   3480
-      Picture         =   "HIDEFORM.frx":D392
+      Picture         =   "HIDEFORM.frx":17201
       Top             =   3960
       Width           =   855
    End
@@ -518,7 +518,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   3
       Left            =   2640
-      Picture         =   "HIDEFORM.frx":D837
+      Picture         =   "HIDEFORM.frx":17D2A
       Top             =   3960
       Width           =   855
    End
@@ -526,7 +526,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   2
       Left            =   1800
-      Picture         =   "HIDEFORM.frx":DCE0
+      Picture         =   "HIDEFORM.frx":18843
       Top             =   3960
       Width           =   855
    End
@@ -534,7 +534,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   1
       Left            =   960
-      Picture         =   "HIDEFORM.frx":E17E
+      Picture         =   "HIDEFORM.frx":1934B
       Top             =   3960
       Width           =   855
    End
@@ -542,7 +542,7 @@ Begin VB.Form frmHide
       Height          =   855
       Index           =   0
       Left            =   120
-      Picture         =   "HIDEFORM.frx":E644
+      Picture         =   "HIDEFORM.frx":19E80
       Top             =   3960
       Width           =   855
    End
@@ -550,7 +550,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   0
       Left            =   120
-      Picture         =   "HIDEFORM.frx":E9D1
+      Picture         =   "HIDEFORM.frx":1A20D
       Top             =   1560
       Width           =   615
    End
@@ -558,7 +558,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   1
       Left            =   720
-      Picture         =   "HIDEFORM.frx":ED44
+      Picture         =   "HIDEFORM.frx":1A580
       Top             =   1560
       Width           =   615
    End
@@ -566,7 +566,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   2
       Left            =   1320
-      Picture         =   "HIDEFORM.frx":F161
+      Picture         =   "HIDEFORM.frx":1ACE8
       Top             =   1560
       Width           =   615
    End
@@ -574,7 +574,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   3
       Left            =   1920
-      Picture         =   "HIDEFORM.frx":F579
+      Picture         =   "HIDEFORM.frx":1B428
       Top             =   1560
       Width           =   615
    End
@@ -582,7 +582,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   4
       Left            =   2520
-      Picture         =   "HIDEFORM.frx":F996
+      Picture         =   "HIDEFORM.frx":1BB8A
       Top             =   1560
       Width           =   615
    End
@@ -590,7 +590,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   5
       Left            =   3120
-      Picture         =   "HIDEFORM.frx":FDAB
+      Picture         =   "HIDEFORM.frx":1C2E8
       Top             =   1560
       Width           =   615
    End
@@ -598,7 +598,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   6
       Left            =   3720
-      Picture         =   "HIDEFORM.frx":101B9
+      Picture         =   "HIDEFORM.frx":1CA3F
       Top             =   1560
       Width           =   615
    End
@@ -606,7 +606,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   7
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":105D7
+      Picture         =   "HIDEFORM.frx":1D1DF
       Top             =   1560
       Width           =   615
    End
@@ -614,7 +614,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   8
       Left            =   720
-      Picture         =   "HIDEFORM.frx":109E2
+      Picture         =   "HIDEFORM.frx":1D931
       Top             =   2160
       Width           =   615
    End
@@ -622,7 +622,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   9
       Left            =   1320
-      Picture         =   "HIDEFORM.frx":10E01
+      Picture         =   "HIDEFORM.frx":1E0DC
       Top             =   2160
       Width           =   615
    End
@@ -630,7 +630,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   10
       Left            =   1920
-      Picture         =   "HIDEFORM.frx":111FF
+      Picture         =   "HIDEFORM.frx":1E7F5
       Top             =   2160
       Width           =   615
    End
@@ -638,7 +638,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   11
       Left            =   2520
-      Picture         =   "HIDEFORM.frx":11620
+      Picture         =   "HIDEFORM.frx":1EFA6
       Top             =   2160
       Width           =   615
    End
@@ -646,7 +646,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   12
       Left            =   3120
-      Picture         =   "HIDEFORM.frx":11A37
+      Picture         =   "HIDEFORM.frx":1F72B
       Top             =   2160
       Width           =   615
    End
@@ -654,7 +654,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   13
       Left            =   3720
-      Picture         =   "HIDEFORM.frx":11E45
+      Picture         =   "HIDEFORM.frx":1FEA6
       Top             =   2160
       Width           =   615
    End
@@ -662,7 +662,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   14
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":1226C
+      Picture         =   "HIDEFORM.frx":20634
       Top             =   2160
       Width           =   615
    End
@@ -670,7 +670,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   15
       Left            =   120
-      Picture         =   "HIDEFORM.frx":1267B
+      Picture         =   "HIDEFORM.frx":20D87
       Top             =   2760
       Width           =   615
    End
@@ -678,7 +678,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   16
       Left            =   720
-      Picture         =   "HIDEFORM.frx":12A37
+      Picture         =   "HIDEFORM.frx":2113C
       Top             =   2760
       Width           =   615
    End
@@ -686,7 +686,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   17
       Left            =   1320
-      Picture         =   "HIDEFORM.frx":12E94
+      Picture         =   "HIDEFORM.frx":218E6
       Top             =   2760
       Width           =   615
    End
@@ -694,7 +694,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   18
       Left            =   1920
-      Picture         =   "HIDEFORM.frx":132EC
+      Picture         =   "HIDEFORM.frx":2206C
       Top             =   2760
       Width           =   615
    End
@@ -702,7 +702,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   19
       Left            =   2520
-      Picture         =   "HIDEFORM.frx":1374A
+      Picture         =   "HIDEFORM.frx":2280C
       Top             =   2760
       Width           =   615
    End
@@ -710,7 +710,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   20
       Left            =   3120
-      Picture         =   "HIDEFORM.frx":13B9E
+      Picture         =   "HIDEFORM.frx":22FB0
       Top             =   2760
       Width           =   615
    End
@@ -718,7 +718,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   21
       Left            =   3720
-      Picture         =   "HIDEFORM.frx":13FE7
+      Picture         =   "HIDEFORM.frx":23749
       Top             =   2760
       Width           =   615
    End
@@ -726,7 +726,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   22
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":14445
+      Picture         =   "HIDEFORM.frx":23F2D
       Top             =   2760
       Width           =   615
    End
@@ -734,7 +734,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   23
       Left            =   720
-      Picture         =   "HIDEFORM.frx":1488F
+      Picture         =   "HIDEFORM.frx":246C6
       Top             =   3360
       Width           =   615
    End
@@ -742,7 +742,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   24
       Left            =   1320
-      Picture         =   "HIDEFORM.frx":14CF0
+      Picture         =   "HIDEFORM.frx":24EB5
       Top             =   3360
       Width           =   615
    End
@@ -750,7 +750,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   25
       Left            =   1920
-      Picture         =   "HIDEFORM.frx":1512B
+      Picture         =   "HIDEFORM.frx":25612
       Top             =   3360
       Width           =   615
    End
@@ -758,7 +758,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   26
       Left            =   2520
-      Picture         =   "HIDEFORM.frx":1558C
+      Picture         =   "HIDEFORM.frx":25E08
       Top             =   3360
       Width           =   615
    End
@@ -766,7 +766,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   27
       Left            =   3120
-      Picture         =   "HIDEFORM.frx":159E0
+      Picture         =   "HIDEFORM.frx":265D0
       Top             =   3360
       Width           =   615
    End
@@ -774,7 +774,7 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   28
       Left            =   3720
-      Picture         =   "HIDEFORM.frx":15E2D
+      Picture         =   "HIDEFORM.frx":26D8F
       Top             =   3360
       Width           =   615
    End
@@ -782,63 +782,63 @@ Begin VB.Form frmHide
       Height          =   615
       Index           =   29
       Left            =   4320
-      Picture         =   "HIDEFORM.frx":16293
+      Picture         =   "HIDEFORM.frx":27562
       Top             =   3360
       Width           =   615
    End
    Begin VB.Image imgEngineBlackLarge 
       Height          =   855
       Left            =   960
-      Picture         =   "HIDEFORM.frx":166E2
+      Picture         =   "HIDEFORM.frx":27CF6
       Top             =   120
       Width           =   855
    End
    Begin VB.Image imgEngineRedLarge 
       Height          =   855
       Left            =   120
-      Picture         =   "HIDEFORM.frx":16BF2
+      Picture         =   "HIDEFORM.frx":28206
       Top             =   120
       Width           =   855
    End
    Begin VB.Image imgEngineBlack 
       Height          =   615
       Left            =   2400
-      Picture         =   "HIDEFORM.frx":17102
+      Picture         =   "HIDEFORM.frx":28716
       Top             =   120
       Width           =   615
    End
    Begin VB.Image imgEngineRed 
       Height          =   615
       Left            =   1800
-      Picture         =   "HIDEFORM.frx":1755E
+      Picture         =   "HIDEFORM.frx":28B72
       Top             =   120
       Width           =   615
    End
    Begin VB.Image imgFormRed 
       Height          =   480
       Left            =   3840
-      Picture         =   "HIDEFORM.frx":179BA
+      Picture         =   "HIDEFORM.frx":28FCE
       Top             =   960
       Width           =   480
    End
    Begin VB.Image imgFormBlack 
       Height          =   480
       Left            =   4440
-      Picture         =   "HIDEFORM.frx":17CC4
+      Picture         =   "HIDEFORM.frx":292D8
       Top             =   960
       Width           =   480
    End
    Begin VB.Image imgBoardSmall 
       Height          =   6255
       Left            =   120
-      Picture         =   "HIDEFORM.frx":17FCE
+      Picture         =   "HIDEFORM.frx":295E2
       Top             =   120
       Width           =   5655
    End
    Begin VB.Image imgBoardLarge 
       Height          =   8655
       Left            =   120
-      Picture         =   "HIDEFORM.frx":1A093
+      Picture         =   "HIDEFORM.frx":3B9CF
       Top             =   120
       Width           =   7815
    End
@@ -854,4 +854,3 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
