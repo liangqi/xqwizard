@@ -198,7 +198,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -2315,6 +2315,8 @@ Private Sub mnEngineUnLoad_Click()
 EngineLoaded False
 Engine_szFile = ""
 CloseEngine
+Engine_szName = ""
+SetTitle
 
 End Sub
 

@@ -2385,6 +2385,7 @@ If bInfo Then
     End If
 End If
 EngineLoaded bLoaded
+SetTitle
 
 End Sub
 
@@ -2901,6 +2902,7 @@ sz = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "
 If UCase(Right(sz, 4)) = ".PGN" Then
     sz = Left(sz, Len(sz) - 4)
 End If
+sz = IIf(sz = "", Engine_szName, sz)
 App_frmMain.Caption = IIf(sz = "", "", sz + " - ") + IIf(App_bPromotion, "³¬¼‰ÏóÆåÎ×ŽŸ", "ÏóÆåÎ×ŽŸ")
 
 End Sub

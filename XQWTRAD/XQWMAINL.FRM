@@ -2314,6 +2314,8 @@ Private Sub mnEngineUnLoad_Click()
 EngineLoaded False
 Engine_szFile = ""
 CloseEngine
+Engine_szName = ""
+SetTitle
 
 End Sub
 
