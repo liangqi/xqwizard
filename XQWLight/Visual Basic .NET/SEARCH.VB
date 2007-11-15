@@ -1,7 +1,7 @@
 ' SEARCH.VB - Source Code for XiangQi Wizard Light, Part II
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+' Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -232,42 +232,45 @@ Module Search
         Dim mv As Integer, mvHash As Integer, mvBest As Integer, nHashFlag As Integer, nNewDepth As Integer
         Dim bInCheck As Boolean
         Dim sort As SortStruct
-        ' 1. 叶子结点处调用静态搜索
-        If nDepth <= 0 Then
-            Return SearchQuiesc(vlAlpha, vlBeta)
-        End If
-        Search_nAllNodes += 1
-        ' 2. 杀棋步数裁剪
-        vl = Search_pos.nDistance - MATE_VALUE
-        If vl >= vlBeta Then
-            Return vl
-        End If
-        ' 3. 重复裁剪
-        vlRep = Search_pos.RepStatus()
-        If vlRep > 0 Then
-            Return Search_pos.RepValue(vlRep)
-        End If
-        ' 4. 置换裁剪
-        vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash)
-        If vl <> UNKNOWN_VALUE Then
-            Return vl
-        End If
-        ' 5. 达到极限深度就返回
-        If Search_pos.nDistance = LIMIT_DEPTH Then
-            Return Search_pos.Evaluate()
-        End If
-        ' 6. 尝试空着裁
-        If Search_pos.sdPlayer = 0 Then
-            vlSelfSide = Search_pos.vlWhite
-        Else
-            vlSelfSide = Search_pos.vlBlack
-        End If
-        If Not bNoNull AndAlso Not Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck AndAlso vlSelfSide > NULL_OKAY_MARGIN Then
-            Search_pos.NullMove()
-            vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL)
-            Search_pos.UndoNullMove()
-            If vl >= vlBeta AndAlso (vlSelfSide > NULL_SAFE_MARGIN OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
+        mvHash = 0
+        If Search_pos.nDistance > 0 Then
+            ' 1. 叶子结点处调用静态搜索
+            If nDepth <= 0 Then
+                Return SearchQuiesc(vlAlpha, vlBeta)
+            End If
+            Search_nAllNodes += 1
+            ' 2. 杀棋步数裁剪
+            vl = Search_pos.nDistance - MATE_VALUE
+            If vl >= vlBeta Then
                 Return vl
+            End If
+            ' 3. 重复裁剪
+            vlRep = Search_pos.RepStatus()
+            If vlRep > 0 Then
+                Return Search_pos.RepValue(vlRep)
+            End If
+            ' 4. 置换裁剪
+            vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash)
+            If vl <> UNKNOWN_VALUE Then
+                Return vl
+            End If
+            ' 5. 达到极限深度就返回
+            If Search_pos.nDistance = LIMIT_DEPTH Then
+                Return Search_pos.Evaluate()
+            End If
+            ' 6. 尝试空着裁
+            If Search_pos.sdPlayer = 0 Then
+                vlSelfSide = Search_pos.vlWhite
+            Else
+                vlSelfSide = Search_pos.vlBlack
+            End If
+            If Not bNoNull AndAlso Not Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck AndAlso vlSelfSide > NULL_OKAY_MARGIN Then
+                Search_pos.NullMove()
+                vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL)
+                Search_pos.UndoNullMove()
+                If vl >= vlBeta AndAlso (vlSelfSide > NULL_SAFE_MARGIN OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
+                    Return vl
+                End If
             End If
         End If
         ' 7. 初始化
@@ -380,7 +383,7 @@ Module Search
         ' 7. 迭代加深
         nTimer = Now.Ticks
         For i = 1 To LIMIT_DEPTH
-            vl = SearchFull(-MATE_VALUE, MATE_VALUE, i, NO_NULL)
+            vl = SearchFull(-MATE_VALUE, MATE_VALUE, i)
             If vl > WIN_VALUE Or vl < -WIN_VALUE Then
                 Exit For
             End If

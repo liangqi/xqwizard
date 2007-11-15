@@ -2,7 +2,7 @@
 Search.java - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0 Beta2, Last Modified: Sep. 2007
+Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -254,29 +254,35 @@ public class Search {
 	}
 
 	public int searchFull(int vlAlpha, int vlBeta, int depth, boolean noNull) {
-		if (depth <= 0) {
-			return searchQuiesc(vlAlpha, vlBeta);
-		}
-		allNodes ++;
-		int vl = pos.mateValue();
-		if (vl >= vlBeta) {
-			return vl;
-		}
-		int vlRep = pos.repStatus();
-		if (vlRep > 0) {
-			return pos.repValue(vlRep);
-		}
-		int[] mvHash = new int[1];
-		vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
-		if (vl != UNKNOWN_VALUE) {
-			return vl;
-		}
-		if (!noNull && !pos.inCheck() && pos.nullOkay()) {
-			pos.nullMove();
-			vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
-			pos.undoNullMove();
-			if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
+		int vl;
+		int[] mvHash = new int[] {0};
+		if (pos.distance > 0) {
+			if (depth <= 0) {
+				return searchQuiesc(vlAlpha, vlBeta);
+			}
+			allNodes ++;
+			vl = pos.mateValue();
+			if (vl >= vlBeta) {
 				return vl;
+			}
+			int vlRep = pos.repStatus();
+			if (vlRep > 0) {
+				return pos.repValue(vlRep);
+			}
+			vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
+			if (vl != UNKNOWN_VALUE) {
+				return vl;
+			}
+			if (pos.distance == LIMIT_DEPTH) {
+				return pos.evaluate();
+			}
+			if (!noNull && !pos.inCheck() && pos.nullOkay()) {
+				pos.nullMove();
+				vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
+				pos.undoNullMove();
+				if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
+					return vl;
+				}
 			}
 		}
 		int hashFlag = HASH_ALPHA;
@@ -371,7 +377,7 @@ public class Search {
 		allNodes = 0;
 		long timer = System.currentTimeMillis();
 		for (int i = 1; i <= LIMIT_DEPTH; i ++) {
-			vl = searchNoNull(-MATE_VALUE, MATE_VALUE, i);
+			vl = searchFull(-MATE_VALUE, MATE_VALUE, i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}

@@ -2,7 +2,7 @@
 Position.java - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.0 Beta3, Last Modified: Oct. 2007
+Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -26,8 +26,8 @@ import java.util.Random;
 public class Position {
 	public static final int MATE_VALUE = 1000;
 	public static final int WIN_VALUE = MATE_VALUE - 100;
-	public static final int NULL_SAFE_MARGIN = 300;
-	public static final int NULL_OKAY_MARGIN = 120;
+	public static final int NULL_SAFE_MARGIN = 400;
+	public static final int NULL_OKAY_MARGIN = 200;
 	public static final int CONTEMPT_VALUE = 20;
 	public static final int ADVANCED_VALUE = 3;
 

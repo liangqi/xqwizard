@@ -427,35 +427,39 @@ Public Class MainForm
         Dim sqLast As Integer
         sqLast = App_sqCursor
         Select Case e.KeyCode
-            Case Keys.Enter
+            Case Keys.NumPad1
+                MoveUp()
+                MoveLeft()
+                DrawCursor(sqLast)
+            Case Keys.NumPad2, Keys.Up
+                MoveUp()
+                DrawCursor(sqLast)
+            Case Keys.NumPad3
+                MoveUp()
+                MoveRight()
+                DrawCursor(sqLast)
+            Case Keys.NumPad4, Keys.Left
+                MoveLeft()
+                DrawCursor(sqLast)
+            Case Keys.NumPad5, Keys.Enter
                 If App_bFlipped Then
                     ClickSquare(254 - App_sqCursor)
                 Else
                     ClickSquare(App_sqCursor)
                 End If
-            Case Keys.Left
-                App_sqCursor -= 1
-                If Not IN_BOARD(App_sqCursor) Then
-                    App_sqCursor += 9
-                End If
+            Case Keys.NumPad6, Keys.Right
+                MoveRight()
                 DrawCursor(sqLast)
-            Case Keys.Up
-                App_sqCursor -= 16
-                If Not IN_BOARD(App_sqCursor) Then
-                    App_sqCursor += 160
-                End If
+            Case Keys.NumPad7
+                MoveDown()
+                MoveLeft()
                 DrawCursor(sqLast)
-            Case Keys.Right
-                App_sqCursor += 1
-                If Not IN_BOARD(App_sqCursor) Then
-                    App_sqCursor -= 9
-                End If
+            Case Keys.NumPad8, Keys.Down
+                MoveDown()
                 DrawCursor(sqLast)
-            Case Keys.Down
-                App_sqCursor += 16
-                If Not IN_BOARD(App_sqCursor) Then
-                    App_sqCursor -= 160
-                End If
+            Case Keys.NumPad9
+                MoveDown()
+                MoveRight()
                 DrawCursor(sqLast)
         End Select
     End Sub
@@ -486,6 +490,34 @@ Public Class MainForm
             End If
         End If
         bClicking = False
+    End Sub
+
+    Private Sub MoveUp()
+        App_sqCursor -= 16
+        If Not IN_BOARD(App_sqCursor) Then
+            App_sqCursor += 160
+        End If
+    End Sub
+
+    Private Sub MoveDown()
+        App_sqCursor += 16
+        If Not IN_BOARD(App_sqCursor) Then
+            App_sqCursor -= 160
+        End If
+    End Sub
+
+    Private Sub MoveLeft()
+        App_sqCursor -= 1
+        If Not IN_BOARD(App_sqCursor) Then
+            App_sqCursor += 9
+        End If
+    End Sub
+
+    Private Sub MoveRight()
+        App_sqCursor += 1
+        If Not IN_BOARD(App_sqCursor) Then
+            App_sqCursor -= 9
+        End If
     End Sub
 
     Private Sub DrawCursor(ByVal sqLast As Integer)
