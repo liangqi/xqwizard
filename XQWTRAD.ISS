@@ -504,6 +504,7 @@ Source: "HELP\OPENING.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\ENGINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\GUI.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\SUPPORT.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
+Source: "HELP\PROMOTE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\LOGO.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\XQWIZARD.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\RBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion

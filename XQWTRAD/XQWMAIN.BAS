@@ -197,7 +197,7 @@ Public Options_szUser           As String   ' 人机對弈用戶
 Public Gui_nFunnyIndex          As Integer  ' “趣味象棋”的条目序号
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
-Public Gui_szTips(0 To TIP_NUM) As String   ' “日積月累”的條目
+Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
@@ -2736,14 +2736,6 @@ End Sub
 ' 加載“日積月累”
 Public Sub LoadTips()
 
-Gui_szTips(0) = "　　中國象棋在增加了仕(士)相(象)升變成兵(卒)的規則後，比賽將更富有趣味性和觀賞性。這個規則有以下几個要點：" + vbCrLf + _
-        "　　一、仕(士)相(象)只能在原來的位置，或走到另一個仕(士)相(象)的原來位置升變；" + vbCrLf + _
-        "　　二、仕(士)相(象)升變成兵(卒)需要花一步棋，變成的兵(卒)占据原來仕(士)相(象)的位置，下一步棋才能走；" + vbCrLf + _
-        "　　三、升變是不可逆的，即兵(卒)不能變回仕(士)相(象)；" + vbCrLf + _
-        "　　四、升變後的兵(卒)同其他兵(卒)的走法一樣，過河前每步只能前行一格，過河後才能橫走；" + vbCrLf + _
-        "　　五、只有本方兵(卒)少于五個時，仕(士)相(象)才能升變成兵(卒)。" + vbCrLf + _
-        "　　超級象棋巫師的升變走法非常簡單，選中可以升變的仕(士)或相(象)，點擊“升變”按鈕。" + vbCrLf + _
-        "　　關于仕(士)相(象)升變成兵(卒)的規則，請參閱 http://www.elephantbase.net/other/promotion.htm"
 Gui_szTips(1) = "　　象棋巫師是一款功能強大的電腦對弈和棋譜編輯軟件，具有方便的人机對戰、棋譜記錄、欣賞、管理棋局的功能，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
         "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.elephantbase.net/league.htm ，下載到其他各具特色的引擎。"
@@ -2812,7 +2804,7 @@ Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
 Gui_nFunnyIndex = Str2Int(GetSetting("XQWizard", "Gui", "FunnyIndex", "1"), 1, 240)
-Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
+Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
@@ -2866,7 +2858,7 @@ SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "FunnyIndex", LTrim(Str(Gui_nFunnyIndex))
-SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
+SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate

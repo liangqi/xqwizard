@@ -107,7 +107,7 @@ Attribute VB_Exposed = False
 ' HOWTO.FRM - Source Code for XiangQi Wizard, Part VIII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -126,13 +126,26 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private bIntro As Boolean
+Private Const cszPromotion As String = "　　中國象棋在增加了仕(士)相(象)升變成兵(卒)的規則後，比賽將更富有趣味性和觀賞性。這個規則有以下几個要點：" + vbCrLf + _
+        "　　一、仕(士)相(象)只能在原來的位置，或走到另一個仕(士)相(象)的原來位置升變；" + vbCrLf + _
+        "　　二、仕(士)相(象)升變成兵(卒)需要花一步棋，變成的兵(卒)占据原來仕(士)相(象)的位置，下一步棋才能走；" + vbCrLf + _
+        "　　三、升變是不可逆的，即兵(卒)不能變回仕(士)相(象)；" + vbCrLf + _
+        "　　四、升變後的兵(卒)同其他兵(卒)的走法一樣，過河前每步只能前行一格，過河後才能橫走；" + vbCrLf + _
+        "　　五、只有本方兵(卒)少于五個時，仕(士)相(象)才能升變成兵(卒)。" + vbCrLf + vbCrLf + _
+        "　　超級象棋巫師的升變走法非常簡單，選中可以升變的仕(士)或相(象)，點擊“升變”按鈕。" + vbCrLf + _
+        "　　如果您不喜歡這個新規則，請運行“象棋巫師”而不是“超級象棋巫師”，不帶“超級”的“象棋巫師”將不會出現任何非傳統的象棋走法。" + vbCrLf + _
+        "　　《象棋百科全書》网站推廣仕(士)相(象)升變成兵(卒)的規則，僅僅是為增加中國象棋的趣味性和觀賞性所做的嘗試性的探索。" + vbCrLf + _
+        "　　您是否需要了解仕(士)相(象)升變成兵(卒)的規則的來龍去脈？"
 
 Private Sub Form_Load()
 
-bIntro = App_bPromotion
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
-txtTips.Text = Gui_szTips(IIf(bIntro, 0, Gui_nTipIndex))
+txtTips.Text = Gui_szTips(Gui_nTipIndex)
+If App_bPromotion Then
+    If MsgBox(cszPromotion, vbQuestion + vbYesNo, "關于仕(士)相(象)升變成兵(卒)的規則") = vbYes Then
+        ShellExecuteA 0, vbNullString, App_szPath + "HELP\PROMOTE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
+    End If
+End If
 
 End Sub
 
@@ -144,13 +157,9 @@ End Sub
 
 Private Sub btnPrev_Click()
 
-If bIntro Then
-    bIntro = False
-Else
-    Gui_nTipIndex = Gui_nTipIndex - 1
-    If Gui_nTipIndex < 1 Then
-        Gui_nTipIndex = TIP_NUM
-    End If
+Gui_nTipIndex = Gui_nTipIndex - 1
+If Gui_nTipIndex < 1 Then
+    Gui_nTipIndex = TIP_NUM
 End If
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 
@@ -158,13 +167,9 @@ End Sub
 
 Private Sub btnNext_Click()
 
-If bIntro Then
-    bIntro = False
-Else
-    Gui_nTipIndex = Gui_nTipIndex + 1
-    If Gui_nTipIndex > TIP_NUM Then
-        Gui_nTipIndex = 1
-    End If
+Gui_nTipIndex = Gui_nTipIndex + 1
+If Gui_nTipIndex > TIP_NUM Then
+    Gui_nTipIndex = 1
 End If
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 
