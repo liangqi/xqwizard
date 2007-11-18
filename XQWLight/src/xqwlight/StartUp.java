@@ -2,7 +2,7 @@
 StartUp.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 1.1, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -21,8 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
@@ -30,29 +28,15 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.Ticker;
 
 public class StartUp extends Form implements CommandListener {
-	private static Alert altAbout;
-
-	static {
-		try {
-			Image image = Image.createImage("/images/xqwlight.png");
-			altAbout = new Alert("关于\"象棋小巫师\"", "象棋小巫师 1.02 \r\n象棋百科全书 荣誉出品 \r\n\r\n" +
-	                "欢迎登录 www.elephantbase.net \r\n免费下载PC版 象棋巫师", image, AlertType.INFO);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		altAbout.setTimeout(Alert.FOREVER);
-	}
-
 	private XQWLight midlet;
-	private ChoiceGroup cgToMove;
-	private ChoiceGroup cgHandicap, cgLevel;
-	private Command cmdAbout, cmdExit, cmdStart;
+	private ChoiceGroup cgToMove, cgHandicap, cgLevel;
+	private Command cmdStart, cmdExit;
 
 	public StartUp(XQWLight midlet) {
-		super("开始 - 象棋小巫师");
+		super("象棋小巫师 1.1");
 		this.midlet = midlet;
 
 		append("谁先走：");
@@ -62,7 +46,7 @@ public class StartUp extends Form implements CommandListener {
 		append(cgToMove);
 
 		append("先走让子：");
-		cgHandicap = new ChoiceGroup(null, Choice.EXCLUSIVE);
+		cgHandicap = new ChoiceGroup(null, Choice.POPUP);
 		cgHandicap.append("不让子", null);
 		cgHandicap.append("让单马", null);
 		cgHandicap.append("让双马", null);
@@ -70,40 +54,37 @@ public class StartUp extends Form implements CommandListener {
 		append(cgHandicap);
 
 		append("电脑水平：");
-		cgLevel = new ChoiceGroup(null, Choice.EXCLUSIVE);
+		cgLevel = new ChoiceGroup(null, Choice.POPUP);
 		cgLevel.append("入门", null);
 		cgLevel.append("业余", null);
 		cgLevel.append("专业", null);
 		append(cgLevel);
 
-		cmdAbout = new Command("关于\"象棋小巫师\"", Command.ITEM, 1);
-		cmdExit = new Command("退出", Command.ITEM, 1);
-		cmdStart = new Command("开始", Command.BACK, 1);
+		cmdStart = new Command("开始", Command.OK, 1);
+		cmdExit = new Command("退出", Command.BACK, 1);
 
-		addCommand(cmdAbout);
-		addCommand(cmdExit);
 		addCommand(cmdStart);
+		addCommand(cmdExit);
 
 		cgLevel.setSelectedIndex(0, true);
 		cgToMove.setSelectedIndex(0, true);
 		cgHandicap.setSelectedIndex(0, true);
 
+		setTicker(new Ticker("欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师"));
 		setCommandListener(this);
 	}
 
 	public void commandAction(Command c, Displayable d) {
 		if (false) {
 			// Code Style
-		} else if (c == cmdAbout) {
-			Display.getDisplay(midlet).setCurrent(altAbout);
-		} else if (c == cmdExit) {
-			midlet.notifyDestroyed();
 		} else if (c == cmdStart) {
 			midlet.flipped = cgToMove.isSelected(1);
 			midlet.handicap = cgHandicap.getSelectedIndex();
 			midlet.level = cgLevel.getSelectedIndex();
 			midlet.mainForm.reset();
 			Display.getDisplay(midlet).setCurrent(midlet.mainForm);
+		} else if (c == cmdExit) {
+			midlet.notifyDestroyed();
 		}
 	}
 }

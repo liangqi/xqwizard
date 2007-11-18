@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.01, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 1.1, Last Modified: Nov. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -36,9 +36,8 @@ public class MainForm extends Canvas implements CommandListener {
 	private static final int PHASE_THINKING = 2;
 	private static final int PHASE_EXITTING = 3;
 
-	private static Image imgBackground, imgBoard, imgThinking;
-	private static Image imgSelected, imgSelected2, imgCursor, imgCursor2;
-	private static Image[] imgPieces = new Image[24];
+	private static Image imgBackground, imgThinking;
+	private Image imgBoard;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
 		null, "rk", "ra", "rb", "rn", "rr", "rc", "rp",
@@ -52,19 +51,7 @@ public class MainForm extends Canvas implements CommandListener {
 	static {
 		try {
 			imgBackground = Image.createImage("/images/background.png");
-			imgBoard = Image.createImage("/images/board.png");
 			imgThinking = Image.createImage("/images/thinking.png");
-			imgSelected = Image.createImage("/images/selected.png");
-			imgSelected2 = Image.createImage("/images/selected2.png");
-			imgCursor = Image.createImage("/images/cursor.png");
-			imgCursor2 = Image.createImage("/images/cursor2.png");
-			for (int pc = 0; pc < 24; pc ++) {
-				if (IMAGE_NAME[pc] == null) {
-					imgPieces[pc] = null;
-				} else {
-					imgPieces[pc] = Image.createImage("/images/" + IMAGE_NAME[pc] + ".png");
-				}
-			}
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -74,32 +61,73 @@ public class MainForm extends Canvas implements CommandListener {
 
 	private XQWLight midlet;
 	private Search search;
+	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
+	private Image[] imgPieces = new Image[24];
+	private int squareSize, squareShift;
+	private int width, height, left, right, top, bottom;
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
 	private String message;
-	private int width, height, left, top;
 	private int phase;
-	private Command cmdBack;
+	private Command cmdRetract, cmdBack;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
 
+		setFullScreenMode(true);
+		width = getWidth();
+		height = getHeight();
+		String imagePath = "/images/";
+		if (width >= 320 && height >= 356) {
+			imagePath += "large/";
+			squareSize = 36;
+			squareShift = 2;
+		} else if (width >= 232 && height >= 258) {
+			imagePath += "medium/";
+			squareSize = 26;
+			squareShift = 1;
+		} else {
+			imagePath += "small/";
+			squareSize = 18;
+			squareShift = 1;
+		}
+		try {
+			imgBoard = Image.createImage(imagePath + "board.png");
+			imgSelected = Image.createImage(imagePath + "selected.png");
+			imgSelected2 = Image.createImage(imagePath + "selected2.png");
+			imgCursor = Image.createImage(imagePath + "cursor.png");
+			imgCursor2 = Image.createImage(imagePath + "cursor2.png");
+			for (int pc = 0; pc < 24; pc ++) {
+				if (IMAGE_NAME[pc] == null) {
+					imgPieces[pc] = null;
+				} else {
+					imgPieces[pc] = Image.createImage(imagePath + IMAGE_NAME[pc] + ".png");
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		int boardWidth = imgBoard.getWidth();
+		int boardHeight = imgBoard.getHeight();
+		left = (width - boardWidth) / 2;
+		top = (height - boardHeight) / 2;
+		right = left + boardWidth - 32;
+		bottom = top + boardHeight - 32;
+
+		// cmdRetract = new Command("»ÚÆå", Command.OK, 1);
+		// addCommand(cmdRetract);
 		cmdBack = new Command("·µ»Ø", Command.BACK, 1);
 		addCommand(cmdBack);
-
 		setCommandListener(this);
 	}
 
 	public void reset() {
+		setFullScreenMode(true);
 		search.pos.loadBoard(midlet.handicap);
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
-		width = getWidth();
-		height = getHeight();
-		left = (width - 144) / 2;
-		top = (height - 160) / 2;
 		phase = PHASE_STARTING;
 	}
 
@@ -107,10 +135,10 @@ public class MainForm extends Canvas implements CommandListener {
 		if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
 			if (false) {
 				// Code Style
+			} else if (c == cmdRetract) {
+				// Not Available, Never Occurs
 			} else if (c == cmdBack) {
 				Display.getDisplay(midlet).setCurrent(midlet.startUp);
-			// } else if (c == cmdExit) {
-				// midlet.notifyDestroyed();
 			}
 		}
 	}
@@ -133,7 +161,7 @@ public class MainForm extends Canvas implements CommandListener {
 			if (Position.IN_BOARD(sq)) {
 				int pc = search.pos.squares[sq];
 				if (pc > 0) {
-					drawSquare(g, imgPieces[pc], sq);
+					drawPiece(g, imgPieces[pc], sq);
 				}
 			}
 		}
@@ -142,28 +170,28 @@ public class MainForm extends Canvas implements CommandListener {
 		if (mvLast > 0) {
 			sqSrc = Position.SRC(mvLast);
 			sqDst = Position.DST(mvLast);
-			drawSquare(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
-			drawSquare(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
+			drawPiece(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
+			drawPiece(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
 		} else if (sqSelected > 0) {
-			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
+			drawPiece(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
 		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
-			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
+			drawCursor(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
 		} else {
-			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
+			drawCursor(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
 		}
 		if (phase == PHASE_THINKING) {
 			int x, y;
 			if (midlet.flipped) {
-				x = (Position.FILE_X(sqDst) < 8 ? left : left + 112);
-				y = (Position.RANK_Y(sqDst) < 8 ? top : top + 128); 
+				x = (Position.FILE_X(sqDst) < 8 ? left : right);
+				y = (Position.RANK_Y(sqDst) < 8 ? top : bottom); 
 			} else {
-				x = (Position.FILE_X(sqDst) < 8 ? left + 112: left);
-				y = (Position.RANK_Y(sqDst) < 8 ? top + 128: top); 
+				x = (Position.FILE_X(sqDst) < 8 ? right: left);
+				y = (Position.RANK_Y(sqDst) < 8 ? bottom: top); 
 			}
 			g.drawImage(imgThinking, x, y, Graphics.LEFT + Graphics.TOP);
 		} else if (phase == PHASE_EXITTING) {
@@ -251,10 +279,19 @@ public class MainForm extends Canvas implements CommandListener {
 		serviceRepaints();
     }
 
-	private void drawSquare(Graphics g, Image image, int sq) {
+	private void drawCursor(Graphics g, Image image, int sq) {
+		drawSquare(g, image, sq, true);
+	}
+
+	private void drawPiece(Graphics g, Image image, int sq) {
+		drawSquare(g, image, sq, false);
+	}
+
+	private void drawSquare(Graphics g, Image image, int sq, boolean cursor) {
+		int shift = (cursor ? 0 : squareShift);
 		int sqLocal = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
-		int sqX = left + (Position.FILE_X(sqLocal) - 3) * 16;
-		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * 16;
+		int sqX = left + (Position.FILE_X(sqLocal) - 3) * squareSize + shift;
+		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * squareSize + shift;
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
