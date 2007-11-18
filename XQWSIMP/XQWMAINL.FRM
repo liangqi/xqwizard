@@ -1842,6 +1842,10 @@ If Options_bAutoSave Then
     App_szFileName = App_szPath + "AUTOSAVE.PGN"
     WriteFile
 End If
+If Not App_bPrevInstance Then
+    Gui_nLeft = Left
+    Gui_nTop = Top
+End If
 
 End Sub
 

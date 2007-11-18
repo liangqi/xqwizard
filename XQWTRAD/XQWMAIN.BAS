@@ -168,6 +168,7 @@ Public App_sqSelected           As Integer  ' 鼠標選中的棋子
 Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 紅黑輪流標志
 Public App_bPromotion           As Boolean  ' 是否允许升变
+Public App_bPrevInstance        As Boolean  ' 是否再一次启动
 ' 全局變量——選項
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 聲音
@@ -194,6 +195,8 @@ Public Options_bTopMost         As Integer  ' 总在最前面
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
+Public Gui_nLeft                As Long     ' 窗口坐标
+Public Gui_nTop                 As Long     ' 窗口坐标
 Public Gui_nFunnyIndex          As Integer  ' “趣味象棋”的条目序号
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
@@ -2709,8 +2712,10 @@ If nMusicIndex < MUSIC_NONE Then
     frmHide.mci.FileName = App_szPath + "MUSICS\" + _
             Choose(nMusicIndex + 1, "CLASSIC", "EXPRESS", "FUNNY", "WALTZ", _
             "MOZART1", "MOZART4", "FLIGHT", "ANITRA", "HUMOUR", "JINGLE", "PAL", "CMUSIC") + ".MID"
-    frmHide.mci.Command = "Open"
-    frmHide.mci.Command = "Play"
+    If Not App_bPrevInstance Then
+        frmHide.mci.Command = "Open"
+        frmHide.mci.Command = "Play"
+    End If
 End If
 App_frmMain.mnOptionsMusicClassic.Checked = (nMusicIndex = MUSIC_CLASSIC)
 App_frmMain.mnOptionsMusicExpress.Checked = (nMusicIndex = MUSIC_EXPRESS)
@@ -2803,6 +2808,8 @@ Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUS
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
+Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
+Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nFunnyIndex = Str2Int(GetSetting("XQWizard", "Gui", "FunnyIndex", "1"), 1, 240)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
@@ -2857,6 +2864,8 @@ SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
+SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
+SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
 SaveSetting "XQWizard", "Gui", "FunnyIndex", LTrim(Str(Gui_nFunnyIndex))
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
@@ -3073,6 +3082,7 @@ Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
 Dim i As Integer, sz As String
 
 ' 彈出啟動畫面
+App_bPrevInstance = App.PrevInstance
 frmStartUp.Show
 frmStartUp.Width = frmStartUp.imgStartUp.Width
 frmStartUp.Height = frmStartUp.imgStartUp.Height
@@ -3185,6 +3195,10 @@ If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
 ' 显示并调整主窗口
+If Not App_bPrevInstance Then
+    App_frmMain.Left = Gui_nLeft
+    App_frmMain.Top = Gui_nTop
+End If
 App_frmMain.Show
 App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
 App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
@@ -3265,7 +3279,7 @@ Do While App_bRunning
             End If
             nEventIndex = EVENT_MUSIC
         Case EVENT_MUSIC ' 音樂
-            If Options_nMusic < MUSIC_NONE Then
+            If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
                 If frmHide.mci.Length = frmHide.mci.Position Then
                     frmHide.mci.To = 0
                     frmHide.mci.Command = "Seek"
