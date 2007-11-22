@@ -166,7 +166,13 @@ Public Class StartUp
     Private Sub frmStartUp_Closed(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Closed
         App_bFlipped = optBlack.Checked
         App_nHandicap = optHandicap.SelectedIndex
+        If App_nHandicap < 0 OrElse App_nHandicap > 3 Then
+            App_nHandicap = 0
+        End If
         App_nLevel = optLevel.SelectedIndex
+        If App_nLevel < 0 OrElse App_nLevel > 2 Then
+            App_nLevel = 0
+        End If
     End Sub
 
     Private Sub btnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAbout.Click
