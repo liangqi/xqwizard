@@ -54,8 +54,10 @@ Begin VB.Form frmEngineSet
          Width           =   615
       End
       Begin VB.TextBox txtBookFile 
+         BackColor       =   &H8000000F&
          Height          =   270
          Left            =   1080
+         Locked          =   -1  'True
          TabIndex        =   10
          Top             =   240
          Width           =   4335
@@ -85,8 +87,10 @@ Begin VB.Form frmEngineSet
          Width           =   615
       End
       Begin VB.TextBox txtEgtbPath 
+         BackColor       =   &H8000000F&
          Height          =   270
          Left            =   1080
+         Locked          =   -1  'True
          TabIndex        =   13
          Top             =   600
          Width           =   4335
@@ -208,8 +212,10 @@ Begin VB.Form frmEngineSet
       Top             =   120
       Width           =   7575
       Begin VB.TextBox txtLogFile 
+         BackColor       =   &H8000000F&
          Height          =   270
          Left            =   1200
+         Locked          =   -1  'True
          TabIndex        =   2
          Top             =   240
          Width           =   4815
@@ -287,7 +293,7 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
