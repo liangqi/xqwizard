@@ -27,14 +27,22 @@ Begin VB.Form frmOptions
       Caption         =   "其他"
       Height          =   615
       Left            =   3480
-      TabIndex        =   30
+      TabIndex        =   31
       Top             =   2640
       Width           =   3255
-      Begin VB.CheckBox chkAutoSave 
-         Caption         =   "自動保存棋局"
+      Begin VB.CheckBox chkPromptSave 
+         Caption         =   "提示保存棋局"
          Height          =   255
          Left            =   120
          TabIndex        =   32
+         Top             =   240
+         Width           =   1455
+      End
+      Begin VB.CheckBox chkAutoSave 
+         Caption         =   "自動保存棋局"
+         Height          =   255
+         Left            =   1680
+         TabIndex        =   33
          Top             =   240
          Width           =   1455
       End
@@ -43,20 +51,20 @@ Begin VB.Form frmOptions
       Caption         =   "引擎"
       Height          =   2415
       Left            =   3480
-      TabIndex        =   15
+      TabIndex        =   16
       Top             =   120
       Width           =   3255
       Begin VB.TextBox txtMoveDelay 
          Height          =   285
          Left            =   960
-         TabIndex        =   17
+         TabIndex        =   18
          Top             =   240
          Width           =   360
       End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   29
+         TabIndex        =   30
          Top             =   2040
          Width           =   1215
       End
@@ -64,7 +72,7 @@ Begin VB.Form frmOptions
          Caption         =   "輸出到狀態欄"
          Height          =   255
          Left            =   1680
-         TabIndex        =   25
+         TabIndex        =   26
          Top             =   1320
          Width           =   1455
       End
@@ -72,7 +80,7 @@ Begin VB.Form frmOptions
          Caption         =   "顯示思考時間"
          Height          =   255
          Left            =   120
-         TabIndex        =   24
+         TabIndex        =   25
          Top             =   1320
          Width           =   1455
       End
@@ -80,7 +88,7 @@ Begin VB.Form frmOptions
          Caption         =   "允許提和認輸"
          Height          =   255
          Left            =   1680
-         TabIndex        =   23
+         TabIndex        =   24
          Top             =   960
          Width           =   1455
       End
@@ -88,7 +96,7 @@ Begin VB.Form frmOptions
          Caption         =   "啟用後台思考"
          Height          =   255
          Left            =   120
-         TabIndex        =   22
+         TabIndex        =   23
          Top             =   960
          Width           =   1455
       End
@@ -96,7 +104,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   27
+         TabIndex        =   28
          Top             =   1680
          Width           =   1215
       End
@@ -104,7 +112,7 @@ Begin VB.Form frmOptions
          Caption         =   "自動翻轉棋盤"
          Height          =   255
          Left            =   120
-         TabIndex        =   20
+         TabIndex        =   21
          Top             =   600
          Width           =   1455
       End
@@ -112,14 +120,14 @@ Begin VB.Form frmOptions
          Caption         =   "顯示引擎名稱"
          Height          =   255
          Left            =   1680
-         TabIndex        =   21
+         TabIndex        =   22
          Top             =   600
          Width           =   1455
       End
       Begin ComCtl2.UpDown updnMoveDelay 
          Height          =   285
          Left            =   1320
-         TabIndex        =   18
+         TabIndex        =   19
          Top             =   240
          Width           =   195
          _ExtentX        =   344
@@ -127,7 +135,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196613
+         BuddyDispid     =   196612
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -141,7 +149,7 @@ Begin VB.Form frmOptions
          Caption         =   "秒"
          Height          =   255
          Left            =   1560
-         TabIndex        =   19
+         TabIndex        =   20
          Top             =   240
          Width           =   255
       End
@@ -149,7 +157,7 @@ Begin VB.Form frmOptions
          Caption         =   "走子延時"
          Height          =   255
          Left            =   120
-         TabIndex        =   16
+         TabIndex        =   17
          Top             =   240
          Width           =   735
       End
@@ -157,7 +165,7 @@ Begin VB.Form frmOptions
          Caption         =   "人机對弈用戶"
          Height          =   255
          Left            =   480
-         TabIndex        =   28
+         TabIndex        =   29
          Top             =   2040
          Width           =   1095
       End
@@ -165,7 +173,7 @@ Begin VB.Form frmOptions
          Caption         =   "新局引擎狀態"
          Height          =   255
          Left            =   480
-         TabIndex        =   26
+         TabIndex        =   27
          Top             =   1680
          Width           =   1095
       End
@@ -175,7 +183,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3840
-      TabIndex        =   34
+      TabIndex        =   35
       Top             =   3360
       Width           =   975
    End
@@ -183,7 +191,7 @@ Begin VB.Form frmOptions
       Caption         =   "确定"
       Height          =   375
       Left            =   2040
-      TabIndex        =   33
+      TabIndex        =   34
       Top             =   3360
       Width           =   975
    End
@@ -238,7 +246,7 @@ Begin VB.Form frmOptions
          Caption         =   "用兩個Esc輸入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   35
+         TabIndex        =   13
          Top             =   1200
          Width           =   1935
       End
@@ -246,7 +254,7 @@ Begin VB.Form frmOptions
          Caption         =   "圖片棋盤的紅子用白底紅字表示"
          Height          =   255
          Left            =   120
-         TabIndex        =   14
+         TabIndex        =   15
          Top             =   1920
          Width           =   2895
       End
@@ -254,7 +262,7 @@ Begin VB.Form frmOptions
          Caption         =   "使用ANSI文本棋盤"
          Height          =   255
          Left            =   120
-         TabIndex        =   13
+         TabIndex        =   14
          Top             =   1560
          Width           =   1815
       End
@@ -276,7 +284,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196638
+         BuddyDispid     =   196637
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -332,16 +340,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Attribute VB_Name = "frmOptions"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.5, Last Modified: Nov. 2007
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
+' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -390,6 +393,7 @@ chkEngineTime.Value = IIf(Options_bEngineTime, 1, 0)
 chkStatusBar.Value = IIf(Options_bStatusBar, 1, 0)
 cmbEnginePlay.ListIndex = Options_nEnginePlay
 txtUser.Text = Options_szUser
+chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 
 End Sub
@@ -434,6 +438,7 @@ Options_bEngineTime = (chkEngineTime.Value = 1)
 Options_bStatusBar = (chkStatusBar.Value = 1)
 Options_nEnginePlay = cmbEnginePlay.ListIndex
 Options_szUser = txtUser.Text
+Options_bPromptSave = (chkPromptSave.Value = 1)
 Options_bAutoSave = (chkAutoSave.Value = 1)
 Unload Me
 

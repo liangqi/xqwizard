@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.51"
+Public Const STRING_VERSION     As String = "3.52"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -192,6 +192,7 @@ Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音樂
 Public Options_bTopMost         As Integer  ' 总在最前面
+Public Options_bPromptSave      As Boolean  ' 提示保存
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机對弈用戶
 ' 全局變量——界面
@@ -2806,7 +2807,8 @@ Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
-Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
+Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
+Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
@@ -2862,6 +2864,7 @@ SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
+SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))

@@ -1852,7 +1852,7 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-If App_bUpdated Then
+If Not Options_bAutoSave And App_bUpdated Then
     If Not SaveFile Then
         nCancel = 1
         Exit Sub
@@ -1878,7 +1878,7 @@ End Sub
 
 Private Sub mnFileNew_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -1894,7 +1894,7 @@ End Sub
 
 Private Sub mnFileOpen_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2104,7 +2104,7 @@ End Sub
 
 Private Sub mnPosEdit_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2123,7 +2123,7 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2135,7 +2135,7 @@ End Sub
 Private Sub mnPosLoad_Click()
 
 Dim szFileName As String
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2183,7 +2183,7 @@ End Sub
 
 Private Sub mnWizardHandicapA_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2195,7 +2195,7 @@ End Sub
 
 Private Sub mnWizardHandicapB_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2207,7 +2207,7 @@ End Sub
 
 Private Sub mnWizardHandicapC_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2219,7 +2219,7 @@ End Sub
 
 Private Sub mnWizardHandicapD_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2231,7 +2231,7 @@ End Sub
 
 Private Sub mnWizardHandicapE_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2243,7 +2243,7 @@ End Sub
 
 Private Sub mnWizardHandicapF_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
@@ -2255,7 +2255,7 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If

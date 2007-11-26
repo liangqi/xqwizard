@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal 
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.51"
+Public Const STRING_VERSION     As String = "3.52"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -192,6 +192,7 @@ Public Options_nBoardL          As Integer  ' 大界面的棋盘
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音乐
 Public Options_bTopMost         As Integer  ' 总在最前面
+Public Options_bPromptSave      As Boolean  ' 提示保存
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机对弈用户
 ' 全局变量——界面
@@ -2806,7 +2807,8 @@ Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
-Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "1")) <> 0)
+Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
+Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
@@ -2862,6 +2864,7 @@ SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
+SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
@@ -2914,7 +2917,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2925,7 +2928,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
@@ -2953,7 +2956,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -3003,7 +3006,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -3016,7 +3019,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

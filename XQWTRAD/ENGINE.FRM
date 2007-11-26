@@ -448,7 +448,7 @@ EngineSet_bCommandSent = True
 If Left(sz, 9) <> "position " Then
     Exit Sub
 End If
-If App_bUpdated Then
+If Options_bPromptSave And App_bUpdated Then
     If Not SaveFile Then
         Exit Sub
     End If
