@@ -41,6 +41,7 @@ Public Const STRING_VERSION     As String = "3.52"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
+Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -169,6 +170,8 @@ Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 红黑轮流标志
 Public App_bPromotion           As Boolean  ' 是否允许升变
 Public App_bPrevInstance        As Boolean  ' 是否再一次启动
+Public App_nEndgames            As Integer  ' 读入的残局数量
+Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -198,7 +201,7 @@ Public Options_szUser           As String   ' 人机对弈用户
 ' 全局变量——界面
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
-Public Gui_nFunnyIndex          As Integer  ' “趣味象棋”的条目序号
+Public Gui_nEndgamesIndex       As Integer  ' 残局的条目序号
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
@@ -783,24 +786,28 @@ End If
 End Sub
 
 ' 如果是“已更新”状态，那么提示保存PGN棋谱
-Public Function SaveFile() As Boolean
+Public Function PromptSave() As Boolean
 
+If Not (Options_bPromptSave And App_bUpdated) Then
+    PromptSave = True
+    Exit Function
+End If
 Select Case MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " + App_szFileName + " 已更改。") + vbCrLf + "是否保存更改？", vbYesNoCancel + vbExclamation)
 Case vbYes
     If App_szFileName = "" Then
         If SaveFileAs() Then
-            SaveFile = True
+            PromptSave = True
         Else
-            SaveFile = False
+            PromptSave = False
         End If
     Else
         WriteFile
-        SaveFile = True
+        PromptSave = True
     End If
 Case vbNo
-    SaveFile = True
+    PromptSave = True
 Case Else
-    SaveFile = False
+    PromptSave = False
 End Select
 
 End Function
@@ -2782,6 +2789,44 @@ Gui_szTips(29) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此
 
 End Sub
 
+' 加载残局
+Public Sub LoadEndgames(ByVal szEpdName As String, ByVal szTitle As String)
+
+Dim nFileNo As Integer, i As Integer, sz As String
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + "ENDGAMES\" + szEpdName + ".EPD" For Input As #nFileNo
+On Error GoTo 0
+App_nEndgames = 0
+Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
+    Line Input #nFileNo, sz
+    i = InStr(sz, ";")
+    If i > 0 Then
+        App_szEndgames(App_nEndgames) = RTrim(Left(sz, i - 1))
+        frmEndgames.lstGames.AddItem LTrim(Mid(sz, i + 1))
+        App_nEndgames = App_nEndgames + 1
+    End If
+Loop
+Close #nFileNo
+If App_nEndgames = 0 Then
+    MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+    ' Unload frmEndgames ' App_nEndgames = 0 说明 frmEndgames 未被加载过
+Else
+    If Gui_nEndgamesIndex >= App_nEndgames Then
+        Gui_nEndgamesIndex = App_nEndgames - 1
+    End If
+    frmEndgames.lstGames.ListIndex = Gui_nEndgamesIndex
+    frmEndgames.Caption = szTitle
+    frmEndgames.Show vbModal, App_frmMain
+End If
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+
+End Sub
+
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
@@ -2812,8 +2857,8 @@ Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0"))
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
-Gui_nFunnyIndex = Str2Int(GetSetting("XQWizard", "Gui", "FunnyIndex", "1"), 1, 240)
-Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), "1")) <> 0)
+Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
+Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
@@ -2869,7 +2914,7 @@ SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
 SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
-SaveSetting "XQWizard", "Gui", "FunnyIndex", LTrim(Str(Gui_nFunnyIndex))
+SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
@@ -2917,7 +2962,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2928,7 +2973,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0.5 Then
@@ -2956,7 +3001,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -3006,7 +3051,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -3019,7 +3064,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

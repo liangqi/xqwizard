@@ -448,10 +448,8 @@ EngineSet_bCommandSent = True
 If Left(sz, 9) <> "position " Then
     Exit Sub
 End If
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 ' °Ñ"position fen ... moves ..."×ª»»³ÉÆåÆ×
 RestartGame , RESTART_DEBUG_UCCI

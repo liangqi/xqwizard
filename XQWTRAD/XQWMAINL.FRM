@@ -1576,6 +1576,60 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardFunny 
          Caption         =   "ΩÏ®˝∂H¥—(&F)"
       End
+      Begin VB.Menu mnWizardEndgames 
+         Caption         =   "ßÛ¶h∏ÍÆ∆(&M)"
+         Begin VB.Menu mnWizardEndgamesA 
+            Caption         =   "∞Ú•ª±˛™k(&A)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesB 
+            Caption         =   "∞Ú•ªæ‘≥N(&B)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesC 
+            Caption         =   "§§ßΩ±˛™k(&C)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesD 
+            Caption         =   "¥›ßΩß±˛(&D)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesE 
+            Caption         =   "¬≤©ˆ–`∂’¥›ßΩ(&E)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesF 
+            Caption         =   "∂H¥—πÍ•Œ¥›ßΩ(≤ƒ§@∂∞)(&F)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesG 
+            Caption         =   "∂H¥—πÍ•Œ¥›ßΩ(≤ƒ§G∂∞)(&G)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesSep 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnWizardEndgamesH 
+            Caption         =   "Æ‹§§Øµ(¥›ßΩΩg)(&H)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesI 
+            Caption         =   "”Ï±°∂ÆΩÏ(&I)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesJ 
+            Caption         =   "ƒÍ¨_Ø´…Û(&J)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesK 
+            Caption         =   "∂HßΩ∂◊¶s(&K)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesL 
+            Caption         =   "¶ø¥Ú¶ ßΩØµ√–(&L)"
+            Enabled         =   0   'False
+         End
+      End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
@@ -1793,7 +1847,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1824,11 +1878,9 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        nCancel = 1
-        Exit Sub
-    End If
+If Not PromptSave Then
+    nCancel = 1
+    Exit Sub
 End If
 If Engine_bAnalyze Then
     StopAnalyze
@@ -1850,10 +1902,8 @@ End Sub
 
 Private Sub mnFileNew_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 App_szFileName = ""
 RestartGame
@@ -1866,10 +1916,8 @@ End Sub
 
 Private Sub mnFileOpen_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 OpenFile
 
@@ -2076,10 +2124,8 @@ End Sub
 
 Private Sub mnPosEdit_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 frmPosEdit.Show vbModal, Me
 
@@ -2095,10 +2141,8 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr Clipboard.GetText
 
@@ -2107,10 +2151,8 @@ End Sub
 Private Sub mnPosLoad_Click()
 
 Dim szFileName As String
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 szFileName = FileDialog("èƒFENŒƒº˛åß»Î", "œÛ∆Âæ÷√ÊŒƒº˛", "FEN")
 If szFileName <> "" Then
@@ -2155,10 +2197,8 @@ End Sub
 
 Private Sub mnWizardHandicapA_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_A
 EngineNewGame ENGINE_PLAY_RED
@@ -2167,10 +2207,8 @@ End Sub
 
 Private Sub mnWizardHandicapB_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_B
 EngineNewGame ENGINE_PLAY_RED
@@ -2179,10 +2217,8 @@ End Sub
 
 Private Sub mnWizardHandicapC_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_C
 EngineNewGame ENGINE_PLAY_RED
@@ -2191,10 +2227,8 @@ End Sub
 
 Private Sub mnWizardHandicapD_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_A
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2203,10 +2237,8 @@ End Sub
 
 Private Sub mnWizardHandicapE_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_B
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2215,10 +2247,8 @@ End Sub
 
 Private Sub mnWizardHandicapF_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_C
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2227,12 +2257,10 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
-frmFunny.Show vbModal
+LoadEndgames "FUNNY", "»§Œ∂œÛ∆Â"
 
 End Sub
 

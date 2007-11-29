@@ -1577,6 +1577,60 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardFunny 
          Caption         =   "趣味象棋(&F)"
       End
+      Begin VB.Menu mnWizardEndgames 
+         Caption         =   "更多资料(&M)"
+         Begin VB.Menu mnWizardEndgamesA 
+            Caption         =   "基本杀法(&A)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesB 
+            Caption         =   "基本战术(&B)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesC 
+            Caption         =   "中局杀法(&C)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesD 
+            Caption         =   "残局攻杀(&D)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesE 
+            Caption         =   "简易胜势残局(&E)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesF 
+            Caption         =   "象棋实用残局(第一集)(&F)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesG 
+            Caption         =   "象棋实用残局(第二集)(&G)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesSep 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnWizardEndgamesH 
+            Caption         =   "桔中秘(残局篇)(&H)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesI 
+            Caption         =   "适情雅趣(&I)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesJ 
+            Caption         =   "烂柯神机(&J)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesK 
+            Caption         =   "象局汇存(&K)"
+            Enabled         =   0   'False
+         End
+         Begin VB.Menu mnWizardEndgamesL 
+            Caption         =   "江湖百局秘谱(&L)"
+            Enabled         =   0   'False
+         End
+      End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
@@ -1794,7 +1848,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1825,11 +1879,9 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        nCancel = 1
-        Exit Sub
-    End If
+If Not PromptSave Then
+    nCancel = 1
+    Exit Sub
 End If
 If Engine_bAnalyze Then
     StopAnalyze
@@ -1851,10 +1903,8 @@ End Sub
 
 Private Sub mnFileNew_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 App_szFileName = ""
 RestartGame
@@ -1867,10 +1917,8 @@ End Sub
 
 Private Sub mnFileOpen_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 OpenFile
 
@@ -2077,10 +2125,8 @@ End Sub
 
 Private Sub mnPosEdit_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 frmPosEdit.Show vbModal, Me
 
@@ -2096,10 +2142,8 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr Clipboard.GetText
 
@@ -2108,10 +2152,8 @@ End Sub
 Private Sub mnPosLoad_Click()
 
 Dim szFileName As String
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 szFileName = FileDialog("从FEN文件导入", "象棋局面文件", "FEN")
 If szFileName <> "" Then
@@ -2156,10 +2198,8 @@ End Sub
 
 Private Sub mnWizardHandicapA_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_A
 EngineNewGame ENGINE_PLAY_RED
@@ -2168,10 +2208,8 @@ End Sub
 
 Private Sub mnWizardHandicapB_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_B
 EngineNewGame ENGINE_PLAY_RED
@@ -2180,10 +2218,8 @@ End Sub
 
 Private Sub mnWizardHandicapC_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_C
 EngineNewGame ENGINE_PLAY_RED
@@ -2192,10 +2228,8 @@ End Sub
 
 Private Sub mnWizardHandicapD_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_A
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2204,10 +2238,8 @@ End Sub
 
 Private Sub mnWizardHandicapE_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_B
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2216,10 +2248,8 @@ End Sub
 
 Private Sub mnWizardHandicapF_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
 LoadFenStr HANDICAP_C
 EngineNewGame ENGINE_PLAY_BLACK
@@ -2228,12 +2258,10 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-If Options_bPromptSave And App_bUpdated Then
-    If Not SaveFile Then
-        Exit Sub
-    End If
+If Not PromptSave Then
+    Exit Sub
 End If
-frmFunny.Show vbModal
+LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
