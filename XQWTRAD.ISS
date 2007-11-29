@@ -69,6 +69,8 @@ Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
+; 残局文件
+Source: "ENDGAMET\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion

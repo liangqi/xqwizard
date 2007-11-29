@@ -2789,7 +2789,7 @@ Gui_szTips(29) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此
 
 End Sub
 
-' 加载残局
+' 加載殘局
 Public Sub LoadEndgames(ByVal szEpdName As String, ByVal szTitle As String)
 
 Dim nFileNo As Integer, i As Integer, sz As String
@@ -2809,8 +2809,8 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
-    ' Unload frmEndgames ' App_nEndgames = 0 说明 frmEndgames 未被加载过
+    MsgBox "無法打開文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+    ' Unload frmEndgames ' App_nEndgames = 0 說明 frmEndgames 未被加載過
 Else
     If Gui_nEndgamesIndex >= App_nEndgames Then
         Gui_nEndgamesIndex = App_nEndgames - 1
@@ -2823,7 +2823,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+MsgBox "無法打開文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
 
 End Sub
 
