@@ -1817,6 +1817,7 @@ App_frmMain.tlb.Buttons("WizardPlay").Enabled = Not bBusy
 App_frmMain.mnWizardHandicap.Enabled = Not bBusy
 App_frmMain.mnWizardFunny.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("WizardFunny").Enabled = Not bBusy
+App_frmMain.mnWizardEndgames.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
 App_frmMain.mnEngineSet.Enabled = Not bBusy
