@@ -1610,12 +1610,10 @@ Begin VB.Form frmMainSmall
             Caption         =   "-"
          End
          Begin VB.Menu mnWizardEndgamesH 
-            Caption         =   "い(摧Ы絞)(&H)"
-            Enabled         =   0   'False
+            Caption         =   "撅い(摧Ы絞)(&H)"
          End
          Begin VB.Menu mnWizardEndgamesI 
             Caption         =   "屿薄懂届(&I)"
-            Enabled         =   0   'False
          End
          Begin VB.Menu mnWizardEndgamesJ 
             Caption         =   "年琠审(&J)"
@@ -2288,6 +2286,114 @@ If Not PromptSave Then
     Exit Sub
 End If
 LoadEndgames "FUNNY", "趣味象棋"
+
+End Sub
+
+Private Sub mnWizardEndgamesA_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_A", "基本殺法"
+
+End Sub
+
+Private Sub mnWizardEndgamesB_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_B", "基本戰術"
+
+End Sub
+
+Private Sub mnWizardEndgamesC_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_C", "中局殺法"
+
+End Sub
+
+Private Sub mnWizardEndgamesD_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_D", "殘局攻殺"
+
+End Sub
+
+Private Sub mnWizardEndgamesE_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_E", "簡易胜勢殘局"
+
+End Sub
+
+Private Sub mnWizardEndgamesF_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_F", "象棋實用殘局(第一集)"
+
+End Sub
+
+Private Sub mnWizardEndgamesG_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_G", "象棋實用殘局(第二集)"
+
+End Sub
+
+Private Sub mnWizardEndgamesH_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_H", "橘中秘(殘局篇)"
+
+End Sub
+
+Private Sub mnWizardEndgamesI_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_I", "适情雅趣"
+
+End Sub
+
+Private Sub mnWizardEndgamesJ_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_J", "爛柯神机"
+
+End Sub
+
+Private Sub mnWizardEndgamesK_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_K", "象局匯存"
+
+End Sub
+
+Private Sub mnWizardEndgamesL_Click()
+
+If Not PromptSave Then
+    Exit Sub
+End If
+LoadEndgames "_L", "江湖百局秘譜"
 
 End Sub
 

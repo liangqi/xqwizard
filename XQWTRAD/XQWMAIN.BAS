@@ -921,16 +921,20 @@ Dim sz As String
 sz = Game_szEvent
 If Game_szRound <> "" Then
     sz = sz + IIf(Game_szEvent = "", "", " ")
-    Select Case Str2Int(Game_szRound)
-    Case 0
+    If Len(Game_szRound) > 5 Then
         sz = sz + Game_szRound
-    Case 1 To 97
-        sz = sz + "µÚ" + Game_szRound + "İ†"
-    Case 98
-        sz = sz + "°ë›QÙ"
-    Case 99
-        sz = sz + "›QÙ"
-    End Select
+    Else
+        Select Case Str2Int(Game_szRound)
+        Case 0
+            sz = sz + Game_szRound
+        Case 1 To 97
+            sz = sz + "µÚ" + Game_szRound + "İ†"
+        Case 98
+            sz = sz + "°ë›QÙ"
+        Case 99
+            sz = sz + "›QÙ"
+        End Select
+    End If
 End If
 EventString = sz
 

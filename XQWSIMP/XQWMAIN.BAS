@@ -921,16 +921,20 @@ Dim sz As String
 sz = Game_szEvent
 If Game_szRound <> "" Then
     sz = sz + IIf(Game_szEvent = "", "", " ")
-    Select Case Str2Int(Game_szRound)
-    Case 0
+    If Len(Game_szRound) > 5 Then
         sz = sz + Game_szRound
-    Case 1 To 97
-        sz = sz + "第" + Game_szRound + "轮"
-    Case 98
-        sz = sz + "半决赛"
-    Case 99
-        sz = sz + "决赛"
-    End Select
+    Else
+        Select Case Str2Int(Game_szRound)
+        Case 0
+            sz = sz + Game_szRound
+        Case 1 To 97
+             sz = sz + "第" + Game_szRound + "轮"
+        Case 98
+            sz = sz + "半决赛"
+        Case 99
+            sz = sz + "决赛"
+        End Select
+    End If
 End If
 EventString = sz
 
@@ -2976,7 +2980,7 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.5 Then
+            If Rnd < 1.0 Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
