@@ -1577,58 +1577,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardFunny 
          Caption         =   "趣味象棋(&F)"
       End
-      Begin VB.Menu mnWizardEndgames 
-         Caption         =   "更多资料(&M)"
-         Begin VB.Menu mnWizardEndgamesA 
-            Caption         =   "基本杀法(&A)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesB 
-            Caption         =   "基本战术(&B)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesC 
-            Caption         =   "中局杀法(&C)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesD 
-            Caption         =   "残局攻杀(&D)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesE 
-            Caption         =   "简易胜势残局(&E)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesF 
-            Caption         =   "象棋实用残局(第一集)(&F)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesG 
-            Caption         =   "象棋实用残局(第二集)(&G)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesSep 
-            Caption         =   "-"
-         End
-         Begin VB.Menu mnWizardEndgamesH 
-            Caption         =   "橘中秘(残局篇)(&H)"
-         End
-         Begin VB.Menu mnWizardEndgamesI 
-            Caption         =   "适情雅趣(&I)"
-         End
-         Begin VB.Menu mnWizardEndgamesJ 
-            Caption         =   "烂柯神机(&J)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesK 
-            Caption         =   "象局汇存(&K)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesL 
-            Caption         =   "江湖百局秘谱(&L)"
-            Enabled         =   0   'False
-         End
-      End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
@@ -1652,6 +1600,58 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnWizardPrint 
          Caption         =   "生成印刷棋盘(&R)"
+      End
+   End
+   Begin VB.Menu mnEndgames 
+      Caption         =   "挑战(&C)"
+      Begin VB.Menu mnEndgamesA 
+         Caption         =   "基本杀法(&A)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesB 
+         Caption         =   "基本战术(&B)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesC 
+         Caption         =   "中局杀法(&C)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesD 
+         Caption         =   "残局攻杀(&D)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesE 
+         Caption         =   "简易胜势残局(&E)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesF 
+         Caption         =   "象棋实用残局(第一集)(&F)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesG 
+         Caption         =   "象棋实用残局(第二集)(&G)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnEndgamesH 
+         Caption         =   "橘中秘(残局篇)(&H)"
+      End
+      Begin VB.Menu mnEndgamesI 
+         Caption         =   "适情雅趣(&I)"
+      End
+      Begin VB.Menu mnEndgamesJ 
+         Caption         =   "烂柯神机(&J)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesK 
+         Caption         =   "象局汇存(&K)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesL 
+         Caption         =   "江湖百局秘谱(&L)"
+         Enabled         =   0   'False
       End
    End
    Begin VB.Menu mnEngine 
@@ -1904,7 +1904,7 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-If Not PromptSave Then
+If CancelSave Then
     nCancel = 1
     Exit Sub
 End If
@@ -1928,7 +1928,7 @@ End Sub
 
 Private Sub mnFileNew_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 App_szFileName = ""
@@ -1942,7 +1942,7 @@ End Sub
 
 Private Sub mnFileOpen_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 OpenFile
@@ -2150,7 +2150,7 @@ End Sub
 
 Private Sub mnPosEdit_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 frmPosEdit.Show vbModal, Me
@@ -2167,7 +2167,7 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr Clipboard.GetText
@@ -2177,7 +2177,7 @@ End Sub
 Private Sub mnPosLoad_Click()
 
 Dim szFileName As String
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 szFileName = FileDialog("从FEN文件导入", "象棋局面文件", "FEN")
@@ -2223,7 +2223,7 @@ End Sub
 
 Private Sub mnWizardHandicapA_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_A
@@ -2233,7 +2233,7 @@ End Sub
 
 Private Sub mnWizardHandicapB_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_B
@@ -2243,7 +2243,7 @@ End Sub
 
 Private Sub mnWizardHandicapC_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_C
@@ -2253,7 +2253,7 @@ End Sub
 
 Private Sub mnWizardHandicapD_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_A
@@ -2263,7 +2263,7 @@ End Sub
 
 Private Sub mnWizardHandicapE_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_B
@@ -2273,7 +2273,7 @@ End Sub
 
 Private Sub mnWizardHandicapF_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_C
@@ -2283,115 +2283,115 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
-Private Sub mnWizardEndgamesA_Click()
+Private Sub mnEndgamesA_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_A", "基本杀法"
 
 End Sub
 
-Private Sub mnWizardEndgamesB_Click()
+Private Sub mnEndgamesB_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_B", "基本战术"
 
 End Sub
 
-Private Sub mnWizardEndgamesC_Click()
+Private Sub mnEndgamesC_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_C", "中局杀法"
 
 End Sub
 
-Private Sub mnWizardEndgamesD_Click()
+Private Sub mnEndgamesD_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_D", "残局攻杀"
 
 End Sub
 
-Private Sub mnWizardEndgamesE_Click()
+Private Sub mnEndgamesE_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_E", "简易胜势残局"
 
 End Sub
 
-Private Sub mnWizardEndgamesF_Click()
+Private Sub mnEndgamesF_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_F", "象棋实用残局(第一集)"
 
 End Sub
 
-Private Sub mnWizardEndgamesG_Click()
+Private Sub mnEndgamesG_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_G", "象棋实用残局(第二集)"
 
 End Sub
 
-Private Sub mnWizardEndgamesH_Click()
+Private Sub mnEndgamesH_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_H", "橘中秘(残局篇)"
 
 End Sub
 
-Private Sub mnWizardEndgamesI_Click()
+Private Sub mnEndgamesI_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_I", "适情雅趣"
 
 End Sub
 
-Private Sub mnWizardEndgamesJ_Click()
+Private Sub mnEndgamesJ_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_J", "烂柯神机"
 
 End Sub
 
-Private Sub mnWizardEndgamesK_Click()
+Private Sub mnEndgamesK_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_K", "象局汇存"
 
 End Sub
 
-Private Sub mnWizardEndgamesL_Click()
+Private Sub mnEndgamesL_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_L", "江湖百局秘谱"

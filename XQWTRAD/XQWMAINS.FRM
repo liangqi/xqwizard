@@ -1576,58 +1576,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardFunny 
          Caption         =   "届禜囱(&F)"
       End
-      Begin VB.Menu mnWizardEndgames 
-         Caption         =   "戈(&M)"
-         Begin VB.Menu mnWizardEndgamesA 
-            Caption         =   "膀セ炳猭(&A)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesB 
-            Caption         =   "膀セ驹砃(&B)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesC 
-            Caption         =   "いЫ炳猭(&C)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesD 
-            Caption         =   "摧Ыю炳(&D)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesE 
-            Caption         =   "虏衊墩摧Ы(&E)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesF 
-            Caption         =   "禜囱龟ノ摧Ы(材栋)(&F)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesG 
-            Caption         =   "禜囱龟ノ摧Ы(材栋)(&G)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesSep 
-            Caption         =   "-"
-         End
-         Begin VB.Menu mnWizardEndgamesH 
-            Caption         =   "撅い(摧Ы絞)(&H)"
-         End
-         Begin VB.Menu mnWizardEndgamesI 
-            Caption         =   "屿薄懂届(&I)"
-         End
-         Begin VB.Menu mnWizardEndgamesJ 
-            Caption         =   "年琠审(&J)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesK 
-            Caption         =   "禜Ы蹲(&K)"
-            Enabled         =   0   'False
-         End
-         Begin VB.Menu mnWizardEndgamesL 
-            Caption         =   "打κЫ眯(&L)"
-            Enabled         =   0   'False
-         End
-      End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
@@ -1651,6 +1599,58 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnWizardPrint 
          Caption         =   "ネΘ囱絃(&R)"
+      End
+   End
+   Begin VB.Menu mnEndgames 
+      Caption         =   "珼驹(&C)"
+      Begin VB.Menu mnEndgamesA 
+         Caption         =   "膀セ炳猭(&A)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesB 
+         Caption         =   "膀セ驹砃(&B)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesC 
+         Caption         =   "いЫ炳猭(&C)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesD 
+         Caption         =   "摧Ыю炳(&D)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesE 
+         Caption         =   "虏衊墩摧Ы(&E)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesF 
+         Caption         =   "禜囱龟ノ摧Ы(材栋)(&F)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesG 
+         Caption         =   "禜囱龟ノ摧Ы(材栋)(&G)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesSep 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnEndgamesH 
+         Caption         =   "撅い(摧Ы絞)(&H)"
+      End
+      Begin VB.Menu mnEndgamesI 
+         Caption         =   "屿薄懂届(&I)"
+      End
+      Begin VB.Menu mnEndgamesJ 
+         Caption         =   "年琠审(&J)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesK 
+         Caption         =   "禜Ы蹲(&K)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnEndgamesL 
+         Caption         =   "打κЫ眯(&L)"
+         Enabled         =   0   'False
       End
    End
    Begin VB.Menu mnEngine 
@@ -1903,7 +1903,7 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-If Not PromptSave Then
+If CancelSave Then
     nCancel = 1
     Exit Sub
 End If
@@ -1927,7 +1927,7 @@ End Sub
 
 Private Sub mnFileNew_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 App_szFileName = ""
@@ -1941,7 +1941,7 @@ End Sub
 
 Private Sub mnFileOpen_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 OpenFile
@@ -2149,7 +2149,7 @@ End Sub
 
 Private Sub mnPosEdit_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 frmPosEdit.Show vbModal, Me
@@ -2166,7 +2166,7 @@ End Sub
 
 Private Sub mnPosPaste_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr Clipboard.GetText
@@ -2176,7 +2176,7 @@ End Sub
 Private Sub mnPosLoad_Click()
 
 Dim szFileName As String
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 szFileName = FileDialog("從FEN文件導入", "象棋局面文件", "FEN")
@@ -2222,7 +2222,7 @@ End Sub
 
 Private Sub mnWizardHandicapA_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_A
@@ -2232,7 +2232,7 @@ End Sub
 
 Private Sub mnWizardHandicapB_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_B
@@ -2242,7 +2242,7 @@ End Sub
 
 Private Sub mnWizardHandicapC_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_C
@@ -2252,7 +2252,7 @@ End Sub
 
 Private Sub mnWizardHandicapD_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_A
@@ -2262,7 +2262,7 @@ End Sub
 
 Private Sub mnWizardHandicapE_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_B
@@ -2272,7 +2272,7 @@ End Sub
 
 Private Sub mnWizardHandicapF_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadFenStr HANDICAP_C
@@ -2282,115 +2282,115 @@ End Sub
 
 Private Sub mnWizardFunny_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
-Private Sub mnWizardEndgamesA_Click()
+Private Sub mnEndgamesA_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_A", "基本殺法"
 
 End Sub
 
-Private Sub mnWizardEndgamesB_Click()
+Private Sub mnEndgamesB_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_B", "基本戰術"
 
 End Sub
 
-Private Sub mnWizardEndgamesC_Click()
+Private Sub mnEndgamesC_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_C", "中局殺法"
 
 End Sub
 
-Private Sub mnWizardEndgamesD_Click()
+Private Sub mnEndgamesD_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_D", "殘局攻殺"
 
 End Sub
 
-Private Sub mnWizardEndgamesE_Click()
+Private Sub mnEndgamesE_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_E", "簡易胜勢殘局"
 
 End Sub
 
-Private Sub mnWizardEndgamesF_Click()
+Private Sub mnEndgamesF_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_F", "象棋實用殘局(第一集)"
 
 End Sub
 
-Private Sub mnWizardEndgamesG_Click()
+Private Sub mnEndgamesG_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_G", "象棋實用殘局(第二集)"
 
 End Sub
 
-Private Sub mnWizardEndgamesH_Click()
+Private Sub mnEndgamesH_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_H", "橘中秘(殘局篇)"
 
 End Sub
 
-Private Sub mnWizardEndgamesI_Click()
+Private Sub mnEndgamesI_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_I", "适情雅趣"
 
 End Sub
 
-Private Sub mnWizardEndgamesJ_Click()
+Private Sub mnEndgamesJ_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_J", "爛柯神机"
 
 End Sub
 
-Private Sub mnWizardEndgamesK_Click()
+Private Sub mnEndgamesK_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_K", "象局匯存"
 
 End Sub
 
-Private Sub mnWizardEndgamesL_Click()
+Private Sub mnEndgamesL_Click()
 
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_L", "江湖百局秘譜"

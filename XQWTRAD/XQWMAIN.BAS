@@ -786,28 +786,28 @@ End If
 End Sub
 
 ' 如果是“已更新”狀態，那么提示保存PGN棋譜
-Public Function PromptSave() As Boolean
+Public Function CancelSave() As Boolean
 
 If Not (Options_bPromptSave And App_bUpdated) Then
-    PromptSave = True
+    CancelSave = False
     Exit Function
 End If
 Select Case MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " + App_szFileName + " 已更改。") + vbCrLf + "是否保存更改？", vbYesNoCancel + vbExclamation)
 Case vbYes
     If App_szFileName = "" Then
         If SaveFileAs() Then
-            PromptSave = True
+            CancelSave = False
         Else
-            PromptSave = False
+            CancelSave = True
         End If
     Else
         WriteFile
-        PromptSave = True
+        CancelSave = False
     End If
 Case vbNo
-    PromptSave = True
+    CancelSave = False
 Case Else
-    PromptSave = False
+    CancelSave = True
 End Select
 
 End Function
@@ -1817,7 +1817,7 @@ App_frmMain.tlb.Buttons("WizardPlay").Enabled = Not bBusy
 App_frmMain.mnWizardHandicap.Enabled = Not bBusy
 App_frmMain.mnWizardFunny.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("WizardFunny").Enabled = Not bBusy
-App_frmMain.mnWizardEndgames.Enabled = Not bBusy
+App_frmMain.mnEndgames.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
 App_frmMain.mnEngineSet.Enabled = Not bBusy

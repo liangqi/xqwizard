@@ -448,7 +448,7 @@ EngineSet_bCommandSent = True
 If Left(sz, 9) <> "position " Then
     Exit Sub
 End If
-If Not PromptSave Then
+If CancelSave Then
     Exit Sub
 End If
 ' °Ñ"position fen ... moves ..."×ª»»³ÉÆåÆ×
