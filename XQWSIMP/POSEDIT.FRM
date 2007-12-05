@@ -1368,6 +1368,18 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
+Dim sqWhiteKing As Integer, sqBlackKing As Integer
+sqWhiteKing = Edit_posBoard.ucsqPieces(16)
+sqBlackKing = Edit_posBoard.ucsqPieces(32)
+If sqWhiteKing > 0 And sqBlackKing > sqWhiteKing Then
+    If MsgBox("你可能没有遵循“红下黑上”的棋子摆放规则。是否需要翻转一下？", vbQuestion + vbYesNo) = vbYes Then
+        CchessFlipBoard Edit_posBoard
+        ' Edit_sqSelected = 0
+        ' PosBoardFlush
+        Edit_szFen = MkBStr(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        ' txtFen.Text = Edit_szFen
+    End If
+End If
 App_szFileName = ""
 RestartGame RESTART_KEEP_LABEL
 Game_sdStart = Edit_posBoard.sdPlayer

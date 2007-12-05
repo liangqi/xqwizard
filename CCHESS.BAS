@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlCChess"
 ' CCHESS.BAS - Source Code for ElephantEye, Additional Part
 '
 ' ElephantEye - a Chinese Chess Program (UCCI Engine)
-' Designed by Morning Yellow, Version: 3.0, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.1, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This library is free software; you can redistribute it and/or
@@ -62,6 +62,7 @@ Public Declare Sub CchessSetIrrev Lib "CCHESS.DLL" Alias "_CchessSetIrrev@4" (By
 Public Declare Sub CchessClearBoard Lib "CCHESS.DLL" Alias "_CchessClearBoard@4" (ByRef pos As PositionStruct)
 Public Declare Sub CchessBoardMirror Lib "CCHESS.DLL" Alias "_CchessBoardMirror@4" (ByRef pos As PositionStruct)
 Public Declare Sub CchessExchangeSide Lib "CCHESS.DLL" Alias "_CchessExchangeSide@4" (ByRef pos As PositionStruct)
+Public Declare Sub CchessFlipBoard Lib "CCHESS.DLL" Alias "_CchessFlipBoard@4" (ByRef pos As PositionStruct)
 Public Declare Function CchessBoardText Lib "CCHESS.DLL" Alias "_CchessBoardText@8" (ByRef pos As PositionStruct, Optional ByVal bAnsi As Long = 0) As Long
 Public Declare Function CchessBoard2Fen Lib "CCHESS.DLL" Alias "_CchessBoard2Fen@4" (ByRef pos As PositionStruct) As Long
 Public Declare Sub CchessFen2Board Lib "CCHESS.DLL" Alias "_CchessFen2Board@8" (ByRef pos As PositionStruct, ByVal szFen As String)
