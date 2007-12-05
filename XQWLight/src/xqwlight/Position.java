@@ -2,7 +2,7 @@
 Position.java - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 1.11, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,6 @@ public class Position {
 	public static final int ADVANCED_VALUE = 3;
 
 	public static final int MAX_GEN_MOVES = 128;
-
 	public static final int MAX_MOVE_NUM = 256;
 
 	public static final int PIECE_KING = 1;
@@ -43,6 +42,11 @@ public class Position {
 	public static final int PIECE_CANNON = 6;
 	public static final int PIECE_PAWN = 7;
 
+	public static final int RANK_TOP = 3;
+	public static final int RANK_BOTTOM = 12;
+	public static final int FILE_LEFT = 3;
+	public static final int FILE_RIGHT = 11;
+	
 	public static final byte[] IN_BOARD = new byte[] {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -159,7 +163,7 @@ public class Position {
 	public static final int[][] KNIGHT_CHECK_DELTA = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
 	public static final int[] MVV_VALUE = {0, 50, 10, 10, 30, 40, 30, 20};
 
-	public static final short PIECE_VALUE[][] = {
+	public static final short[][] PIECE_VALUE = {
 		{
 			0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 			0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -282,44 +286,11 @@ public class Position {
 		},
 	};
 
-	public static final int BOARD_HANDICAP[][] = {
-		{
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0,
-			0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 5, 4, 3, 2, 1, 2, 3, 4, 5, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		}, {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0,
-			0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 5, 4, 3, 2, 1, 2, 3, 0, 5, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		}, {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0,
-			0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 5, 0, 3, 2, 1, 2, 3, 0, 5, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		}, {
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 5, 4, 0, 0, 1, 0, 0, 4, 5, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		}
+	public static final String[] STARTUP_FEN = {
+		"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+		"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1",
+		"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1",
+		"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1",
 	};
 
 	public static final boolean IN_BOARD(int sq) {
@@ -558,23 +529,6 @@ public class Position {
 		distance = 0;
 	}
 
-	public void loadBoard(int handicap) {
-		clearBoard();
-		for (int sq = 0; sq < 128; sq ++) {
-			int pc = BOARD_HANDICAP[handicap][sq];
-			if (pc > 0) {
-				addPiece(128 + sq, pc + 8);
-			}
-		}
-		for (int sq = 0; sq < 128; sq ++) {
-			int pc = BOARD_HANDICAP[0][sq];
-			if (pc > 0) {
-				addPiece(126 - sq, pc + 16);
-			}
-		}
-		setIrrev();
-	}
-
 	public void addPiece(int sq, int pc, boolean del) {
 		int pcAdjust;
 		squares[sq] = (byte) (del ? 0 : pc);
@@ -664,6 +618,73 @@ public class Position {
 		moveNum --;
 		distance --;
 		changeSide();
+	}
+
+	public int fenPiece(char c) {
+		switch (c) {
+		case 'K':
+			return 1;
+		case 'A':
+			return 2;
+		case 'B':
+		case 'E':
+			return 3;
+		case 'H':
+		case 'N':
+			return 4;
+		case 'R':
+			return 5;
+		case 'C':
+			return 6;
+		case 'P':
+			return 7;
+		default:
+			return 0;
+		}
+	}
+
+	public void fromFen(String fen) {
+		clearBoard();
+		int rank = RANK_TOP;
+		int file = FILE_LEFT;
+		// Assume fen is not empty
+		int index = 0;
+		char c = fen.charAt(index);
+		// Assume a space exists
+		while (fen.charAt(index) != ' ') {
+			if (c == '/') {
+				file = FILE_LEFT;
+				rank ++;
+				if (rank > RANK_BOTTOM) {
+					break;
+				}
+			} else if (c >= '1' && c <= '9') {
+				for (int k = 0; k < (c - '0'); k ++) {
+					if (file >= FILE_RIGHT) {
+						break;
+					}
+					file ++;
+				}
+			} else if (c >= 'A' && c <= 'Z') {
+				if (file <= FILE_RIGHT) {
+					addPiece(COORD_XY(file, rank), fenPiece(c) + 8);
+					file ++;
+				}
+			} else if (c >= 'a' && c <= 'z') {
+				if (file <= FILE_RIGHT) {
+					addPiece(COORD_XY(file, rank), fenPiece((char) (c + 'A' - 'a')) + 16);
+					file ++;
+				}
+			}
+			index ++;
+			c = fen.charAt(index);
+		}
+		// Assume 'w' or 'b' at last
+		index ++;
+		if (sdPlayer == (fen.charAt(index) == 'b' ? 0 : 1)) {
+			changeSide();
+		}
+		setIrrev();
 	}
 
 	public int generateAllMoves(int[] mvs) {

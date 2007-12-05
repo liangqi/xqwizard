@@ -51,6 +51,7 @@ public class StartUp extends Form implements CommandListener {
 		cgHandicap.append("让单马", null);
 		cgHandicap.append("让双马", null);
 		cgHandicap.append("让九子", null);
+		// cgHandicap.append("调试", null);
 		append(cgHandicap);
 
 		append("电脑水平：");
