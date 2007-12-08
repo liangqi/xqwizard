@@ -2920,7 +2920,7 @@ SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
 SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
-SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo1", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
+SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
