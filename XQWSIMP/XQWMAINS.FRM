@@ -1653,6 +1653,72 @@ Begin VB.Form frmMainSmall
          Caption         =   "江湖百局秘谱(&L)"
          Enabled         =   0   'False
       End
+      Begin VB.Menu mnEndgamesSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnEndgamesBooth 
+         Caption         =   "象棋路边摊(&M)"
+         Begin VB.Menu mnEndgamesBoothA 
+            Caption         =   "&A.健身房教练(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothB 
+            Caption         =   "&B.红茶店老板(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothC 
+            Caption         =   "&C.医生(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothD 
+            Caption         =   "&D.花店老板(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothE 
+            Caption         =   "&E.面店老板(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothF 
+            Caption         =   "&F.槟榔摊老板(初级)"
+         End
+         Begin VB.Menu mnEndgamesBoothSep1 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnEndgamesBoothG 
+            Caption         =   "&G.美术社老板(中级)"
+         End
+         Begin VB.Menu mnEndgamesBoothH 
+            Caption         =   "&H.咖啡馆老板(中级)"
+         End
+         Begin VB.Menu mnEndgamesBoothI 
+            Caption         =   "&I.漫画店长(中级)"
+         End
+         Begin VB.Menu mnEndgamesBoothJ 
+            Caption         =   "&J.小吃店员(中级)"
+         End
+         Begin VB.Menu mnEndgamesBoothK 
+            Caption         =   "&K.消防队长(中级)"
+         End
+         Begin VB.Menu mnEndgamesBoothSep2 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnEndgamesBoothL 
+            Caption         =   "&L.赌场打手(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothM 
+            Caption         =   "&M.国术馆长(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothN 
+            Caption         =   "&N.杂货店老板(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothO 
+            Caption         =   "&O.水果摊老板(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothP 
+            Caption         =   "&P.棋摊老板(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothQ 
+            Caption         =   "&Q.和尚(高级)"
+         End
+         Begin VB.Menu mnEndgamesBoothR 
+            Caption         =   "&R.棋社社长(高级)"
+         End
+      End
    End
    Begin VB.Menu mnEngine 
       Caption         =   "引擎(&E)"
@@ -1873,7 +1939,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.53, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2395,6 +2461,168 @@ If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "_L", "江湖百局秘谱"
+
+End Sub
+
+Private Sub mnEndgamesBoothA_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_A", "象棋路边摊 - A.健身房教练(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothB_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_B", "象棋路边摊 - B.红茶店老板(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothC_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_C", "象棋路边摊 - C.医生(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothD_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_D", "象棋路边摊 - D.花店老板(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothE_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_E", "象棋路边摊 - E.面店老板(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothF_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_F", "象棋路边摊 - F.槟榔摊老板(初级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothG_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_G", "象棋路边摊 - G.美术社老板(中级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothH_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_H", "象棋路边摊 - H.咖啡馆老板(中级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothI_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_I", "象棋路边摊 - I.漫画店长(中级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothJ_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_J", "象棋路边摊 - J.小吃店员(中级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothK_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_K", "象棋路边摊 - K.消防队长(中级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothL_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_L", "象棋路边摊 - L.赌场打手(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothM_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_M", "象棋路边摊 - M.国术馆长(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothN_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_N", "象棋路边摊 - N.杂货店老板(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothO_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_O", "象棋路边摊 - O.水果摊老板(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothP_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_P", "象棋路边摊 - P.棋摊老板(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothQ_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_Q", "象棋路边摊 - Q.和尚(高级)"
+
+End Sub
+
+Private Sub mnEndgamesBoothR_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "BOOTH_R", "象棋路边摊 - R.棋社社长(高级)"
 
 End Sub
 
