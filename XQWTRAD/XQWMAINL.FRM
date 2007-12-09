@@ -1605,15 +1605,12 @@ Begin VB.Form frmMainLarge
       Caption         =   "挑戰(&C)"
       Begin VB.Menu mnEndgamesA 
          Caption         =   "基本殺法(&A)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnEndgamesB 
          Caption         =   "基本戰術(&B)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnEndgamesC 
          Caption         =   "中局殺法(&C)"
-         Enabled         =   0   'False
       End
       Begin VB.Menu mnEndgamesD 
          Caption         =   "殘局攻殺(&D)"
