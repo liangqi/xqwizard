@@ -1,6 +1,6 @@
 《象棋巫师》源程序常见问题解答
 
-《象棋巫师》开发团队(webmaster@elephantbase.net)　2007年11月
+《象棋巫师》开发团队(webmaster@elephantbase.net)　2007年12月
 
 1. 哪里能下载到《象棋巫师》的源程序？
 
@@ -14,13 +14,13 @@
 2. 《象棋巫师》是用什么语言开发的？
 
 　　《象棋巫师》是用 Visual Basic 6.0 开发的。
-　　VB6是 Visual Studio 98 的一个组件，安装 Visual Studio 98 后，XQWSIMP.VBP 和 XQWTRAD.VBP 即被关联为VB6的工程文件。双击VBP文件即可进入VB6的集成开发环境，执行VBP文件右键菜单中的Make，即可编译成《象棋巫师》执行程序(XQWIZARD.EXE)了。
+　　VB6是 Visual Studio 98 的一个组件，安装 Visual Studio 98 后，"XQWSIMP.VBP"和"XQWTRAD.VBP"即被关联为VB6的工程文件。双击VBP文件即可进入VB6的集成开发环境，执行VBP文件右键菜单中的Make，即可编译成《象棋巫师》执行程序(XQWIZARD.EXE)了。
 　　《象棋巫师》的工程文件也可以用VB5打开，但是代码需要作适当的修改，例如 InStrRev() 函数需要自定义。但《象棋巫师》的源程序不适用于 VB.NET 。
 
 3. 简体版和繁体版是如何区分的？
 
-　　《象棋巫师》简体版的工程文件是 XQWSIMP.VBP，繁体版的工程文件是 XQWTRAD.VBP，两个文件全部位于主目录下。
-　　简体版和繁体版的公共源程序都放在主目录下，简体版专有的源程序放在 XQWSIMP 目录下，繁体版专有的源程序放在 XQWTRAD 目录下。
+　　简体版的工程文件是"XQWSIMP.VBP"，繁体版的工程文件是"XQWTRAD.VBP"，两个文件都位于主目录下。
+　　简体版和繁体版的公共源程序都放在主目录下，简体版专有的源程序放在"XQWSIMP"目录下，繁体版专有的源程序放在"XQWTRAD"目录下。
 
 4. 源程序由哪些文件构成？
 
@@ -28,9 +28,39 @@
 
 5. 繁体版的源程序是如何生成并用来编译的？
 
-　　繁体版的源程序全部放在 XQWTRAD 目录下，与简体版的源程序(放在 XQWSIMP 目录下)一一对应。
-　　《象棋巫师》开发团队已发布的繁体版源程序只适用于简体中文版的 Windows，直接编译 XQWTRAD.VBP 即可生成繁体版的《象棋巫师》执行程序(XQWIZARD.EXE)了。
-　　简体版的源程序转换为繁体版比较烦琐，窗体设计部分(FRM文件 Attribute 以上的部分)的代码需要转化成BIG5码，程序部分(FRM文件 Attribute 以下的部分，以及BAS文件)的代码需要转换成GB(HZ)码。转换完成后，还需要改动一些地方：
-　　　　(1) 
+　　繁体版的源程序全部放在"XQWTRAD"目录下，与简体版的源程序(放在"XQWSIMP"目录下)一一对应。
+　　已发布的繁体版源程序只适用于简体中文版的 Windows，直接编译"XQWTRAD.VBP"即可生成繁体版的《象棋巫师》执行程序(XQWIZARD.EXE)了。
+　　简体版的源程序转换为繁体版比较烦琐，窗体设计部分(FRM文件"Attribute"以上的部分)的代码需要转化成BIG5码，而程序部分(FRM文件"Attribute"以下的部分，以及BAS文件)的繁体文字需要用GB/HZ码表示。转换完成后，还需要改动一些地方：
+　　　　(1) 字体属性中，"Charset"设成136(简体版是134)；
+　　　　(2) 窗体设计部分中如果使用OCX控件(如"MSComctlLib.Toolbar"控件)，那么属性中的文字需要用GB/HZ码表示。
+　　　　(3) "XQWMAIN.BAS"中，"Main()"过程中的"CchessInit"这一句应改成"CchessInit CCHESS_TRADITIONAL"，"CheckUpdate()"过程中的下载地址也应修改；
+　　　　(4) 某些简繁转换程序不一定转换正确，需要手工更正，如"后"转换成"後"、"体"转换成"體"、"老板"转换成"老闆"。
+　　注意：尽量不要在VB6的集成开发环境中编辑"XQWTRAD.VBP"工程文件及其包含的其他文件，因为它会破坏某些设置(如字体属性)。
 
-6. 
+6. 为什么会找不到DLL文件？
+
+　　如果源程序在VB6的集成开发环境下运行，那么可能会遇到找不到DLL文件的问题，只要将主目录下的"ATOM.DLL"、"PIPE.DLL"、"ECCO.DLL"和"CCHESS.DLL"复制到"WINDOWS"或"SYSTEM32"目录下即可。
+　　如果运行编译后的执行程序(XQWIZARD.EXE)，那么只要保证上述4个DLL文件与"XQWIZARD.EXE"在同一目录下即可正常运行。
+
+7. 主目录中的EXE和DLL文件有源程序吗？
+
+　　主目录中的EXE和DLL文件(包括上述4个执行程序需要调用的DLL文件)都源于 SourceForge 的 ElephantEye 项目，可参阅"ELEEYE.TXT"。
+
+8. 如何修改资源文件？
+
+　　工程文件中引用了资源文件"XQWIZARD.RES"，它是由另一个资源文件"XQWIZARD.RC"编译而成的。
+　　如需修改执行程序中的图标，那么首先修改"RES"目录下的ICO文件，然后用VC6的"RC"命令把"XQWIZARD.RC"编译为"XQWIZARD.RES"就可以了。
+
+9. 如何制作安装包？
+
+　　《象棋巫师》的安装包是由 Inno Setup 制作的。由于安装向导用中文语言，所以 Inno Setup 必须附带中文语言文件(简体和繁体各一个)，在 Inno Setup 的官方网站上可以获得：
+　　　　http://www.jrsoftware.org/
+
+10. 简体版和繁体版的安装包选择的文件有哪些不同？
+
+　　"XQWSIMP.ISS"和"XQWTRAD.ISS"分别是简体版和繁体版的安装脚本，除了文字编码有区别外(分别是GB/HZ码和BIG5码)，选择的文件也有所不同，主要区别有：
+　　　　(1) 简体版的图片棋盘取自"BMPBOARD"目录，繁体版取自"BMPBOART"目录(安装目标目录仍旧为"BMPBOARD")；
+　　　　(2) 简体版的印刷棋盘取自"PRINTBRD"目录，繁体版取自"PRINTBRT"目录(安装目标目录仍旧为"PRINTBRD")；
+　　　　(3) 简体版的Web棋盘图片取自"JSBOARD"目录，繁体版取自"JSBOART"目录(安装目标目录仍旧为"JSBOARD")；
+　　　　(4) 简体版的挑战棋谱取自"ENDGAMES"目录，繁体版取自"ENDGAMET"目录(安装目标目录仍旧为"ENDGAMES")。
+　　在制作安装包前，必须先生成执行程序(XQWIZARD.EXE)，即用"XQWSIMP.ISS"制作安装包前，必须用"XQWSIMP.VBP"生成执行程序，用"XQWTRAD.ISS"制作安装包前，必须用"XQWTRAD.VBP"生成执行程序。
