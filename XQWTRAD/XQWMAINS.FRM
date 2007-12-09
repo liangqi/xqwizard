@@ -1661,28 +1661,28 @@ Begin VB.Form frmMainSmall
             Caption         =   "&A.胺ō┬毙絤()"
          End
          Begin VB.Menu mnEndgamesBoothB 
-            Caption         =   "&B.┍ρ狾()"
+            Caption         =   "&B.┍ρ馏()"
          End
          Begin VB.Menu mnEndgamesBoothC 
             Caption         =   "&C.洛ネ()"
          End
          Begin VB.Menu mnEndgamesBoothD 
-            Caption         =   "&D.┍ρ狾()"
+            Caption         =   "&D.┍ρ馏()"
          End
          Begin VB.Menu mnEndgamesBoothE 
-            Caption         =   "&E.┍ρ狾()"
+            Caption         =   "&E.难┍ρ馏()"
          End
          Begin VB.Menu mnEndgamesBoothF 
-            Caption         =   "&F.耣穧舥ρ狾()"
+            Caption         =   "&F.耣穧舥ρ馏()"
          End
          Begin VB.Menu mnEndgamesBoothSep1 
             Caption         =   "-"
          End
          Begin VB.Menu mnEndgamesBoothG 
-            Caption         =   "&G.砃ρ狾(い)"
+            Caption         =   "&G.砃ρ馏(い)"
          End
          Begin VB.Menu mnEndgamesBoothH 
-            Caption         =   "&H.〡柏繻ρ狾(い)"
+            Caption         =   "&H.〡柏繻ρ馏(い)"
          End
          Begin VB.Menu mnEndgamesBoothI 
             Caption         =   "&I.憨礶┍(い)"
@@ -1703,13 +1703,13 @@ Begin VB.Form frmMainSmall
             Caption         =   "&M.瓣砃繻(蔼)"
          End
          Begin VB.Menu mnEndgamesBoothN 
-            Caption         =   "&N.馒砯┍ρ狾(蔼)"
+            Caption         =   "&N.馒砯┍ρ馏(蔼)"
          End
          Begin VB.Menu mnEndgamesBoothO 
-            Caption         =   "&O.狦舥ρ狾(蔼)"
+            Caption         =   "&O.狦舥ρ馏(蔼)"
          End
          Begin VB.Menu mnEndgamesBoothP 
-            Caption         =   "&P.囱舥ρ狾(蔼)"
+            Caption         =   "&P.囱舥ρ馏(蔼)"
          End
          Begin VB.Menu mnEndgamesBoothQ 
             Caption         =   "&Q.㎝﹟(蔼)"
@@ -2477,7 +2477,7 @@ Private Sub mnEndgamesBoothB_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_B", "象棋路邊攤 - B.紅茶店老板(初級)"
+LoadEndgames "BOOTH_B", "象棋路邊攤 - B.紅茶店老闆(初級)"
 
 End Sub
 
@@ -2495,7 +2495,7 @@ Private Sub mnEndgamesBoothD_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_D", "象棋路邊攤 - D.花店老板(初級)"
+LoadEndgames "BOOTH_D", "象棋路邊攤 - D.花店老闆(初級)"
 
 End Sub
 
@@ -2504,7 +2504,7 @@ Private Sub mnEndgamesBoothE_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_E", "象棋路邊攤 - E.面店老板(初級)"
+LoadEndgames "BOOTH_E", "象棋路邊攤 - E.麵店老闆(初級)"
 
 End Sub
 
@@ -2513,7 +2513,7 @@ Private Sub mnEndgamesBoothF_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_F", "象棋路邊攤 - F.檳榔攤老板(初級)"
+LoadEndgames "BOOTH_F", "象棋路邊攤 - F.檳榔攤老闆(初級)"
 
 End Sub
 
@@ -2522,7 +2522,7 @@ Private Sub mnEndgamesBoothG_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_G", "象棋路邊攤 - G.美術社老板(中級)"
+LoadEndgames "BOOTH_G", "象棋路邊攤 - G.美術社老闆(中級)"
 
 End Sub
 
@@ -2531,7 +2531,7 @@ Private Sub mnEndgamesBoothH_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_H", "象棋路邊攤 - H.咖啡館老板(中級)"
+LoadEndgames "BOOTH_H", "象棋路邊攤 - H.咖啡館老闆(中級)"
 
 End Sub
 
@@ -2585,7 +2585,7 @@ Private Sub mnEndgamesBoothN_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_N", "象棋路邊攤 - N.雜貨店老板(高級)"
+LoadEndgames "BOOTH_N", "象棋路邊攤 - N.雜貨店老闆(高級)"
 
 End Sub
 
@@ -2594,7 +2594,7 @@ Private Sub mnEndgamesBoothO_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_O", "象棋路邊攤 - O.水果攤老板(高級)"
+LoadEndgames "BOOTH_O", "象棋路邊攤 - O.水果攤老闆(高級)"
 
 End Sub
 
@@ -2603,7 +2603,7 @@ Private Sub mnEndgamesBoothP_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "BOOTH_P", "象棋路邊攤 - P.棋攤老板(高級)"
+LoadEndgames "BOOTH_P", "象棋路邊攤 - P.棋攤老闆(高級)"
 
 End Sub
 
