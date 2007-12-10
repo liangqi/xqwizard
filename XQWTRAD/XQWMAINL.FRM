@@ -1549,28 +1549,35 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnWizardHandicap 
+      Begin VB.Menu mnWizardHandicap_ 
          Caption         =   "琵(&H)"
-         Begin VB.Menu mnWizardHandicapA 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "砆琵虫皑(&A)"
+            Index           =   0
          End
-         Begin VB.Menu mnWizardHandicapB 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "砆琵蛮皑(&B)"
+            Index           =   1
          End
-         Begin VB.Menu mnWizardHandicapC 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "砆琵(&C)"
+            Index           =   2
          End
-         Begin VB.Menu mnWizardHandicapSep1 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "-"
+            Index           =   3
          End
-         Begin VB.Menu mnWizardHandicapD 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "琵虫皑(&D)"
+            Index           =   4
          End
-         Begin VB.Menu mnWizardHandicapE 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "琵蛮皑(&E)"
+            Index           =   5
          End
-         Begin VB.Menu mnWizardHandicapF 
+         Begin VB.Menu mnWizardHandicap 
             Caption         =   "琵(&F)"
+            Index           =   6
          End
       End
       Begin VB.Menu mnWizardFunny 
@@ -1601,118 +1608,152 @@ Begin VB.Form frmMainLarge
          Caption         =   "ネΘ囱絃(&R)"
       End
    End
-   Begin VB.Menu mnEndgames 
+   Begin VB.Menu mnEndgames_ 
       Caption         =   "珼驹(&C)"
-      Begin VB.Menu mnEndgamesA 
+      Begin VB.Menu mnEndgames 
          Caption         =   "膀セ炳猭(&A)"
+         Index           =   0
       End
-      Begin VB.Menu mnEndgamesB 
+      Begin VB.Menu mnEndgames 
          Caption         =   "膀セ驹砃(&B)"
+         Index           =   1
       End
-      Begin VB.Menu mnEndgamesC 
+      Begin VB.Menu mnEndgames 
          Caption         =   "いЫ炳猭(&C)"
+         Index           =   2
       End
-      Begin VB.Menu mnEndgamesD 
+      Begin VB.Menu mnEndgames 
          Caption         =   "摧Ыю炳(&D)"
          Enabled         =   0   'False
+         Index           =   3
       End
-      Begin VB.Menu mnEndgamesE 
+      Begin VB.Menu mnEndgames 
          Caption         =   "虏衊墩摧Ы(&E)"
          Enabled         =   0   'False
+         Index           =   4
       End
-      Begin VB.Menu mnEndgamesF 
+      Begin VB.Menu mnEndgames 
          Caption         =   "禜囱龟ノ摧Ы(材栋)(&F)"
          Enabled         =   0   'False
+         Index           =   5
       End
-      Begin VB.Menu mnEndgamesG 
+      Begin VB.Menu mnEndgames 
          Caption         =   "禜囱龟ノ摧Ы(材栋)(&G)"
          Enabled         =   0   'False
+         Index           =   6
       End
-      Begin VB.Menu mnEndgamesSep 
+      Begin VB.Menu mnEndgames 
          Caption         =   "-"
+         Index           =   7
       End
-      Begin VB.Menu mnEndgamesH 
+      Begin VB.Menu mnEndgames 
          Caption         =   "撅い(摧Ы絞)(&H)"
+         Index           =   8
       End
-      Begin VB.Menu mnEndgamesI 
+      Begin VB.Menu mnEndgames 
          Caption         =   "屿薄懂届(&I)"
+         Index           =   9
       End
-      Begin VB.Menu mnEndgamesJ 
+      Begin VB.Menu mnEndgames 
          Caption         =   "年琠审(&J)"
          Enabled         =   0   'False
+         Index           =   10
       End
-      Begin VB.Menu mnEndgamesK 
+      Begin VB.Menu mnEndgames 
          Caption         =   "禜Ы蹲(&K)"
          Enabled         =   0   'False
+         Index           =   11
       End
-      Begin VB.Menu mnEndgamesL 
+      Begin VB.Menu mnEndgames 
          Caption         =   "打κЫ眯(&L)"
          Enabled         =   0   'False
+         Index           =   12
       End
-      Begin VB.Menu mnEndgamesSep2 
+      Begin VB.Menu mnEndgames 
          Caption         =   "-"
+         Index           =   13
       End
-      Begin VB.Menu mnEndgamesBooth 
+      Begin VB.Menu mnEndgamesBooth_ 
          Caption         =   "禜囱隔娩舥(&M)"
-         Begin VB.Menu mnEndgamesBoothA 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&A.胺ō┬毙絤()"
+            Index           =   0
          End
-         Begin VB.Menu mnEndgamesBoothB 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&B.┍ρ馏()"
+            Index           =   1
          End
-         Begin VB.Menu mnEndgamesBoothC 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&C.洛ネ()"
+            Index           =   2
          End
-         Begin VB.Menu mnEndgamesBoothD 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&D.┍ρ馏()"
+            Index           =   3
          End
-         Begin VB.Menu mnEndgamesBoothE 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&E.难┍ρ馏()"
+            Index           =   4
          End
-         Begin VB.Menu mnEndgamesBoothF 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&F.耣穧舥ρ馏()"
+            Index           =   5
          End
-         Begin VB.Menu mnEndgamesBoothSep1 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "-"
+            Index           =   6
          End
-         Begin VB.Menu mnEndgamesBoothG 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&G.砃ρ馏(い)"
+            Index           =   7
          End
-         Begin VB.Menu mnEndgamesBoothH 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&H.〡柏繻ρ馏(い)"
+            Index           =   8
          End
-         Begin VB.Menu mnEndgamesBoothI 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&I.憨礶┍(い)"
+            Index           =   9
          End
-         Begin VB.Menu mnEndgamesBoothJ 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&J.┍(い)"
+            Index           =   10
          End
-         Begin VB.Menu mnEndgamesBoothK 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&K.ň钉(い)"
+            Index           =   11
          End
-         Begin VB.Menu mnEndgamesBoothSep2 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "-"
+            Index           =   12
          End
-         Begin VB.Menu mnEndgamesBoothL 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&L.戒初ゴも(蔼)"
+            Index           =   13
          End
-         Begin VB.Menu mnEndgamesBoothM 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&M.瓣砃繻(蔼)"
+            Index           =   14
          End
-         Begin VB.Menu mnEndgamesBoothN 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&N.馒砯┍ρ馏(蔼)"
+            Index           =   15
          End
-         Begin VB.Menu mnEndgamesBoothO 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&O.狦舥ρ馏(蔼)"
+            Index           =   16
          End
-         Begin VB.Menu mnEndgamesBoothP 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&P.囱舥ρ馏(蔼)"
+            Index           =   17
          End
-         Begin VB.Menu mnEndgamesBoothQ 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&Q.㎝﹟(蔼)"
+            Index           =   18
          End
-         Begin VB.Menu mnEndgamesBoothR 
+         Begin VB.Menu mnEndgamesBooth 
             Caption         =   "&R.囱(蔼)"
+            Index           =   19
          End
       End
    End
@@ -1775,82 +1816,105 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnOptionsBoard 
+      Begin VB.Menu mnOptionsBoard_ 
          Caption         =   "囱絃(&B)"
-         Begin VB.Menu mnOptionsBoardWood 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "騌れ(&W)"
+            Index           =   0
          End
-         Begin VB.Menu mnOptionsBoardGreen 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "厚︹瞶ホ(&G)"
+            Index           =   1
          End
-         Begin VB.Menu mnOptionsBoardWhite 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "フ︹瞶ホ(&H)"
+            Index           =   2
          End
-         Begin VB.Menu mnOptionsBoardSheet 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "ネ(&S)"
+            Index           =   3
          End
-         Begin VB.Menu mnOptionsBoardCanvas 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "礶ガ(&C)"
+            Index           =   4
          End
-         Begin VB.Menu mnOptionsBoardDrops 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "簑(&D)"
+            Index           =   5
          End
-         Begin VB.Menu mnOptionsBoardQianHong 
+         Begin VB.Menu mnOptionsBoard 
             Caption         =   "睱禜囱(&Q)"
+            Index           =   6
          End
       End
-      Begin VB.Menu mnOptionsPieces 
+      Begin VB.Menu mnOptionsPieces_ 
          Caption         =   "囱(&P)"
-         Begin VB.Menu mnOptionsPiecesWood 
+         Begin VB.Menu mnOptionsPieces 
             Caption         =   "れㄨ(&W)"
+            Index           =   0
          End
-         Begin VB.Menu mnOptionsPiecesDelicate 
+         Begin VB.Menu mnOptionsPieces 
             Caption         =   "弘璓(&D)"
+            Index           =   1
          End
-         Begin VB.Menu mnOptionsPiecesPolish 
+         Begin VB.Menu mnOptionsPieces 
             Caption         =   "緼(&P)"
+            Index           =   2
          End
       End
-      Begin VB.Menu mnOptionsMusic 
+      Begin VB.Menu mnOptionsMusic_ 
          Caption         =   "贾(&M)"
-         Begin VB.Menu mnOptionsMusicClassic 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "ㄥ(&C)"
+            Index           =   0
          End
-         Begin VB.Menu mnOptionsMusicExpress 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "候眎(&E)"
+            Index           =   1
          End
-         Begin VB.Menu mnOptionsMusicFunny 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "届(&F)"
+            Index           =   2
          End
-         Begin VB.Menu mnOptionsMusicWaltz 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "蛾籖Ρ(&W)"
+            Index           =   3
          End
-         Begin VB.Menu mnOptionsMusicMozart1 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "馋ゃ疭(&M)"
+            Index           =   4
          End
-         Begin VB.Menu mnOptionsMusicMozart4 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "馋ゃ疭(&Z)"
+            Index           =   5
          End
-         Begin VB.Menu mnOptionsMusicFlight 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "偿噶籖(&L)"
+            Index           =   6
          End
-         Begin VB.Menu mnOptionsMusicAnitra 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "ブ焊疭(&A)"
+            Index           =   7
          End
-         Begin VB.Menu mnOptionsMusicHumour 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "纐Ρ(&H)"
+            Index           =   8
          End
-         Begin VB.Menu mnOptionsMusicJingle 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "筧臫讽(&J)"
+            Index           =   9
          End
-         Begin VB.Menu mnOptionsMusicPal 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "糃獿肚(&P)"
+            Index           =   10
          End
-         Begin VB.Menu mnOptionsMusicTcf 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "ぱ郸┎(&T)"
+            Index           =   11
          End
-         Begin VB.Menu mnOptionsMusicNone 
+         Begin VB.Menu mnOptionsMusic 
             Caption         =   "礚羘(&N)"
+            Index           =   12
          End
       End
       Begin VB.Menu mnOptionsTopMost 
@@ -2256,63 +2320,13 @@ End If
 
 End Sub
 
-Private Sub mnWizardHandicapA_Click()
+Private Sub mnWizardHandicap_Click(nIndex As Integer)
 
 If CancelSave Then
     Exit Sub
 End If
-LoadFenStr HANDICAP_A
-EngineNewGame ENGINE_PLAY_RED
-
-End Sub
-
-Private Sub mnWizardHandicapB_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadFenStr HANDICAP_B
-EngineNewGame ENGINE_PLAY_RED
-
-End Sub
-
-Private Sub mnWizardHandicapC_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadFenStr HANDICAP_C
-EngineNewGame ENGINE_PLAY_RED
-
-End Sub
-
-Private Sub mnWizardHandicapD_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadFenStr HANDICAP_A
-EngineNewGame ENGINE_PLAY_BLACK
-
-End Sub
-
-Private Sub mnWizardHandicapE_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadFenStr HANDICAP_B
-EngineNewGame ENGINE_PLAY_BLACK
-
-End Sub
-
-Private Sub mnWizardHandicapF_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadFenStr HANDICAP_C
-EngineNewGame ENGINE_PLAY_BLACK
+LoadFenStr Choose(nIndex Mod 4 + 1, HANDICAP_A, HANDICAP_B, HANDICAP_C)
+EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
@@ -2322,276 +2336,6 @@ If CancelSave Then
     Exit Sub
 End If
 LoadEndgames "FUNNY", "趣味象棋"
-
-End Sub
-
-Private Sub mnEndgamesA_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_A", "基本殺法"
-
-End Sub
-
-Private Sub mnEndgamesB_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_B", "基本戰術"
-
-End Sub
-
-Private Sub mnEndgamesC_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_C", "中局殺法"
-
-End Sub
-
-Private Sub mnEndgamesD_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_D", "殘局攻殺"
-
-End Sub
-
-Private Sub mnEndgamesE_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_E", "簡易胜勢殘局"
-
-End Sub
-
-Private Sub mnEndgamesF_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_F", "象棋實用殘局(第一集)"
-
-End Sub
-
-Private Sub mnEndgamesG_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_G", "象棋實用殘局(第二集)"
-
-End Sub
-
-Private Sub mnEndgamesH_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_H", "橘中秘(殘局篇)"
-
-End Sub
-
-Private Sub mnEndgamesI_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_I", "适情雅趣"
-
-End Sub
-
-Private Sub mnEndgamesJ_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_J", "爛柯神机"
-
-End Sub
-
-Private Sub mnEndgamesK_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_K", "象局匯存"
-
-End Sub
-
-Private Sub mnEndgamesL_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "_L", "江湖百局秘譜"
-
-End Sub
-
-Private Sub mnEndgamesBoothA_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_A", "象棋路邊攤 - A.健身房教練(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothB_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_B", "象棋路邊攤 - B.紅茶店老闆(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothC_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_C", "象棋路邊攤 - C.醫生(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothD_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_D", "象棋路邊攤 - D.花店老闆(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothE_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_E", "象棋路邊攤 - E.麵店老闆(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothF_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_F", "象棋路邊攤 - F.檳榔攤老闆(初級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothG_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_G", "象棋路邊攤 - G.美術社老闆(中級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothH_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_H", "象棋路邊攤 - H.咖啡館老闆(中級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothI_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_I", "象棋路邊攤 - I.漫畫店長(中級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothJ_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_J", "象棋路邊攤 - J.小吃店員(中級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothK_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_K", "象棋路邊攤 - K.消防隊長(中級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothL_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_L", "象棋路邊攤 - L.賭場打手(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothM_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_M", "象棋路邊攤 - M.國術館長(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothN_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_N", "象棋路邊攤 - N.雜貨店老闆(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothO_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_O", "象棋路邊攤 - O.水果攤老闆(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothP_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_P", "象棋路邊攤 - P.棋攤老闆(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothQ_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_Q", "象棋路邊攤 - Q.和尚(高級)"
-
-End Sub
-
-Private Sub mnEndgamesBoothR_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "BOOTH_R", "象棋路邊攤 - R.棋社社長(高級)"
 
 End Sub
 
@@ -2640,6 +2384,33 @@ End Sub
 Private Sub mnWizardPrint_Click()
 
 ViewPrintBitmap
+
+End Sub
+
+Private Sub mnEndgames_Click(nIndex As Integer)
+
+Dim szEpdName As String, szTitle As String
+If CancelSave Then
+    Exit Sub
+End If
+szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
+szTitle = Choose(nIndex + 1, "基本殺法", "基本戰術", "中局殺法", "殘局攻殺", "簡易胜勢殘局", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
+        "", "橘中秘(殘局篇)", "适情雅趣", "爛柯神机", "象局匯存", "江湖百局秘譜")
+LoadEndgames szEpdName, szTitle
+
+End Sub
+
+Private Sub mnEndgamesBooth_Click(nIndex As Integer)
+
+Dim szEpdName As String, szTitle As String
+If CancelSave Then
+    Exit Sub
+End If
+szEpdName = "BOOTH_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "", "G", "H", "I", "J", "K", "", "L", "M", "N", "O", "P", "Q", "R")
+szTitle = "象棋路邊攤 - " + Choose(nIndex + 1, "A.健身房教練(初級)", "B.紅茶店老闆(初級)", "C.醫生(初級)", "D.花店老闆(初級)", "E.麵店老闆(初級)", "F.檳榔攤老闆(初級)", _
+        "", "G.美術社老闆(中級)", "H.咖啡館老闆(中級)", "I.漫畫店長(中級)", "J.小吃店員(中級)", "K.消防隊長(中級)", _
+        "", "L.賭場打手(高級)", "M.國術館長(高級)", "N.雜貨店老闆(高級)", "O.水果攤老闆(高級)", "P.棋攤老闆(高級)", "Q.和尚(高級)", "R.棋社社長(高級)")
+LoadEndgames szEpdName, szTitle
 
 End Sub
 
@@ -2805,141 +2576,21 @@ frmOptions.Show vbModal, Me
 
 End Sub
 
-Private Sub mnOptionsBoardWood_Click()
+Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
-BoardSettingLarge BOARD_L_WOOD
-
-End Sub
-
-Private Sub mnOptionsBoardGreen_Click()
-
-BoardSettingLarge BOARD_L_GREEN
+BoardSettingLarge nIndex
 
 End Sub
 
-Private Sub mnOptionsBoardWhite_Click()
+Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
-BoardSettingLarge BOARD_L_WHITE
-
-End Sub
-
-Private Sub mnOptionsBoardSheet_Click()
-
-BoardSettingLarge BOARD_L_SHEET
+PiecesSettingLarge nIndex
 
 End Sub
 
-Private Sub mnOptionsBoardCanvas_Click()
+Private Sub mnOptionsMusic_Click(nIndex As Integer)
 
-BoardSettingLarge BOARD_L_CANVAS
-
-End Sub
-
-Private Sub mnOptionsBoardDrops_Click()
-
-BoardSettingLarge BOARD_L_DROPS
-
-End Sub
-
-Private Sub mnOptionsBoardQianHong_Click()
-
-BoardSettingLarge BOARD_L_QIANHONG
-
-End Sub
-
-Private Sub mnOptionsPiecesWood_Click()
-
-PiecesSettingLarge PIECES_L_WOOD
-
-End Sub
-
-Private Sub mnOptionsPiecesDelicate_Click()
-
-PiecesSettingLarge PIECES_L_DELICATE
-
-End Sub
-
-Private Sub mnOptionsPiecesPolish_Click()
-
-PiecesSettingLarge PIECES_L_POLISH
-
-End Sub
-
-Private Sub mnOptionsMusicClassic_Click()
-
-MusicSetting MUSIC_CLASSIC
-
-End Sub
-
-Private Sub mnOptionsMusicExpress_Click()
-
-MusicSetting MUSIC_EXPRESS
-
-End Sub
-
-Private Sub mnOptionsMusicFunny_Click()
-
-MusicSetting MUSIC_FUNNY
-
-End Sub
-
-Private Sub mnOptionsMusicWaltz_Click()
-
-MusicSetting MUSIC_WALTZ
-
-End Sub
-
-Private Sub mnOptionsMusicMozart1_Click()
-
-MusicSetting MUSIC_MOZART1
-
-End Sub
-
-Private Sub mnOptionsMusicMozart4_Click()
-
-MusicSetting MUSIC_MOZART4
-
-End Sub
-
-Private Sub mnOptionsMusicFlight_Click()
-
-MusicSetting MUSIC_FLIGHT
-
-End Sub
-
-Private Sub mnOptionsMusicAnitra_Click()
-
-MusicSetting MUSIC_ANITRA
-
-End Sub
-
-Private Sub mnOptionsMusicHumour_Click()
-
-MusicSetting MUSIC_HUMOUR
-
-End Sub
-
-Private Sub mnOptionsMusicJingle_Click()
-
-MusicSetting MUSIC_JINGLE
-
-End Sub
-
-Private Sub mnOptionsMusicPal_Click()
-
-MusicSetting MUSIC_PAL
-
-End Sub
-
-Private Sub mnOptionsMusicTcf_Click()
-
-MusicSetting MUSIC_CMUSIC
-
-End Sub
-
-Private Sub mnOptionsMusicNone_Click()
-
-MusicSetting MUSIC_NONE
+MusicSetting nIndex
 
 End Sub
 

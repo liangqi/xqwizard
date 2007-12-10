@@ -2615,13 +2615,13 @@ End Sub
 
 Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
-BoardSettingLarge nIndex
+BoardSettingSmall nIndex
 
 End Sub
 
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
-PiecesSettingLarge nIndex
+PiecesSettingSmall nIndex
 
 End Sub
 
