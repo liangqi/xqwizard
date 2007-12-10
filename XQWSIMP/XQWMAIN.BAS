@@ -1814,10 +1814,10 @@ App_frmMain.mnPosPaste.Enabled = Not bBusy
 App_frmMain.mnPosLoad.Enabled = Not bBusy
 App_frmMain.mnWizardPlay.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("WizardPlay").Enabled = Not bBusy
-App_frmMain.mnWizardHandicap.Enabled = Not bBusy
+App_frmMain.mnWizardHandicap_.Enabled = Not bBusy
 App_frmMain.mnWizardFunny.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("WizardFunny").Enabled = Not bBusy
-App_frmMain.mnEndgames.Enabled = Not bBusy
+App_frmMain.mnEndgames_.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
 App_frmMain.mnEngineSet.Enabled = Not bBusy
@@ -2590,20 +2590,12 @@ End Sub
 ' 设置棋盘(小)
 Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 
+Dim i As Integer
 BoardSettingSmallHide nBoardIndex
 frmMainSmall.imgBoard.Picture = frmHide.imgBoardSmall.Picture
-frmMainSmall.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_S_WOOD)
-frmMainSmall.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_S_GREEN)
-frmMainSmall.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_S_WHITE)
-frmMainSmall.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_S_SHEET)
-frmMainSmall.mnOptionsBoardCanvas.Checked = (nBoardIndex = BOARD_S_CANVAS)
-frmMainSmall.mnOptionsBoardDrops.Checked = (nBoardIndex = BOARD_S_DROPS)
-frmMainSmall.mnOptionsBoardClouds.Checked = (nBoardIndex = BOARD_S_CLOUDS)
-frmMainSmall.mnOptionsBoardXQStudio.Checked = (nBoardIndex = BOARD_S_XQSTUDIO)
-frmMainSmall.mnOptionsBoardMoveSky.Checked = (nBoardIndex = BOARD_S_MOVESKY)
-frmMainSmall.mnOptionsBoardMRSJ.Checked = (nBoardIndex = BOARD_S_MRSJ)
-frmMainSmall.mnOptionsBoardZMBL.Checked = (nBoardIndex = BOARD_S_ZMBL)
-frmMainSmall.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_S_QIANHONG)
+For i = 0 To BOARD_S_MAX - 1
+    frmMainSmall.mnOptionsBoard(i).Checked = (nBoardIndex = i)
+Next
 Options_nBoardS = nBoardIndex
 
 End Sub
@@ -2621,15 +2613,12 @@ End Sub
 ' 设置棋盘(大)
 Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
 
+Dim i As Integer
 BoardSettingLargeHide nBoardIndex
 frmMainLarge.imgBoard.Picture = frmHide.imgBoardLarge
-frmMainLarge.mnOptionsBoardWood.Checked = (nBoardIndex = BOARD_L_WOOD)
-frmMainLarge.mnOptionsBoardGreen.Checked = (nBoardIndex = BOARD_L_GREEN)
-frmMainLarge.mnOptionsBoardWhite.Checked = (nBoardIndex = BOARD_L_WHITE)
-frmMainLarge.mnOptionsBoardSheet.Checked = (nBoardIndex = BOARD_L_SHEET)
-frmMainLarge.mnOptionsBoardCanvas.Checked = (nBoardIndex = BOARD_L_CANVAS)
-frmMainLarge.mnOptionsBoardDrops.Checked = (nBoardIndex = BOARD_L_DROPS)
-frmMainLarge.mnOptionsBoardQianHong.Checked = (nBoardIndex = BOARD_L_QIANHONG)
+For i = 0 To BOARD_L_MAX - 1
+    frmMainLarge.mnOptionsBoard(i).Checked = (nBoardIndex = i)
+Next
 Options_nBoardL = nBoardIndex
 
 End Sub
@@ -2674,13 +2663,9 @@ PiecesSettingSmallHide nPiecesIndex
 For i = 0 To 29
     Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
 Next
-frmMainSmall.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_S_WOOD)
-frmMainSmall.mnOptionsPiecesDelicate.Checked = (nPiecesIndex = PIECES_S_DELICATE)
-frmMainSmall.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_S_POLISH)
-frmMainSmall.mnOptionsPiecesXQStudio.Checked = (nPiecesIndex = PIECES_S_XQSTUDIO)
-frmMainSmall.mnOptionsPiecesMoveSky.Checked = (nPiecesIndex = PIECES_S_MOVESKY)
-frmMainSmall.mnOptionsPiecesMRSJ.Checked = (nPiecesIndex = PIECES_S_MRSJ)
-frmMainSmall.mnOptionsPiecesZMBL.Checked = (nPiecesIndex = PIECES_S_ZMBL)
+For i = 0 To PIECES_S_MAX - 1
+    frmMainSmall.mnOptionsPieces(i).Checked = (nPiecesIndex = i)
+Next
 BoardFlush
 LabelFlush
 Options_nPiecesS = nPiecesIndex
@@ -2708,9 +2693,9 @@ PiecesSettingLargeHide nPiecesIndex
 For i = 0 To 29
     Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
 Next
-frmMainLarge.mnOptionsPiecesWood.Checked = (nPiecesIndex = PIECES_L_WOOD)
-frmMainLarge.mnOptionsPiecesDelicate.Checked = (nPiecesIndex = PIECES_L_DELICATE)
-frmMainLarge.mnOptionsPiecesPolish.Checked = (nPiecesIndex = PIECES_L_POLISH)
+For i = 0 To PIECES_L_MAX - 1
+    frmMainLarge.mnOptionsPieces(i).Checked = (nPiecesIndex = i)
+Next
 BoardFlush
 LabelFlush
 Options_nPiecesL = nPiecesIndex
@@ -2720,6 +2705,7 @@ End Sub
 ' 设置音乐
 Public Sub MusicSetting(ByVal nMusicIndex As Integer)
 
+Dim i As Integer
 frmHide.mci.Command = "Close"
 If nMusicIndex < MUSIC_NONE Then
     frmHide.mci.FileName = App_szPath + "MUSICS\" + _
@@ -2730,19 +2716,9 @@ If nMusicIndex < MUSIC_NONE Then
         frmHide.mci.Command = "Play"
     End If
 End If
-App_frmMain.mnOptionsMusicClassic.Checked = (nMusicIndex = MUSIC_CLASSIC)
-App_frmMain.mnOptionsMusicExpress.Checked = (nMusicIndex = MUSIC_EXPRESS)
-App_frmMain.mnOptionsMusicFunny.Checked = (nMusicIndex = MUSIC_FUNNY)
-App_frmMain.mnOptionsMusicWaltz.Checked = (nMusicIndex = MUSIC_WALTZ)
-App_frmMain.mnOptionsMusicMozart1.Checked = (nMusicIndex = MUSIC_MOZART1)
-App_frmMain.mnOptionsMusicMozart4.Checked = (nMusicIndex = MUSIC_MOZART4)
-App_frmMain.mnOptionsMusicFlight.Checked = (nMusicIndex = MUSIC_FLIGHT)
-App_frmMain.mnOptionsMusicAnitra.Checked = (nMusicIndex = MUSIC_ANITRA)
-App_frmMain.mnOptionsMusicHumour.Checked = (nMusicIndex = MUSIC_HUMOUR)
-App_frmMain.mnOptionsMusicJingle.Checked = (nMusicIndex = MUSIC_JINGLE)
-App_frmMain.mnOptionsMusicPal.Checked = (nMusicIndex = MUSIC_PAL)
-App_frmMain.mnOptionsMusicTcf.Checked = (nMusicIndex = MUSIC_CMUSIC)
-App_frmMain.mnOptionsMusicNone.Checked = (nMusicIndex = MUSIC_NONE)
+For i = 0 To MUSIC_MAX - 1
+    App_frmMain.mnOptionsMusic(i).Checked = (nMusicIndex = i)
+Next
 Options_nMusic = nMusicIndex
 
 End Sub
@@ -2981,7 +2957,7 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 1.0 Then
+            If Rnd < 1# Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
