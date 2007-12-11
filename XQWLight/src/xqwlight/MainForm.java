@@ -61,69 +61,38 @@ public class MainForm extends Canvas implements CommandListener {
 
 	private XQWLight midlet;
 	private Search search;
+
+	private int cursorX, cursorY;
+	private int sqSelected, mvLast;
+	private int normalWidth, normalHeight;
+	private int phase;
+	private String message;
+	private Command cmdRetract, cmdBack;
+
+	private boolean bLoaded;
 	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, squareShift;
 	private int width, height, left, right, top, bottom;
-	private int cursorX, cursorY;
-	private int sqSelected, mvLast;
-	private String message;
-	private int phase;
-	private Command cmdRetract, cmdBack;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
-
+		// Assume FullScreenMode = false
+		normalWidth = getWidth();
+		normalHeight = getHeight();
 		setFullScreenMode(true);
-		width = getWidth();
-		height = getHeight();
-		String imagePath = "/images/";
-		if (width >= 320 && height >= 356) {
-			imagePath += "large/";
-			squareSize = 36;
-			squareShift = 2;
-		} else if (width >= 232 && height >= 258) {
-			imagePath += "medium/";
-			squareSize = 26;
-			squareShift = 1;
-		} else {
-			imagePath += "small/";
-			squareSize = 18;
-			squareShift = 1;
-		}
-		try {
-			imgBoard = Image.createImage(imagePath + "board.png");
-			imgSelected = Image.createImage(imagePath + "selected.png");
-			imgSelected2 = Image.createImage(imagePath + "selected2.png");
-			imgCursor = Image.createImage(imagePath + "cursor.png");
-			imgCursor2 = Image.createImage(imagePath + "cursor2.png");
-			for (int pc = 0; pc < 24; pc ++) {
-				if (IMAGE_NAME[pc] == null) {
-					imgPieces[pc] = null;
-				} else {
-					imgPieces[pc] = Image.createImage(imagePath + IMAGE_NAME[pc] + ".png");
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		int boardWidth = imgBoard.getWidth();
-		int boardHeight = imgBoard.getHeight();
-		left = (width - boardWidth) / 2;
-		top = (height - boardHeight) / 2;
-		right = left + boardWidth - 32;
-		bottom = top + boardHeight - 32;
-
 		// cmdRetract = new Command("»ÚÆå", Command.OK, 1);
 		// addCommand(cmdRetract);
 		cmdBack = new Command("·µ»Ø", Command.BACK, 1);
 		addCommand(cmdBack);
 		setCommandListener(this);
+		phase = PHASE_STARTING;
+		bLoaded = false;
 	}
 
-	public void reset() {
+	public void init() {
 		setFullScreenMode(true);
 		search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
 		cursorX = cursorY = 7;
@@ -146,6 +115,61 @@ public class MainForm extends Canvas implements CommandListener {
 	protected void paint(Graphics g) {
 		if (phase == PHASE_STARTING) {
 			phase = PHASE_WAITING;
+			// Wait 1 second for resizing
+			width = getWidth();
+			height = getHeight();
+			for (int i = 0; i < 10; i ++) {
+				if (width != normalWidth || height != normalHeight) {
+					break;
+				}
+				width = getWidth();
+				height = getHeight();
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+					// Ignored
+				}
+			}
+			if (!bLoaded) {
+				bLoaded = true;
+				// "width" and "height" are Full-Screen values
+				String imagePath = "/images/";
+				if (width >= 320 && height >= 356) {
+					imagePath += "large/";
+					squareSize = 36;
+					squareShift = 2;
+				} else if (width >= 232 && height >= 258) {
+					imagePath += "medium/";
+					squareSize = 26;
+					squareShift = 1;
+				} else {
+					imagePath += "small/";
+					squareSize = 18;
+					squareShift = 1;
+				}
+				try {
+					imgBoard = Image.createImage(imagePath + "board.png");
+					imgSelected = Image.createImage(imagePath + "selected.png");
+					imgSelected2 = Image.createImage(imagePath + "selected2.png");
+					imgCursor = Image.createImage(imagePath + "cursor.png");
+					imgCursor2 = Image.createImage(imagePath + "cursor2.png");
+					for (int pc = 0; pc < 24; pc ++) {
+						if (IMAGE_NAME[pc] == null) {
+							imgPieces[pc] = null;
+						} else {
+							imgPieces[pc] = Image.createImage(imagePath + IMAGE_NAME[pc] + ".png");
+						}
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage());
+				}
+				int boardWidth = imgBoard.getWidth();
+				int boardHeight = imgBoard.getHeight();
+				left = (width - boardWidth) / 2;
+				top = (height - boardHeight) / 2;
+				right = left + boardWidth - 32;
+				bottom = top + boardHeight - 32;
+			}
 			if (midlet.flipped) {
 				responseMove();
 				return;
