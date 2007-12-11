@@ -36,7 +36,7 @@ public class StartUp extends Form implements CommandListener {
 	private Command cmdStart, cmdExit;
 
 	public StartUp(XQWLight midlet) {
-		super("象棋小巫师 1.1");
+		super("象棋小巫师 1.11");
 		this.midlet = midlet;
 
 		append("谁先走：");
