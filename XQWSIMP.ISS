@@ -71,8 +71,18 @@ Source: "jsboard.htm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
 ; ╡п╬жнд╪Ч
 Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\BOOTH_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\BOOTH_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\BOOTH_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
@@ -452,7 +462,7 @@ Source: "MUSICS\FUNNY.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\WALTZ.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART1.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART4.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\FLIGHT.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\MOONLITE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\ANITRA.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\HUMOUR.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\JINGLE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion

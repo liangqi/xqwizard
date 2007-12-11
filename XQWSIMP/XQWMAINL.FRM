@@ -1653,17 +1653,14 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "烂柯神机(&J)"
-         Enabled         =   0   'False
          Index           =   10
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "象局汇存(&K)"
-         Enabled         =   0   'False
          Index           =   11
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "江湖百局秘谱(&L)"
-         Enabled         =   0   'False
          Index           =   12
       End
       Begin VB.Menu mnEndgames 
@@ -1886,7 +1883,7 @@ Begin VB.Form frmMainLarge
             Index           =   5
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "野蜂飞舞(&L)"
+            Caption         =   "月光(&L)"
             Index           =   6
          End
          Begin VB.Menu mnOptionsMusic 

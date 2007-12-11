@@ -129,7 +129,7 @@ Public Const MUSIC_FUNNY        As Integer = 2
 Public Const MUSIC_WALTZ        As Integer = 3
 Public Const MUSIC_MOZART1      As Integer = 4
 Public Const MUSIC_MOZART4      As Integer = 5
-Public Const MUSIC_FLIGHT       As Integer = 6
+Public Const MUSIC_MOONLITE     As Integer = 6
 Public Const MUSIC_ANITRA       As Integer = 7
 Public Const MUSIC_HUMOUR       As Integer = 8
 Public Const MUSIC_JINGLE       As Integer = 9
@@ -2710,7 +2710,7 @@ frmHide.mci.Command = "Close"
 If nMusicIndex < MUSIC_NONE Then
     frmHide.mci.FileName = App_szPath + "MUSICS\" + _
             Choose(nMusicIndex + 1, "CLASSIC", "EXPRESS", "FUNNY", "WALTZ", _
-            "MOZART1", "MOZART4", "FLIGHT", "ANITRA", "HUMOUR", "JINGLE", "PAL", "CMUSIC") + ".MID"
+            "MOZART1", "MOZART4", "MOONLITE", "ANITRA", "HUMOUR", "JINGLE", "PAL", "CMUSIC") + ".MID"
     If Not App_bPrevInstance Then
         frmHide.mci.Command = "Open"
         frmHide.mci.Command = "Play"
