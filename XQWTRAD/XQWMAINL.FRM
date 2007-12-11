@@ -1623,23 +1623,19 @@ Begin VB.Form frmMainLarge
          Index           =   2
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "摧Ыю炳(&D)"
-         Enabled         =   0   'False
+         Caption         =   "禜囱炳帝(&D)"
          Index           =   3
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "虏衊墩摧Ы(&E)"
-         Enabled         =   0   'False
+         Caption         =   "摧Ыю炳眯(&E)"
          Index           =   4
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "禜囱龟ノ摧Ы(材栋)(&F)"
-         Enabled         =   0   'False
          Index           =   5
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "禜囱龟ノ摧Ы(材栋)(&G)"
-         Enabled         =   0   'False
          Index           =   6
       End
       Begin VB.Menu mnEndgames 
@@ -2394,7 +2390,7 @@ If CancelSave Then
     Exit Sub
 End If
 szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
-szTitle = Choose(nIndex + 1, "基本殺法", "基本戰術", "中局殺法", "殘局攻殺", "簡易胜勢殘局", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
+szTitle = Choose(nIndex + 1, "基本殺法", "基本戰術", "中局殺法", "象棋殺著大全", "殘局攻殺譜", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
         "", "橘中秘(殘局篇)", "适情雅趣", "爛柯神机", "象局匯存", "江湖百局秘譜")
 LoadEndgames szEpdName, szTitle
 

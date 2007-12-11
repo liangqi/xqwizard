@@ -1624,23 +1624,19 @@ Begin VB.Form frmMainLarge
          Index           =   2
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "残局攻杀(&D)"
-         Enabled         =   0   'False
+         Caption         =   "象棋杀着大全(&D)"
          Index           =   3
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "简易胜势残局(&E)"
-         Enabled         =   0   'False
+         Caption         =   "残局攻杀谱(&E)"
          Index           =   4
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "象棋实用残局(第一集)(&F)"
-         Enabled         =   0   'False
          Index           =   5
       End
       Begin VB.Menu mnEndgames 
          Caption         =   "象棋实用残局(第二集)(&G)"
-         Enabled         =   0   'False
          Index           =   6
       End
       Begin VB.Menu mnEndgames 
@@ -2395,7 +2391,7 @@ If CancelSave Then
     Exit Sub
 End If
 szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
-szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "残局攻杀", "简易胜势残局", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
+szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
         "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
 LoadEndgames szEpdName, szTitle
 
