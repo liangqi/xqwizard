@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.11, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.12, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -92,11 +92,32 @@ public class MainForm extends Canvas implements CommandListener {
 		bLoaded = false;
 	}
 
-	public void init() {
+	public void reset() {
 		setFullScreenMode(true);
-		search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
+		if (midlet.rsData[0] == 0) {
+			midlet.rsData[1] = (byte) (midlet.flipped ? 1 : 0);
+			search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
+			for (int i = 0; i < 256; i ++) {
+				midlet.rsData[i + 2] = search.pos.squares[i];
+			}
+		} else {
+			midlet.flipped = (midlet.rsData[1] != 0);
+			search.pos.clearBoard();
+			for (int sq = 0; sq < 256; sq ++) {
+				int pc = midlet.rsData[sq + 2];
+				if (pc > 0) {
+					search.pos.addPiece(sq, pc);
+				}
+			}
+			if (midlet.flipped) {
+				search.pos.changeSide();
+			}
+			search.pos.setIrrev();
+		}
+		midlet.rsData[0] = 0;
+		midlet.disp = XQWLight.DISP_MAINFORM;
 		phase = PHASE_STARTING;
 	}
 
@@ -107,6 +128,7 @@ public class MainForm extends Canvas implements CommandListener {
 			} else if (c == cmdRetract) {
 				// Not Available, Never Occurs
 			} else if (c == cmdBack) {
+				midlet.disp = XQWLight.DISP_STARTUP;
 				Display.getDisplay(midlet).setCurrent(midlet.startUp);
 			}
 		}
@@ -170,6 +192,7 @@ public class MainForm extends Canvas implements CommandListener {
 				right = left + boardWidth - 32;
 				bottom = top + boardHeight - 32;
 			}
+			// TODO Wrong!!!
 			if (midlet.flipped) {
 				responseMove();
 				return;
@@ -244,6 +267,7 @@ public class MainForm extends Canvas implements CommandListener {
 			} else {
 				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
 					mvLast = 0;
+					midlet.disp = XQWLight.DISP_STARTUP;
 					phase = PHASE_EXITTING;
 					repaint();
 					serviceRepaints();
@@ -360,13 +384,16 @@ public class MainForm extends Canvas implements CommandListener {
 		repaint();
 		serviceRepaints();
 		search.searchMain(1 << (midlet.level << 1));
-		int pc = search.pos.squares[Position.DST(search.mvResult)];
+		int sq = Position.DST(search.mvResult);
+		int pc = search.pos.squares[sq];
 		search.pos.makeMove(search.mvResult);
 		if (pc > 0) {
 			search.pos.setIrrev();
 		}
+		for (int i = 0; i < 256; i ++) {
+			midlet.rsData[i + 2] = search.pos.squares[i];
+		}
 		mvLast = search.mvResult;
-		int sq = Position.DST(mvLast);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}

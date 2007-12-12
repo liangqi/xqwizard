@@ -2,7 +2,7 @@
 StartUp.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.11, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.12, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ public class StartUp extends Form implements CommandListener {
 	private Command cmdStart, cmdExit;
 
 	public StartUp(XQWLight midlet) {
-		super("象棋小巫师 1.11");
+		super("象棋小巫师 1.12");
 		this.midlet = midlet;
 
 		append("谁先走：");
@@ -82,7 +82,7 @@ public class StartUp extends Form implements CommandListener {
 			midlet.flipped = cgToMove.isSelected(1);
 			midlet.handicap = cgHandicap.getSelectedIndex();
 			midlet.level = cgLevel.getSelectedIndex();
-			midlet.mainForm.init();
+			midlet.mainForm.reset();
 			Display.getDisplay(midlet).setCurrent(midlet.mainForm);
 		} else if (c == cmdExit) {
 			midlet.notifyDestroyed();
