@@ -2,4 +2,3 @@ XQWizard Advert List
 elephantbase,60,183,5618
 xqwlight_ad1,60,191,5759
 xqwlight_ad2,60,191,5871
-dpxq,60,167,7482

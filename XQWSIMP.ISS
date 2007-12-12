@@ -109,8 +109,6 @@ Source: "ADVERT\xqwlight_ad1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\dpxq.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\dpxq.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; ÆåÅÌÎÄ¼þ(Ð¡)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
