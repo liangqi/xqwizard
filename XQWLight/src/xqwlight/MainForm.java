@@ -65,7 +65,7 @@ public class MainForm extends Canvas implements CommandListener {
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
 	private int normalWidth, normalHeight;
-	private int phase;
+	private volatile int phase;
 	private String message;
 	private Command cmdRetract, cmdBack;
 
@@ -97,13 +97,8 @@ public class MainForm extends Canvas implements CommandListener {
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
 		if (midlet.rsData[0] == 0) {
-			midlet.rsData[1] = (byte) (midlet.flipped ? 1 : 0);
 			search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
-			for (int i = 0; i < 256; i ++) {
-				midlet.rsData[i + 2] = search.pos.squares[i];
-			}
 		} else {
-			midlet.flipped = (midlet.rsData[1] != 0);
 			search.pos.clearBoard();
 			for (int sq = 0; sq < 256; sq ++) {
 				int pc = midlet.rsData[sq + 2];
@@ -116,8 +111,6 @@ public class MainForm extends Canvas implements CommandListener {
 			}
 			search.pos.setIrrev();
 		}
-		midlet.rsData[0] = 0;
-		midlet.disp = XQWLight.DISP_MAINFORM;
 		phase = PHASE_STARTING;
 	}
 
@@ -128,7 +121,7 @@ public class MainForm extends Canvas implements CommandListener {
 			} else if (c == cmdRetract) {
 				// Not Available, Never Occurs
 			} else if (c == cmdBack) {
-				midlet.disp = XQWLight.DISP_STARTUP;
+				midlet.rsData[0] = 0;
 				Display.getDisplay(midlet).setCurrent(midlet.startUp);
 			}
 		}
@@ -192,8 +185,7 @@ public class MainForm extends Canvas implements CommandListener {
 				right = left + boardWidth - 32;
 				bottom = top + boardHeight - 32;
 			}
-			// TODO Wrong!!!
-			if (midlet.flipped) {
+			if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
 				responseMove();
 				return;
 			}
@@ -267,7 +259,7 @@ public class MainForm extends Canvas implements CommandListener {
 			} else {
 				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
 					mvLast = 0;
-					midlet.disp = XQWLight.DISP_STARTUP;
+					midlet.rsData[0] = 0;
 					phase = PHASE_EXITTING;
 					repaint();
 					serviceRepaints();
@@ -358,6 +350,11 @@ public class MainForm extends Canvas implements CommandListener {
 			message = "超过自然限着作和，辛苦了！";
 			return true;
 		}
+		if (computer) {
+			midlet.rsData[0] = (byte) (midlet.level + 1);
+			midlet.rsData[1] = (byte) (midlet.flipped ? 1 : 0);
+			System.arraycopy(search.pos.squares, 0, midlet.rsData, 2, 256);
+		}
 		return false;
 	}
 
@@ -389,9 +386,6 @@ public class MainForm extends Canvas implements CommandListener {
 		search.pos.makeMove(search.mvResult);
 		if (pc > 0) {
 			search.pos.setIrrev();
-		}
-		for (int i = 0; i < 256; i ++) {
-			midlet.rsData[i + 2] = search.pos.squares[i];
 		}
 		mvLast = search.mvResult;
 		if (midlet.flipped) {

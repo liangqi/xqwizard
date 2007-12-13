@@ -85,6 +85,7 @@ public class StartUp extends Form implements CommandListener {
 			midlet.mainForm.reset();
 			Display.getDisplay(midlet).setCurrent(midlet.mainForm);
 		} else if (c == cmdExit) {
+			midlet.destroyApp(false);
 			midlet.notifyDestroyed();
 		}
 	}
