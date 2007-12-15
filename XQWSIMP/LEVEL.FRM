@@ -313,7 +313,7 @@ Attribute VB_Exposed = False
 ' LEVEL.FRM - Source Code for XiangQi Wizard, Part IV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 2.1, Last Modified: Mar. 2006
+' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2006 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -419,6 +419,15 @@ Case LEVEL_INFINITE
     frmDepth.Visible = False
 End Select
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
+SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+
+End Sub
+
+Private Sub Form_Unload(nCancel As Integer)
+
+If Not (Timer_nDepth = 0 And (Engine_bRed Or Engine_bBlack)) Then
+    App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+End If
 
 End Sub
 
@@ -546,7 +555,6 @@ End Sub
 
 Private Sub btnCancel_Click()
 
-App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
 Unload Me
 
 End Sub

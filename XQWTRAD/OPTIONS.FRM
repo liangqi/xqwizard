@@ -343,7 +343,7 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.52, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -395,6 +395,7 @@ cmbEnginePlay.ListIndex = Options_nEnginePlay
 txtUser.Text = Options_szUser
 chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
+SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
 

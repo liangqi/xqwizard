@@ -16,7 +16,7 @@ Private Declare Function SHBrowseForFolderA Lib "SHELL32.DLL" (ByRef lpbi As Bro
 Private Declare Function SHGetPathFromIDListA Lib "SHELL32.DLL" (ByVal pidl As Long, ByVal pszPath As Long) As Long
 
 Private Const BIF_RETURNONLYFSDIRS As Long = 1
-Private Const MAX_PATH As Long = 60
+Private Const MAX_PATH As Long = 260
 
 Public Function BrowseForFolder(ByVal szTitle As String) As String
 

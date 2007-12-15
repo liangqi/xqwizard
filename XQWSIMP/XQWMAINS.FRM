@@ -2002,7 +2002,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.53, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2031,7 +2031,7 @@ cmbFormat.AddItem "H2-E2", 2
 
 End Sub
 
-Private Sub Form_UnLoad(nCancel As Integer)
+Private Sub Form_Unload(nCancel As Integer)
 
 If CancelSave Then
     nCancel = 1
@@ -2051,6 +2051,14 @@ End If
 If Not App_bPrevInstance Then
     Gui_nLeft = Left
     Gui_nTop = Top
+End If
+
+End Sub
+
+Private Sub Form_Resize()
+
+If Options_bTopMost Then
+    SetWindowPos hWnd, HWND_TOPMOST, , 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 End If
 
 End Sub

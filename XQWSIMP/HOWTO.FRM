@@ -107,7 +107,7 @@ Attribute VB_Exposed = False
 ' HOWTO.FRM - Source Code for XiangQi Wizard, Part VIII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.51, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -146,10 +146,11 @@ If App_bPromotion Then
         ShellExecuteA 0, vbNullString, App_szPath + "HELP\PROMOTE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
     End If
 End If
+SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
 
-Private Sub Form_UnLoad(nCancel As Integer)
+Private Sub Form_Unload(nCancel As Integer)
 
 Gui_bShowHowTo = (chkShowHowTo.Value = 1)
 
