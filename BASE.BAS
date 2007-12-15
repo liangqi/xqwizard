@@ -4,11 +4,11 @@ Option Explicit
 ' === Begin Windows APIs ===
 
 Public Const SW_SHOWNORMAL      As Long = 1         ' ShellExecuteA
-Public Const MB_ICONINFORMATION As Long = 64        ' MessageBeep
-Public Const MB_ICONEXCLAMATION As Long = 48        ' MessageBeep
-Public Const MB_ICONQUESTION    As Long = 32        ' MessageBeep
-Public Const MB_ICONHAND        As Long = 16        ' MessageBeep
 Public Const MB_OK              As Long = 0         ' MessageBeep
+Public Const MB_ICONHAND        As Long = 16        ' MessageBeep
+Public Const MB_ICONQUESTION    As Long = 32        ' MessageBeep
+Public Const MB_ICONEXCLAMATION As Long = 48        ' MessageBeep
+Public Const MB_ICONINFORMATION As Long = 64        ' MessageBeep
 Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
 Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
 Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
@@ -81,6 +81,38 @@ Private Declare Sub FreeLibrary Lib "KERNEL32.DLL" (ByVal hLibModule As Long)
 Private Declare Function LoadIconA Lib "USER32.DLL" (ByVal hInstance As Long, ByVal lpIconName As Long) As Long
 Private Declare Sub DestroyIcon Lib "USER32.DLL" (ByVal hIcon As Long)
 Private Declare Sub MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams)
+
+' For Open/Save
+Private Type OpenFileName
+    lStructSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpstrFilter As String
+    lpstrCustomFilter As String
+    nMaxCustFilter As Long
+    nFilterIndex As Long
+    lpstrFile As String
+    nMaxFile As Long
+    lpstrFileTitle As String
+    nMaxFileTitle As Long
+    lpstrInitialDir As String
+    lpstrTitle As String
+    flags As Long
+    nFileOffset As Integer
+    nFileExtension As Integer
+    lpstrDefExt As String
+    lCustData As Long
+    lpfnHook As Long
+    lpTemplateName As String
+End Type
+
+Private Const OFN_OVERWRITEPROMPT As Long = 2
+Private Const OFN_HIDEREADONLY As Long = 4
+Private Const OFN_PATHMUSTEXIST As Long = 2048
+Private Const OFN_FILEMUSTEXIST As Long = 4096
+
+Private Declare Function GetOpenFileNameA Lib "COMDLG32.DLL" (ByRef lpofn As OpenFileName) As Long
+Private Declare Function GetSaveFileNameA Lib "COMDLG32.DLL" (ByRef lpofn As OpenFileName) As Long
 
 ' For BrowseForFolder
 Private Type BrowseInfo
@@ -155,8 +187,8 @@ Private Declare Sub GetStartupInfoA Lib "KERNEL32.DLL" (ByRef lpStartupInfo As S
 Private Declare Sub AllocConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub FreeConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub SetConsoleMode Lib "KERNEL32.DLL" (ByVal h As Long, ByVal n As Long)
-Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByRef lpBuffer As Byte, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
-Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As String, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
+Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
+Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
 Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
 
 Private Stdio_si As StartupInfo
@@ -369,7 +401,10 @@ Else
     DestroyIcon hIcon
     MessageBeep MB_ICONINFORMATION
     mbp.cbSize = Len(mbp)
+    mbp.hwndOwner = 0
+    On Error Resume Next
     mbp.hwndOwner = Screen.ActiveForm.hWnd
+    On Error GoTo 0
     mbp.hInstance = hInstance
     mbp.lpszText = szPrompt
     mbp.lpszCaption = szTitle
@@ -387,6 +422,74 @@ End If
 End Sub
 
 ' === End MessageBox ===
+
+' === Begin Open/Save ===
+
+Private Function TrimNull(ByVal sz As String) As String
+
+Dim i As Integer
+i = InStr(sz, Chr(0))
+If i > 0 Then
+    TrimNull = Left(sz, i - 1)
+Else
+    TrimNull = sz
+End If
+
+End Function
+
+Public Function OpenFileDialog(ByVal szTitle As String, ByVal szFilter As String) As String
+
+Dim ofn As OpenFileName
+szFilter = Replace(szFilter, "|", Chr(0))
+ofn.lStructSize = Len(ofn)
+ofn.hwndOwner = 0
+On Error Resume Next
+ofn.hwndOwner = Screen.ActiveForm.hWnd
+On Error GoTo 0
+ofn.hInstance = 0
+ofn.lpstrCustomFilter = vbNullString
+ofn.lpstrFileTitle = vbNullString
+ofn.lpstrInitialDir = vbNullString
+ofn.lpstrFilter = szFilter + Chr(0)
+ofn.lpstrFile = String(260, 0)
+ofn.nMaxFile = 260
+ofn.lpstrTitle = szTitle
+ofn.flags = OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_HIDEREADONLY
+If GetOpenFileNameA(ofn) <> 0 Then
+    OpenFileDialog = TrimNull(ofn.lpstrFile)
+Else
+    OpenFileDialog = ""
+End If
+
+End Function
+
+Public Function SaveFileDialog(ByVal szTitle As String, ByVal szFilter As String, ByVal szFileName As String) As String
+
+Dim ofn As OpenFileName, sz As String
+szFilter = Replace(szFilter, "|", Chr(0))
+ofn.lStructSize = Len(ofn)
+ofn.hwndOwner = 0
+On Error Resume Next
+ofn.hwndOwner = Screen.ActiveForm.hWnd
+On Error GoTo 0
+ofn.hInstance = 0
+ofn.lpstrCustomFilter = vbNullString
+ofn.lpstrFileTitle = vbNullString
+ofn.lpstrInitialDir = vbNullString
+ofn.lpstrFilter = szFilter + Chr(0)
+ofn.lpstrFile = szFileName + String(260, 0)
+ofn.nMaxFile = 260
+ofn.lpstrTitle = szTitle
+ofn.flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT
+If GetSaveFileNameA(ofn) <> 0 Then
+   SaveFileDialog = TrimNull(ofn.lpstrFile)
+Else
+   SaveFileDialog = ""
+End If
+
+End Function
+
+' === End OpenFile ===
 
 ' === Begin BrowseForFolder ===
 
@@ -473,22 +576,22 @@ Public Function StdioIn() As String
 
 Dim nNumberOfBytesRead As Long
 Dim lpBuffer(0 To READ_BUFFER_LEN - 1) As Byte
-ReadFile Stdio_si.hStdInput, lpBuffer(0), READ_BUFFER_LEN, nNumberOfBytesRead
-StdioIn = SysAllocStringByteLen(lpBuffer(0), nNumberOfBytesRead)
+ReadFile Stdio_si.hStdInput, VarPtr(lpBuffer(0)), READ_BUFFER_LEN, nNumberOfBytesRead
+StdioIn = SysAllocStringByteLen(VarPtr(lpBuffer(0)), nNumberOfBytesRead)
 
 End Function
 
 Public Sub StdioOut(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdOutput, sz, lstrlenA(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdOutput, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
 
 End Sub
 
 Public Sub StdioErr(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdError, sz, lstrlenA(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
 
 End Sub
 

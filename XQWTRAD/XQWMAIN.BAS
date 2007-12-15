@@ -314,36 +314,24 @@ End Function
 ' 打開文件對話框
 Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
-Dim sz As String
-sz = szSave
-sz = Replace(sz, "\", "＼")
-sz = Replace(sz, "/", "／")
-sz = Replace(sz, ":", "：")
-sz = Replace(sz, "*", "＊")
-sz = Replace(sz, "?", "？")
-sz = Replace(sz, Chr(34), Chr(&HA3A2))
-sz = Replace(sz, "<", "＜")
-sz = Replace(sz, ">", "＞")
-sz = Replace(sz, "|", "｜")
-frmHide.comdlg.FileName = IIf(szSave = "", "", sz + "." + szExt)
-frmHide.comdlg.DialogTitle = szTitle
-frmHide.comdlg.DefaultExt = "." + szExt
-frmHide.comdlg.Filter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
-frmHide.comdlg.Flags = IIf(szSave = "", 0, cdlOFNOverwritePrompt) + cdlOFNHideReadOnly
-frmHide.comdlg.CancelError = True
-On Error GoTo lnErrorOpen
+Dim szFileName As String, szFilter As String
+szFilter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
 If szSave = "" Then
-    frmHide.comdlg.ShowOpen
+    szFileName = OpenFileDialog(szTitle, szFilter)
 Else
-    frmHide.comdlg.ShowSave
+    szFileName = szSave
+    szFileName = Replace(szFileName, "\", "＼")
+    szFileName = Replace(szFileName, "/", "／")
+    szFileName = Replace(szFileName, ":", "：")
+    szFileName = Replace(szFileName, "*", "＊")
+    szFileName = Replace(szFileName, "?", "？")
+    szFileName = Replace(szFileName, Chr(34), Chr(&HA3A2))
+    szFileName = Replace(szFileName, "<", "＜")
+    szFileName = Replace(szFileName, ">", "＞")
+    szFileName = Replace(szFileName, "|", "｜")
+    szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt)
 End If
-On Error GoTo 0
-FileDialog = frmHide.comdlg.FileName
-Exit Function
-
-lnErrorOpen:
-On Error GoTo 0
-FileDialog = ""
+FileDialog = szFileName
 
 End Function
 
@@ -727,15 +715,9 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-frmHide.comdlg.FileName = ""
-frmHide.comdlg.DialogTitle = "打開棋譜文件"
-frmHide.comdlg.DefaultExt = ".PGN"
-frmHide.comdlg.Filter = "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|QQ象棋棋譜 (*.CHE)|*.CHE|所有文件 (*.*)|*.*"
-frmHide.comdlg.Flags = cdlOFNHideReadOnly
-frmHide.comdlg.CancelError = False
-frmHide.comdlg.ShowOpen
-If frmHide.comdlg.FileName <> "" Then
-    App_szFileName = frmHide.comdlg.FileName
+szFileName = OpenFileDialog("打開棋譜文件", "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|QQ象棋棋譜 (*.CHE)|*.CHE|所有文件 (*.*)|*.*")
+If szFileName <> "" Then
+    App_szFileName = szFileName
     ReadFile
 End If
 

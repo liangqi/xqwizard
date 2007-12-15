@@ -1,5 +1,4 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{C1A8AF28-1257-101B-8FB0-0020AF039CA3}#1.1#0"; "MCI32.OCX"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
@@ -26,7 +25,7 @@ Begin VB.Form frmHide
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin InetCtlsObjects.Inet inet 
-      Left            =   4440
+      Left            =   3840
       Top             =   120
       _ExtentX        =   1005
       _ExtentY        =   1005
@@ -44,13 +43,6 @@ Begin VB.Form frmHide
       _Version        =   393216
       DeviceType      =   ""
       FileName        =   ""
-   End
-   Begin MSComDlg.CommonDialog comdlg 
-      Left            =   3840
-      Top             =   120
-      _ExtentX        =   847
-      _ExtentY        =   847
-      _Version        =   393216
    End
    Begin MSComctlLib.ImageList imglst 
       Left            =   3120
