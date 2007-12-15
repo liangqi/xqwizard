@@ -37,7 +37,6 @@ Name: "eleeye"; Description: "加载 ElephantEye 引擎"; Types: default
 
 [Files]
 ; 系统文件
-Source: "COMDLG32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 Source: "MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 Source: "COMCT232.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 Source: "MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
