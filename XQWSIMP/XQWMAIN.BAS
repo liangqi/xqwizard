@@ -21,21 +21,6 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
-' 全局常量——Windows参数常量
-Public Const SW_SHOWNORMAL      As Long = 1         ' ShellExecuteA
-Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
-Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
-Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
-Public Const HWND_TOPMOST       As Long = -1        ' SetWindowPos
-Public Const HWND_NOTOPMOST     As Long = -2        ' SetWindowPos
-Public Const SWP_NOSIZE         As Long = 1         ' SetWindowPos
-Public Const SWP_NOMOVE         As Long = 2         ' SetWindowPos
-
-Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
-Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
-Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
-
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "3.6"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
@@ -130,13 +115,14 @@ Public Const MUSIC_WALTZ        As Integer = 3
 Public Const MUSIC_MOZART1      As Integer = 4
 Public Const MUSIC_MOZART4      As Integer = 5
 Public Const MUSIC_MOONLITE     As Integer = 6
-Public Const MUSIC_ANITRA       As Integer = 7
-Public Const MUSIC_HUMOUR       As Integer = 8
-Public Const MUSIC_JINGLE       As Integer = 9
-Public Const MUSIC_PAL          As Integer = 10
-Public Const MUSIC_CMUSIC       As Integer = 11
-Public Const MUSIC_NONE         As Integer = 12
-Public Const MUSIC_MAX          As Integer = 13
+Public Const MUSIC_LOVDREAM     As Integer = 7
+Public Const MUSIC_ANITRA       As Integer = 8
+Public Const MUSIC_HUMOUR       As Integer = 9
+Public Const MUSIC_JINGLE       As Integer = 10
+Public Const MUSIC_PAL          As Integer = 11
+Public Const MUSIC_CMUSIC       As Integer = 12
+Public Const MUSIC_NONE         As Integer = 13
+Public Const MUSIC_MAX          As Integer = 14
 ' 全局常量——循环事件
 Public Const EVENT_TIMER        As Integer = 0
 Public Const EVENT_PLAY         As Integer = 1
@@ -315,36 +301,6 @@ End Function
 Public Function Digit2Word(ByVal nArg As Integer) As String
 
 Digit2Word = Choose(nArg, "１", "２", "３", "４", "５", "６", "７", "８", "９")
-
-End Function
-
-' 把字符串转换成整数，用于多种场合
-Public Function Str2Int(ByVal sz As String, Optional ByVal nMin As Integer = -32767, Optional ByVal nMax As Integer = 32767) As Integer
-
-Dim df As Double
-df = Val(sz)
-If df < nMin Then
-    Str2Int = nMin
-ElseIf df > nMax Then
-    Str2Int = nMax
-Else
-    Str2Int = df
-End If
-
-End Function
-
-' 把字符串转换成整数，用于多种场合
-Public Function Str2Lng(ByVal sz As String, Optional ByVal nMin As Long = -2147483647, Optional ByVal nMax As Long = 2147483647) As Long
-
-Dim df As Double
-df = Val(sz)
-If df < nMin Then
-    Str2Lng = nMin
-ElseIf df > nMax Then
-    Str2Lng = nMax
-Else
-    Str2Lng = df
-End If
 
 End Function
 
@@ -2709,8 +2665,8 @@ Dim i As Integer
 frmHide.mci.Command = "Close"
 If nMusicIndex < MUSIC_NONE Then
     frmHide.mci.FileName = App_szPath + "MUSICS\" + _
-            Choose(nMusicIndex + 1, "CLASSIC", "EXPRESS", "FUNNY", "WALTZ", _
-            "MOZART1", "MOZART4", "MOONLITE", "ANITRA", "HUMOUR", "JINGLE", "PAL", "CMUSIC") + ".MID"
+            Choose(nMusicIndex + 1, "CLASSIC", "EXPRESS", "FUNNY", "WALTZ", "MOZART1", "MOZART4", _
+            "MOONLITE", "LOVDREAM", "ANITRA", "HUMOUR", "JINGLE", "PAL", "CMUSIC") + ".MID"
     If Not App_bPrevInstance Then
         frmHide.mci.Command = "Open"
         frmHide.mci.Command = "Play"
@@ -2831,7 +2787,7 @@ Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
-Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
+Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "9"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)

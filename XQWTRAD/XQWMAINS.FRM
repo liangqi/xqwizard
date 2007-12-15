@@ -1922,28 +1922,32 @@ Begin VB.Form frmMainSmall
             Index           =   6
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "皮爾‧金特(&A)"
+            Caption         =   "愛之夢(&D)"
             Index           =   7
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "幽默曲(&H)"
+            Caption         =   "皮爾‧金特(&A)"
             Index           =   8
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "鈴儿響叮當(&J)"
+            Caption         =   "幽默曲(&H)"
             Index           =   9
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "仙劍奇俠傳(&P)"
+            Caption         =   "鈴儿響叮當(&J)"
             Index           =   10
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "天策府(&T)"
+            Caption         =   "仙劍奇俠傳(&P)"
             Index           =   11
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "無聲(&N)"
+            Caption         =   "天策府(&T)"
             Index           =   12
+         End
+         Begin VB.Menu mnOptionsMusic 
+            Caption         =   "無聲(&N)"
+            Index           =   13
          End
       End
       Begin VB.Menu mnOptionsTopMost 
@@ -2057,7 +2061,7 @@ End Sub
 Private Sub Form_Resize()
 
 If Options_bTopMost Then
-    SetWindowPos hWnd, HWND_TOPMOST, , 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+    SetWindowPos hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 End If
 
 End Sub

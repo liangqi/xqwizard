@@ -461,6 +461,7 @@ Source: "MUSICS\WALTZ.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART1.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART4.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOONLITE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\LOVDREAM.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\ANITRA.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\HUMOUR.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\JINGLE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
