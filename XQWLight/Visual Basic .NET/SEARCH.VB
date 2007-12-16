@@ -1,7 +1,7 @@
 ' SEARCH.VB - Source Code for XiangQi Wizard Light, Part II
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -23,13 +23,12 @@ Module Search
     Public Const HASH_ALPHA As Integer = 1
     Public Const HASH_BETA As Integer = 2
     Public Const HASH_PV As Integer = 3
+    Public Const RANDOM_RANGE As Integer = 8
     Public Const LIMIT_DEPTH As Integer = 64
     Public Const NULL_DEPTH As Integer = 2
     Public Const NO_NULL As Boolean = True
-    Public Const UNKNOWN_VALUE As Integer = MATE_VALUE + 1
 
     Public Structure HashStruct
-        ' Public dwZobristLock0 As Integer
         Public ucDepth As Byte, ucFlag As Byte
         Public svl As Short
         Public mv As Integer, dwZobristLock As Integer
@@ -47,14 +46,19 @@ Module Search
         Dim bMate As Boolean
         hash = Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1))
         If hash.dwZobristLock <> Search_pos.dwZobristLock Then
-            Return UNKNOWN_VALUE
+            Return -MATE_VALUE
         End If
         mv = hash.mv
-        bMate = False
         If hash.svl > WIN_VALUE Then
+            If hash.svl < BAN_VALUE Then
+                Return -MATE_VALUE
+            End If
             hash.svl -= CShort(Search_pos.nDistance)
             bMate = True
         ElseIf hash.svl < -WIN_VALUE Then
+            If hash.svl > -BAN_VALUE Then
+                Return -MATE_VALUE
+            End If
             hash.svl += CShort(Search_pos.nDistance)
             bMate = True
         End If
@@ -71,7 +75,7 @@ Module Search
                 Return hash.svl
             End If
         End If
-        Return UNKNOWN_VALUE
+        Return -MATE_VALUE
     End Function
 
     Public Sub RecordHash(ByVal nFlag As Integer, ByVal vl As Integer, ByVal nDepth As Integer, ByVal mv As Integer)
@@ -80,16 +84,22 @@ Module Search
         If hash.ucDepth > nDepth Then
             Return
         End If
-        hash.dwZobristLock = Search_pos.dwZobristLock
-        hash.ucFlag = CByte(nFlag)
-        hash.ucDepth = CByte(nDepth)
         If vl > WIN_VALUE Then
+            If mv = 0 And vl <= BAN_VALUE Then
+                Return
+            End If
             hash.svl = CShort(vl + Search_pos.nDistance)
         ElseIf vl < -WIN_VALUE Then
+            If mv = 0 And vl >= -BAN_VALUE Then
+                Return
+            End If
             hash.svl = CShort(vl - Search_pos.nDistance)
         Else
             hash.svl = CShort(vl)
         End If
+        hash.dwZobristLock = Search_pos.dwZobristLock
+        hash.ucFlag = CByte(nFlag)
+        hash.ucDepth = CByte(nDepth)
         hash.mv = mv
         Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1)) = hash
     End Sub
@@ -152,6 +162,14 @@ Module Search
             Return 0
         End Function
     End Structure
+
+    Public Sub SetBestMove(ByVal mv As Integer, ByVal nDepth As Integer)
+        Search_nHistory(Search_pos.HistoryIndex(mv)) += nDepth * nDepth
+        If Search_mvKiller(Search_pos.nDistance, 0) <> mv Then
+            Search_mvKiller(Search_pos.nDistance, 1) = Search_mvKiller(Search_pos.nDistance, 0)
+            Search_mvKiller(Search_pos.nDistance, 0) = mv
+        End If
+    End Sub
 
     Public Function SearchQuiesc(ByVal vlAlpha As Integer, ByVal vlBeta As Integer) As Integer
         Dim vl As Integer, vlRep As Integer, vlBest As Integer
@@ -232,45 +250,43 @@ Module Search
         Dim mv As Integer, mvHash As Integer, mvBest As Integer, nHashFlag As Integer, nNewDepth As Integer
         Dim bInCheck As Boolean
         Dim sort As SortStruct
+        ' 1. 叶子结点处调用静态搜索
+        If nDepth <= 0 Then
+            Return SearchQuiesc(vlAlpha, vlBeta)
+        End If
+        Search_nAllNodes += 1
+        ' 2. 杀棋步数裁剪
+        vl = Search_pos.nDistance - MATE_VALUE
+        If vl >= vlBeta Then
+            Return vl
+        End If
+        ' 3. 重复裁剪
+        vlRep = Search_pos.RepStatus()
+        If vlRep > 0 Then
+            Return Search_pos.RepValue(vlRep)
+        End If
+        ' 4. 置换裁剪
         mvHash = 0
-        If Search_pos.nDistance > 0 Then
-            ' 1. 叶子结点处调用静态搜索
-            If nDepth <= 0 Then
-                Return SearchQuiesc(vlAlpha, vlBeta)
-            End If
-            Search_nAllNodes += 1
-            ' 2. 杀棋步数裁剪
-            vl = Search_pos.nDistance - MATE_VALUE
-            If vl >= vlBeta Then
+        vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash)
+        If vl > -MATE_VALUE Then
+            Return vl
+        End If
+        ' 5. 达到极限深度就返回
+        If Search_pos.nDistance = LIMIT_DEPTH Then
+            Return Search_pos.Evaluate()
+        End If
+        ' 6. 尝试空着裁
+        If Search_pos.sdPlayer = 0 Then
+            vlSelfSide = Search_pos.vlWhite
+        Else
+            vlSelfSide = Search_pos.vlBlack
+        End If
+        If Not bNoNull AndAlso Not Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck AndAlso vlSelfSide > NULL_OKAY_MARGIN Then
+            Search_pos.NullMove()
+            vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL)
+            Search_pos.UndoNullMove()
+            If vl >= vlBeta AndAlso (vlSelfSide > NULL_SAFE_MARGIN OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
                 Return vl
-            End If
-            ' 3. 重复裁剪
-            vlRep = Search_pos.RepStatus()
-            If vlRep > 0 Then
-                Return Search_pos.RepValue(vlRep)
-            End If
-            ' 4. 置换裁剪
-            vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash)
-            If vl <> UNKNOWN_VALUE Then
-                Return vl
-            End If
-            ' 5. 达到极限深度就返回
-            If Search_pos.nDistance = LIMIT_DEPTH Then
-                Return Search_pos.Evaluate()
-            End If
-            ' 6. 尝试空着裁
-            If Search_pos.sdPlayer = 0 Then
-                vlSelfSide = Search_pos.vlWhite
-            Else
-                vlSelfSide = Search_pos.vlBlack
-            End If
-            If Not bNoNull AndAlso Not Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck AndAlso vlSelfSide > NULL_OKAY_MARGIN Then
-                Search_pos.NullMove()
-                vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL)
-                Search_pos.UndoNullMove()
-                If vl >= vlBeta AndAlso (vlSelfSide > NULL_SAFE_MARGIN OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
-                    Return vl
-                End If
             End If
         End If
         ' 7. 初始化
@@ -323,14 +339,45 @@ Module Search
         Else
             RecordHash(nHashFlag, vlBest, nDepth, mvBest)
             If mvBest > 0 Then
-                Search_nHistory(Search_pos.HistoryIndex(mvBest)) += nDepth * nDepth
-                If Search_mvKiller(Search_pos.nDistance, 0) <> mvBest Then
-                    Search_mvKiller(Search_pos.nDistance, 1) = Search_mvKiller(Search_pos.nDistance, 0)
-                    Search_mvKiller(Search_pos.nDistance, 0) = mvBest
-                End If
+                SetBestMove(mvBest, nDepth)
             End If
             Return vlBest
         End If
+    End Function
+
+    Public Function SearchRoot(ByVal nDepth As Integer) As Integer
+        Dim vl As Integer, vlBest As Integer, mv As Integer, nNewDepth As Integer
+        Dim sort As SortStruct
+        vlBest = -MATE_VALUE
+        sort.Init(Search_mvResult)
+        mv = sort.NextMove
+        While mv > 0
+            If Search_pos.MakeMove(mv) Then
+                nNewDepth = nDepth - 1
+                If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
+                    nNewDepth += 1
+                End If
+                If vlBest = -MATE_VALUE Then
+                    vl = -SearchFull(-MATE_VALUE, MATE_VALUE, nNewDepth, NO_NULL)
+                Else
+                    vl = -SearchFull(-vlBest - 1, -vlBest, nNewDepth)
+                    If vl > vlBest Then
+                        vl = -SearchFull(-MATE_VALUE, -vlBest, nNewDepth, NO_NULL)
+                    End If
+                End If
+                Search_pos.UndoMakeMove()
+                If vl > vlBest Then
+                    vlBest = vl
+                    Search_mvResult = mv
+                    If vlBest > -WIN_VALUE And vlBest < WIN_VALUE Then
+                        vlBest += CInt(Int(Rnd() * RANDOM_RANGE)) - CInt(Int(Rnd() * RANDOM_RANGE))
+                    End If
+                End If
+            End If
+            mv = sort.NextMove
+        End While
+        SetBestMove(Search_mvResult, nDepth)
+        Return vlBest
     End Function
 
     Public Sub SearchMain(ByVal nSeconds As Integer)
@@ -383,7 +430,7 @@ Module Search
         ' 7. 迭代加深
         nTimer = Now.Ticks
         For i = 1 To LIMIT_DEPTH
-            vl = SearchFull(-MATE_VALUE, MATE_VALUE, i)
+            vl = SearchRoot(i)
             If vl > WIN_VALUE Or vl < -WIN_VALUE Then
                 Exit For
             End If

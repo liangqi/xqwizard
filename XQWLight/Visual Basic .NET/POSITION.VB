@@ -1,7 +1,7 @@
 ' POSITION.VB - Source Code for XiangQi Wizard Light, Part I
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,9 @@ Module Position
 
     Public Const MAX_MOVE_NUM As Integer = 256
     Public Const MAX_GEN_MOVES As Integer = 128
-    Public Const MATE_VALUE As Integer = 1000
-    Public Const WIN_VALUE As Integer = MATE_VALUE - 100
+    Public Const MATE_VALUE As Integer = 10000
+    Public Const BAN_VALUE As Integer = MATE_VALUE - 100
+    Public Const WIN_VALUE As Integer = MATE_VALUE - 200
     Public Const NULL_SAFE_MARGIN As Integer = 400
     Public Const NULL_OKAY_MARGIN As Integer = 200
     Public Const CONTEMPT_VALUE As Integer = 20
@@ -997,10 +998,10 @@ Module Position
             Dim vlReturn As Integer
             vlReturn = 0
             If (nArg And 2) <> 0 Then
-                vlReturn += nDistance - MATE_VALUE
+                vlReturn += nDistance - BAN_VALUE
             End If
             If (nArg And 4) <> 0 Then
-                vlReturn -= nDistance - MATE_VALUE
+                vlReturn -= nDistance - BAN_VALUE
             End If
             If vlReturn = 0 Then
                 If (nDistance And 1) = 0 Then

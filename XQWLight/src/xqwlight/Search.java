@@ -2,7 +2,7 @@
 Search.java - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.02, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -54,10 +54,11 @@ public class Search {
 	public static final int HASH_PV = 3;
 	public static final int LIMIT_DEPTH = 64;
 	public static final int NULL_DEPTH = 2;
+	public static final int RANDOM_MASK = 7;
 	public static final int MAX_GEN_MOVES = Position.MAX_GEN_MOVES;
 	public static final int MATE_VALUE = Position.MATE_VALUE;
+	public static final int BAN_VALUE = Position.BAN_VALUE;
 	public static final int WIN_VALUE = Position.WIN_VALUE;
-	public static final int UNKNOWN_VALUE = MATE_VALUE + 1;
 
 	public static class HashItem {
 		public byte depth, flag;
@@ -85,28 +86,32 @@ public class Search {
 	public int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
 		HashItem hash = getHashItem();
 		if (hash.zobristLock != pos.zobristLock) {
-			return UNKNOWN_VALUE;
+			return -MATE_VALUE;
 		}
 		mv[0] = hash.mv;
 		boolean mate = false;
-		if (hash.vl > WIN_VALUE) {			
+		if (hash.vl > WIN_VALUE) {
+			if (hash.vl < Position.BAN_VALUE) {
+				return -MATE_VALUE;
+			}
 			hash.vl -= pos.distance;
 			mate = true;
 		} else if (hash.vl < -WIN_VALUE) {
+			if (hash.vl > -BAN_VALUE) {
+				return -MATE_VALUE;
+			}
 			hash.vl += pos.distance;
 			mate = true;
 		}
 		if (hash.depth >= depth || mate) {
 			if (hash.flag == HASH_BETA) {
-				return (hash.vl >= vlBeta ? hash.vl : UNKNOWN_VALUE);
+				return (hash.vl >= vlBeta ? hash.vl : -MATE_VALUE);
 			} else if (hash.flag == HASH_ALPHA) {
-				return (hash.vl <= vlAlpha ? hash.vl : UNKNOWN_VALUE);
-			} else {
-				return hash.vl;
+				return (hash.vl <= vlAlpha ? hash.vl : -MATE_VALUE);
 			}
-		} else {
-			return UNKNOWN_VALUE;
+			return hash.vl;
 		}
+		return -MATE_VALUE;
 	}
 
 	public void recordHash(int flag, int vl, int depth, int mv) {
@@ -117,8 +122,14 @@ public class Search {
 		hash.flag = (byte) flag;
 		hash.depth = (byte) depth;
 		if (vl > WIN_VALUE) {
+		    if (mv == 0 && vl <= BAN_VALUE) {
+		    	return;
+		    }
 			hash.vl = (short) (vl + pos.distance);
 		} else if (vl < -WIN_VALUE) {
+		    if (mv == 0 && vl >= -BAN_VALUE) {
+		    	return;
+		    }
 			hash.vl = (short) (vl - pos.distance);
 		} else {
 			hash.vl = (short) vl;
@@ -185,6 +196,14 @@ public class Search {
 		}
 	}
 
+	public void setBestMove(int mv, int depth) {
+		historyTable[pos.historyIndex(mv)] += depth * depth;
+		int[] killers = mvKiller[pos.distance];
+		if (killers[0] != mv) {
+			killers[1] = killers[0];
+			killers[0] = mv;
+		}
+	}
 	public int searchQuiesc(int vlAlpha, int vlBeta) {
 		allNodes ++;
 		int vl = pos.mateValue();
@@ -255,34 +274,32 @@ public class Search {
 
 	public int searchFull(int vlAlpha, int vlBeta, int depth, boolean noNull) {
 		int vl;
+		if (depth <= 0) {
+			return searchQuiesc(vlAlpha, vlBeta);
+		}
+		allNodes ++;
+		vl = pos.mateValue();
+		if (vl >= vlBeta) {
+			return vl;
+		}
+		int vlRep = pos.repStatus();
+		if (vlRep > 0) {
+			return pos.repValue(vlRep);
+		}
 		int[] mvHash = new int[] {0};
-		if (pos.distance > 0) {
-			if (depth <= 0) {
-				return searchQuiesc(vlAlpha, vlBeta);
-			}
-			allNodes ++;
-			vl = pos.mateValue();
-			if (vl >= vlBeta) {
+		vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
+		if (vl > -MATE_VALUE) {
+			return vl;
+		}
+		if (pos.distance == LIMIT_DEPTH) {
+			return pos.evaluate();
+		}
+		if (!noNull && !pos.inCheck() && pos.nullOkay()) {
+			pos.nullMove();
+			vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
+			pos.undoNullMove();
+			if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
 				return vl;
-			}
-			int vlRep = pos.repStatus();
-			if (vlRep > 0) {
-				return pos.repValue(vlRep);
-			}
-			vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
-			if (vl != UNKNOWN_VALUE) {
-				return vl;
-			}
-			if (pos.distance == LIMIT_DEPTH) {
-				return pos.evaluate();
-			}
-			if (!noNull && !pos.inCheck() && pos.nullOkay()) {
-				pos.nullMove();
-				vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
-				pos.undoNullMove();
-				if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
-					return vl;
-				}
 			}
 		}
 		int hashFlag = HASH_ALPHA;
@@ -319,23 +336,47 @@ public class Search {
 				}
 			}
 		}
-		if (pos.distance == 0) {
-			mvResult = mvBest;
-		}
 		if (vlBest == -MATE_VALUE) {
 			return pos.mateValue();
 		} else {
 			recordHash(hashFlag, vlBest, depth, mvBest);
 			if (mvBest > 0) {
-				historyTable[pos.historyIndex(mvBest)] += depth * depth;
-				int[] killers = mvKiller[pos.distance];
-				if (killers[0] != mvBest) {
-					killers[1] = killers[0];
-					killers[0] = mvBest;
-				}
+				setBestMove(mvBest, depth);
 			}
 			return vlBest;
 		}
+	}
+
+	public int searchRoot(int depth) {
+		int vlBest = -MATE_VALUE;
+		SortItem sort = new SortItem(mvResult);
+		int mv;
+		while ((mv = sort.next()) > 0) {
+			if (!pos.makeMove(mv)) {
+				continue;
+			}
+			int newDepth = pos.inCheck() ? depth : depth - 1;
+			int vl;
+			if (vlBest == -MATE_VALUE) {
+				vl = -searchNoNull(-MATE_VALUE, MATE_VALUE, newDepth);
+			} else {
+				vl = -searchFull(-vlBest - 1, -vlBest, newDepth);
+				if (vl > vlBest) {
+					vl = -searchNoNull(-MATE_VALUE, -vlBest, newDepth);
+				}
+			}
+			pos.undoMakeMove();
+			if (vl > vlBest) {
+				vlBest = vl;
+				mvResult = mv;
+				if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
+					vlBest += (Position.random.nextInt() & RANDOM_MASK) -
+							(Position.random.nextInt() & RANDOM_MASK);
+				}
+			}
+		}
+		setBestMove(mvResult, depth);
+		return vlBest;
 	}
 
 	public void searchMain(int seconds) {
@@ -377,7 +418,7 @@ public class Search {
 		allNodes = 0;
 		long timer = System.currentTimeMillis();
 		for (int i = 1; i <= LIMIT_DEPTH; i ++) {
-			vl = searchFull(-MATE_VALUE, MATE_VALUE, i);
+			vl = searchRoot(i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}

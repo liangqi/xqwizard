@@ -68,18 +68,13 @@
                 />
                 <Reference
                     Platform = "Windows CE"
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                />
-                <Reference
-                    Platform = "Windows CE"
                     Name = "System.Windows.Forms"
                     AssemblyName = "System.Windows.Forms"
                 />
                 <Reference
                     Platform = "Windows CE"
-                    Name = "System.Xml"
-                    AssemblyName = "System.Xml"
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
                 />
                 <Reference
                     Platform = "Windows CE-Designer"
@@ -137,7 +132,7 @@
                 />
                 <File
                     RelPath = "STARTUP.VB"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -156,7 +151,7 @@
                 />
                 <File
                     RelPath = "XQWLMAIN.VB"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
