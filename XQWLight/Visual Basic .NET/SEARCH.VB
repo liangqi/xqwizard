@@ -46,6 +46,7 @@ Module Search
         Dim bMate As Boolean
         hash = Search_hash(Search_pos.dwZobristKey And (HASH_SIZE - 1))
         If hash.dwZobristLock <> Search_pos.dwZobristLock Then
+            mv = 0
             Return -MATE_VALUE
         End If
         mv = hash.mv
@@ -266,7 +267,6 @@ Module Search
             Return Search_pos.RepValue(vlRep)
         End If
         ' 4. 置换裁剪
-        mvHash = 0
         vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash)
         If vl > -MATE_VALUE Then
             Return vl
@@ -331,9 +331,6 @@ Module Search
             mv = sort.NextMove()
         End While
         ' 12. 更新置换表、历史表和杀手着法表
-        If Search_pos.nDistance = 0 Then
-            Search_mvResult = mvBest
-        End If
         If vlBest = -MATE_VALUE Then
             Return Search_pos.nDistance - MATE_VALUE
         Else
@@ -425,6 +422,7 @@ Module Search
             Search_nHistory(i) = 0
         Next
         ' 6. 初始化
+        Search_mvResult = 0
         Search_pos.nDistance = 0
         Search_nAllNodes = 0
         ' 7. 迭代加深

@@ -86,6 +86,7 @@ public class Search {
 	public int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
 		HashItem hash = getHashItem();
 		if (hash.zobristLock != pos.zobristLock) {
+			mv[0] = 0;
 			return -MATE_VALUE;
 		}
 		mv[0] = hash.mv;
@@ -286,7 +287,7 @@ public class Search {
 		if (vlRep > 0) {
 			return pos.repValue(vlRep);
 		}
-		int[] mvHash = new int[] {0};
+		int[] mvHash = new int[1];
 		vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
 		if (vl > -MATE_VALUE) {
 			return vl;
@@ -414,6 +415,7 @@ public class Search {
 		for (int i = 0; i < 4096; i ++) {
 			historyTable[i] = 0;
 		}
+		mvResult = 0;
 		pos.distance = 0;
 		allNodes = 0;
 		long timer = System.currentTimeMillis();

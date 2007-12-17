@@ -72,7 +72,7 @@ Module XQWLight
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim mvResult As Integer, sqLast As Integer, pcCaptured As Integer
+        Dim sqLast As Integer, pcCaptured As Integer
         If GetResult() Then
             Return False
         End If
