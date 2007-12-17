@@ -72,8 +72,7 @@ public class MainForm extends Canvas implements CommandListener {
 	private boolean bLoaded;
 	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
-	private int squareSize, squareShift;
-	private int width, height, left, right, top, bottom;
+	private int squareSize, width, height, left, right, top, bottom;
 
 	public MainForm(XQWLight midlet) {
 		this.midlet = midlet;
@@ -149,18 +148,23 @@ public class MainForm extends Canvas implements CommandListener {
 				bLoaded = true;
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
-				if (width >= 320 && height >= 356) {
+				int boardWidth;
+				int boardHeight;
+				if (width >= 324 && height >= 360) {
 					imagePath += "large/";
+					boardWidth = 324;
+					boardHeight = 360;
 					squareSize = 36;
-					squareShift = 2;
-				} else if (width >= 232 && height >= 258) {
+				} else if (width >= 234 && height >= 260) {
 					imagePath += "medium/";
+					boardWidth = 234;
+					boardHeight = 260;
 					squareSize = 26;
-					squareShift = 1;
 				} else {
 					imagePath += "small/";
+					boardWidth = 162;
+					boardHeight = 180;
 					squareSize = 18;
-					squareShift = 1;
 				}
 				try {
 					imgBoard = Image.createImage(imagePath + "board.png");
@@ -178,8 +182,6 @@ public class MainForm extends Canvas implements CommandListener {
 				} catch (Exception e) {
 					throw new RuntimeException(e.getMessage());
 				}
-				int boardWidth = imgBoard.getWidth();
-				int boardHeight = imgBoard.getHeight();
 				left = (width - boardWidth) / 2;
 				top = (height - boardHeight) / 2;
 				right = left + boardWidth - 32;
@@ -200,7 +202,7 @@ public class MainForm extends Canvas implements CommandListener {
 			if (Position.IN_BOARD(sq)) {
 				int pc = search.pos.squares[sq];
 				if (pc > 0) {
-					drawPiece(g, imgPieces[pc], sq);
+					drawSquare(g, imgPieces[pc], sq);
 				}
 			}
 		}
@@ -209,19 +211,19 @@ public class MainForm extends Canvas implements CommandListener {
 		if (mvLast > 0) {
 			sqSrc = Position.SRC(mvLast);
 			sqDst = Position.DST(mvLast);
-			drawPiece(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
-			drawPiece(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
+			drawSquare(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
+			drawSquare(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
 		} else if (sqSelected > 0) {
-			drawPiece(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
+			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
 		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
-			drawCursor(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
+			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
 		} else {
-			drawCursor(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
+			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
 		}
 		if (phase == PHASE_THINKING) {
 			int x, y;
@@ -245,27 +247,13 @@ public class MainForm extends Canvas implements CommandListener {
 			Display.getDisplay(midlet).setCurrent(midlet.startUp);			
 			return;
 		}
+		if (phase == PHASE_THINKING) {
+			return;
+		}
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
 		if (action == FIRE || code == KEY_NUM5) {
-			int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
-			if (midlet.flipped) {
-				sq = Position.SQUARE_FLIP(sq);
-			}
-			int pc = search.pos.squares[sq];
-			if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
-				mvLast = 0;
-				sqSelected = sq;
-			} else {
-				if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
-					mvLast = 0;
-					midlet.rsData[0] = 0;
-					phase = PHASE_EXITTING;
-					repaint();
-					serviceRepaints();
-					return;
-				}
-			}
+			clickSquare();
 		} else {
 			switch (action) {
 			case UP:
@@ -319,19 +307,45 @@ public class MainForm extends Canvas implements CommandListener {
 		serviceRepaints();
     }
 
-	private void drawCursor(Graphics g, Image image, int sq) {
-		drawSquare(g, image, sq, true);
+	protected void pointerPressed(int x, int y) {
+		if (phase == PHASE_EXITTING) {
+			Display.getDisplay(midlet).setCurrent(midlet.startUp);			
+			return;
+		}
+		if (phase == PHASE_THINKING) {
+			return;
+		}
+		cursorX = (x - left) / squareSize;
+		cursorY = (y - top) / squareSize;
+		cursorX = (cursorX < 0 ? 0 : cursorX > 8 ? 8 : cursorX);
+		cursorY = (cursorY < 0 ? 0 : cursorY > 9 ? 9 : cursorY);
+		clickSquare();
+		repaint();
+		serviceRepaints();
 	}
 
-	private void drawPiece(Graphics g, Image image, int sq) {
-		drawSquare(g, image, sq, false);
+	private void clickSquare() {
+		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
+		if (midlet.flipped) {
+			sq = Position.SQUARE_FLIP(sq);
+		}
+		int pc = search.pos.squares[sq];
+		if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
+			mvLast = 0;
+			sqSelected = sq;
+		} else {
+			if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
+				mvLast = 0;
+				midlet.rsData[0] = 0;
+				phase = PHASE_EXITTING;
+			}
+		}
 	}
 
-	private void drawSquare(Graphics g, Image image, int sq, boolean cursor) {
-		int shift = (cursor ? 0 : squareShift);
+	private void drawSquare(Graphics g, Image image, int sq) {
 		int sqLocal = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
-		int sqX = left + (Position.FILE_X(sqLocal) - 3) * squareSize + shift;
-		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * squareSize + shift;
+		int sqX = left + (Position.FILE_X(sqLocal) - 3) * squareSize;
+		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * squareSize;
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
