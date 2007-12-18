@@ -338,7 +338,7 @@ End Function
 ' ≤•∑≈…˘“Ù
 Public Sub PlayWavSound(ByVal szSoundFile As String)
 
-PlaySoundA App_szPath + "\SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
 
 End Sub
 

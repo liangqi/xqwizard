@@ -19,13 +19,18 @@
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 Module XQWLight
+    Public Const SND_ASYNC As Long = 1
+    Public Const SND_NOWAIT As Long = 8192
+    Public Const SND_FILENAME As Long = 131072
+    Public Declare Function PlaySound Lib "COREDLL.DLL" (ByVal szSound As String, ByVal hMod As IntPtr, ByVal flags As Integer) As Integer
+
     Public Const DRAW_SELECTED As Boolean = True
     Public Const RESULT_COMPUTER As Boolean = True
 
     Public Const LEFT_MARGIN As Integer = 6
     Public Const TOP_MARGIN As Integer = 8
 
-    Public App_frm As MainForm
+    Public App_frm As MainForm, App_szPath As String
     Public App_bExit As Boolean, App_bFlipped As Boolean
     Public App_nHandicap As Integer, App_nLevel As Integer
     Public App_sqCursor As Integer, App_sqSelected As Integer, App_mvLast As Integer
@@ -68,6 +73,8 @@ Module XQWLight
             MsgBox("超过自然限着作和，辛苦了！", MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
+        ' TODO "COREDLL.DLL" Not Found ...
+        PlaySound(App_szPath + "SOUNDS\MOVE.WAV", IntPtr.Zero, SND_ASYNC + SND_NOWAIT + SND_FILENAME)
         Return False
     End Function
 
@@ -117,7 +124,21 @@ Module XQWLight
     End Function
 
     Public Sub Main()
-        Dim frmStartUp As StartUp
+        Dim frmStartUp As StartUp, nSlash As Integer, nBackSlash As Integer
+
+        App_szPath = System.Reflection.Assembly.GetExecutingAssembly.GetName.CodeBase
+        If Left(App_szPath, 8) = "file:///" Then
+            App_szPath = Mid(App_szPath, 9)
+        End If
+        nSlash = InStrRev(App_szPath, "/")
+        nBackSlash = InStrRev(App_szPath, "\")
+        If nSlash > nBackSlash Then
+            App_szPath = Left(App_szPath, nSlash)
+        ElseIf nSlash < nBackSlash Then
+            App_szPath = Left(App_szPath, nBackSlash)
+        Else
+            App_szPath = ""
+        End If
         Randomize()
         InitArrays()
         LoadBook()

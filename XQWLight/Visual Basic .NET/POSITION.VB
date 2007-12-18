@@ -472,19 +472,7 @@ Module Position
         Dim szFile As String, nSlash As Integer, nBackSlash As Integer, fp As FileStream
         Dim i As Integer, Buffer(7) As Byte, BookRecord As BookStruct
 
-        szFile = System.Reflection.Assembly.GetExecutingAssembly.GetName.CodeBase
-        If Left(szFile, 8) = "file:///" Then
-            szFile = Mid(szFile, 9)
-        End If
-        nSlash = InStrRev(szFile, "/")
-        nBackSlash = InStrRev(szFile, "\")
-        If nSlash > nBackSlash Then
-            szFile = Left(szFile, nSlash) + "BOOK.DAT"
-        ElseIf nSlash < nBackSlash Then
-            szFile = Left(szFile, nBackSlash) + "BOOK.DAT"
-        Else
-            szFile = "BOOK.DAT"
-        End If
+        szFile = App_szPath + "BOOK.DAT"
         If File.Exists(szFile) Then
             fp = File.Open(szFile, FileMode.Open, FileAccess.Read)
             Book_nMoveNum = CInt(fp.Length \ 8)
