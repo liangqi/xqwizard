@@ -26,29 +26,34 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 
-public class XQWLight extends MIDlet {
-	public StartUp startUp = new StartUp(this);
-	public MainForm mainForm = new MainForm(this);
+public class XQWLMIDlet extends MIDlet {
+	public XQWLForm form = new XQWLForm(this);
+	public XQWLCanvas canvas = new XQWLCanvas(this);
 
-	public boolean flipped;
+	public boolean flipped, sound;
 	public int handicap, level;
+
+	public static final int RS_DATA_LEN = 512;
 	/**
-	 * 0: Status, 0 = Normal Exit, 1/2/3 = Game Saved (Level + 1)
-	 * 1: Player, 0 = Red, 1 = Black (Flipped)
-	 * 2-257: Squares
+	 * 0: Status, 0 = Normal Exit, 1 = Game Saved
+	 * 16: Player, 0 = Red, 1 = Black (Flipped)
+	 * 17: Handicap, 0 = None, 1 = 1 Knight, 2 = 2 Knights, 3 = 9 Pieces
+	 * 18: Level, 0 = Beginner, 1 = Amateur, 2 = Expert
+	 * 19: Sound, 0 = Off, 1 = On
+	 * 256-511: Squares
 	 */
 	public byte[] rsData = new byte[RS_DATA_LEN];
 
 	private boolean started = false;
-
-	private static final int RS_DATA_LEN = 258;
 
 	public void startApp() {
 		if (started) {
 			return;
 		}
 		started = true;
-		rsData[0] = 0;
+		for (int i = 0; i < RS_DATA_LEN; i ++) {
+			rsData[i] = 0;
+		}
 		try {
 			RecordStore rs = RecordStore.openRecordStore("XQWLight", true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
@@ -66,16 +71,19 @@ public class XQWLight extends MIDlet {
 		} catch (Exception e) {
 			// Ignored
 		}
+		flipped = (rsData[16] != 0);
+		handicap = Math.min(Math.max(0, rsData[17]), 3);
+		level = Math.min(Math.max(0, rsData[18]), 2);
+		sound = (rsData[19] == 0);
+		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
+		form.cgLevel.setSelectedIndex(level, true);
+		form.cgHandicap.setSelectedIndex(handicap, true);
+		form.cgSound.setSelectedIndex(0, sound);
 		if (rsData[0] == 0) {
-			Display.getDisplay(this).setCurrent(startUp);
+			Display.getDisplay(this).setCurrent(form);
 		} else {
-			flipped = (rsData[1] != 0);
-			level = rsData[0] - 1;
-			if (level < 0 || level > 2) {
-				level = 0;
-			}
-			mainForm.reset();
-			Display.getDisplay(this).setCurrent(mainForm);
+			canvas.reset();
+			Display.getDisplay(this).setCurrent(canvas);
 		}
 	}
 
@@ -84,6 +92,10 @@ public class XQWLight extends MIDlet {
     }
 
     public void destroyApp(boolean unc) {
+		rsData[16] = (byte) (flipped ? 1 : 0);
+		rsData[17] = (byte) handicap;
+		rsData[18] = (byte) level;
+		rsData[19] = (byte) (sound ? 0 : 1);
 		try {
 			RecordStore rs = RecordStore.openRecordStore("XQWLight", true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);

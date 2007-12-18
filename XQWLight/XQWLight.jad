@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-MIDlet-1: 象棋小巫师, /images/xqwlight.png, xqwlight.XQWLight
+MIDlet-1: 象棋小巫师, /images/xqwlight.png, xqwlight.XQWLMIDlet
 MIDlet-Name: 象棋小巫师
 MIDlet-Description: 手机象棋游戏 - 象棋小巫师 1.13
 MIDlet-Vendor: www.elephantbase.net

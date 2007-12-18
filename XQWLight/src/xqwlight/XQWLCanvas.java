@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import java.io.InputStream;
+
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -29,8 +31,12 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
+import javax.microedition.media.PlayerListener;
+import javax.microedition.media.control.VolumeControl;
 
-public class MainForm extends Canvas implements CommandListener {
+public class XQWLCanvas extends Canvas implements CommandListener {
 	private static final int PHASE_STARTING = 0;
 	private static final int PHASE_WAITING = 1;
 	private static final int PHASE_THINKING = 2;
@@ -59,7 +65,7 @@ public class MainForm extends Canvas implements CommandListener {
 		heightBackground = imgBackground.getHeight();
 	}
 
-	private XQWLight midlet;
+	private XQWLMIDlet midlet;
 	private Search search;
 
 	private int cursorX, cursorY;
@@ -74,7 +80,7 @@ public class MainForm extends Canvas implements CommandListener {
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
-	public MainForm(XQWLight midlet) {
+	public XQWLCanvas(XQWLMIDlet midlet) {
 		this.midlet = midlet;
 		search = new Search();
 		search.pos = new Position();
@@ -100,7 +106,7 @@ public class MainForm extends Canvas implements CommandListener {
 		} else {
 			search.pos.clearBoard();
 			for (int sq = 0; sq < 256; sq ++) {
-				int pc = midlet.rsData[sq + 2];
+				int pc = midlet.rsData[sq + 256];
 				if (pc > 0) {
 					search.pos.addPiece(sq, pc);
 				}
@@ -121,7 +127,7 @@ public class MainForm extends Canvas implements CommandListener {
 				// Not Available, Never Occurs
 			} else if (c == cmdBack) {
 				midlet.rsData[0] = 0;
-				Display.getDisplay(midlet).setCurrent(midlet.startUp);
+				Display.getDisplay(midlet).setCurrent(midlet.form);
 			}
 		}
 	}
@@ -244,7 +250,7 @@ public class MainForm extends Canvas implements CommandListener {
 
 	protected void keyPressed(int code) {
 		if (phase == PHASE_EXITTING) {
-			Display.getDisplay(midlet).setCurrent(midlet.startUp);			
+			Display.getDisplay(midlet).setCurrent(midlet.form);			
 			return;
 		}
 		if (phase == PHASE_THINKING) {
@@ -309,7 +315,7 @@ public class MainForm extends Canvas implements CommandListener {
 
 	protected void pointerPressed(int x, int y) {
 		if (phase == PHASE_EXITTING) {
-			Display.getDisplay(midlet).setCurrent(midlet.startUp);			
+			Display.getDisplay(midlet).setCurrent(midlet.form);			
 			return;
 		}
 		if (phase == PHASE_THINKING) {
@@ -331,11 +337,11 @@ public class MainForm extends Canvas implements CommandListener {
 		}
 		int pc = search.pos.squares[sq];
 		if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
+			playSound("CLICK");
 			mvLast = 0;
 			sqSelected = sq;
 		} else {
 			if (sqSelected > 0 && addMove(Position.MOVE(sqSelected, sq)) && !responseMove()) {
-				mvLast = 0;
 				midlet.rsData[0] = 0;
 				phase = PHASE_EXITTING;
 			}
@@ -349,25 +355,32 @@ public class MainForm extends Canvas implements CommandListener {
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
-	private boolean getResult(boolean computer) {
+	private boolean getResult() {
+		return getResult(null);
+	}
+
+	private boolean getResult(String wavFile) {
 		if (search.pos.isMate()) {
-			message = computer ? "请再接再厉！" : "祝贺你取得胜利！";
+			playSound(wavFile == null ? "WIN" : "LOSS");
+			message = (wavFile == null ? "祝贺你取得胜利！" : "请再接再厉！");
 			return true;
 		}
 		int vlRep = search.pos.repStatus(3);
 		if (vlRep > 0) {
-			vlRep = (computer ? -search.pos.repValue(vlRep) : search.pos.repValue(vlRep));
+			vlRep = (wavFile == null ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
+			playSound(vlRep > Position.WIN_VALUE ? "LOSS" : vlRep < -Position.WIN_VALUE ? "WIN" : "DRAW");
 			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
 		if (search.pos.moveNum == 100) {
+			playSound("DRAW");
 			message = "超过自然限着作和，辛苦了！";
 			return true;
 		}
-		if (computer) {
-			midlet.rsData[0] = (byte) (midlet.level + 1);
-			midlet.rsData[1] = (byte) (midlet.flipped ? 1 : 0);
-			System.arraycopy(search.pos.squares, 0, midlet.rsData, 2, 256);
+		if (wavFile != null) {
+			playSound(wavFile);
+			midlet.rsData[0] = 1;
+			System.arraycopy(search.pos.squares, 0, midlet.rsData, 256, 256);
 		}
 		return false;
 	}
@@ -379,16 +392,19 @@ public class MainForm extends Canvas implements CommandListener {
 				if (pc > 0) {
 					search.pos.setIrrev();
 				}
+				playSound(search.pos.inCheck() ? "CHECK" : pc > 0 ? "CAPTURE" : "MOVE");
 				sqSelected = 0;
 				mvLast = mv;
 				return true;
+			} else {
+				playSound("ILLEGAL");
 			}
 		}
 		return false;
 	}
 
-	public boolean responseMove() {
-		if (getResult(false)) {
+	private boolean responseMove() {
+		if (getResult()) {
 			return false;
 		}
 		phase = PHASE_THINKING;
@@ -397,13 +413,45 @@ public class MainForm extends Canvas implements CommandListener {
 		search.searchMain(1 << (midlet.level << 1));
 		int pc = search.pos.squares[Position.DST(search.mvResult)];
 		search.pos.makeMove(search.mvResult);
+		String wavFile = "MOVE2";
 		if (pc > 0) {
 			search.pos.setIrrev();
+			wavFile = "CAPTURE2";
+		}
+		if (search.pos.inCheck()) {
+			wavFile = "CHECK2";
 		}
 		mvLast = search.mvResult;
 		phase = PHASE_WAITING;
 		repaint();
 		serviceRepaints();
-		return !getResult(true);
+		return !getResult(wavFile);
+	}
+
+	private PlayerListener listener = new PlayerListener() {
+		public void playerUpdate(Player player, String event, Object eventData) {
+			if (event == STOPPED || event == STOPPED_AT_TIME || event == END_OF_MEDIA) {
+				player.close();
+			}
+		}
+	};
+
+	private void playSound(String wavFile) {
+		if (!midlet.sound) {
+			return;
+		}
+		try {
+			InputStream in = this.getClass().getResourceAsStream("/sounds/" + wavFile + ".WAV");
+			Player player = Manager.createPlayer(in, "audio/x-wav");
+			player.addPlayerListener(listener);
+			player.realize();
+			VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
+			if (vc != null) {
+				vc.setLevel(50);
+			}
+			player.start();
+		} catch (Exception e) {
+			// Ignored
+		}
 	}
 }
