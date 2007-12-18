@@ -1,7 +1,7 @@
 ' XQWLMAIN.VB - Source Code for XiangQi Wizard Light, Part IV
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.0 Beta4, Last Modified: Oct. 2007
+' Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -482,9 +482,11 @@ Public Class MainForm
                 DrawSquare(App_mvLast And 255)
                 DrawSquare(App_mvLast >> 8)
             End If
+            PlaySound("CLICK")
         Else
             If App_sqSelected > 0 AndAlso AddMove(App_sqSelected, sq) AndAlso Not ResponseMove() Then
                 bClicking = False
+                ' 如果"bClicking = False"在"Close()"之后，则窗口会重新打开！
                 Close()
                 Exit Sub
             End If

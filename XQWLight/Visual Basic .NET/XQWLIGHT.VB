@@ -23,6 +23,7 @@ Module XQWLight
     Public Const SND_NOWAIT As Long = 8192
     Public Const SND_FILENAME As Long = 131072
     Public Declare Function PlaySound Lib "COREDLL.DLL" (ByVal szSound As String, ByVal hMod As IntPtr, ByVal flags As Integer) As Integer
+    Public Declare Function PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hmod As Integer, ByVal flags As Integer) As Integer
 
     Public Const DRAW_SELECTED As Boolean = True
     Public Const RESULT_COMPUTER As Boolean = True
@@ -31,7 +32,7 @@ Module XQWLight
     Public Const TOP_MARGIN As Integer = 8
 
     Public App_frm As MainForm, App_szPath As String
-    Public App_bExit As Boolean, App_bFlipped As Boolean
+    Public App_bExit As Boolean, App_bFlipped As Boolean, App_bSound As Boolean
     Public App_nHandicap As Integer, App_nLevel As Integer
     Public App_sqCursor As Integer, App_sqSelected As Integer, App_mvLast As Integer
 
@@ -48,22 +49,44 @@ Module XQWLight
                 App_mvLast = mv
                 App_frm.DrawSquare(sqSrc, DRAW_SELECTED)
                 App_frm.DrawSquare(sqDst, DRAW_SELECTED)
+                If (Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck) Then
+                    PlaySound("CHECK")
+                Else
+                    If (pcCaptured > 0) Then
+                        PlaySound("CAPTURE")
+                    Else
+                        PlaySound("MOVE")
+                    End If
+                End If
                 Return True
+            Else
+                PlaySound("ILLEGAL")
             End If
         End If
         Return False
     End Function
 
-    Public Function GetResult(Optional ByVal bComputer As Boolean = False) As Boolean
+    Public Sub PlaySound(ByVal szWavFile As String)
+        If Not App_bSound Then
+            Return
+        End If
+        Try
+            PlaySound(App_szPath + "SOUNDS\" + szWavFile + ".WAV", IntPtr.Zero, SND_ASYNC + SND_NOWAIT + SND_FILENAME)
+        Catch ex As Exception
+            PlaySoundA(App_szPath + "SOUNDS\" + szWavFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME)
+        End Try
+    End Sub
+
+    Public Function GetResult(Optional ByVal szWavFile As String = "") As Boolean
         Dim vlRep As Integer
         If Search_pos.IsMate() Then
-            MsgBox(IIf(bComputer, "请再接再厉！", "祝贺你取得胜利！"), MsgBoxStyle.Information, "棋局结束")
+            MsgBox(IIf(szWavFile = "", "祝贺你取得胜利！", "请再接再厉！"), MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
         vlRep = Search_pos.RepStatus(3)
         If vlRep > 0 Then
             vlRep = Search_pos.RepValue(vlRep)
-            If bComputer Then
+            If szWavFile <> "" Then
                 vlRep = -vlRep
             End If
             MsgBox(Switch(vlRep > WIN_VALUE, "长打作负，请不要气馁！", vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", True, "双方不变作和，辛苦了！"), MsgBoxStyle.Information, "棋局结束")
@@ -73,13 +96,14 @@ Module XQWLight
             MsgBox("超过自然限着作和，辛苦了！", MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
-        ' TODO "COREDLL.DLL" Not Found ...
-        PlaySound(App_szPath + "SOUNDS\MOVE.WAV", IntPtr.Zero, SND_ASYNC + SND_NOWAIT + SND_FILENAME)
+        If szWavFile <> "" Then
+            PlaySound(szWavFile)
+        End If
         Return False
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim sqLast As Integer, pcCaptured As Integer
+        Dim sqLast As Integer, pcCaptured As Integer, szWavFile As String
         If GetResult() Then
             Return False
         End If
@@ -101,23 +125,20 @@ Module XQWLight
             App_frm.DrawSquare(App_mvLast And 255)
             App_frm.DrawSquare(App_mvLast >> 8)
         End If
+        szWavFile = "MOVE2"
         pcCaptured = Search_pos.pcSquares(Search_mvResult >> 8)
         Search_pos.MakeMove(Search_mvResult)
         If pcCaptured > 0 Then
+            szWavFile = "CAPTURE2"
             Search_pos.SetIrrev()
         End If
+        If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
+            szWavFile = "CHECK2"
+        End If
         App_mvLast = Search_mvResult
-        'sqLast = App_sqCursor
-        'If App_bFlipped Then
-        'App_sqCursor = 254 - (App_mvLast >> 8)
-        'App_frm.DrawSquare(254 - sqLast)
-        'Else
-        '    App_sqCursor = App_mvLast >> 8
-        '    App_frm.DrawSquare(sqLast)
-        'End If
         App_frm.DrawSquare(App_mvLast And 255, DRAW_SELECTED)
         App_frm.DrawSquare(App_mvLast >> 8, DRAW_SELECTED)
-        If GetResult(RESULT_COMPUTER) Then
+        If GetResult(szWavFile) Then
             Return False
         End If
         Return True

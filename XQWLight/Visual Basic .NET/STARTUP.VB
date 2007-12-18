@@ -55,6 +55,7 @@ Public Class StartUp
     Friend WithEvents optLevel As System.Windows.Forms.ComboBox
     Friend WithEvents lblLevel As System.Windows.Forms.Label
     Friend WithEvents btnAbout As System.Windows.Forms.Button
+    Friend WithEvents chkSound As System.Windows.Forms.CheckBox
     Private Sub InitializeComponent()
         Me.btnStart = New System.Windows.Forms.Button
         Me.btnExit = New System.Windows.Forms.Button
@@ -66,6 +67,69 @@ Public Class StartUp
         Me.lblPlayer = New System.Windows.Forms.Label
         Me.optLevel = New System.Windows.Forms.ComboBox
         Me.btnAbout = New System.Windows.Forms.Button
+        Me.chkSound = New System.Windows.Forms.CheckBox
+        '
+        'btnAbout
+        '
+        Me.btnAbout.Location = New System.Drawing.Point(16, 0)
+        Me.btnAbout.Size = New System.Drawing.Size(120, 24)
+        Me.btnAbout.Text = "关于""象棋小巫师"""
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        '
+        'lblPlayer
+        '
+        Me.lblPlayer.Location = New System.Drawing.Point(16, 32)
+        Me.lblPlayer.Size = New System.Drawing.Size(48, 16)
+        Me.lblPlayer.Text = "谁先走"
+        '
+        'optRed
+        '
+        Me.optRed.Location = New System.Drawing.Point(64, 24)
+        Me.optRed.Size = New System.Drawing.Size(64, 24)
+        Me.optRed.Text = "我先走"
+        '
+        'optBlack
+        '
+        Me.optBlack.Location = New System.Drawing.Point(64, 48)
+        Me.optBlack.Size = New System.Drawing.Size(72, 24)
+        Me.optBlack.Text = "电脑先走"
+        '
+        'lblHandicap
+        '
+        Me.lblHandicap.Location = New System.Drawing.Point(16, 72)
+        Me.lblHandicap.Size = New System.Drawing.Size(56, 16)
+        Me.lblHandicap.Text = "先走让子"
+        '
+        'optHandicap
+        '
+        Me.optHandicap.Items.Add("不让子")
+        Me.optHandicap.Items.Add("让单马")
+        Me.optHandicap.Items.Add("让双马")
+        Me.optHandicap.Items.Add("让九子")
+        Me.optHandicap.Location = New System.Drawing.Point(72, 72)
+        Me.optHandicap.Size = New System.Drawing.Size(64, 20)
+        '
+        'lblLevel
+        '
+        Me.lblLevel.Location = New System.Drawing.Point(16, 96)
+        Me.lblLevel.Size = New System.Drawing.Size(56, 16)
+        Me.lblLevel.Text = "电脑水平"
+        '
+        'optLevel
+        '
+        Me.optLevel.Items.Add("入门")
+        Me.optLevel.Items.Add("业余")
+        Me.optLevel.Items.Add("专业")
+        Me.optLevel.Location = New System.Drawing.Point(72, 96)
+        Me.optLevel.Size = New System.Drawing.Size(64, 20)
+        '
+        'chkSound
+        '
+        Me.chkSound.Checked = True
+        Me.chkSound.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkSound.Location = New System.Drawing.Point(16, 120)
+        Me.chkSound.Size = New System.Drawing.Size(56, 16)
+        Me.chkSound.Text = "音效"
         '
         'btnStart
         '
@@ -79,60 +143,6 @@ Public Class StartUp
         Me.btnExit.Size = New System.Drawing.Size(56, 24)
         Me.btnExit.Text = "退出"
         '
-        'optHandicap
-        '
-        Me.optHandicap.Items.Add("不让子")
-        Me.optHandicap.Items.Add("让单马")
-        Me.optHandicap.Items.Add("让双马")
-        Me.optHandicap.Items.Add("让九子")
-        Me.optHandicap.Location = New System.Drawing.Point(72, 88)
-        Me.optHandicap.Size = New System.Drawing.Size(64, 20)
-        '
-        'lblHandicap
-        '
-        Me.lblHandicap.Location = New System.Drawing.Point(16, 88)
-        Me.lblHandicap.Size = New System.Drawing.Size(56, 16)
-        Me.lblHandicap.Text = "先走让子"
-        '
-        'lblLevel
-        '
-        Me.lblLevel.Location = New System.Drawing.Point(16, 112)
-        Me.lblLevel.Size = New System.Drawing.Size(56, 16)
-        Me.lblLevel.Text = "电脑水平"
-        '
-        'optRed
-        '
-        Me.optRed.Location = New System.Drawing.Point(64, 40)
-        Me.optRed.Size = New System.Drawing.Size(64, 24)
-        Me.optRed.Text = "我先走"
-        '
-        'optBlack
-        '
-        Me.optBlack.Location = New System.Drawing.Point(64, 64)
-        Me.optBlack.Size = New System.Drawing.Size(72, 24)
-        Me.optBlack.Text = "电脑先走"
-        '
-        'lblPlayer
-        '
-        Me.lblPlayer.Location = New System.Drawing.Point(16, 48)
-        Me.lblPlayer.Size = New System.Drawing.Size(48, 16)
-        Me.lblPlayer.Text = "谁先走"
-        '
-        'optLevel
-        '
-        Me.optLevel.Items.Add("入门")
-        Me.optLevel.Items.Add("业余")
-        Me.optLevel.Items.Add("专业")
-        Me.optLevel.Location = New System.Drawing.Point(72, 112)
-        Me.optLevel.Size = New System.Drawing.Size(64, 20)
-        '
-        'btnAbout
-        '
-        Me.btnAbout.Location = New System.Drawing.Point(16, 8)
-        Me.btnAbout.Size = New System.Drawing.Size(120, 24)
-        Me.btnAbout.Text = "关于""象棋小巫师"""
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
-        '
         'StartUp
         '
         Me.BackColor = System.Drawing.SystemColors.Control
@@ -145,6 +155,7 @@ Public Class StartUp
         Me.Controls.Add(Me.optHandicap)
         Me.Controls.Add(Me.lblLevel)
         Me.Controls.Add(Me.optLevel)
+        Me.Controls.Add(Me.chkSound)
         Me.Controls.Add(Me.btnStart)
         Me.Controls.Add(Me.btnExit)
         Me.MaximizeBox = False
@@ -155,12 +166,12 @@ Public Class StartUp
 #End Region
     Private Sub btnStart_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnStart.Click
         App_bExit = False
-        Me.Close()
+        Close()
     End Sub
 
     Private Sub btnExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnExit.Click
         App_bExit = True
-        Me.Close()
+        Close()
     End Sub
 
     Private Sub frmStartUp_Closed(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Closed
@@ -173,6 +184,7 @@ Public Class StartUp
         If App_nLevel < 0 OrElse App_nLevel > 2 Then
             App_nLevel = 0
         End If
+        App_bSound = chkSound.Checked
     End Sub
 
     Private Sub btnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAbout.Click
