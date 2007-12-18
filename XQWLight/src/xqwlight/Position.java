@@ -21,7 +21,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import java.io.InputStream;
 import java.util.Random;
+
 
 public class Position {
 	public static final int MATE_VALUE = 10000;
@@ -34,6 +36,7 @@ public class Position {
 
 	public static final int MAX_GEN_MOVES = 128;
 	public static final int MAX_MOVE_NUM = 256;
+	public static final int MAX_BOOK_SIZE = 16384;
 
 	public static final int PIECE_KING = 1;
 	public static final int PIECE_ADVISOR = 2;
@@ -415,16 +418,6 @@ public class Position {
 	public static int[][] PreGen_zobristKeyTable = new int[14][256];
 	public static int[][] PreGen_zobristLockTable = new int[14][256];
 
-	public static class BookItem {
-		public int zobristLock, mv, vl;
-
-		public BookItem(int zobristLock, int mv, int vl) {
-			this.zobristLock = zobristLock;
-			this.mv = mv;
-			this.vl = vl;
-		}
-	}
-
 	public static class RC4 {
 		public int[] state = new int[256];
 		public int x, y;
@@ -466,7 +459,22 @@ public class Position {
 		}
 	}
 
+	/** byte[2] (Little Endian) -> short */
+	public static int toShort(byte[] b) {
+		return ((b[0] & 0xff) | ((b[1] & 0xff) << 8));
+	}
+
+	/** byte[4] (Little Endian) -> long */
+	public static int toInt(byte[] b) {
+		return (b[0] & 0xff) | ((b[1] & 0xff) << 8) | ((b[2] & 0xff) << 16) | ((b[3] & 0xff) << 24);
+	}
+
 	public static Random random = new Random();
+
+	public static int bookSize;
+	public static int[] bookLock = new int[MAX_BOOK_SIZE];
+	public static short[] bookMove = new short[MAX_BOOK_SIZE];
+	public static short[] bookValue = new short[MAX_BOOK_SIZE];
 
 	static {
 		RC4 rc4 = new RC4(new byte[] {0});
@@ -479,6 +487,23 @@ public class Position {
 				rc4.nextLong(); // Skip ZobristLock0
 				PreGen_zobristLockTable[i][j] = rc4.nextLong();
 			}
+		}
+		try {
+			byte[] intData = new byte[4];
+			byte[] shortData = new byte[2];
+			InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
+			bookSize = Math.min(in.available() / 8, MAX_BOOK_SIZE);
+			for (int i = 0; i < bookSize; i ++) {
+				in.read(intData);
+				bookLock[i] = toInt(intData);
+				in.read(shortData);
+				bookMove[i] = (short) toShort(shortData);
+				in.read(shortData);
+				bookValue[i] = (short) toShort(shortData);
+			}
+			in.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -538,7 +563,8 @@ public class Position {
 			vlWhite += del ? -PIECE_VALUE[pcAdjust][sq] : PIECE_VALUE[pcAdjust][sq];
 		} else {
 			pcAdjust = pc - 17;
-			vlBlack += del ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] : PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
+			vlBlack += del ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] :
+					PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
 			pcAdjust += 7;
 		}
 		zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
@@ -902,7 +928,8 @@ public class Position {
 		case PIECE_ADVISOR:
 			return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
 		case PIECE_BISHOP:
-			return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) && squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+			return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
+					squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
 		case PIECE_KNIGHT:
 			int sqPin = KNIGHT_PIN(sqSrc, sqDst);
 			return sqPin != sqSrc && squares[sqPin] == 0;
@@ -1086,22 +1113,22 @@ public class Position {
 	}
 
 	public int bookMove() {
-		if (Book.BOOK_SIZE == 0) {
+		if (bookSize == 0) {
 			return 0;
 		}
 		boolean mirror = false;
 		int lock = zobristLock;
-		int index = binarySearch(lock, Book.Lock.BOOK_LOCK, 0, Book.BOOK_SIZE);
+		int index = binarySearch(lock, bookLock, 0, bookSize);
 		if (index < 0) {
 			mirror = true;
 			lock = mirror().zobristLock;
-			index = binarySearch(lock, Book.Lock.BOOK_LOCK, 0, Book.BOOK_SIZE);
+			index = binarySearch(lock, bookLock, 0, bookSize);
 		}
 		if (index < 0) {
 			return 0;
 		}
 		index --;
-		while (index >= 0 && Book.Lock.BOOK_LOCK[index] == lock) {
+		while (index >= 0 && bookLock[index] == lock) {
 			index --;
 		}
 		int[] mvs = new int[MAX_GEN_MOVES];
@@ -1109,11 +1136,12 @@ public class Position {
 		int value = 0;
 		int moves = 0;
 		index ++;
-		while (index < Book.BOOK_SIZE && Book.Lock.BOOK_LOCK[index] == lock) {
-			int mv = (mirror ? MIRROR_MOVE(Book.Move.BOOK_MOVE[index]) : Book.Move.BOOK_MOVE[index]);
+		while (index < bookSize && bookLock[index] == lock) {
+			int mv = 0xffff & bookMove[index];
+			mv = (mirror ? MIRROR_MOVE(mv) : mv);
 			if (legalMove(mv)) {
 				mvs[moves] = mv;
-				vls[moves] = Book.Value.BOOK_VALUE[index];
+				vls[moves] = bookValue[index];
 				value += vls[moves];
 				moves ++;
 				if (moves == MAX_GEN_MOVES) {
