@@ -33,7 +33,6 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
-import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
 
 public class XQWLCanvas extends Canvas implements CommandListener {
@@ -430,30 +429,29 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		return !getResult(wavFile);
 	}
 
-	private PlayerListener listener = new PlayerListener() {
-		public void playerUpdate(Player player, String event, Object eventData) {
-			if (event == STOPPED || event == STOPPED_AT_TIME || event == END_OF_MEDIA) {
-				player.close();
-			}
-		}
-	};
-
-	private void playSound(String wavFile) {
+	private void playSound(final String wavFile) {
 		if (!midlet.sound) {
 			return;
 		}
-		try {
-			InputStream in = this.getClass().getResourceAsStream("/sounds/" + wavFile + ".WAV");
-			Player player = Manager.createPlayer(in, "audio/x-wav");
-			player.realize();
-			VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
-			if (vc != null) {
-				vc.setLevel(50);
+		new Thread() {
+			public void run() {
+				try {
+					InputStream in = this.getClass().getResourceAsStream("/sounds/" + wavFile + ".WAV");
+					Player player = Manager.createPlayer(in, "audio/x-wav");
+					player.realize();
+					VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
+					if (vc != null) {
+						vc.setLevel(50);
+					}
+					player.start();
+					while (player.getState() == Player.STARTED) {
+						Thread.sleep(1);
+					}
+					player.close();
+				} catch (Exception e) {
+					// Ignored
+				}
 			}
-			player.start();
-			player.addPlayerListener(listener);
-		} catch (Exception e) {
-			// Ignored
-		}
+		}.start();
 	}
 }
