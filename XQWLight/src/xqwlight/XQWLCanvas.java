@@ -355,10 +355,12 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 
+	/** Player Move Result */
 	private boolean getResult() {
 		return getResult(null);
 	}
 
+	/** Computer Move Result */
 	private boolean getResult(String wavFile) {
 		if (search.pos.isMate()) {
 			playSound(wavFile == null ? "WIN" : "LOSS");
@@ -443,13 +445,13 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		try {
 			InputStream in = this.getClass().getResourceAsStream("/sounds/" + wavFile + ".WAV");
 			Player player = Manager.createPlayer(in, "audio/x-wav");
-			player.addPlayerListener(listener);
 			player.realize();
 			VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
 			if (vc != null) {
 				vc.setLevel(50);
 			}
 			player.start();
+			player.addPlayerListener(listener);
 		} catch (Exception e) {
 			// Ignored
 		}
