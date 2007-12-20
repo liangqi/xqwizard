@@ -1046,7 +1046,8 @@ public class Position {
 	}
 
 	public int evaluate() {
-		return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+		int vl = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+		return vl == drawValue() ? vl - 1 : vl;
 	}
 
 	public boolean nullOkay() {

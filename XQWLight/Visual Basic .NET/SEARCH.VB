@@ -62,6 +62,8 @@ Module Search
             End If
             hash.svl += CShort(Search_pos.nDistance)
             bMate = True
+        ElseIf hash.svl = Search_pos.DrawValue Then
+            Return -MATE_VALUE
         End If
         If hash.ucDepth >= nDepth OrElse bMate Then
             If hash.ucFlag = HASH_BETA Then
@@ -90,6 +92,8 @@ Module Search
                 Return
             End If
             hash.svl = CShort(vl - Search_pos.nDistance)
+        ElseIf vl = Search_pos.DrawValue AndAlso mv = 0 Then
+            Return
         Else
             hash.svl = CShort(vl)
         End If
@@ -347,6 +351,7 @@ Module Search
                     Search_mvResult = mv
                     If vlBest > -WIN_VALUE AndAlso vlBest < WIN_VALUE Then
                         vlBest += CInt(Int(Rnd() * RANDOM_RANGE)) - CInt(Int(Rnd() * RANDOM_RANGE))
+                        vlBest = IIF_INT(vlBest = Search_pos.DrawValue(), vlBest - 1, vlBest)
                     End If
                 End If
             End If

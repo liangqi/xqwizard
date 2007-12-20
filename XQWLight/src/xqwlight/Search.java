@@ -103,6 +103,8 @@ public class Search {
 			}
 			hash.vl += pos.distance;
 			mate = true;
+		} else if (hash.vl == pos.drawValue()) {
+			return -MATE_VALUE;
 		}
 		if (hash.depth >= depth || mate) {
 			if (hash.flag == HASH_BETA) {
@@ -132,6 +134,8 @@ public class Search {
 		    	return;
 		    }
 			hash.vl = (short) (vl - pos.distance);
+		} else if (vl == pos.drawValue() && mv == 0) {
+			return;
 		} else {
 			hash.vl = (short) vl;
 		}
@@ -373,6 +377,7 @@ public class Search {
 				if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
 					vlBest += (Position.random.nextInt() & RANDOM_MASK) -
 							(Position.random.nextInt() & RANDOM_MASK);
+					vlBest = (vlBest == pos.drawValue() ? vlBest - 1 : vlBest);
 				}
 			}
 		}

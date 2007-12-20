@@ -1070,7 +1070,9 @@ Module Position
         End Function
 
         Public Function Evaluate() As Integer
-            Return IIF_INT(sdPlayer = 0, vlWhite - vlBlack, vlBlack - vlWhite) + ADVANCED_VALUE
+            Dim vl As Integer
+            vl = IIF_INT(sdPlayer = 0, vlWhite - vlBlack, vlBlack - vlWhite) + ADVANCED_VALUE
+            Return IIF_INT(vl = DrawValue(), vl - 1, vl)
         End Function
 
         Public Function DrawValue() As Integer
