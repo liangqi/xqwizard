@@ -28,14 +28,14 @@ Module Test
                 If IN_BOARD(sqSrc) Then
                     For sqDst = 0 To 255
                         If (IN_BOARD(sqDst)) Then
-                            If pos.LegalMove(sqSrc + (sqDst << 8)) Then
+                            If pos.LegalMove(MOVE(sqSrc, sqDst)) Then
                                 nLegalMoves += 1
                             End If
                         End If
                     Next
                 End If
             Next
-            nCheckPos += IIf(pos.Checked(pos.sdPlayer), 1, 0)
+            nCheckPos += IIF_INT(pos.Checked(pos.sdPlayer), 1, 0)
             sd = fpRead.ReadByte()
         End While
         ' 测试结果：着法 = 149203，将军局面 = 227

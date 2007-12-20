@@ -495,7 +495,7 @@ public class Position {
 			bookSize = Math.min(in.available() / 8, MAX_BOOK_SIZE);
 			for (int i = 0; i < bookSize; i ++) {
 				in.read(intData);
-				bookLock[i] = toInt(intData);
+				bookLock[i] = toInt(intData) >>> 1; // Convert into Unsigned
 				in.read(shortData);
 				bookMove[i] = (short) toShort(shortData);
 				in.read(shortData);
@@ -512,12 +512,9 @@ public class Position {
 		int high = to - 1;
 		while (low <= high) {
 			int mid = (low + high) / 2;
-			// Convert to Unsigned
-			int vlLeft = vls[mid] >>> 1;
-			int vlRight = vl >>> 1;
-			if (vlLeft < vlRight) {
+			if (vls[mid] < vl) {
 				low = mid + 1;
-			} else if (vlLeft > vlRight) {
+			} else if (vls[mid] > vl) {
 				high = mid - 1;
 			} else {
 				return mid;
@@ -1117,11 +1114,11 @@ public class Position {
 			return 0;
 		}
 		boolean mirror = false;
-		int lock = zobristLock;
+		int lock = zobristLock >>> 1; // Convert into Unsigned
 		int index = binarySearch(lock, bookLock, 0, bookSize);
 		if (index < 0) {
 			mirror = true;
-			lock = mirror().zobristLock;
+			lock = mirror().zobristLock >>> 1; // Convert into Unsigned
 			index = binarySearch(lock, bookLock, 0, bookSize);
 		}
 		if (index < 0) {

@@ -374,7 +374,7 @@ Public Class MainForm
         App_sqCursor = CType(sender, ImageSquare).sq
         DrawCursor(sqLast)
         If App_bFlipped Then
-            ClickSquare(254 - App_sqCursor)
+            ClickSquare(SQUARE_FLIP(App_sqCursor))
         Else
             ClickSquare(App_sqCursor)
         End If
@@ -443,7 +443,7 @@ Public Class MainForm
                 DrawCursor(sqLast)
             Case Keys.NumPad5, Keys.Enter
                 If App_bFlipped Then
-                    ClickSquare(254 - App_sqCursor)
+                    ClickSquare(SQUARE_FLIP(App_sqCursor))
                 Else
                     ClickSquare(App_sqCursor)
                 End If
@@ -472,19 +472,19 @@ Public Class MainForm
         End If
         bClicking = True
         pc = Search_pos.pcSquares(sq)
-        If (pc And (8 + (Search_pos.sdPlayer << 3))) <> 0 Then
+        If (pc And SIDE_TAG(Search_pos.sdPlayer)) <> 0 Then
             If App_sqSelected > 0 Then
                 DrawSquare(App_sqSelected)
             End If
             App_sqSelected = sq
             DrawSquare(App_sqSelected, DRAW_SELECTED)
             If App_mvLast > 0 Then
-                DrawSquare(App_mvLast And 255)
-                DrawSquare(App_mvLast >> 8)
+                DrawSquare(SRC(App_mvLast))
+                DrawSquare(DST(App_mvLast))
             End If
             PlaySound("CLICK")
         Else
-            If App_sqSelected > 0 AndAlso AddMove(App_sqSelected, sq) AndAlso Not ResponseMove() Then
+            If App_sqSelected > 0 AndAlso AddMove(MOVE(App_sqSelected, sq)) AndAlso Not ResponseMove() Then
                 bClicking = False
                 ' 如果"bClicking = False"在"Close()"之后，则窗口会重新打开！
                 Close()
@@ -526,21 +526,21 @@ Public Class MainForm
         Dim sq As Integer
         sq = sqLast
         If App_bFlipped Then
-            sq = 254 - sq
+            sq = SQUARE_FLIP(sq)
         End If
-        DrawSquare(sq, App_sqSelected = sq OrElse (App_mvLast And 255) = sq OrElse (App_mvLast >> 8) = sq)
+        DrawSquare(sq, App_sqSelected = sq OrElse SRC(App_mvLast) = sq OrElse DST(App_mvLast) = sq)
         sq = App_sqCursor
         If App_bFlipped Then
-            sq = 254 - sq
+            sq = SQUARE_FLIP(sq)
         End If
-        DrawSquare(sq, App_sqSelected = sq OrElse (App_mvLast And 255) = sq OrElse (App_mvLast >> 8) = sq)
+        DrawSquare(sq, App_sqSelected = sq OrElse SRC(App_mvLast) = sq OrElse DST(App_mvLast) = sq)
     End Sub
 
     Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
         Dim sqFlipped As Integer, pc As Integer
         sqFlipped = sq
         If App_bFlipped Then
-            sqFlipped = 254 - sqFlipped
+            sqFlipped = SQUARE_FLIP(sqFlipped)
         End If
         pc = Search_pos.pcSquares(sq)
         If pc = 0 Then

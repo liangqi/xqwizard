@@ -42,7 +42,7 @@ Module Position
     Public Const WIN_VALUE As Integer = MATE_VALUE - 200
     Public Const NULL_SAFE_MARGIN As Integer = 400
     Public Const NULL_OKAY_MARGIN As Integer = 200
-    Public Const CONTEMPT_VALUE As Integer = 20
+    Public Const DRAW_VALUE As Integer = 20
     Public Const ADVANCED_VALUE As Integer = 3
 
     Public IN_BOARD(255) As Boolean
@@ -58,11 +58,19 @@ Module Position
     Private MVV_VALUE(7) As Integer
 
     Private LEGAL_SPAN(511) As Integer
-    Private KNIGHT_PIN(511) As Integer
+    Private KNIGHT_PIN_TAB(511) As Integer
+
+    Public Function IIF_INT(ByVal b As Boolean, ByVal x As Integer, ByVal y As Integer) As Integer
+        If b Then
+            Return x
+        Else
+            Return y
+        End If
+    End Function
 
     Public Sub SetBooleanArray(ByVal bArray() As Boolean, ByVal ParamArray nData() As Integer)
         Dim i As Integer, n As Integer
-        n = nData.Length() - 1
+        n = nData.Length - 1
         For i = 0 To n
             bArray(i) = nData(i) <> 0
         Next
@@ -70,7 +78,7 @@ Module Position
 
     Public Sub SetIntArray(ByVal nArray() As Integer, ByVal ParamArray nData() As Integer)
         Dim i As Integer, n As Integer
-        n = nData.Length() - 1
+        n = nData.Length - 1
         For i = 0 To n
             nArray(i) = nData(i)
         Next
@@ -78,7 +86,7 @@ Module Position
 
     Public Sub SetIntArray2(ByVal nArray(,) As Integer, ByVal nIndex As Integer, ByVal ParamArray nData() As Integer)
         Dim i As Integer, n As Integer
-        n = nData.Length() - 1
+        n = nData.Length - 1
         For i = 0 To n
             nArray(nIndex, i) = nData(i)
         Next
@@ -167,7 +175,7 @@ Module Position
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0)
-        SetIntArray(KNIGHT_PIN, _
+        SetIntArray(KNIGHT_PIN_TAB, _
                                      0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
@@ -399,10 +407,6 @@ Module Position
             Init(nKey)
         End Sub
 
-        Public Sub InitRand()
-            ' TODO
-        End Sub
-
         Public Function NextByte() As Integer
             x = (x + 1) And 255
             y = (y + s(x)) And 255
@@ -451,7 +455,7 @@ Module Position
 
     Public Structure BookStruct
         Public dwZobristLock As Integer
-        Public mv As Integer
+        Public mv As Short
         Public vl As Short
     End Structure
 
@@ -480,7 +484,7 @@ Module Position
             For i = 0 To Book_nMoveNum - 1
                 fp.Read(Buffer, 0, 8)
                 BookRecord.dwZobristLock = ((CInt(Buffer(0)) + (CInt(Buffer(1)) << 8) + (CInt(Buffer(2)) << 16) + (CInt(Buffer(3)) << 24)) >> 1) And &H7FFFFFFF
-                BookRecord.mv = CInt(Buffer(4)) + (CInt(Buffer(5)) << 8)
+                BookRecord.mv = CShort(Buffer(4)) + (CShort(Buffer(5)) << 8)
                 BookRecord.vl = CShort(Buffer(6)) + (CShort(Buffer(7)) << 8)
                 Book_Table(i) = BookRecord
             Next
@@ -509,8 +513,112 @@ Module Position
         Public bCheck As Boolean
     End Structure
 
-    Public Function MirrorSquare(ByVal sq As Integer) As Integer
-        Return (sq >> 4 << 4) + 14 - (sq And 15)
+    Public Function RANK_Y(ByVal sq As Integer) As Integer
+        Return sq >> 4
+    End Function
+
+    Public Function FILE_X(ByVal sq As Integer) As Integer
+        Return sq And 15
+    End Function
+
+    Public Function COORD_XY(ByVal x As Integer, ByVal y As Integer) As Integer
+        Return x + (y << 4)
+    End Function
+
+    Public Function SQUARE_FLIP(ByVal sq As Integer) As Integer
+        Return 254 - sq
+    End Function
+
+    Public Function FILE_FLIP(ByVal x As Integer) As Integer
+        Return 14 - x
+    End Function
+
+    Public Function RANK_FLIP(ByVal y As Integer) As Integer
+        Return 15 - y
+    End Function
+
+    Public Function MIRROR_SQUARE(ByVal sq As Integer) As Integer
+        Return COORD_XY(FILE_FLIP(FILE_X(sq)), RANK_Y(sq))
+    End Function
+
+    Public Function SQUARE_FORWARD(ByVal sq As Integer, ByVal sd As Integer) As Integer
+        Return sq - 16 + (sd << 5)
+    End Function
+
+    Public Function SQUARE_BACKWARD(ByVal sq As Integer, ByVal sd As Integer) As Integer
+        Return sq + 16 - (sd << 5)
+    End Function
+
+    Public Function KING_SPAN(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return LEGAL_SPAN(sqDst - sqSrc + 256) = 1
+    End Function
+
+    Public Function ADVISOR_SPAN(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return LEGAL_SPAN(sqDst - sqSrc + 256) = 2
+    End Function
+
+    Public Function BISHOP_SPAN(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return LEGAL_SPAN(sqDst - sqSrc + 256) = 3
+    End Function
+
+    Public Function BISHOP_PIN(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Integer
+        Return (sqSrc + sqDst) >> 1
+    End Function
+
+    Public Function KNIGHT_PIN(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Integer
+        Return sqSrc + KNIGHT_PIN_TAB(sqDst - sqSrc + 256)
+    End Function
+
+    Public Function HOME_HALF(ByVal sq As Integer, ByVal sd As Integer) As Boolean
+        Return (sq And &H80) <> (sd << 7)
+    End Function
+
+    Public Function AWAY_HALF(ByVal sq As Integer, ByVal sd As Integer) As Boolean
+        Return (sq And &H80) = (sd << 7)
+    End Function
+
+    Public Function SAME_HALF(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return ((sqSrc Xor sqDst) And &H80) = 0
+    End Function
+
+    Public Function DIFF_HALF(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return ((sqSrc Xor sqDst) And &H80) <> 0
+    End Function
+
+    Public Function SAME_RANK(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return ((sqSrc Xor sqDst) And &HF0) = 0
+    End Function
+
+    Public Function SAME_FILE(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
+        Return ((sqSrc Xor sqDst) And &HF) = 0
+    End Function
+
+    Public Function SIDE_TAG(ByVal sd As Integer) As Integer
+        Return 8 + (sd << 3)
+    End Function
+
+    Public Function OPP_SIDE_TAG(ByVal sd As Integer) As Integer
+        Return 16 - (sd << 3)
+    End Function
+
+    Public Function SRC(ByVal mv As Integer) As Integer
+        Return mv And 255
+    End Function
+
+    Public Function DST(ByVal mv As Integer) As Integer
+        Return mv >> 8
+    End Function
+
+    Public Function MOVE(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Integer
+        Return sqSrc + (sqDst << 8)
+    End Function
+
+    Public Function MIRROR_MOVE(ByVal mv As Integer) As Integer
+        Return MOVE(MIRROR_SQUARE(SRC(mv)), MIRROR_SQUARE(DST(mv)))
+    End Function
+
+    Public Function MVV_LVA(ByVal pc As Integer, ByVal lva As Integer) As Integer
+        Return MVV_VALUE(pc And 7) - lva
     End Function
 
     Public Structure PositionStruct
@@ -545,25 +653,13 @@ Module Position
 
         Public Sub AddPiece(ByVal sq As Integer, ByVal pc As Integer, Optional ByVal bDel As Boolean = False)
             Dim pcAdjust As Integer
-            If bDel Then
-                pcSquares(sq) = 0
-            Else
-                pcSquares(sq) = pc
-            End If
+            pcSquares(sq) = IIF_INT(bDel, 0, pc)
             If pc < 16 Then
                 pcAdjust = pc - 9
-                If bDel Then
-                    vlWhite -= PIECE_VALUE(pcAdjust, sq)
-                Else
-                    vlWhite += PIECE_VALUE(pcAdjust, sq)
-                End If
+                vlWhite += IIF_INT(bDel, -PIECE_VALUE(pcAdjust, sq), PIECE_VALUE(pcAdjust, sq))
             Else
                 pcAdjust = pc - 17
-                If bDel Then
-                    vlBlack -= PIECE_VALUE(pcAdjust, 254 - sq)
-                Else
-                    vlBlack += PIECE_VALUE(pcAdjust, 254 - sq)
-                End If
+                vlBlack += IIF_INT(bDel, -PIECE_VALUE(pcAdjust, SQUARE_FLIP(sq)), PIECE_VALUE(pcAdjust, SQUARE_FLIP(sq)))
                 pcAdjust += 7
             End If
             dwZobristKey = dwZobristKey Xor PreGen_dwZobristKeyTable(pcAdjust, sq)
@@ -572,8 +668,8 @@ Module Position
 
         Public Function MovePiece(ByVal mv As Integer) As Integer
             Dim sqSrc As Integer, sqDst As Integer, pc As Integer, pcCaptured As Integer
-            sqSrc = mv And 255
-            sqDst = mv >> 8
+            sqSrc = SRC(mv)
+            sqDst = DST(mv)
             pcCaptured = pcSquares(sqDst)
             If pcCaptured > 0 Then
                 AddPiece(sqDst, pcCaptured, PIECE_DEL)
@@ -586,8 +682,8 @@ Module Position
 
         Public Sub UndoMovePiece(ByVal mv As Integer, ByVal pcCaptured As Integer)
             Dim sqSrc As Integer, sqDst As Integer, pc As Integer
-            sqSrc = mv And 255
-            sqDst = mv >> 8
+            sqSrc = SRC(mv)
+            sqDst = DST(mv)
             pc = pcSquares(sqDst)
             AddPiece(sqDst, pc, PIECE_DEL)
             AddPiece(sqSrc, pc)
@@ -663,11 +759,10 @@ Module Position
         Public Function GenerateMoves(ByVal mvs() As MoveStruct, Optional ByVal bCapOnly As Boolean = False) As Integer
             Dim sqSrc As Integer, sqDst As Integer, pcSrc As Integer, pcDst As Integer
             Dim i As Integer, nDelta As Integer, nMoves As Integer
-            Dim sqSelfSide As Integer, pcSelfSide As Integer, pcOppSide As Integer
+            Dim pcSelfSide As Integer, pcOppSide As Integer
             nMoves = 0
-            sqSelfSide = (1 - sdPlayer) << 7
-            pcSelfSide = 8 + (sdPlayer << 3)
-            pcOppSide = 24 - pcSelfSide
+            pcSelfSide = SIDE_TAG(sdPlayer)
+            pcOppSide = OPP_SIDE_TAG(sdPlayer)
             For sqSrc = 0 To 255
                 pcSrc = pcSquares(sqSrc)
                 If (pcSrc And pcSelfSide) <> 0 Then
@@ -679,12 +774,12 @@ Module Position
                                     pcDst = pcSquares(sqDst)
                                     If bCapOnly Then
                                         If (pcDst And pcOppSide) <> 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                            mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 5
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                            mvs(nMoves).vl = MVV_LVA(pcDst, 5)
                                             nMoves += 1
                                         End If
                                     ElseIf (pcDst And pcSelfSide) = 0 Then
-                                        mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                        mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                         nMoves += 1
                                     End If
                                 End If
@@ -696,12 +791,12 @@ Module Position
                                     pcDst = pcSquares(sqDst)
                                     If bCapOnly Then
                                         If (pcDst And pcOppSide) <> 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                            mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 1
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                            mvs(nMoves).vl = MVV_LVA(pcDst, 1)
                                             nMoves += 1
                                         End If
                                     ElseIf (pcDst And pcSelfSide) = 0 Then
-                                        mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                        mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                         nMoves += 1
                                     End If
                                 End If
@@ -709,17 +804,17 @@ Module Position
                         Case PIECE_BISHOP
                             For i = 0 To 3
                                 sqDst = sqSrc + ADVISOR_DELTA(i)
-                                If IN_BOARD(sqDst) AndAlso (sqDst And 128) = sqSelfSide AndAlso pcSquares(sqDst) = 0 Then
+                                If IN_BOARD(sqDst) AndAlso HOME_HALF(sqDst, sdPlayer) AndAlso pcSquares(sqDst) = 0 Then
                                     sqDst += ADVISOR_DELTA(i)
                                     pcDst = pcSquares(sqDst)
                                     If bCapOnly Then
                                         If (pcDst And pcOppSide) <> 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                            mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 1
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                            mvs(nMoves).vl = MVV_LVA(pcDst, 1)
                                             nMoves += 1
                                         End If
                                     ElseIf (pcDst And pcSelfSide) = 0 Then
-                                        mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                        mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                         nMoves += 1
                                     End If
                                 End If
@@ -734,12 +829,12 @@ Module Position
                                             pcDst = pcSquares(sqDst)
                                             If bCapOnly Then
                                                 If (pcDst And pcOppSide) <> 0 Then
-                                                    mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                                    mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 3
+                                                    mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                                    mvs(nMoves).vl = MVV_LVA(pcDst, 3)
                                                     nMoves += 1
                                                 End If
                                             ElseIf (pcDst And pcSelfSide) = 0 Then
-                                                mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                                mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                                 nMoves += 1
                                             End If
                                         End If
@@ -754,13 +849,13 @@ Module Position
                                     pcDst = pcSquares(sqDst)
                                     If pcDst = 0 Then
                                         If Not bCapOnly Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                             nMoves += 1
                                         End If
                                     Else
                                         If (pcDst And pcOppSide) <> 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                            mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 4
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                            mvs(nMoves).vl = MVV_LVA(pcDst, 4)
                                             nMoves += 1
                                         End If
                                         Exit While
@@ -776,7 +871,7 @@ Module Position
                                     pcDst = pcSquares(sqDst)
                                     If pcDst = 0 Then
                                         If Not bCapOnly Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                             nMoves += 1
                                         End If
                                     Else
@@ -789,8 +884,8 @@ Module Position
                                     pcDst = pcSquares(sqDst)
                                     If pcDst > 0 Then
                                         If (pcDst And pcOppSide) <> 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                            mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 3
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                            mvs(nMoves).vl = MVV_LVA(pcDst, 3)
                                             nMoves += 1
                                         End If
                                         Exit While
@@ -804,28 +899,28 @@ Module Position
                                 pcDst = pcSquares(sqDst)
                                 If bCapOnly Then
                                     If (pcDst And pcOppSide) <> 0 Then
-                                        mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                        mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 2
+                                        mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                        mvs(nMoves).vl = MVV_LVA(pcDst, 2)
                                         nMoves += 1
                                     End If
                                 ElseIf (pcDst And pcSelfSide) = 0 Then
-                                    mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                    mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                     nMoves += 1
                                 End If
                             End If
-                            If (sqSrc And 128) <> sqSelfSide Then
+                            If AWAY_HALF(sqSrc, sdPlayer) Then
                                 For nDelta = -1 To 1 Step 2
                                     sqDst = sqSrc + nDelta
                                     If IN_BOARD(sqDst) Then
                                         pcDst = pcSquares(sqDst)
                                         If bCapOnly Then
                                             If (pcDst And pcOppSide) <> 0 Then
-                                                mvs(nMoves).mv = sqSrc + (sqDst << 8)
-                                                mvs(nMoves).vl = MVV_VALUE(pcDst And 7) - 2
+                                                mvs(nMoves).mv = MOVE(sqSrc, sqDst)
+                                                mvs(nMoves).vl = MVV_LVA(pcDst, 2)
                                                 nMoves += 1
                                             End If
                                         ElseIf (pcDst And pcSelfSide) = 0 Then
-                                            mvs(nMoves).mv = sqSrc + (sqDst << 8)
+                                            mvs(nMoves).mv = MOVE(sqSrc, sqDst)
                                             nMoves += 1
                                         End If
                                     End If
@@ -841,14 +936,14 @@ Module Position
             Dim sqSrc As Integer, sqDst As Integer, pcSrc As Integer, pcDst As Integer, sqPin As Integer
             Dim pcSelfSide As Integer, i As Integer, nDelta As Integer
 
-            sqSrc = mv And 255
+            sqSrc = SRC(mv)
             pcSrc = pcSquares(sqSrc)
-            pcSelfSide = 8 + (sdPlayer << 3)
+            pcSelfSide = SIDE_TAG(sdPlayer)
             If (pcSrc And pcSelfSide) = 0 Then
                 Return False
             End If
 
-            sqDst = mv >> 8
+            sqDst = DST(mv)
             pcDst = pcSquares(sqDst)
             If (pcDst And pcSelfSide) <> 0 Then
                 Return False
@@ -856,27 +951,19 @@ Module Position
 
             Select Case pcSrc - pcSelfSide
                 Case PIECE_KING
-                    Return IN_FORT(sqDst) AndAlso LEGAL_SPAN(sqDst - sqSrc + 256) = 1
+                    Return IN_FORT(sqDst) AndAlso KING_SPAN(sqSrc, sqDst)
                 Case PIECE_ADVISOR
-                    Return IN_FORT(sqDst) AndAlso LEGAL_SPAN(sqDst - sqSrc + 256) = 2
+                    Return IN_FORT(sqDst) AndAlso ADVISOR_SPAN(sqSrc, sqDst)
                 Case PIECE_BISHOP
-                    Return ((sqSrc Xor sqDst) And 128) = 0 AndAlso LEGAL_SPAN(sqDst - sqSrc + 256) = 3 AndAlso pcSquares((sqSrc + sqDst) \ 2) = 0
+                    Return SAME_HALF(sqSrc, sqDst) AndAlso BISHOP_SPAN(sqSrc, sqDst) AndAlso pcSquares(BISHOP_PIN(sqSrc, sqDst)) = 0
                 Case PIECE_KNIGHT
-                    sqPin = sqSrc + KNIGHT_PIN(sqDst - sqSrc + 256)
+                    sqPin = KNIGHT_PIN(sqSrc, sqDst)
                     Return sqPin <> sqSrc AndAlso pcSquares(sqPin) = 0
                 Case PIECE_ROOK, PIECE_CANNON
                     If ((sqSrc Xor sqDst) And &HF) = 0 Then
-                        If sqDst < sqSrc Then
-                            nDelta = -16
-                        Else
-                            nDelta = 16
-                        End If
+                        nDelta = IIF_INT(sqDst < sqSrc, -16, 16)
                     ElseIf ((sqSrc Xor sqDst) And &HF0) = 0 Then
-                        If sqDst < sqSrc Then
-                            nDelta = -1
-                        Else
-                            nDelta = 1
-                        End If
+                        nDelta = IIF_INT(sqDst < sqSrc, -1, 1)
                     Else
                         Return False
                     End If
@@ -896,10 +983,10 @@ Module Position
                         Return False
                     End If
                 Case PIECE_PAWN
-                    If (sqSrc And 128) = (sdPlayer << 7) AndAlso (sqDst = sqSrc + 1 OrElse sqDst = sqSrc - 1) Then
+                    If AWAY_HALF(sqDst, sdPlayer) AndAlso (sqDst = sqSrc + 1 OrElse sqDst = sqSrc - 1) Then
                         Return True
                     Else
-                        Return sqDst = sqSrc - 16 + (sdPlayer << 5)
+                        Return sqDst = SQUARE_FORWARD(sqSrc, sdPlayer)
                     End If
                 Case Else
                     Return False
@@ -909,11 +996,11 @@ Module Position
         Public Function Checked(ByVal sd As Integer) As Boolean
             Dim sqSrc As Integer, sqDst As Integer, pcSrc As Integer, pcDst As Integer
             Dim pcSelfSide As Integer, pcOppSide, i As Integer, nDelta As Integer
-            pcSelfSide = 8 + (sd << 3)
-            pcOppSide = 24 - pcSelfSide
+            pcSelfSide = SIDE_TAG(sd)
+            pcOppSide = OPP_SIDE_TAG(sd)
             For sqSrc = 0 To 255
                 If pcSquares(sqSrc) = pcSelfSide + PIECE_KING Then
-                    If pcSquares(sqSrc + (sd << 5) - 16) = pcOppSide + PIECE_PAWN Then
+                    If pcSquares(SQUARE_FORWARD(sqSrc, sd)) = pcOppSide + PIECE_PAWN Then
                         Return True
                     End If
                     For nDelta = -1 To 1 Step 2
@@ -974,32 +1061,38 @@ Module Position
             Return True
         End Function
 
-        Public Function Evaluate() As Integer
-            If sdPlayer = 0 Then
-                Return vlWhite - vlBlack + ADVANCED_VALUE
-            Else
-                Return vlBlack - vlWhite + ADVANCED_VALUE
-            End If
+        Public Function MateValue() As Integer
+            Return nDistance - MATE_VALUE
         End Function
 
-        Public Function RepValue(ByVal nArg As Integer) As Integer
+        Public Function BanValue() As Integer
+            Return nDistance - BAN_VALUE
+        End Function
+
+        Public Function Evaluate() As Integer
+            Return IIF_INT(sdPlayer = 0, vlWhite - vlBlack, vlBlack - vlWhite) + ADVANCED_VALUE
+        End Function
+
+        Public Function DrawValue() As Integer
+            Return IIF_INT((nDistance And 1) = 0, -DRAW_VALUE, DRAW_VALUE)
+        End Function
+
+        Public Function NullOkay() As Boolean
+            Return IIF_INT(sdPlayer = 0, vlWhite, vlBlack) > NULL_OKAY_MARGIN
+        End Function
+
+        Public Function NullSafe() As Boolean
+            Return IIF_INT(sdPlayer = 0, vlWhite, vlBlack) > NULL_SAFE_MARGIN
+        End Function
+
+        Public Function InCheck() As Boolean
+            Return mvsList(nMoveNum - 1).bCheck
+        End Function
+
+        Public Function RepValue(ByVal vlRep As Integer) As Integer
             Dim vlReturn As Integer
-            vlReturn = 0
-            If (nArg And 2) <> 0 Then
-                vlReturn += nDistance - BAN_VALUE
-            End If
-            If (nArg And 4) <> 0 Then
-                vlReturn -= nDistance - BAN_VALUE
-            End If
-            If vlReturn = 0 Then
-                If (nDistance And 1) = 0 Then
-                    Return -CONTEMPT_VALUE
-                Else
-                    Return CONTEMPT_VALUE
-                End If
-            Else
-                Return vlReturn
-            End If
+            vlReturn = IIF_INT((vlRep And 2) = 0, 0, BanValue) + IIF_INT((vlRep And 4) = 0, 0, -BanValue())
+            Return IIF_INT(vlReturn = 0, DrawValue, vlReturn)
         End Function
 
         Public Function RepStatus(Optional ByVal nRecur As Integer = 1) As Integer
@@ -1014,23 +1107,16 @@ Module Position
             While mvsList(nIndex).mv > 0 AndAlso mvsList(nIndex).pcCaptured = 0
                 ' 3. 设置长将标志
                 If bSelfSide Then
-                    bPerpCheck = bPerpCheck And mvsList(nIndex).bCheck
+                    bPerpCheck = bPerpCheck AndAlso mvsList(nIndex).bCheck
                     ' 4. 检查循环
                     If mvsList(nIndex).vl = dwZobristKey Then
                         nRecur -= 1
                         If nRecur = 0 Then
-                            vl = 1
-                            If bPerpCheck Then
-                                vl += 2
-                            End If
-                            If bOppPerpCheck Then
-                                vl += 4
-                            End If
-                            Return vl
+                            Return 1 + IIF_INT(bPerpCheck, 2, 0) + IIF_INT(bOppPerpCheck, 4, 0)
                         End If
                     End If
                 Else
-                    bOppPerpCheck = bOppPerpCheck And mvsList(nIndex).bCheck
+                    bOppPerpCheck = bOppPerpCheck AndAlso mvsList(nIndex).bCheck
                 End If
                 bSelfSide = Not bSelfSide
                 nIndex -= 1
@@ -1045,7 +1131,7 @@ Module Position
             For sq = 0 To 255
                 pc = pcSquares(sq)
                 If pc > 0 Then
-                    pos.AddPiece(MirrorSquare(sq), pc)
+                    pos.AddPiece(MIRROR_SQUARE(sq), pc)
                 End If
             Next
             If sdPlayer = 1 Then
@@ -1085,10 +1171,8 @@ Module Position
             nMoves = 0
             nIndex += 1
             While nIndex < Book_nMoveNum AndAlso Book_Table(nIndex).dwZobristLock = bk.dwZobristLock
-                mv = Book_Table(nIndex).mv
-                If bMirror Then
-                    mv = MirrorSquare(mv And 255) + (MirrorSquare(mv >> 8) << 8)
-                End If
+                mv = Book_Table(nIndex).mv And &HFFFF
+                mv = IIF_INT(bMirror, MIRROR_MOVE(mv), mv)
                 If LegalMove(mv) Then
                     mvs(nMoves).mv = mv
                     mvs(nMoves).vl = Book_Table(nIndex).vl
@@ -1115,7 +1199,7 @@ Module Position
         End Function
 
         Public Function HistoryIndex(ByVal mv As Integer) As Integer
-            Return ((pcSquares(mv And 255) - 8) << 8) + (mv >> 8)
+            Return ((pcSquares(SRC(mv)) - 8) << 8) + DST(mv)
         End Function
     End Structure
 End Module

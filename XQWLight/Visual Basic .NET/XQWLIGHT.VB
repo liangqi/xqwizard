@@ -36,10 +36,19 @@ Module XQWLight
     Public App_nHandicap As Integer, App_nLevel As Integer
     Public App_sqCursor As Integer, App_sqSelected As Integer, App_mvLast As Integer
 
-    Public Function AddMove(ByVal sqSrc As Integer, ByVal sqDst As Integer) As Boolean
-        Dim mv As Integer, pcCaptured As Integer
-        mv = sqSrc + (sqDst << 8)
+    Public Function IIF_STR(ByVal b As Boolean, ByVal x As String, ByVal y As String) As String
+        If b Then
+            Return x
+        Else
+            Return y
+        End If
+    End Function
+
+    Public Function AddMove(ByVal mv As Integer) As Boolean
+        Dim sqSrc As Integer, sqDst As Integer, pcCaptured As Integer
         If Search_pos.LegalMove(mv) Then
+            sqSrc = SRC(mv)
+            sqDst = DST(mv)
             pcCaptured = Search_pos.pcSquares(sqDst)
             If Search_pos.MakeMove(mv) Then
                 If pcCaptured > 0 Then
@@ -49,15 +58,7 @@ Module XQWLight
                 App_mvLast = mv
                 App_frm.DrawSquare(sqSrc, DRAW_SELECTED)
                 App_frm.DrawSquare(sqDst, DRAW_SELECTED)
-                If (Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck) Then
-                    PlaySound("CHECK")
-                Else
-                    If (pcCaptured > 0) Then
-                        PlaySound("CAPTURE")
-                    Else
-                        PlaySound("MOVE")
-                    End If
-                End If
+                PlaySound(IIF_STR(Search_pos.InCheck, "CHECK", IIF_STR(pcCaptured > 0, "CAPTURE", "MOVE")))
                 Return True
             Else
                 PlaySound("ILLEGAL")
@@ -79,8 +80,8 @@ Module XQWLight
 
     Public Function GetResult(Optional ByVal szWavFile As String = "") As Boolean
         Dim vlRep As Integer
-        If Search_pos.IsMate() Then
-            MsgBox(IIf(szWavFile = "", "祝贺你取得胜利！", "请再接再厉！"), MsgBoxStyle.Information, "棋局结束")
+        If Search_pos.IsMate Then
+            MsgBox(IIF_STR(szWavFile = "", "祝贺你取得胜利！", "请再接再厉！"), MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
         vlRep = Search_pos.RepStatus(3)
@@ -89,7 +90,7 @@ Module XQWLight
             If szWavFile <> "" Then
                 vlRep = -vlRep
             End If
-            MsgBox(Switch(vlRep > WIN_VALUE, "长打作负，请不要气馁！", vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", True, "双方不变作和，辛苦了！"), MsgBoxStyle.Information, "棋局结束")
+            MsgBox(IIF_STR(vlRep > WIN_VALUE, "长打作负，请不要气馁！", IIF_STR(vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", "双方不变作和，辛苦了！")), MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
         If Search_pos.nMoveNum = 100 Then
@@ -103,41 +104,35 @@ Module XQWLight
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim sqLast As Integer, pcCaptured As Integer, szWavFile As String
+        Dim sqSrc As Integer, sqDst As Integer, pcCaptured As Integer, szWavFile As String
         If GetResult() Then
             Return False
         End If
-        If ((App_mvLast >> 8) And 15) < 8 Xor App_bFlipped Then
-            App_frm.imgThinking.Left = LEFT_MARGIN + 112
-        Else
-            App_frm.imgThinking.Left = LEFT_MARGIN
-        End If
-        If ((App_mvLast >> 8) >> 4) < 8 Xor App_bFlipped Then
-            App_frm.imgThinking.Top = TOP_MARGIN + 128
-        Else
-            App_frm.imgThinking.Top = TOP_MARGIN
-        End If
+        sqSrc = SRC(App_mvLast)
+        sqDst = DST(App_mvLast)
+        App_frm.imgThinking.Left = LEFT_MARGIN + IIF_INT(FILE_X(sqDst) < 8 Xor App_bFlipped, 112, 0)
+        App_frm.imgThinking.Top = TOP_MARGIN + IIF_INT(RANK_Y(sqDst) < 8 Xor App_bFlipped, 128, 0)
         App_frm.imgThinking.Visible = True
         App_frm.Refresh()
         SearchMain(CInt(4 ^ App_nLevel))
         App_frm.imgThinking.Visible = False
         If App_mvLast > 0 Then
-            App_frm.DrawSquare(App_mvLast And 255)
-            App_frm.DrawSquare(App_mvLast >> 8)
+            App_frm.DrawSquare(sqSrc)
+            App_frm.DrawSquare(sqDst)
         End If
         szWavFile = "MOVE2"
-        pcCaptured = Search_pos.pcSquares(Search_mvResult >> 8)
+        pcCaptured = Search_pos.pcSquares(DST(Search_mvResult))
         Search_pos.MakeMove(Search_mvResult)
         If pcCaptured > 0 Then
             szWavFile = "CAPTURE2"
             Search_pos.SetIrrev()
         End If
-        If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
+        If Search_pos.InCheck Then
             szWavFile = "CHECK2"
         End If
         App_mvLast = Search_mvResult
-        App_frm.DrawSquare(App_mvLast And 255, DRAW_SELECTED)
-        App_frm.DrawSquare(App_mvLast >> 8, DRAW_SELECTED)
+        App_frm.DrawSquare(SRC(App_mvLast), DRAW_SELECTED)
+        App_frm.DrawSquare(DST(App_mvLast), DRAW_SELECTED)
         If GetResult(szWavFile) Then
             Return False
         End If
@@ -153,13 +148,7 @@ Module XQWLight
         End If
         nSlash = InStrRev(App_szPath, "/")
         nBackSlash = InStrRev(App_szPath, "\")
-        If nSlash > nBackSlash Then
-            App_szPath = Left(App_szPath, nSlash)
-        ElseIf nSlash < nBackSlash Then
-            App_szPath = Left(App_szPath, nBackSlash)
-        Else
-            App_szPath = ""
-        End If
+        App_szPath = IIF_STR(nSlash = nBackSlash, "", Left(App_szPath, IIF_INT(nSlash > nBackSlash, nSlash, nBackSlash)))
         Randomize()
         InitArrays()
         LoadBook()

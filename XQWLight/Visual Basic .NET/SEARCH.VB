@@ -63,18 +63,13 @@ Module Search
             hash.svl += CShort(Search_pos.nDistance)
             bMate = True
         End If
-        If hash.ucDepth >= nDepth Or bMate Then
+        If hash.ucDepth >= nDepth OrElse bMate Then
             If hash.ucFlag = HASH_BETA Then
-                If hash.svl >= vlBeta Then
-                    Return hash.svl
-                End If
+                Return IIF_INT(hash.svl >= vlBeta, hash.svl, -MATE_VALUE)
             ElseIf hash.ucFlag = HASH_ALPHA Then
-                If hash.svl <= vlAlpha Then
-                    Return hash.svl
-                End If
-            Else
-                Return hash.svl
+                Return IIF_INT(hash.svl <= vlAlpha, hash.svl, -MATE_VALUE)
             End If
+            Return hash.svl
         End If
         Return -MATE_VALUE
     End Function
@@ -86,12 +81,12 @@ Module Search
             Return
         End If
         If vl > WIN_VALUE Then
-            If mv = 0 And vl <= BAN_VALUE Then
+            If mv = 0 AndAlso vl <= BAN_VALUE Then
                 Return
             End If
             hash.svl = CShort(vl + Search_pos.nDistance)
         ElseIf vl < -WIN_VALUE Then
-            If mv = 0 And vl >= -BAN_VALUE Then
+            If mv = 0 AndAlso vl >= -BAN_VALUE Then
                 Return
             End If
             hash.svl = CShort(vl - Search_pos.nDistance)
@@ -174,27 +169,27 @@ Module Search
 
     Public Function SearchQuiesc(ByVal vlAlpha As Integer, ByVal vlBeta As Integer) As Integer
         Dim vl As Integer, vlRep As Integer, vlBest As Integer
-        Dim i As Integer, nGenMoves As Integer, sqSide As Integer
+        Dim i As Integer, nGenMoves As Integer
         Dim mvs(MAX_GEN_MOVES - 1) As MoveStruct
 
         Search_nAllNodes += 1
         ' 1. 杀棋步数裁剪
-        vl = Search_pos.nDistance - MATE_VALUE
+        vl = Search_pos.MateValue
         If vl >= vlBeta Then
             Return vl
         End If
         ' 2. 重复裁剪
-        vlRep = Search_pos.RepStatus()
+        vlRep = Search_pos.RepStatus
         If vlRep > 0 Then
             Return Search_pos.RepValue(vlRep)
         End If
         ' 3. 达到极限深度就返回
         If Search_pos.nDistance = LIMIT_DEPTH Then
-            Return Search_pos.Evaluate()
+            Return Search_pos.Evaluate
         End If
         ' 4. 初始化
         vlBest = -MATE_VALUE
-        If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
+        If Search_pos.InCheck Then
             nGenMoves = Search_pos.GenerateMoves(mvs)
             For i = 0 To nGenMoves - 1
                 mvs(i).vl = Search_nHistory(Search_pos.HistoryIndex(mvs(i).mv))
@@ -202,7 +197,7 @@ Module Search
             Array.Sort(mvs, 0, nGenMoves, MoveComparer.Instance)
         Else
             ' 5. 对于没有将军的局面，首先尝试不吃子就截断
-            vl = Search_pos.Evaluate()
+            vl = Search_pos.Evaluate
             If vl > vlBest Then
                 If vl >= vlBeta Then
                     Return vl
@@ -213,11 +208,10 @@ Module Search
                 End If
             End If
             ' 6. 根据MVV/LVA排序，并过滤价值不大的吃子
-            sqSide = (1 - Search_pos.sdPlayer) << 7
             nGenMoves = Search_pos.GenerateMoves(mvs, CAP_ONLY)
             Array.Sort(mvs, 0, nGenMoves, MoveComparer.Instance)
             For i = 0 To nGenMoves - 1
-                If mvs(i).vl < 10 OrElse (mvs(i).vl < 20 AndAlso ((mvs(i).mv >> 8) And 128) = sqSide) Then
+                If mvs(i).vl < 10 OrElse (mvs(i).vl < 20 AndAlso HOME_HALF(DST(mvs(i).mv), Search_pos.sdPlayer)) Then
                     Exit For
                 End If
             Next
@@ -239,15 +233,11 @@ Module Search
                 End If
             End If
         Next
-        If vlBest = -MATE_VALUE Then
-            Return Search_pos.nDistance - MATE_VALUE
-        Else
-            Return vlBest
-        End If
+        Return IIF_INT(vlBest = -MATE_VALUE, Search_pos.MateValue, vlBest)
     End Function
 
     Public Function SearchFull(ByVal vlAlpha As Integer, ByVal vlBeta As Integer, ByVal nDepth As Integer, Optional ByVal bNoNull As Boolean = False) As Integer
-        Dim vl As Integer, vlRep As Integer, vlBest As Integer, vlSelfSide As Integer
+        Dim vl As Integer, vlRep As Integer, vlBest As Integer
         Dim mv As Integer, mvHash As Integer, mvBest As Integer, nHashFlag As Integer, nNewDepth As Integer
         Dim bInCheck As Boolean
         Dim sort As SortStruct
@@ -257,12 +247,12 @@ Module Search
         End If
         Search_nAllNodes += 1
         ' 2. 杀棋步数裁剪
-        vl = Search_pos.nDistance - MATE_VALUE
+        vl = Search_pos.MateValue
         If vl >= vlBeta Then
             Return vl
         End If
         ' 3. 重复裁剪
-        vlRep = Search_pos.RepStatus()
+        vlRep = Search_pos.RepStatus
         If vlRep > 0 Then
             Return Search_pos.RepValue(vlRep)
         End If
@@ -273,19 +263,14 @@ Module Search
         End If
         ' 5. 达到极限深度就返回
         If Search_pos.nDistance = LIMIT_DEPTH Then
-            Return Search_pos.Evaluate()
+            Return Search_pos.Evaluate
         End If
         ' 6. 尝试空着裁
-        If Search_pos.sdPlayer = 0 Then
-            vlSelfSide = Search_pos.vlWhite
-        Else
-            vlSelfSide = Search_pos.vlBlack
-        End If
-        If Not bNoNull AndAlso Not Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck AndAlso vlSelfSide > NULL_OKAY_MARGIN Then
+        If Not bNoNull AndAlso Not Search_pos.InCheck AndAlso Search_pos.NullOkay Then
             Search_pos.NullMove()
             vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL)
             Search_pos.UndoNullMove()
-            If vl >= vlBeta AndAlso (vlSelfSide > NULL_SAFE_MARGIN OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
+            If vl >= vlBeta AndAlso (Search_pos.NullSafe OrElse SearchFull(vlBeta - 1, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta) Then
                 Return vl
             End If
         End If
@@ -295,14 +280,11 @@ Module Search
         mvBest = 0
         sort.Init(mvHash)
         ' 8. Alpha-Beta搜索
-        mv = sort.NextMove()
+        mv = sort.NextMove
         While mv > 0
             If Search_pos.MakeMove(mv) Then
                 ' 9. 将军延伸
-                nNewDepth = nDepth - 1
-                If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
-                    nNewDepth += 1
-                End If
+                nNewDepth = IIF_INT(Search_pos.InCheck, nDepth, nDepth - 1)
                 ' 10. PVS
                 If vlBest = -MATE_VALUE Then
                     vl = -SearchFull(-vlBeta, -vlAlpha, nNewDepth)
@@ -328,11 +310,11 @@ Module Search
                     End If
                 End If
             End If
-            mv = sort.NextMove()
+            mv = sort.NextMove
         End While
         ' 12. 更新置换表、历史表和杀手着法表
         If vlBest = -MATE_VALUE Then
-            Return Search_pos.nDistance - MATE_VALUE
+            Return Search_pos.MateValue
         Else
             RecordHash(nHashFlag, vlBest, nDepth, mvBest)
             If mvBest > 0 Then
@@ -350,10 +332,7 @@ Module Search
         mv = sort.NextMove
         While mv > 0
             If Search_pos.MakeMove(mv) Then
-                nNewDepth = nDepth - 1
-                If Search_pos.mvsList(Search_pos.nMoveNum - 1).bCheck Then
-                    nNewDepth += 1
-                End If
+                nNewDepth = IIF_INT(Search_pos.InCheck, nDepth, nDepth - 1)
                 If vlBest = -MATE_VALUE Then
                     vl = -SearchFull(-MATE_VALUE, MATE_VALUE, nNewDepth, NO_NULL)
                 Else
@@ -366,7 +345,7 @@ Module Search
                 If vl > vlBest Then
                     vlBest = vl
                     Search_mvResult = mv
-                    If vlBest > -WIN_VALUE And vlBest < WIN_VALUE Then
+                    If vlBest > -WIN_VALUE AndAlso vlBest < WIN_VALUE Then
                         vlBest += CInt(Int(Rnd() * RANDOM_RANGE)) - CInt(Int(Rnd() * RANDOM_RANGE))
                     End If
                 End If
@@ -382,7 +361,7 @@ Module Search
         Dim nTimer As Long
         Dim mvs(MAX_GEN_MOVES - 1) As MoveStruct
         ' 1. 开局库
-        Search_mvResult = Search_pos.BookMove()
+        Search_mvResult = Search_pos.BookMove
         If Search_mvResult > 0 Then
             Search_pos.MakeMove(Search_mvResult)
             If Search_pos.RepStatus(3) = 0 Then
@@ -429,7 +408,7 @@ Module Search
         nTimer = Now.Ticks
         For i = 1 To LIMIT_DEPTH
             vl = SearchRoot(i)
-            If vl > WIN_VALUE Or vl < -WIN_VALUE Then
+            If vl > WIN_VALUE OrElse vl < -WIN_VALUE Then
                 Exit For
             End If
             If Now.Ticks - nTimer > TimeSpan.TicksPerSecond * nSeconds Then
