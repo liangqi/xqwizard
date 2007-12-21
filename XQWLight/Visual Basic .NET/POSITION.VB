@@ -24,8 +24,16 @@ Module Position
     Public Const PIECE_DEL As Boolean = True
     Public Const CAP_ONLY As Boolean = True
 
-    Public Const RANK_FROM As Integer = 3
-    Public Const FILE_FROM As Integer = 3
+    Public Const MATE_VALUE As Integer = 10000
+    Public Const BAN_VALUE As Integer = MATE_VALUE - 100
+    Public Const WIN_VALUE As Integer = MATE_VALUE - 200
+    Public Const NULL_SAFE_MARGIN As Integer = 400
+    Public Const NULL_OKAY_MARGIN As Integer = 200
+    Public Const DRAW_VALUE As Integer = 20
+    Public Const ADVANCED_VALUE As Integer = 3
+
+    Public Const MAX_MOVE_NUM As Integer = 256
+    Public Const MAX_GEN_MOVES As Integer = 128
 
     Public Const PIECE_KING As Integer = 1
     Public Const PIECE_ADVISOR As Integer = 2
@@ -35,21 +43,16 @@ Module Position
     Public Const PIECE_CANNON As Integer = 6
     Public Const PIECE_PAWN As Integer = 7
 
-    Public Const MAX_MOVE_NUM As Integer = 256
-    Public Const MAX_GEN_MOVES As Integer = 128
-    Public Const MATE_VALUE As Integer = 10000
-    Public Const BAN_VALUE As Integer = MATE_VALUE - 100
-    Public Const WIN_VALUE As Integer = MATE_VALUE - 200
-    Public Const NULL_SAFE_MARGIN As Integer = 400
-    Public Const NULL_OKAY_MARGIN As Integer = 200
-    Public Const DRAW_VALUE As Integer = 20
-    Public Const ADVANCED_VALUE As Integer = 3
+    Public Const RANK_TOP As Integer = 3
+    Public Const RANK_BOTTOM As Integer = 12
+    Public Const FILE_LEFT As Integer = 3
+    Public Const FILE_RIGHT As Integer = 11
 
+    Public BOARD_HANDICAP(3) As String
     Public IN_BOARD(255) As Boolean
 
     Private IN_FORT(255) As Boolean
     Private PIECE_VALUE(6, 255) As Integer
-    Private BOARD_HANDICAP(3, 127) As Integer
 
     Private KING_DELTA(3) As Integer
     Private ADVISOR_DELTA(3) As Integer
@@ -68,11 +71,19 @@ Module Position
         End If
     End Function
 
-    Public Sub SetBooleanArray(ByVal bArray() As Boolean, ByVal ParamArray nData() As Integer)
+    Public Sub SetBoolArray(ByVal bArray() As Boolean, ByVal ParamArray nData() As Integer)
         Dim i As Integer, n As Integer
         n = nData.Length - 1
         For i = 0 To n
             bArray(i) = nData(i) <> 0
+        Next
+    End Sub
+
+    Public Sub SetStrArray(ByVal szArray() As String, ByVal ParamArray szData() As String)
+        Dim i As Integer, n As Integer
+        n = szData.Length - 1
+        For i = 0 To n
+            szArray(i) = szData(i)
         Next
     End Sub
 
@@ -93,7 +104,7 @@ Module Position
     End Sub
 
     Public Sub InitBoardFort()
-        SetBooleanArray(IN_BOARD, _
+        SetBoolArray(IN_BOARD, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
@@ -110,7 +121,7 @@ Module Position
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        SetBooleanArray(IN_FORT, _
+        SetBoolArray(IN_FORT, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
@@ -337,42 +348,11 @@ Module Position
     End Sub
 
     Public Sub InitBoardHandicap()
-        SetIntArray2(BOARD_HANDICAP, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0, _
-                0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 5, 4, 3, 2, 1, 2, 3, 4, 5, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        SetIntArray2(BOARD_HANDICAP, 1, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0, _
-                0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 5, 4, 3, 2, 1, 2, 3, 0, 5, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        SetIntArray2(BOARD_HANDICAP, 2, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 0, 0, 0, _
-                0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 5, 0, 3, 2, 1, 2, 3, 0, 5, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        SetIntArray2(BOARD_HANDICAP, 3, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 5, 4, 0, 0, 1, 0, 0, 4, 5, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        SetStrArray(BOARD_HANDICAP, _
+                "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1", _
+                "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1", _
+                "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1", _
+                "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1")
     End Sub
 
     Public Class RC4Struct
@@ -738,21 +718,70 @@ Module Position
             dwZobristLock = dwZobristLock Xor PreGen_dwZobristLockPlayer
         End Sub
 
-        Public Sub LoadBoard(ByVal nHandicap As Integer)
-            Dim sq As Integer, pc As Integer
+        Public Function FenPiece(ByVal c As Char) As Integer
+            Select Case c
+                Case CChar("K")
+                    Return 1
+                Case CChar("A")
+                    Return 2
+                Case CChar("B"), CChar("E")
+                    Return 3
+                Case CChar("H"), CChar("N")
+                    Return 4
+                Case CChar("R")
+                    Return 5
+                Case CChar("C")
+                    Return 6
+                Case CChar("P")
+                    Return 7
+                Case Else
+                    Return 0
+            End Select
+        End Function
+
+        Public Sub FromFen(ByVal szFen As String)
+            Dim nRank As Integer, nFile As Integer, nIndex As Integer, k As Integer
+            Dim c As Char
             ClearBoard()
-            For sq = 0 To 127
-                pc = BOARD_HANDICAP(nHandicap, sq)
-                If pc > 0 Then
-                    AddPiece(128 + sq, pc + 8)
+            nRank = RANK_TOP
+            nFile = FILE_LEFT
+            ' 假定"szFen"不是空的
+            nIndex = 0
+            c = szFen.Chars(nIndex)
+            ' 假定"szFen"中必定有空格
+            While c <> CChar(" ")
+                If c = CChar("/") Then
+                    nFile = FILE_LEFT
+                    nRank += 1
+                    If nRank > RANK_BOTTOM Then
+                        Exit While
+                    End If
+                ElseIf c >= CChar("1") And c <= CChar("9") Then
+                    For k = 1 To Asc(c.ToString) - Asc("0")
+                        If nFile >= FILE_RIGHT Then
+                            Exit For
+                        End If
+                        nFile += 1
+                    Next
+                ElseIf c >= CChar("A") And c <= CChar("Z") Then
+                    If nFile <= FILE_RIGHT Then
+                        AddPiece(COORD_XY(nFile, nRank), FenPiece(c) + 8)
+                        nFile += 1
+                    End If
+                ElseIf c >= CChar("a") And c <= CChar("z") Then
+                    If nFile <= FILE_RIGHT Then
+                        AddPiece(COORD_XY(nFile, nRank), FenPiece(Char.ToUpper(c)) + 16)
+                        nFile += 1
+                    End If
                 End If
-            Next
-            For sq = 0 To 127
-                pc = BOARD_HANDICAP(0, sq)
-                If pc > 0 Then
-                    AddPiece(126 - sq, pc + 16)
-                End If
-            Next
+                nIndex += 1
+                c = szFen.Chars(nIndex)
+            End While
+            ' 假定空格之后一定还有字符
+            nIndex += 1
+            If sdPlayer = IIF_INT(szFen.Chars(nIndex) = CChar("b"), 0, 1) Then
+                ChangeSide()
+            End If
             SetIrrev()
         End Sub
 

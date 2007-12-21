@@ -392,8 +392,8 @@ Public Class MainForm
                 If IN_BOARD(sq) Then
                     img = New ImageSquare(sq)
                     img.sq = sq
-                    img.Left = (x - FILE_FROM) * 16 + LEFT_MARGIN
-                    img.Top = (y - RANK_FROM) * 16 + TOP_MARGIN
+                    img.Left = (x - FILE_LEFT) * 16 + LEFT_MARGIN
+                    img.Top = (y - RANK_TOP) * 16 + TOP_MARGIN
                     img.Width = 16
                     img.Height = 16
                     Controls.Add(img)
@@ -402,8 +402,7 @@ Public Class MainForm
                 End If
             Next
         Next
-
-        Search_pos.LoadBoard(App_nHandicap)
+        Search_pos.FromFen(Position.BOARD_HANDICAP(App_nHandicap))
         App_sqCursor = &HAA
         For sq = 0 To 255
             If IN_BOARD(sq) Then

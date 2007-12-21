@@ -31,12 +31,11 @@ public class Position {
 	public static final int WIN_VALUE = MATE_VALUE - 200;
 	public static final int NULL_SAFE_MARGIN = 400;
 	public static final int NULL_OKAY_MARGIN = 200;
-	public static final int CONTEMPT_VALUE = 20;
+	public static final int DRAW_VALUE = 20;
 	public static final int ADVANCED_VALUE = 3;
 
-	public static final int MAX_GEN_MOVES = 128;
 	public static final int MAX_MOVE_NUM = 256;
-	public static final int MAX_BOOK_SIZE = 16384;
+	public static final int MAX_GEN_MOVES = 128;
 
 	public static final int PIECE_KING = 1;
 	public static final int PIECE_ADVISOR = 2;
@@ -472,9 +471,8 @@ public class Position {
 	public static Random random = new Random();
 
 	public static int bookSize;
-	public static int[] bookLock = new int[MAX_BOOK_SIZE];
-	public static short[] bookMove = new short[MAX_BOOK_SIZE];
-	public static short[] bookValue = new short[MAX_BOOK_SIZE];
+	public static int[] bookLock;
+	public static short[] bookMove, bookValue;
 
 	static {
 		RC4 rc4 = new RC4(new byte[] {0});
@@ -492,7 +490,10 @@ public class Position {
 			byte[] intData = new byte[4];
 			byte[] shortData = new byte[2];
 			InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
-			bookSize = Math.min(in.available() / 8, MAX_BOOK_SIZE);
+			bookSize = in.available() / 8;
+			bookLock = new int[bookSize];
+			bookMove = new short[bookSize];
+			bookValue = new short[bookSize];
 			for (int i = 0; i < bookSize; i ++) {
 				in.read(intData);
 				bookLock[i] = toInt(intData) >>> 1; // Convert into Unsigned
@@ -675,7 +676,7 @@ public class Position {
 		int index = 0;
 		char c = fen.charAt(index);
 		// Assume a space exists
-		while (fen.charAt(index) != ' ') {
+		while (c != ' ') {
 			if (c == '/') {
 				file = FILE_LEFT;
 				rank ++;
@@ -1042,7 +1043,7 @@ public class Position {
 	}
 
 	public int drawValue() {
-		return (distance & 1) == 0 ? -CONTEMPT_VALUE : CONTEMPT_VALUE;
+		return (distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
 	}
 
 	public int evaluate() {
