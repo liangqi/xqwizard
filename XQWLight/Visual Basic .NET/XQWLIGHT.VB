@@ -152,6 +152,7 @@ Module XQWLight
         Randomize()
         InitArrays()
         LoadBook()
+        ' Test.Test()
         frmStartUp = New StartUp
         App_frm = New MainForm
         App_bExit = True

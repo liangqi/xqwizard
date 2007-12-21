@@ -141,6 +141,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "TEST.VB"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "XQWLIGHT.ICO"
                     BuildAction = "Content"
                 />

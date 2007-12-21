@@ -28,12 +28,11 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		Position pos = new Position();
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
+		int legal = 0, gened = 0, moved = 0, check = 0; 
 		BufferedReader in = new BufferedReader(new InputStreamReader(Test.class.getResourceAsStream("/test/FUNNY.EPD")));
 		String str = in.readLine();
-		int legal = 0, gened = 0, moved = 0, check = 0; 
 		while (str != null) {
 			pos.fromFen(str);
-			str = in.readLine();
 			for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
 				if (Position.IN_BOARD(sqSrc)) {
 					for (int sqDst = 0; sqDst < 256; sqDst ++) {
@@ -52,6 +51,7 @@ public class Test {
 				}
 			}
 			gened += moveNum;
+			str = in.readLine();
 		}
 		in.close();
 		System.out.println("Legal: " + legal); // 7809
