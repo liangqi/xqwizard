@@ -21,8 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-import java.io.InputStream;
-
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -31,15 +29,24 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
-import javax.microedition.media.Manager;
-import javax.microedition.media.Player;
-import javax.microedition.media.control.VolumeControl;
 
 public class XQWLCanvas extends Canvas implements CommandListener {
 	private static final int PHASE_STARTING = 0;
 	private static final int PHASE_WAITING = 1;
 	private static final int PHASE_THINKING = 2;
 	private static final int PHASE_EXITTING = 3;
+
+	private static final int RESP_CLICK = 0;
+	private static final int RESP_ILLEGAL = 1;
+	private static final int RESP_MOVE = 2;
+	private static final int RESP_MOVE2 = 3;
+	private static final int RESP_CAPTURE = 4;
+	private static final int RESP_CAPTURE2 = 5;
+	private static final int RESP_CHECK = 6;
+	private static final int RESP_CHECK2 = 7;
+	private static final int RESP_WIN = 8;
+	private static final int RESP_DRAW = 9;
+	private static final int RESP_LOSS = 10;
 
 	private static Image imgBackground, imgThinking;
 	private Image imgBoard;
@@ -58,7 +65,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 			imgBackground = Image.createImage("/images/background.png");
 			imgThinking = Image.createImage("/images/thinking.png");
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			// Ignored
 		}
 		widthBackground = imgBackground.getWidth();
 		heightBackground = imgBackground.getHeight();
@@ -165,11 +172,16 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 					boardWidth = 234;
 					boardHeight = 260;
 					squareSize = 26;
-				} else {
+				} else if (false && width >= 162 && height >= 180){
 					imagePath += "small/";
 					boardWidth = 162;
 					boardHeight = 180;
 					squareSize = 18;
+				} else {
+					imagePath += "tiny/";
+					boardWidth = 117;
+					boardHeight = 130;
+					squareSize = 13;
 				}
 				try {
 					imgBoard = Image.createImage(imagePath + "board.png");
@@ -185,7 +197,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 						}
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(e.getMessage());
+					// Ignored
 				}
 				left = (width - boardWidth) / 2;
 				top = (height - boardHeight) / 2;
@@ -336,7 +348,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		}
 		int pc = search.pos.squares[sq];
 		if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
-			playSound("CLICK");
+			playSound(RESP_CLICK);
 			mvLast = 0;
 			sqSelected = sq;
 		} else {
@@ -356,30 +368,30 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 
 	/** Player Move Result */
 	private boolean getResult() {
-		return getResult(null);
+		return getResult(-1);
 	}
 
 	/** Computer Move Result */
-	private boolean getResult(String wavFile) {
+	private boolean getResult(int response) {
 		if (search.pos.isMate()) {
-			playSound(wavFile == null ? "WIN" : "LOSS");
-			message = (wavFile == null ? "祝贺你取得胜利！" : "请再接再厉！");
+			playSound(response < 0 ? RESP_WIN : RESP_LOSS);
+			message = (response < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
 			return true;
 		}
 		int vlRep = search.pos.repStatus(3);
 		if (vlRep > 0) {
-			vlRep = (wavFile == null ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
-			playSound(vlRep > Position.WIN_VALUE ? "LOSS" : vlRep < -Position.WIN_VALUE ? "WIN" : "DRAW");
+			vlRep = (response < 0 ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
+			playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS : vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
 			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
 		if (search.pos.moveNum == 100) {
-			playSound("DRAW");
+			playSound(RESP_DRAW);
 			message = "超过自然限着作和，辛苦了！";
 			return true;
 		}
-		if (wavFile != null) {
-			playSound(wavFile);
+		if (response >= 0) {
+			playSound(response);
 			midlet.rsData[0] = 1;
 			System.arraycopy(search.pos.squares, 0, midlet.rsData, 256, 256);
 		}
@@ -393,12 +405,12 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 				if (pc > 0) {
 					search.pos.setIrrev();
 				}
-				playSound(search.pos.inCheck() ? "CHECK" : pc > 0 ? "CAPTURE" : "MOVE");
+				playSound(search.pos.inCheck() ? RESP_CHECK : pc > 0 ? RESP_CAPTURE : RESP_MOVE);
 				sqSelected = 0;
 				mvLast = mv;
 				return true;
 			} else {
-				playSound("ILLEGAL");
+				playSound(RESP_ILLEGAL);
 			}
 		}
 		return false;
@@ -414,44 +426,32 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		search.searchMain(1 << (midlet.level << 1));
 		int pc = search.pos.squares[Position.DST(search.mvResult)];
 		search.pos.makeMove(search.mvResult);
-		String wavFile = "MOVE2";
+		int response = RESP_MOVE2;
 		if (pc > 0) {
 			search.pos.setIrrev();
-			wavFile = "CAPTURE2";
+			response = RESP_CAPTURE2;
 		}
 		if (search.pos.inCheck()) {
-			wavFile = "CHECK2";
+			response = RESP_CHECK2;
 		}
 		mvLast = search.mvResult;
 		phase = PHASE_WAITING;
 		repaint();
 		serviceRepaints();
-		return !getResult(wavFile);
+		return !getResult(response);
 	}
 
-	private void playSound(final String wavFile) {
-		if (!midlet.sound) {
-			return;
-		}
-		new Thread() {
-			public void run() {
-				try {
-					InputStream in = this.getClass().getResourceAsStream("/sounds/" + wavFile + ".WAV");
-					Player player = Manager.createPlayer(in, "audio/x-wav");
-					player.realize();
-					VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
-					if (vc != null) {
-						vc.setLevel(50);
+	private void playSound(final int response) {
+		if (midlet.sound && midlet.players[response] != null) {
+			new Thread() {
+				public void run() {
+					try {
+						midlet.players[response].start();
+					} catch (Exception e) {
+						// Ignored
 					}
-					player.start();
-					while (player.getState() == Player.STARTED) {
-						Thread.sleep(1);
-					}
-					player.close();
-				} catch (Exception e) {
-					// Ignored
 				}
-			}
-		}.start();
+			}.start();
+		}
 	}
 }

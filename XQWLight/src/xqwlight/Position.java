@@ -504,7 +504,7 @@ public class Position {
 			}
 			in.close();
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getMessage()); // Never Occurs
 		}
 	}
 

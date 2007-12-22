@@ -21,7 +21,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import java.io.InputStream;
+
 import javax.microedition.lcdui.Display;
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
+import javax.microedition.media.control.VolumeControl;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
@@ -32,6 +37,12 @@ public class XQWLMIDlet extends MIDlet {
 
 	public boolean flipped, sound;
 	public int handicap, level;
+
+	private static String[] SOUND_NAME = {
+		"click", "illegal", "move", "move2", "capture", "capture2",
+		"check", "check2", "win", "draw", "loss",
+	};
+	public Player[] players = new Player[SOUND_NAME.length];
 
 	public static final int RS_DATA_LEN = 512;
 	/**
@@ -51,6 +62,33 @@ public class XQWLMIDlet extends MIDlet {
 			return;
 		}
 		started = true;
+		// Open Sounds
+		for (int i = 0; i < SOUND_NAME.length; i ++) {
+			InputStream in = this.getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".mp3");
+			try {
+				players[i] = Manager.createPlayer(in, "audio/mpeg");
+				players[i].prefetch();
+			} catch (Exception e) {
+				players[i] = null;
+			}
+			if (players[i] != null) {
+				continue;
+			}
+			in = this.getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
+			try {
+				players[i] = Manager.createPlayer(in, "audio/x-wav");
+				players[i].prefetch();
+			} catch (Exception e) {
+				players[i] = null;
+			}
+			if (players[i] != null) {
+				VolumeControl vc = (VolumeControl) players[i].getControl("VolumeControl");
+				if (vc != null) {
+					vc.setLevel(30);
+				}
+			}
+		}
+		// Load Record-Store
 		for (int i = 0; i < RS_DATA_LEN; i ++) {
 			rsData[i] = 0;
 		}
@@ -92,6 +130,13 @@ public class XQWLMIDlet extends MIDlet {
     }
 
     public void destroyApp(boolean unc) {
+    	// Close Sounds
+		for (int i = 0; i < SOUND_NAME.length; i ++) {
+			if (players[i] != null) {
+				players[i].close();
+			}
+		}
+		// Save Record-Store
 		rsData[16] = (byte) (flipped ? 1 : 0);
 		rsData[17] = (byte) handicap;
 		rsData[18] = (byte) level;
