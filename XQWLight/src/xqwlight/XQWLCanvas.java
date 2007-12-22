@@ -65,7 +65,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 			imgBackground = Image.createImage("/images/background.png");
 			imgThinking = Image.createImage("/images/thinking.png");
 		} catch (Exception e) {
-			// Ignored
+			throw new RuntimeException(e.getMessage());
 		}
 		widthBackground = imgBackground.getWidth();
 		heightBackground = imgBackground.getHeight();
@@ -160,29 +160,21 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 				bLoaded = true;
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
-				int boardWidth;
-				int boardHeight;
 				if (width >= 324 && height >= 360) {
 					imagePath += "large/";
-					boardWidth = 324;
-					boardHeight = 360;
 					squareSize = 36;
 				} else if (width >= 234 && height >= 260) {
 					imagePath += "medium/";
-					boardWidth = 234;
-					boardHeight = 260;
 					squareSize = 26;
-				} else if (false && width >= 162 && height >= 180){
+				} else if (width >= 162 && height >= 180){
 					imagePath += "small/";
-					boardWidth = 162;
-					boardHeight = 180;
 					squareSize = 18;
 				} else {
 					imagePath += "tiny/";
-					boardWidth = 117;
-					boardHeight = 130;
 					squareSize = 13;
 				}
+				int boardWidth = squareSize * 9;
+				int boardHeight = squareSize * 10;
 				try {
 					imgBoard = Image.createImage(imagePath + "board.png");
 					imgSelected = Image.createImage(imagePath + "selected.png");
@@ -197,7 +189,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 						}
 					}
 				} catch (Exception e) {
-					// Ignored
+					throw new RuntimeException(e.getMessage());
 				}
 				left = (width - boardWidth) / 2;
 				top = (height - boardHeight) / 2;

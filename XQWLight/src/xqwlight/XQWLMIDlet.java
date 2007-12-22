@@ -2,7 +2,7 @@
 XQWLight.java - Source Code for XiangQi Wizard Light, Part VI
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.12, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -64,22 +64,21 @@ public class XQWLMIDlet extends MIDlet {
 		started = true;
 		// Open Sounds
 		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			InputStream in = this.getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".mp3");
+			InputStream in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".mp3");
 			try {
 				players[i] = Manager.createPlayer(in, "audio/mpeg");
 				players[i].prefetch();
 			} catch (Exception e) {
 				players[i] = null;
 			}
-			if (players[i] != null) {
-				continue;
-			}
-			in = this.getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
-			try {
-				players[i] = Manager.createPlayer(in, "audio/x-wav");
-				players[i].prefetch();
-			} catch (Exception e) {
-				players[i] = null;
+			if (players[i] == null) {
+				in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
+				try {
+					players[i] = Manager.createPlayer(in, "audio/x-wav");
+					players[i].prefetch();
+				} catch (Exception e) {
+					players[i] = null;
+				}
 			}
 			if (players[i] != null) {
 				VolumeControl vc = (VolumeControl) players[i].getControl("VolumeControl");
