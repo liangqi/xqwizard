@@ -83,7 +83,7 @@ Private Const MB_USERICON As Long = 128
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal lpLibFileName As String) As Long
 Private Declare Sub FreeLibrary Lib "KERNEL32.DLL" (ByVal hLibModule As Long)
 Private Declare Function LoadIconA Lib "USER32.DLL" (ByVal hInstance As Long, ByVal lpIconName As Long) As Long
-Private Declare Sub MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams)
+Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' For Open/Save
 Private Type OpenFileName
@@ -439,7 +439,12 @@ mbp.lpszIcon = dwStyle \ 16 + IDI_APPLICATION
 mbp.dwContextHelpId = 0
 mbp.lpfnMsgBoxCallback = 0
 mbp.dwLanguageId = 0
-MessageBoxIndirectA mbp
+' Unsupported under Windows 98
+If MessageBoxIndirectA(mbp) = 0 Then
+    mbp.hInstance = App.hInstance
+    mbp.lpszIcon = 1
+    MessageBoxIndirectA mbp
+End If
 
 End Sub
 
