@@ -164,7 +164,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
-            Object.ToolTipText     =   "Í£Ö¹Ë¼¿¼"
+            Object.ToolTipText     =   "Í£Ö¹Ë¼¿¼/Á¢¼´×ßÆå"
          EndProperty
       EndProperty
    End
@@ -1798,7 +1798,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnEngineStop 
-         Caption         =   "°±¤î«ä¦Ò(&O)"
+         Caption         =   "°±¤î«ä¦Ò/¥ß§Y¨«´Ñ(&O)"
       End
    End
    Begin VB.Menu mnOptions 
