@@ -198,7 +198,7 @@ Begin VB.Form frmMainLarge
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -2554,7 +2554,8 @@ End Sub
 Private Sub mnEngineDraw_Click()
 
 If Engine_bDraw Then
-    MsgBox IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
+    PlayWavSound "DRAW"
+    MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST

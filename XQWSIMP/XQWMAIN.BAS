@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 3.61, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.6"
+Public Const STRING_VERSION     As String = "3.61"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -1238,11 +1238,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     AnalyzeEcco
     If (nMoveStatus And MOVE_MATE) <> 0 Then
         If bEcho And Options_bSounds Then
-            If (Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack) Then
-                PlayWavSound "LOSS"
-            Else
-                PlayWavSound "WIN"
-            End If
+            PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
+            MsgBoxMute IIf(Game_sdCurr = 1, "红胜。", "黑胜。"), vbInformation
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1261,7 +1258,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                MsgBox "自然作和！", vbInformation
+                PlayWavSound "DRAW"
+                MsgBoxMute "自然作和。", vbInformation
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1280,7 +1278,12 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Game_nResult = Game_nResult - 1 + Game_sdCurr * 2
             End If
             If bEcho Then
-                MsgBox Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！"), vbInformation
+                If Game_nResult = 2 Then
+                    PlayWavSound "DRAW"
+                Else
+                    PlayWavSound IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
+                End If
+                MsgBoxMute Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！"), vbInformation
             End If
             App_frmMain.lblResult = ResultString
             Timer_bEnabled = False
@@ -1298,12 +1301,14 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If Engine_nStatus = IDLE_PONDER Then
         If mv = Engine_mvPonder Then
             If Options_bAllowResign And Engine_bPonderFinishedResign Then
-                MsgBox IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
+                PlayWavSound "WIN"
+                MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
-                MsgBox IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
+                PlayWavSound "DRAW"
+                MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
@@ -2043,12 +2048,14 @@ Else
                 MoveForward
             Loop
             If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
-                MsgBox IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
+                PlayWavSound "WIN"
+                MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
-                MsgBox IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
+                PlayWavSound "DRAW"
+                MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST

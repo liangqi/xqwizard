@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.6 (简体中文版)
+AppVerName=象棋巫师 3.61 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -451,6 +451,7 @@ Source: "SOUNDS\PROMOTE2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CHECK.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\CHECK2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\WIN.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
+Source: "SOUNDS\DRAW.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\LOSS.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 ; 音乐文件
 Source: "MUSICS\CLASSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion

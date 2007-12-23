@@ -4,11 +4,15 @@ Option Explicit
 ' === Begin Windows APIs ===
 
 Public Const SW_SHOWNORMAL      As Long = 1         ' ShellExecuteA
-Public Const MB_OK              As Long = 0         ' MessageBeep
+Public Const MB_ICONSTOP        As Long = 16        ' MessageBeep
 Public Const MB_ICONHAND        As Long = 16        ' MessageBeep
+Public Const MB_ICONERROR       As Long = 16        ' MessageBeep
 Public Const MB_ICONQUESTION    As Long = 32        ' MessageBeep
 Public Const MB_ICONEXCLAMATION As Long = 48        ' MessageBeep
+Public Const MB_ICONWARNING     As Long = 48        ' MessageBeep
 Public Const MB_ICONINFORMATION As Long = 64        ' MessageBeep
+Public Const MB_ICONASTERISK    As Long = 64        ' MessageBeep
+Public Const IDI_APPLICATION    As Long = 32512     ' LoadIconA
 Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
 Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
 Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
@@ -60,7 +64,7 @@ Public Type UrlType
     szLabel As String
 End Type
 
-' For MsgBoxWithIcon
+' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
     cbSize As Long
     hwndOwner As Long
@@ -79,7 +83,6 @@ Private Const MB_USERICON As Long = 128
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal lpLibFileName As String) As Long
 Private Declare Sub FreeLibrary Lib "KERNEL32.DLL" (ByVal hLibModule As Long)
 Private Declare Function LoadIconA Lib "USER32.DLL" (ByVal hInstance As Long, ByVal lpIconName As Long) As Long
-Private Declare Sub DestroyIcon Lib "USER32.DLL" (ByVal hIcon As Long)
 Private Declare Sub MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams)
 
 ' For Open/Save
@@ -378,7 +381,7 @@ End Function
 
 ' === End URLs ===
 
-' === Begin MsgBoxWithIcon ===
+' === Begin MsgBoxWithIcon/MsgBoxMute ===
 
 Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, Optional ByVal szIconFile As String = vbNullString)
 
@@ -398,7 +401,6 @@ End If
 If hIcon = 0 Then
     MsgBox szPrompt, vbInformation, szTitle
 Else
-    DestroyIcon hIcon
     MessageBeep MB_ICONINFORMATION
     mbp.cbSize = Len(mbp)
     mbp.hwndOwner = 0
@@ -421,7 +423,27 @@ End If
 
 End Sub
 
-' === End MessageBox ===
+Public Sub MsgBoxMute(ByVal szPrompt As String, Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString)
+
+Dim mbp As MsgBoxParams
+mbp.cbSize = Len(mbp)
+mbp.hwndOwner = 0
+On Error Resume Next
+mbp.hwndOwner = Screen.ActiveForm.hWnd
+On Error GoTo 0
+mbp.hInstance = 0
+mbp.lpszText = szPrompt
+mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
+mbp.dwStyle = MB_USERICON
+mbp.lpszIcon = dwStyle \ 16 + IDI_APPLICATION
+mbp.dwContextHelpId = 0
+mbp.lpfnMsgBoxCallback = 0
+mbp.dwLanguageId = 0
+MessageBoxIndirectA mbp
+
+End Sub
+
+' === End MsgBoxWithIcon/MsgBoxMute ===
 
 ' === Begin Open/Save ===
 

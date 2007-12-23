@@ -2590,7 +2590,8 @@ End Sub
 Private Sub mnEngineDraw_Click()
 
 If Engine_bDraw Then
-    MsgBox IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
+    PlayWavSound "DRAW"
+    MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST

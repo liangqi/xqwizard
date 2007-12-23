@@ -1969,7 +1969,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 3.61, Last Modified: Dec. 2007
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2553,7 +2553,8 @@ End Sub
 Private Sub mnEngineDraw_Click()
 
 If Engine_bDraw Then
-    MsgBox IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
+    PlayWavSound "DRAW"
+    MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST
