@@ -1889,10 +1889,26 @@ EngineBusy True
 
 End Sub
 
+' 在思考细节框中输出信息，并定位光标
+Public Sub AppendThink(ByVal sz As String)
+
+Dim nTextLen As Long
+If App_frmMain.txtThink.Text = "" Then
+    App_frmMain.txtThink.Text = sz
+    App_frmMain.txtThink.SelStart = 0
+Else
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + vbCrLf
+    nTextLen = Len(App_frmMain.txtThink.Text)
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + sz
+    App_frmMain.txtThink.SelStart = nTextLen
+End If
+
+End Sub
+
 ' 输出引擎的信息，显示到显示思考窗口和状态栏
 Public Sub PopEngine(ByVal szReceived As String)
 
-Dim i As Integer, nScore As Integer, nOldDepth
+Dim i As Integer, nScore As Integer, nOldDepth As Integer
 Dim nTime As Long, nNodes As Long
 Dim szMoveList As String, nMoveStatus As Long, mv As Long
 Dim pos As PositionStruct
@@ -1940,8 +1956,7 @@ If i > 0 Then
         If Engine_bAnalyze And Options_bEngineTime Then
             nTime = Int((Timer - Engine_dwTime) * 1000)
             nTime = IIf(nTime < 0, nTime + 86400000, nTime)
-            App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->" + vbCrLf
-            App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+            AppendThink TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->"
         End If
     End If
     szMoveList = Space(4 - Len(Str(Engine_nDepth))) + LTrim(Str(Engine_nDepth))
@@ -1981,8 +1996,7 @@ If i > 0 Then
         End If
     End If
     If Engine_bAnalyze Then
-        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + szMoveList + vbCrLf
-        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+        AppendThink szMoveList
     End If
 End If
 
@@ -1993,8 +2007,7 @@ If i > 0 Then
         App_frmMain.stb.Panels("Msg").Text = Mid(szReceived, i + 9)
     End If
     If Engine_bAnalyze Then
-        App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + Mid(szReceived, i + 9) + vbCrLf
-        App_frmMain.txtThink.SelStart = Len(App_frmMain.txtThink.Text)
+        AppendThink Mid(szReceived, i + 9)
     End If
 End If
 
