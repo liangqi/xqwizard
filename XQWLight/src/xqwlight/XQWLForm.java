@@ -37,7 +37,7 @@ public class XQWLForm extends Form implements CommandListener {
 	public ChoiceGroup cgToMove, cgHandicap, cgLevel, cgSound;
 
 	public XQWLForm(XQWLMIDlet midlet) {
-		super(midlet.getAppProperty("MIDlet-Name") + " " + midlet.getAppProperty("MIDlet-Version"));
+		super("象棋小巫师");
 		this.midlet = midlet;
 
 		cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE, new String[] {"我先走", "电脑先走"}, null);

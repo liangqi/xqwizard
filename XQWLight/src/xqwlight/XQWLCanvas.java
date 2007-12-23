@@ -148,30 +148,33 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 				if (width != normalWidth || height != normalHeight) {
 					break;
 				}
-				width = getWidth();
-				height = getHeight();
 				try {
 					Thread.sleep(100);
 				} catch (Exception e) {
 					// Ignored
 				}
+				width = getWidth();
+				height = getHeight();
 			}
 			if (!bLoaded) {
 				bLoaded = true;
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
-				if (width >= 324 && height >= 360) {
-					imagePath += "large/";
+				squareSize = Math.min(width / 9, height / 10);
+				if (false) {
+					// Code Style
+				} else if (squareSize >= 36) {
 					squareSize = 36;
-				} else if (width >= 234 && height >= 260) {
-					imagePath += "medium/";
+					imagePath += "large/";
+				} else if (squareSize >= 26) {
 					squareSize = 26;
-				} else if (width >= 162 && height >= 180){
-					imagePath += "small/";
+					imagePath += "medium/";
+				} else if (squareSize >= 18) {
 					squareSize = 18;
+					imagePath += "small/";
 				} else {
-					imagePath += "tiny/";
 					squareSize = 13;
+					imagePath += "tiny/";
 				}
 				int boardWidth = squareSize * 9;
 				int boardHeight = squareSize * 10;
