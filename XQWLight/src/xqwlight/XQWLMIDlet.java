@@ -2,7 +2,7 @@
 XQWLight.java - Source Code for XiangQi Wizard Light, Part VI
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -32,19 +32,6 @@ import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 
 public class XQWLMIDlet extends MIDlet {
-	public XQWLForm form = new XQWLForm(this);
-	public XQWLCanvas canvas = new XQWLCanvas(this);
-
-	public boolean flipped, sound;
-	public int handicap, level;
-
-	private static String[] SOUND_NAME = {
-		"click", "illegal", "move", "move2", "capture", "capture2",
-		"check", "check2", "win", "draw", "loss",
-	};
-	public Player[] players = new Player[SOUND_NAME.length];
-
-	public static final int RS_DATA_LEN = 512;
 	/**
 	 * 0: Status, 0 = Normal Exit, 1 = Game Saved
 	 * 16: Player, 0 = Red, 1 = Black (Flipped)
@@ -53,7 +40,18 @@ public class XQWLMIDlet extends MIDlet {
 	 * 19: Sound, 0 = Off, 1 = On
 	 * 256-511: Squares
 	 */
+	private static final int RS_DATA_LEN = 512;
+	private static String[] SOUND_NAME = {
+		"click", "illegal", "move", "move2", "capture", "capture2",
+		"check", "check2", "win", "draw", "loss",
+	};
+	private Player[] players = new Player[SOUND_NAME.length];
+
 	public byte[] rsData = new byte[RS_DATA_LEN];
+	public boolean flipped;
+	public int handicap, level, sound;
+	public XQWLForm form = new XQWLForm(this);
+	public XQWLCanvas canvas = new XQWLCanvas(this);
 
 	private boolean started = false;
 
@@ -71,20 +69,15 @@ public class XQWLMIDlet extends MIDlet {
 			} catch (Exception e) {
 				players[i] = null;
 			}
-			if (players[i] == null) {
-				in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
-				try {
-					players[i] = Manager.createPlayer(in, "audio/x-wav");
-					players[i].prefetch();
-				} catch (Exception e) {
-					players[i] = null;
-				}
-			}
 			if (players[i] != null) {
-				VolumeControl vc = (VolumeControl) players[i].getControl("VolumeControl");
-				if (vc != null) {
-					vc.setLevel(30);
-				}
+				continue;
+			}
+			in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
+			try {
+				players[i] = Manager.createPlayer(in, "audio/x-wav");
+				players[i].prefetch();
+			} catch (Exception e) {
+				players[i] = null;
 			}
 		}
 		// Load Record-Store
@@ -111,11 +104,12 @@ public class XQWLMIDlet extends MIDlet {
 		flipped = (rsData[16] != 0);
 		handicap = Math.min(Math.max(0, rsData[17]), 3);
 		level = Math.min(Math.max(0, rsData[18]), 2);
-		sound = (rsData[19] == 0);
+		sound = Math.min(Math.max(0, rsData[19]), 5);
+		setVolume();
 		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
 		form.cgLevel.setSelectedIndex(level, true);
 		form.cgHandicap.setSelectedIndex(handicap, true);
-		form.cgSound.setSelectedIndex(0, sound);
+		form.gSound.setValue(sound);
 		if (rsData[0] == 0) {
 			Display.getDisplay(this).setCurrent(form);
 		} else {
@@ -124,12 +118,12 @@ public class XQWLMIDlet extends MIDlet {
 		}
 	}
 
-    public void pauseApp() {
-    	// Do Nothing
-    }
+	public void pauseApp() {
+		// Do Nothing
+	}
 
-    public void destroyApp(boolean unc) {
-    	// Close Sounds
+	public void destroyApp(boolean unc) {
+		// Close Sounds
 		for (int i = 0; i < SOUND_NAME.length; i ++) {
 			if (players[i] != null) {
 				players[i].close();
@@ -139,7 +133,7 @@ public class XQWLMIDlet extends MIDlet {
 		rsData[16] = (byte) (flipped ? 1 : 0);
 		rsData[17] = (byte) handicap;
 		rsData[18] = (byte) level;
-		rsData[19] = (byte) (sound ? 0 : 1);
+		rsData[19] = (byte) sound;
 		try {
 			RecordStore rs = RecordStore.openRecordStore("XQWLight", true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
@@ -153,6 +147,35 @@ public class XQWLMIDlet extends MIDlet {
 		} catch (Exception e) {
 			// Ignored
 		}
-    	started = false;
-    }
+		started = false;
+	}
+
+	public void setVolume() {
+		for (int i = 0; i < SOUND_NAME.length; i ++) {
+			setVolume(i);
+		}
+	}
+
+	public void setVolume(int i) {
+		if (players[i] != null) {
+			VolumeControl vc = (VolumeControl) players[i].getControl("VolumeControl");
+			if (vc != null) {
+				vc.setLevel(sound * 10);
+			}
+		}
+	}
+
+	public void playSound(final int response) {
+		if (sound > 0 && players[response] != null) {
+			new Thread() {
+				public void run() {
+					try {
+						players[response].start();
+					} catch (Exception e) {
+						// Ignored
+					}
+				}
+			}.start();
+		}
+	}
 }

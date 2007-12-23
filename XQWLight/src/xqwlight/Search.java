@@ -125,14 +125,14 @@ public class Search {
 		hash.flag = (byte) flag;
 		hash.depth = (byte) depth;
 		if (vl > WIN_VALUE) {
-		    if (mv == 0 && vl <= BAN_VALUE) {
-		    	return;
-		    }
+			if (mv == 0 && vl <= BAN_VALUE) {
+				return;
+			}
 			hash.vl = (short) (vl + pos.distance);
 		} else if (vl < -WIN_VALUE) {
-		    if (mv == 0 && vl >= -BAN_VALUE) {
-		    	return;
-		    }
+			if (mv == 0 && vl >= -BAN_VALUE) {
+				return;
+			}
 			hash.vl = (short) (vl - pos.distance);
 		} else if (vl == pos.drawValue() && mv == 0) {
 			return;

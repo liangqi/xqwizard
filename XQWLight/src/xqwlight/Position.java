@@ -1065,7 +1065,7 @@ public class Position {
 
 	public int repValue(int vlRep) {
 		int vlReturn = ((vlRep & 2) == 0 ? 0 : banValue()) + ((vlRep & 4) == 0 ? 0 : -banValue());
-	    return vlReturn == 0 ? drawValue() : vlReturn;
+		return vlReturn == 0 ? drawValue() : vlReturn;
 	}
 
 	public int repStatus() {

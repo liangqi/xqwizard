@@ -2,7 +2,7 @@
 MainForm.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-public class XQWLCanvas extends Canvas implements CommandListener {
+public class XQWLCanvas extends Canvas {
 	private static final int PHASE_STARTING = 0;
 	private static final int PHASE_WAITING = 1;
 	private static final int PHASE_THINKING = 2;
@@ -86,8 +86,8 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
-	public XQWLCanvas(XQWLMIDlet midlet) {
-		this.midlet = midlet;
+	public XQWLCanvas(XQWLMIDlet midlet_) {
+		this.midlet = midlet_;
 		search = new Search();
 		search.pos = new Position();
 		// Assume FullScreenMode = false
@@ -98,7 +98,22 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		// addCommand(cmdRetract);
 		cmdBack = new Command("返回", Command.BACK, 1);
 		addCommand(cmdBack);
-		setCommandListener(this);
+
+		setCommandListener(new CommandListener() {
+			public void commandAction(Command c, Displayable d) {
+				if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
+					if (false) {
+						// Code Style
+					} else if (c == cmdRetract) {
+						// Not Available, Never Occurs
+					} else if (c == cmdBack) {
+						midlet.rsData[0] = 0;
+						Display.getDisplay(midlet).setCurrent(midlet.form);
+					}
+				}
+			}
+		});
+
 		phase = PHASE_STARTING;
 		bLoaded = false;
 	}
@@ -123,19 +138,6 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 			search.pos.setIrrev();
 		}
 		phase = PHASE_STARTING;
-	}
-
-	public void commandAction(Command c, Displayable d) {
-		if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
-			if (false) {
-				// Code Style
-			} else if (c == cmdRetract) {
-				// Not Available, Never Occurs
-			} else if (c == cmdBack) {
-				midlet.rsData[0] = 0;
-				Display.getDisplay(midlet).setCurrent(midlet.form);
-			}
-		}
 	}
 
 	protected void paint(Graphics g) {
@@ -317,7 +319,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		}
 		repaint();
 		serviceRepaints();
-    }
+	}
 
 	protected void pointerPressed(int x, int y) {
 		if (phase == PHASE_EXITTING) {
@@ -343,7 +345,7 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		}
 		int pc = search.pos.squares[sq];
 		if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
-			playSound(RESP_CLICK);
+			midlet.playSound(RESP_CLICK);
 			mvLast = 0;
 			sqSelected = sq;
 		} else {
@@ -369,24 +371,24 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 	/** Computer Move Result */
 	private boolean getResult(int response) {
 		if (search.pos.isMate()) {
-			playSound(response < 0 ? RESP_WIN : RESP_LOSS);
+			midlet.playSound(response < 0 ? RESP_WIN : RESP_LOSS);
 			message = (response < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
 			return true;
 		}
 		int vlRep = search.pos.repStatus(3);
 		if (vlRep > 0) {
 			vlRep = (response < 0 ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
-			playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS : vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
+			midlet.playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS : vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
 			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
 		if (search.pos.moveNum == 100) {
-			playSound(RESP_DRAW);
+			midlet.playSound(RESP_DRAW);
 			message = "超过自然限着作和，辛苦了！";
 			return true;
 		}
 		if (response >= 0) {
-			playSound(response);
+			midlet.playSound(response);
 			midlet.rsData[0] = 1;
 			System.arraycopy(search.pos.squares, 0, midlet.rsData, 256, 256);
 		}
@@ -400,12 +402,12 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 				if (pc > 0) {
 					search.pos.setIrrev();
 				}
-				playSound(search.pos.inCheck() ? RESP_CHECK : pc > 0 ? RESP_CAPTURE : RESP_MOVE);
+				midlet.playSound(search.pos.inCheck() ? RESP_CHECK : pc > 0 ? RESP_CAPTURE : RESP_MOVE);
 				sqSelected = 0;
 				mvLast = mv;
 				return true;
 			} else {
-				playSound(RESP_ILLEGAL);
+				midlet.playSound(RESP_ILLEGAL);
 			}
 		}
 		return false;
@@ -434,19 +436,5 @@ public class XQWLCanvas extends Canvas implements CommandListener {
 		repaint();
 		serviceRepaints();
 		return !getResult(response);
-	}
-
-	private void playSound(final int response) {
-		if (midlet.sound && midlet.players[response] != null) {
-			new Thread() {
-				public void run() {
-					try {
-						midlet.players[response].start();
-					} catch (Exception e) {
-						// Ignored
-					}
-				}
-			}.start();
-		}
 	}
 }
