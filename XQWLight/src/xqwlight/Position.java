@@ -49,7 +49,7 @@ public class Position {
 	public static final int RANK_BOTTOM = 12;
 	public static final int FILE_LEFT = 3;
 	public static final int FILE_RIGHT = 11;
-	
+
 	public static final byte[] IN_BOARD = new byte[] {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -160,9 +160,9 @@ public class Position {
 		0,  0,  0,  0,  0,  0,  0
 	};
 
-	public static final int[] KING_DELTA = {-16, -1, 1, 16}; 
-	public static final int[] ADVISOR_DELTA = {-17, -15, 15, 17}; 
-	public static final int[][] KNIGHT_DELTA = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 33}}; 
+	public static final int[] KING_DELTA = {-16, -1, 1, 16};
+	public static final int[] ADVISOR_DELTA = {-17, -15, 15, 17};
+	public static final int[][] KNIGHT_DELTA = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 33}};
 	public static final int[][] KNIGHT_CHECK_DELTA = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
 	public static final int[] MVV_VALUE = {0, 50, 10, 10, 30, 40, 30, 20};
 
@@ -296,119 +296,119 @@ public class Position {
 		"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1",
 	};
 
-	public static final boolean IN_BOARD(int sq) {
+	public static boolean IN_BOARD(int sq) {
 		return IN_BOARD[sq] != 0;
 	}
 
-	public static final boolean IN_FORT(int sq) {
+	public static boolean IN_FORT(int sq) {
 		return IN_FORT[sq] != 0;
 	}
 
-	public static final int RANK_Y(int sq) {
+	public static int RANK_Y(int sq) {
 		return sq >> 4;
 	}
 
-	public static final int FILE_X(int sq) {
+	public static int FILE_X(int sq) {
 		return sq & 15;
 	}
 
-	public static final int COORD_XY(int x, int y) {
+	public static int COORD_XY(int x, int y) {
 		return x + (y << 4);
 	}
 
-	public static final int SQUARE_FLIP(int sq) {
+	public static int SQUARE_FLIP(int sq) {
 		return 254 - sq;
 	}
 
-	public static final int FILE_FLIP(int x) {
+	public static int FILE_FLIP(int x) {
 		return 14 - x;
 	}
 
-	public static final int RANK_FLIP(int y) {
+	public static int RANK_FLIP(int y) {
 		return 15 - y;
 	}
 
-	public static final int MIRROR_SQUARE(int sq) {
+	public static int MIRROR_SQUARE(int sq) {
 		return COORD_XY(FILE_FLIP(FILE_X(sq)), RANK_Y(sq));
 	}
 
-	public static final int SQUARE_FORWARD(int sq, int sd) {
+	public static int SQUARE_FORWARD(int sq, int sd) {
 		return sq - 16 + (sd << 5);
 	}
 
-	public static final int SQUARE_BACKWARD(int sq, int sd) {
+	public static int SQUARE_BACKWARD(int sq, int sd) {
 		return sq + 16 - (sd << 5);
 	}
 
-	public static final boolean KING_SPAN(int sqSrc, int sqDst) {
+	public static boolean KING_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 1;
 	}
 
-	public static final boolean ADVISOR_SPAN(int sqSrc, int sqDst) {
+	public static boolean ADVISOR_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 2;
 	}
 
-	public static final boolean BISHOP_SPAN(int sqSrc, int sqDst) {
+	public static boolean BISHOP_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 3;
 	}
 
-	public static final int BISHOP_PIN(int sqSrc, int sqDst) {
+	public static int BISHOP_PIN(int sqSrc, int sqDst) {
 		return (sqSrc + sqDst) >> 1;
 	}
 
-	public static final int KNIGHT_PIN(int sqSrc, int sqDst) {
+	public static int KNIGHT_PIN(int sqSrc, int sqDst) {
 		return sqSrc + KNIGHT_PIN[sqDst - sqSrc + 256];
 	}
 
-	public static final boolean HOME_HALF(int sq, int sd) {
+	public static boolean HOME_HALF(int sq, int sd) {
 		return (sq & 0x80) != (sd << 7);
 	}
 
-	public static final boolean AWAY_HALF(int sq, int sd) {
+	public static boolean AWAY_HALF(int sq, int sd) {
 		return (sq & 0x80) == (sd << 7);
 	}
 
-	public static final boolean SAME_HALF(int sqSrc, int sqDst) {
+	public static boolean SAME_HALF(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x80) == 0;
 	}
 
-	public static final boolean DIFF_HALF(int sqSrc, int sqDst) {
+	public static boolean DIFF_HALF(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x80) != 0;
 	}
 
-	public static final boolean SAME_RANK(int sqSrc, int sqDst) {
+	public static boolean SAME_RANK(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0xf0) == 0;
 	}
 
-	public static final boolean SAME_FILE(int sqSrc, int sqDst) {
+	public static boolean SAME_FILE(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x0f) == 0;
 	}
 
-	public static final int SIDE_TAG(int sd) {
+	public static int SIDE_TAG(int sd) {
 		return 8 + (sd << 3);
 	}
 
-	public static final int OPP_SIDE_TAG(int sd) {
+	public static int OPP_SIDE_TAG(int sd) {
 		return 16 - (sd << 3);
 	}
 
-	public static final int SRC(int mv) {
+	public static int SRC(int mv) {
 		return mv & 255;
 	}
 
-	public static final int DST(int mv) {
+	public static int DST(int mv) {
 		return mv >> 8;
 	}
 
-	public static final int MOVE(int sqSrc, int sqDst) {
+	public static int MOVE(int sqSrc, int sqDst) {
 		return sqSrc + (sqDst << 8);
 	}
 
-	public static final int MIRROR_MOVE(int mv) {
+	public static int MIRROR_MOVE(int mv) {
 		return MOVE(MIRROR_SQUARE(SRC(mv)), MIRROR_SQUARE(DST(mv)));
 	}
 
-	public static final int MVV_LVA(int pc, int lva) {
+	public static int MVV_LVA(int pc, int lva) {
 		return MVV_VALUE[pc & 7] - lva;
 	}
 
@@ -935,9 +935,9 @@ public class Position {
 		case PIECE_CANNON:
 			int delta;
 			if (SAME_RANK(sqSrc, sqDst)) {
-				delta = (sqDst < sqSrc ? -1 : 1);				
+				delta = (sqDst < sqSrc ? -1 : 1);
 			} else if (SAME_FILE(sqSrc, sqDst)) {
-				delta = (sqDst < sqSrc ? -16 : 16);				
+				delta = (sqDst < sqSrc ? -16 : 16);
 			} else {
 				return false;
 			}

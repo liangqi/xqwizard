@@ -90,7 +90,7 @@ public class XQWLMIDlet extends MIDlet {
 		if (rsData[0] == 0) {
 			Display.getDisplay(this).setCurrent(form);
 		} else {
-			canvas.reset();
+			canvas.load();
 			Display.getDisplay(this).setCurrent(canvas);
 		}
 	}

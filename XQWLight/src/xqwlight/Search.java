@@ -66,7 +66,7 @@ public class Search {
 		public int mv, zobristLock;
 	}
 
-	public Position pos;
+	public Position pos = new Position();
 	public int allNodes, mvResult;
 	public int[] historyTable = new int[4096];
 	public int[][] mvKiller = new int[LIMIT_DEPTH][2];
@@ -82,7 +82,7 @@ public class Search {
 	public HashItem getHashItem() {
 		return hashTable[pos.zobristKey & (HASH_SIZE - 1)];
 	}
-	
+
 	public int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
 		HashItem hash = getHashItem();
 		if (hash.zobristLock != pos.zobristLock) {

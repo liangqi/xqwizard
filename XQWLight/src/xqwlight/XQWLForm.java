@@ -63,7 +63,7 @@ public class XQWLForm extends Form {
 					midlet.handicap = cgHandicap.getSelectedIndex();
 					midlet.level = cgLevel.getSelectedIndex();
 					midlet.sound = gSound.getValue();
-					midlet.canvas.reset();
+					midlet.canvas.load();
 					Display.getDisplay(midlet).setCurrent(midlet.canvas);
 				} else if (c == cmdExit) {
 					midlet.destroyApp(false);

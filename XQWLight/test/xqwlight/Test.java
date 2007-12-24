@@ -28,7 +28,7 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		Position pos = new Position();
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
-		int legal = 0, gened = 0, moved = 0, check = 0; 
+		int legal = 0, gened = 0, moved = 0, check = 0;
 		BufferedReader in = new BufferedReader(new InputStreamReader(Test.class.getResourceAsStream("/test/FUNNY.EPD")));
 		String str = in.readLine();
 		while (str != null) {

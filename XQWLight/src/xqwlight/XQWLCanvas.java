@@ -31,7 +31,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public class XQWLCanvas extends Canvas {
-	private static final int PHASE_STARTING = 0;
+	private static final int PHASE_LOADING = 0;
 	private static final int PHASE_WAITING = 1;
 	private static final int PHASE_THINKING = 2;
 	private static final int PHASE_EXITTING = 3;
@@ -72,31 +72,27 @@ public class XQWLCanvas extends Canvas {
 	}
 
 	private XQWLMIDlet midlet;
-	private Search search;
+	private Search search = new Search();
 
+	private String message;
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
-	private int normalWidth, normalHeight;
-	private volatile int phase;
-	private String message;
-	private Command cmdRetract, cmdBack;
+	// Assume FullScreenMode = false
+	private int normalWidth = getWidth();
+	private int normalHeight = getHeight();
+	private Command cmdRetract = new Command("»ÚÆå", Command.OK, 1);
+	private Command cmdBack = new Command("·µ»Ø", Command.BACK, 1);
+	private volatile int phase = PHASE_LOADING;
 
-	private boolean bLoaded;
+	private boolean bLoaded = false;
 	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
 	public XQWLCanvas(XQWLMIDlet midlet_) {
 		this.midlet = midlet_;
-		search = new Search();
-		search.pos = new Position();
-		// Assume FullScreenMode = false
-		normalWidth = getWidth();
-		normalHeight = getHeight();
 		setFullScreenMode(true);
-		// cmdRetract = new Command("»ÚÆå", Command.OK, 1);
 		// addCommand(cmdRetract);
-		cmdBack = new Command("·µ»Ø", Command.BACK, 1);
 		addCommand(cmdBack);
 
 		setCommandListener(new CommandListener() {
@@ -113,12 +109,9 @@ public class XQWLCanvas extends Canvas {
 				}
 			}
 		});
-
-		phase = PHASE_STARTING;
-		bLoaded = false;
 	}
 
-	public void reset() {
+	public void load() {
 		setFullScreenMode(true);
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
@@ -137,12 +130,25 @@ public class XQWLCanvas extends Canvas {
 			}
 			search.pos.setIrrev();
 		}
-		phase = PHASE_STARTING;
+		phase = PHASE_LOADING;
+		new Thread() {
+			public void run() {
+				while (phase == PHASE_LOADING) {
+					try {
+						Thread.sleep(1);
+					} catch (Exception e) {
+						// Ignored
+					}
+				}
+				if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
+					responseMove();
+				}
+			}
+		}.start();
 	}
 
 	protected void paint(Graphics g) {
-		if (phase == PHASE_STARTING) {
-			phase = PHASE_WAITING;
+		if (phase == PHASE_LOADING) {
 			// Wait 1 second for resizing
 			width = getWidth();
 			height = getHeight();
@@ -201,10 +207,7 @@ public class XQWLCanvas extends Canvas {
 				right = left + boardWidth - 32;
 				bottom = top + boardHeight - 32;
 			}
-			if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
-				responseMove();
-				return;
-			}
+			phase = PHASE_WAITING;
 		}
 		for (int x = 0; x < width; x += widthBackground) {
 			for (int y = 0; y < height; y += heightBackground) {
@@ -243,10 +246,10 @@ public class XQWLCanvas extends Canvas {
 			int x, y;
 			if (midlet.flipped) {
 				x = (Position.FILE_X(sqDst) < 8 ? left : right);
-				y = (Position.RANK_Y(sqDst) < 8 ? top : bottom); 
+				y = (Position.RANK_Y(sqDst) < 8 ? top : bottom);
 			} else {
 				x = (Position.FILE_X(sqDst) < 8 ? right: left);
-				y = (Position.RANK_Y(sqDst) < 8 ? bottom: top); 
+				y = (Position.RANK_Y(sqDst) < 8 ? bottom: top);
 			}
 			g.drawImage(imgThinking, x, y, Graphics.LEFT + Graphics.TOP);
 		} else if (phase == PHASE_EXITTING) {
@@ -258,7 +261,7 @@ public class XQWLCanvas extends Canvas {
 
 	protected void keyPressed(int code) {
 		if (phase == PHASE_EXITTING) {
-			Display.getDisplay(midlet).setCurrent(midlet.form);			
+			Display.getDisplay(midlet).setCurrent(midlet.form);
 			return;
 		}
 		if (phase == PHASE_THINKING) {
@@ -323,7 +326,7 @@ public class XQWLCanvas extends Canvas {
 
 	protected void pointerPressed(int x, int y) {
 		if (phase == PHASE_EXITTING) {
-			Display.getDisplay(midlet).setCurrent(midlet.form);			
+			Display.getDisplay(midlet).setCurrent(midlet.form);
 			return;
 		}
 		if (phase == PHASE_THINKING) {
