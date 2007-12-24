@@ -41,11 +41,10 @@ public class XQWLMIDlet extends MIDlet {
 	 * 256-511: Squares
 	 */
 	private static final int RS_DATA_LEN = 512;
-	private static String[] SOUND_NAME = {
+	private static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
 		"check", "check2", "win", "draw", "loss",
 	};
-	private Player[] players = new Player[SOUND_NAME.length];
 
 	public byte[] rsData = new byte[RS_DATA_LEN];
 	public boolean flipped;
@@ -60,27 +59,6 @@ public class XQWLMIDlet extends MIDlet {
 			return;
 		}
 		started = true;
-		// Open Sounds
-		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			InputStream in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".mp3");
-			try {
-				players[i] = Manager.createPlayer(in, "audio/mpeg");
-				players[i].prefetch();
-			} catch (Exception e) {
-				players[i] = null;
-			}
-			if (players[i] != null) {
-				continue;
-			}
-			in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
-			try {
-				players[i] = Manager.createPlayer(in, "audio/x-wav");
-				players[i].prefetch();
-			} catch (Exception e) {
-				players[i] = null;
-			}
-		}
-		// Load Record-Store
 		for (int i = 0; i < RS_DATA_LEN; i ++) {
 			rsData[i] = 0;
 		}
@@ -105,7 +83,6 @@ public class XQWLMIDlet extends MIDlet {
 		handicap = Math.min(Math.max(0, rsData[17]), 3);
 		level = Math.min(Math.max(0, rsData[18]), 2);
 		sound = Math.min(Math.max(0, rsData[19]), 5);
-		setVolume();
 		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
 		form.cgLevel.setSelectedIndex(level, true);
 		form.cgHandicap.setSelectedIndex(handicap, true);
@@ -123,13 +100,6 @@ public class XQWLMIDlet extends MIDlet {
 	}
 
 	public void destroyApp(boolean unc) {
-		// Close Sounds
-		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			if (players[i] != null) {
-				players[i].close();
-			}
-		}
-		// Save Record-Store
 		rsData[16] = (byte) (flipped ? 1 : 0);
 		rsData[17] = (byte) handicap;
 		rsData[18] = (byte) level;
@@ -150,32 +120,34 @@ public class XQWLMIDlet extends MIDlet {
 		started = false;
 	}
 
-	public void setVolume() {
-		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			setVolume(i);
+	public void playSound(int response) {
+		if (sound == 0) {
+			return;
 		}
-	}
-
-	public void setVolume(int i) {
-		if (players[i] != null) {
-			VolumeControl vc = (VolumeControl) players[i].getControl("VolumeControl");
-			if (vc != null) {
-				vc.setLevel(sound * 10);
-			}
-		}
-	}
-
-	public void playSound(final int response) {
-		if (sound > 0 && players[response] != null) {
-			new Thread() {
-				public void run() {
-					try {
-						players[response].start();
-					} catch (Exception e) {
-						// Ignored
+		final int i = response;
+		new Thread() {
+			public void run() {
+				InputStream in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
+				try {
+					Player p = Manager.createPlayer(in, "audio/x-wav");
+					p.realize();
+					VolumeControl vc = (VolumeControl) p.getControl("VolumeControl");
+					if (vc != null) {
+						vc.setLevel(sound * 10);
 					}
+					p.start();
+					while (p.getState() == Player.STARTED) {
+						try {
+							sleep(1);
+						} catch (Exception e) {
+							// Ignored
+						}
+					}
+					p.close();
+				} catch (Exception e) {
+					// Ignored
 				}
-			}.start();
-		}
+			}
+		}.start();
 	}
 }

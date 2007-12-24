@@ -63,7 +63,6 @@ public class XQWLForm extends Form {
 					midlet.handicap = cgHandicap.getSelectedIndex();
 					midlet.level = cgLevel.getSelectedIndex();
 					midlet.sound = gSound.getValue();
-					midlet.setVolume();
 					midlet.canvas.reset();
 					Display.getDisplay(midlet).setCurrent(midlet.canvas);
 				} else if (c == cmdExit) {
@@ -77,7 +76,6 @@ public class XQWLForm extends Form {
 			public void itemStateChanged(Item i) {
 				if (i == gSound) {
 					midlet.sound = gSound.getValue();
-					midlet.setVolume(0);
 					midlet.playSound(0);
 				}
 			}
