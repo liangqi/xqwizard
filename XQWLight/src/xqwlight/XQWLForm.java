@@ -1,5 +1,5 @@
 /*
-StartUp.java - Source Code for XiangQi Wizard Light, Part III
+XQWLForm.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
 Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
