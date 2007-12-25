@@ -336,10 +336,6 @@ public class Position {
 		return sq - 16 + (sd << 5);
 	}
 
-	public static int SQUARE_BACKWARD(int sq, int sd) {
-		return sq + 16 - (sd << 5);
-	}
-
 	public static boolean KING_SPAN(int sqSrc, int sqDst) {
 		return LEGAL_SPAN[sqDst - sqSrc + 256] == 1;
 	}
@@ -370,10 +366,6 @@ public class Position {
 
 	public static boolean SAME_HALF(int sqSrc, int sqDst) {
 		return ((sqSrc ^ sqDst) & 0x80) == 0;
-	}
-
-	public static boolean DIFF_HALF(int sqSrc, int sqDst) {
-		return ((sqSrc ^ sqDst) & 0x80) != 0;
 	}
 
 	public static boolean SAME_RANK(int sqSrc, int sqDst) {

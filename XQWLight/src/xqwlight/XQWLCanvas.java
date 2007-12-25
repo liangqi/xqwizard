@@ -233,7 +233,7 @@ public class XQWLCanvas extends Canvas {
 		} else if (sqSelected > 0) {
 			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
-		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
+		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
@@ -342,8 +342,7 @@ public class XQWLCanvas extends Canvas {
 	}
 
 	private void clickSquare() {
-		int sq = Position.COORD_XY(cursorX + 3, cursorY + 3);
-		if (midlet.flipped) {
+		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		int pc = search.pos.squares[sq];
@@ -361,8 +360,8 @@ public class XQWLCanvas extends Canvas {
 
 	private void drawSquare(Graphics g, Image image, int sq) {
 		int sqLocal = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
-		int sqX = left + (Position.FILE_X(sqLocal) - 3) * squareSize;
-		int sqY = top + (Position.RANK_Y(sqLocal) - 3) * squareSize;
+		int sqX = left + (Position.FILE_X(sqLocal) - Position.FILE_LEFT) * squareSize;
+		int sqY = top + (Position.RANK_Y(sqLocal) - Position.RANK_TOP) * squareSize;
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 

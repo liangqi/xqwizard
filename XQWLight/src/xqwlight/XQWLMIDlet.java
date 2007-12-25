@@ -32,6 +32,7 @@ import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 
 public class XQWLMIDlet extends MIDlet {
+	private static final String STORE_NAME = "XQWLight";
 	/**
 	 * 0: Status, 0 = Normal Exit, 1 = Game Saved
 	 * 16: Player, 0 = Red, 1 = Black (Flipped)
@@ -63,7 +64,7 @@ public class XQWLMIDlet extends MIDlet {
 			rsData[i] = 0;
 		}
 		try {
-			RecordStore rs = RecordStore.openRecordStore("XQWLight", true);
+			RecordStore rs = RecordStore.openRecordStore(STORE_NAME, true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
 			if (re.hasNextElement()) {
 				int recordId = re.nextRecordId();
@@ -105,7 +106,7 @@ public class XQWLMIDlet extends MIDlet {
 		rsData[18] = (byte) level;
 		rsData[19] = (byte) sound;
 		try {
-			RecordStore rs = RecordStore.openRecordStore("XQWLight", true);
+			RecordStore rs = RecordStore.openRecordStore(STORE_NAME, true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
 			if (re.hasNextElement()) {
 				int recordId = re.nextRecordId();
