@@ -26,28 +26,28 @@ import java.io.InputStreamReader;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
-		Position pos = new Position();
+		Search search = new Search();
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
 		int legal = 0, gened = 0, moved = 0, check = 0;
 		BufferedReader in = new BufferedReader(new InputStreamReader(Test.class.getResourceAsStream("/test/FUNNY.EPD")));
 		String str = in.readLine();
 		while (str != null) {
-			pos.fromFen(str);
+			search.pos.fromFen(str);
 			for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
 				if (Position.IN_BOARD(sqSrc)) {
 					for (int sqDst = 0; sqDst < 256; sqDst ++) {
 						if (Position.IN_BOARD(sqDst)) {
-							legal += (pos.legalMove(Position.MOVE(sqSrc, sqDst)) ? 1 : 0);
+							legal += (search.pos.legalMove(Position.MOVE(sqSrc, sqDst)) ? 1 : 0);
 						}
 					}
 				}
 			}
-			int moveNum = pos.generateAllMoves(mvs);
+			int moveNum = search.pos.generateAllMoves(mvs);
 			for (int i = 0; i < moveNum; i ++) {
-				if (pos.makeMove(mvs[i])) {
+				if (search.pos.makeMove(mvs[i])) {
 					moved ++;
-					check += (pos.inCheck() ? 1 : 0);
-					pos.undoMakeMove();
+					check += (search.pos.inCheck() ? 1 : 0);
+					search.pos.undoMakeMove();
 				}
 			}
 			gened += moveNum;
@@ -58,5 +58,9 @@ public class Test {
 		System.out.println("Gened: " + gened); // 7809
 		System.out.println("Moved: " + moved); // 7207
 		System.out.println("Check: " + check); // 718
+		search.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1");
+		long l = System.currentTimeMillis();
+		search.searchMain(1);
+		System.out.println("NPS = " + (search.allNodes / (System.currentTimeMillis() - l)) + "K");
 	}
 }

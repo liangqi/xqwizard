@@ -540,7 +540,7 @@ public class Position {
 
 	public void setIrrev() {
 		mvList[0] = pcList[0] = 0;
-		chkList[0] = checked(sdPlayer);
+		chkList[0] = checked();
 		moveNum = 1;
 		distance = 0;
 	}
@@ -569,27 +569,26 @@ public class Position {
 		addPiece(sq, pc, true);
 	}
 
-	public int movePiece(int mv) {
-		int sqSrc = SRC(mv);
-		int sqDst = DST(mv);
-		int pcCaptured = squares[sqDst];
-		if (pcCaptured > 0) {
-			delPiece(sqDst, pcCaptured);
+	public void movePiece() {
+		int sqSrc = SRC(mvList[moveNum]);
+		int sqDst = DST(mvList[moveNum]);
+		pcList[moveNum] = squares[sqDst];
+		if (pcList[moveNum] > 0) {
+			delPiece(sqDst, pcList[moveNum]);
 		}
 		int pc = squares[sqSrc];
 		delPiece(sqSrc, pc);
 		addPiece(sqDst, pc);
-		return pcCaptured;
 	}
 
-	public void undoMovePiece(int mv, int pcCaptured) {
-		int sqSrc = SRC(mv);
-		int sqDst = DST(mv);
+	public void undoMovePiece() {
+		int sqSrc = SRC(mvList[moveNum]);
+		int sqDst = DST(mvList[moveNum]);
 		int pc = squares[sqDst];
 		delPiece(sqDst, pc);
 		addPiece(sqSrc, pc);
-		if (pcCaptured > 0) {
-			addPiece(sqDst, pcCaptured);
+		if (pcList[moveNum] > 0) {
+			addPiece(sqDst, pcList[moveNum]);
 		}
 	}
 
@@ -601,15 +600,14 @@ public class Position {
 
 	public boolean makeMove(int mv) {
 		keyList[moveNum] = zobristKey;
-		int pcCaptured = movePiece(mv);
-		if (checked(sdPlayer)) {
-			undoMovePiece(mv, pcCaptured);
+		mvList[moveNum] = mv;
+		movePiece();
+		if (checked()) {
+			undoMovePiece();
 			return false;
 		}
 		changeSide();
-		mvList[moveNum] = mv;
-		pcList[moveNum] = pcCaptured;
-		chkList[moveNum] = checked(sdPlayer);
+		chkList[moveNum] = checked();
 		moveNum ++;
 		distance ++;
 		return true;
@@ -619,7 +617,7 @@ public class Position {
 		moveNum --;
 		distance --;
 		changeSide();
-		undoMovePiece(mvList[moveNum], pcList[moveNum]);
+		undoMovePiece();
 	}
 
 	public void nullMove() {
@@ -959,14 +957,14 @@ public class Position {
 		}
 	}
 
-	public boolean checked(int sd) {
-		int pcSelfSide = SIDE_TAG(sd);
-		int pcOppSide = OPP_SIDE_TAG(sd);
+	public boolean checked() {
+		int pcSelfSide = SIDE_TAG(sdPlayer);
+		int pcOppSide = OPP_SIDE_TAG(sdPlayer);
 		for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
 			if (squares[sqSrc] != pcSelfSide + PIECE_KING) {
 				continue;
 			}
-			if (squares[SQUARE_FORWARD(sqSrc, sd)] == pcOppSide + PIECE_PAWN) {
+			if (squares[SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide + PIECE_PAWN) {
 				return true;
 			}
 			for (int delta = -1; delta <= 1; delta += 2) {
@@ -1010,8 +1008,9 @@ public class Position {
 					sqDst += delta;
 				}
 			}
+			return false;
 		}
-		return false;
+		throw new RuntimeException(); // Never Occurs
 	}
 
 	public boolean isMate() {
@@ -1053,6 +1052,10 @@ public class Position {
 
 	public boolean inCheck() {
 		return chkList[moveNum - 1];
+	}
+
+	public boolean captured() {
+		return pcList[moveNum - 1] > 0;
 	}
 
 	public int repValue(int vlRep) {

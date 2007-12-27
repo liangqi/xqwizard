@@ -255,7 +255,8 @@ public class XQWLCanvas extends Canvas {
 		} else if (phase == PHASE_EXITTING) {
 			g.setFont(font);
 			g.setColor(0x0000ff);
-			g.drawString(message, (width - message.length() * fontWidth) / 2, (height - fontHeight) / 2, Graphics.LEFT + Graphics.TOP);
+			g.drawString(message, (width - message.length() * fontWidth) / 2,
+					(height - fontHeight) / 2, Graphics.LEFT + Graphics.TOP);
 		}
 	}
 
@@ -342,7 +343,8 @@ public class XQWLCanvas extends Canvas {
 	}
 
 	private void clickSquare() {
-		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);		if (midlet.flipped) {
+		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);
+		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		int pc = search.pos.squares[sq];
@@ -380,8 +382,10 @@ public class XQWLCanvas extends Canvas {
 		int vlRep = search.pos.repStatus(3);
 		if (vlRep > 0) {
 			vlRep = (response < 0 ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
-			midlet.playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS : vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
-			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" : vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+			midlet.playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS :
+					vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
+			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" :
+					vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
 		if (search.pos.moveNum == 100) {
@@ -399,12 +403,12 @@ public class XQWLCanvas extends Canvas {
 
 	private boolean addMove(int mv) {
 		if (search.pos.legalMove(mv)) {
-			int pc = search.pos.squares[Position.DST(mv)];
 			if (search.pos.makeMove(mv)) {
-				if (pc > 0) {
+				midlet.playSound(search.pos.inCheck() ? RESP_CHECK :
+						search.pos.captured() ? RESP_CAPTURE : RESP_MOVE);
+				if (search.pos.captured()) {
 					search.pos.setIrrev();
 				}
-				midlet.playSound(search.pos.inCheck() ? RESP_CHECK : pc > 0 ? RESP_CAPTURE : RESP_MOVE);
 				sqSelected = 0;
 				mvLast = mv;
 				return true;
@@ -423,12 +427,11 @@ public class XQWLCanvas extends Canvas {
 		repaint();
 		serviceRepaints();
 		search.searchMain(1 << (midlet.level << 1));
-		int pc = search.pos.squares[Position.DST(search.mvResult)];
 		search.pos.makeMove(search.mvResult);
 		int response = RESP_MOVE2;
-		if (pc > 0) {
-			search.pos.setIrrev();
+		if (search.pos.captured()) {
 			response = RESP_CAPTURE2;
+			search.pos.setIrrev();
 		}
 		if (search.pos.inCheck()) {
 			response = RESP_CHECK2;
