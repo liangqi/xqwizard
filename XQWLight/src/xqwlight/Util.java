@@ -71,4 +71,30 @@ public class Util {
 			return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
 		}
 	}
+
+	public static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
+
+	public static void shellSort(int[] mvs, int[] vls, int from, int to) {
+		int stepLevel = 1;
+		while (SHELL_STEP[stepLevel] < to - from) {
+			stepLevel ++;
+		}
+		stepLevel --;
+		while (stepLevel > 0) {
+			int step = SHELL_STEP[stepLevel];
+			for (int i = from + step; i < to; i ++) {
+				int mvBest = mvs[i];
+				int vlBest = vls[i];
+				int j = i - step;
+				while (j >= from && vlBest > vls[j]) {
+					mvs[j + step] = mvs[j];
+					vls[j + step] = vls[j];
+					j -= step;
+				}
+				mvs[j + step] = mvBest;
+				vls[j + step] = vlBest;
+			}
+			stepLevel --;
+		}
+	}
 }

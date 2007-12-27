@@ -388,7 +388,7 @@ public class XQWLCanvas extends Canvas {
 					vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
-		if (search.pos.moveNum == 100) {
+		if (search.pos.moveNum > 100) {
 			midlet.playSound(RESP_DRAW);
 			message = "超过自然限着作和，辛苦了！";
 			return true;

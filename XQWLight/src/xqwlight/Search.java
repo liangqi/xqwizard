@@ -22,32 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package xqwlight;
 
 public class Search {
-	public static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
-
-	public static void shellSort(int[] mvs, int[] vls, int from, int to) {
-		int stepLevel = 1;
-		while (SHELL_STEP[stepLevel] < to - from) {
-			stepLevel ++;
-		}
-		stepLevel --;
-		while (stepLevel > 0) {
-			int step = SHELL_STEP[stepLevel];
-			for (int i = from + step; i < to; i ++) {
-				int mvBest = mvs[i];
-				int vlBest = vls[i];
-				int j = i - step;
-				while (j >= from && vlBest > vls[j]) {
-					mvs[j + step] = mvs[j];
-					vls[j + step] = vls[j];
-					j -= step;
-				}
-				mvs[j + step] = mvBest;
-				vls[j + step] = vlBest;
-			}
-			stepLevel --;
-		}
-	}
-
 	public static final int HASH_SIZE = 4096;
 	public static final int HASH_ALPHA = 1;
 	public static final int HASH_BETA = 2;
@@ -187,7 +161,7 @@ public class Search {
 				for (int i = 0; i < moves; i ++) {
 					vls[i] = historyTable[pos.historyIndex(mvs[i])];
 				}
-				shellSort(mvs, vls, 0, moves);
+				Util.shellSort(mvs, vls, 0, moves);
 				index = 0;
 			}
 			while (index < moves) {
@@ -232,7 +206,7 @@ public class Search {
 			for (int i = 0; i < genMoves; i ++) {
 				vls[i] = historyTable[pos.historyIndex(mvs[i])];
 			}
-			shellSort(mvs, vls, 0, genMoves);
+			Util.shellSort(mvs, vls, 0, genMoves);
 		} else {
 			vl = pos.evaluate();
 			if (vl > vlBest) {
@@ -244,7 +218,7 @@ public class Search {
 			}
 			int[] vls = new int[MAX_GEN_MOVES];
 			genMoves = pos.generateMoves(mvs, vls);
-			shellSort(mvs, vls, 0, genMoves);
+			Util.shellSort(mvs, vls, 0, genMoves);
 			for (int i = 0; i < genMoves; i ++) {
 				if (vls[i] < 10 || (vls[i] < 20 && Position.HOME_HALF(Position.DST(mvs[i]), pos.sdPlayer))) {
 					genMoves = i;
