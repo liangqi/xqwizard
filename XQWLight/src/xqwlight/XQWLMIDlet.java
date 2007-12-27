@@ -81,9 +81,9 @@ public class XQWLMIDlet extends MIDlet {
 			// Ignored
 		}
 		flipped = (rsData[16] != 0);
-		handicap = Math.min(Math.max(0, rsData[17]), 3);
-		level = Math.min(Math.max(0, rsData[18]), 2);
-		sound = Math.min(Math.max(0, rsData[19]), 5);
+		handicap = Util.MIN_MAX(0, rsData[17], 3);
+		level = Util.MIN_MAX(0, rsData[18], 2);
+		sound = Util.MIN_MAX(0, rsData[19], 5);
 		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
 		form.cgLevel.setSelectedIndex(level, true);
 		form.cgHandicap.setSelectedIndex(handicap, true);

@@ -335,8 +335,8 @@ public class XQWLCanvas extends Canvas {
 		}
 		cursorX = (x - left) / squareSize;
 		cursorY = (y - top) / squareSize;
-		cursorX = (cursorX < 0 ? 0 : cursorX > 8 ? 8 : cursorX);
-		cursorY = (cursorY < 0 ? 0 : cursorY > 9 ? 9 : cursorY);
+		cursorX = Util.MIN_MAX(0, cursorX, 8);
+		cursorY = Util.MIN_MAX(0, cursorY, 9);
 		clickSquare();
 		repaint();
 		serviceRepaints();
