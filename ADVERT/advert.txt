@@ -1,6 +1,4 @@
 XQWizard Advert List
-alimama,60,135,5618
 elephantbase,60,183,5618
-alimama,60,135,5618
-xqwlight_ad1,30,191,5759
-xqwlight_ad2,30,191,5871
+xqwlight_ad1,60,191,5759
+xqwlight_ad2,60,191,5871
