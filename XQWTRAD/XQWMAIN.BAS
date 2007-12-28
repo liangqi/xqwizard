@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.61, Last Modified: Dec. 2007
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.61, Last Modified: Jan. 2008
+' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Option Explicit
 
 ' 全局常量——象棋巫師信息
 Public Const STRING_VERSION     As String = "3.61"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2007 www.elephantbase.net"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数

@@ -21,7 +21,7 @@ OutputDir=.
 Compression=lzma
 SolidCompression=yes
 SetupIconFile=RES\XQWSETUP.ICO
-AppCopyright=(C) 2004-2007 www.elephantbase.net
+AppCopyright=(C) 2004-2008 www.elephantbase.net
 
 [Types]
 Name: "default"; Description: "»± °…Ë÷√"
