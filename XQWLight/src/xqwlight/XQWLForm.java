@@ -2,7 +2,7 @@
 XQWLForm.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -38,9 +38,12 @@ public class XQWLForm extends Form {
 	private Command cmdStart = new Command("开始", Command.OK, 1);
 	private Command cmdExit = new Command("退出", Command.BACK, 1);
 
-	public ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE, new String[] {"我先走", "电脑先走"}, null);
-	public ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP, new String[] {"不让子", "让单马", "让双马", "让九子"}, null);
-	public ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP, new String[] {"入门", "业余", "专业"}, null);
+	public ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
+			new String[] {"我先走", "电脑先走"}, null);
+	public ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP,
+			new String[] {"不让子", "让左马", "让双马", "让九子"}, null);
+	public ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
+			new String[] {"入门", "业余", "专业"}, null);
 	public Gauge gSound = new Gauge("音量", true, 5, 0);
 
 	public XQWLForm(XQWLMIDlet midlet_) {

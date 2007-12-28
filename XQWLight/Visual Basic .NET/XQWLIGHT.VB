@@ -1,7 +1,7 @@
 ' XQWLIGHT.VB - Source Code for XiangQi Wizard Light, Part V
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -45,20 +45,19 @@ Module XQWLight
     End Function
 
     Public Function AddMove(ByVal mv As Integer) As Boolean
-        Dim sqSrc As Integer, sqDst As Integer, pcCaptured As Integer
+        Dim sqSrc As Integer, sqDst As Integer
         If Search_pos.LegalMove(mv) Then
             sqSrc = SRC(mv)
             sqDst = DST(mv)
-            pcCaptured = Search_pos.pcSquares(sqDst)
             If Search_pos.MakeMove(mv) Then
-                If pcCaptured > 0 Then
+                PlaySound(IIF_STR(Search_pos.InCheck, "CHECK", IIF_STR(Search_pos.Captured, "CAPTURE", "MOVE")))
+                If Search_pos.Captured Then
                     Search_pos.SetIrrev()
                 End If
                 App_sqSelected = 0
                 App_mvLast = mv
                 App_frm.DrawSquare(sqSrc, DRAW_SELECTED)
                 App_frm.DrawSquare(sqDst, DRAW_SELECTED)
-                PlaySound(IIF_STR(Search_pos.InCheck, "CHECK", IIF_STR(pcCaptured > 0, "CAPTURE", "MOVE")))
                 Return True
             Else
                 PlaySound("ILLEGAL")
@@ -90,10 +89,11 @@ Module XQWLight
             If szWavFile <> "" Then
                 vlRep = -vlRep
             End If
-            MsgBox(IIF_STR(vlRep > WIN_VALUE, "长打作负，请不要气馁！", IIF_STR(vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", "双方不变作和，辛苦了！")), MsgBoxStyle.Information, "棋局结束")
+            MsgBox(IIF_STR(vlRep > WIN_VALUE, "长打作负，请不要气馁！", _
+                    IIF_STR(vlRep < -WIN_VALUE, "电脑长打作负，祝贺你取得胜利！", "双方不变作和，辛苦了！")), MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
-        If Search_pos.nMoveNum = 100 Then
+        If Search_pos.nMoveNum > 100 Then
             MsgBox("超过自然限着作和，辛苦了！", MsgBoxStyle.Information, "棋局结束")
             Return True
         End If
@@ -104,7 +104,7 @@ Module XQWLight
     End Function
 
     Public Function ResponseMove() As Boolean
-        Dim sqSrc As Integer, sqDst As Integer, pcCaptured As Integer, szWavFile As String
+        Dim sqSrc As Integer, sqDst As Integer, szWavFile As String
         If GetResult() Then
             Return False
         End If
@@ -120,15 +120,10 @@ Module XQWLight
             App_frm.DrawSquare(sqSrc)
             App_frm.DrawSquare(sqDst)
         End If
-        szWavFile = "MOVE2"
-        pcCaptured = Search_pos.pcSquares(DST(Search_mvResult))
         Search_pos.MakeMove(Search_mvResult)
-        If pcCaptured > 0 Then
-            szWavFile = "CAPTURE2"
+        szWavFile = IIF_STR(Search_pos.InCheck, "CHECK2", IIF_STR(Search_pos.Captured, "CAPTURE2", "MOVE2"))
+        If Search_pos.Captured Then
             Search_pos.SetIrrev()
-        End If
-        If Search_pos.InCheck Then
-            szWavFile = "CHECK2"
         End If
         App_mvLast = Search_mvResult
         App_frm.DrawSquare(SRC(App_mvLast), DRAW_SELECTED)

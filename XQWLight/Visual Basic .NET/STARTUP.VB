@@ -1,7 +1,7 @@
 ' STARTUP.VB - Source Code for XiangQi Wizard Light, Part III
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
-' Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -103,7 +103,7 @@ Public Class StartUp
         'optHandicap
         '
         Me.optHandicap.Items.Add("不让子")
-        Me.optHandicap.Items.Add("让单马")
+        Me.optHandicap.Items.Add("让左马")
         Me.optHandicap.Items.Add("让双马")
         Me.optHandicap.Items.Add("让九子")
         Me.optHandicap.Location = New System.Drawing.Point(72, 72)
@@ -188,7 +188,8 @@ Public Class StartUp
     End Sub
 
     Private Sub btnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAbout.Click
-        MsgBox("象棋小巫师 1.13" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
-                "欢迎登录 www.elephantbase.net" + vbCrLf + "免费下载PC版 象棋巫师" + vbCrLf, MsgBoxStyle.Information, "关于象棋小巫师")
+        MsgBox("象棋小巫师 1.21" + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
+                "(C) 2004-2008 www.elephantbase.net" + vbCrLf + "本产品符合GNU通用公共许可协议" + vbCrLf + vbCrLf + _
+                "欢迎登录 www.elephantbase.net" + vbCrLf + "免费下载PC版 象棋巫师", MsgBoxStyle.Information, "关于象棋小巫师")
     End Sub
 End Class

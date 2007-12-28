@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -48,7 +50,7 @@ public class XQWLCanvas extends Canvas {
 	private static final int RESP_DRAW = 9;
 	private static final int RESP_LOSS = 10;
 
-	private static Image imgBackground, imgThinking;
+	private static Image imgXQWLight, imgBackground, imgThinking;
 	private Image imgBoard;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
@@ -62,6 +64,7 @@ public class XQWLCanvas extends Canvas {
 
 	static {
 		try {
+			imgXQWLight = Image.createImage("/images/xqwlight.png");
 			imgBackground = Image.createImage("/images/background.png");
 			imgThinking = Image.createImage("/images/thinking.png");
 		} catch (Exception e) {
@@ -80,8 +83,10 @@ public class XQWLCanvas extends Canvas {
 	// Assume FullScreenMode = false
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
-	private Command cmdRetract = new Command("悔棋", Command.OK, 1);
-	private Command cmdBack = new Command("返回", Command.BACK, 1);
+	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
+	private Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
+	private Command cmdBack = new Command("返回", Command.ITEM, 1);
+	private Command cmdAbout = new Command("关于", Command.ITEM, 1);
 	private volatile int phase = PHASE_LOADING;
 
 	private boolean bLoaded = false;
@@ -92,8 +97,13 @@ public class XQWLCanvas extends Canvas {
 	public XQWLCanvas(XQWLMIDlet midlet_) {
 		this.midlet = midlet_;
 		setFullScreenMode(true);
+		altAbout.setString("象棋小巫师 " + midlet.getAppProperty("MIDlet-Version") +
+				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
+				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
+				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
 		// addCommand(cmdRetract);
 		addCommand(cmdBack);
+		addCommand(cmdAbout);
 
 		setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
@@ -105,6 +115,9 @@ public class XQWLCanvas extends Canvas {
 					} else if (c == cmdBack) {
 						midlet.rsData[0] = 0;
 						Display.getDisplay(midlet).setCurrent(midlet.form);
+					} else if (c == cmdAbout) {
+						Display.getDisplay(midlet).setCurrent(altAbout);
+						setFullScreenMode(true);
 					}
 				}
 			}
