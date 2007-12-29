@@ -49,7 +49,8 @@ public class XQWLMIDlet extends MIDlet {
 
 	public byte[] rsData = new byte[RS_DATA_LEN];
 	public boolean flipped;
-	public int handicap, level, sound;
+	public int handicap, level, sound, music;
+	public Player midiPlayer = null;
 	public XQWLForm form = new XQWLForm(this);
 	public XQWLCanvas canvas = new XQWLCanvas(this);
 
@@ -63,6 +64,8 @@ public class XQWLMIDlet extends MIDlet {
 		for (int i = 0; i < RS_DATA_LEN; i ++) {
 			rsData[i] = 0;
 		}
+		rsData[19] = 3;
+		rsData[20] = 2;
 		try {
 			RecordStore rs = RecordStore.openRecordStore(STORE_NAME, true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
@@ -84,14 +87,18 @@ public class XQWLMIDlet extends MIDlet {
 		handicap = Util.MIN_MAX(0, rsData[17], 3);
 		level = Util.MIN_MAX(0, rsData[18], 2);
 		sound = Util.MIN_MAX(0, rsData[19], 5);
+		music = Util.MIN_MAX(0, rsData[20], 5);
 		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
 		form.cgLevel.setSelectedIndex(level, true);
 		form.cgHandicap.setSelectedIndex(handicap, true);
 		form.gSound.setValue(sound);
+		form.gMusic.setValue(music);
 		if (rsData[0] == 0) {
+			startMusic("form");
 			Display.getDisplay(this).setCurrent(form);
 		} else {
 			canvas.load();
+			startMusic("canvas");
 			Display.getDisplay(this).setCurrent(canvas);
 		}
 	}
@@ -101,10 +108,12 @@ public class XQWLMIDlet extends MIDlet {
 	}
 
 	public void destroyApp(boolean unc) {
+		stopMusic();
 		rsData[16] = (byte) (flipped ? 1 : 0);
 		rsData[17] = (byte) handicap;
 		rsData[18] = (byte) level;
 		rsData[19] = (byte) sound;
+		rsData[20] = (byte) music;
 		try {
 			RecordStore rs = RecordStore.openRecordStore(STORE_NAME, true);
 			RecordEnumeration re = rs.enumerateRecords(null, null, false);
@@ -150,5 +159,38 @@ public class XQWLMIDlet extends MIDlet {
 				}
 			}
 		}.start();
+	}
+
+	public void stopMusic() {
+		if (midiPlayer != null) {
+			try {
+				midiPlayer.stop();
+			} catch (Exception e) {
+				// Ignored
+			}
+		}
+	}
+
+	public void startMusic(String strMusic) {
+		stopMusic();
+		InputStream in = getClass().getResourceAsStream("/musics/" + strMusic + ".mid");
+		try {
+			midiPlayer = Manager.createPlayer(in, "audio/midi");
+			midiPlayer.setLoopCount(-1);
+			midiPlayer.realize();
+			setMusicVolume();
+			midiPlayer.start();
+		} catch (Exception e) {
+			midiPlayer = null;
+		}
+	}
+
+	public void setMusicVolume() {
+		if (midiPlayer != null) {
+			VolumeControl vc = (VolumeControl) midiPlayer.getControl("VolumeControl");
+			if (vc != null) {
+				vc.setLevel(music * 10);
+			}
+		}
 	}
 }

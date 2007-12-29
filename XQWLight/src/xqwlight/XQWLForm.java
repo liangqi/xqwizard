@@ -44,7 +44,8 @@ public class XQWLForm extends Form {
 			new String[] {"不让子", "让左马", "让双马", "让九子"}, null);
 	public ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
 			new String[] {"入门", "业余", "专业"}, null);
-	public Gauge gSound = new Gauge("音量", true, 5, 0);
+	public Gauge gSound = new Gauge("音效", true, 5, 0);
+	public Gauge gMusic = new Gauge("音乐", true, 5, 0);
 
 	public XQWLForm(XQWLMIDlet midlet_) {
 		super("象棋小巫师");
@@ -53,6 +54,7 @@ public class XQWLForm extends Form {
 		append(cgHandicap);
 		append(cgLevel);
 		append(gSound);
+		append(gMusic);
 		addCommand(cmdStart);
 		addCommand(cmdExit);
 		setTicker(new Ticker("欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师"));
@@ -66,7 +68,9 @@ public class XQWLForm extends Form {
 					midlet.handicap = cgHandicap.getSelectedIndex();
 					midlet.level = cgLevel.getSelectedIndex();
 					midlet.sound = gSound.getValue();
+					midlet.music = gMusic.getValue();
 					midlet.canvas.load();
+					midlet.startMusic("canvas");
 					Display.getDisplay(midlet).setCurrent(midlet.canvas);
 				} else if (c == cmdExit) {
 					midlet.destroyApp(false);
@@ -77,9 +81,14 @@ public class XQWLForm extends Form {
 
 		setItemStateListener(new ItemStateListener() {
 			public void itemStateChanged(Item i) {
-				if (i == gSound) {
+				if (false) {
+					// Code Style
+				} else if (i == gSound) {
 					midlet.sound = gSound.getValue();
 					midlet.playSound(0);
+				} else if (i == gMusic) {
+					midlet.music = gMusic.getValue();
+					midlet.setMusicVolume();
 				}
 			}
 		});

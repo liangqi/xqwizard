@@ -114,6 +114,7 @@ public class XQWLCanvas extends Canvas {
 						// Not Available, Never Occurs
 					} else if (c == cmdBack) {
 						midlet.rsData[0] = 0;
+						midlet.startMusic("form");
 						Display.getDisplay(midlet).setCurrent(midlet.form);
 					} else if (c == cmdAbout) {
 						Display.getDisplay(midlet).setCurrent(altAbout);
@@ -275,6 +276,7 @@ public class XQWLCanvas extends Canvas {
 
 	protected void keyPressed(int code) {
 		if (phase == PHASE_EXITTING) {
+			midlet.startMusic("form");
 			Display.getDisplay(midlet).setCurrent(midlet.form);
 			return;
 		}
@@ -340,6 +342,7 @@ public class XQWLCanvas extends Canvas {
 
 	protected void pointerPressed(int x, int y) {
 		if (phase == PHASE_EXITTING) {
+			midlet.startMusic("form");
 			Display.getDisplay(midlet).setCurrent(midlet.form);
 			return;
 		}
