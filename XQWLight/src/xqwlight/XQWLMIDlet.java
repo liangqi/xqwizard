@@ -163,11 +163,8 @@ public class XQWLMIDlet extends MIDlet {
 
 	public void stopMusic() {
 		if (midiPlayer != null) {
-			try {
-				midiPlayer.stop();
-			} catch (Exception e) {
-				// Ignored
-			}
+			midiPlayer.close();
+			midiPlayer = null;
 		}
 	}
 
