@@ -740,38 +740,38 @@ Module Position
         End Function
 
         Public Sub FromFen(ByVal szFen As String)
-            Dim nRank As Integer, nFile As Integer, nIndex As Integer, k As Integer
+            Dim y As Integer, x As Integer, nIndex As Integer, k As Integer
             Dim c As Char
             ClearBoard()
-            nRank = RANK_TOP
-            nFile = FILE_LEFT
+            y = RANK_TOP
+            x = FILE_LEFT
             ' 假定"szFen"不是空的
             nIndex = 0
             c = szFen.Chars(nIndex)
             ' 假定"szFen"中必定有空格
             While c <> CChar(" ")
                 If c = CChar("/") Then
-                    nFile = FILE_LEFT
-                    nRank += 1
-                    If nRank > RANK_BOTTOM Then
+                    x = FILE_LEFT
+                    y += 1
+                    If y > RANK_BOTTOM Then
                         Exit While
                     End If
                 ElseIf c >= CChar("1") And c <= CChar("9") Then
                     For k = 1 To Asc(c.ToString) - Asc("0")
-                        If nFile >= FILE_RIGHT Then
+                        If x >= FILE_RIGHT Then
                             Exit For
                         End If
-                        nFile += 1
+                        x += 1
                     Next
                 ElseIf c >= CChar("A") And c <= CChar("Z") Then
-                    If nFile <= FILE_RIGHT Then
-                        AddPiece(COORD_XY(nFile, nRank), FenPiece(c) + 8)
-                        nFile += 1
+                    If x <= FILE_RIGHT Then
+                        AddPiece(COORD_XY(x, y), FenPiece(c) + 8)
+                        x += 1
                     End If
                 ElseIf c >= CChar("a") And c <= CChar("z") Then
-                    If nFile <= FILE_RIGHT Then
-                        AddPiece(COORD_XY(nFile, nRank), FenPiece(Char.ToUpper(c)) + 16)
-                        nFile += 1
+                    If x <= FILE_RIGHT Then
+                        AddPiece(COORD_XY(x, y), FenPiece(Char.ToUpper(c)) + 16)
+                        x += 1
                     End If
                 End If
                 nIndex += 1

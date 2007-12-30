@@ -183,7 +183,8 @@ public class Search {
 			killers[0] = mv;
 		}
 	}
-	public int searchQuiesc(int vlAlpha, int vlBeta) {
+	public int searchQuiesc(int vlAlpha_, int vlBeta) {
+		int vlAlpha = vlAlpha_;
 		allNodes ++;
 		int vl = pos.mateValue();
 		if (vl >= vlBeta) {
@@ -197,7 +198,6 @@ public class Search {
 			return pos.evaluate();
 		}
 		int vlBest = -MATE_VALUE;
-		int vlAlphaLocal = vlAlpha;
 		int genMoves;
 		int[] mvs = new int[MAX_GEN_MOVES];
 		if (pos.inCheck()) {
@@ -214,7 +214,7 @@ public class Search {
 					return vl;
 				}
 				vlBest = vl;
-				vlAlphaLocal = Math.max(vl, vlAlphaLocal);
+				vlAlpha = Math.max(vl, vlAlpha);
 			}
 			int[] vls = new int[MAX_GEN_MOVES];
 			genMoves = pos.generateMoves(mvs, vls);
@@ -230,14 +230,14 @@ public class Search {
 			if (!pos.makeMove(mvs[i])) {
 				continue;
 			}
-			vl = -searchQuiesc(-vlBeta, -vlAlphaLocal);
+			vl = -searchQuiesc(-vlBeta, -vlAlpha);
 			pos.undoMakeMove();
 			if (vl > vlBest) {
 				if (vl >= vlBeta) {
 					return vl;
 				}
 				vlBest = vl;
-				vlAlphaLocal = Math.max(vl, vlAlphaLocal);
+				vlAlpha = Math.max(vl, vlAlpha);
 			}
 		}
 		return vlBest == -MATE_VALUE ? pos.mateValue() : vlBest;
@@ -251,7 +251,8 @@ public class Search {
 		return searchFull(vlAlpha, vlBeta, depth, false);
 	}
 
-	public int searchFull(int vlAlpha, int vlBeta, int depth, boolean noNull) {
+	public int searchFull(int vlAlpha_, int vlBeta, int depth, boolean noNull) {
+		int vlAlpha = vlAlpha_;
 		int vl;
 		if (depth <= 0) {
 			return searchQuiesc(vlAlpha, vlBeta);
@@ -283,7 +284,6 @@ public class Search {
 		}
 		int hashFlag = HASH_ALPHA;
 		int vlBest = -MATE_VALUE;
-		int vlAlphaLocal = vlAlpha;
 		int mvBest = 0;
 		SortItem sort = new SortItem(mvHash[0]);
 		int mv;
@@ -293,11 +293,11 @@ public class Search {
 			}
 			int newDepth = pos.inCheck() ? depth : depth - 1;
 			if (vlBest == -MATE_VALUE) {
-				vl = -searchFull(-vlBeta, -vlAlphaLocal, newDepth);
+				vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
 			} else {
-				vl = -searchFull(-vlAlphaLocal - 1, -vlAlphaLocal, newDepth);
-				if (vl > vlAlphaLocal && vl < vlBeta) {
-					vl = -searchFull(-vlBeta, -vlAlphaLocal, newDepth);
+				vl = -searchFull(-vlAlpha - 1, -vlAlpha, newDepth);
+				if (vl > vlAlpha && vl < vlBeta) {
+					vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
 				}
 			}
 			pos.undoMakeMove();
@@ -308,8 +308,8 @@ public class Search {
 					mvBest = mv;
 					break;
 				}
-				if (vl > vlAlphaLocal) {
-					vlAlphaLocal = vl;
+				if (vl > vlAlpha) {
+					vlAlpha = vl;
 					hashFlag = HASH_PV;
 					mvBest = mv;
 				}

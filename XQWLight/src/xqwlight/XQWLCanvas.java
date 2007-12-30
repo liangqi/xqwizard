@@ -58,7 +58,8 @@ public class XQWLCanvas extends Canvas {
 		null, "bk", "ba", "bb", "bn", "br", "bc", "bp",
 	};
 	private static int widthBackground, heightBackground;
-	private static Font font = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD + Font.STYLE_ITALIC, Font.SIZE_LARGE);
+	private static Font font = Font.getFont(Font.FACE_SYSTEM,
+			Font.STYLE_BOLD + Font.STYLE_ITALIC, Font.SIZE_LARGE);
 	private static int fontWidth = font.charWidth('¡¡');
 	private static int fontHeight = font.getHeight();
 
@@ -387,9 +388,9 @@ public class XQWLCanvas extends Canvas {
 	}
 
 	private void drawSquare(Graphics g, Image image, int sq) {
-		int sqLocal = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
-		int sqX = left + (Position.FILE_X(sqLocal) - Position.FILE_LEFT) * squareSize;
-		int sqY = top + (Position.RANK_Y(sqLocal) - Position.RANK_TOP) * squareSize;
+		int sqFlipped = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
+		int sqX = left + (Position.FILE_X(sqFlipped) - Position.FILE_LEFT) * squareSize;
+		int sqY = top + (Position.RANK_Y(sqFlipped) - Position.RANK_TOP) * squareSize;
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
 	}
 

@@ -593,35 +593,35 @@ public class Position {
 
 	public void fromFen(String fen) {
 		clearBoard();
-		int rank = RANK_TOP;
-		int file = FILE_LEFT;
+		int y = RANK_TOP;
+		int x = FILE_LEFT;
 		// Assume fen is not empty
 		int index = 0;
 		char c = fen.charAt(index);
 		// Assume a space exists
 		while (c != ' ') {
 			if (c == '/') {
-				file = FILE_LEFT;
-				rank ++;
-				if (rank > RANK_BOTTOM) {
+				x = FILE_LEFT;
+				y ++;
+				if (y > RANK_BOTTOM) {
 					break;
 				}
 			} else if (c >= '1' && c <= '9') {
 				for (int k = 0; k < (c - '0'); k ++) {
-					if (file >= FILE_RIGHT) {
+					if (x >= FILE_RIGHT) {
 						break;
 					}
-					file ++;
+					x ++;
 				}
 			} else if (c >= 'A' && c <= 'Z') {
-				if (file <= FILE_RIGHT) {
-					addPiece(COORD_XY(file, rank), fenPiece(c) + 8);
-					file ++;
+				if (x <= FILE_RIGHT) {
+					addPiece(COORD_XY(x, y), fenPiece(c) + 8);
+					x ++;
 				}
 			} else if (c >= 'a' && c <= 'z') {
-				if (file <= FILE_RIGHT) {
-					addPiece(COORD_XY(file, rank), fenPiece((char) (c + 'A' - 'a')) + 16);
-					file ++;
+				if (x <= FILE_RIGHT) {
+					addPiece(COORD_XY(x, y), fenPiece((char) (c + 'A' - 'a')) + 16);
+					x ++;
 				}
 			}
 			index ++;
@@ -1000,8 +1000,8 @@ public class Position {
 		return repStatus(1);
 	}
 
-	public int repStatus(int recur) {
-		int recurLocal = recur;
+	public int repStatus(int recur_) {
+		int recur = recur_;
 		boolean selfSide = false;
 		boolean perpCheck = true;
 		boolean oppPerpCheck = true;
@@ -1010,8 +1010,8 @@ public class Position {
 			if (selfSide) {
 				perpCheck = perpCheck && chkList[index];
 				if (keyList[index] == zobristKey) {
-					recurLocal --;
-					if (recurLocal == 0) {
+					recur --;
+					if (recur == 0) {
 						return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
 					}
 				}

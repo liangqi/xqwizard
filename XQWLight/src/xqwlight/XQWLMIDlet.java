@@ -189,6 +189,7 @@ public class XQWLMIDlet extends MIDlet {
 			VolumeControl vc = (VolumeControl) midiPlayer.getControl("VolumeControl");
 			if (vc != null) {
 				vc.setLevel(music * 10);
+				vc.setMute(music == 0);
 			}
 		}
 	}
