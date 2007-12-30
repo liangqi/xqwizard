@@ -1,9 +1,9 @@
 /*
-XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part VI
+XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part V
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.20, Last Modified: Dec. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,14 +38,16 @@ public class XQWLMIDlet extends MIDlet {
 	 * 16: Player, 0 = Red, 1 = Black (Flipped)
 	 * 17: Handicap, 0 = None, 1 = 1 Knight, 2 = 2 Knights, 3 = 9 Pieces
 	 * 18: Level, 0 = Beginner, 1 = Amateur, 2 = Expert
-	 * 19: Sound, 0 = Off, 1 = On
+	 * 19: Sound Level, 0 = Mute, 5 = Max
+	 * 20: Music Level, 0 = Mute, 5 = Max
 	 * 256-511: Squares
 	 */
-	private static final int RS_DATA_LEN = 512;
 	private static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
 		"check", "check2", "win", "draw", "loss",
 	};
+
+	public static final int RS_DATA_LEN = 512;
 
 	public byte[] rsData = new byte[RS_DATA_LEN];
 	public boolean flipped;

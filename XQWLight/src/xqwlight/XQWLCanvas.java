@@ -3,7 +3,7 @@ XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
 Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
-Copyright (C) 2004-2007 www.elephantbase.net
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -77,6 +77,7 @@ public class XQWLCanvas extends Canvas {
 	private XQWLMIDlet midlet;
 	private Search search = new Search();
 
+	private byte[] retractData = new byte[XQWLMIDlet.RS_DATA_LEN];
 	private String message;
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
@@ -84,12 +85,12 @@ public class XQWLCanvas extends Canvas {
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
 	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
-	private Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
 	private Command cmdBack = new Command("返回", Command.ITEM, 1);
+	private Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
 	private Command cmdAbout = new Command("关于", Command.ITEM, 1);
 	private volatile int phase = PHASE_LOADING;
 
-	private boolean bLoaded = false;
+	private boolean init = false;
 	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
@@ -101,8 +102,8 @@ public class XQWLCanvas extends Canvas {
 				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
 				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
 				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
-		// addCommand(cmdRetract);
 		addCommand(cmdBack);
+		addCommand(cmdRetract);
 		addCommand(cmdAbout);
 
 		setCommandListener(new CommandListener() {
@@ -110,14 +111,19 @@ public class XQWLCanvas extends Canvas {
 				if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
 					if (false) {
 						// Code Style
-					} else if (c == cmdRetract) {
-						// Not Available, Never Occurs
 					} else if (c == cmdBack) {
 						midlet.rsData[0] = 0;
 						midlet.startMusic("form");
 						Display.getDisplay(midlet).setCurrent(midlet.form);
+					} else if (c == cmdRetract) {
+						// Restore Retract Status
+						System.arraycopy(retractData, 0, midlet.rsData, 0, XQWLMIDlet.RS_DATA_LEN);
+						load();
+						repaint();
+						serviceRepaints();
 					} else if (c == cmdAbout) {
 						Display.getDisplay(midlet).setCurrent(altAbout);
+						phase = PHASE_LOADING;
 						setFullScreenMode(true);
 					}
 				}
@@ -132,6 +138,7 @@ public class XQWLCanvas extends Canvas {
 		if (midlet.rsData[0] == 0) {
 			search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
 		} else {
+			// Restore Record-Score Data
 			search.pos.clearBoard();
 			for (int sq = 0; sq < 256; sq ++) {
 				int pc = midlet.rsData[sq + 256];
@@ -144,21 +151,24 @@ public class XQWLCanvas extends Canvas {
 			}
 			search.pos.setIrrev();
 		}
+		// Backup Retract Status
+		System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
+		// Call "responseMove()" if Computer Moves First
 		phase = PHASE_LOADING;
-		new Thread() {
-			public void run() {
-				while (phase == PHASE_LOADING) {
-					try {
-						Thread.sleep(1);
-					} catch (Exception e) {
-						// Ignored
+		if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
+			new Thread() {
+				public void run() {
+					while (phase == PHASE_LOADING) {
+						try {
+							Thread.sleep(1);
+						} catch (Exception e) {
+							// Ignored
+						}
 					}
-				}
-				if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
 					responseMove();
 				}
-			}
-		}.start();
+			}.start();
+		}
 	}
 
 	protected void paint(Graphics g) {
@@ -178,8 +188,8 @@ public class XQWLCanvas extends Canvas {
 				width = getWidth();
 				height = getHeight();
 			}
-			if (!bLoaded) {
-				bLoaded = true;
+			if (!init) {
+				init = true;
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
 				squareSize = Math.min(width / 9, height / 10);
@@ -411,6 +421,9 @@ public class XQWLCanvas extends Canvas {
 		}
 		if (response >= 0) {
 			midlet.playSound(response);
+			// Backup Retract Status
+			System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
+			// Backup Record-Score Data
 			midlet.rsData[0] = 1;
 			System.arraycopy(search.pos.squares, 0, midlet.rsData, 256, 256);
 		}

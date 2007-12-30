@@ -2,7 +2,7 @@
 '
 ' XiangQi Wizard Light - a Chinese Chess Program for Windows CE
 ' Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
