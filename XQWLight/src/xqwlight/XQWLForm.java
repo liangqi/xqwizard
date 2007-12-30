@@ -87,8 +87,15 @@ public class XQWLForm extends Form {
 					midlet.sound = gSound.getValue();
 					midlet.playSound(0);
 				} else if (i == gMusic) {
+					int originalMusic = midlet.music;
 					midlet.music = gMusic.getValue();
-					midlet.setMusicVolume();
+					if (midlet.music == 0) {
+						midlet.stopMusic();
+					} else if (originalMusic == 0) {
+						midlet.startMusic("form");
+					} else {
+						midlet.setMusicVolume();
+					}
 				}
 			}
 		});

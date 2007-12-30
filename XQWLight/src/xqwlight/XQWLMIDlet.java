@@ -172,6 +172,9 @@ public class XQWLMIDlet extends MIDlet {
 
 	public void startMusic(String strMusic) {
 		stopMusic();
+		if (music == 0) {
+			return;
+		}
 		InputStream in = getClass().getResourceAsStream("/musics/" + strMusic + ".mid");
 		try {
 			midiPlayer = Manager.createPlayer(in, "audio/midi");
@@ -189,7 +192,6 @@ public class XQWLMIDlet extends MIDlet {
 			VolumeControl vc = (VolumeControl) midiPlayer.getControl("VolumeControl");
 			if (vc != null) {
 				vc.setLevel(music * 10);
-				vc.setMute(music == 0);
 			}
 		}
 	}
