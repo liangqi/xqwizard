@@ -132,6 +132,21 @@ public class XQWLMIDlet extends MIDlet {
 		started = false;
 	}
 
+	public Player createPlayer(String name, String type) {
+		InputStream in = getClass().getResourceAsStream(name);
+		try {
+			return Manager.createPlayer(in, type);
+			// If creating "Player" succeeded, no need to close "InputStream".
+		} catch (Exception e) {
+			try {
+				in.close();
+			} catch (Exception e2) {
+				// Ignored
+			}
+			return null;
+		}
+	}
+
 	public void playSound(int response) {
 		if (sound == 0) {
 			return;
@@ -139,26 +154,31 @@ public class XQWLMIDlet extends MIDlet {
 		final int i = response;
 		new Thread() {
 			public void run() {
-				InputStream in = getClass().getResourceAsStream("/sounds/" + SOUND_NAME[i] + ".wav");
+				Player player = createPlayer("/sounds/" + SOUND_NAME[i] + ".wav", "audio/x-wav");
+				if (player == null) {
+					player = createPlayer("/sounds/" + SOUND_NAME[i] + ".mp3", "audio/mpeg");
+				}
+				if (player == null) {
+					return;
+				}
 				try {
-					Player p = Manager.createPlayer(in, "audio/x-wav");
-					p.realize();
-					VolumeControl vc = (VolumeControl) p.getControl("VolumeControl");
+					player.realize();
+					VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
 					if (vc != null) {
 						vc.setLevel(sound * 10);
 					}
-					p.start();
-					while (p.getState() == Player.STARTED) {
-						try {
-							sleep(1);
-						} catch (Exception e) {
-							// Ignored
-						}
-					}
-					p.close();
+					player.start();
 				} catch (Exception e) {
 					// Ignored
 				}
+				while (player.getState() == Player.STARTED) {
+					try {
+						sleep(1);
+					} catch (Exception e) {
+						// Ignored
+					}
+				}
+				player.close();
 			}
 		}.start();
 	}
@@ -175,15 +195,17 @@ public class XQWLMIDlet extends MIDlet {
 		if (music == 0) {
 			return;
 		}
-		InputStream in = getClass().getResourceAsStream("/musics/" + strMusic + ".mid");
+		midiPlayer = createPlayer("/musics/" + strMusic + ".mid", "audio/midi");
+		if (midiPlayer == null) {
+			return;
+		}
 		try {
-			midiPlayer = Manager.createPlayer(in, "audio/midi");
 			midiPlayer.setLoopCount(-1);
 			midiPlayer.realize();
 			setMusicVolume();
 			midiPlayer.start();
 		} catch (Exception e) {
-			midiPlayer = null;
+			// Ignored
 		}
 	}
 
