@@ -156,9 +156,6 @@ public class XQWLMIDlet extends MIDlet {
 			public void run() {
 				Player player = createPlayer("/sounds/" + SOUND_NAME[i] + ".wav", "audio/x-wav");
 				if (player == null) {
-					player = createPlayer("/sounds/" + SOUND_NAME[i] + ".mp3", "audio/mpeg");
-				}
-				if (player == null) {
 					return;
 				}
 				try {
