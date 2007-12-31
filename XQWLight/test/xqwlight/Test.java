@@ -21,15 +21,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class Test {
 	public static void main(String[] args) throws Exception {
 		Search search = new Search();
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
 		int legal = 0, gened = 0, moved = 0, check = 0;
-		BufferedReader in = new BufferedReader(new InputStreamReader(Test.class.getResourceAsStream("/test/FUNNY.EPD")));
+		LineInputStream in = new LineInputStream(search.getClass().getResourceAsStream("/book/FUNNY.EPD"));
 		String str = in.readLine();
 		while (str != null) {
 			search.pos.fromFen(str);
