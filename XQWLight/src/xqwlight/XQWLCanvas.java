@@ -60,8 +60,6 @@ public class XQWLCanvas extends Canvas {
 	private static int widthBackground, heightBackground;
 	private static Font font = Font.getFont(Font.FACE_SYSTEM,
 			Font.STYLE_BOLD + Font.STYLE_ITALIC, Font.SIZE_LARGE);
-	private static int fontWidth = font.charWidth('¡¡');
-	private static int fontHeight = font.getHeight();
 
 	static {
 		try {
@@ -280,8 +278,7 @@ public class XQWLCanvas extends Canvas {
 		} else if (phase == PHASE_EXITTING) {
 			g.setFont(font);
 			g.setColor(0x0000ff);
-			g.drawString(message, (width - message.length() * fontWidth) / 2,
-					(height - fontHeight) / 2, Graphics.LEFT + Graphics.TOP);
+			g.drawString(message, width / 2, height / 2, Graphics.HCENTER + Graphics.BASELINE);
 		}
 	}
 
