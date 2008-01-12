@@ -98,7 +98,7 @@ public class XQWLCanvas extends Canvas {
 		this.midlet = midlet_;
 		setFullScreenMode(true);
 		altAbout.setTimeout(Alert.FOREVER);
-		altAbout.setString("象棋小巫师 " + midlet.getAppProperty("MIDlet-Version") +
+		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +
 				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
 				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
 				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
