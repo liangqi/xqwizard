@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.61, Last Modified: Jan. 2008
+' Designed by Morning Yellow, Version: 3.62, Last Modified: Jan. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.61"
+Public Const STRING_VERSION     As String = "3.62"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -1387,12 +1387,12 @@ For i = 1 To Game_nMaxMove
     szJava = szJava + Move2Iccs(Game_mvMove(i)) + " "
 Next
 szJava = szJava + Chr(34) + ">" + vbCrLf
-szJava = szJava + "請登錄<a href=" + Chr(34) + "http://www.java.com/" + Chr(34) + ">www.java.com</a>下載Java運行包" + vbCrLf
+szJava = szJava + "請登錄<a href=" + Chr(34) + "http://www.java.com/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.java.com</a>下載Java運行包" + vbCrLf
 szJava = szJava + "</applet>"
 If Not Game_bStartPos Then
     szJava = szJava + "<p>" + Game_szIrrevFen(0) + "</p>"
 End If
-szJava = szJava + "<p>歡迎訪問<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + ">www.elephantbase.net</a></p>"
+szJava = szJava + "<p>歡迎訪問<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.elephantbase.net</a></p>"
 Clipboard.Clear
 Clipboard.SetText szJava
 MsgBox "Java棋盤代碼已复制到剪貼板。", vbInformation
