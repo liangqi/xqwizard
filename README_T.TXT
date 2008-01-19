@@ -39,5 +39,5 @@ https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 你可以使用 TortoiseSVN 等SVN客戶端程序獲取到最新的(跟開發者完全同步的)代碼，TortoiseSVN 的使用介紹和下載地址是：
 http://sourceforge.net/projects/tortoisesvn/
 
-為防止他人在《象棋巫師》的代碼中加入病毒和木馬，請确認《象棋巫師》下載包和執行程序含有來自《象棋百科全書》网站的簽名，該簽名的信任鏈根証書為：
+為防止他人在《象棋巫師》的代碼中加入病毒和木馬，請确認《象棋巫師》下載包和執行程序含有來自象棋百科全書网的簽名，該簽名的信任鏈根証書為：
 http://www.elephantbase.net/ca.cer (安裝根証書時，請确認SHA1碼指紋：08DCE562 81962C93 9D2F8DD5 5217D3B1 69380BA0)

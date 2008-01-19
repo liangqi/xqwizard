@@ -685,8 +685,8 @@ For i = 1 To Game_nMaxMove
 Next
 Print #nFileNo, Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1")
 Print #nFileNo, "============================"
-Print #nFileNo, "šgÓ­ÔL†–¡¶ÏóÆå°Ù¿ÆÈ«•ø¡·ÍøÕ¾"
-Print #nFileNo, "ÍÆ¼öÓÃ¡°ÏóÆåÎ×ŽŸ¡±Ó^ÙpÆå×V"
+Print #nFileNo, " šgÓ­ÔL†–¡¶ÏóÆå°Ù¿ÆÈ«•ø¾W¡· "
+Print #nFileNo, " ÍÆ¼öÓÃ¡¶ÏóÆåÎ×ŽŸ¡·Ó^ÙpÆå×V "
 Print #nFileNo, "http://www.elephantbase.net/"
 Close #nFileNo
 If Not bTempFile Then
@@ -2694,9 +2694,9 @@ Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¶à‚€Í¨ÓÃÏóÆåÒýÇæ£¬Ëû‚ƒ´ó¶¼¾ßÓÐŒ£˜IÆåÊÖµÄË®Æ½£¬Ê
 Gui_szTips(3) = "¡¡¡¡üc“ô¡°ÒýÇæˆÌ¼t¡±»ò¡°ÒýÇæˆÌºÚ¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË»ú´ó‘ð£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎåÖÖ²»Í¬µÄëy¶È½oÓÃ‘ôÌåòž¡£"
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£Íû×ŒëŠÄX×ßÆå£¬¶øƒHƒHÊÇÏëÖªµÀëŠÄXÔÚÏëÐ©Ê²Ã´£¬»òÕß×ŒëŠÄX½oÄãÒ»Ð©†¢°l£¬¿ÉÒÔüc“ô¡°ÒýÇæ·ÖÎö¡±°´âo£¬´òé_Ë¼¿¼¼š¹´°¿Ú¡£" + vbCrLf + _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼¼š¹´°¿ÚÖÐµÄË¼¿¼Â·¾€¸´ÖÆÏÂí£¬Õ³ÙNµ½Ö÷´°¿ÚÖÐ£¬Œ¦Ë¼¿¼¾€Â·ßMÐÐÍÆÑÝ¡£"
-Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×ŽŸŠ´óµÄÆå×V¡¢ÆåˆDŒ§ÈëºÍŒ§³ö¹¦ÄÜžéÄúÔÚÍø½jÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
-Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŽŸÄ¿Ç°Ö÷ÒªÍ¨ß^Íø½j°lÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔÄ¡¶ÏóÆå°Ù¿ÆÈ«•ø¡·ÍøÕ¾«@µÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
-Gui_szTips(7) = "¡¡¡¡Ä¿Ç°Íø½jÉÏÒÑ½›ÓÐ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼þ(áá¾Y.PGN)¿É¹©ÏÂÝd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂÝd½ü15ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×ŽŸŠ´óµÄÆå×V¡¢ÆåˆDŒ§ÈëºÍŒ§³ö¹¦ÄÜžéÄúÔÚ¾W½jÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
+Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŽŸÄ¿Ç°Ö÷ÒªÍ¨ß^¾W½j°lÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔÄ¡¶ÏóÆå°Ù¿ÆÈ«•ø¾W¡·«@µÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
+Gui_szTips(7) = "¡¡¡¡Ä¿Ç°¾W½jÉÏÒÑ½›ÓÐ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼þ(áá¾Y.PGN)¿É¹©ÏÂÝd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂÝd½ü15ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
         "¡¡¡¡Í¬•rÒ²šgÓ­ÄúŒ¢×Ô¼ºÖÆ×÷µÄÎÄ¼þÉÏ‚÷½oÎÒ‚ƒ¡£"
 Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŽŸÓÐÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×ŽŸé_°lˆFê Â“Ïµ£¬à]¼þµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×ŽŸé_°lˆFê ·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÂ“Ïµ¡£"
@@ -2705,16 +2705,16 @@ Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»‚€ÏóÆåÎ×ŽŸµÄ³õŒWÕß£¬ÕˆÄú×Ð¼šé†×x±¾Ü›¼þ¡°ŽÍÖú¡±ßx
 Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³ÖÎÄ¼þêPÂ“¹¦ÄÜ£¬ëp“ôPGNÎÄ¼þ(ˆD˜ËÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ôFENÎÄ¼þ(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
 Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆå×V¡£Ö»Òªëp“ôXQFÎÄ¼þ(ˆD˜ËÊÇ¡°Ïó¡±×Ö)£¬»òÕßüc“ô¡°´òé_¡±°´âo²¢ßx“ñÒ»‚€XQFÎÄ¼þ£¬ÏóÆåÎ×ŽŸ¾Í•þ´òé_ß@‚€Æå×V¡£"
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×ŽŸ×îÊÊºÏ800x600ºÍ1024x768µÄï@Ê¾·ÖÞqÂÊ£¬ÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿ò(¡°ßxí—¡±ßx†ÎÖÐµÄ¡°ÔOÖÃ¡±Ò»í—)£¬°Ñ¡°½çÃæ¡±ÔO³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄï@Ê¾·ÖÞqÂÊÏÂµÃµ½×îÊæÊÊµÄï@Ê¾Ð§¹û¡£"
-Gui_szTips(14) = "¡¡¡¡žéÁË·½±ãÐ£ˆ@Íø×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷Æå×V¡¢ÆåˆDºÍ°l±íÎÄÕÂ£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎÄ±¾Æå×VºÍ²ÊÉ«ASCII×Ö·ûÆåˆDµÄÝ”³ö¹¦ÄÜ¡£Í¨ß^¼ôÙN°å£¬Äú¿ÉÒÔÔÚBBSÉÏ°l±í¾«ÃÀÆ¯ÁÁµÄÆå×VºÍÆåˆDÁË¡£"
+Gui_szTips(14) = "¡¡¡¡žéÁË·½±ãÐ£ˆ@¾W×Ö·ûBBSµÄÊ¹ÓÃÕß½»Á÷Æå×V¡¢ÆåˆDºÍ°l±íÎÄÕÂ£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎÄ±¾Æå×VºÍ²ÊÉ«ASCII×Ö·ûÆåˆDµÄÝ”³ö¹¦ÄÜ¡£Í¨ß^¼ôÙN°å£¬Äú¿ÉÒÔÔÚBBSÉÏ°l±í¾«ÃÀÆ¯ÁÁµÄÆå×VºÍÆåˆDÁË¡£"
 Gui_szTips(15) = "¡¡¡¡ÓÃTelnetÔÚBBSÉÏ°lANSI„Ó‘BÆå×V•r£¬üc“ô¡°¸´ÖÆANSI„Ó‘BÆå×V¡±°´âo£¬ÔÙÏòTelnetÖÐÕ³ÙNƒÈÈÝ£¬±£´æÙN×Ó¼´¿É¡£" + vbCrLf + _
         "¡¡¡¡²é¿´º¬ÓÐANSI„Ó‘BÆå×VµÄÙN×Ó•r£¬¿É¸ù¾ÝÙN×ÓÉÏµÄÌáÊ¾£¬°´¡°¡ý¡±æIžgÓ[Æå×V£¬®”Æå×VÍêÈ«ï@Ê¾³öíáá£¬°´Ò»´Î¡°¡ý¡±æIÆå¾Ö¾Í×ßÒ»²½£¬ºÜ·½±ãÓÃ‘ôÓ^ÙpÆå¾Ö¡£"
 Gui_szTips(16) = "¡¡¡¡Ê¹ÓÃ¡°¸´ÖÆÎÄ±¾Æå±P¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÙN³öìo‘BµÄANSI´ú´a£¬¸÷´ó¸ßÐ£µÄBBSÕ¾¶¼Ö§³ÖANSI´ú´a¡£¼t×ÓÓÃ¼t×Ö±íÊ¾£¬ºÚ×ÓÓÃ¾G×Ö±íÊ¾£¬Ò»Ä¿ÁËÈ»¡£" + vbCrLf + _
         "¡¡¡¡Èç¹ûBBS²»Ö§³ÖANSI´ú´a£¬»òÕßÖ»ÊÇžéÁËÙNµ½ÆÕÍ¨ÎÄ±¾ÉÏ£¬¿ÉÒÔÔÚÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿òÖÐ°Ñ¡°Ê¹ÓÃANSIÎÄ±¾Æå±P¡±µÄã^È¥µô¡£…^„e¼t×ÓºÍºÚ×ÓµÄ·½·¨ÊÇ£º¼t×ÓµÄƒÉß…Ž§ˆAÀ¨Ì–£¬ºÚ×ÓµÄƒÉß…Ž§·½À¨Ì–¡£"
 Gui_szTips(17) = "¡¡¡¡Èç¹ûÔ“BBSÏµ½yÊÇÐèÒª°´ƒÉ´ÎEscapeæI²ÅÄÜæIÈëÒ»‚€Escape×Ö·û(Ò²¿ÉÄÜÈ¡›QÓÚTelnet½K¶ËµÄÔOÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿òÖÐ°Ñ¡°ÓÃƒÉ‚€EscÝ”ÈëANSI¡±ã^ÉÏ¡£"
-Gui_szTips(18) = "¡¡¡¡ÎÄ±¾Æå±PµÄ×îááÒ»ÐÐÖTÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆå±P¾Ž´a(·QžéFEN´®)£¬Èç¹ûÄúÔÚÍø½jÕ“‰¯ÉÏ¿´µ½ÁËß@˜ÓµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±ßx†ÎµÄ¡°Œ§ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆå±PŒ§Èëµ½ÏóÆåÎ×ŽŸÖÐ£¬ÃâÈ¥ÁË”[·ÅÆå×ÓÎ»ÖÃµÄŸ©À¡£"
+Gui_szTips(18) = "¡¡¡¡ÎÄ±¾Æå±PµÄ×îááÒ»ÐÐÖTÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆå±P¾Ž´a(·QžéFEN´®)£¬Èç¹ûÄúÔÚ¾W½jÕ“‰¯ÉÏ¿´µ½ÁËß@˜ÓµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±ßx†ÎµÄ¡°Œ§ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆå±PŒ§Èëµ½ÏóÆåÎ×ŽŸÖÐ£¬ÃâÈ¥ÁË”[·ÅÆå×ÓÎ»ÖÃµÄŸ©À¡£"
 Gui_szTips(19) = "¡¡¡¡üc“ô¡°²é¿´PGNÎÄ¼þ¡±°´âo£¬¾Í¿ÉÒÔ¿´µ½Æå×VÎÄ±¾£¬žéÕ³ÙNµ½BBSÉÏ»òÕßWordÎÄ™nÖÐÌá¹©ÁË·½±ã¡£"
 Gui_szTips(20) = "¡¡¡¡ÏóÆåÎ×ŽŸ¿É×xÈëÂ“±Š¡¢ÞÄÌì¡¢ÖÐ‡øÓÎ‘òÖÐÐÄµÈÖÐ‡øÏóÆåµÄ´æ±PÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾Æå×VÎÄ¼þ£¬°Ñß@Ð©º¬ÓÐÖø·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÙN°å£¬üc“ô¡°Ä¼ôÙN°åŒ§Èë¡±°´âo£¬ß@Ð©Öø·¨¾Í•þä›ÖÆµ½ÏóÆåÎ×ŽŸÖÐ¡£"
-Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×ŽŸ¿ÉŒ¢Æå×VŒ§³öžéÖ§³ÖJava„Ó‘BÆå±PµÄHTMLÎÄ±¾£¬ÌØ„eÊÊºÏŒ¢Æå×VÔÚÍøÉÏ°l±í¡£"
+Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×ŽŸ¿ÉŒ¢Æå×VŒ§³öžéÖ§³ÖJava„Ó‘BÆå±PµÄHTMLÎÄ±¾£¬ÌØ„eÊÊºÏŒ¢Æå×VÔÚ¾WÉÏ°l±í¡£"
 Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×ŽŸÌá¹©µÄÆå×VæI±PÝ”Èë·¨žéÏ²šgæI±Pä›ÈëÆå×VµÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßÐ§µÄÆå×VÝ”Èë·½·¨£¬ÆåÓÑ¿É¸ù¾Ý×Ô¼ºµÄÁ•‘TÔÚ”µ×ÖÐ¡æI±P»òWXF×ÖÄ¸¸ñÊ½ÖÐÈÎÒâßx“ñ¡£"
 Gui_szTips(23) = "¡¡¡¡ÔÚÐÀÙpÆå×VµÄß^³ÌÖÐ£¬üc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¾Í¿ÉÄÔ“²½×Ô„ÓÑÝÊ¾£¬ÑÝÊ¾µÄ•régég¸ô¿ÉÒÔ×ÔÓÉÕ{Õû¡£ÔÙ´Îüc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¿ÉÍ£Ö¹×Ô„ÓÑÝÊ¾¡£"
 Gui_szTips(24) = "¡¡¡¡üc“ô¡°²é¿´ˆDÆ¬Æå±P¡±°´âo£¬°ÑˆDÆ¬Æå±P¸´ÖÆ²¢Õ³ÙNµ½WordµÈÎÄ×ÖÌŽÀíÜ›¼þÖÐ£¬¿ÉÒÔÉú³ÉÆ¯ÁÁµÄÏóÆå¸å¼þ¡£"

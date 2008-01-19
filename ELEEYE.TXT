@@ -157,5 +157,5 @@
 　　(12) 说明文档(DOC)：即《中国象棋程序设计探索》系列连载；
 　　(13) 参赛棋谱(CCGC)：ElephantEye 参加首届全国计算机博弈锦标赛(CCGC)的全部棋谱。
 
-　　如果要获得关于 ElephantEye 的更加详细的信息，可登录《象棋百科全书》网站：
+　　如果要获得关于 ElephantEye 的更加详细的信息，可登录象棋百科全书网：
 　　　　http://www.elephantbase.net/

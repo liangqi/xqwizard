@@ -39,5 +39,5 @@ https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 你可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 http://sourceforge.net/projects/tortoisesvn/
 
-为防止他人在《象棋巫师》的代码中加入病毒和木马，请确认《象棋巫师》下载包和执行程序含有来自《象棋百科全书》网站的签名，该签名的信任链根证书为：
+为防止他人在《象棋巫师》的代码中加入病毒和木马，请确认《象棋巫师》下载包和执行程序含有来自象棋百科全书网的签名，该签名的信任链根证书为：
 http://www.elephantbase.net/ca.cer (安装根证书时，请确认SHA1码指纹：08DCE562 81962C93 9D2F8DD5 5217D3B1 69380BA0)

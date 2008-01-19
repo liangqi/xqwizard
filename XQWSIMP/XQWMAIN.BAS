@@ -685,8 +685,8 @@ For i = 1 To Game_nMaxMove
 Next
 Print #nFileNo, Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1")
 Print #nFileNo, "============================"
-Print #nFileNo, "»¶Ó­·ÃÎÊ¡¶ÏóÆå°Ù¿ÆÈ«Êé¡·ÍøÕ¾"
-Print #nFileNo, "ÍÆ¼öÓÃ¡°ÏóÆåÎ×Ê¦¡±¹ÛÉÍÆåÆ×"
+Print #nFileNo, " »¶Ó­·ÃÎÊ¡¶ÏóÆå°Ù¿ÆÈ«ÊéÍø¡· "
+Print #nFileNo, " ÍÆ¼öÓÃ¡¶ÏóÆåÎ×Ê¦¡·¹ÛÉÍÆåÆ× "
 Print #nFileNo, "http://www.elephantbase.net/"
 Close #nFileNo
 If Not bTempFile Then
@@ -2695,7 +2695,7 @@ Gui_szTips(3) = "¡¡¡¡µã»÷¡°ÒýÇæÖ´ºì¡±»ò¡°ÒýÇæÖ´ºÚ¡±°´Å¥£¬¾Í¿ÉÒÔÕ¹¿ªÈË»ú´óÕ½£¬ÏóÆ
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£ÍûÈÃµçÄÔ×ßÆå£¬¶ø½ö½öÊÇÏëÖªµÀµçÄÔÔÚÏëÐ©Ê²Ã´£¬»òÕßÈÃµçÄÔ¸øÄãÒ»Ð©Æô·¢£¬¿ÉÒÔµã»÷¡°ÒýÇæ·ÖÎö¡±°´Å¥£¬´ò¿ªË¼¿¼Ï¸½Ú´°¿Ú¡£" + vbCrLf + _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼Ï¸½Ú´°¿ÚÖÐµÄË¼¿¼Â·Ïß¸´ÖÆÏÂÀ´£¬Õ³Ìùµ½Ö÷´°¿ÚÖÐ£¬¶ÔË¼¿¼ÏßÂ·½øÐÐÍÆÑÝ¡£"
 Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×Ê¦Ç¿´óµÄÆåÆ×¡¢ÆåÍ¼µ¼ÈëºÍµ¼³ö¹¦ÄÜÎªÄúÔÚÍøÂçÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
-Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ýÍøÂç·¢ÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔ´Ó¡¶ÏóÆå°Ù¿ÆÈ«Êé¡·ÍøÕ¾»ñµÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
+Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ýÍøÂç·¢ÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔ´Ó¡¶ÏóÆå°Ù¿ÆÈ«ÊéÍø¡·»ñµÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
 Gui_szTips(7) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓÐÊýÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼þ(áá×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü15ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
         "¡¡¡¡Í¬Ê±Ò²»¶Ó­Äú½«×Ô¼ºÖÆ×÷µÄÎÄ¼þÉÏ´«¸øÎÒÃÇ¡£"
 Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓÐÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼þµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
