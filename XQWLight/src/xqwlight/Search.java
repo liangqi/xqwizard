@@ -183,6 +183,7 @@ public class Search {
 			killers[0] = mv;
 		}
 	}
+
 	public int searchQuiesc(int vlAlpha_, int vlBeta) {
 		int vlAlpha = vlAlpha_;
 		allNodes ++;

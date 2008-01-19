@@ -84,9 +84,9 @@ public class XQWLCanvas extends Canvas {
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
 	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
-	private Command cmdBack = new Command("返回", Command.ITEM, 1);
-	private Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
-	private Command cmdAbout = new Command("关于", Command.ITEM, 1);
+	private Command cmdBack = new Command("返回", Command.SCREEN, 1);
+	private Command cmdRetract = new Command("悔棋", Command.SCREEN, 1);
+	private Command cmdAbout = new Command("关于", Command.SCREEN, 1);
 	private volatile int phase = PHASE_LOADING;
 
 	private boolean init = false;
