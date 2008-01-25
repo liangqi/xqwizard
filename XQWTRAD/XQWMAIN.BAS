@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.62, Last Modified: Jan. 2008
+' Designed by Morning Yellow, Version: 3.63, Last Modified: Jan. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.62"
+Public Const STRING_VERSION     As String = "3.63"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -258,6 +258,7 @@ Public Engine_pipe          As PipeStruct   ' 引擎管道
 Public Engine_nStatus           As Integer  ' 引擎狀態
 Public Engine_nTimeRatio        As Long     ' 引擎時間比例(秒制是1，毫秒制是1000)
 Public Engine_szName            As String   ' 引擎名稱
+Public Engine_szVersion         As String   ' 引擎版本
 Public Engine_szCopyright       As String   ' 引擎版權
 Public Engine_szAuthor          As String   ' 引擎作者
 Public Engine_szUser            As String   ' 引擎用戶
@@ -1707,6 +1708,7 @@ End Sub
 Public Sub AboutEngine()
 
 MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" + Engine_szName + vbCrLf) + _
+        IIf(Engine_szVersion = "", "", "版本：" + Engine_szVersion + vbCrLf) + _
         IIf(Engine_szCopyright = "", "", "版權：" + Engine_szCopyright + vbCrLf) + _
         IIf(Engine_szAuthor = "", "", "作者：" + Engine_szAuthor + vbCrLf) + _
         IIf(Engine_szUser = "", "", "用戶：" + Engine_szUser), "關于UCCI引擎", Engine_szFile
@@ -2305,6 +2307,7 @@ Else
     SendEngine "ucci"
     dfLastTime = Timer
     Engine_szName = ""
+    Engine_szVersion = ""
     Engine_szCopyright = ""
     Engine_szAuthor = ""
     Engine_szUser = ""
@@ -2323,6 +2326,8 @@ Else
             ReceiveEngineLog szReceived
             If Left(szReceived, 8) = "id name " Then
                 Engine_szName = Mid(szReceived, 9)
+            ElseIf Left(szReceived, 11) = "id version " Then
+                Engine_szVersion = Mid(szReceived, 12)
             ElseIf Left(szReceived, 13) = "id copyright " Then
                 Engine_szCopyright = Mid(szReceived, 14)
             ElseIf Left(szReceived, 10) = "id author " Then
