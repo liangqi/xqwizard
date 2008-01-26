@@ -33,21 +33,21 @@ import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.ItemStateListener;
 import javax.microedition.lcdui.Ticker;
 
-public class XQWLForm extends Form {
-	private XQWLMIDlet midlet;
-	private Command cmdStart = new Command("开始", Command.OK, 1);
-	private Command cmdExit = new Command("退出", Command.BACK, 1);
+class XQWLForm extends Form {
+	XQWLMIDlet midlet;
+	Command cmdStart = new Command("开始", Command.OK, 1);
+	Command cmdExit = new Command("退出", Command.BACK, 1);
 
-	public ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
+	ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
 			new String[] {"我先走", "电脑先走"}, null);
-	public ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP,
+	ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP,
 			new String[] {"不让子", "让左马", "让双马", "让九子"}, null);
-	public ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
+	ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
 			new String[] {"入门", "业余", "专业"}, null);
-	public Gauge gSound = new Gauge("音效", true, 5, 0);
-	public Gauge gMusic = new Gauge("音乐", true, 5, 0);
+	Gauge gSound = new Gauge("音效", true, 5, 0);
+	Gauge gMusic = new Gauge("音乐", true, 5, 0);
 
-	public XQWLForm(XQWLMIDlet midlet_) {
+	XQWLForm(XQWLMIDlet midlet_) {
 		super("象棋小巫师");
 		this.midlet = midlet_;
 		append(cgToMove);

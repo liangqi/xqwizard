@@ -32,7 +32,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-public class XQWLCanvas extends Canvas {
+class XQWLCanvas extends Canvas {
 	private static final int PHASE_LOADING = 0;
 	private static final int PHASE_WAITING = 1;
 	private static final int PHASE_THINKING = 2;
@@ -73,28 +73,29 @@ public class XQWLCanvas extends Canvas {
 		heightBackground = imgBackground.getHeight();
 	}
 
-	private XQWLMIDlet midlet;
-	private Search search = new Search();
+	XQWLMIDlet midlet;
+	byte[] retractData = new byte[XQWLMIDlet.RS_DATA_LEN];
 
-	private byte[] retractData = new byte[XQWLMIDlet.RS_DATA_LEN];
+	private Search search = new Search();
 	private String message;
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
 	// Assume FullScreenMode = false
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
-	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
-	private Command cmdBack = new Command("返回", Command.ITEM, 1);
-	private Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
-	private Command cmdAbout = new Command("关于", Command.ITEM, 1);
-	private volatile int phase = PHASE_LOADING;
+
+	Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
+	Command cmdBack = new Command("返回", Command.ITEM, 1);
+	Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
+	Command cmdAbout = new Command("关于", Command.ITEM, 1);
+	volatile int phase = PHASE_LOADING;
 
 	private boolean init = false;
 	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
-	public XQWLCanvas(XQWLMIDlet midlet_) {
+	XQWLCanvas(XQWLMIDlet midlet_) {
 		this.midlet = midlet_;
 		setFullScreenMode(true);
 		altAbout.setTimeout(Alert.FOREVER);
@@ -131,7 +132,7 @@ public class XQWLCanvas extends Canvas {
 		});
 	}
 
-	public void load() {
+	void load() {
 		setFullScreenMode(true);
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
@@ -447,7 +448,7 @@ public class XQWLCanvas extends Canvas {
 		return false;
 	}
 
-	private boolean responseMove() {
+	boolean responseMove() {
 		if (getResult()) {
 			return false;
 		}

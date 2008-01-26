@@ -42,19 +42,19 @@ public class XQWLMIDlet extends MIDlet {
 	 * 20: Music Level, 0 = Mute, 5 = Max
 	 * 256-511: Squares
 	 */
-	private static final String[] SOUND_NAME = {
+	static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
 		"check", "check2", "win", "draw", "loss",
 	};
 
-	public static final int RS_DATA_LEN = 512;
+	static final int RS_DATA_LEN = 512;
 
-	public byte[] rsData = new byte[RS_DATA_LEN];
-	public boolean flipped;
-	public int handicap, level, sound, music;
-	public Player midiPlayer = null;
-	public XQWLForm form = new XQWLForm(this);
-	public XQWLCanvas canvas = new XQWLCanvas(this);
+	byte[] rsData = new byte[RS_DATA_LEN];
+	boolean flipped;
+	int handicap, level, sound, music;
+	Player midiPlayer = null;
+	XQWLForm form = new XQWLForm(this);
+	XQWLCanvas canvas = new XQWLCanvas(this);
 
 	private boolean started = false;
 
@@ -132,7 +132,7 @@ public class XQWLMIDlet extends MIDlet {
 		started = false;
 	}
 
-	public Player createPlayer(String name, String type) {
+	Player createPlayer(String name, String type) {
 		InputStream in = getClass().getResourceAsStream(name);
 		try {
 			return Manager.createPlayer(in, type);
@@ -147,7 +147,7 @@ public class XQWLMIDlet extends MIDlet {
 		}
 	}
 
-	public void playSound(int response) {
+	void playSound(int response) {
 		if (sound == 0) {
 			return;
 		}
@@ -180,14 +180,14 @@ public class XQWLMIDlet extends MIDlet {
 		}.start();
 	}
 
-	public void stopMusic() {
+	void stopMusic() {
 		if (midiPlayer != null) {
 			midiPlayer.close();
 			midiPlayer = null;
 		}
 	}
 
-	public void startMusic(String strMusic) {
+	void startMusic(String strMusic) {
 		stopMusic();
 		if (music == 0) {
 			return;
@@ -206,7 +206,7 @@ public class XQWLMIDlet extends MIDlet {
 		}
 	}
 
-	public void setMusicVolume() {
+	void setMusicVolume() {
 		if (midiPlayer != null) {
 			VolumeControl vc = (VolumeControl) midiPlayer.getControl("VolumeControl");
 			if (vc != null) {
