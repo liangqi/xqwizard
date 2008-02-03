@@ -54,8 +54,8 @@ class XQWLCanvas extends Canvas {
 	private Image imgBoard;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
-		null, "rk", "ra", "rb", "rn", "rr", "rc", "rp",
-		null, "bk", "ba", "bb", "bn", "br", "bc", "bp",
+		"rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
+		"bk", "ba", "bb", "bn", "br", "bc", "bp", null,
 	};
 	private static int widthBackground, heightBackground;
 	private static Font font = Font.getFont(Font.FACE_SYSTEM,

@@ -24,7 +24,6 @@ package xqwlight;
 import java.io.InputStream;
 import java.util.Random;
 
-
 public class Position {
 	public static final int MATE_VALUE = 10000;
 	public static final int BAN_VALUE = MATE_VALUE - 100;
@@ -37,13 +36,13 @@ public class Position {
 	public static final int MAX_MOVE_NUM = 256;
 	public static final int MAX_GEN_MOVES = 128;
 
-	public static final int PIECE_KING = 1;
-	public static final int PIECE_ADVISOR = 2;
-	public static final int PIECE_BISHOP = 3;
-	public static final int PIECE_KNIGHT = 4;
-	public static final int PIECE_ROOK = 5;
-	public static final int PIECE_CANNON = 6;
-	public static final int PIECE_PAWN = 7;
+	public static final int PIECE_KING = 0;
+	public static final int PIECE_ADVISOR = 1;
+	public static final int PIECE_BISHOP = 2;
+	public static final int PIECE_KNIGHT = 3;
+	public static final int PIECE_ROOK = 4;
+	public static final int PIECE_CANNON = 5;
+	public static final int PIECE_PAWN = 6;
 
 	public static final int RANK_TOP = 3;
 	public static final int RANK_BOTTOM = 12;
@@ -164,7 +163,7 @@ public class Position {
 	public static final int[] ADVISOR_DELTA = {-17, -15, 15, 17};
 	public static final int[][] KNIGHT_DELTA = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 33}};
 	public static final int[][] KNIGHT_CHECK_DELTA = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
-	public static final int[] MVV_VALUE = {0, 50, 10, 10, 30, 40, 30, 20};
+	public static final int[] MVV_VALUE = {50, 10, 10, 30, 40, 30, 20, 0};
 
 	public static final short[][] PIECE_VALUE = {
 		{
@@ -482,10 +481,10 @@ public class Position {
 		int pcAdjust;
 		squares[sq] = (byte) (del ? 0 : pc);
 		if (pc < 16) {
-			pcAdjust = pc - 9;
+			pcAdjust = pc - 8;
 			vlWhite += del ? -PIECE_VALUE[pcAdjust][sq] : PIECE_VALUE[pcAdjust][sq];
 		} else {
-			pcAdjust = pc - 17;
+			pcAdjust = pc - 16;
 			vlBlack += del ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] :
 					PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
 			pcAdjust += 7;
@@ -571,23 +570,23 @@ public class Position {
 	public int fenPiece(char c) {
 		switch (c) {
 		case 'K':
-			return 1;
+			return PIECE_KING;
 		case 'A':
-			return 2;
+			return PIECE_ADVISOR;
 		case 'B':
 		case 'E':
-			return 3;
+			return PIECE_BISHOP;
 		case 'H':
 		case 'N':
-			return 4;
+			return PIECE_KNIGHT;
 		case 'R':
-			return 5;
+			return PIECE_ROOK;
 		case 'C':
-			return 6;
+			return PIECE_CANNON;
 		case 'P':
-			return 7;
+			return PIECE_PAWN;
 		default:
-			return 0;
+			return -1;
 		}
 	}
 

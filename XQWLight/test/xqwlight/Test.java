@@ -57,7 +57,7 @@ public class Test {
 		System.out.println("Check: " + check); // 718
 		search.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1");
 		long l = System.currentTimeMillis();
-		search.searchMain(1);
+		search.searchMain(1000);
 		System.out.println("NPS = " + (search.allNodes / (System.currentTimeMillis() - l)) + "K");
 	}
 }

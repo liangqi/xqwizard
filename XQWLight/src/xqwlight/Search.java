@@ -360,7 +360,11 @@ public class Search {
 		return vlBest;
 	}
 
-	public void searchMain(int seconds) {
+	public void searchMain(int millis) {
+		searchMain(LIMIT_DEPTH, millis);
+	}
+
+	public void searchMain(int depth, int millis) {
 		mvResult = pos.bookMove();
 		if (mvResult > 0) {
 			pos.makeMove(mvResult);
@@ -396,15 +400,15 @@ public class Search {
 			historyTable[i] = 0;
 		}
 		mvResult = 0;
-		pos.distance = 0;
 		allNodes = 0;
+		pos.distance = 0;
 		long timer = System.currentTimeMillis();
-		for (int i = 1; i <= LIMIT_DEPTH; i ++) {
+		for (int i = 1; i <= depth; i ++) {
 			vl = searchRoot(i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}
-			if (System.currentTimeMillis() - timer > seconds * 1000) {
+			if (System.currentTimeMillis() - timer > millis * 1000) {
 				break;
 			}
 		}
