@@ -634,6 +634,34 @@ public class Position {
 		setIrrev();
 	}
 
+	public static final String FEN_PIECE = "        KABNRCP kabnrcp ";
+
+	public String toFen() {
+		StringBuffer fen = new StringBuffer();
+		for (int y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
+			int k = 0;
+			for (int x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
+				int pc = squares[COORD_XY(x, y)];
+				if (pc > 0) {
+					if (k > 0) {
+						fen.append((char) ('0' + k));
+						k = 0;
+					}
+					fen.append(FEN_PIECE.charAt(pc));
+				} else {
+					k ++;
+				}
+			}
+		    if (k > 0) {
+				fen.append((char) ('0' + k));
+		    }
+		    fen.append('/');
+		}
+		fen.setCharAt(fen.length() - 1, ' ');
+		fen.append(sdPlayer == 0 ? 'w' : 'b');
+		return fen.toString();
+	}
+
 	public int generateAllMoves(int[] mvs) {
 		return generateMoves(mvs, null);
 	}

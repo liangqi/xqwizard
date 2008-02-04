@@ -23,28 +23,28 @@ package xqwlight;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
-		Search search = new Search();
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
 		int legal = 0, gened = 0, moved = 0, check = 0;
-		LineInputStream in = new LineInputStream(search.getClass().getResourceAsStream("/book/FUNNY.EPD"));
+		Position pos = new Position();
+		LineInputStream in = new LineInputStream(pos.getClass().getResourceAsStream("/book/FUNNY.EPD"));
 		String str = in.readLine();
 		while (str != null) {
-			search.pos.fromFen(str);
+			pos.fromFen(str);
 			for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
 				if (Position.IN_BOARD(sqSrc)) {
 					for (int sqDst = 0; sqDst < 256; sqDst ++) {
 						if (Position.IN_BOARD(sqDst)) {
-							legal += (search.pos.legalMove(Position.MOVE(sqSrc, sqDst)) ? 1 : 0);
+							legal += (pos.legalMove(Position.MOVE(sqSrc, sqDst)) ? 1 : 0);
 						}
 					}
 				}
 			}
-			int moveNum = search.pos.generateAllMoves(mvs);
+			int moveNum = pos.generateAllMoves(mvs);
 			for (int i = 0; i < moveNum; i ++) {
-				if (search.pos.makeMove(mvs[i])) {
+				if (pos.makeMove(mvs[i])) {
 					moved ++;
-					check += (search.pos.inCheck() ? 1 : 0);
-					search.pos.undoMakeMove();
+					check += (pos.inCheck() ? 1 : 0);
+					pos.undoMakeMove();
 				}
 			}
 			gened += moveNum;
@@ -55,9 +55,10 @@ public class Test {
 		System.out.println("Gened: " + gened); // 7809
 		System.out.println("Moved: " + moved); // 7207
 		System.out.println("Check: " + check); // 718
-		search.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1");
-		long l = System.currentTimeMillis();
+		pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
+		System.out.println(pos.toFen());
+		Search search = new Search(pos, 12);
 		search.searchMain(1000);
-		System.out.println("NPS = " + (search.allNodes / (System.currentTimeMillis() - l)) + "K");
+		System.out.println("NPS = " + search.getKNPS() + "K");
 	}
 }

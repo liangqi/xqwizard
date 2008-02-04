@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
+Designed by Morning Yellow, Version: 1.22, Last Modified: Feb. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -76,7 +76,8 @@ class XQWLCanvas extends Canvas {
 	XQWLMIDlet midlet;
 	byte[] retractData = new byte[XQWLMIDlet.RS_DATA_LEN];
 
-	private Search search = new Search();
+	private Position pos = new Position();
+	private Search search = new Search(pos, 12);
 	private String message;
 	private int cursorX, cursorY;
 	private int sqSelected, mvLast;
@@ -137,26 +138,26 @@ class XQWLCanvas extends Canvas {
 		cursorX = cursorY = 7;
 		sqSelected = mvLast = 0;
 		if (midlet.rsData[0] == 0) {
-			search.pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
+			pos.fromFen(Position.STARTUP_FEN[midlet.handicap]);
 		} else {
 			// Restore Record-Score Data
-			search.pos.clearBoard();
+			pos.clearBoard();
 			for (int sq = 0; sq < 256; sq ++) {
 				int pc = midlet.rsData[sq + 256];
 				if (pc > 0) {
-					search.pos.addPiece(sq, pc);
+					pos.addPiece(sq, pc);
 				}
 			}
 			if (midlet.flipped) {
-				search.pos.changeSide();
+				pos.changeSide();
 			}
-			search.pos.setIrrev();
+			pos.setIrrev();
 		}
 		// Backup Retract Status
 		System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
 		// Call "responseMove()" if Computer Moves First
 		phase = PHASE_LOADING;
-		if (search.pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
+		if (pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
 			new Thread() {
 				public void run() {
 					while (phase == PHASE_LOADING) {
@@ -242,7 +243,7 @@ class XQWLCanvas extends Canvas {
 		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
 		for (int sq = 0; sq < 256; sq ++) {
 			if (Position.IN_BOARD(sq)) {
-				int pc = search.pos.squares[sq];
+				int pc = pos.squares[sq];
 				if (pc > 0) {
 					drawSquare(g, imgPieces[pc], sq);
 				}
@@ -253,19 +254,19 @@ class XQWLCanvas extends Canvas {
 		if (mvLast > 0) {
 			sqSrc = Position.SRC(mvLast);
 			sqDst = Position.DST(mvLast);
-			drawSquare(g, (search.pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
-			drawSquare(g, (search.pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
+			drawSquare(g, (pos.squares[sqSrc] & 8) == 0 ? imgSelected : imgSelected2, sqSrc);
+			drawSquare(g, (pos.squares[sqDst] & 8) == 0 ? imgSelected : imgSelected2, sqDst);
 		} else if (sqSelected > 0) {
-			drawSquare(g, (search.pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
+			drawSquare(g, (pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
 		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
-			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
+			drawSquare(g, (pos.squares[sq] & 8) == 0 ? imgCursor2 : imgCursor, sq);
 		} else {
-			drawSquare(g, (search.pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
+			drawSquare(g, (pos.squares[sq] & 8) == 0 ? imgCursor : imgCursor2, sq);
 		}
 		if (phase == PHASE_THINKING) {
 			int x, y;
@@ -373,8 +374,8 @@ class XQWLCanvas extends Canvas {
 		if (midlet.flipped) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
-		int pc = search.pos.squares[sq];
-		if ((pc & Position.SIDE_TAG(search.pos.sdPlayer)) != 0) {
+		int pc = pos.squares[sq];
+		if ((pc & Position.SIDE_TAG(pos.sdPlayer)) != 0) {
 			midlet.playSound(RESP_CLICK);
 			mvLast = 0;
 			sqSelected = sq;
@@ -400,21 +401,21 @@ class XQWLCanvas extends Canvas {
 
 	/** Computer Move Result */
 	private boolean getResult(int response) {
-		if (search.pos.isMate()) {
+		if (pos.isMate()) {
 			midlet.playSound(response < 0 ? RESP_WIN : RESP_LOSS);
 			message = (response < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
 			return true;
 		}
-		int vlRep = search.pos.repStatus(3);
+		int vlRep = pos.repStatus(3);
 		if (vlRep > 0) {
-			vlRep = (response < 0 ? search.pos.repValue(vlRep) : -search.pos.repValue(vlRep));
+			vlRep = (response < 0 ? pos.repValue(vlRep) : -pos.repValue(vlRep));
 			midlet.playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS :
 					vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
 			message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" :
 					vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 			return true;
 		}
-		if (search.pos.moveNum > 100) {
+		if (pos.moveNum > 100) {
 			midlet.playSound(RESP_DRAW);
 			message = "超过自然限着作和，辛苦了！";
 			return true;
@@ -425,18 +426,18 @@ class XQWLCanvas extends Canvas {
 			System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
 			// Backup Record-Score Data
 			midlet.rsData[0] = 1;
-			System.arraycopy(search.pos.squares, 0, midlet.rsData, 256, 256);
+			System.arraycopy(pos.squares, 0, midlet.rsData, 256, 256);
 		}
 		return false;
 	}
 
 	private boolean addMove(int mv) {
-		if (search.pos.legalMove(mv)) {
-			if (search.pos.makeMove(mv)) {
-				midlet.playSound(search.pos.inCheck() ? RESP_CHECK :
-						search.pos.captured() ? RESP_CAPTURE : RESP_MOVE);
-				if (search.pos.captured()) {
-					search.pos.setIrrev();
+		if (pos.legalMove(mv)) {
+			if (pos.makeMove(mv)) {
+				midlet.playSound(pos.inCheck() ? RESP_CHECK :
+						pos.captured() ? RESP_CAPTURE : RESP_MOVE);
+				if (pos.captured()) {
+					pos.setIrrev();
 				}
 				sqSelected = 0;
 				mvLast = mv;
@@ -455,17 +456,16 @@ class XQWLCanvas extends Canvas {
 		phase = PHASE_THINKING;
 		repaint();
 		serviceRepaints();
-		search.searchMain(1 << (midlet.level << 1));
-		search.pos.makeMove(search.mvResult);
+		mvLast = search.searchMain(1 << (midlet.level << 1));
+		pos.makeMove(mvLast);
 		int response = RESP_MOVE2;
-		if (search.pos.captured()) {
+		if (pos.captured()) {
 			response = RESP_CAPTURE2;
-			search.pos.setIrrev();
+			pos.setIrrev();
 		}
-		if (search.pos.inCheck()) {
+		if (pos.inCheck()) {
 			response = RESP_CHECK2;
 		}
-		mvLast = search.mvResult;
 		phase = PHASE_WAITING;
 		repaint();
 		serviceRepaints();

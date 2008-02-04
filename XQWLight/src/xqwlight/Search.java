@@ -2,7 +2,7 @@
 Search.java - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.13, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 1.22, Last Modified: Feb. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -21,43 +21,44 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+class HashItem {
+	byte depth, flag;
+	short vl;
+	int mv, zobristLock;
+}
+
 public class Search {
-	public static final int HASH_SIZE = 4096;
-	public static final int HASH_ALPHA = 1;
-	public static final int HASH_BETA = 2;
-	public static final int HASH_PV = 3;
-	public static final int LIMIT_DEPTH = 64;
-	public static final int NULL_DEPTH = 2;
-	public static final int RANDOM_MASK = 7;
-	public static final int MAX_GEN_MOVES = Position.MAX_GEN_MOVES;
-	public static final int MATE_VALUE = Position.MATE_VALUE;
-	public static final int BAN_VALUE = Position.BAN_VALUE;
-	public static final int WIN_VALUE = Position.WIN_VALUE;
+	private static final int HASH_ALPHA = 1;
+	private static final int HASH_BETA = 2;
+	private static final int HASH_PV = 3;
+	private static final int LIMIT_DEPTH = 64;
+	private static final int NULL_DEPTH = 2;
+	private static final int RANDOM_MASK = 7;
+	private static final int MAX_GEN_MOVES = Position.MAX_GEN_MOVES;
+	private static final int MATE_VALUE = Position.MATE_VALUE;
+	private static final int BAN_VALUE = Position.BAN_VALUE;
+	private static final int WIN_VALUE = Position.WIN_VALUE;
 
-	public static class HashItem {
-		public byte depth, flag;
-		public short vl;
-		public int mv, zobristLock;
-	}
+	private int hashMask, mvResult, allNodes, allMillis;
+	private HashItem[] hashTable;
+	Position pos;
+	int[] historyTable = new int[4096];
+	int[][] mvKiller = new int[LIMIT_DEPTH][2];
 
-	public Position pos = new Position();
-	public int allNodes, mvResult;
-	public int[] historyTable = new int[4096];
-	public int[][] mvKiller = new int[LIMIT_DEPTH][2];
-
-	public HashItem[] hashTable = new HashItem[HASH_SIZE];
-
-	{
-		for (int i = 0; i < HASH_SIZE; i ++) {
+	public Search(Position pos, int hashLevel) {
+		this.pos = pos;
+		hashMask = (1 << hashLevel) - 1;
+		hashTable = new HashItem[hashMask + 1];
+		for (int i = 0; i <= hashMask; i ++) {
 			hashTable[i] = new HashItem();
 		}
 	}
 
-	public HashItem getHashItem() {
-		return hashTable[pos.zobristKey & (HASH_SIZE - 1)];
+	private HashItem getHashItem() {
+		return hashTable[pos.zobristKey & hashMask];
 	}
 
-	public int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
+	private int probeHash(int vlAlpha, int vlBeta, int depth, int[] mv) {
 		HashItem hash = getHashItem();
 		if (hash.zobristLock != pos.zobristLock) {
 			mv[0] = 0;
@@ -91,7 +92,7 @@ public class Search {
 		return -MATE_VALUE;
 	}
 
-	public void recordHash(int flag, int vl, int depth, int mv) {
+	private void recordHash(int flag, int vl, int depth, int mv) {
 		HashItem hash = getHashItem();
 		if (hash.depth > depth) {
 			return;
@@ -117,24 +118,24 @@ public class Search {
 		hash.zobristLock = pos.zobristLock;
 	}
 
-	public class SortItem {
-		public static final int PHASE_HASH = 0;
-		public static final int PHASE_KILLER_1 = 1;
-		public static final int PHASE_KILLER_2 = 2;
-		public static final int PHASE_GEN_MOVES = 3;
-		public static final int PHASE_REST = 4;
+	private class SortItem {
+		private static final int PHASE_HASH = 0;
+		private static final int PHASE_KILLER_1 = 1;
+		private static final int PHASE_KILLER_2 = 2;
+		private static final int PHASE_GEN_MOVES = 3;
+		private static final int PHASE_REST = 4;
 
-		public int index, moves, phase;
-		public int mvHash, mvKiller1, mvKiller2;
-		public int[] mvs, vls;
+		private int index, moves, phase;
+		private int mvHash, mvKiller1, mvKiller2;
+		private int[] mvs, vls;
 
-		public SortItem(int mvHash) {
+		SortItem(int mvHash) {
 			this.mvHash = mvHash;
 			this.mvKiller1 = mvKiller[pos.distance][0];
 			this.mvKiller2 = mvKiller[pos.distance][1];
 		}
 
-		public int next() {
+		int next() {
 			if (phase == PHASE_HASH) {
 				phase = PHASE_KILLER_1;
 				if (mvHash > 0) {
@@ -175,7 +176,7 @@ public class Search {
 		}
 	}
 
-	public void setBestMove(int mv, int depth) {
+	private void setBestMove(int mv, int depth) {
 		historyTable[pos.historyIndex(mv)] += depth * depth;
 		int[] killers = mvKiller[pos.distance];
 		if (killers[0] != mv) {
@@ -184,7 +185,7 @@ public class Search {
 		}
 	}
 
-	public int searchQuiesc(int vlAlpha_, int vlBeta) {
+	private int searchQuiesc(int vlAlpha_, int vlBeta) {
 		int vlAlpha = vlAlpha_;
 		allNodes ++;
 		int vl = pos.mateValue();
@@ -244,15 +245,15 @@ public class Search {
 		return vlBest == -MATE_VALUE ? pos.mateValue() : vlBest;
 	}
 
-	public int searchNoNull(int vlAlpha, int vlBeta, int depth) {
+	private int searchNoNull(int vlAlpha, int vlBeta, int depth) {
 		return searchFull(vlAlpha, vlBeta, depth, true);
 	}
 
-	public int searchFull(int vlAlpha, int vlBeta, int depth) {
+	private int searchFull(int vlAlpha, int vlBeta, int depth) {
 		return searchFull(vlAlpha, vlBeta, depth, false);
 	}
 
-	public int searchFull(int vlAlpha_, int vlBeta, int depth, boolean noNull) {
+	private int searchFull(int vlAlpha_, int vlBeta, int depth, boolean noNull) {
 		int vlAlpha = vlAlpha_;
 		int vl;
 		if (depth <= 0) {
@@ -327,7 +328,7 @@ public class Search {
 		}
 	}
 
-	public int searchRoot(int depth) {
+	private int searchRoot(int depth) {
 		int vlBest = -MATE_VALUE;
 		SortItem sort = new SortItem(mvResult);
 		int mv;
@@ -360,17 +361,17 @@ public class Search {
 		return vlBest;
 	}
 
-	public void searchMain(int millis) {
-		searchMain(LIMIT_DEPTH, millis);
+	public int searchMain(int millis) {
+		return searchMain(LIMIT_DEPTH, millis);
 	}
 
-	public void searchMain(int depth, int millis) {
+	public int searchMain(int depth, int millis) {
 		mvResult = pos.bookMove();
 		if (mvResult > 0) {
 			pos.makeMove(mvResult);
 			if (pos.repStatus(3) == 0) {
 				pos.undoMakeMove();
-				return;
+				return mvResult;
 			}
 			pos.undoMakeMove();
 		}
@@ -385,9 +386,9 @@ public class Search {
 			}
 		}
 		if (vl == 1) {
-			return;
+			return mvResult;
 		}
-		for (int i = 0; i < HASH_SIZE; i ++) {
+		for (int i = 0; i <= hashMask; i ++) {
 			HashItem hash = hashTable[i];
 			hash.depth = hash.flag = 0;
 			hash.vl = 0;
@@ -402,15 +403,21 @@ public class Search {
 		mvResult = 0;
 		allNodes = 0;
 		pos.distance = 0;
-		long timer = System.currentTimeMillis();
+		long t = System.currentTimeMillis();
 		for (int i = 1; i <= depth; i ++) {
 			vl = searchRoot(i);
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}
-			if (System.currentTimeMillis() - timer > millis * 1000) {
+			allMillis = (int) (System.currentTimeMillis() - t);
+			if (allMillis > millis) {
 				break;
 			}
 		}
+		return mvResult;
+	}
+
+	public int getKNPS() {
+		return allNodes / allMillis;
 	}
 }
