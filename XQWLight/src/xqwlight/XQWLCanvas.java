@@ -456,7 +456,7 @@ class XQWLCanvas extends Canvas {
 		phase = PHASE_THINKING;
 		repaint();
 		serviceRepaints();
-		mvLast = search.searchMain(1 << (midlet.level << 1));
+		mvLast = search.searchMain(1000 << (midlet.level << 1));
 		pos.makeMove(mvLast);
 		int response = RESP_MOVE2;
 		if (pos.captured()) {
