@@ -909,9 +909,8 @@ public class Position {
 		case PIECE_PAWN:
 			if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
 				return true;
-			} else {
-				return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
 			}
+			return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
 		default:
 			return false;
 		}

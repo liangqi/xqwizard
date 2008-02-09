@@ -442,9 +442,8 @@ class XQWLCanvas extends Canvas {
 				sqSelected = 0;
 				mvLast = mv;
 				return true;
-			} else {
-				midlet.playSound(RESP_ILLEGAL);
 			}
+			midlet.playSound(RESP_ILLEGAL);
 		}
 		return false;
 	}

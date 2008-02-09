@@ -319,13 +319,12 @@ public class Search {
 		}
 		if (vlBest == -MATE_VALUE) {
 			return pos.mateValue();
-		} else {
-			recordHash(hashFlag, vlBest, depth, mvBest);
-			if (mvBest > 0) {
-				setBestMove(mvBest, depth);
-			}
-			return vlBest;
 		}
+		recordHash(hashFlag, vlBest, depth, mvBest);
+		if (mvBest > 0) {
+			setBestMove(mvBest, depth);
+		}
+		return vlBest;
 	}
 
 	private int searchRoot(int depth) {
