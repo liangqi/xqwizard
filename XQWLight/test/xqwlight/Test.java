@@ -55,7 +55,7 @@ public class Test {
 		System.out.println("Gened: " + gened); // 7809
 		System.out.println("Moved: " + moved); // 7207
 		System.out.println("Check: " + check); // 718
-		pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
+		pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKABNR w - - 0 1");
 		System.out.println(pos.toFen());
 		Search search = new Search(pos, 12);
 		search.searchMain(1000);
