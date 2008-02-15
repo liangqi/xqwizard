@@ -594,10 +594,12 @@ public class Position {
 		clearBoard();
 		int y = RANK_TOP;
 		int x = FILE_LEFT;
-		// Assume fen is not empty
 		int index = 0;
+		if (index == fen.length()) {
+			setIrrev();
+			return;
+		}
 		char c = fen.charAt(index);
-		// Assume a space exists
 		while (c != ' ') {
 			if (c == '/') {
 				x = FILE_LEFT;
@@ -624,10 +626,17 @@ public class Position {
 				}
 			}
 			index ++;
+			if (index == fen.length()) {
+				setIrrev();
+				return;
+			}
 			c = fen.charAt(index);
 		}
-		// Assume 'w' or 'b' at last
 		index ++;
+		if (index == fen.length()) {
+			setIrrev();
+			return;
+		}
 		if (sdPlayer == (fen.charAt(index) == 'b' ? 0 : 1)) {
 			changeSide();
 		}
