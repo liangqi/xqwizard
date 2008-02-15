@@ -978,7 +978,7 @@ public class Position {
 			}
 			return false;
 		}
-		throw new RuntimeException(); // Never Occurs
+		return false;
 	}
 
 	public boolean isMate() {
