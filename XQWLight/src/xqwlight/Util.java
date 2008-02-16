@@ -1,6 +1,21 @@
 package xqwlight;
 
 public class Util {
+	public static byte[] POP_COUNT_16 = new byte[65536];
+
+	static {
+		for (int i = 0; i < 65536; i ++) {
+			int n = ((i >> 1) & 0x5555) + (i & 0x5555);
+			n = ((n >> 2) & 0x3333) + (n & 0x3333);
+			n = ((n >> 4) & 0x0f0f) + (n & 0x0f0f);
+			POP_COUNT_16[i] = (byte) ((n >> 8) + (n & 0x00ff));
+		}
+	}
+
+	public static int POP_COUNT_16(int data) {
+		return POP_COUNT_16[data];
+	}
+
 	/** byte[2] (Little Endian) -> short */
 	public static int TO_SHORT(byte[] b) {
 		return ((b[0] & 0xff) | ((b[1] & 0xff) << 8));

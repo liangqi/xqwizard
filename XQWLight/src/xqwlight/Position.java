@@ -616,12 +616,18 @@ public class Position {
 				}
 			} else if (c >= 'A' && c <= 'Z') {
 				if (x <= FILE_RIGHT) {
-					addPiece(COORD_XY(x, y), fenPiece(c) + 8);
+					int pt = fenPiece(c);
+					if (pt >= 0) {
+						addPiece(COORD_XY(x, y), pt + 8);
+					}
 					x ++;
 				}
 			} else if (c >= 'a' && c <= 'z') {
 				if (x <= FILE_RIGHT) {
-					addPiece(COORD_XY(x, y), fenPiece((char) (c + 'A' - 'a')) + 16);
+					int pt = fenPiece((char) (c + 'A' - 'a'));
+					if (pt >= 0) {
+						addPiece(COORD_XY(x, y), pt + 16);
+					}
 					x ++;
 				}
 			}
