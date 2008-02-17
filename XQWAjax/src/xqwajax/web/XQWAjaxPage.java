@@ -2,10 +2,13 @@ package xqwajax.web;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -16,6 +19,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
 import xqwajax.util.wicket.AjaxPlayerPanel;
@@ -62,23 +66,46 @@ public class XQWAjaxPage extends WebPage {
 		"check", "check2", "win", "draw", "loss",
 	};
 
+	private static final String[] BOARD_NAME = {
+		"wood", "green", "white", "sheet", "canvas", "drops", "qianhong"
+	};
+
+	private static final String[] PIECES_NAME = {
+		"wood", "delicate", "polish"
+	};
+
+	private static final String[] MUSIC_NAME = {
+		"classic", "express", "funny", "waltz", "mozart1", "mozart4", "lovdream",
+		"moonlite", "anitra", "humour", "jingle", "pal", "cmusic"
+	};
+
 	private static ResourceReference createImage(String imageName) {
 		return new ResourceReference(XQWAjaxPage.class, "images/" + imageName + ".gif");
 	}
 
-	private static ResourceReference createPiece(String pieceName) {
-		return new ResourceReference(XQWAjaxPage.class, "pieces/wood/" + pieceName + ".gif");
+	private static ResourceReference createBoard(String boardName) {
+		return new ResourceReference(XQWAjaxPage.class, "boards/" + boardName + ".gif");
+	}
+
+	private static ResourceReference createPiece(String piecesName, String pieceName) {
+		return new ResourceReference(XQWAjaxPage.class, "pieces/" + piecesName +
+				"/" + pieceName + ".gif");
 	}
 
 	private static ResourceReference createSound(String soundName) {
 		return new ResourceReference(XQWAjaxPage.class, "sounds/" + soundName + ".wav");
 	}
 
+	private static ResourceReference createMusic(String musicName) {
+		return new ResourceReference(XQWAjaxPage.class, "musics/" + musicName + ".mid");
+	}
+
 	static ResourceReference[] rrStatus = new ResourceReference[STATUS_NAME.length];
-	static ResourceReference[] rrPieces = new ResourceReference[24];
-	static ResourceReference[] rrSelected = new ResourceReference[24];
+	static ResourceReference[] rrBoards = new ResourceReference[BOARD_NAME.length];
+	static ResourceReference[][] rrPieces = new ResourceReference[PIECES_NAME.length][24];
+	static ResourceReference[][] rrSelected = new ResourceReference[PIECES_NAME.length][24];
 	static ResourceReference[] rrSound = new ResourceReference[SOUND_NAME.length];
-	static ResourceReference rrMusic = new ResourceReference(XQWAjaxPage.class, "bg.mid");
+	static ResourceReference[] rrMusic = new ResourceReference[MUSIC_NAME.length];
 	static ResourceReference rrStar0 = createImage("star0");
 	static ResourceReference rrStar1 = createImage("star1");
 
@@ -86,19 +113,28 @@ public class XQWAjaxPage extends WebPage {
 		for (int i = 0; i < STATUS_NAME.length; i ++) {
 			rrStatus[i] = createImage(STATUS_NAME[i]);
 		}
-		ResourceReference imgOo = createPiece("oo");
-		ResourceReference imgOos = createPiece("oos");
-		for (int i = 0; i < 24; i ++) {
-			if (PIECE_NAME[i] == null) {
-				rrPieces[i] = imgOo;
-				rrSelected[i] = imgOos;
-			} else {
-				rrPieces[i] = createPiece(PIECE_NAME[i]);
-				rrSelected[i] = createPiece(PIECE_NAME[i] + "s");
+		for (int i = 0; i < BOARD_NAME.length; i ++) {
+			rrBoards[i] = createBoard(BOARD_NAME[i]);
+		}
+		for (int i = 0; i < PIECES_NAME.length; i ++) {
+			String piecesName = PIECES_NAME[i];
+			ResourceReference imgOo = createPiece(piecesName, "oo");
+			ResourceReference imgOos = createPiece(piecesName, "oos");
+			for (int j = 0; j < 24; j ++) {
+				if (PIECE_NAME[j] == null) {
+					rrPieces[i][j] = imgOo;
+					rrSelected[i][j] = imgOos;
+				} else {
+					rrPieces[i][j] = createPiece(piecesName, PIECE_NAME[j]);
+					rrSelected[i][j] = createPiece(piecesName, PIECE_NAME[j] + "s");
+				}
 			}
 		}
 		for (int i = 0; i < SOUND_NAME.length; i ++) {
 			rrSound[i] = createSound(SOUND_NAME[i]);
+		}
+		for (int i = 0; i < MUSIC_NAME.length; i ++) {
+			rrMusic[i] = createMusic(MUSIC_NAME[i]);
 		}
 	}
 
@@ -109,6 +145,8 @@ public class XQWAjaxPage extends WebPage {
 	int status = STATUS_READY;
 	Position pos = new Position();
 	Search search = new Search(pos, 16);
+	int boardId = getCookieValue("board", 0, Choices.getBoardTypes().size() - 1, 0);
+	int piecesId = getCookieValue("pieces", 0, Choices.getPiecesTypes().size() - 1, 0);
 	int level = getCookieValue("level", 0, LEVEL_STRING.length - 1, 0);
 	String retractFen = null;
 	int sqSelected = 0, mvLast = 0, mvResult = 0;
@@ -192,9 +230,9 @@ public class XQWAjaxPage extends WebPage {
 
 		void drawSquare(int sq) {
 			if (sq == sqSelected || sq == Position.SRC(mvLast) || sq == Position.DST(mvLast)) {
-				imgSquares[sq].setImageResourceReference(rrSelected[pos.squares[sq]]);
+				imgSquares[sq].setImageResourceReference(rrSelected[piecesId][pos.squares[sq]]);
 			} else {
-				imgSquares[sq].setImageResourceReference(rrPieces[pos.squares[sq]]);
+				imgSquares[sq].setImageResourceReference(rrPieces[piecesId][pos.squares[sq]]);
 			}
 			target.addComponent(imgSquares[sq]);
 		}
@@ -269,8 +307,6 @@ public class XQWAjaxPage extends WebPage {
 		// 1. Start-Up Position ...
 		boolean flipped = getCookieValue("flipped", false);
 		int handicap = getCookieValue("handicap", 0, LEVEL_STRING.length - 1, 0);
-		int boardId = getCookieValue("board", 0, Choices.getBoardTypes().size() - 1, 0);
-		int piecesId = getCookieValue("pieces", 0, Choices.getPiecesTypes().size() - 1, 0);
 		int musicId = getCookieValue("music", 0, Choices.getMusicTypes().size() - 1, 9);
 		retractFen = getCookieValue("fen");
 		retractFen = (retractFen == null ? Position.STARTUP_FEN[handicap] : retractFen);
@@ -279,6 +315,14 @@ public class XQWAjaxPage extends WebPage {
 		add(lblTitle.setOutputMarkupId(true));
 		add(imgTitle.setOutputMarkupId(true));
 		// 3. Board ...
+		// See LocalizedImageResource.setSrcAttribute(ComponentTag)
+		CharSequence url = RequestCycle.get().urlFor(rrBoards[boardId], null);
+		url = RequestCycle.get().getOriginalResponse().
+				encodeURL(Strings.replaceAll(url, "&", "&amp;"));
+		WebMarkupContainer tdBoard = new WebMarkupContainer("tdBoard");
+		tdBoard.add(new SimpleAttributeModifier("background", url));
+		tdBoard.setOutputMarkupId(true);
+		add(tdBoard);
 		for (int i = 0; i < 256; i ++) {
 			final int sq = i;
 			if (!Position.IN_BOARD(sq)) {
@@ -287,7 +331,7 @@ public class XQWAjaxPage extends WebPage {
 			int sqFlipped = flipped ? Position.SQUARE_FLIP(sq) : sq;
 			String sqName = "" + (char) ('a' + Position.FILE_X(sqFlipped) - Position.FILE_LEFT) +
 					(char) ('9' - Position.RANK_Y(sqFlipped) + Position.RANK_TOP);
-			imgSquares[sq] = new Image(sqName, rrPieces[pos.squares[sq]]);
+			imgSquares[sq] = new Image(sqName, rrPieces[piecesId][pos.squares[sq]]);
 			imgSquares[sq].add(new AjaxEventBehavior("onClick") {
 				private static final long serialVersionUID = 1L;
 
@@ -342,7 +386,7 @@ public class XQWAjaxPage extends WebPage {
 					}
 				}
 			});
-			add(imgSquares[sq].setOutputMarkupId(true));
+			tdBoard.add(imgSquares[sq].setOutputMarkupId(true));
 		}
 		// 4. Form ...
 		// 4.1. Player Moves ...
@@ -449,7 +493,7 @@ public class XQWAjaxPage extends WebPage {
 		playerSound.setVolume(getCookieValue("soundVolume", 1, AjaxPlayerPanel.MAX_VOLUME, 3));
 		add(playerSound);
 		// 8. Musics ...
-		ResourceComponent embedMusic = new ResourceComponent("embedMusic", rrMusic);
+		ResourceComponent embedMusic = new ResourceComponent("embedMusic", rrMusic[musicId]);
 		add(embedMusic);
 		AjaxPlayerPanel playerMusic = new AjaxPlayerPanel("playerMusic") {
 			private static final long serialVersionUID = 1L;
