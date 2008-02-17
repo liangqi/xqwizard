@@ -93,7 +93,7 @@ Begin VB.Form frmOptions
          Width           =   1455
       End
       Begin VB.CheckBox chkAlwaysPonder 
-         Caption         =   "启用後台思考"
+         Caption         =   "启用后台思考"
          Height          =   255
          Left            =   120
          TabIndex        =   23
@@ -420,7 +420,7 @@ End Sub
 Private Sub btnConfirm_Click()
 
 If Options_bLargeGui <> optLargeGui.Value Then
-    MsgBox "显示模式已经更改，重新启动程序後才能生效。", vbInformation
+    MsgBox "显示模式已经更改，重新启动程序后才能生效。", vbInformation
 End If
 Options_bLargeGui = optLargeGui.Value
 Options_bSounds = (chkSounds.Value = 1)

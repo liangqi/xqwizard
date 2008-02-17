@@ -81,7 +81,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button11 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveEnd"
-            Object.ToolTipText     =   "最後局面"
+            Object.ToolTipText     =   "最后局面"
          EndProperty
          BeginProperty Button12 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "MoveDel"
@@ -154,7 +154,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
-            Object.ToolTipText     =   "後台思考"
+            Object.ToolTipText     =   "后台思考"
             Style           =   1
          EndProperty
          BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -1491,7 +1491,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "下一着(&F)"
       End
       Begin VB.Menu mnMoveEnd 
-         Caption         =   "最後局面(&E)"
+         Caption         =   "最后局面(&E)"
       End
       Begin VB.Menu mnMoveSep2 
          Caption         =   "-"
@@ -1778,7 +1778,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "引擎执黑(&B)"
       End
       Begin VB.Menu mnEnginePonder 
-         Caption         =   "後台思考(&P)"
+         Caption         =   "后台思考(&P)"
       End
       Begin VB.Menu mnEngineAnalyze 
          Caption         =   "引擎分析(&A)"
@@ -2134,7 +2134,7 @@ End Sub
 Private Sub mnMoveDel_Click()
 
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox("必须清除以後所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) <> vbYes Then
+    If MsgBox("必须清除以后所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) <> vbYes Then
         Exit Sub
     End If
 End If
@@ -2600,7 +2600,7 @@ Else
         MsgBox "放弃提和。", vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox "请走一着棋，然後等待引擎接受或拒绝提和。" + vbCrLf + "如果引擎拒绝提和，则不会理睬，而是继续走棋。", vbInformation
+        MsgBox "请走一着棋，然后等待引擎接受或拒绝提和。" + vbCrLf + "如果引擎拒绝提和，则不会理睬，而是继续走棋。", vbInformation
         mnEngineDraw.Checked = True
     End If
 End If
