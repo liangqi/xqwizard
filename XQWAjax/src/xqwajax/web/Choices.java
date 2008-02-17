@@ -30,4 +30,21 @@ public class Choices {
 	public static List<String> getBoardTypes() {
 		return lstBoard;
 	}
+
+	private static List<String> lstPieces = Arrays.asList(new String[] {
+		"木刻", "精致", "光泽"
+	});
+
+	public static List<String> getPiecesTypes() {
+		return lstPieces;
+	}
+
+	private static List<String> lstMusic = Arrays.asList(new String[] {
+		"古典", "紧张", "风趣", "圆舞曲", "莫扎特一", "莫扎特四", "爱之梦",
+		"月光", "皮尔·金特", "幽默曲", "铃儿响叮当", "仙剑奇侠传", "天策府",
+	});
+
+	public static List<String> getMusicTypes() {
+		return lstMusic;
+	}
 }

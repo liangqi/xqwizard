@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.image.Image;
@@ -73,16 +74,16 @@ public class XQWAjaxPage extends WebPage {
 		return new ResourceReference(XQWAjaxPage.class, "sounds/" + soundName + ".wav");
 	}
 
-	static ResourceReference[] rrStatus = new ResourceReference[5];
+	static ResourceReference[] rrStatus = new ResourceReference[STATUS_NAME.length];
 	static ResourceReference[] rrPieces = new ResourceReference[24];
 	static ResourceReference[] rrSelected = new ResourceReference[24];
-	static ResourceReference[] rrSound = new ResourceReference[13];
+	static ResourceReference[] rrSound = new ResourceReference[SOUND_NAME.length];
 	static ResourceReference rrMusic = new ResourceReference(XQWAjaxPage.class, "bg.mid");
 	static ResourceReference rrStar0 = createImage("star0");
 	static ResourceReference rrStar1 = createImage("star1");
 
 	static {
-		for (int i = 0; i < 5; i ++) {
+		for (int i = 0; i < STATUS_NAME.length; i ++) {
 			rrStatus[i] = createImage(STATUS_NAME[i]);
 		}
 		ResourceReference imgOo = createPiece("oo");
@@ -96,7 +97,7 @@ public class XQWAjaxPage extends WebPage {
 				rrSelected[i] = createPiece(PIECE_NAME[i] + "s");
 			}
 		}
-		for (int i = 0; i < 11; i ++) {
+		for (int i = 0; i < SOUND_NAME.length; i ++) {
 			rrSound[i] = createSound(SOUND_NAME[i]);
 		}
 	}
@@ -108,14 +109,14 @@ public class XQWAjaxPage extends WebPage {
 	int status = STATUS_READY;
 	Position pos = new Position();
 	Search search = new Search(pos, 16);
-	int level = getCookieValue("level", 0, 4, 0);
+	int level = getCookieValue("level", 0, LEVEL_STRING.length - 1, 0);
 	String retractFen = null;
 	int sqSelected = 0, mvLast = 0, mvResult = 0;
 
 	Label lblTitle = new Label("lblTitle", "¾ÍÐ÷");
 	Image imgTitle = new Image("imgTitle", rrStatus[STATUS_READY]);
 	Image[] imgSquares = new Image[256];
-	Image[] imgLevels = new Image[5];
+	Image[] imgLevels = new Image[LEVEL_STRING.length];
 	Label lblLevel = new Label("lblLevel", LEVEL_STRING[level]);
 	AjaxPlayerPanel playerSound = new AjaxPlayerPanel("playerSound") {
 		private static final long serialVersionUID = 1L;
@@ -134,6 +135,53 @@ public class XQWAjaxPage extends WebPage {
 			addCookieValue("soundVolume", Integer.toString(getVolume()));
 		}
 	};
+
+	private class ThinkingBehavior extends AbstractAjaxTimerBehavior {
+		private static final long serialVersionUID = 1L;
+		
+		private String cookieFen = retractFen;
+
+		ThinkingBehavior() {
+			super(Duration.seconds(1));
+		}
+
+		@Override
+		protected void onTimer(AjaxRequestTarget target) {
+			AjaxBoard board = new AjaxBoard(target);
+			if (status != STATUS_TO_MOVE) {
+				return;
+			}
+			if (sqSelected > 0) {
+				int sq = sqSelected;
+				sqSelected = 0;
+				board.drawSquare(sq);
+			}
+			if (mvLast > 0) {
+				int mv = mvLast;
+				mvLast = 0;
+				board.drawMove(mv);
+			}
+			mvLast = mvResult;
+			pos.makeMove(mvLast);
+			board.drawMove(mvLast);
+			int response = pos.inCheck() ? RESP_CHECK2 :
+					pos.captured() ? RESP_CAPTURE2 : RESP_MOVE2;
+			if (pos.captured()) {
+				pos.setIrrev();
+			}
+			if (getResult(board, response)) {
+				addCookieValue("fen", null);
+			} else {
+				board.playSound(response);
+				board.setMessage("¾ÍÐ÷", STATUS_READY);
+				retractFen = cookieFen;
+				cookieFen = pos.toFen();
+				addCookieValue("fen", cookieFen);
+			}
+		}
+	}
+
+	ThinkingBehavior oldBehavior = null, newBehavior = null;
 
 	private class AjaxBoard {
 		private AjaxRequestTarget target;
@@ -166,11 +214,23 @@ public class XQWAjaxPage extends WebPage {
 		void setMessage(String msg, int status) {
 			lblTitle.setModelObject(msg);
 			imgTitle.setImageResourceReference(rrStatus[status]);
+			XQWAjaxPage.this.status = status;
+			if (status == STATUS_THINKING) {
+				newBehavior = new ThinkingBehavior();
+				imgTitle.add(newBehavior);
+				if (oldBehavior != null) {
+					imgTitle.remove(oldBehavior);
+				}
+			} else {
+				if (newBehavior != null) {
+					newBehavior.stop();
+					oldBehavior = newBehavior;
+				}
+			}
 			if (target != null) {
 				target.addComponent(lblTitle);
 				target.addComponent(imgTitle);
 			}
-			XQWAjaxPage.this.status = status;
 		}
 	}
 
@@ -208,7 +268,10 @@ public class XQWAjaxPage extends WebPage {
 	public XQWAjaxPage() {
 		// 1. Start-Up Position ...
 		boolean flipped = getCookieValue("flipped", false);
-		int handicap = getCookieValue("handicap", 0, 3, 0);
+		int handicap = getCookieValue("handicap", 0, LEVEL_STRING.length - 1, 0);
+		int boardId = getCookieValue("board", 0, Choices.getBoardTypes().size() - 1, 0);
+		int piecesId = getCookieValue("pieces", 0, Choices.getPiecesTypes().size() - 1, 0);
+		int musicId = getCookieValue("music", 0, Choices.getMusicTypes().size() - 1, 9);
 		retractFen = getCookieValue("fen");
 		retractFen = (retractFen == null ? Position.STARTUP_FEN[handicap] : retractFen);
 		pos.fromFen(retractFen);
@@ -285,10 +348,10 @@ public class XQWAjaxPage extends WebPage {
 		// 4.1. Player Moves ...
 		final RadioChoice selFlipped = new RadioChoice("selFlipped",
 				new Model(flipped ? Choices.FLIPPED_TRUE : Choices.FLIPPED_FALSE),
-				Choices.getFlippedTypes());
+				Choices.getFlippedTypes()).setSuffix("");
 		// selFlipped.setModelValue(new String[] {Integer.toString(flipped ? 1 : 0)});
 		// 4.2. Handicap ...
-		final RadioChoice selHandicap = new RadioChoice("selHandicap",
+		final DropDownChoice selHandicap = new DropDownChoice("selHandicap",
 				new Model(Choices.getHandicapTypes().get(handicap)), Choices.getHandicapTypes());
 		// selHandicap.setModelValue(new String[] {Integer.toString(handicap)});
 		// 4.3. New Game ...
@@ -310,18 +373,24 @@ public class XQWAjaxPage extends WebPage {
 		frm.add(selHandicap);
 		add(frm);
 		// 4.4. Board ...
-		final RadioChoice selBoard = new RadioChoice("selBoard");
+		final DropDownChoice selBoard = new DropDownChoice("selBoard",
+				new Model(Choices.getBoardTypes().get(boardId)), Choices.getBoardTypes());
 		// 4.5. Pieces ...
-		final RadioChoice selPieces = new RadioChoice("selPieces");
+		final DropDownChoice selPieces = new DropDownChoice("selPieces",
+				new Model(Choices.getPiecesTypes().get(piecesId)), Choices.getPiecesTypes());
 		// 4.6. Musics ...
-		final RadioChoice selMusic = new RadioChoice("selMusic");
+		final DropDownChoice selMusic = new DropDownChoice("selMusic",
+				new Model(Choices.getMusicTypes().get(musicId)), Choices.getMusicTypes());
 		// 4.7. Apply ...
 		Form frmGui = new Form("frmGui") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit() {
-				// TODO
+				addCookieValue("board", selBoard.getModelValue());
+				addCookieValue("pieces", selPieces.getModelValue());
+				addCookieValue("music", selMusic.getModelValue());
+				setResponsePage(RefreshPage.class);
 			}
 		};
 		frmGui.add(selBoard);
@@ -351,7 +420,7 @@ public class XQWAjaxPage extends WebPage {
 			}
 		}.setVisible(getApplication().getConfigurationType().equalsIgnoreCase("DEVELOPMENT")));
 		// 6. Level ...
-		for (int i = 0; i < 5; i ++) {
+		for (int i = 0; i < LEVEL_STRING.length; i ++) {
 			final int currLevel = i;
 			imgLevels[i] = new Image("imgLevel" + i, i > level ? rrStar0 : rrStar1);
 			imgLevels[i].add(new AjaxEventBehavior("onClick") {
@@ -360,7 +429,7 @@ public class XQWAjaxPage extends WebPage {
 				@Override
 				protected void onEvent(AjaxRequestTarget target) {
 					level = currLevel;
-					for (int j = 1; j < 5; j ++) {
+					for (int j = 1; j < LEVEL_STRING.length; j ++) {
 						imgLevels[j].setImageResourceReference(j > level ? rrStar0 : rrStar1);
 						target.addComponent(imgLevels[j]);
 					}
@@ -377,7 +446,7 @@ public class XQWAjaxPage extends WebPage {
 		add(embedSound);
 		playerSound.setEmbed(embedSound);
 		playerSound.setMute(getCookieValue("soundMute", false));
-		playerSound.setVolume(getCookieValue("soundVolume", 1, 5, 3));
+		playerSound.setVolume(getCookieValue("soundVolume", 1, AjaxPlayerPanel.MAX_VOLUME, 3));
 		add(playerSound);
 		// 8. Musics ...
 		ResourceComponent embedMusic = new ResourceComponent("embedMusic", rrMusic);
@@ -399,52 +468,10 @@ public class XQWAjaxPage extends WebPage {
 		};
 		playerMusic.setEmbed(embedMusic);
 		playerMusic.setMute(getCookieValue("musicMute", false));
-		playerMusic.setVolume(getCookieValue("musicVolume", 1, 5, 2));
+		playerMusic.setVolume(getCookieValue("musicVolume", 1, AjaxPlayerPanel.MAX_VOLUME, 2));
 		playerMusic.setLoop(true);
 		add(playerMusic);
-		// 9. Thinking Response ...
-		add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
-			private static final long serialVersionUID = 1L;
-
-			private String cookieFen = retractFen;
-
-			@Override
-			protected void onTimer(AjaxRequestTarget target) {
-				AjaxBoard board = new AjaxBoard(target);
-				if (status != STATUS_TO_MOVE) {
-					return;
-				}
-				if (sqSelected > 0) {
-					int sq = sqSelected;
-					sqSelected = 0;
-					board.drawSquare(sq);
-				}
-				if (mvLast > 0) {
-					int mv = mvLast;
-					mvLast = 0;
-					board.drawMove(mv);
-				}
-				mvLast = mvResult;
-				pos.makeMove(mvLast);
-				board.drawMove(mvLast);
-				int response = pos.inCheck() ? RESP_CHECK2 :
-						pos.captured() ? RESP_CAPTURE2 : RESP_MOVE2;
-				if (pos.captured()) {
-					pos.setIrrev();
-				}
-				if (getResult(board, response)) {
-					addCookieValue("fen", null);
-				} else {
-					board.playSound(response);
-					board.setMessage("¾ÍÐ÷", STATUS_READY);
-					status = STATUS_READY;
-					retractFen = cookieFen;
-					cookieFen = pos.toFen();
-					addCookieValue("fen", cookieFen);
-				}
-			}
-		});
-		// 10. Computer Moves First ...
+		// 9. Computer Moves First ...
 		if ((pos.sdPlayer == 0 ? flipped : !flipped) && !pos.isMate()) {
 			thinking(null);
 		}
