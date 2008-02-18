@@ -148,8 +148,8 @@ public class XQWAjaxPage extends WebPage {
 	int boardId = getCookieValue("board", 0, Choices.getBoardTypes().size() - 1, 0);
 	int piecesId = getCookieValue("pieces", 0, Choices.getPiecesTypes().size() - 1, 0);
 	int level = getCookieValue("level", 0, LEVEL_STRING.length - 1, 0);
-	String retractFen = null;
-	int sqSelected = 0, mvLast = 0, mvResult = 0;
+	String cookieFen, retractFen;
+	int sqSelected = 0, mvLast = 0, mvResult;
 
 	Label lblTitle = new Label("lblTitle", "¾ÍÐ÷");
 	Image imgTitle = new Image("imgTitle", rrStatus[STATUS_READY]);
@@ -176,8 +176,6 @@ public class XQWAjaxPage extends WebPage {
 
 	private class ThinkingBehavior extends AbstractAjaxTimerBehavior {
 		private static final long serialVersionUID = 1L;
-		
-		private String cookieFen = retractFen;
 
 		ThinkingBehavior() {
 			super(Duration.seconds(1));
@@ -308,9 +306,10 @@ public class XQWAjaxPage extends WebPage {
 		boolean flipped = getCookieValue("flipped", false);
 		int handicap = getCookieValue("handicap", 0, LEVEL_STRING.length - 1, 0);
 		int musicId = getCookieValue("music", 0, Choices.getMusicTypes().size() - 1, 9);
-		retractFen = getCookieValue("fen");
-		retractFen = (retractFen == null ? Position.STARTUP_FEN[handicap] : retractFen);
-		pos.fromFen(retractFen);
+		cookieFen = getCookieValue("fen");
+		cookieFen = (cookieFen == null ? Position.STARTUP_FEN[handicap] : cookieFen);
+		pos.fromFen(cookieFen);
+		retractFen = cookieFen;
 		// 2. Title ...
 		add(lblTitle.setOutputMarkupId(true));
 		add(imgTitle.setOutputMarkupId(true));
