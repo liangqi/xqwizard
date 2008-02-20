@@ -53,7 +53,6 @@ Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CHE2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
