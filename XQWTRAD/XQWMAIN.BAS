@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.64, Last Modified: Jan. 2008
+' Designed by Morning Yellow, Version: 3.64, Last Modified: Feb. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1306,12 +1306,18 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             Else
                 Engine_nStatus = IDLE_READY

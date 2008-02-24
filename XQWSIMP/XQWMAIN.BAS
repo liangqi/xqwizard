@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.64, Last Modified: Jan. 2008
+' Designed by Morning Yellow, Version: 3.64, Last Modified: Feb. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -316,23 +316,50 @@ End Function
 Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
 Dim szFileName As String, szFilter As String
+1010:
+On Error GoTo lnBugReport ' DEBUG
+1020:
 szFilter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
+1030:
 If szSave = "" Then
+1040:
     szFileName = OpenFileDialog(szTitle, szFilter)
+1050:
 Else
+1060:
     szFileName = szSave
+1070:
     szFileName = Replace(szFileName, "\", "＼")
+1080:
     szFileName = Replace(szFileName, "/", "／")
+1090:
     szFileName = Replace(szFileName, ":", "：")
+1100:
     szFileName = Replace(szFileName, "*", "＊")
+1110:
     szFileName = Replace(szFileName, "?", "？")
+1120:
     szFileName = Replace(szFileName, Chr(34), Chr(&HA3A2))
+1130:
     szFileName = Replace(szFileName, "<", "＜")
+1140:
     szFileName = Replace(szFileName, ">", "＞")
+1150:
     szFileName = Replace(szFileName, "|", "｜")
+1160:
     szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt)
+1170:
 End If
+1180:
 FileDialog = szFileName
+1190:
+On Error GoTo 0 ' DEBUG
+
+Exit Function ' DEBUG
+lnBugReport: ' DEBUG
+MsgBox "象棋巫师遇到致命错误，我们对此引起的不便表示抱歉。强烈建议您将错误报告发送给象棋巫师开发团队，我们将此报告视为保密的和匿名的。感谢您对象棋巫师的支持。", vbExclamation
+ShellExecuteA 0, vbNullString, "mailto:webmaster@elephantbase.net?subject=象棋巫师错误报告&body=XQWMAIN.BAS 在第" + Str(Erl) + " 行发生错误", vbNullString, vbNullString, SW_SHOWNORMAL
+End
 
 End Function
 
@@ -2067,12 +2094,18 @@ Else
                 MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
