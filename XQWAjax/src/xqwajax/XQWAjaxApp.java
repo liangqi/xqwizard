@@ -7,12 +7,12 @@ import xqwajax.web.XQWAjaxPage;
 
 public class XQWAjaxApp extends WebApplication {
 	@Override
-	protected void init() {
-		getApplicationSettings().setPageExpiredErrorPage(RefreshPage.class);
+	public Class<? extends XQWAjaxPage> getHomePage() {
+		return XQWAjaxPage.class;
 	}
 
 	@Override
-	public Class<XQWAjaxPage> getHomePage() {
-		return XQWAjaxPage.class;
+	protected void init() {
+		getApplicationSettings().setPageExpiredErrorPage(RefreshPage.class);
 	}
 }
