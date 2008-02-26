@@ -187,19 +187,12 @@ public class XQWAjaxPage extends WebPage {
 			if (status != STATUS_TO_MOVE) {
 				return;
 			}
-			if (sqSelected > 0) {
-				int sq = sqSelected;
-				sqSelected = 0;
-				board.drawSquare(sq);
-			}
 			if (mvLast > 0) {
-				int mv = mvLast;
-				mvLast = 0;
-				board.drawMove(mv);
+				board.drawMove(mvLast);
 			}
 			mvLast = mvResult;
 			pos.makeMove(mvLast);
-			board.drawMove(mvLast);
+			board.drawMove(mvLast, DRAW_SELECTED);
 			int response = pos.inCheck() ? RESP_CHECK2 :
 					pos.captured() ? RESP_CAPTURE2 : RESP_MOVE2;
 			if (pos.captured()) {
@@ -219,6 +212,8 @@ public class XQWAjaxPage extends WebPage {
 
 	ThinkingBehavior oldBehavior = null, newBehavior = null;
 
+	private static final boolean DRAW_SELECTED = true;
+
 	private class AjaxBoard {
 		private AjaxRequestTarget target;
 
@@ -227,17 +222,22 @@ public class XQWAjaxPage extends WebPage {
 		}
 
 		void drawSquare(int sq) {
-			if (sq == sqSelected || sq == Position.SRC(mvLast) || sq == Position.DST(mvLast)) {
-				imgSquares[sq].setImageResourceReference(rrSelected[piecesId][pos.squares[sq]]);
-			} else {
-				imgSquares[sq].setImageResourceReference(rrPieces[piecesId][pos.squares[sq]]);
-			}
+			drawSquare(sq, false);
+		}
+
+		void drawSquare(int sq, boolean bSelected) {
+			imgSquares[sq].setImageResourceReference((bSelected ? rrSelected : rrPieces)
+					[piecesId][pos.squares[sq]]);
 			target.addComponent(imgSquares[sq]);
 		}
 
 		void drawMove(int mv) {
-			drawSquare(Position.SRC(mv));
-			drawSquare(Position.DST(mv));
+			drawMove(mv, false);
+		}
+
+		void drawMove(int mv, boolean bSelected) {
+			drawSquare(Position.SRC(mv), bSelected);
+			drawSquare(Position.DST(mv), bSelected);
 		}
 
 		void playSound(int response) {
@@ -343,26 +343,22 @@ public class XQWAjaxPage extends WebPage {
 					int pc = pos.squares[sq];
 					if ((pc & Position.SIDE_TAG(pos.sdPlayer)) != 0) {
 						if (sqSelected > 0) {
-							int sqLast = sqSelected;
-							sqSelected = 0;
-							board.drawSquare(sqLast);
+							board.drawSquare(sqSelected);
+						}
+						if (mvLast > 0) {
+							board.drawMove(mvLast);
+							mvLast = 0;
 						}
 						sqSelected = sq;
-						board.drawSquare(sq);
-						if (mvLast > 0) {
-							int mv = mvLast;
-							mvLast = 0;
-							board.drawMove(mv);
-						}
-						board.drawSquare(sq);
+						board.drawSquare(sq, DRAW_SELECTED);
 						board.playSound(RESP_CLICK);
 					} else if (sqSelected > 0) {
-						int mv = Position.MOVE(sqSelected, sq);
-						if (!pos.legalMove(mv)) {
+						mvLast = Position.MOVE(sqSelected, sq);
+						if (!pos.legalMove(mvLast)) {
 							return;
 						}
 						pc = pos.squares[sqSelected];
-						if (!pos.makeMove(mv)) {
+						if (!pos.makeMove(mvLast)) {
 							board.playSound(RESP_ILLEGAL);
 							return;
 						}
@@ -371,11 +367,8 @@ public class XQWAjaxPage extends WebPage {
 						if (pos.captured()) {
 							pos.setIrrev();
 						}
-						int sqLast = sqSelected;
 						sqSelected = 0;
-						board.drawSquare(sqLast);
-						mvLast = mv;
-						board.drawMove(mv);
+						board.drawMove(mvLast, DRAW_SELECTED);
 						board.playSound(response);
 						if (getResult(board)) {
 							addCookieValue("fen", null);
