@@ -409,7 +409,7 @@ Else
     On Error GoTo 0
     mbp.hInstance = hInstance
     mbp.lpszText = szPrompt
-    mbp.lpszCaption = szTitle
+    mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
     mbp.dwStyle = MB_USERICON
     mbp.lpszIcon = 1
     mbp.dwContextHelpId = 0
