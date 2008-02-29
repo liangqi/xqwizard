@@ -482,6 +482,12 @@ ofn.lpstrFile = String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
 ofn.flags = OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_HIDEREADONLY
+ofn.nFileOffset = 0
+ofn.nFileExtension = 0
+ofn.lpstrDefExt = vbNullString
+ofn.lCustData = 0
+ofn.lpfnHook = 0
+ofn.lpTemplateName = vbNullString
 If GetOpenFileNameA(ofn) <> 0 Then
     OpenFileDialog = TrimNull(ofn.lpstrFile)
 Else
@@ -508,6 +514,12 @@ ofn.lpstrFile = szFileName + String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
 ofn.flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT
+ofn.nFileOffset = 0
+ofn.nFileExtension = 0
+ofn.lpstrDefExt = vbNullString
+ofn.lCustData = 0
+ofn.lpfnHook = 0
+ofn.lpTemplateName = vbNullString
 If GetSaveFileNameA(ofn) <> 0 Then
    SaveFileDialog = TrimNull(ofn.lpstrFile)
 Else
