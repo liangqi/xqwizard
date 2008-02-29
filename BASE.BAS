@@ -473,7 +473,6 @@ ofn.hwndOwner = 0
 On Error Resume Next
 ofn.hwndOwner = Screen.ActiveForm.hWnd
 On Error GoTo 0
-ofn.hInstance = 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
@@ -486,8 +485,6 @@ ofn.nFileOffset = 0
 ofn.nFileExtension = 0
 ofn.lpstrDefExt = vbNullString
 ofn.lCustData = 0
-ofn.lpfnHook = 0
-ofn.lpTemplateName = vbNullString
 If GetOpenFileNameA(ofn) <> 0 Then
     OpenFileDialog = TrimNull(ofn.lpstrFile)
 Else
@@ -505,7 +502,6 @@ ofn.hwndOwner = 0
 On Error Resume Next
 ofn.hwndOwner = Screen.ActiveForm.hWnd
 On Error GoTo 0
-ofn.hInstance = 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
@@ -518,8 +514,6 @@ ofn.nFileOffset = 0
 ofn.nFileExtension = 0
 ofn.lpstrDefExt = vbNullString
 ofn.lCustData = 0
-ofn.lpfnHook = 0
-ofn.lpTemplateName = vbNullString
 If GetSaveFileNameA(ofn) <> 0 Then
    SaveFileDialog = TrimNull(ofn.lpstrFile)
 Else
