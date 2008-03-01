@@ -47,7 +47,7 @@ public class AjaxPlayerPanel extends Panel {
 				setMute(!getMute());
 				target.addComponent(imgMute);
 				muteChanged(target);
-			}			
+			}
 		});
 		add(imgMute.setOutputMarkupId(true));
 		for (int i = 0; i < MAX_VOLUME; i ++) {

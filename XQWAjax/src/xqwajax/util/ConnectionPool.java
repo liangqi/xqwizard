@@ -13,7 +13,7 @@ public class ConnectionPool extends Pool<Connection> {
 	@Override
 	protected Connection makeObject() {
 		try {
-			return DriverManager.getConnection(url);				
+			return DriverManager.getConnection(url);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

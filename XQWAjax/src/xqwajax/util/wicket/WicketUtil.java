@@ -7,7 +7,6 @@ import org.apache.wicket.protocol.http.WebResponse;
 
 import xqwajax.util.Bytes;
 
-
 public class WicketUtil {
 	public static void download(Component component, final String ext, final String type, final byte[] content) {
 		component.getRequestCycle().setRequestTarget(new IRequestTarget() {

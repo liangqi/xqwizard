@@ -51,12 +51,12 @@ public class Base64 {
 				int b2 = data[length + 1] & 0xff;
 				result[j] = ENC_TAB[((b1 << 4) | (b2 >>> 4)) & 0x3f];
 				j ++;
-				result[j] = ENC_TAB[(b2 << 2) & 0x3f];				
+				result[j] = ENC_TAB[(b2 << 2) & 0x3f];
 				j ++;
 			} else {
 				result[j] = ENC_TAB[(b1 << 4) & 0x3f];
 				j ++;
-				result[j] = PADDING_BYTE;				
+				result[j] = PADDING_BYTE;
 				j ++;
 			}
 			result[j] = PADDING_BYTE;
@@ -87,7 +87,7 @@ public class Base64 {
 			j ++;
 			result[j] = (byte) ((b2 << 4) | (b3 >> 2));
 			j ++;
-			result[j] = (byte) ((b3 << 6) | b4);			
+			result[j] = (byte) ((b3 << 6) | b4);
 			j ++;
 		}
 		if (modulus > 1) {
