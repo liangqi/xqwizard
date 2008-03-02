@@ -1,8 +1,8 @@
 /*
-XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part V
+XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
+Designed by Morning Yellow, Version: 1.23, Last Modified: Mar. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,17 @@ package xqwlight;
 
 import java.io.InputStream;
 
+import javax.microedition.lcdui.Choice;
+import javax.microedition.lcdui.ChoiceGroup;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Gauge;
+import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ItemStateListener;
+import javax.microedition.lcdui.Ticker;
 import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 import javax.microedition.media.control.VolumeControl;
@@ -53,8 +63,72 @@ public class XQWLMIDlet extends MIDlet {
 	boolean flipped;
 	int handicap, level, sound, music;
 	Player midiPlayer = null;
-	XQWLForm form = new XQWLForm(this);
+	Form form = new Form("象棋小巫师");
 	XQWLCanvas canvas = new XQWLCanvas(this);
+
+	Command cmdStart = new Command("开始", Command.OK, 1);
+	Command cmdExit = new Command("退出", Command.BACK, 1);
+
+	ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
+			new String[] {"我先走", "电脑先走"}, null);
+	ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP,
+			new String[] {"不让子", "让左马", "让双马", "让九子"}, null);
+	ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
+			new String[] {"入门", "业余", "专业"}, null);
+	Gauge gSound = new Gauge("音效", true, 5, 0);
+	Gauge gMusic = new Gauge("音乐", true, 5, 0);
+
+	{
+		form.append(cgToMove);
+		form.append(cgHandicap);
+		form.append(cgLevel);
+		form.append(gSound);
+		form.append(gMusic);
+		form.addCommand(cmdStart);
+		form.addCommand(cmdExit);
+		form.setTicker(new Ticker("欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师"));
+
+		form.setCommandListener(new CommandListener() {
+			public void commandAction(Command c, Displayable d) {
+				if (false) {
+					// Code Style
+				} else if (c == cmdStart) {
+					flipped = cgToMove.isSelected(1);
+					handicap = cgHandicap.getSelectedIndex();
+					level = cgLevel.getSelectedIndex();
+					sound = gSound.getValue();
+					music = gMusic.getValue();
+					canvas.load();
+					startMusic("canvas");
+					Display.getDisplay(XQWLMIDlet.this).setCurrent(canvas);
+				} else if (c == cmdExit) {
+					destroyApp(false);
+					notifyDestroyed();
+				}
+			}
+		});
+
+		form.setItemStateListener(new ItemStateListener() {
+			public void itemStateChanged(Item i) {
+				if (false) {
+					// Code Style
+				} else if (i == gSound) {
+					sound = gSound.getValue();
+					playSound(0);
+				} else if (i == gMusic) {
+					int originalMusic = music;
+					music = gMusic.getValue();
+					if (music == 0) {
+						stopMusic();
+					} else if (originalMusic == 0) {
+						startMusic("form");
+					} else {
+						setMusicVolume();
+					}
+				}
+			}
+		});
+	}
 
 	private boolean started = false;
 
@@ -90,11 +164,11 @@ public class XQWLMIDlet extends MIDlet {
 		level = Util.MIN_MAX(0, rsData[18], 2);
 		sound = Util.MIN_MAX(0, rsData[19], 5);
 		music = Util.MIN_MAX(0, rsData[20], 5);
-		form.cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
-		form.cgLevel.setSelectedIndex(level, true);
-		form.cgHandicap.setSelectedIndex(handicap, true);
-		form.gSound.setValue(sound);
-		form.gMusic.setValue(music);
+		cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
+		cgLevel.setSelectedIndex(level, true);
+		cgHandicap.setSelectedIndex(handicap, true);
+		gSound.setValue(sound);
+		gMusic.setValue(music);
 		if (rsData[0] == 0) {
 			startMusic("form");
 			Display.getDisplay(this).setCurrent(form);
