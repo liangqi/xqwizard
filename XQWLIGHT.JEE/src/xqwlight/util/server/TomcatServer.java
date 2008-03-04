@@ -1,5 +1,6 @@
-package xqwlight.util.server;
 /* Unavailable
+package xqwlight.util.server;
+
 import java.io.File;
 
 import org.apache.catalina.Context;

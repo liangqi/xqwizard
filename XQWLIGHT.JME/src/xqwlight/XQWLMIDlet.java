@@ -244,7 +244,7 @@ public class XQWLMIDlet extends MIDlet {
 				}
 				while (player.getState() == Player.STARTED) {
 					try {
-						sleep(1);
+						sleep(100);
 					} catch (Exception e) {
 						// Ignored
 					}

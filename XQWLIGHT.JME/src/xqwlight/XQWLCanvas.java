@@ -162,7 +162,7 @@ class XQWLCanvas extends Canvas {
 				public void run() {
 					while (phase == PHASE_LOADING) {
 						try {
-							sleep(1);
+							sleep(100);
 						} catch (Exception e) {
 							// Ignored
 						}

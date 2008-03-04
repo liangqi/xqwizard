@@ -1,4 +1,4 @@
-package xqwajax.util.server;
+package xqwlight.util.server;
 
 import java.io.File;
 
