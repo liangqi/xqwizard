@@ -1,7 +1,7 @@
 import java.io.File;
 
-import xqwajax.util.ClassPath;
-import xqwajax.util.server.JettyServer;
+import xqwlight.util.ClassPath;
+import xqwlight.util.server.JettyServer;
 
 public class Startup {
 	private static final File DEFAULT_HOME = ClassPath.getInstance().

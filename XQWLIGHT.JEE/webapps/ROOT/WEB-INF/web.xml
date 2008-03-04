@@ -11,16 +11,16 @@
   </context-param>
 -->
   <filter>
-    <filter-name>XQWAjaxApp</filter-name>
+    <filter-name>XQWLightApp</filter-name>
     <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
     <init-param>
       <param-name>applicationClassName</param-name>
-      <param-value>xqwajax.XQWAjaxApp</param-value>
+      <param-value>xqwlight.XQWLightApp</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </filter>
   <filter-mapping>
-    <filter-name>XQWAjaxApp</filter-name>
+    <filter-name>XQWLightApp</filter-name>
     <url-pattern>/app/*</url-pattern>
   </filter-mapping>
 </web-app>
