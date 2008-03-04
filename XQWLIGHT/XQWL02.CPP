@@ -39,6 +39,9 @@ const int PIECE_ROOK = 4;
 const int PIECE_CANNON = 5;
 const int PIECE_PAWN = 6;
 
+// 其他常数
+const int MAX_GEN_MOVES = 128;
+
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -80,7 +83,7 @@ static const char ccInFort[256] = {
 };
 
 // 判断步长是否符合特定走法的数组，1=帅(将)，2=仕(士)，3=相(象)
-static const char ccLegalSpan[256] = {
+static const char ccLegalSpan[512] = {
                        0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -117,7 +120,7 @@ static const char ccLegalSpan[256] = {
 };
 
 // 根据步长判断马是否蹩腿的数组
-static const char ccKnightPin[256] = {
+static const char ccKnightPin[512] = {
                               0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -234,17 +237,17 @@ inline int SQUARE_FORWARD(int sq, int sd) {
 
 // 走法是否符合帅(将)的步长
 inline BOOL KING_SPAN(int sqSrc, int sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 1;
+  return ccLegalSpan[sqDst - sqSrc + 256] == 1;
 }
 
 // 走法是否符合仕(士)的步长
 inline BOOL ADVISOR_SPAN(int sqSrc, int sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 2;
+  return ccLegalSpan[sqDst - sqSrc + 256] == 2;
 }
 
 // 走法是否符合相(象)的步长
 inline BOOL BISHOP_SPAN(int sqSrc, int sqDst) {
-  return LEGAL_SPAN[sqDst - sqSrc + 256] == 3;
+  return ccLegalSpan[sqDst - sqSrc + 256] == 3;
 }
 
 // 相(象)眼的位置
@@ -254,7 +257,7 @@ inline int BISHOP_PIN(int sqSrc, int sqDst) {
 
 // 马腿的位置
 inline int KNIGHT_PIN(int sqSrc, int sqDst) {
-  return sqSrc + KNIGHT_PIN[sqDst - sqSrc + 256];
+  return sqSrc + ccKnightPin[sqDst - sqSrc + 256];
 }
 
 // 是否未过河
@@ -308,7 +311,7 @@ inline int MOVE(int sqSrc, int sqDst) {
 }
 
 // 走法水平镜像
-public static int MIRROR_MOVE(int mv) {
+inline int MIRROR_MOVE(int mv) {
   return MOVE(MIRROR_SQUARE(SRC(mv)), MIRROR_SQUARE(DST(mv)));
 }
 
@@ -324,12 +327,13 @@ struct PositionStruct {
   void ChangeSide(void) { // 交换走子方
     sdPlayer = 1 - sdPlayer;
   }
-  int MovePiece(int mv);  // 搬一步棋的棋子
+  int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋
-  BOOL MakeMove(int mv);  // 走一步棋
-  int GenMoves(int *mvs); // 生成所有走法
-  BOOL LegalMove(int mv); // 判断走法是否合理
-  BOOL Checked(void);     // 判断是否被将军
+  BOOL MakeMove(int mv);                      // 走一步棋
+  int GenerateMoves(int *mvs) const;          // 生成所有走法
+  BOOL LegalMove(int mv) const;               // 判断走法是否合理
+  BOOL Checked(void) const;                   // 判断是否被将军
+  BOOL IsMate(void);                          // 判断是否被杀
 };
 
 // 搬一步棋的棋子
@@ -344,7 +348,7 @@ int PositionStruct::MovePiece(int mv) {
 }
 
 // 撤消搬一步棋
-void PositionStruct::UndoMakeMove(int mv, int pcCaptured) {
+void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   int sqSrc, sqDst;
   sqSrc = SRC(mv);
   sqDst = DST(mv);
@@ -364,133 +368,350 @@ BOOL PositionStruct::MakeMove(int mv) {
   return TRUE;
 }
 
-	public boolean legalMove(int mv) {
-		int sqSrc = SRC(mv);
-		int pcSrc = squares[sqSrc];
-		int pcSelfSide = SIDE_TAG(sdPlayer);
-		if ((pcSrc & pcSelfSide) == 0) {
-			return false;
-		}
-
-		int sqDst = DST(mv);
-		int pcDst = squares[sqDst];
-		if ((pcDst & pcSelfSide) != 0) {
-			return false;
-		}
-
-		switch (pcSrc - pcSelfSide) {
-		case PIECE_KING:
-			return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
-		case PIECE_ADVISOR:
-			return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
-		case PIECE_BISHOP:
-			return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
-					squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
-		case PIECE_KNIGHT:
-			int sqPin = KNIGHT_PIN(sqSrc, sqDst);
-			return sqPin != sqSrc && squares[sqPin] == 0;
-		case PIECE_ROOK:
-		case PIECE_CANNON:
-			int delta;
-			if (SAME_RANK(sqSrc, sqDst)) {
-				delta = (sqDst < sqSrc ? -1 : 1);
-			} else if (SAME_FILE(sqSrc, sqDst)) {
-				delta = (sqDst < sqSrc ? -16 : 16);
-			} else {
-				return false;
-			}
-			sqPin = sqSrc + delta;
-			while (sqPin != sqDst && squares[sqPin] == 0) {
-				sqPin += delta;
-			}
-			if (sqPin == sqDst) {
-				return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
-			} else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
-				sqPin += delta;
-				while (sqPin != sqDst && squares[sqPin] == 0) {
-					sqPin += delta;
-				}
-				return sqPin == sqDst;
-			} else {
-				return false;
-			}
-		case PIECE_PAWN:
-			if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
-				return true;
-			}
-			return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
-		default:
-			return false;
-		}
-	}
-
-	public boolean checked() {
+/*
+// 生成所有走法
+int PositionStruct::GenMoves(int *mvs) const {
+		int moves = 0;
 		int pcSelfSide = SIDE_TAG(sdPlayer);
 		int pcOppSide = OPP_SIDE_TAG(sdPlayer);
 		for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
-			if (squares[sqSrc] != pcSelfSide + PIECE_KING) {
+			int pcSrc = squares[sqSrc];
+			if ((pcSrc & pcSelfSide) == 0) {
 				continue;
 			}
-			if (squares[SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide + PIECE_PAWN) {
-				return true;
-			}
-			for (int delta = -1; delta <= 1; delta += 2) {
-				if (squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
-					return true;
-				}
-			}
-			for (int i = 0; i < 4; i ++) {
-				if (squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
-					continue;
-				}
-				for (int j = 0; j < 2; j ++) {
-					int pcDst = squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
-					if (pcDst == pcOppSide + PIECE_KNIGHT) {
-						return true;
+			switch (pcSrc - pcSelfSide) {
+			case PIECE_KING:
+				for (int i = 0; i < 4; i ++) {
+					int sqDst = sqSrc + ccKingDelta[i];
+					if (!IN_FORT(sqDst)) {
+						continue;
+					}
+					int pcDst = squares[sqDst];
+					if (vls == null) {
+						if ((pcDst & pcSelfSide) == 0) {
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							moves ++;
+						}
+					} else if ((pcDst & pcOppSide) != 0) {
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 5);
+						moves ++;
 					}
 				}
-			}
-			for (int i = 0; i < 4; i ++) {
-				int delta = KING_DELTA[i];
-				int sqDst = sqSrc + delta;
-				while (IN_BOARD(sqDst)) {
+				break;
+			case PIECE_ADVISOR:
+				for (int i = 0; i < 4; i ++) {
+					int sqDst = sqSrc + ccAdvisorDelta[i];
+					if (!IN_FORT(sqDst)) {
+						continue;
+					}
 					int pcDst = squares[sqDst];
-					if (pcDst > 0) {
-						if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
-							return true;
+					if (vls == null) {
+						if ((pcDst & pcSelfSide) == 0) {
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							moves ++;
 						}
-						break;
+					} else if ((pcDst & pcOppSide) != 0) {
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 1);
+						moves ++;
+					}
+				}
+				break;
+			case PIECE_BISHOP:
+				for (int i = 0; i < 4; i ++) {
+					int sqDst = sqSrc + ccAdvisorDelta[i];
+					if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) && squares[sqDst] == 0)) {
+						continue;
+					}
+					sqDst += ccAdvisorDelta[i];
+					int pcDst = squares[sqDst];
+					if (vls == null) {
+						if ((pcDst & pcSelfSide) == 0) {
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							moves ++;
+						}
+					} else if ((pcDst & pcOppSide) != 0) {
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 1);
+						moves ++;
+					}
+				}
+				break;
+			case PIECE_KNIGHT:
+				for (int i = 0; i < 4; i ++) {
+					int sqDst = sqSrc + ccKingDelta[i];
+					if (squares[sqDst] > 0) {
+						continue;
+					}
+					for (int j = 0; j < 2; j ++) {
+						sqDst = sqSrc + KNIGHT_DELTA[i][j];
+						if (!IN_BOARD(sqDst)) {
+							continue;
+						}
+						int pcDst = squares[sqDst];
+						if (vls == null) {
+							if ((pcDst & pcSelfSide) == 0) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								moves ++;
+							}
+						} else if ((pcDst & pcOppSide) != 0) {
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							vls[moves] = MVV_LVA(pcDst, 1);
+							moves ++;
+						}
+					}
+				}
+				break;
+			case PIECE_ROOK:
+				for (int i = 0; i < 4; i ++) {
+					int delta = ccKingDelta[i];
+					int sqDst = sqSrc + delta;
+					while (IN_BOARD(sqDst)) {
+						int pcDst = squares[sqDst];
+						if (pcDst == 0) {
+							if (vls == null) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								moves ++;
+							}
+						} else {
+							if ((pcDst & pcOppSide) != 0) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								if (vls != null) {
+									vls[moves] = MVV_LVA(pcDst, 4);
+								}
+								moves ++;
+							}
+							break;
+						}
+						sqDst += delta;
+					}
+				}
+				break;
+			case PIECE_CANNON:
+				for (int i = 0; i < 4; i ++) {
+					int delta = ccKingDelta[i];
+					int sqDst = sqSrc + delta;
+					while (IN_BOARD(sqDst)) {
+						int pcDst = squares[sqDst];
+						if (pcDst == 0) {
+							if (vls == null) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								moves ++;
+							}
+						} else {
+							break;
+						}
+						sqDst += delta;
 					}
 					sqDst += delta;
-				}
-				sqDst += delta;
-				while (IN_BOARD(sqDst)) {
-					int pcDst = squares[sqDst];
-					if (pcDst > 0) {
-						if (pcDst == pcOppSide + PIECE_CANNON) {
-							return true;
+					while (IN_BOARD(sqDst)) {
+						int pcDst = squares[sqDst];
+						if (pcDst > 0) {
+							if ((pcDst & pcOppSide) != 0) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								if (vls != null) {
+									vls[moves] = MVV_LVA(pcDst, 4);
+								}
+								moves ++;
+							}
+							break;
 						}
-						break;
+						sqDst += delta;
 					}
-					sqDst += delta;
 				}
+				break;
+			case PIECE_PAWN:
+				int sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
+				if (IN_BOARD(sqDst)) {
+					int pcDst = squares[sqDst];
+					if (vls == null) {
+						if ((pcDst & pcSelfSide) == 0) {
+							mvs[moves] = MOVE(sqSrc, sqDst);
+							moves ++;
+						}
+					} else if ((pcDst & pcOppSide) != 0) {
+						mvs[moves] = MOVE(sqSrc, sqDst);
+						vls[moves] = MVV_LVA(pcDst, 2);
+						moves ++;
+					}
+				}
+				if (AWAY_HALF(sqSrc, sdPlayer)) {
+					for (int delta = -1; delta <= 1; delta += 2) {
+						sqDst = sqSrc + delta;
+						if (IN_BOARD(sqDst)) {
+							int pcDst = squares[sqDst];
+							if (vls == null) {
+								if ((pcDst & pcSelfSide) == 0) {
+									mvs[moves] = MOVE(sqSrc, sqDst);
+									moves ++;
+								}
+							} else if ((pcDst & pcOppSide) != 0) {
+								mvs[moves] = MOVE(sqSrc, sqDst);
+								vls[moves] = MVV_LVA(pcDst, 2);
+								moves ++;
+							}
+						}
+					}
+				}
+				break;
 			}
-			return false;
 		}
-		return false;
-	}
+		return moves;
+}
+*/
 
-	public boolean isMate() {
-		int[] mvs = new int[MAX_GEN_MOVES];
-		int moves = generateAllMoves(mvs);
-		for (int i = 0; i < moves; i ++) {
-			if (makeMove(mvs[i])) {
-				undoMakeMove();
-				return false;
-			}
-		}
-		return true;
-	}
+// 判断走法是否合理
+BOOL PositionStruct::LegalMove(int mv) const {
+  int sqSrc, sqDst, sqPin;
+  int pcSelfSide, pcSrc, pcDst, nDelta;
+  // 判断走法是否合法，需要经过以下的判断过程：
+
+  // 1. 判断起始格是否有自己的棋子
+  sqSrc = SRC(mv);
+  pcSrc = ucpcSquares[sqSrc];
+  pcSelfSide = SIDE_TAG(sdPlayer);
+  if ((pcSrc & pcSelfSide) == 0) {
+    return FALSE;
+  }
+
+  // 2. 判断目标格是否有自己的棋子
+  sqDst = DST(mv);
+  pcDst = ucpcSquares[sqDst];
+  if ((pcDst & pcSelfSide) != 0) {
+    return FALSE;
+  }
+
+  // 3. 根据棋子的类型检查走法是否合理
+  switch (pcSrc - pcSelfSide) {
+  case PIECE_KING:
+    return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
+  case PIECE_ADVISOR:
+    return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
+  case PIECE_BISHOP:
+    return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
+        ucpcSquares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+  case PIECE_KNIGHT:
+    sqPin = KNIGHT_PIN(sqSrc, sqDst);
+    return sqPin != sqSrc && ucpcSquares[sqPin] == 0;
+  case PIECE_ROOK:
+  case PIECE_CANNON:
+    if (SAME_RANK(sqSrc, sqDst)) {
+      nDelta = (sqDst < sqSrc ? -1 : 1);
+    } else if (SAME_FILE(sqSrc, sqDst)) {
+      nDelta = (sqDst < sqSrc ? -16 : 16);
+    } else {
+      return FALSE;
+    }
+    sqPin = sqSrc + nDelta;
+    while (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
+      sqPin += nDelta;
+    }
+    if (sqPin == sqDst) {
+      return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
+    } else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
+      sqPin += nDelta;
+      while (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
+        sqPin += nDelta;
+      }
+      return sqPin == sqDst;
+    } else {
+      return FALSE;
+    }
+  case PIECE_PAWN:
+    if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+      return TRUE;
+    }
+    return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
+  default:
+    return FALSE;
+  }
+}
+
+// 判断是否被将军
+BOOL PositionStruct::Checked() const {
+  int i, j, sqSrc, sqDst;
+  int pcSelfSide, pcOppSide, pcDst, nDelta;
+  pcSelfSide = SIDE_TAG(sdPlayer);
+  pcOppSide = OPP_SIDE_TAG(sdPlayer);
+  // 找到棋盘上的帅(将)，再做以下判断：
+
+  for (sqSrc = 0; sqSrc < 256; sqSrc ++) {
+    if (ucpcSquares[sqSrc] != pcSelfSide + PIECE_KING) {
+      continue;
+    }
+
+    // 1. 判断是否被对方的兵(卒)将军
+    if (ucpcSquares[SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide + PIECE_PAWN) {
+      return TRUE;
+    }
+    for (nDelta = -1; nDelta <= 1; nDelta += 2) {
+      if (ucpcSquares[sqSrc + nDelta] == pcOppSide + PIECE_PAWN) {
+        return TRUE;
+      }
+    }
+
+    // 2. 判断是否被对方的马将军(以仕(士)的步长当作马腿)
+    for (i = 0; i < 4; i ++) {
+      if (ucpcSquares[sqSrc + ccAdvisorDelta[i]] != 0) {
+        continue;
+      }
+      for (j = 0; j < 2; j ++) {
+        pcDst = ucpcSquares[sqSrc + ccKnightCheckDelta[i][j]];
+        if (pcDst == pcOppSide + PIECE_KNIGHT) {
+          return TRUE;
+        }
+      }
+    }
+
+    // 3. 判断是否被对方的车或炮将军(包括将帅对脸)
+    for (i = 0; i < 4; i ++) {
+      nDelta = ccKingDelta[i];
+      sqDst = sqSrc + nDelta;
+      while (IN_BOARD(sqDst)) {
+        pcDst = ucpcSquares[sqDst];
+	if (pcDst > 0) {
+          if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
+            return TRUE;
+          }
+          break;
+        }
+        sqDst += nDelta;
+      }
+      sqDst += nDelta;
+      while (IN_BOARD(sqDst)) {
+        int pcDst = ucpcSquares[sqDst];
+        if (pcDst > 0) {
+          if (pcDst == pcOppSide + PIECE_CANNON) {
+            return TRUE;
+          }
+          break;
+        }
+        sqDst += nDelta;
+      }
+    }
+    return FALSE;
+  }
+  return FALSE;
+}
+
+// 判断是否被杀
+BOOL PositionStruct::IsMate(void) {
+  int i, nGenMoveNum, pcCaptured;
+  int mvs[MAX_GEN_MOVES];
+
+  nGenMoveNum = GenerateMoves(mvs);
+  for (i = 0; i < nGenMoveNum; i ++) {
+    pcCaptured = MovePiece(mvs[i]);
+    if (Checked()) {
+      UndoMovePiece(mvs[i], pcCaptured);
+      return FALSE;
+    } else {
+      UndoMovePiece(mvs[i], pcCaptured);
+    }
+  }
+  return TRUE;
+}
 
 PositionStruct pos; // 局面实例
 
