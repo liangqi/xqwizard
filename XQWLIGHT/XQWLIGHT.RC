@@ -48,8 +48,8 @@ BEGIN
 END
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1, 0, 0, 0
- PRODUCTVERSION 1, 0, 0, 0
+ FILEVERSION 0, 0, 0, 0
+ PRODUCTVERSION 0, 0, 0, 0
  FILEFLAGSMASK 0x3fL
  FILEFLAGS 0x0L
  FILEOS 0x4L
@@ -60,16 +60,16 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "Comments", "Very Simple Chinese Chess Program 1.0, (C) 2004-2008 www.elephantbase.net\0"
+            VALUE "Comments", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.elephantbase.net\0"
             VALUE "CompanyName", "Author: Morning Yellow (* Shanghai Computer Chess Research Center, eMail: webmaster@elephantbase.net)\0"
-            VALUE "FileDescription", "Very Simple Chinese Chess Program\0"
-            VALUE "FileVersion", "1.0\0"
-            VALUE "InternalName", "Very Simple Chinese Chess Program\0"
-            VALUE "LegalCopyright", "Very Simple Chinese Chess Program 1.0, (C) 2004-2008 www.elephantbase.net\0"
+            VALUE "FileDescription", "XiangQi Wizard Light\0"
+            VALUE "FileVersion", "0.x\0"
+            VALUE "InternalName", "XiangQi Wizard Light\0"
+            VALUE "LegalCopyright", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.elephantbase.net\0"
             VALUE "LegalTrademarks", "www.elephantbase.net\0"
-            VALUE "OriginalFilename", "VSCCP??.EXE\0"
-            VALUE "ProductName", "Very Simple Chinese Chess Program\0"
-            VALUE "ProductVersion", "1.0\0"
+            VALUE "OriginalFilename", "XQWLIGHT.EXE\0"
+            VALUE "ProductName", "XiangQi Wizard Light\0"
+            VALUE "ProductVersion", "0.x\0"
         END
     END
     BLOCK "VarFileInfo"
