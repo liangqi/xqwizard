@@ -238,16 +238,20 @@ public class XQWLMIDlet extends MIDlet {
 					if (vc != null) {
 						vc.setLevel(sound * 10);
 					}
+					long t = player.getDuration();
 					player.start();
+					if (t == Player.TIME_UNKNOWN) {
+						while (player.getState() == Player.STARTED) {
+							sleep(100);
+						}
+					} else {
+						Object mutex = new Object();
+						synchronized (mutex) {
+							mutex.wait(t);
+						}
+					}
 				} catch (Exception e) {
 					// Ignored
-				}
-				while (player.getState() == Player.STARTED) {
-					try {
-						sleep(100);
-					} catch (Exception e) {
-						// Ignored
-					}
 				}
 				player.close();
 			}

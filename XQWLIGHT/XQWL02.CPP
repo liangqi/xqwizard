@@ -368,198 +368,157 @@ BOOL PositionStruct::MakeMove(int mv) {
   return TRUE;
 }
 
-/*
 // 生成所有走法
-int PositionStruct::GenMoves(int *mvs) const {
-		int moves = 0;
-		int pcSelfSide = SIDE_TAG(sdPlayer);
-		int pcOppSide = OPP_SIDE_TAG(sdPlayer);
-		for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
-			int pcSrc = squares[sqSrc];
-			if ((pcSrc & pcSelfSide) == 0) {
-				continue;
-			}
-			switch (pcSrc - pcSelfSide) {
-			case PIECE_KING:
-				for (int i = 0; i < 4; i ++) {
-					int sqDst = sqSrc + ccKingDelta[i];
-					if (!IN_FORT(sqDst)) {
-						continue;
-					}
-					int pcDst = squares[sqDst];
-					if (vls == null) {
-						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = MOVE(sqSrc, sqDst);
-							moves ++;
-						}
-					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = MOVE(sqSrc, sqDst);
-						vls[moves] = MVV_LVA(pcDst, 5);
-						moves ++;
-					}
-				}
-				break;
-			case PIECE_ADVISOR:
-				for (int i = 0; i < 4; i ++) {
-					int sqDst = sqSrc + ccAdvisorDelta[i];
-					if (!IN_FORT(sqDst)) {
-						continue;
-					}
-					int pcDst = squares[sqDst];
-					if (vls == null) {
-						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = MOVE(sqSrc, sqDst);
-							moves ++;
-						}
-					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = MOVE(sqSrc, sqDst);
-						vls[moves] = MVV_LVA(pcDst, 1);
-						moves ++;
-					}
-				}
-				break;
-			case PIECE_BISHOP:
-				for (int i = 0; i < 4; i ++) {
-					int sqDst = sqSrc + ccAdvisorDelta[i];
-					if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) && squares[sqDst] == 0)) {
-						continue;
-					}
-					sqDst += ccAdvisorDelta[i];
-					int pcDst = squares[sqDst];
-					if (vls == null) {
-						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = MOVE(sqSrc, sqDst);
-							moves ++;
-						}
-					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = MOVE(sqSrc, sqDst);
-						vls[moves] = MVV_LVA(pcDst, 1);
-						moves ++;
-					}
-				}
-				break;
-			case PIECE_KNIGHT:
-				for (int i = 0; i < 4; i ++) {
-					int sqDst = sqSrc + ccKingDelta[i];
-					if (squares[sqDst] > 0) {
-						continue;
-					}
-					for (int j = 0; j < 2; j ++) {
-						sqDst = sqSrc + KNIGHT_DELTA[i][j];
-						if (!IN_BOARD(sqDst)) {
-							continue;
-						}
-						int pcDst = squares[sqDst];
-						if (vls == null) {
-							if ((pcDst & pcSelfSide) == 0) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								moves ++;
-							}
-						} else if ((pcDst & pcOppSide) != 0) {
-							mvs[moves] = MOVE(sqSrc, sqDst);
-							vls[moves] = MVV_LVA(pcDst, 1);
-							moves ++;
-						}
-					}
-				}
-				break;
-			case PIECE_ROOK:
-				for (int i = 0; i < 4; i ++) {
-					int delta = ccKingDelta[i];
-					int sqDst = sqSrc + delta;
-					while (IN_BOARD(sqDst)) {
-						int pcDst = squares[sqDst];
-						if (pcDst == 0) {
-							if (vls == null) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								moves ++;
-							}
-						} else {
-							if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								if (vls != null) {
-									vls[moves] = MVV_LVA(pcDst, 4);
-								}
-								moves ++;
-							}
-							break;
-						}
-						sqDst += delta;
-					}
-				}
-				break;
-			case PIECE_CANNON:
-				for (int i = 0; i < 4; i ++) {
-					int delta = ccKingDelta[i];
-					int sqDst = sqSrc + delta;
-					while (IN_BOARD(sqDst)) {
-						int pcDst = squares[sqDst];
-						if (pcDst == 0) {
-							if (vls == null) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								moves ++;
-							}
-						} else {
-							break;
-						}
-						sqDst += delta;
-					}
-					sqDst += delta;
-					while (IN_BOARD(sqDst)) {
-						int pcDst = squares[sqDst];
-						if (pcDst > 0) {
-							if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								if (vls != null) {
-									vls[moves] = MVV_LVA(pcDst, 4);
-								}
-								moves ++;
-							}
-							break;
-						}
-						sqDst += delta;
-					}
-				}
-				break;
-			case PIECE_PAWN:
-				int sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
-				if (IN_BOARD(sqDst)) {
-					int pcDst = squares[sqDst];
-					if (vls == null) {
-						if ((pcDst & pcSelfSide) == 0) {
-							mvs[moves] = MOVE(sqSrc, sqDst);
-							moves ++;
-						}
-					} else if ((pcDst & pcOppSide) != 0) {
-						mvs[moves] = MOVE(sqSrc, sqDst);
-						vls[moves] = MVV_LVA(pcDst, 2);
-						moves ++;
-					}
-				}
-				if (AWAY_HALF(sqSrc, sdPlayer)) {
-					for (int delta = -1; delta <= 1; delta += 2) {
-						sqDst = sqSrc + delta;
-						if (IN_BOARD(sqDst)) {
-							int pcDst = squares[sqDst];
-							if (vls == null) {
-								if ((pcDst & pcSelfSide) == 0) {
-									mvs[moves] = MOVE(sqSrc, sqDst);
-									moves ++;
-								}
-							} else if ((pcDst & pcOppSide) != 0) {
-								mvs[moves] = MOVE(sqSrc, sqDst);
-								vls[moves] = MVV_LVA(pcDst, 2);
-								moves ++;
-							}
-						}
-					}
-				}
-				break;
-			}
-		}
-		return moves;
+int PositionStruct::GenerateMoves(int *mvs) const {
+  int i, j, nMoves, nDelta, sqSrc, sqDst;
+  int pcSelfSide, pcOppSide, pcSrc, pcDst;
+  // 生成所有走法，需要经过以下几个步骤：
+
+  pcSelfSide = SIDE_TAG(sdPlayer);
+  pcOppSide = OPP_SIDE_TAG(sdPlayer);
+  for (sqSrc = 0; sqSrc < 256; sqSrc ++) {
+
+    // 1. 找到一个本方棋子，再做以下判断：
+    pcSrc = ucpcSquares[sqSrc];
+    if ((pcSrc & pcSelfSide) == 0) {
+      continue;
+    }
+
+    // 2. 根据棋子确定走法
+    switch (pcSrc - pcSelfSide) {
+    case PIECE_KING:
+      for (i = 0; i < 4; i ++) {
+        sqDst = sqSrc + ccKingDelta[i];
+        if (!IN_FORT(sqDst)) {
+          continue;
+        }
+        pcDst = ucpcSquares[sqDst];
+        if ((pcDst & pcSelfSide) == 0) {
+          mvs[nMoves] = MOVE(sqSrc, sqDst);
+          nMoves ++;
+        }
+      }
+      break;
+    case PIECE_ADVISOR:
+      for (i = 0; i < 4; i ++) {
+        sqDst = sqSrc + ccAdvisorDelta[i];
+        if (!IN_FORT(sqDst)) {
+          continue;
+        }
+        pcDst = ucpcSquares[sqDst];
+        if ((pcDst & pcSelfSide) == 0) {
+          mvs[nMoves] = MOVE(sqSrc, sqDst);
+          nMoves ++;
+        }
+      }
+      break;
+    case PIECE_BISHOP:
+      for (i = 0; i < 4; i ++) {
+        sqDst = sqSrc + ccAdvisorDelta[i];
+        if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) && ucpcSquares[sqDst] == 0)) {
+          continue;
+        }
+        sqDst += ccAdvisorDelta[i];
+        pcDst = ucpcSquares[sqDst];
+        if ((pcDst & pcSelfSide) == 0) {
+          mvs[nMoves] = MOVE(sqSrc, sqDst);
+          nMoves ++;
+        }
+      }
+      break;
+    case PIECE_KNIGHT:
+      for (i = 0; i < 4; i ++) {
+        sqDst = sqSrc + ccKingDelta[i];
+        if (ucpcSquares[sqDst] > 0) {
+          continue;
+        }
+        for (j = 0; j < 2; j ++) {
+          sqDst = sqSrc + ccKnightDelta[i][j];
+          if (!IN_BOARD(sqDst)) {
+            continue;
+          }
+          pcDst = ucpcSquares[sqDst];
+          if ((pcDst & pcSelfSide) == 0) {
+            mvs[nMoves] = MOVE(sqSrc, sqDst);
+            nMoves ++;
+          }
+        }
+      }
+      break;
+    case PIECE_ROOK:
+      for (i = 0; i < 4; i ++) {
+        nDelta = ccKingDelta[i];
+        sqDst = sqSrc + nDelta;
+        while (IN_BOARD(sqDst)) {
+          pcDst = ucpcSquares[sqDst];
+          if (pcDst == 0) {
+              mvs[nMoves] = MOVE(sqSrc, sqDst);
+              nMoves ++;
+          } else {
+            if ((pcDst & pcOppSide) != 0) {
+              mvs[nMoves] = MOVE(sqSrc, sqDst);
+              nMoves ++;
+            }
+            break;
+          }
+          sqDst += nDelta;
+          }
+      }
+      break;
+    case PIECE_CANNON:
+      for (i = 0; i < 4; i ++) {
+        nDelta = ccKingDelta[i];
+        sqDst = sqSrc + nDelta;
+        while (IN_BOARD(sqDst)) {
+          pcDst = ucpcSquares[sqDst];
+          if (pcDst == 0) {
+            mvs[nMoves] = MOVE(sqSrc, sqDst);
+            nMoves ++;
+          } else {
+            break;
+          }
+          sqDst += nDelta;
+        }
+        sqDst += nDelta;
+        while (IN_BOARD(sqDst)) {
+          pcDst = ucpcSquares[sqDst];
+          if (pcDst > 0) {
+            if ((pcDst & pcOppSide) != 0) {
+              mvs[nMoves] = MOVE(sqSrc, sqDst);
+              nMoves ++;
+            }
+            break;
+          }
+          sqDst += nDelta;
+        }
+      }
+      break;
+    case PIECE_PAWN:
+      sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
+      if (IN_BOARD(sqDst)) {
+        pcDst = ucpcSquares[sqDst];
+        if ((pcDst & pcSelfSide) == 0) {
+          mvs[nMoves] = MOVE(sqSrc, sqDst);
+          nMoves ++;
+        }
+      }
+      if (AWAY_HALF(sqSrc, sdPlayer)) {
+        for (nDelta = -1; nDelta <= 1; nDelta += 2) {
+          sqDst = sqSrc + nDelta;
+          if (IN_BOARD(sqDst)) {
+            pcDst = ucpcSquares[sqDst];
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs[nMoves] = MOVE(sqSrc, sqDst);
+              nMoves ++;
+            }
+          }
+        }
+      }
+      break;
+    }
+  }
+  return nMoves;
 }
-*/
 
 // 判断走法是否合理
 BOOL PositionStruct::LegalMove(int mv) const {
