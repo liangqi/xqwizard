@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.64, Last Modified: Feb. 2008
+' Designed by Morning Yellow, Version: 3.65, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.64"
+Public Const STRING_VERSION     As String = "3.65"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -338,8 +338,9 @@ Else
     szFileName = Replace(szFileName, "*", "＊")
 1110:
     szFileName = Replace(szFileName, "?", "？")
-1120:
-    szFileName = Replace(szFileName, Chr(34), Chr(&HA3A2))
+1121:
+    ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
+    szFileName = Replace(szFileName, Chr(34), "'")
 1130:
     szFileName = Replace(szFileName, "<", "＜")
 1140:
