@@ -240,15 +240,11 @@ public class XQWLMIDlet extends MIDlet {
 					}
 					long t = player.getDuration();
 					player.start();
-					if (t == Player.TIME_UNKNOWN) {
-						while (player.getState() == Player.STARTED) {
-							sleep(100);
-						}
-					} else {
-						Object mutex = new Object();
-						synchronized (mutex) {
-							mutex.wait(t);
-						}
+					if (t != Player.TIME_UNKNOWN) {
+						sleep(t);
+					}
+					while (player.getState() == Player.STARTED) {
+						sleep(100);
 					}
 				} catch (Exception e) {
 					// Ignored
