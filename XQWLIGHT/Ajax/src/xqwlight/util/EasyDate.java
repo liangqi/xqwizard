@@ -11,13 +11,13 @@ public class EasyDate extends Date {
 
 	private static DateFormat dfDate = DateFormat.getDateInstance(DateFormat.MEDIUM);
 	private static DateFormat dfTime = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-	private static long timeZoneOffset = -TimeZone.getDefault().getRawOffset();
+	private static int timeZoneOffset = TimeZone.getDefault().getRawOffset();
 
 	private static long parseTime(String strTime) {
 		try {
 			return dfTime.parse(strTime).getTime();
 		} catch (Exception e) {
-			return timeZoneOffset;
+			return -timeZoneOffset;
 		}
 	}
 
@@ -25,7 +25,7 @@ public class EasyDate extends Date {
 		try {
 			return dfDate.parse(strDate).getTime();
 		} catch (Exception e) {
-			return timeZoneOffset;
+			return -timeZoneOffset;
 		}
 	}
 
@@ -42,7 +42,7 @@ public class EasyDate extends Date {
 	}
 
 	public EasyDate(String strDate, String strTime) {
-		super(parseDate(strDate) + parseTime(strTime) - timeZoneOffset);
+		super(parseDate(strDate) + parseTime(strTime) + timeZoneOffset);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class EasyDate extends Date {
 	}
 
 	public EasyDate lastMidnight() {
-		return new EasyDate((getTime() - timeZoneOffset) / ONE_DAY_TIME * ONE_DAY_TIME + timeZoneOffset);
+		return new EasyDate((getTime() + timeZoneOffset) / ONE_DAY_TIME * ONE_DAY_TIME - timeZoneOffset);
 	}
 
 	public EasyDate nextMidnight() {

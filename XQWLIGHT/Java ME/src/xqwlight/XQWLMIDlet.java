@@ -2,7 +2,7 @@
 XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.23, Last Modified: Mar. 2008
+Designed by Morning Yellow, Version: 1.24, Last Modified: Mar. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -43,15 +43,7 @@ import javax.microedition.rms.RecordStore;
 
 public class XQWLMIDlet extends MIDlet {
 	private static final String STORE_NAME = "XQWLight";
-	/**
-	 * 0: Status, 0 = Normal Exit, 1 = Game Saved
-	 * 16: Player, 0 = Red, 1 = Black (Flipped)
-	 * 17: Handicap, 0 = None, 1 = 1 Knight, 2 = 2 Knights, 3 = 9 Pieces
-	 * 18: Level, 0 = Beginner, 1 = Amateur, 2 = Expert
-	 * 19: Sound Level, 0 = Mute, 5 = Max
-	 * 20: Music Level, 0 = Mute, 5 = Max
-	 * 256-511: Squares
-	 */
+
 	static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
 		"check", "check2", "win", "draw", "loss",
@@ -59,6 +51,15 @@ public class XQWLMIDlet extends MIDlet {
 
 	static final int RS_DATA_LEN = 512;
 
+	/**
+	 * 0: Status, 0 = Normal Exit, 1 = Game Saved<br>
+	 * 16: Player, 0 = Red, 1 = Black (Flipped)<br>
+	 * 17: Handicap, 0 = None, 1 = 1 Knight, 2 = 2 Knights, 3 = 9 Pieces<br>
+	 * 18: Level, 0 = Beginner, 1 = Amateur, 2 = Expert<br>
+	 * 19: Sound Level, 0 = Mute, 5 = Max<br>
+	 * 20: Music Level, 0 = Mute, 5 = Max<br>
+	 * 256-511: Squares
+	 */
 	byte[] rsData = new byte[RS_DATA_LEN];
 	boolean flipped;
 	int handicap, level, sound, music;
@@ -228,28 +229,28 @@ public class XQWLMIDlet extends MIDlet {
 		final int i = response;
 		new Thread() {
 			public void run() {
-				Player player = createPlayer("/sounds/" + SOUND_NAME[i] + ".wav", "audio/x-wav");
-				if (player == null) {
+				Player p = createPlayer("/sounds/" + SOUND_NAME[i] + ".wav", "audio/x-wav");
+				if (p == null) {
 					return;
 				}
 				try {
-					player.realize();
-					VolumeControl vc = (VolumeControl) player.getControl("VolumeControl");
+					p.realize();
+					VolumeControl vc = (VolumeControl) p.getControl("VolumeControl");
 					if (vc != null) {
 						vc.setLevel(sound * 10);
 					}
-					long t = player.getDuration();
-					player.start();
+					long t = p.getDuration();
+					p.start();
 					if (t != Player.TIME_UNKNOWN) {
-						sleep(t);
+						sleep(t / 1000 + 1);
 					}
-					while (player.getState() == Player.STARTED) {
+					while (p.getState() == Player.STARTED) {
 						sleep(100);
 					}
 				} catch (Exception e) {
 					// Ignored
 				}
-				player.close();
+				p.close();
 			}
 		}.start();
 	}
