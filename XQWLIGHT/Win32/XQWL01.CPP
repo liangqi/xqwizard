@@ -285,7 +285,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
   HDC hdc;
   RECT rect;
   PAINTSTRUCT ps;
-  MSGBOXPARAMS msgbox;
+  MSGBOXPARAMS mbp;
 
   switch (uMsg) {
   // 新建窗口
@@ -319,17 +319,17 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     case IDM_HELP_ABOUT:
       // 弹出带VSCCP图标的对话框
       MessageBeep(MB_ICONINFORMATION);
-      msgbox.cbSize = sizeof(MSGBOXPARAMS);
-      msgbox.hwndOwner = hWnd;
-      msgbox.hInstance = Xqwl.hInst;
-      msgbox.lpszText = cszAbout;
-      msgbox.lpszCaption = "关于象棋小巫师";
-      msgbox.dwStyle = MB_USERICON;
-      msgbox.lpszIcon = MAKEINTRESOURCE(IDI_APPICON);
-      msgbox.dwContextHelpId = 0;
-      msgbox.lpfnMsgBoxCallback = NULL;
-      msgbox.dwLanguageId = 0;
-      MessageBoxIndirect(&msgbox);
+      mbp.cbSize = sizeof(MSGBOXPARAMS);
+      mbp.hwndOwner = hWnd;
+      mbp.hInstance = Xqwl.hInst;
+      mbp.lpszText = cszAbout;
+      mbp.lpszCaption = "关于象棋小巫师";
+      mbp.dwStyle = MB_USERICON;
+      mbp.lpszIcon = MAKEINTRESOURCE(IDI_APPICON);
+      mbp.dwContextHelpId = 0;
+      mbp.lpfnMsgBoxCallback = NULL;
+      mbp.dwLanguageId = 0;
+      MessageBoxIndirect(&mbp);
       break;
     }
     break;

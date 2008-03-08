@@ -328,7 +328,7 @@ struct PositionStruct {
     sdPlayer = 1 - sdPlayer;
   }
   int MovePiece(int mv);                      // 搬一步棋的棋子
-  void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋
+  void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
   BOOL MakeMove(int mv);                      // 走一步棋
   int GenerateMoves(int *mvs) const;          // 生成所有走法
   BOOL LegalMove(int mv) const;               // 判断走法是否合理
@@ -347,7 +347,7 @@ int PositionStruct::MovePiece(int mv) {
   return pcCaptured;
 }
 
-// 撤消搬一步棋
+// 撤消搬一步棋的棋子
 void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   int sqSrc, sqDst;
   sqSrc = SRC(mv);
@@ -368,12 +368,15 @@ BOOL PositionStruct::MakeMove(int mv) {
   return TRUE;
 }
 
+// 撤消走一步棋
+
 // 生成所有走法
 int PositionStruct::GenerateMoves(int *mvs) const {
   int i, j, nMoves, nDelta, sqSrc, sqDst;
   int pcSelfSide, pcOppSide, pcSrc, pcDst;
   // 生成所有走法，需要经过以下几个步骤：
 
+  nMoves = 0;
   pcSelfSide = SIDE_TAG(sdPlayer);
   pcOppSide = OPP_SIDE_TAG(sdPlayer);
   for (sqSrc = 0; sqSrc < 256; sqSrc ++) {
@@ -662,7 +665,7 @@ BOOL PositionStruct::IsMate(void) {
   nGenMoveNum = GenerateMoves(mvs);
   for (i = 0; i < nGenMoveNum; i ++) {
     pcCaptured = MovePiece(mvs[i]);
-    if (Checked()) {
+    if (!Checked()) {
       UndoMovePiece(mvs[i], pcCaptured);
       return FALSE;
     } else {
@@ -775,25 +778,35 @@ static void DrawBoard(HDC hdc) {
   DeleteDC(hdcTmp);
 }
 
-// 走一步棋
-static void MakeMove(int mv) {
-  int sqSrc, sqDst, pc;
-  sqSrc = SRC(mv);
-  sqDst = DST(mv);
-  pc = pos.ucpcSquares[sqSrc];
-  pos.ucpcSquares[sqSrc] = 0;
-  pos.ucpcSquares[sqDst] = pc;
-  pos.sdPlayer = 1 - pos.sdPlayer;
-}
-
 // 播放资源声音
 inline void PlayResWav(int nResId) {
   PlaySound(MAKEINTRESOURCE(nResId), Xqwl.hInst, SND_ASYNC | SND_NOWAIT | SND_RESOURCE);
 }
 
+// 弹出不带声音的提示框
+static void MessageBoxMute(char *lpszText) {
+  MSGBOXPARAMS mbp;
+  mbp.cbSize = sizeof(MSGBOXPARAMS);
+  mbp.hwndOwner = Xqwl.hWnd;
+  mbp.hInstance = NULL;
+  mbp.lpszText = lpszText;
+  mbp.lpszCaption = "象棋小巫师";
+  mbp.dwStyle = MB_USERICON;
+  mbp.lpszIcon = MAKEINTRESOURCE(IDI_INFORMATION);
+  mbp.dwContextHelpId = 0;
+  mbp.lpfnMsgBoxCallback = NULL;
+  mbp.dwLanguageId = 0;
+  if (MessageBoxIndirect(&mbp) == 0) {
+    // 系统图标在 Windows 98 下会失败，所以要使用应用程序图标
+    mbp.hInstance = Xqwl.hInst;
+    mbp.lpszIcon = MAKEINTRESOURCE(IDI_APPICON);
+    MessageBoxIndirect(&mbp);
+  }
+}
+
 // 点击格子事件处理
 static void ClickSquare(int sq) {
-  int pc;
+  int pc, mv;
   HDC hdc, hdcTmp;
 
   hdc = GetDC(Xqwl.hWnd);
@@ -813,12 +826,30 @@ static void ClickSquare(int sq) {
     PlayResWav(IDR_CLICK); // 播放点击的声音
   // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
   } else if (Xqwl.sqSelected != 0) {
-    Xqwl.mvLast = MOVE(Xqwl.sqSelected, sq);
-    MakeMove(Xqwl.mvLast);
-    DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
-    DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
-    Xqwl.sqSelected = 0;
-    PlayResWav(pc == 0 ? IDR_MOVE : IDR_CAPTURE); // 播放走子或吃子的声音
+    mv = MOVE(Xqwl.sqSelected, sq);
+    if (pos.LegalMove(mv)) {
+      if (pos.MakeMove(mv)) {
+        Xqwl.mvLast = mv;
+        DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
+        DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
+        Xqwl.sqSelected = 0;
+        if (pos.IsMate()) {
+          // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
+          PlayResWav(pos.sdPlayer == 0 ? IDR_LOSS : IDR_WIN);
+          MessageBoxMute(pos.sdPlayer == 0 ? "黑胜。" : "红胜。");
+        } else {
+          // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
+          if (pos.sdPlayer == 0) {
+            PlayResWav(pos.Checked() ? IDR_CHECK2 : pc != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
+          } else {
+            PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
+          }
+        }
+      } else {
+        PlayResWav(IDR_ILLEGAL); // 播放被将军的声音
+      }
+    }
+    // 如果根本就不符合走法(例如马不走日字)，那么程序不予理会
   }
   DeleteDC(hdcTmp);
   ReleaseDC(Xqwl.hWnd, hdc);
@@ -836,7 +867,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
   HDC hdc;
   RECT rect;
   PAINTSTRUCT ps;
-  MSGBOXPARAMS msgbox;
+  MSGBOXPARAMS mbp;
 
   switch (uMsg) {
   // 新建窗口
@@ -870,17 +901,17 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     case IDM_HELP_ABOUT:
       // 弹出带VSCCP图标的对话框
       MessageBeep(MB_ICONINFORMATION);
-      msgbox.cbSize = sizeof(MSGBOXPARAMS);
-      msgbox.hwndOwner = hWnd;
-      msgbox.hInstance = Xqwl.hInst;
-      msgbox.lpszText = cszAbout;
-      msgbox.lpszCaption = "关于象棋小巫师";
-      msgbox.dwStyle = MB_USERICON;
-      msgbox.lpszIcon = MAKEINTRESOURCE(IDI_APPICON);
-      msgbox.dwContextHelpId = 0;
-      msgbox.lpfnMsgBoxCallback = NULL;
-      msgbox.dwLanguageId = 0;
-      MessageBoxIndirect(&msgbox);
+      mbp.cbSize = sizeof(MSGBOXPARAMS);
+      mbp.hwndOwner = hWnd;
+      mbp.hInstance = Xqwl.hInst;
+      mbp.lpszText = cszAbout;
+      mbp.lpszCaption = "关于象棋小巫师";
+      mbp.dwStyle = MB_USERICON;
+      mbp.lpszIcon = MAKEINTRESOURCE(IDI_APPICON);
+      mbp.dwContextHelpId = 0;
+      mbp.lpfnMsgBoxCallback = NULL;
+      mbp.dwLanguageId = 0;
+      MessageBoxIndirect(&mbp);
       break;
     }
     break;
