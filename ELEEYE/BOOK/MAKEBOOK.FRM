@@ -289,7 +289,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' ElephantEye Book Maker - a Chinese Chess Book Maker Program for ElephantEye
-' Designed by Morning Yellow, Version: 3.1, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.13, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This library is free software; you can redistribute it and/or
@@ -316,6 +316,7 @@ Private fs As Object
 Private Sub Form_Load()
 
 CchessInit
+EccoInitOpenVar
 txtBookFile.Text = GetSetting("XQWizard", "Engine", "BookFiles", "")
 Set fs = CreateObject("Scripting.FileSystemObject")
 

@@ -26,7 +26,7 @@ Begin VB.Form frmViewBook
       Height          =   375
       Left            =   600
       TabIndex        =   0
-      Top             =   2640
+      Top             =   2760
       Width           =   1215
    End
    Begin MSComctlLib.ImageList imglst 
@@ -773,7 +773,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' ElephantEye Book Maker - a Chinese Chess Book Maker Program for ElephantEye
-' Designed by Morning Yellow, Version: 3.1, Last Modified: Nov. 2007
+' Designed by Morning Yellow, Version: 3.13, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This library is free software; you can redistribute it and/or
@@ -797,12 +797,13 @@ Private Declare Function GetBookMoves Lib "MAKEBOOK.DLL" Alias "_GetBookMoves@16
 
 Private Const MAX_NODE_NUM As Integer = 32767
 Private Nodes_szFen(0 To MAX_NODE_NUM) As String
+Private Nodes_szFile(0 To MAX_NODE_NUM) As String
 Private Nodes_bExpanded(0 To MAX_NODE_NUM) As Boolean
 Private Nodes_nIndex As Integer
 
 Private Sub AddNode(ByRef pos As PositionStruct, ByVal mv As Long, ByVal vl As Long, Optional ByVal nIndex As Integer = -1)
 
-Dim nStatus As Long, sz As String
+Dim nStatus As Long, sz As String, dwFile As Long
 Dim pc As Integer, nPicId As Integer
 
 If Nodes_nIndex = MAX_NODE_NUM Then
@@ -814,7 +815,8 @@ If pc = 0 Then
 Else
     nPicId = PieceType(pc) + IIf(pc < 32, 2, 9)
 End If
-sz = Mid(MkC(CchessFile2Chin(CchessMove2File(mv, pos), pos.sdPlayer)), 2) + "(" + LTrim(Str(vl)) + ")"
+dwFile = CchessMove2File(mv, pos)
+sz = Mid(MkC(CchessFile2Chin(dwFile, pos.sdPlayer)), 2) + "(" + LTrim(Str(vl)) + ")"
 If nIndex = -1 Then
     tree.Nodes.Add , , , sz, nPicId
 Else
@@ -822,6 +824,11 @@ Else
 End If
 CchessTryMove pos, nStatus, mv
 Nodes_szFen(Nodes_nIndex) = MkBStr(CchessBoard2Fen(pos))
+If nIndex = -1 Then
+    Nodes_szFile(Nodes_nIndex) = MkL(dwFile)
+Else
+    Nodes_szFile(Nodes_nIndex) = Nodes_szFile(nIndex) + MkL(dwFile)
+End If
 CchessUndoMove pos
 Nodes_bExpanded(Nodes_nIndex) = False
 Nodes_nIndex = Nodes_nIndex + 1
@@ -881,6 +888,7 @@ End Sub
 Private Sub tree_NodeClick(ByVal n As Node)
 
 Dim i As Integer, nMoveNum, nIndex As Integer
+Dim dwEcco As Long, szEcco As String, szOpen As String, szVar As String
 Dim mvs(1 To 128) As Long, vls(1 To 128) As Long
 Dim pos As PositionStruct
 
@@ -894,6 +902,12 @@ If Not Nodes_bExpanded(nIndex) Then
         AddNode pos, mvs(i), vls(i), nIndex
     Next
 End If
+dwEcco = EccoIndex(Nodes_szFile(nIndex))
+szEcco = Left(MkL(dwEcco), 3)
+szOpen = MkBStr(EccoOpening(dwEcco))
+szVar = MkBStr(EccoVariation(dwEcco))
+
+Caption = "ä¯ÀÀ¿ª¾Ö¿â - " + szOpen + IIf(szVar = "", "", "¡ª¡ª") + szVar + "(" + szEcco + ")"
 
 End Sub
 
