@@ -1,7 +1,7 @@
-中国象棋对弈程序ElephantEye(象眼)　版本：3.0
+中国象棋对弈程序ElephantEye(象眼)　版本：3.13
 
-黄晨 *　2007年11月
-( * 联系地址：复旦大学化学系表面化学实验室，eMail：webmaster@elephantbase.net)
+黄晨 *　2008年3月
+( * 联系地址：上海计算机博弈研究所，eMail：webmaster@elephantbase.net)
 
 一、简介
 
@@ -21,7 +21,7 @@
 　　probe {fen <fen_str> | startpos} [moves <move_list>]
 　　quit
 (2) 可以返回的UCCI信息有：
-　　id {name <engine_name> | copyright <copyright_info> | author <author_name> | user <user_name>}
+　　id {name <engine_name> | version <version_name> | copyright <copyright_info> | author <author_name> | user <user_name>}
 　　option ...
 　　ucciok
 　　info ...
@@ -127,10 +127,10 @@
 
 十、相关资源
 
-　　SourceForge 是 ElephantEye 源程序的唯一发布网站，下载页面是：
-　　　　http://sourceforge.net/projects/elephanteye/
-　　ElephantEye 的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
-　　　　https://elephanteye.svn.sourceforge.net/svnroot/elephanteye/
+　　ElephantEye的源程序发布在SourceForge的XiangQi Wizard项目中，其页面是：
+　　　　http://sourceforge.net/projects/xqwizard/
+　　ElephantEye的版本改进，实时同步地发布在SourceForge的SVN站点上，获取地址是：
+　　　　https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 　　　　http://sourceforge.net/projects/tortoisesvn/
 

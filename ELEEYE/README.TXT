@@ -1,7 +1,7 @@
 中国象棋对弈程序ElephantEye(象眼)　版本：3.13
 
 黄晨 *　2008年3月
-( * 联系地址：复旦大学化学系表面化学实验室，eMail：webmaster@elephantbase.net)
+( * 联系地址：上海计算机博弈研究所，eMail：webmaster@elephantbase.net)
 
 一、简介
 
@@ -127,10 +127,10 @@
 
 十、相关资源
 
-　　ElephantEye 的源程序已发布在 SourceForge 的 XiangQi Wizard 项目中，下载页面是：
+　　ElephantEye的源程序发布在SourceForge的XiangQi Wizard项目中，其页面是：
 　　　　http://sourceforge.net/projects/xqwizard/
-　　ElephantEye 的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
-　　　　https://xqwizard.svn.sourceforge.net/
+　　ElephantEye的版本改进，实时同步地发布在SourceForge的SVN站点上，获取地址是：
+　　　　https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 　　　　http://sourceforge.net/projects/tortoisesvn/
 
