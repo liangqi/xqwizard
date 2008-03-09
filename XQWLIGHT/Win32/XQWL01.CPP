@@ -224,17 +224,6 @@ static void DrawBoard(HDC hdc) {
   DeleteDC(hdcTmp);
 }
 
-// 走一步棋
-static void MakeMove(int mv) {
-  int sqSrc, sqDst, pc;
-  sqSrc = SRC(mv);
-  sqDst = DST(mv);
-  pc = pos.ucpcSquares[sqSrc];
-  pos.ucpcSquares[sqSrc] = 0;
-  pos.ucpcSquares[sqDst] = pc;
-  pos.sdPlayer = 1 - pos.sdPlayer;
-}
-
 // 播放资源声音
 inline void PlayResWav(int nResId) {
   PlaySound(MAKEINTRESOURCE(nResId), Xqwl.hInst, SND_ASYNC | SND_NOWAIT | SND_RESOURCE);
@@ -263,7 +252,7 @@ static void ClickSquare(int sq) {
   // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
   } else if (Xqwl.sqSelected != 0) {
     Xqwl.mvLast = MOVE(Xqwl.sqSelected, sq);
-    MakeMove(Xqwl.mvLast);
+    pos.MakeMove(Xqwl.mvLast);
     DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
     DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
     Xqwl.sqSelected = 0;

@@ -40,7 +40,7 @@ const int PIECE_CANNON = 5;
 const int PIECE_PAWN = 6;
 
 // 其他常数
-const int MAX_GEN_MOVES = 128;
+const int MAX_GEN_MOVES = 128; // 最大的生成走法数
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {

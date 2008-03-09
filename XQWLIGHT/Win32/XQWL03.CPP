@@ -5,11 +5,14 @@
  *
  * 象棋小巫师 0.3 的目标：
  * 一、用子力位置价值表实现局面评价函数；
- * 二、用Alpha-Beta搜索让电脑走棋；
- * 三、增加历史表启发，优化Alpha-Beta搜索的效率；
- * 四、增加杀棋步数评价，能有效搜索杀棋。
+ * 二、用超出边界(Fail-Soft)的Alpha-Beta搜索让电脑走棋；
+ * 三、用迭代加深技术实现时间控制；
+ * 四、增加历史表启发，优化Alpha-Beta搜索的效率；
+ * 五、增加杀棋步数评价，能有效搜索杀棋。
  */
 
+#include <stdlib.h>
+#include <time.h>
 #include <windows.h>
 #include "resource.h"
 
@@ -42,9 +45,11 @@ const int PIECE_CANNON = 5;
 const int PIECE_PAWN = 6;
 
 // 其他常数
-const int MAX_GEN_MOVES = 128;
-const int MATE_VALUE = 10000;
-const int WIN_VALUE = MATE_VALUE - 100;
+const int MAX_GEN_MOVES = 128; // 最大的生成走法数
+const int LIMIT_DEPTH = 32;    // 最大的搜索深度
+const int MATE_VALUE = 10000;  // 最高分值，即将死的分值
+const int WIN_VALUE = MATE_VALUE - 100; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
+const int ADVANCED_VALUE = 3;  // 先行权分值
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
@@ -447,7 +452,8 @@ inline int MIRROR_MOVE(int mv) {
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   unsigned char ucpcSquares[256]; // 棋盘上的棋子
-  int vlPieces, nDistance;        // 子力价值(红优为正)、距离根节点的步数
+  int vlRed, vlBlack;             // 红、黑双方的子力价值
+  int nDistance;                  // 距离根节点的步数
 
   void Startup(void);             // 初始化棋盘
   void ChangeSide(void) {         // 交换走子方
@@ -456,17 +462,29 @@ struct PositionStruct {
   void AddPiece(int sq, int pc) { // 在棋盘上放一枚棋子
     ucpcSquares[sq] = pc;
     // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
-    vlPieces += (pc < 16 ? cucvlPiecePos[pc - 8][sq] : -cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)]);
+    if (pc < 16) {
+      vlRed += cucvlPiecePos[pc - 8][sq];
+    } else {
+      vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
+    }
   }
   void DelPiece(int sq, int pc) { // 从棋盘上拿走一枚棋子
     ucpcSquares[sq] = 0;
     // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
-    vlPieces -= (pc < 16 ? cucvlPiecePos[pc - 8][sq] : -cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)]);
+    if (pc < 16) {
+      vlRed -= cucvlPiecePos[pc - 8][sq];
+    } else {
+      vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
+    }
+  }
+  int Evaluate(void) const {      // 局面评价函数
+    return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
   }
   int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
-  BOOL MakeMove(int mv);                      // 走一步棋
+  BOOL MakeMove(int mv, int &pcCaptured);     // 走一步棋
   void UndoMakeMove(int mv, int pcCaptured) { // 撤消走一步棋
+    nDistance --;
     ChangeSide();
     UndoMovePiece(mv, pcCaptured);
   }
@@ -479,7 +497,7 @@ struct PositionStruct {
 // 初始化棋盘
 void PositionStruct::Startup(void) {
   int sq, pc;
-  sdPlayer = vlPieces = nDistance = 0;
+  sdPlayer = vlRed = vlBlack = nDistance = 0;
   memset(ucpcSquares, 0, 256);
   for (sq = 0; sq < 256; sq ++) {
     pc = cucpcStartup[sq];
@@ -518,14 +536,14 @@ void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
 }
 
 // 走一步棋
-BOOL PositionStruct::MakeMove(int mv) {
-  int pc;
-  pc = MovePiece(mv);
+BOOL PositionStruct::MakeMove(int mv, int &pcCaptured) {
+  pcCaptured = MovePiece(mv);
   if (Checked()) {
-    UndoMovePiece(mv, pc);
+    UndoMovePiece(mv, pcCaptured);
     return FALSE;
   }
   ChangeSide();
+  nDistance ++;
   return TRUE;
 }
 
@@ -842,7 +860,89 @@ static struct {
   HWND hWnd;                                    // 主窗口句柄
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
   int sqSelected, mvLast;                       // 选中的格子，上一步棋
+  int nHistoryTable[65536];                     // 历史表
 } Xqwl;
+
+// "qsort"排序的比较函数
+static int CompareMove(int mv1, int mv2) {
+  return Xqwl.nHistoryTable[mv1] - Xqwl.nHistoryTable[mv2];
+}
+
+// Alpha-Beta完全搜索过程
+static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
+  int i, nMoves, pcCaptured;
+  int vl, vlBest, mvBest;
+  int mvs[MAX_GEN_MOVES];
+  // 一个Alpha-Beta完全搜索分为以下几个阶段
+
+  // 1. 到达水平线，则返回局面评价值
+  if (nDepth == 0) {
+    return pos.Evaluate();
+  }
+
+  // 2. 生成全部走法，并根据历史表排序
+  nMoves = pos.GenerateMoves(mvs);
+  qsort(mvs, nMoves, sizeof(int), (int (*)(const void *, const void *)) CompareMove);
+
+  // 3. 逐一走这些走法，并进行递归
+  vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
+  mvBest = 0;           // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
+  for (i = 0; i < nMoves; i ++) {
+    if (pos.MakeMove(mvs[i], pcCaptured)) {
+      vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
+      pos.UndoMakeMove(mvs[i], pcCaptured);
+
+      // 4. 进行Alpha-Beta大小判断和截断
+      if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
+        vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta窗口
+        if (vl >= vlBeta) { // 找到一个Beta走法
+          mvBest = mvs[i];  // Beta走法要保存到历史表
+          break;            // Beta截断
+        }
+        if (vl > vlAlpha) { // 找到一个PV走法
+          mvBest = mvs[i];  // PV走法要保存到历史表
+          vlAlpha = vl;     // 缩小Alpha-Beta窗口
+        }
+      }
+    }
+  }
+
+  // 5. 所有走法都搜索完了，把最佳走法(不能是Alpha走法)保存到历史表，返回最佳值
+  if (vlBest == -MATE_VALUE) {
+    // 如果是杀棋，就根据杀棋步数给出评价
+    return pos.nDistance - MATE_VALUE;
+  }
+  if (mvBest > 0) {
+    // 如果不是Alpha走法，就将最佳走法保存到历史表
+    Xqwl.nHistoryTable[mvBest] += nDepth * nDepth;
+    if (pos.nDistance == 0) {
+      // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
+      Xqwl.mvLast = mvBest;
+    }
+  }
+  return vlBest;
+}
+
+// 迭代加深搜索过程
+static void SearchMain(void) {
+  int i, t, vl;
+
+  // 清空历史表
+  memset(Xqwl.nHistoryTable, 0, 65536 * sizeof(int));
+  t = clock();
+  // 迭代加深
+  for (i = 1; i <= LIMIT_DEPTH; i ++) {
+    vl = SearchFull(-MATE_VALUE, MATE_VALUE, i);
+    // 搜索到杀棋，就终止搜索
+    if (vl > WIN_VALUE || vl < -WIN_VALUE) {
+      break;
+    }
+    // 超过一秒钟，就终止搜索
+    if (clock() - t > CLOCKS_PER_SEC) {
+      break;
+    }
+  }
+}
 
 // TransparentBlt 的替代函数，用来修正原函数在 Windows 98 下资源泄漏的问题
 static void TransparentBlt2(HDC hdcDest, int nXOriginDest, int nYOriginDest, int nWidthDest, int nHeightDest,
@@ -987,7 +1087,7 @@ static void ClickSquare(int sq) {
   } else if (Xqwl.sqSelected != 0) {
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
-      if (pos.MakeMove(mv)) {
+      if (pos.MakeMove(mv, pc)) {
         Xqwl.mvLast = mv;
         DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
         DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
