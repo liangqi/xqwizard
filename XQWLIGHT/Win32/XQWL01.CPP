@@ -127,8 +127,8 @@ PositionStruct pos; // 局面实例
 static struct {
   HINSTANCE hInst;                              // 应用程序句柄实例
   HWND hWnd;                                    // 主窗口句柄
-  int sqSelected, mvLast;                       // 选中的格子，上一步棋
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
+  int sqSelected, mvLast;                       // 选中的格子，上一步棋
 } Xqwl;
 
 // TransparentBlt 的替代函数，用来修正原函数在 Windows 98 下资源泄漏的问题
