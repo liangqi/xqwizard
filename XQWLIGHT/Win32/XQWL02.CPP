@@ -320,12 +320,18 @@ struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   unsigned char ucpcSquares[256]; // 棋盘上的棋子
 
-  void Startup(void) {    // 初始化棋盘
+  void Startup(void) {            // 初始化棋盘
     sdPlayer = 0;
     memcpy(ucpcSquares, cucpcStartup, 256);
   }
-  void ChangeSide(void) { // 交换走子方
+  void ChangeSide(void) {         // 交换走子方
     sdPlayer = 1 - sdPlayer;
+  }
+  void AddPiece(int sq, int pc) { // 在棋盘上放一枚棋子
+    ucpcSquares[sq] = pc;
+  }
+  void DelPiece(int sq) {         // 从棋盘上拿走一枚棋子
+    ucpcSquares[sq] = 0;
   }
   int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
@@ -338,22 +344,26 @@ struct PositionStruct {
 
 // 搬一步棋的棋子
 int PositionStruct::MovePiece(int mv) {
-  int sqSrc, sqDst, pcCaptured;
+  int sqSrc, sqDst, pc, pcCaptured;
   sqSrc = SRC(mv);
   sqDst = DST(mv);
   pcCaptured = ucpcSquares[sqDst];
-  ucpcSquares[sqDst] = ucpcSquares[sqSrc];
-  ucpcSquares[sqSrc] = 0;
+  DelPiece(sqDst);
+  pc = ucpcSquares[sqSrc];
+  DelPiece(sqSrc);
+  AddPiece(sqDst, pc);
   return pcCaptured;
 }
 
 // 撤消搬一步棋的棋子
 void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
-  int sqSrc, sqDst;
+  int sqSrc, sqDst, pc;
   sqSrc = SRC(mv);
   sqDst = DST(mv);
-  ucpcSquares[sqSrc] = ucpcSquares[sqDst];
-  ucpcSquares[sqDst] = pcCaptured;
+  pc = ucpcSquares[sqDst];
+  DelPiece(sqDst);
+  AddPiece(sqSrc, pc);
+  AddPiece(sqDst, pcCaptured);
 }
 
 // 走一步棋

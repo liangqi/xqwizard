@@ -104,22 +104,37 @@ struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   unsigned char ucpcSquares[256]; // 棋盘上的棋子
 
-  void Startup(void) {     // 初始化棋盘
+  void Startup(void) {            // 初始化棋盘
     sdPlayer = 0;
     memcpy(ucpcSquares, cucpcStartup, 256);
   }
-  void ChangeSide(void) {  // 交换走子方
+  void ChangeSide(void) {         // 交换走子方
     sdPlayer = 1 - sdPlayer;
   }
-  void MovePiece(int mv) { // 搬一步棋的棋子
-    ucpcSquares[DST(mv)] = ucpcSquares[SRC(mv)];
-    ucpcSquares[SRC(mv)] = 0;
+  void AddPiece(int sq, int pc) { // 在棋盘上放一枚棋子
+    ucpcSquares[sq] = pc;
   }
-  void MakeMove(int mv) {  // 走一步棋
+  void DelPiece(int sq) {         // 从棋盘上拿走一枚棋子
+    ucpcSquares[sq] = 0;
+  }
+  void MovePiece(int mv);         // 搬一步棋的棋子
+  void MakeMove(int mv) {         // 走一步棋
     MovePiece(mv);
     ChangeSide();
   }
 };
+
+// 搬一步棋的棋子
+void PositionStruct::MovePiece(int mv) {
+  int sqSrc, sqDst, pc, pcCaptured;
+  sqSrc = SRC(mv);
+  sqDst = DST(mv);
+  pcCaptured = ucpcSquares[sqDst];
+  DelPiece(sqDst);
+  pc = ucpcSquares[sqSrc];
+  DelPiece(sqSrc);
+  AddPiece(sqDst, pc);
+}
 
 PositionStruct pos; // 局面实例
 
