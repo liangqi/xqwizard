@@ -858,17 +858,18 @@ PositionStruct pos; // 局面实例
 static struct {
   HINSTANCE hInst;                              // 应用程序句柄实例
   HWND hWnd;                                    // 主窗口句柄
+  HDC hdc, hdcTmp;                              // 设备句柄，只在"ClickSquare"过程中有效
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
-  int sqSelected, mvLast;                       // 选中的格子，上一步棋
+  int sqSelected, mvLast, mvResult;             // 选中的格子，上一步棋，电脑走的棋
   int nHistoryTable[65536];                     // 历史表
 } Xqwl;
 
 // "qsort"排序的比较函数
-static int CompareMove(int mv1, int mv2) {
-  return Xqwl.nHistoryTable[mv1] - Xqwl.nHistoryTable[mv2];
+static int CompareMove(const void *lpmv1, const void *lpmv2) {
+  return Xqwl.nHistoryTable[*(int *) lpmv1] - Xqwl.nHistoryTable[*(int *) lpmv2];
 }
 
-// Alpha-Beta完全搜索过程
+// 超出边界(Fail-Soft)的Alpha-Beta搜索过程
 static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
   int i, nMoves, pcCaptured;
   int vl, vlBest, mvBest;
@@ -880,28 +881,30 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
     return pos.Evaluate();
   }
 
-  // 2. 生成全部走法，并根据历史表排序
-  nMoves = pos.GenerateMoves(mvs);
-  qsort(mvs, nMoves, sizeof(int), (int (*)(const void *, const void *)) CompareMove);
-
-  // 3. 逐一走这些走法，并进行递归
+  // 2. 初始化最佳值和最佳走法
   vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
   mvBest = 0;           // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
+
+  // 3. 生成全部走法，并根据历史表排序
+  nMoves = pos.GenerateMoves(mvs);
+  qsort(mvs, nMoves, sizeof(int), CompareMove);
+
+  // 4. 逐一走这些走法，并进行递归
   for (i = 0; i < nMoves; i ++) {
     if (pos.MakeMove(mvs[i], pcCaptured)) {
       vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
       pos.UndoMakeMove(mvs[i], pcCaptured);
 
-      // 4. 进行Alpha-Beta大小判断和截断
+      // 5. 进行Alpha-Beta大小判断和截断
       if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
-        vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta窗口
+        vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
         if (vl >= vlBeta) { // 找到一个Beta走法
           mvBest = mvs[i];  // Beta走法要保存到历史表
           break;            // Beta截断
         }
         if (vl > vlAlpha) { // 找到一个PV走法
           mvBest = mvs[i];  // PV走法要保存到历史表
-          vlAlpha = vl;     // 缩小Alpha-Beta窗口
+          vlAlpha = vl;     // 缩小Alpha-Beta边界
         }
       }
     }
@@ -917,7 +920,7 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
     Xqwl.nHistoryTable[mvBest] += nDepth * nDepth;
     if (pos.nDistance == 0) {
       // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
-      Xqwl.mvLast = mvBest;
+      Xqwl.mvResult = mvBest;
     }
   }
   return vlBest;
@@ -927,18 +930,20 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
 static void SearchMain(void) {
   int i, t, vl;
 
-  // 清空历史表
-  memset(Xqwl.nHistoryTable, 0, 65536 * sizeof(int));
-  t = clock();
-  // 迭代加深
+  // 初始化
+  memset(Xqwl.nHistoryTable, 0, 65536 * sizeof(int)); // 清空历史表
+  t = clock();       // 初始化定时器
+  pos.nDistance = 0; // 初始步数
+
+  // 迭代加深过程
   for (i = 1; i <= LIMIT_DEPTH; i ++) {
     vl = SearchFull(-MATE_VALUE, MATE_VALUE, i);
     // 搜索到杀棋，就终止搜索
     if (vl > WIN_VALUE || vl < -WIN_VALUE) {
       break;
     }
-    // 超过一秒钟，就终止搜索
-    if (clock() - t > CLOCKS_PER_SEC) {
+    // 超过1/4秒，就终止搜索
+    if (clock() - t > CLOCKS_PER_SEC / 4) {
       break;
     }
   }
@@ -988,26 +993,6 @@ static void TransparentBlt2(HDC hdcDest, int nXOriginDest, int nYOriginDest, int
 static void DrawTransBmp(HDC hdc, HDC hdcTmp, int xx, int yy, HBITMAP bmp) {
   SelectObject(hdcTmp, bmp);
   TransparentBlt2(hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, hdcTmp, 0, 0, SQUARE_SIZE, SQUARE_SIZE, MASK_COLOR);
-}
-
-// "DrawSquare"参数
-const BOOL DRAW_SELECTED = TRUE;
-
-// 绘制格子
-static void DrawSquare(HDC hdc, HDC hdcTmp, int sq, BOOL bSelected = FALSE) {
-  int xx, yy, pc;
-
-  xx = BOARD_EDGE + (FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
-  yy = BOARD_EDGE + (RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
-  SelectObject(hdcTmp, Xqwl.bmpBoard);
-  BitBlt(hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, hdcTmp, xx, yy, SRCCOPY);
-  pc = pos.ucpcSquares[sq];
-  if (pc != 0) {
-    DrawTransBmp(hdc, hdcTmp, xx, yy, Xqwl.bmpPieces[pc]);
-  }
-  if (bSelected) {
-    DrawTransBmp(hdc, hdcTmp, xx, yy, Xqwl.bmpSelected);
-  }
 }
 
 // 绘制棋盘
@@ -1063,46 +1048,88 @@ static void MessageBoxMute(char *lpszText) {
   }
 }
 
+// "DrawSquare"参数
+const BOOL DRAW_SELECTED = TRUE;
+
+// 绘制格子
+static void DrawSquare(int sq, BOOL bSelected = FALSE) {
+  int xx, yy, pc;
+
+  xx = BOARD_EDGE + (FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
+  yy = BOARD_EDGE + (RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
+  SelectObject(Xqwl.hdcTmp, Xqwl.bmpBoard);
+  BitBlt(Xqwl.hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, Xqwl.hdcTmp, xx, yy, SRCCOPY);
+  pc = pos.ucpcSquares[sq];
+  if (pc != 0) {
+    DrawTransBmp(Xqwl.hdc, Xqwl.hdcTmp, xx, yy, Xqwl.bmpPieces[pc]);
+  }
+  if (bSelected) {
+    DrawTransBmp(Xqwl.hdc, Xqwl.hdcTmp, xx, yy, Xqwl.bmpSelected);
+  }
+}
+
+// 电脑回应一步棋
+static void ResponseMove(void) {
+  int pcCaptured;
+  // 电脑走一步棋
+  SetCursor((HCURSOR) LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
+  SearchMain();
+  SetCursor((HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
+  pos.MakeMove(Xqwl.mvResult, pcCaptured);
+  // 清除上一步棋的选择标记
+  DrawSquare(SRC(Xqwl.mvLast));
+  DrawSquare(DST(Xqwl.mvLast));
+  // 把电脑走的棋标记出来
+  Xqwl.mvLast = Xqwl.mvResult;
+  DrawSquare(SRC(Xqwl.mvLast), DRAW_SELECTED);
+  DrawSquare(DST(Xqwl.mvLast), DRAW_SELECTED);
+  if (pos.IsMate()) {
+    // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
+    PlayResWav(IDR_LOSS);
+    MessageBoxMute("请再接再厉！");
+  } else {
+    // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
+    PlayResWav(pos.Checked() ? IDR_CHECK2 : pcCaptured != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
+  }
+}
+
 // 点击格子事件处理
 static void ClickSquare(int sq) {
   int pc, mv;
-  HDC hdc, hdcTmp;
-
-  hdc = GetDC(Xqwl.hWnd);
-  hdcTmp = CreateCompatibleDC(hdc);
-  // 如果点击自己的子，那么直接选中该子
+  Xqwl.hdc = GetDC(Xqwl.hWnd);
+  Xqwl.hdcTmp = CreateCompatibleDC(Xqwl.hdc);
   pc = pos.ucpcSquares[sq];
+
   if ((pc & SIDE_TAG(pos.sdPlayer)) != 0) {
+    // 如果点击自己的子，那么直接选中该子
     if (Xqwl.sqSelected != 0) {
-      DrawSquare(hdc, hdcTmp, Xqwl.sqSelected);
+      DrawSquare(Xqwl.sqSelected);
     }
     Xqwl.sqSelected = sq;
-    DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
+    DrawSquare(sq, DRAW_SELECTED);
     if (Xqwl.mvLast != 0) {
-      DrawSquare(hdc, hdcTmp, SRC(Xqwl.mvLast));
-      DrawSquare(hdc, hdcTmp, DST(Xqwl.mvLast));
+      DrawSquare(SRC(Xqwl.mvLast));
+      DrawSquare(DST(Xqwl.mvLast));
     }
     PlayResWav(IDR_CLICK); // 播放点击的声音
-  // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
+
   } else if (Xqwl.sqSelected != 0) {
+    // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
       if (pos.MakeMove(mv, pc)) {
         Xqwl.mvLast = mv;
-        DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
-        DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
+        DrawSquare(Xqwl.sqSelected, DRAW_SELECTED);
+        DrawSquare(sq, DRAW_SELECTED);
         Xqwl.sqSelected = 0;
         if (pos.IsMate()) {
           // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
-          PlayResWav(pos.sdPlayer == 0 ? IDR_LOSS : IDR_WIN);
-          MessageBoxMute(pos.sdPlayer == 0 ? "黑胜。" : "红胜。");
+          PlayResWav(IDR_WIN);
+          MessageBoxMute("祝贺你取得胜利！");
         } else {
           // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-          if (pos.sdPlayer == 0) {
-            PlayResWav(pos.Checked() ? IDR_CHECK2 : pc != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
-          } else {
-            PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
-          }
+          PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
+          ResponseMove(); // 轮到电脑走棋
         }
       } else {
         PlayResWav(IDR_ILLEGAL); // 播放被将军的声音
@@ -1110,8 +1137,8 @@ static void ClickSquare(int sq) {
     }
     // 如果根本就不符合走法(例如马不走日字)，那么程序不予理会
   }
-  DeleteDC(hdcTmp);
-  ReleaseDC(Xqwl.hWnd, hdc);
+  DeleteDC(Xqwl.hdcTmp);
+  ReleaseDC(Xqwl.hWnd, Xqwl.hdc);
 }
 
 // 初始化棋局

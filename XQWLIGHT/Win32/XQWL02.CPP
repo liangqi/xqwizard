@@ -4,8 +4,7 @@
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
  * 象棋小巫师 0.2 的目标：
- * 一、实现中国象棋规则；
- * 二、为走棋动作配上音效。
+ * 一、实现中国象棋规则。
  */
 
 #include <windows.h>
@@ -691,6 +690,7 @@ PositionStruct pos; // 局面实例
 static struct {
   HINSTANCE hInst;                              // 应用程序句柄实例
   HWND hWnd;                                    // 主窗口句柄
+  HDC hdc, hdcTmp;                              // 设备句柄，只在"ClickSquare"过程中有效
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
   int sqSelected, mvLast;                       // 选中的格子，上一步棋
 } Xqwl;
@@ -739,26 +739,6 @@ static void TransparentBlt2(HDC hdcDest, int nXOriginDest, int nYOriginDest, int
 static void DrawTransBmp(HDC hdc, HDC hdcTmp, int xx, int yy, HBITMAP bmp) {
   SelectObject(hdcTmp, bmp);
   TransparentBlt2(hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, hdcTmp, 0, 0, SQUARE_SIZE, SQUARE_SIZE, MASK_COLOR);
-}
-
-// "DrawSquare"参数
-const BOOL DRAW_SELECTED = TRUE;
-
-// 绘制格子
-static void DrawSquare(HDC hdc, HDC hdcTmp, int sq, BOOL bSelected = FALSE) {
-  int xx, yy, pc;
-
-  xx = BOARD_EDGE + (FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
-  yy = BOARD_EDGE + (RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
-  SelectObject(hdcTmp, Xqwl.bmpBoard);
-  BitBlt(hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, hdcTmp, xx, yy, SRCCOPY);
-  pc = pos.ucpcSquares[sq];
-  if (pc != 0) {
-    DrawTransBmp(hdc, hdcTmp, xx, yy, Xqwl.bmpPieces[pc]);
-  }
-  if (bSelected) {
-    DrawTransBmp(hdc, hdcTmp, xx, yy, Xqwl.bmpSelected);
-  }
 }
 
 // 绘制棋盘
@@ -814,46 +794,62 @@ static void MessageBoxMute(char *lpszText) {
   }
 }
 
+// "DrawSquare"参数
+const BOOL DRAW_SELECTED = TRUE;
+
+// 绘制格子
+static void DrawSquare(int sq, BOOL bSelected = FALSE) {
+  int xx, yy, pc;
+
+  xx = BOARD_EDGE + (FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
+  yy = BOARD_EDGE + (RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
+  SelectObject(Xqwl.hdcTmp, Xqwl.bmpBoard);
+  BitBlt(Xqwl.hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, Xqwl.hdcTmp, xx, yy, SRCCOPY);
+  pc = pos.ucpcSquares[sq];
+  if (pc != 0) {
+    DrawTransBmp(Xqwl.hdc, Xqwl.hdcTmp, xx, yy, Xqwl.bmpPieces[pc]);
+  }
+  if (bSelected) {
+    DrawTransBmp(Xqwl.hdc, Xqwl.hdcTmp, xx, yy, Xqwl.bmpSelected);
+  }
+}
+
 // 点击格子事件处理
 static void ClickSquare(int sq) {
   int pc, mv;
-  HDC hdc, hdcTmp;
-
-  hdc = GetDC(Xqwl.hWnd);
-  hdcTmp = CreateCompatibleDC(hdc);
-  // 如果点击自己的子，那么直接选中该子
+  Xqwl.hdc = GetDC(Xqwl.hWnd);
+  Xqwl.hdcTmp = CreateCompatibleDC(Xqwl.hdc);
   pc = pos.ucpcSquares[sq];
+
   if ((pc & SIDE_TAG(pos.sdPlayer)) != 0) {
+    // 如果点击自己的子，那么直接选中该子
     if (Xqwl.sqSelected != 0) {
-      DrawSquare(hdc, hdcTmp, Xqwl.sqSelected);
+      DrawSquare(Xqwl.sqSelected);
     }
     Xqwl.sqSelected = sq;
-    DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
+    DrawSquare(sq, DRAW_SELECTED);
     if (Xqwl.mvLast != 0) {
-      DrawSquare(hdc, hdcTmp, SRC(Xqwl.mvLast));
-      DrawSquare(hdc, hdcTmp, DST(Xqwl.mvLast));
+      DrawSquare(SRC(Xqwl.mvLast));
+      DrawSquare(DST(Xqwl.mvLast));
     }
     PlayResWav(IDR_CLICK); // 播放点击的声音
-  // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
+
   } else if (Xqwl.sqSelected != 0) {
+    // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
       if (pos.MakeMove(mv)) {
         Xqwl.mvLast = mv;
-        DrawSquare(hdc, hdcTmp, Xqwl.sqSelected, DRAW_SELECTED);
-        DrawSquare(hdc, hdcTmp, sq, DRAW_SELECTED);
+        DrawSquare(Xqwl.sqSelected, DRAW_SELECTED);
+        DrawSquare(sq, DRAW_SELECTED);
         Xqwl.sqSelected = 0;
         if (pos.IsMate()) {
           // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
-          PlayResWav(pos.sdPlayer == 0 ? IDR_LOSS : IDR_WIN);
-          MessageBoxMute(pos.sdPlayer == 0 ? "黑胜。" : "红胜。");
+          PlayResWav(IDR_WIN);
+          MessageBoxMute("祝贺你取得胜利！");
         } else {
           // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-          if (pos.sdPlayer == 0) {
-            PlayResWav(pos.Checked() ? IDR_CHECK2 : pc != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
-          } else {
-            PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
-          }
+          PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
         }
       } else {
         PlayResWav(IDR_ILLEGAL); // 播放被将军的声音
@@ -861,8 +857,8 @@ static void ClickSquare(int sq) {
     }
     // 如果根本就不符合走法(例如马不走日字)，那么程序不予理会
   }
-  DeleteDC(hdcTmp);
-  ReleaseDC(Xqwl.hWnd, hdc);
+  DeleteDC(Xqwl.hdcTmp);
+  ReleaseDC(Xqwl.hWnd, Xqwl.hdc);
 }
 
 // 初始化棋局
