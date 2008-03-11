@@ -74,6 +74,21 @@ inline int COORD_XY(int x, int y) {
   return x + (y << 4);
 }
 
+// 翻转格子
+inline int SQUARE_FLIP(int sq) {
+  return 254 - sq;
+}
+
+// 纵坐标水平镜像
+inline int FILE_FLIP(int x) {
+  return 14 - x;
+}
+
+// 横坐标垂直镜像
+inline int RANK_FLIP(int y) {
+  return 15 - y;
+}
+
 // 获得红黑标记(红子是8，黑子是16)
 inline int SIDE_TAG(int sd) {
   return 8 + (sd << 3);
@@ -145,6 +160,7 @@ static struct {
   HDC hdc, hdcTmp;                              // 设备句柄，只在"ClickSquare"过程中有效
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
   int sqSelected, mvLast;                       // 选中的格子，上一步棋
+  BOOL bFlipped;                                // 是否翻转棋盘
 } Xqwl;
 
 // TransparentBlt 的替代函数，用来修正原函数在 Windows 98 下资源泄漏的问题
@@ -205,8 +221,13 @@ static void DrawBoard(HDC hdc) {
   // 画棋子
   for (x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
     for (y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
-      xx = BOARD_EDGE + (x - FILE_LEFT) * SQUARE_SIZE;
-      yy = BOARD_EDGE + (y - RANK_TOP) * SQUARE_SIZE;
+      if (Xqwl.bFlipped) {
+        xx = BOARD_EDGE + (FILE_FLIP(x) - FILE_LEFT) * SQUARE_SIZE;
+        yy = BOARD_EDGE + (RANK_FLIP(y) - RANK_TOP) * SQUARE_SIZE;
+      } else {
+        xx = BOARD_EDGE + (x - FILE_LEFT) * SQUARE_SIZE;
+        yy = BOARD_EDGE + (y - RANK_TOP) * SQUARE_SIZE;
+      }
       sq = COORD_XY(x, y);
       pc = pos.ucpcSquares[sq];
       if (pc != 0) {
@@ -230,10 +251,11 @@ const BOOL DRAW_SELECTED = TRUE;
 
 // 绘制格子
 static void DrawSquare(int sq, BOOL bSelected = FALSE) {
-  int xx, yy, pc;
+  int sqFlipped, xx, yy, pc;
 
-  xx = BOARD_EDGE + (FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
-  yy = BOARD_EDGE + (RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
+  sqFlipped = Xqwl.bFlipped ? SQUARE_FLIP(sq) : sq;
+  xx = BOARD_EDGE + (FILE_X(sqFlipped) - FILE_LEFT) * SQUARE_SIZE;
+  yy = BOARD_EDGE + (RANK_Y(sqFlipped) - RANK_TOP) * SQUARE_SIZE;
   SelectObject(Xqwl.hdcTmp, Xqwl.bmpBoard);
   BitBlt(Xqwl.hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, Xqwl.hdcTmp, xx, yy, SRCCOPY);
   pc = pos.ucpcSquares[sq];
@@ -250,6 +272,7 @@ static void ClickSquare(int sq) {
   int pc;
   Xqwl.hdc = GetDC(Xqwl.hWnd);
   Xqwl.hdcTmp = CreateCompatibleDC(Xqwl.hdc);
+  sq = Xqwl.bFlipped ? SQUARE_FLIP(sq) : sq;
   pc = pos.ucpcSquares[sq];
 
   if ((pc & SIDE_TAG(pos.sdPlayer)) != 0) {
@@ -313,6 +336,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     switch (LOWORD(wParam)) {
     case IDM_FILE_RED:
     case IDM_FILE_BLACK:
+      Xqwl.bFlipped = (LOWORD(wParam) == IDM_FILE_BLACK);
       Startup();
       hdc = GetDC(Xqwl.hWnd);
       DrawBoard(hdc);
@@ -372,6 +396,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
   // 初始化全局变量
   Xqwl.hInst = hInstance;
+  Xqwl.bFlipped = FALSE;
   Startup();
 
   // 装入图片
