@@ -170,10 +170,10 @@ void PreGenInit(void) {
 
   // 首先初始化Zobrist键值表
   rc4.InitZero();
-  PreGen.zobrPlayer.Init(rc4);
+  PreGen.zobrPlayer.InitRC4(rc4);
   for (i = 0; i < 14; i ++) {
     for (j = 0; j < 256; j ++) {
-      PreGen.zobrTable[i][j].Init(rc4);
+      PreGen.zobrTable[i][j].InitRC4(rc4);
     }
   }
 

@@ -175,7 +175,7 @@ static const char ccKnightDelta[4][2] = {{-33, -31}, {-18, 14}, {-14, 18}, {31, 
 static const char ccKnightCheckDelta[4][2] = {{-33, -18}, {-31, -14}, {14, 31}, {18, 33}};
 
 // 棋盘初始设置
-static const unsigned char cucpcStartup[256] = {
+static const BYTE cucpcStartup[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -195,7 +195,7 @@ static const unsigned char cucpcStartup[256] = {
 };
 
 // 子力位置价值表
-static const unsigned char cucvlPiecePos[7][256] = {
+static const BYTE cucvlPiecePos[7][256] = {
   { // 帅(将)
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -451,7 +451,7 @@ inline int MIRROR_MOVE(int mv) {
 // 局面结构
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
-  unsigned char ucpcSquares[256]; // 棋盘上的棋子
+  BYTE ucpcSquares[256];          // 棋盘上的棋子
   int vlRed, vlBlack;             // 红、黑双方的子力价值
   int nDistance;                  // 距离根节点的步数
 
@@ -549,11 +549,11 @@ BOOL PositionStruct::MakeMove(int mv, int &pcCaptured) {
 
 // 生成所有走法
 int PositionStruct::GenerateMoves(int *mvs) const {
-  int i, j, nMoves, nDelta, sqSrc, sqDst;
+  int i, j, nGenMoves, nDelta, sqSrc, sqDst;
   int pcSelfSide, pcOppSide, pcSrc, pcDst;
   // 生成所有走法，需要经过以下几个步骤：
 
-  nMoves = 0;
+  nGenMoves = 0;
   pcSelfSide = SIDE_TAG(sdPlayer);
   pcOppSide = OPP_SIDE_TAG(sdPlayer);
   for (sqSrc = 0; sqSrc < 256; sqSrc ++) {
@@ -574,8 +574,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         }
         pcDst = ucpcSquares[sqDst];
         if ((pcDst & pcSelfSide) == 0) {
-          mvs[nMoves] = MOVE(sqSrc, sqDst);
-          nMoves ++;
+          mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+          nGenMoves ++;
         }
       }
       break;
@@ -587,8 +587,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         }
         pcDst = ucpcSquares[sqDst];
         if ((pcDst & pcSelfSide) == 0) {
-          mvs[nMoves] = MOVE(sqSrc, sqDst);
-          nMoves ++;
+          mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+          nGenMoves ++;
         }
       }
       break;
@@ -601,8 +601,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         sqDst += ccAdvisorDelta[i];
         pcDst = ucpcSquares[sqDst];
         if ((pcDst & pcSelfSide) == 0) {
-          mvs[nMoves] = MOVE(sqSrc, sqDst);
-          nMoves ++;
+          mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+          nGenMoves ++;
         }
       }
       break;
@@ -619,8 +619,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           }
           pcDst = ucpcSquares[sqDst];
           if ((pcDst & pcSelfSide) == 0) {
-            mvs[nMoves] = MOVE(sqSrc, sqDst);
-            nMoves ++;
+            mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+            nGenMoves ++;
           }
         }
       }
@@ -632,12 +632,12 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         while (IN_BOARD(sqDst)) {
           pcDst = ucpcSquares[sqDst];
           if (pcDst == 0) {
-              mvs[nMoves] = MOVE(sqSrc, sqDst);
-              nMoves ++;
+              mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+              nGenMoves ++;
           } else {
             if ((pcDst & pcOppSide) != 0) {
-              mvs[nMoves] = MOVE(sqSrc, sqDst);
-              nMoves ++;
+              mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+              nGenMoves ++;
             }
             break;
           }
@@ -652,8 +652,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         while (IN_BOARD(sqDst)) {
           pcDst = ucpcSquares[sqDst];
           if (pcDst == 0) {
-            mvs[nMoves] = MOVE(sqSrc, sqDst);
-            nMoves ++;
+            mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+            nGenMoves ++;
           } else {
             break;
           }
@@ -664,8 +664,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           pcDst = ucpcSquares[sqDst];
           if (pcDst > 0) {
             if ((pcDst & pcOppSide) != 0) {
-              mvs[nMoves] = MOVE(sqSrc, sqDst);
-              nMoves ++;
+              mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+              nGenMoves ++;
             }
             break;
           }
@@ -678,8 +678,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
       if (IN_BOARD(sqDst)) {
         pcDst = ucpcSquares[sqDst];
         if ((pcDst & pcSelfSide) == 0) {
-          mvs[nMoves] = MOVE(sqSrc, sqDst);
-          nMoves ++;
+          mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+          nGenMoves ++;
         }
       }
       if (AWAY_HALF(sqSrc, sdPlayer)) {
@@ -688,8 +688,8 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           if (IN_BOARD(sqDst)) {
             pcDst = ucpcSquares[sqDst];
             if ((pcDst & pcSelfSide) == 0) {
-              mvs[nMoves] = MOVE(sqSrc, sqDst);
-              nMoves ++;
+              mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+              nGenMoves ++;
             }
           }
         }
@@ -697,7 +697,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
       break;
     }
   }
-  return nMoves;
+  return nGenMoves;
 }
 
 // 判断走法是否合理
@@ -854,25 +854,30 @@ BOOL PositionStruct::IsMate(void) {
 
 PositionStruct pos; // 局面实例
 
-// 除"pos"外，所有的全局变量都包装在"Vsccp"这个结构中
+// 与图形界面有关的全局变量
 static struct {
   HINSTANCE hInst;                              // 应用程序句柄实例
   HWND hWnd;                                    // 主窗口句柄
   HDC hdc, hdcTmp;                              // 设备句柄，只在"ClickSquare"过程中有效
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
-  int sqSelected, mvLast, mvResult;             // 选中的格子，上一步棋，电脑走的棋
-  int nHistoryTable[65536];                     // 历史表
+  int sqSelected, mvLast;                       // 选中的格子，上一步棋
   BOOL bFlipped;                                // 是否翻转棋盘
 } Xqwl;
 
+// 与搜索有关的全局变量
+static struct {
+  int mvResult;             // 电脑走的棋
+  int nHistoryTable[65536]; // 历史表
+} Search;
+
 // "qsort"排序的比较函数
 static int CompareMove(const void *lpmv1, const void *lpmv2) {
-  return Xqwl.nHistoryTable[*(int *) lpmv1] - Xqwl.nHistoryTable[*(int *) lpmv2];
+  return Search.nHistoryTable[*(int *) lpmv1] - Search.nHistoryTable[*(int *) lpmv2];
 }
 
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
 static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
-  int i, nMoves, pcCaptured;
+  int i, nGenMoves, pcCaptured;
   int vl, vlBest, mvBest;
   int mvs[MAX_GEN_MOVES];
   // 一个Alpha-Beta完全搜索分为以下几个阶段
@@ -887,11 +892,11 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
   mvBest = 0;           // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
 
   // 3. 生成全部走法，并根据历史表排序
-  nMoves = pos.GenerateMoves(mvs);
-  qsort(mvs, nMoves, sizeof(int), CompareMove);
+  nGenMoves = pos.GenerateMoves(mvs);
+  qsort(mvs, nGenMoves, sizeof(int), CompareMove);
 
   // 4. 逐一走这些走法，并进行递归
-  for (i = 0; i < nMoves; i ++) {
+  for (i = 0; i < nGenMoves; i ++) {
     if (pos.MakeMove(mvs[i], pcCaptured)) {
       vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
       pos.UndoMakeMove(mvs[i], pcCaptured);
@@ -918,10 +923,10 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
   }
   if (mvBest > 0) {
     // 如果不是Alpha走法，就将最佳走法保存到历史表
-    Xqwl.nHistoryTable[mvBest] += nDepth * nDepth;
+    Search.nHistoryTable[mvBest] += nDepth * nDepth;
     if (pos.nDistance == 0) {
       // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
-      Xqwl.mvResult = mvBest;
+      Search.mvResult = mvBest;
     }
   }
   return vlBest;
@@ -932,7 +937,7 @@ static void SearchMain(void) {
   int i, t, vl;
 
   // 初始化
-  memset(Xqwl.nHistoryTable, 0, 65536 * sizeof(int)); // 清空历史表
+  memset(Search.nHistoryTable, 0, 65536 * sizeof(int)); // 清空历史表
   t = clock();       // 初始化定时器
   pos.nDistance = 0; // 初始步数
 
@@ -1082,12 +1087,12 @@ static void ResponseMove(void) {
   SetCursor((HCURSOR) LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
   SearchMain();
   SetCursor((HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
-  pos.MakeMove(Xqwl.mvResult, pcCaptured);
+  pos.MakeMove(Search.mvResult, pcCaptured);
   // 清除上一步棋的选择标记
   DrawSquare(SRC(Xqwl.mvLast));
   DrawSquare(DST(Xqwl.mvLast));
   // 把电脑走的棋标记出来
-  Xqwl.mvLast = Xqwl.mvResult;
+  Xqwl.mvLast = Search.mvResult;
   DrawSquare(SRC(Xqwl.mvLast), DRAW_SELECTED);
   DrawSquare(DST(Xqwl.mvLast), DRAW_SELECTED);
   if (pos.IsMate()) {

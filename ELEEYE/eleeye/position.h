@@ -270,7 +270,7 @@ struct PositionStruct {
     sdPlayer = 0;
     memset(ucpcSquares, 0, 256);
     memset(ucsqPieces, 0, 48);
-    zobr.Init();
+    zobr.InitZero();
     dwBitPiece = 0;
     memset(wBitRanks, 0, 16 * sizeof(uint16));
     memset(wBitFiles, 0, 16 * sizeof(uint16));

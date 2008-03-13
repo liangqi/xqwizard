@@ -165,10 +165,10 @@ struct SlideMaskStruct {
 
 struct ZobristStruct {
   uint32 dwKey, dwLock0, dwLock1;
-  void Init(void) {
+  void InitZero(void) {
     dwKey = dwLock0 = dwLock1 = 0;
   }
-  void Init(RC4Struct &rc4) {
+  void InitRC4(RC4Struct &rc4) {
     dwKey = rc4.NextLong();
     dwLock0 = rc4.NextLong();
     dwLock1 = rc4.NextLong();

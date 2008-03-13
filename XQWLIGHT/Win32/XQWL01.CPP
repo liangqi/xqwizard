@@ -40,7 +40,7 @@ const int PIECE_CANNON = 5;
 const int PIECE_PAWN = 6;
 
 // 棋盘初始设置
-static const unsigned char cucpcStartup[256] = {
+static const BYTE cucpcStartup[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -117,7 +117,7 @@ inline int MOVE(int sqSrc, int sqDst) {
 // 局面结构
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
-  unsigned char ucpcSquares[256]; // 棋盘上的棋子
+  BYTE ucpcSquares[256];          // 棋盘上的棋子
 
   void Startup(void) {            // 初始化棋盘
     sdPlayer = 0;
@@ -153,7 +153,7 @@ void PositionStruct::MovePiece(int mv) {
 
 PositionStruct pos; // 局面实例
 
-// 除"pos"外，所有的全局变量都包装在"Vsccp"这个结构中
+// 与图形界面有关的全局变量
 static struct {
   HINSTANCE hInst;                              // 应用程序句柄实例
   HWND hWnd;                                    // 主窗口句柄

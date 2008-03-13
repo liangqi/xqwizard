@@ -1,17 +1,22 @@
 /**
  * XiangQi Wizard Light - A Very Simple Chinese Chess Program
- * Designed by Morning Yellow, Version: 0.2, Last Modified: Mar. 2008
+ * Designed by Morning Yellow, Version: 0.4, Last Modified: Mar. 2008
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
- * 象棋小巫师 0.2 的目标：
- * 一、实现中国象棋规则。
+ * 象棋小巫师 0.4 的目标：
+ * 一、用Zobrist校验码技术实现循环局面判定；
+ * 二、增加静态(Quiescence)搜索和MVV/LVA启发；
+ * 三、增加将军延伸和空步(Null-Move)裁剪；
+ * 四、实现开局库。
  */
 
+#include <stdlib.h>
+#include <time.h>
 #include <windows.h>
 #include "resource.h"
 
 // 版本号
-const char *const cszAbout = "象棋小巫师 0.2\n象棋百科全书 荣誉出品\n\n"
+const char *const cszAbout = "象棋小巫师 0.4\n象棋百科全书 荣誉出品\n\n"
     "(C) 2004-2008 www.elephantbase.net\n本产品符合GNU通用公共许可协议\n\n"
     "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师";
 
@@ -40,6 +45,10 @@ const int PIECE_PAWN = 6;
 
 // 其他常数
 const int MAX_GEN_MOVES = 128; // 最大的生成走法数
+const int LIMIT_DEPTH = 32;    // 最大的搜索深度
+const int MATE_VALUE = 10000;  // 最高分值，即将死的分值
+const int WIN_VALUE = MATE_VALUE - 100; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
+const int ADVANCED_VALUE = 3;  // 先行权分值
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
@@ -184,6 +193,130 @@ static const BYTE cucpcStartup[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
 };
 
+// 子力位置价值表
+static const BYTE cucvlPiecePos[7][256] = {
+  { // 帅(将)
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  2,  2,  2,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0, 11, 15, 11,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 仕(士)
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0, 20,  0, 20,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0, 23,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0, 20,  0, 20,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 相(象)
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0, 20,  0,  0,  0, 20,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0, 18,  0,  0,  0, 23,  0,  0,  0, 18,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0, 20,  0,  0,  0, 20,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 马
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0, 90, 90, 90, 96, 90, 96, 90, 90, 90,  0,  0,  0,  0,
+    0,  0,  0, 90, 96,103, 97, 94, 97,103, 96, 90,  0,  0,  0,  0,
+    0,  0,  0, 92, 98, 99,103, 99,103, 99, 98, 92,  0,  0,  0,  0,
+    0,  0,  0, 93,108,100,107,100,107,100,108, 93,  0,  0,  0,  0,
+    0,  0,  0, 90,100, 99,103,104,103, 99,100, 90,  0,  0,  0,  0,
+    0,  0,  0, 90, 98,101,102,103,102,101, 98, 90,  0,  0,  0,  0,
+    0,  0,  0, 92, 94, 98, 95, 98, 95, 98, 94, 92,  0,  0,  0,  0,
+    0,  0,  0, 93, 92, 94, 95, 92, 95, 94, 92, 93,  0,  0,  0,  0,
+    0,  0,  0, 85, 90, 92, 93, 78, 93, 92, 90, 85,  0,  0,  0,  0,
+    0,  0,  0, 88, 85, 90, 88, 90, 88, 90, 85, 88,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 车
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,206,208,207,213,214,213,207,208,206,  0,  0,  0,  0,
+    0,  0,  0,206,212,209,216,233,216,209,212,206,  0,  0,  0,  0,
+    0,  0,  0,206,208,207,214,216,214,207,208,206,  0,  0,  0,  0,
+    0,  0,  0,206,213,213,216,216,216,213,213,206,  0,  0,  0,  0,
+    0,  0,  0,208,211,211,214,215,214,211,211,208,  0,  0,  0,  0,
+    0,  0,  0,208,212,212,214,215,214,212,212,208,  0,  0,  0,  0,
+    0,  0,  0,204,209,204,212,214,212,204,209,204,  0,  0,  0,  0,
+    0,  0,  0,198,208,204,212,212,212,204,208,198,  0,  0,  0,  0,
+    0,  0,  0,200,208,206,212,200,212,206,208,200,  0,  0,  0,  0,
+    0,  0,  0,194,206,204,212,200,212,204,206,194,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 炮
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,100,100, 96, 91, 90, 91, 96,100,100,  0,  0,  0,  0,
+    0,  0,  0, 98, 98, 96, 92, 89, 92, 96, 98, 98,  0,  0,  0,  0,
+    0,  0,  0, 97, 97, 96, 91, 92, 91, 96, 97, 97,  0,  0,  0,  0,
+    0,  0,  0, 96, 99, 99, 98,100, 98, 99, 99, 96,  0,  0,  0,  0,
+    0,  0,  0, 96, 96, 96, 96,100, 96, 96, 96, 96,  0,  0,  0,  0,
+    0,  0,  0, 95, 96, 99, 96,100, 96, 99, 96, 95,  0,  0,  0,  0,
+    0,  0,  0, 96, 96, 96, 96, 96, 96, 96, 96, 96,  0,  0,  0,  0,
+    0,  0,  0, 97, 96,100, 99,101, 99,100, 96, 97,  0,  0,  0,  0,
+    0,  0,  0, 96, 97, 98, 98, 98, 98, 98, 97, 96,  0,  0,  0,  0,
+    0,  0,  0, 96, 96, 97, 99, 99, 99, 97, 96, 96,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }, { // 兵(卒)
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  9,  9,  9, 11, 13, 11,  9,  9,  9,  0,  0,  0,  0,
+    0,  0,  0, 19, 24, 34, 42, 44, 42, 34, 24, 19,  0,  0,  0,  0,
+    0,  0,  0, 19, 24, 32, 37, 37, 37, 32, 24, 19,  0,  0,  0,  0,
+    0,  0,  0, 19, 23, 27, 29, 30, 29, 27, 23, 19,  0,  0,  0,  0,
+    0,  0,  0, 14, 18, 20, 27, 29, 27, 20, 18, 14,  0,  0,  0,  0,
+    0,  0,  0,  7,  0, 13,  0, 16,  0, 13,  0,  7,  0,  0,  0,  0,
+    0,  0,  0,  7,  0,  7,  0, 15,  0,  7,  0,  7,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  }
+};
+
 // 判断棋子是否在棋盘中
 inline BOOL IN_BOARD(int sq) {
   return ccInBoard[sq] != 0;
@@ -314,32 +447,166 @@ inline int MIRROR_MOVE(int mv) {
   return MOVE(MIRROR_SQUARE(SRC(mv)), MIRROR_SQUARE(DST(mv)));
 }
 
+// RC4密码流生成器
+struct RC4Struct {
+  BYTE s[256];
+  int x, y;
+
+  void InitZero(void);   // 用空密钥初始化密码流生成器
+  BYTE NextByte(void) {  // 生成密码流的下一个字节
+    BYTE uc;
+    x = (x + 1) & 255;
+    y = (y + s[x]) & 255;
+    uc = s[x];
+    s[x] = s[y];
+    s[y] = uc;
+    return s[(s[x] + s[y]) & 255];
+  }
+  DWORD NextLong(void) { // 生成密码流的下四个字节
+    BYTE uc0, uc1, uc2, uc3;
+    uc0 = NextByte();
+    uc1 = NextByte();
+    uc2 = NextByte();
+    uc3 = NextByte();
+    return uc0 + (uc1 << 8) + (uc2 << 16) + (uc3 << 24);
+  }
+};
+
+// 用空密钥初始化密码流生成器
+void RC4Struct::InitZero(void) {
+  int i, j;
+  BYTE uc;
+
+  x = y = j = 0;
+  for (i = 0; i < 256; i ++) {
+    s[i] = i;
+  }
+  for (i = 0; i < 256; i ++) {
+    j = (j + s[i]) & 255;
+    uc = s[i];
+    s[i] = s[j];
+    s[j] = uc;
+  }
+}
+
+// Zobrist结构
+struct ZobristStruct {
+  DWORD dwKey, dwLock0, dwLock1;
+
+  void InitZero(void) {                 // 用零填充Zobrist
+    dwKey = dwLock0 = dwLock1 = 0;
+  }
+  void InitRC4(RC4Struct &rc4) {        // 用密码流填充Zobrist
+    dwKey = rc4.NextLong();
+    dwLock0 = rc4.NextLong();
+    dwLock1 = rc4.NextLong();
+  }
+  void Xor(const ZobristStruct &zobr) { // 执行XOR操作
+    dwKey ^= zobr.dwKey;
+    dwLock0 ^= zobr.dwLock0;
+    dwLock1 ^= zobr.dwLock1;
+  }
+  void Xor(const ZobristStruct &zobr1, const ZobristStruct &zobr2) {
+    dwKey ^= zobr1.dwKey ^ zobr2.dwKey;
+    dwLock0 ^= zobr1.dwLock0 ^ zobr2.dwLock0;
+    dwLock1 ^= zobr1.dwLock1 ^ zobr2.dwLock1;
+  }
+};
+
+// Zobrist表
+static struct {
+  ZobristStruct Player;
+  ZobristStruct Table[14][256];
+} Zobrist;
+
+// 初始化Zobrist表
+static void InitZobrist(void) {
+  int i, j;
+  RC4Struct rc4;
+
+  rc4.InitZero();
+  Zobrist.Player.InitRC4(rc4);
+  for (i = 0; i < 14; i ++) {
+    for (j = 0; j < 256; j ++) {
+      Zobrist.Table[i][j].InitRC4(rc4);
+    }
+  }
+}
+
+// 历史走法(占4字节)
+struct MoveStruct {
+  USHORT wmv;
+  BYTE ucpcCaptured;
+  BYTE ucbCheck;
+}; // mvs
+
 // 局面结构
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   BYTE ucpcSquares[256];          // 棋盘上的棋子
+  int vlRed, vlBlack;             // 红、黑双方的子力价值
+  int nDistance, nMoveNum;        // 距离根节点的步数，
+  ZobristStruct zobr;             // Zobrist
 
-  void Startup(void) {            // 初始化棋盘
-    sdPlayer = 0;
-    memcpy(ucpcSquares, cucpcStartup, 256);
-  }
+  void Startup(void);             // 初始化棋盘
   void ChangeSide(void) {         // 交换走子方
     sdPlayer = 1 - sdPlayer;
+    zobr.Xor(Zobrist.Player);
   }
   void AddPiece(int sq, int pc) { // 在棋盘上放一枚棋子
     ucpcSquares[sq] = pc;
+    // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
+    if (pc < 16) {
+      vlRed += cucvlPiecePos[pc - 8][sq];
+      pc -= 8;
+    } else {
+      vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
+      pc -= 9;
+    }
+    zobr.Xor(Zobrist.Table[pc][sq]);
   }
-  void DelPiece(int sq) {         // 从棋盘上拿走一枚棋子
+  void DelPiece(int sq, int pc) { // 从棋盘上拿走一枚棋子
     ucpcSquares[sq] = 0;
+    // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
+    if (pc < 16) {
+      vlRed -= cucvlPiecePos[pc - 8][sq];
+      pc -= 8;
+    } else {
+      vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
+      pc -= 9;
+    }
+    zobr.Xor(Zobrist.Table[pc][sq]);
+  }
+  int Evaluate(void) const {      // 局面评价函数
+    return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
   }
   int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
-  BOOL MakeMove(int mv);                      // 走一步棋
+  BOOL MakeMove(int mv, int &pcCaptured);     // 走一步棋
+  void UndoMakeMove(int mv, int pcCaptured) { // 撤消走一步棋
+    nDistance --;
+    ChangeSide();
+    UndoMovePiece(mv, pcCaptured);
+  }
   int GenerateMoves(int *mvs) const;          // 生成所有走法
   BOOL LegalMove(int mv) const;               // 判断走法是否合理
   BOOL Checked(void) const;                   // 判断是否被将军
   BOOL IsMate(void);                          // 判断是否被杀
 };
+
+// 初始化棋盘
+void PositionStruct::Startup(void) {
+  int sq, pc;
+  sdPlayer = vlRed = vlBlack = nDistance = 0;
+  memset(ucpcSquares, 0, 256);
+  zobr.InitZero();
+  for (sq = 0; sq < 256; sq ++) {
+    pc = cucpcStartup[sq];
+    if (pc != 0) {
+      AddPiece(sq, pc);
+    }
+  }
+}
 
 // 搬一步棋的棋子
 int PositionStruct::MovePiece(int mv) {
@@ -347,9 +614,11 @@ int PositionStruct::MovePiece(int mv) {
   sqSrc = SRC(mv);
   sqDst = DST(mv);
   pcCaptured = ucpcSquares[sqDst];
-  DelPiece(sqDst);
+  if (pcCaptured != 0) {
+    DelPiece(sqDst, pcCaptured);
+  }
   pc = ucpcSquares[sqSrc];
-  DelPiece(sqSrc);
+  DelPiece(sqSrc, pc);
   AddPiece(sqDst, pc);
   return pcCaptured;
 }
@@ -360,24 +629,24 @@ void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   sqSrc = SRC(mv);
   sqDst = DST(mv);
   pc = ucpcSquares[sqDst];
-  DelPiece(sqDst);
+  DelPiece(sqDst, pc);
   AddPiece(sqSrc, pc);
-  AddPiece(sqDst, pcCaptured);
+  if (pcCaptured != 0) {
+    AddPiece(sqDst, pcCaptured);
+  }
 }
 
 // 走一步棋
-BOOL PositionStruct::MakeMove(int mv) {
-  int pc;
-  pc = MovePiece(mv);
+BOOL PositionStruct::MakeMove(int mv, int &pcCaptured) {
+  pcCaptured = MovePiece(mv);
   if (Checked()) {
-    UndoMovePiece(mv, pc);
+    UndoMovePiece(mv, pcCaptured);
     return FALSE;
   }
   ChangeSide();
+  nDistance ++;
   return TRUE;
 }
-
-// 撤消走一步棋
 
 // 生成所有走法
 int PositionStruct::GenerateMoves(int *mvs) const {
@@ -696,6 +965,97 @@ static struct {
   BOOL bFlipped;                                // 是否翻转棋盘
 } Xqwl;
 
+// 与搜索有关的全局变量
+static struct {
+  int mvResult;             // 电脑走的棋
+  int nHistoryTable[65536]; // 历史表
+} Search;
+
+// "qsort"排序的比较函数
+static int CompareMove(const void *lpmv1, const void *lpmv2) {
+  return Search.nHistoryTable[*(int *) lpmv1] - Search.nHistoryTable[*(int *) lpmv2];
+}
+
+// 超出边界(Fail-Soft)的Alpha-Beta搜索过程
+static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
+  int i, nGenMoves, pcCaptured;
+  int vl, vlBest, mvBest;
+  int mvs[MAX_GEN_MOVES];
+  // 一个Alpha-Beta完全搜索分为以下几个阶段
+
+  // 1. 到达水平线，则返回局面评价值
+  if (nDepth == 0) {
+    return pos.Evaluate();
+  }
+
+  // 2. 初始化最佳值和最佳走法
+  vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
+  mvBest = 0;           // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
+
+  // 3. 生成全部走法，并根据历史表排序
+  nGenMoves = pos.GenerateMoves(mvs);
+  qsort(mvs, nGenMoves, sizeof(int), CompareMove);
+
+  // 4. 逐一走这些走法，并进行递归
+  for (i = 0; i < nGenMoves; i ++) {
+    if (pos.MakeMove(mvs[i], pcCaptured)) {
+      vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
+      pos.UndoMakeMove(mvs[i], pcCaptured);
+
+      // 5. 进行Alpha-Beta大小判断和截断
+      if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
+        vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
+        if (vl >= vlBeta) { // 找到一个Beta走法
+          mvBest = mvs[i];  // Beta走法要保存到历史表
+          break;            // Beta截断
+        }
+        if (vl > vlAlpha) { // 找到一个PV走法
+          mvBest = mvs[i];  // PV走法要保存到历史表
+          vlAlpha = vl;     // 缩小Alpha-Beta边界
+        }
+      }
+    }
+  }
+
+  // 5. 所有走法都搜索完了，把最佳走法(不能是Alpha走法)保存到历史表，返回最佳值
+  if (vlBest == -MATE_VALUE) {
+    // 如果是杀棋，就根据杀棋步数给出评价
+    return pos.nDistance - MATE_VALUE;
+  }
+  if (mvBest > 0) {
+    // 如果不是Alpha走法，就将最佳走法保存到历史表
+    Search.nHistoryTable[mvBest] += nDepth * nDepth;
+    if (pos.nDistance == 0) {
+      // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
+      Search.mvResult = mvBest;
+    }
+  }
+  return vlBest;
+}
+
+// 迭代加深搜索过程
+static void SearchMain(void) {
+  int i, t, vl;
+
+  // 初始化
+  memset(Search.nHistoryTable, 0, 65536 * sizeof(int)); // 清空历史表
+  t = clock();       // 初始化定时器
+  pos.nDistance = 0; // 初始步数
+
+  // 迭代加深过程
+  for (i = 1; i <= LIMIT_DEPTH; i ++) {
+    vl = SearchFull(-MATE_VALUE, MATE_VALUE, i);
+    // 搜索到杀棋，就终止搜索
+    if (vl > WIN_VALUE || vl < -WIN_VALUE) {
+      break;
+    }
+    // 超过1/4秒，就终止搜索
+    if (clock() - t > CLOCKS_PER_SEC / 4) {
+      break;
+    }
+  }
+}
+
 // TransparentBlt 的替代函数，用来修正原函数在 Windows 98 下资源泄漏的问题
 static void TransparentBlt2(HDC hdcDest, int nXOriginDest, int nYOriginDest, int nWidthDest, int nHeightDest,
     HDC hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc, UINT crTransparent) {
@@ -821,6 +1181,31 @@ static void DrawSquare(int sq, BOOL bSelected = FALSE) {
   }
 }
 
+// 电脑回应一步棋
+static void ResponseMove(void) {
+  int pcCaptured;
+  // 电脑走一步棋
+  SetCursor((HCURSOR) LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
+  SearchMain();
+  SetCursor((HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
+  pos.MakeMove(Search.mvResult, pcCaptured);
+  // 清除上一步棋的选择标记
+  DrawSquare(SRC(Xqwl.mvLast));
+  DrawSquare(DST(Xqwl.mvLast));
+  // 把电脑走的棋标记出来
+  Xqwl.mvLast = Search.mvResult;
+  DrawSquare(SRC(Xqwl.mvLast), DRAW_SELECTED);
+  DrawSquare(DST(Xqwl.mvLast), DRAW_SELECTED);
+  if (pos.IsMate()) {
+    // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
+    PlayResWav(IDR_LOSS);
+    MessageBoxMute("请再接再厉！");
+  } else {
+    // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
+    PlayResWav(pos.Checked() ? IDR_CHECK2 : pcCaptured != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
+  }
+}
+
 // 点击格子事件处理
 static void ClickSquare(int sq) {
   int pc, mv;
@@ -846,7 +1231,7 @@ static void ClickSquare(int sq) {
     // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
-      if (pos.MakeMove(mv)) {
+      if (pos.MakeMove(mv, pc)) {
         Xqwl.mvLast = mv;
         DrawSquare(Xqwl.sqSelected, DRAW_SELECTED);
         DrawSquare(sq, DRAW_SELECTED);
@@ -858,6 +1243,7 @@ static void ClickSquare(int sq) {
         } else {
           // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
           PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
+          ResponseMove(); // 轮到电脑走棋
         }
       } else {
         PlayResWav(IDR_ILLEGAL); // 播放被将军的声音
@@ -908,6 +1294,12 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
       Startup();
       hdc = GetDC(Xqwl.hWnd);
       DrawBoard(hdc);
+      if (Xqwl.bFlipped) {
+        Xqwl.hdc = hdc;
+        Xqwl.hdcTmp = CreateCompatibleDC(Xqwl.hdc);
+        ResponseMove();
+        DeleteDC(Xqwl.hdcTmp);
+      }
       ReleaseDC(Xqwl.hWnd, hdc);
       break;
     case IDM_FILE_EXIT:
@@ -963,6 +1355,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   WNDCLASSEX wce;
 
   // 初始化全局变量
+  InitZobrist();
   Xqwl.hInst = hInstance;
   Xqwl.bFlipped = FALSE;
   Startup();
