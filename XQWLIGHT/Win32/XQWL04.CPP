@@ -4,7 +4,7 @@
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
  * 象棋小巫师 0.4 的目标：
- * 一、用Zobrist校验码技术实现循环局面判定；
+ * 一、用Zobrist校验码技术实现重复局面判定；
  * 二、增加静态(Quiescence)搜索和MVV/LVA启发；
  * 三、增加将军延伸和空步(Null-Move)裁剪；
  * 四、实现开局库。
@@ -45,9 +45,11 @@ const int PIECE_PAWN = 6;
 
 // 其他常数
 const int MAX_GEN_MOVES = 128; // 最大的生成走法数
+const int MAX_MOVES = 256;     // 最大的历史走法数
 const int LIMIT_DEPTH = 32;    // 最大的搜索深度
 const int MATE_VALUE = 10000;  // 最高分值，即将死的分值
 const int WIN_VALUE = MATE_VALUE - 100; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
+const int DRAW_VALUE = 20;     // 和棋时返回的分数(取负值)
 const int ADVANCED_VALUE = 3;  // 先行权分值
 
 // 判断棋子是否在棋盘中的数组
@@ -533,11 +535,18 @@ static void InitZobrist(void) {
   }
 }
 
-// 历史走法(占4字节)
+// 历史走法信息(占4字节)
 struct MoveStruct {
-  USHORT wmv;
-  BYTE ucpcCaptured;
-  BYTE ucbCheck;
+  WORD wmv;
+  BYTE ucpcCaptured, ucbCheck;
+  DWORD dwKey;
+
+  void Set(int mv, int pcCaptured, BOOL bCheck, DWORD dwKey_) {
+    wmv = mv;
+    ucpcCaptured = pcCaptured;
+    ucbCheck = bCheck;
+    dwKey = dwKey_;
+  }
 }; // mvs
 
 // 局面结构
@@ -545,9 +554,14 @@ struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   BYTE ucpcSquares[256];          // 棋盘上的棋子
   int vlRed, vlBlack;             // 红、黑双方的子力价值
-  int nDistance, nMoveNum;        // 距离根节点的步数，
+  int nDistance, nMoveNum;        // 距离根节点的步数，历史走法数
+  MoveStruct mvsList[MAX_MOVES];  // 历史走法信息列表
   ZobristStruct zobr;             // Zobrist
 
+  void SetIrrev(void) {           // 清空(初始化)历史走法信息
+    mvsList[0].Set(0, 0, Checked(), zobr.dwKey);
+    nMoveNum = 1;
+  }
   void Startup(void);             // 初始化棋盘
   void ChangeSide(void) {         // 交换走子方
     sdPlayer = 1 - sdPlayer;
@@ -558,40 +572,60 @@ struct PositionStruct {
     // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
     if (pc < 16) {
       vlRed += cucvlPiecePos[pc - 8][sq];
-      pc -= 8;
+      zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
-      pc -= 9;
+      zobr.Xor(Zobrist.Table[pc - 9][sq]);
     }
-    zobr.Xor(Zobrist.Table[pc][sq]);
   }
   void DelPiece(int sq, int pc) { // 从棋盘上拿走一枚棋子
     ucpcSquares[sq] = 0;
     // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
     if (pc < 16) {
       vlRed -= cucvlPiecePos[pc - 8][sq];
-      pc -= 8;
+      zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
-      pc -= 9;
+      zobr.Xor(Zobrist.Table[pc - 9][sq]);
     }
-    zobr.Xor(Zobrist.Table[pc][sq]);
   }
   int Evaluate(void) const {      // 局面评价函数
     return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
   }
+  BOOL Captured(void) const {     // 上一步是否吃子
+    return mvsList[nMoveNum - 1].ucpcCaptured != 0;
+  }
   int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
-  BOOL MakeMove(int mv, int &pcCaptured);     // 走一步棋
-  void UndoMakeMove(int mv, int pcCaptured) { // 撤消走一步棋
+  BOOL MakeMove(int mv);                      // 走一步棋
+  void UndoMakeMove(void) {                   // 撤消走一步棋
     nDistance --;
+    nMoveNum --;
     ChangeSide();
-    UndoMovePiece(mv, pcCaptured);
+    UndoMovePiece(mvsList[nMoveNum].wmv, mvsList[nMoveNum].ucpcCaptured);
+  }
+  void NullMove(void) {                       // 走一步空步
+    DWORD dwKey;
+    dwKey = zobr.dwKey;
+    ChangeSide();
+    mvsList[nMoveNum].Set(0, 0, FALSE, dwKey);
+    nMoveNum ++;
+  }
+  void UndoNullMove(void) {                   // 撤消走一步空步
+    nMoveNum --;
+    ChangeSide();
   }
   int GenerateMoves(int *mvs) const;          // 生成所有走法
   BOOL LegalMove(int mv) const;               // 判断走法是否合理
   BOOL Checked(void) const;                   // 判断是否被将军
   BOOL IsMate(void);                          // 判断是否被杀
+  int RepStatus(int nRecur = 1) const;        // 检测重复局面
+  int RepValue(int nRepStatus) const {        // 重复局面分值
+    int vlReturn;
+    vlReturn = ((nRepStatus & 2) == 0 ? 0 : nDistance - MATE_VALUE) +
+        ((nRepStatus & 4) == 0 ? 0 : MATE_VALUE - nDistance);
+    return vlReturn == 0 ? -DRAW_VALUE : vlReturn;
+  }
 };
 
 // 初始化棋盘
@@ -606,6 +640,7 @@ void PositionStruct::Startup(void) {
       AddPiece(sq, pc);
     }
   }
+  SetIrrev();
 }
 
 // 搬一步棋的棋子
@@ -637,13 +672,22 @@ void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
 }
 
 // 走一步棋
-BOOL PositionStruct::MakeMove(int mv, int &pcCaptured) {
+BOOL PositionStruct::MakeMove(int mv) {
+  int pcCaptured;
+  DWORD dwKey;
+
+  if (nMoveNum == MAX_MOVES) {
+    return FALSE;
+  }
+  dwKey = zobr.dwKey;
   pcCaptured = MovePiece(mv);
   if (Checked()) {
     UndoMovePiece(mv, pcCaptured);
     return FALSE;
   }
   ChangeSide();
+  mvsList[nMoveNum].Set(mv, pcCaptured, Checked(), dwKey);
+  nMoveNum ++;
   nDistance ++;
   return TRUE;
 }
@@ -953,6 +997,32 @@ BOOL PositionStruct::IsMate(void) {
   return TRUE;
 }
 
+// 检测重复局面
+int PositionStruct::RepStatus(int nRecur) const {
+  BOOL bSelfSide, bPerpCheck, bOppPerpCheck;
+  const MoveStruct *lpmvs;
+
+  bSelfSide = FALSE;
+  bPerpCheck = bOppPerpCheck = TRUE;
+  lpmvs = mvsList + nMoveNum - 1;
+  while (lpmvs->wmv != 0 && lpmvs->ucpcCaptured == 0) {
+    if (bSelfSide) {
+      bPerpCheck = bPerpCheck && lpmvs->ucbCheck;
+      if (lpmvs->dwKey == zobr.dwKey) {
+        nRecur --;
+        if (nRecur == 0) {
+          return 1 + (bPerpCheck ? 2 : 0) + (bOppPerpCheck ? 4 : 0);
+        }
+      }
+    } else {
+      bOppPerpCheck = bOppPerpCheck && lpmvs->ucbCheck;
+    }
+    bSelfSide = !bSelfSide;
+    lpmvs --;
+  }
+  return 0;
+}
+
 PositionStruct pos; // 局面实例
 
 // 与图形界面有关的全局变量
@@ -978,7 +1048,7 @@ static int CompareMove(const void *lpmv1, const void *lpmv2) {
 
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
 static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
-  int i, nGenMoves, pcCaptured;
+  int i, nGenMoves;
   int vl, vlBest, mvBest;
   int mvs[MAX_GEN_MOVES];
   // 一个Alpha-Beta完全搜索分为以下几个阶段
@@ -986,6 +1056,14 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
   // 1. 到达水平线，则返回局面评价值
   if (nDepth == 0) {
     return pos.Evaluate();
+  }
+
+  // 1-1. 检查重复局面(不要在根节点检查，否则就没有走法了)
+  if (pos.nDistance > 0) {
+    vl = pos.RepStatus();
+    if (vl != 0) {
+      return pos.RepValue(vl);
+    }
   }
 
   // 2. 初始化最佳值和最佳走法
@@ -998,9 +1076,9 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
 
   // 4. 逐一走这些走法，并进行递归
   for (i = 0; i < nGenMoves; i ++) {
-    if (pos.MakeMove(mvs[i], pcCaptured)) {
+    if (pos.MakeMove(mvs[i])) {
       vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
-      pos.UndoMakeMove(mvs[i], pcCaptured);
+      pos.UndoMakeMove();
 
       // 5. 进行Alpha-Beta大小判断和截断
       if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
@@ -1183,12 +1261,12 @@ static void DrawSquare(int sq, BOOL bSelected = FALSE) {
 
 // 电脑回应一步棋
 static void ResponseMove(void) {
-  int pcCaptured;
+  int vlRep;
   // 电脑走一步棋
   SetCursor((HCURSOR) LoadImage(NULL, IDC_WAIT, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
   SearchMain();
   SetCursor((HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
-  pos.MakeMove(Search.mvResult, pcCaptured);
+  pos.MakeMove(Search.mvResult);
   // 清除上一步棋的选择标记
   DrawSquare(SRC(Xqwl.mvLast));
   DrawSquare(DST(Xqwl.mvLast));
@@ -1196,19 +1274,34 @@ static void ResponseMove(void) {
   Xqwl.mvLast = Search.mvResult;
   DrawSquare(SRC(Xqwl.mvLast), DRAW_SELECTED);
   DrawSquare(DST(Xqwl.mvLast), DRAW_SELECTED);
+  // 检查重复局面
+  vlRep = pos.RepStatus(3);
   if (pos.IsMate()) {
     // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
     PlayResWav(IDR_LOSS);
     MessageBoxMute("请再接再厉！");
+    return;
+  } else if (vlRep > 0) {
+    vlRep = pos.RepValue(vlRep);
+    // 注意："vlRep"是对玩家来说的分值
+    PlayResWav(vlRep < -WIN_VALUE ? IDR_LOSS : vlRep > WIN_VALUE ? IDR_WIN : IDR_DRAW);
+    MessageBoxMute(vlRep < -WIN_VALUE ? "长打作负，请不要气馁！" :
+        vlRep > WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+  } else if (pos.nMoveNum > 100) {
+    PlayResWav(IDR_DRAW);
+    MessageBoxMute("超过自然限着作和，辛苦了！");
   } else {
     // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-    PlayResWav(pos.Checked() ? IDR_CHECK2 : pcCaptured != 0 ? IDR_CAPTURE2 : IDR_MOVE2);
+    PlayResWav(pos.Checked() ? IDR_CHECK2 : pos.Captured() ? IDR_CAPTURE2 : IDR_MOVE2);
+    if (pos.Captured()) {
+      pos.SetIrrev();
+    }
   }
 }
 
 // 点击格子事件处理
 static void ClickSquare(int sq) {
-  int pc, mv;
+  int pc, mv, vlRep;
   Xqwl.hdc = GetDC(Xqwl.hWnd);
   Xqwl.hdcTmp = CreateCompatibleDC(Xqwl.hdc);
   sq = Xqwl.bFlipped ? SQUARE_FLIP(sq) : sq;
@@ -1231,18 +1324,32 @@ static void ClickSquare(int sq) {
     // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
-      if (pos.MakeMove(mv, pc)) {
+      if (pos.MakeMove(mv)) {
         Xqwl.mvLast = mv;
         DrawSquare(Xqwl.sqSelected, DRAW_SELECTED);
         DrawSquare(sq, DRAW_SELECTED);
         Xqwl.sqSelected = 0;
+        // 检查重复局面
+        vlRep = pos.RepStatus(3);
         if (pos.IsMate()) {
           // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
           PlayResWav(IDR_WIN);
           MessageBoxMute("祝贺你取得胜利！");
+        } else if (vlRep > 0) {
+          vlRep = pos.RepValue(vlRep);
+          // 注意："vlRep"是对电脑来说的分值
+          PlayResWav(vlRep > WIN_VALUE ? IDR_LOSS : vlRep < -WIN_VALUE ? IDR_WIN : IDR_DRAW);
+          MessageBoxMute(vlRep > WIN_VALUE ? "长打作负，请不要气馁！" :
+              vlRep < -WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+        } else if (pos.nMoveNum > 100) {
+          PlayResWav(IDR_DRAW);
+          MessageBoxMute("超过自然限着作和，辛苦了！");
         } else {
           // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-          PlayResWav(pos.Checked() ? IDR_CHECK : pc != 0 ? IDR_CAPTURE : IDR_MOVE);
+          PlayResWav(pos.Checked() ? IDR_CHECK : pos.Captured() ? IDR_CAPTURE : IDR_MOVE);
+          if (pos.Captured()) {
+            pos.SetIrrev();
+          }
           ResponseMove(); // 轮到电脑走棋
         }
       } else {
@@ -1306,7 +1413,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
       DestroyWindow(Xqwl.hWnd);
       break;
     case IDM_HELP_ABOUT:
-      // 弹出带VSCCP图标的对话框
+      // 弹出带象棋小巫师图标的对话框
       MessageBeep(MB_ICONINFORMATION);
       mbp.cbSize = sizeof(MSGBOXPARAMS);
       mbp.hwndOwner = hWnd;
@@ -1378,12 +1485,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   wce.hCursor = (HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
   wce.hbrBackground = (HBRUSH) (COLOR_BTNFACE + 1);
   wce.lpszMenuName = MAKEINTRESOURCE(IDM_MAINMENU);
-  wce.lpszClassName = "VSCCP";
+  wce.lpszClassName = "XQWLIGHT";
   wce.hIconSm = (HICON) LoadImage(hInstance, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 16, 16, LR_SHARED);
   RegisterClassEx(&wce);
 
   // 打开窗口
-  Xqwl.hWnd = CreateWindow("VSCCP", "象棋小巫师", WINDOW_STYLES,
+  Xqwl.hWnd = CreateWindow("XQWLIGHT", "象棋小巫师", WINDOW_STYLES,
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
   if (Xqwl.hWnd == NULL) {
     return 0;

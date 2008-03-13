@@ -914,7 +914,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
       DestroyWindow(Xqwl.hWnd);
       break;
     case IDM_HELP_ABOUT:
-      // 弹出带VSCCP图标的对话框
+      // 弹出带象棋小巫师图标的对话框
       MessageBeep(MB_ICONINFORMATION);
       mbp.cbSize = sizeof(MSGBOXPARAMS);
       mbp.hwndOwner = hWnd;
@@ -985,12 +985,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   wce.hCursor = (HCURSOR) LoadImage(NULL, IDC_ARROW, IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
   wce.hbrBackground = (HBRUSH) (COLOR_BTNFACE + 1);
   wce.lpszMenuName = MAKEINTRESOURCE(IDM_MAINMENU);
-  wce.lpszClassName = "VSCCP";
+  wce.lpszClassName = "XQWLIGHT";
   wce.hIconSm = (HICON) LoadImage(hInstance, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 16, 16, LR_SHARED);
   RegisterClassEx(&wce);
 
   // 打开窗口
-  Xqwl.hWnd = CreateWindow("VSCCP", "象棋小巫师", WINDOW_STYLES,
+  Xqwl.hWnd = CreateWindow("XQWLIGHT", "象棋小巫师", WINDOW_STYLES,
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
   if (Xqwl.hWnd == NULL) {
     return 0;
