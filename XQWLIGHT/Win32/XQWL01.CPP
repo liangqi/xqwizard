@@ -4,8 +4,7 @@
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
  * 象棋小巫师 0.1 的目标：
- * 一、绘制棋具；
- * 二、制作一个可操作的图形界面。
+ * 一、制作一个可操作的图形界面。
  */
 
 #include <windows.h>

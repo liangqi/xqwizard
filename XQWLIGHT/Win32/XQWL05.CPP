@@ -3,10 +3,9 @@
  * Designed by Morning Yellow, Version: 0.4, Last Modified: Mar. 2008
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
- * 象棋小巫师 0.4 的目标：
- * 一、用Zobrist校验码技术实现重复局面判定；
- * 二、实现静态(Quiescence)搜索和MVV/LVA启发；
- * 三、实现将军延伸和空步(Null-Move)裁剪。
+ * 象棋小巫师 0.5 的目标：
+ * 一、实现置换表；
+ * 二、采用置换表走法、杀手走法等多中启发方式。
  */
 
 #include <stdlib.h>
@@ -15,7 +14,7 @@
 #include "resource.h"
 
 // 版本号
-const char *const cszAbout = "象棋小巫师 0.4\n象棋百科全书 荣誉出品\n\n"
+const char *const cszAbout = "象棋小巫师 0.5\n象棋百科全书 荣誉出品\n\n"
     "(C) 2004-2008 www.elephantbase.net\n本产品符合GNU通用公共许可协议\n\n"
     "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师";
 
@@ -52,6 +51,10 @@ const int DRAW_VALUE = 20;     // 和棋时返回的分数(取负值)
 const int ADVANCED_VALUE = 3;  // 先行权分值
 const int NULL_MARGIN = 400;   // 空步裁剪的子力边界
 const int NULL_DEPTH = 2;      // 空步裁剪的裁剪深度
+const int HASH_SIZE = 1048576; // 置换表大小
+const int HASH_ALPHA = 1;      // ALPHA节点的置换表项
+const int HASH_BETA = 2;       // BETA节点的置换表项
+const int HASH_PV = 3;         // PV节点的置换表项
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
@@ -1047,11 +1050,67 @@ static struct {
   BOOL bFlipped, bGameOver;                     // 是否翻转棋盘，是否游戏结束(不让继续玩下去)
 } Xqwl;
 
+// 置换表项结构
+struct HashItem {
+  WORD wDepth, wFlag, wvl, wmv;
+  DWORD dwLock0, dwLock1;
+};
+
 // 与搜索有关的全局变量
 static struct {
   int mvResult;             // 电脑走的棋
   int nHistoryTable[65536]; // 历史表
+  HashItem Hash[HASH_SIZE]; // 置换表
 } Search;
+
+static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
+  BOOL bMate;
+  HashItem hsh;
+
+  hsh = Search.Hash[pos.zobr.dwKey & (HASH_SIZE - 1)];
+  if (hsh.dwLock0 != pos.zobr.dwLock0 || hsh.dwLock1 != pos.zobr.dwLock1) {
+    mv = 0;
+    return -MATE_VALUE;
+  }
+  mv = hsh.wmv;
+  bMate = FALSE;
+  if (hsh.wvl > WIN_VALUE) {
+    hsh.wvl -= pos.nDistance;
+    bMate = TRUE;
+  } else if (hsh.wvl < -WIN_VALUE) {
+    hsh.wvl += pos.nDistance;
+    bMate = TRUE;
+  }
+  if (hsh.wDepth >= nDepth || bMate) {
+    if (hsh.wFlag == HASH_BETA) {
+      return (hsh.wvl >= vlBeta ? hsh.wvl : -MATE_VALUE);
+    } else if (hsh.wFlag == HASH_ALPHA) {
+      return (hsh.wvl <= vlAlpha ? hsh.wvl : -MATE_VALUE);
+    }
+    return hsh.wvl;
+  }
+  return -MATE_VALUE;
+};
+
+static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
+  HashItem *lphsh;
+  lphsh = Search.Hash + (pos.zobr.dwKey & (HASH_SIZE - 1));
+  if (lphsh->wDepth > nDepth) {
+    return;
+  }
+  lphsh->wFlag = nFlag;
+  lphsh->wDepth = nDepth;
+  if (vl > WIN_VALUE) {
+    lphsh->wvl = vl + pos.nDistance;
+  } else if (vl < -WIN_VALUE) {
+    lphsh->wvl = vl - pos.nDistance;
+  } else {
+    lphsh->wvl = vl;
+  }
+  lphsh->wmv = mv;
+  lphsh->dwLock0 = pos.zobr.dwLock0;
+  lphsh->dwLock1 = pos.zobr.dwLock1;
+};
 
 // MVV/LVA每种子力的价值
 static BYTE cucMvvLva[24] = {

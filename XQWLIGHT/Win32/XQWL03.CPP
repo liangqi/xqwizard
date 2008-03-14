@@ -7,8 +7,8 @@
  * 一、用子力位置价值表实现局面评价函数；
  * 二、用超出边界(Fail-Soft)的Alpha-Beta搜索让电脑走棋；
  * 三、用迭代加深技术实现时间控制；
- * 四、增加历史表启发，优化Alpha-Beta搜索的效率；
- * 五、增加杀棋步数评价，能有效搜索杀棋。
+ * 四、实现历史表启发，优化Alpha-Beta搜索的效率；
+ * 五、实现杀棋步数评价，能有效搜索杀棋。
  */
 
 #include <stdlib.h>
@@ -948,8 +948,8 @@ static void SearchMain(void) {
     if (vl > WIN_VALUE || vl < -WIN_VALUE) {
       break;
     }
-    // 超过1/4秒，就终止搜索
-    if (clock() - t > CLOCKS_PER_SEC / 4) {
+    // 超过一秒，就终止搜索
+    if (clock() - t > CLOCKS_PER_SEC) {
       break;
     }
   }
