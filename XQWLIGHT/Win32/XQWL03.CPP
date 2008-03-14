@@ -642,7 +642,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
             break;
           }
           sqDst += nDelta;
-          }
+        }
       }
       break;
     case PIECE_CANNON:
@@ -870,9 +870,9 @@ static struct {
   int nHistoryTable[65536]; // 历史表
 } Search;
 
-// "qsort"排序的比较函数
-static int CompareMove(const void *lpmv1, const void *lpmv2) {
-  return Search.nHistoryTable[*(int *) lpmv1] - Search.nHistoryTable[*(int *) lpmv2];
+// "qsort"按历史表排序的比较函数
+static int CompareHistory(const void *lpmv1, const void *lpmv2) {
+  return Search.nHistoryTable[*(int *) lpmv2] - Search.nHistoryTable[*(int *) lpmv1];
 }
 
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
@@ -893,7 +893,7 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
 
   // 3. 生成全部走法，并根据历史表排序
   nGenMoves = pos.GenerateMoves(mvs);
-  qsort(mvs, nGenMoves, sizeof(int), CompareMove);
+  qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
 
   // 4. 逐一走这些走法，并进行递归
   for (i = 0; i < nGenMoves; i ++) {

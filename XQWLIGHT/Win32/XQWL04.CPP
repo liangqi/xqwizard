@@ -51,6 +51,8 @@ const int MATE_VALUE = 10000;  // 最高分值，即将死的分值
 const int WIN_VALUE = MATE_VALUE - 100; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
 const int DRAW_VALUE = 20;     // 和棋时返回的分数(取负值)
 const int ADVANCED_VALUE = 3;  // 先行权分值
+const int NULL_MARGIN = 400;   // 空步裁剪的子力边界
+const int NULL_DEPTH = 2;      // 空步裁剪的裁剪深度
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
@@ -592,6 +594,9 @@ struct PositionStruct {
   int Evaluate(void) const {      // 局面评价函数
     return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
   }
+  BOOL InCheck(void) const {      // 是否被将军
+    return mvsList[nMoveNum - 1].ucbCheck;
+  }
   BOOL Captured(void) const {     // 上一步是否吃子
     return mvsList[nMoveNum - 1].ucpcCaptured != 0;
   }
@@ -615,7 +620,8 @@ struct PositionStruct {
     nMoveNum --;
     ChangeSide();
   }
-  int GenerateMoves(int *mvs) const;          // 生成所有走法
+  // 生成所有走法，如果"bCapture"为"TRUE"则只生成吃子走法
+  int GenerateMoves(int *mvs, BOOL bCapture = FALSE) const;
   BOOL LegalMove(int mv) const;               // 判断走法是否合理
   BOOL Checked(void) const;                   // 判断是否被将军
   BOOL IsMate(void);                          // 判断是否被杀
@@ -625,6 +631,9 @@ struct PositionStruct {
     vlReturn = ((nRepStatus & 2) == 0 ? 0 : nDistance - MATE_VALUE) +
         ((nRepStatus & 4) == 0 ? 0 : MATE_VALUE - nDistance);
     return vlReturn == 0 ? -DRAW_VALUE : vlReturn;
+  }
+  BOOL NullOkay(void) const {                 // 判断是否允许空步裁剪
+    return (sdPlayer == 0 ? vlRed : vlBlack) > NULL_MARGIN;
   }
 };
 
@@ -676,9 +685,6 @@ BOOL PositionStruct::MakeMove(int mv) {
   int pcCaptured;
   DWORD dwKey;
 
-  if (nMoveNum == MAX_MOVES) {
-    return FALSE;
-  }
   dwKey = zobr.dwKey;
   pcCaptured = MovePiece(mv);
   if (Checked()) {
@@ -692,8 +698,11 @@ BOOL PositionStruct::MakeMove(int mv) {
   return TRUE;
 }
 
-// 生成所有走法
-int PositionStruct::GenerateMoves(int *mvs) const {
+// "GenerateMoves"参数
+const BOOL GEN_CAPTURE = TRUE;
+
+// 生成所有走法，如果"bCapture"为"TRUE"则只生成吃子走法
+int PositionStruct::GenerateMoves(int *mvs, BOOL bCapture) const {
   int i, j, nGenMoves, nDelta, sqSrc, sqDst;
   int pcSelfSide, pcOppSide, pcSrc, pcDst;
   // 生成所有走法，需要经过以下几个步骤：
@@ -718,7 +727,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           continue;
         }
         pcDst = ucpcSquares[sqDst];
-        if ((pcDst & pcSelfSide) == 0) {
+        if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
           mvs[nGenMoves] = MOVE(sqSrc, sqDst);
           nGenMoves ++;
         }
@@ -731,7 +740,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           continue;
         }
         pcDst = ucpcSquares[sqDst];
-        if ((pcDst & pcSelfSide) == 0) {
+        if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
           mvs[nGenMoves] = MOVE(sqSrc, sqDst);
           nGenMoves ++;
         }
@@ -745,7 +754,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         }
         sqDst += ccAdvisorDelta[i];
         pcDst = ucpcSquares[sqDst];
-        if ((pcDst & pcSelfSide) == 0) {
+        if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
           mvs[nGenMoves] = MOVE(sqSrc, sqDst);
           nGenMoves ++;
         }
@@ -763,7 +772,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
             continue;
           }
           pcDst = ucpcSquares[sqDst];
-          if ((pcDst & pcSelfSide) == 0) {
+          if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
             mvs[nGenMoves] = MOVE(sqSrc, sqDst);
             nGenMoves ++;
           }
@@ -777,8 +786,10 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         while (IN_BOARD(sqDst)) {
           pcDst = ucpcSquares[sqDst];
           if (pcDst == 0) {
+            if (!bCapture) {
               mvs[nGenMoves] = MOVE(sqSrc, sqDst);
               nGenMoves ++;
+            }
           } else {
             if ((pcDst & pcOppSide) != 0) {
               mvs[nGenMoves] = MOVE(sqSrc, sqDst);
@@ -787,7 +798,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
             break;
           }
           sqDst += nDelta;
-          }
+        }
       }
       break;
     case PIECE_CANNON:
@@ -797,8 +808,10 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         while (IN_BOARD(sqDst)) {
           pcDst = ucpcSquares[sqDst];
           if (pcDst == 0) {
-            mvs[nGenMoves] = MOVE(sqSrc, sqDst);
-            nGenMoves ++;
+            if (!bCapture) {
+              mvs[nGenMoves] = MOVE(sqSrc, sqDst);
+              nGenMoves ++;
+            }
           } else {
             break;
           }
@@ -822,7 +835,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
       sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
       if (IN_BOARD(sqDst)) {
         pcDst = ucpcSquares[sqDst];
-        if ((pcDst & pcSelfSide) == 0) {
+        if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
           mvs[nGenMoves] = MOVE(sqSrc, sqDst);
           nGenMoves ++;
         }
@@ -832,7 +845,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
           sqDst = sqSrc + nDelta;
           if (IN_BOARD(sqDst)) {
             pcDst = ucpcSquares[sqDst];
-            if ((pcDst & pcSelfSide) == 0) {
+            if (bCapture ? (pcDst & pcOppSide) != 0 : (pcDst & pcSelfSide) == 0) {
               mvs[nGenMoves] = MOVE(sqSrc, sqDst);
               nGenMoves ++;
             }
@@ -1032,8 +1045,25 @@ static struct {
   HDC hdc, hdcTmp;                              // 设备句柄，只在"ClickSquare"过程中有效
   HBITMAP bmpBoard, bmpSelected, bmpPieces[24]; // 资源图片句柄
   int sqSelected, mvLast;                       // 选中的格子，上一步棋
-  BOOL bFlipped;                                // 是否翻转棋盘
+  BOOL bFlipped, bGameOver;                     // 是否翻转棋盘，是否游戏结束(不让继续玩下去)
 } Xqwl;
+
+// MVV/LVA每种子力的价值
+static BYTE cucMvvLva[24] = {
+  0, 0, 0, 0, 0, 0, 0, 0,
+  5, 1, 1, 3, 4, 3, 2, 0,
+  5, 1, 1, 3, 4, 3, 2, 0
+};
+
+// 求MVV/LVA值
+inline int MvvLva(int mv) {
+  return (cucMvvLva[pos.ucpcSquares[DST(mv)]] << 3) - cucMvvLva[pos.ucpcSquares[SRC(mv)]];
+}
+
+// "qsort"按MVV/LVA值排序的比较函数
+static int CompareMvvLva(const void *lpmv1, const void *lpmv2) {
+  return MvvLva(*(int *) lpmv2) - MvvLva(*(int *) lpmv1);
+}
 
 // 与搜索有关的全局变量
 static struct {
@@ -1041,28 +1071,103 @@ static struct {
   int nHistoryTable[65536]; // 历史表
 } Search;
 
-// "qsort"排序的比较函数
-static int CompareMove(const void *lpmv1, const void *lpmv2) {
-  return Search.nHistoryTable[*(int *) lpmv1] - Search.nHistoryTable[*(int *) lpmv2];
+// "qsort"按历史表排序的比较函数
+static int CompareHistory(const void *lpmv1, const void *lpmv2) {
+  return Search.nHistoryTable[*(int *) lpmv2] - Search.nHistoryTable[*(int *) lpmv1];
 }
 
+// 静态(Quiescence)搜索过程
+static int SearchQuiesc(int vlAlpha, int vlBeta) {
+  int i, nGenMoves;
+  int vl, vlBest;
+  int mvs[MAX_GEN_MOVES];
+  // 一个静态搜索分为以下几个阶段
+
+  // 1. 检查重复局面
+  vl = pos.RepStatus();
+  if (vl != 0) {
+    return pos.RepValue(vl);
+  }
+
+  // 2. 初始化最佳值
+  vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
+
+  if (pos.InCheck()) {
+    // 3. 如果被将军，则生成全部走法
+    nGenMoves = pos.GenerateMoves(mvs);
+    qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
+  } else {
+
+    // 4. 如果不被将军，先做局面评价
+    vl = pos.Evaluate();
+    if (vl > vlBest) {
+      vlBest = vl;
+      if (vl >= vlBeta) {
+        return vl;
+      }
+      if (vl > vlAlpha) {
+        vlAlpha = vl;
+      }
+    }
+
+    // 5. 如果局面评价没有截断，再生成吃子走法
+    nGenMoves = pos.GenerateMoves(mvs, GEN_CAPTURE);
+    qsort(mvs, nGenMoves, sizeof(int), CompareMvvLva);
+  }
+
+  // 6. 逐一走这些走法，并进行递归
+  for (i = 0; i < nGenMoves; i ++) {
+    if (pos.MakeMove(mvs[i])) {
+      vl = -SearchQuiesc(-vlBeta, -vlAlpha);
+      pos.UndoMakeMove();
+
+      // 7. 进行Alpha-Beta大小判断和截断
+      if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
+        vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
+        if (vl >= vlBeta) { // 找到一个Beta走法
+          return vl;        // Beta截断
+        }
+        if (vl > vlAlpha) { // 找到一个PV走法
+          vlAlpha = vl;     // 缩小Alpha-Beta边界
+        }
+      }
+    }
+  }
+
+  // 8. 所有走法都搜索完了，返回最佳值
+  return vlBest == -MATE_VALUE ? pos.nDistance - MATE_VALUE : vlBest;
+}
+
+// "SearchFull"的参数
+const BOOL NO_NULL = TRUE;
+
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
-static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
+static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE) {
   int i, nGenMoves;
   int vl, vlBest, mvBest;
   int mvs[MAX_GEN_MOVES];
   // 一个Alpha-Beta完全搜索分为以下几个阶段
 
-  // 1. 到达水平线，则返回局面评价值
-  if (nDepth == 0) {
-    return pos.Evaluate();
+  // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
+  if (nDepth <= 0) {
+    return SearchQuiesc(vlAlpha, vlBeta);
   }
 
-  // 1-1. 检查重复局面(不要在根节点检查，否则就没有走法了)
   if (pos.nDistance > 0) {
+    // 1-1. 检查重复局面(注意：不要在根节点检查，否则就没有走法了)
     vl = pos.RepStatus();
     if (vl != 0) {
       return pos.RepValue(vl);
+    }
+
+    // 1-2. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
+    if (!bNoNull && !pos.InCheck() && pos.NullOkay()) {
+      pos.NullMove();
+      vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
+      pos.UndoNullMove();
+      if (vl >= vlBeta) {
+        return vl;
+      }
     }
   }
 
@@ -1072,12 +1177,13 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth) {
 
   // 3. 生成全部走法，并根据历史表排序
   nGenMoves = pos.GenerateMoves(mvs);
-  qsort(mvs, nGenMoves, sizeof(int), CompareMove);
+  qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
 
   // 4. 逐一走这些走法，并进行递归
   for (i = 0; i < nGenMoves; i ++) {
     if (pos.MakeMove(mvs[i])) {
-      vl = -SearchFull(-vlBeta, -vlAlpha, nDepth - 1);
+      // 将军延伸
+      vl = -SearchFull(-vlBeta, -vlAlpha, pos.InCheck() ? nDepth : nDepth - 1);
       pos.UndoMakeMove();
 
       // 5. 进行Alpha-Beta大小判断和截断
@@ -1280,19 +1386,21 @@ static void ResponseMove(void) {
     // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
     PlayResWav(IDR_LOSS);
     MessageBoxMute("请再接再厉！");
-    return;
+    Xqwl.bGameOver = TRUE;
   } else if (vlRep > 0) {
     vlRep = pos.RepValue(vlRep);
     // 注意："vlRep"是对玩家来说的分值
     PlayResWav(vlRep < -WIN_VALUE ? IDR_LOSS : vlRep > WIN_VALUE ? IDR_WIN : IDR_DRAW);
     MessageBoxMute(vlRep < -WIN_VALUE ? "长打作负，请不要气馁！" :
         vlRep > WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+    Xqwl.bGameOver = TRUE;
   } else if (pos.nMoveNum > 100) {
     PlayResWav(IDR_DRAW);
     MessageBoxMute("超过自然限着作和，辛苦了！");
+    Xqwl.bGameOver = TRUE;
   } else {
     // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-    PlayResWav(pos.Checked() ? IDR_CHECK2 : pos.Captured() ? IDR_CAPTURE2 : IDR_MOVE2);
+    PlayResWav(pos.InCheck() ? IDR_CHECK2 : pos.Captured() ? IDR_CAPTURE2 : IDR_MOVE2);
     if (pos.Captured()) {
       pos.SetIrrev();
     }
@@ -1320,7 +1428,7 @@ static void ClickSquare(int sq) {
     }
     PlayResWav(IDR_CLICK); // 播放点击的声音
 
-  } else if (Xqwl.sqSelected != 0) {
+  } else if (Xqwl.sqSelected != 0 && !Xqwl.bGameOver) {
     // 如果点击的不是自己的子，但有子选中了(一定是自己的子)，那么走这个子
     mv = MOVE(Xqwl.sqSelected, sq);
     if (pos.LegalMove(mv)) {
@@ -1335,18 +1443,21 @@ static void ClickSquare(int sq) {
           // 如果分出胜负，那么播放胜负的声音，并且弹出不带声音的提示框
           PlayResWav(IDR_WIN);
           MessageBoxMute("祝贺你取得胜利！");
+          Xqwl.bGameOver = TRUE;
         } else if (vlRep > 0) {
           vlRep = pos.RepValue(vlRep);
           // 注意："vlRep"是对电脑来说的分值
           PlayResWav(vlRep > WIN_VALUE ? IDR_LOSS : vlRep < -WIN_VALUE ? IDR_WIN : IDR_DRAW);
           MessageBoxMute(vlRep > WIN_VALUE ? "长打作负，请不要气馁！" :
               vlRep < -WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+          Xqwl.bGameOver = TRUE;
         } else if (pos.nMoveNum > 100) {
           PlayResWav(IDR_DRAW);
           MessageBoxMute("超过自然限着作和，辛苦了！");
+          Xqwl.bGameOver = TRUE;
         } else {
           // 如果没有分出胜负，那么播放将军、吃子或一般走子的声音
-          PlayResWav(pos.Checked() ? IDR_CHECK : pos.Captured() ? IDR_CAPTURE : IDR_MOVE);
+          PlayResWav(pos.InCheck() ? IDR_CHECK : pos.Captured() ? IDR_CAPTURE : IDR_MOVE);
           if (pos.Captured()) {
             pos.SetIrrev();
           }
@@ -1366,6 +1477,7 @@ static void ClickSquare(int sq) {
 static void Startup(void) {
   pos.Startup();
   Xqwl.sqSelected = Xqwl.mvLast = 0;
+  Xqwl.bGameOver = FALSE;
 }
 
 // 窗体事件捕捉过程

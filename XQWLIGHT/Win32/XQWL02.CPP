@@ -474,7 +474,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
             break;
           }
           sqDst += nDelta;
-          }
+        }
       }
       break;
     case PIECE_CANNON:
