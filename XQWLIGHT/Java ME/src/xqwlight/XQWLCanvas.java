@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.22, Last Modified: Feb. 2008
+Designed by Morning Yellow, Version: 1.24, Last Modified: Mar. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -58,8 +58,10 @@ class XQWLCanvas extends Canvas {
 		"bk", "ba", "bb", "bn", "br", "bc", "bp", null,
 	};
 	private static int widthBackground, heightBackground;
-	private static Font font = Font.getFont(Font.FACE_SYSTEM,
+	private static Font fontLarge = Font.getFont(Font.FACE_SYSTEM,
 			Font.STYLE_BOLD + Font.STYLE_ITALIC, Font.SIZE_LARGE);
+	private static Font fontSmall = Font.getFont(Font.FACE_SYSTEM,
+			Font.STYLE_BOLD, Font.SIZE_SMALL);
 
 	static {
 		try {
@@ -96,6 +98,8 @@ class XQWLCanvas extends Canvas {
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
+	private boolean bCompatible = false;
+
 	XQWLCanvas(XQWLMIDlet midlet_) {
 		this.midlet = midlet_;
 		setFullScreenMode(true);
@@ -107,6 +111,10 @@ class XQWLCanvas extends Canvas {
 		addCommand(cmdBack);
 		addCommand(cmdRetract);
 		addCommand(cmdAbout);
+
+		if (midlet.getAppProperty("XQWLight-Compatible").toLowerCase().equals("true")) {
+			bCompatible = true;
+		}
 
 		setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
@@ -279,9 +287,17 @@ class XQWLCanvas extends Canvas {
 			}
 			g.drawImage(imgThinking, x, y, Graphics.LEFT + Graphics.TOP);
 		} else if (phase == PHASE_EXITTING) {
-			g.setFont(font);
+			g.setFont(fontLarge);
 			g.setColor(0x0000ff);
 			g.drawString(message, width / 2, height / 2, Graphics.HCENTER + Graphics.BASELINE);
+		}
+
+		if (bCompatible) {
+			g.setFont(fontSmall);
+			g.setColor(0x0000ff);
+			g.drawString("* - ÍË³ö", 0, height, Graphics.LEFT + Graphics.BASELINE);
+			g.drawString("0 - »ÚÆå", width / 2, height, Graphics.HCENTER + Graphics.BASELINE);
+			g.drawString("# - ¹ØÓÚ", width, height, Graphics.RIGHT + Graphics.BASELINE);
 		}
 	}
 
@@ -294,6 +310,29 @@ class XQWLCanvas extends Canvas {
 		if (phase == PHASE_THINKING) {
 			return;
 		}
+
+		if (bCompatible) {
+			switch (code) {
+			case KEY_STAR:
+				midlet.rsData[0] = 0;
+				midlet.startMusic("form");
+				Display.getDisplay(midlet).setCurrent(midlet.form);
+				return;
+			case KEY_NUM0:
+				// Restore Retract Status
+				System.arraycopy(retractData, 0, midlet.rsData, 0, XQWLMIDlet.RS_DATA_LEN);
+				load();
+				repaint();
+				serviceRepaints();
+				return;
+			case KEY_POUND:
+				Display.getDisplay(midlet).setCurrent(altAbout);
+				phase = PHASE_LOADING;
+				setFullScreenMode(true);
+				return;
+			}
+		}
+
 		int deltaX = 0, deltaY = 0;
 		int action = getGameAction(code);
 		if (action == FIRE || code == KEY_NUM5) {
