@@ -130,6 +130,7 @@ public class Search {
 		private int[] mvs, vls;
 
 		SortItem(int mvHash) {
+			phase = PHASE_HASH;
 			this.mvHash = mvHash;
 			this.mvKiller1 = mvKiller[pos.distance][0];
 			this.mvKiller2 = mvKiller[pos.distance][1];

@@ -41,10 +41,10 @@ void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv
   __ASSERT_BOUND(1 - MATE_VALUE, vl, MATE_VALUE - 1);
   __ASSERT(mv == 0 || pos.LegalMove(mv));
   if (vl > WIN_VALUE) {
-    vl += pos.nDistance;
     if (mv == 0 && vl <= BAN_VALUE) {
       return; // 导致长将的局面(不进行置换裁剪)如果连最佳着法也没有，那么没有必要写入置换表
     }
+    vl += pos.nDistance;
   } else if (vl < -WIN_VALUE) {
     if (mv == 0 && vl >= -BAN_VALUE) {
       return; // 同理

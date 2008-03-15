@@ -614,8 +614,10 @@ struct PositionStruct {
     ChangeSide();
     mvsList[nMoveNum].Set(0, 0, FALSE, dwKey);
     nMoveNum ++;
+    nDistance ++;
   }
   void UndoNullMove(void) {                   // 撤消走一步空步
+    nDistance --;
     nMoveNum --;
     ChangeSide();
   }
@@ -1088,16 +1090,21 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
     return pos.RepValue(vl);
   }
 
-  // 2. 初始化最佳值
+  // 2. 到达极限深度就返回局面评价
+  if (pos.nDistance == LIMIT_DEPTH) {
+    return pos.Evaluate();
+  }
+
+  // 3. 初始化最佳值
   vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
 
   if (pos.InCheck()) {
-    // 3. 如果被将军，则生成全部走法
+    // 4. 如果被将军，则生成全部走法
     nGenMoves = pos.GenerateMoves(mvs);
     qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
   } else {
 
-    // 4. 如果不被将军，先做局面评价
+    // 5. 如果不被将军，先做局面评价
     vl = pos.Evaluate();
     if (vl > vlBest) {
       vlBest = vl;
@@ -1109,18 +1116,18 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
       }
     }
 
-    // 5. 如果局面评价没有截断，再生成吃子走法
+    // 6. 如果局面评价没有截断，再生成吃子走法
     nGenMoves = pos.GenerateMoves(mvs, GEN_CAPTURE);
     qsort(mvs, nGenMoves, sizeof(int), CompareMvvLva);
   }
 
-  // 6. 逐一走这些走法，并进行递归
+  // 7. 逐一走这些走法，并进行递归
   for (i = 0; i < nGenMoves; i ++) {
     if (pos.MakeMove(mvs[i])) {
       vl = -SearchQuiesc(-vlBeta, -vlAlpha);
       pos.UndoMakeMove();
 
-      // 7. 进行Alpha-Beta大小判断和截断
+      // 8. 进行Alpha-Beta大小判断和截断
       if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
         vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
         if (vl >= vlBeta) { // 找到一个Beta走法
@@ -1133,7 +1140,7 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
     }
   }
 
-  // 8. 所有走法都搜索完了，返回最佳值
+  // 9. 所有走法都搜索完了，返回最佳值
   return vlBest == -MATE_VALUE ? pos.nDistance - MATE_VALUE : vlBest;
 }
 
@@ -1147,19 +1154,24 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
   int mvs[MAX_GEN_MOVES];
   // 一个Alpha-Beta完全搜索分为以下几个阶段
 
-  // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
-  if (nDepth <= 0) {
-    return SearchQuiesc(vlAlpha, vlBeta);
-  }
-
   if (pos.nDistance > 0) {
+    // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
+    if (nDepth <= 0) {
+      return SearchQuiesc(vlAlpha, vlBeta);
+    }
+
     // 1-1. 检查重复局面(注意：不要在根节点检查，否则就没有走法了)
     vl = pos.RepStatus();
     if (vl != 0) {
       return pos.RepValue(vl);
     }
 
-    // 1-2. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
+    // 1-2. 到达极限深度就返回局面评价
+    if (pos.nDistance == LIMIT_DEPTH) {
+      return pos.Evaluate();
+    }
+
+    // 1-3. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
     if (!bNoNull && !pos.InCheck() && pos.NullOkay()) {
       pos.NullMove();
       vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);

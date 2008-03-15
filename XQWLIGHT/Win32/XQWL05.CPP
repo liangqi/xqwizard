@@ -1,11 +1,11 @@
 /**
  * XiangQi Wizard Light - A Very Simple Chinese Chess Program
- * Designed by Morning Yellow, Version: 0.4, Last Modified: Mar. 2008
+ * Designed by Morning Yellow, Version: 0.5, Last Modified: Mar. 2008
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
  * 象棋小巫师 0.5 的目标：
  * 一、实现置换表；
- * 二、采用置换表走法、杀手走法等多中启发方式。
+ * 二、采用置换表走法、杀手走法等多种启发方式。
  */
 
 #include <stdlib.h>
@@ -51,7 +51,7 @@ const int DRAW_VALUE = 20;     // 和棋时返回的分数(取负值)
 const int ADVANCED_VALUE = 3;  // 先行权分值
 const int NULL_MARGIN = 400;   // 空步裁剪的子力边界
 const int NULL_DEPTH = 2;      // 空步裁剪的裁剪深度
-const int HASH_SIZE = 1048576; // 置换表大小
+const int HASH_SIZE = 1 << 20; // 置换表大小
 const int HASH_ALPHA = 1;      // ALPHA节点的置换表项
 const int HASH_BETA = 2;       // BETA节点的置换表项
 const int HASH_PV = 3;         // PV节点的置换表项
@@ -617,8 +617,10 @@ struct PositionStruct {
     ChangeSide();
     mvsList[nMoveNum].Set(0, 0, FALSE, dwKey);
     nMoveNum ++;
+    nDistance ++;
   }
   void UndoNullMove(void) {                   // 撤消走一步空步
+    nDistance --;
     nMoveNum --;
     ChangeSide();
   }
@@ -1052,60 +1054,65 @@ static struct {
 
 // 置换表项结构
 struct HashItem {
-  WORD wDepth, wFlag, wvl, wmv;
+  BYTE ucDepth, ucFlag;
+  SHORT swvl;
+  WORD wmv, wReserved;
   DWORD dwLock0, dwLock1;
 };
 
 // 与搜索有关的全局变量
 static struct {
-  int mvResult;             // 电脑走的棋
-  int nHistoryTable[65536]; // 历史表
-  HashItem Hash[HASH_SIZE]; // 置换表
+  int mvResult;                  // 电脑走的棋
+  int nHistoryTable[65536];      // 历史表
+  int mvKillers[LIMIT_DEPTH][2]; // 杀手走法表
+  HashItem HashTable[HASH_SIZE]; // 置换表
 } Search;
 
+// 提取置换表项
 static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
   BOOL bMate;
   HashItem hsh;
 
-  hsh = Search.Hash[pos.zobr.dwKey & (HASH_SIZE - 1)];
+  hsh = Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)];
   if (hsh.dwLock0 != pos.zobr.dwLock0 || hsh.dwLock1 != pos.zobr.dwLock1) {
     mv = 0;
     return -MATE_VALUE;
   }
   mv = hsh.wmv;
   bMate = FALSE;
-  if (hsh.wvl > WIN_VALUE) {
-    hsh.wvl -= pos.nDistance;
+  if (hsh.swvl > WIN_VALUE) {
+    hsh.swvl -= pos.nDistance;
     bMate = TRUE;
-  } else if (hsh.wvl < -WIN_VALUE) {
-    hsh.wvl += pos.nDistance;
+  } else if (hsh.swvl < -WIN_VALUE) {
+    hsh.swvl += pos.nDistance;
     bMate = TRUE;
   }
-  if (hsh.wDepth >= nDepth || bMate) {
-    if (hsh.wFlag == HASH_BETA) {
-      return (hsh.wvl >= vlBeta ? hsh.wvl : -MATE_VALUE);
-    } else if (hsh.wFlag == HASH_ALPHA) {
-      return (hsh.wvl <= vlAlpha ? hsh.wvl : -MATE_VALUE);
+  if (hsh.ucDepth >= nDepth || bMate) {
+    if (hsh.ucFlag == HASH_BETA) {
+      return (hsh.swvl >= vlBeta ? hsh.swvl : -MATE_VALUE);
+    } else if (hsh.ucFlag == HASH_ALPHA) {
+      return (hsh.swvl <= vlAlpha ? hsh.swvl : -MATE_VALUE);
     }
-    return hsh.wvl;
+    return hsh.swvl;
   }
   return -MATE_VALUE;
 };
 
+// 保存置换表项
 static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
   HashItem *lphsh;
-  lphsh = Search.Hash + (pos.zobr.dwKey & (HASH_SIZE - 1));
-  if (lphsh->wDepth > nDepth) {
+  lphsh = Search.HashTable + (pos.zobr.dwKey & (HASH_SIZE - 1));
+  if (lphsh->ucDepth > nDepth) {
     return;
   }
-  lphsh->wFlag = nFlag;
-  lphsh->wDepth = nDepth;
+  lphsh->ucFlag = nFlag;
+  lphsh->ucDepth = nDepth;
   if (vl > WIN_VALUE) {
-    lphsh->wvl = vl + pos.nDistance;
+    lphsh->swvl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
-    lphsh->wvl = vl - pos.nDistance;
+    lphsh->swvl = vl - pos.nDistance;
   } else {
-    lphsh->wvl = vl;
+    lphsh->swvl = vl;
   }
   lphsh->wmv = mv;
   lphsh->dwLock0 = pos.zobr.dwLock0;
@@ -1134,6 +1141,91 @@ static int CompareHistory(const void *lpmv1, const void *lpmv2) {
   return Search.nHistoryTable[*(int *) lpmv2] - Search.nHistoryTable[*(int *) lpmv1];
 }
 
+
+// 走法排序阶段
+const int PHASE_HASH = 0;
+const int PHASE_KILLER_1 = 1;
+const int PHASE_KILLER_2 = 2;
+const int PHASE_GEN_MOVES = 3;
+const int PHASE_REST = 4;
+
+// 走法排序结构
+struct SortStruct {
+  int mvHash, mvKiller1, mvKiller2; // 置换表走法和两个杀手走法
+  int nPhase, nIndex, nGenMoves;    // 当前阶段，当前采用第几个走法，总共有几个走法
+  int mvs[MAX_GEN_MOVES];           // 所有的走法
+
+  void Init(int mvHash_) { // 初始化，设定置换表走法和两个杀手走法
+    mvHash = mvHash_;
+    mvKiller1 = Search.mvKillers[pos.nDistance][0];
+    mvKiller2 = Search.mvKillers[pos.nDistance][1];
+    nPhase = PHASE_HASH;
+  }
+  int Next(void); // 得到下一个走法
+};
+
+// 得到下一个走法
+int SortStruct::Next(void) {
+  int mv;
+  switch (nPhase) {
+  // "nPhase"表示着法启发的若干阶段，依次为：
+
+  // 0. 置换表着法启发，完成后立即进入下一阶段；
+  case PHASE_HASH:
+    nPhase = PHASE_KILLER_1;
+    if (mvHash != 0) {
+      return mvHash;
+    }
+    // 技巧：这里没有"break"，表示"switch"的上一个"case"执行完后紧接着做下一个"case"，下同
+
+  // 1. 杀手着法启发(第一个杀手着法)，完成后立即进入下一阶段；
+  case PHASE_KILLER_1:
+    nPhase = PHASE_KILLER_2;
+    if (mvKiller1 != mvHash && mvKiller1 != 0 && pos.LegalMove(mvKiller1)) {
+      return mvKiller1;
+    }
+
+  // 2. 杀手着法启发(第二个杀手着法)，完成后立即进入下一阶段；
+  case PHASE_KILLER_2:
+    nPhase = PHASE_GEN_MOVES;
+    if (mvKiller2 != mvHash && mvKiller2 != 0 && pos.LegalMove(mvKiller2)) {
+      return mvKiller2;
+    }
+
+  // 3. 生成所有着法，完成后立即进入下一阶段；
+  case PHASE_GEN_MOVES:
+    nPhase = PHASE_REST;
+    nGenMoves = pos.GenerateMoves(mvs);
+    qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
+    nIndex = 0;
+
+  // 4. 对剩余着法做历史表启发；
+  case PHASE_REST:
+    while (nIndex < nGenMoves) {
+      mv = mvs[nIndex];
+      nIndex ++;
+      if (mv != mvHash && mv != mvKiller1 && mv != mvKiller2) {
+        return mv;
+      }
+    }
+
+  // 5. 没有着法了，返回零。
+  default:
+    return 0;
+  }
+}
+
+// 对最佳走法的处理
+inline void SetBestMove(int mv, int nDepth) {
+  int *lpmvKillers;
+  Search.nHistoryTable[mv] += nDepth * nDepth;
+  lpmvKillers = Search.mvKillers[pos.nDistance];
+  if (lpmvKillers[0] != mv) {
+    lpmvKillers[1] = lpmvKillers[0];
+    lpmvKillers[0] = mv;
+  }
+}
+
 // 静态(Quiescence)搜索过程
 static int SearchQuiesc(int vlAlpha, int vlBeta) {
   int i, nGenMoves;
@@ -1147,16 +1239,21 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
     return pos.RepValue(vl);
   }
 
-  // 2. 初始化最佳值
+  // 2. 到达极限深度就返回局面评价
+  if (pos.nDistance == LIMIT_DEPTH) {
+    return pos.Evaluate();
+  }
+
+  // 3. 初始化最佳值
   vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
 
   if (pos.InCheck()) {
-    // 3. 如果被将军，则生成全部走法
+    // 4. 如果被将军，则生成全部走法
     nGenMoves = pos.GenerateMoves(mvs);
     qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
   } else {
 
-    // 4. 如果不被将军，先做局面评价
+    // 5. 如果不被将军，先做局面评价
     vl = pos.Evaluate();
     if (vl > vlBest) {
       vlBest = vl;
@@ -1168,18 +1265,18 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
       }
     }
 
-    // 5. 如果局面评价没有截断，再生成吃子走法
+    // 6. 如果局面评价没有截断，再生成吃子走法
     nGenMoves = pos.GenerateMoves(mvs, GEN_CAPTURE);
     qsort(mvs, nGenMoves, sizeof(int), CompareMvvLva);
   }
 
-  // 6. 逐一走这些走法，并进行递归
+  // 7. 逐一走这些走法，并进行递归
   for (i = 0; i < nGenMoves; i ++) {
     if (pos.MakeMove(mvs[i])) {
       vl = -SearchQuiesc(-vlBeta, -vlAlpha);
       pos.UndoMakeMove();
 
-      // 7. 进行Alpha-Beta大小判断和截断
+      // 8. 进行Alpha-Beta大小判断和截断
       if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
         vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
         if (vl >= vlBeta) { // 找到一个Beta走法
@@ -1192,7 +1289,7 @@ static int SearchQuiesc(int vlAlpha, int vlBeta) {
     }
   }
 
-  // 8. 所有走法都搜索完了，返回最佳值
+  // 9. 所有走法都搜索完了，返回最佳值
   return vlBest == -MATE_VALUE ? pos.nDistance - MATE_VALUE : vlBest;
 }
 
@@ -1201,24 +1298,36 @@ const BOOL NO_NULL = TRUE;
 
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
 static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE) {
-  int i, nGenMoves;
-  int vl, vlBest, mvBest;
-  int mvs[MAX_GEN_MOVES];
+  int nHashFlag, vl, vlBest;
+  int mv, mvBest, mvHash;
+  SortStruct Sort;
   // 一个Alpha-Beta完全搜索分为以下几个阶段
 
-  // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
-  if (nDepth <= 0) {
-    return SearchQuiesc(vlAlpha, vlBeta);
-  }
-
+  mvHash = 0;
   if (pos.nDistance > 0) {
+    // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
+    if (nDepth <= 0) {
+      return SearchQuiesc(vlAlpha, vlBeta);
+    }
+
     // 1-1. 检查重复局面(注意：不要在根节点检查，否则就没有走法了)
     vl = pos.RepStatus();
     if (vl != 0) {
       return pos.RepValue(vl);
     }
 
-    // 1-2. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
+    // 1-2. 到达极限深度就返回局面评价
+    if (pos.nDistance == LIMIT_DEPTH) {
+      return pos.Evaluate();
+    }
+
+    // 1-3. 尝试置换表裁剪，并得到置换表走法
+    vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash);
+    if (vl > -MATE_VALUE) {
+      return vl;
+    }
+
+    // 1-4. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
     if (!bNoNull && !pos.InCheck() && pos.NullOkay()) {
       pos.NullMove();
       vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
@@ -1230,16 +1339,16 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
   }
 
   // 2. 初始化最佳值和最佳走法
+  nHashFlag = HASH_ALPHA;
   vlBest = -MATE_VALUE; // 这样可以知道，是否一个走法都没走过(杀棋)
   mvBest = 0;           // 这样可以知道，是否搜索到了Beta走法或PV走法，以便保存到历史表
 
-  // 3. 生成全部走法，并根据历史表排序
-  nGenMoves = pos.GenerateMoves(mvs);
-  qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
+  // 3. 初始化走法排序结构
+  Sort.Init(mvHash);
 
   // 4. 逐一走这些走法，并进行递归
-  for (i = 0; i < nGenMoves; i ++) {
-    if (pos.MakeMove(mvs[i])) {
+  while ((mv = Sort.Next()) != 0) {
+    if (pos.MakeMove(mv)) {
       // 将军延伸
       vl = -SearchFull(-vlBeta, -vlAlpha, pos.InCheck() ? nDepth : nDepth - 1);
       pos.UndoMakeMove();
@@ -1248,11 +1357,13 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
       if (vl > vlBest) {    // 找到最佳值(但不能确定是Alpha、PV还是Beta走法)
         vlBest = vl;        // "vlBest"就是目前要返回的最佳值，可能超出Alpha-Beta边界
         if (vl >= vlBeta) { // 找到一个Beta走法
-          mvBest = mvs[i];  // Beta走法要保存到历史表
+          nHashFlag = HASH_BETA;
+          mvBest = mv;      // Beta走法要保存到历史表
           break;            // Beta截断
         }
         if (vl > vlAlpha) { // 找到一个PV走法
-          mvBest = mvs[i];  // PV走法要保存到历史表
+          nHashFlag = HASH_PV;
+          mvBest = mv;      // PV走法要保存到历史表
           vlAlpha = vl;     // 缩小Alpha-Beta边界
         }
       }
@@ -1264,9 +1375,11 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
     // 如果是杀棋，就根据杀棋步数给出评价
     return pos.nDistance - MATE_VALUE;
   }
-  if (mvBest > 0) {
+  // 记录到置换表
+  RecordHash(nHashFlag, vlBest, nDepth, mvBest);
+  if (mvBest != 0) {
     // 如果不是Alpha走法，就将最佳走法保存到历史表
-    Search.nHistoryTable[mvBest] += nDepth * nDepth;
+    SetBestMove(mvBest, nDepth);
     if (pos.nDistance == 0) {
       // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
       Search.mvResult = mvBest;
@@ -1280,7 +1393,9 @@ static void SearchMain(void) {
   int i, t, vl;
 
   // 初始化
-  memset(Search.nHistoryTable, 0, 65536 * sizeof(int)); // 清空历史表
+  memset(Search.nHistoryTable, 0, 65536 * sizeof(int));      // 清空历史表
+  memset(Search.mvKillers, 0, 65536 * sizeof(int[2]));       // 清空杀手走法表
+  memset(Search.HashTable, 0, HASH_SIZE * sizeof(HashItem)); // 清空置换表
   t = clock();       // 初始化定时器
   pos.nDistance = 0; // 初始步数
 
