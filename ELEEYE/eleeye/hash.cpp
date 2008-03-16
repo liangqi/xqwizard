@@ -63,14 +63,14 @@ void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv
     // 3. 如果试探到一样的局面，那么更新置换表信息即可；
     if (HASH_POS_EQUAL(hsh, pos)) {
       // 如果深度更深，或者边界缩小，都可更新置换表的值
-      if ((nFlag & HASH_ALPHA) != 0 && (hsh.ucAlphaDepth <= nDepth || hsh.swvlAlpha >= vl)) {
+      if ((nFlag & HASH_ALPHA) != 0 && (hsh.ucAlphaDepth <= nDepth || hsh.svlAlpha >= vl)) {
         hsh.ucAlphaDepth = nDepth;
-        hsh.swvlAlpha = vl;
+        hsh.svlAlpha = vl;
       }
       // Beta结点要注意：不要用Null-Move的结点覆盖正常的结点
-      if ((nFlag & HASH_BETA) != 0 && (hsh.ucBetaDepth <= nDepth || hsh.swvlBeta <= vl) && (mv != 0 || hsh.wmv == 0)) {
+      if ((nFlag & HASH_BETA) != 0 && (hsh.ucBetaDepth <= nDepth || hsh.svlBeta <= vl) && (mv != 0 || hsh.wmv == 0)) {
         hsh.ucBetaDepth = nDepth;
-        hsh.swvlBeta = vl;
+        hsh.svlBeta = vl;
       }
       // 最佳着法是始终覆盖的
       if (mv != 0) {
@@ -95,14 +95,14 @@ void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv
   hsh.dwZobristLock1 = pos.zobr.dwLock1;
   hsh.wmv = mv;
   hsh.ucAlphaDepth = hsh.ucBetaDepth = 0;
-  hsh.swvlAlpha = hsh.swvlBeta = 0;
+  hsh.svlAlpha = hsh.svlBeta = 0;
   if ((nFlag & HASH_ALPHA) != 0) {
     hsh.ucAlphaDepth = nDepth;
-    hsh.swvlAlpha = vl;
+    hsh.svlAlpha = vl;
   }
   if ((nFlag & HASH_BETA) != 0) {
     hsh.ucBetaDepth = nDepth;
-    hsh.swvlBeta = vl;
+    hsh.svlBeta = vl;
   }
   HASH_ITEM(pos, nMinLayer) = hsh;
 }
@@ -212,7 +212,7 @@ int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, Bo
 
   // 2. 判断是否符合Beta边界
   if (hsh.ucBetaDepth > 0) {
-    vl = ValueAdjust(pos, bBanNode, bMateNode, hsh.swvlBeta);
+    vl = ValueAdjust(pos, bBanNode, bMateNode, hsh.svlBeta);
     if (!bBanNode && !(hsh.wmv == 0 && bNoNull) && (hsh.ucBetaDepth >= nDepth || bMateNode) && vl >= vlBeta) {
       __ASSERT_BOUND(1 - MATE_VALUE, vl, MATE_VALUE - 1);
       if (hsh.wmv == 0 || PosStable(pos, hsh.wmv)) {
@@ -223,7 +223,7 @@ int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, Bo
 
   // 3. 判断是否符合Alpha边界
   if (hsh.ucAlphaDepth > 0) {
-    vl = ValueAdjust(pos, bBanNode, bMateNode, hsh.swvlAlpha);
+    vl = ValueAdjust(pos, bBanNode, bMateNode, hsh.svlAlpha);
     if (!bBanNode && (hsh.ucAlphaDepth >= nDepth || bMateNode) && vl <= vlAlpha) {
       __ASSERT_BOUND(1 - MATE_VALUE, vl, MATE_VALUE - 1);
       if (hsh.wmv == 0 || PosStable(pos, hsh.wmv)) {
@@ -242,8 +242,8 @@ void RecordHashQ(const PositionStruct &pos, int vlBeta, int vlAlpha) {
   __ASSERT((vlBeta > -WIN_VALUE && vlBeta < WIN_VALUE) || (vlAlpha > -WIN_VALUE && vlAlpha < WIN_VALUE));
   lphsh = hshItemsQ + (pos.zobr.dwKey & nHashMask);
   lphsh->dwZobristLock0 = pos.zobr.dwLock0;
-  lphsh->swvlAlpha = vlAlpha;
-  lphsh->swvlBeta = vlBeta;
+  lphsh->svlAlpha = vlAlpha;
+  lphsh->svlBeta = vlBeta;
   lphsh->dwZobristLock1 = pos.zobr.dwLock1;
 }
 
@@ -254,8 +254,8 @@ int ProbeHashQ(const PositionStruct &pos, int vlAlpha, int vlBeta) {
 
   lphsh = hshItemsQ + (pos.zobr.dwKey & nHashMask);
   if (lphsh->dwZobristLock0 == pos.zobr.dwLock0) {
-    vlHashAlpha = lphsh->swvlAlpha;
-    vlHashBeta = lphsh->swvlBeta;
+    vlHashAlpha = lphsh->svlAlpha;
+    vlHashBeta = lphsh->svlBeta;
     if (lphsh->dwZobristLock1 == pos.zobr.dwLock1) {
       if (vlHashBeta >= vlBeta) {
         __ASSERT(vlHashBeta > -WIN_VALUE && vlHashBeta < WIN_VALUE);
@@ -288,10 +288,10 @@ Bool PopHash(const PositionStruct &pos) {
         printf(" bestmove %.4s", (const char *) &dwMoveStr);
       }
       if (hsh.ucBetaDepth > 0) {
-        printf(" lowerbound %d depth %d", hsh.swvlBeta, hsh.ucBetaDepth);
+        printf(" lowerbound %d depth %d", hsh.svlBeta, hsh.ucBetaDepth);
       }
       if (hsh.ucAlphaDepth > 0) {
-        printf(" upperbound %d depth %d", hsh.swvlAlpha, hsh.ucAlphaDepth);
+        printf(" upperbound %d depth %d", hsh.svlAlpha, hsh.ucAlphaDepth);
       }
       printf("\n");
       fflush(stdout);

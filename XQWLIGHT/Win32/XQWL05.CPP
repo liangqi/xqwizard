@@ -1055,7 +1055,7 @@ static struct {
 // 置换表项结构
 struct HashItem {
   BYTE ucDepth, ucFlag;
-  SHORT swvl;
+  SHORT svl;
   WORD wmv, wReserved;
   DWORD dwLock0, dwLock1;
 };
@@ -1080,20 +1080,20 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
   }
   mv = hsh.wmv;
   bMate = FALSE;
-  if (hsh.swvl > WIN_VALUE) {
-    hsh.swvl -= pos.nDistance;
+  if (hsh.svl > WIN_VALUE) {
+    hsh.svl -= pos.nDistance;
     bMate = TRUE;
-  } else if (hsh.swvl < -WIN_VALUE) {
-    hsh.swvl += pos.nDistance;
+  } else if (hsh.svl < -WIN_VALUE) {
+    hsh.svl += pos.nDistance;
     bMate = TRUE;
   }
   if (hsh.ucDepth >= nDepth || bMate) {
     if (hsh.ucFlag == HASH_BETA) {
-      return (hsh.swvl >= vlBeta ? hsh.swvl : -MATE_VALUE);
+      return (hsh.svl >= vlBeta ? hsh.svl : -MATE_VALUE);
     } else if (hsh.ucFlag == HASH_ALPHA) {
-      return (hsh.swvl <= vlAlpha ? hsh.swvl : -MATE_VALUE);
+      return (hsh.svl <= vlAlpha ? hsh.svl : -MATE_VALUE);
     }
-    return hsh.swvl;
+    return hsh.svl;
   }
   return -MATE_VALUE;
 };
@@ -1108,11 +1108,11 @@ static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
   lphsh->ucFlag = nFlag;
   lphsh->ucDepth = nDepth;
   if (vl > WIN_VALUE) {
-    lphsh->swvl = vl + pos.nDistance;
+    lphsh->svl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
-    lphsh->swvl = vl - pos.nDistance;
+    lphsh->svl = vl - pos.nDistance;
   } else {
-    lphsh->swvl = vl;
+    lphsh->svl = vl;
   }
   lphsh->wmv = mv;
   lphsh->dwLock0 = pos.zobr.dwLock0;

@@ -40,7 +40,7 @@ struct HashStruct {
   uint32 dwZobristLock0;           // Zobrist校验锁，第一部分
   uint16 wmv;                      // 最佳着法
   uint8 ucAlphaDepth, ucBetaDepth; // 深度(上边界和下边界)
-  sint16 swvlAlpha, swvlBeta;      // 分值(上边界和下边界)
+  sint16 svlAlpha, svlBeta;        // 分值(上边界和下边界)
   uint32 dwZobristLock1;           // Zobrist校验锁，第二部分
 }; // hsh
 
