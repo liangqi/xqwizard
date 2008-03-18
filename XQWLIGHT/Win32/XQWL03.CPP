@@ -452,7 +452,7 @@ inline int MIRROR_MOVE(int mv) {
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   BYTE ucpcSquares[256];          // 棋盘上的棋子
-  int vlRed, vlBlack;             // 红、黑双方的子力价值
+  int vlWhite, vlBlack;           // 红、黑双方的子力价值
   int nDistance;                  // 距离根节点的步数
 
   void Startup(void);             // 初始化棋盘
@@ -463,7 +463,7 @@ struct PositionStruct {
     ucpcSquares[sq] = pc;
     // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
     if (pc < 16) {
-      vlRed += cucvlPiecePos[pc - 8][sq];
+      vlWhite += cucvlPiecePos[pc - 8][sq];
     } else {
       vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
     }
@@ -472,13 +472,13 @@ struct PositionStruct {
     ucpcSquares[sq] = 0;
     // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
     if (pc < 16) {
-      vlRed -= cucvlPiecePos[pc - 8][sq];
+      vlWhite -= cucvlPiecePos[pc - 8][sq];
     } else {
       vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
     }
   }
   int Evaluate(void) const {      // 局面评价函数
-    return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
+    return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
   }
   int MovePiece(int mv);                      // 搬一步棋的棋子
   void UndoMovePiece(int mv, int pcCaptured); // 撤消搬一步棋的棋子
@@ -497,7 +497,7 @@ struct PositionStruct {
 // 初始化棋盘
 void PositionStruct::Startup(void) {
   int sq, pc;
-  sdPlayer = vlRed = vlBlack = nDistance = 0;
+  sdPlayer = vlWhite = vlBlack = nDistance = 0;
   memset(ucpcSquares, 0, 256);
   for (sq = 0; sq < 256; sq ++) {
     pc = cucpcStartup[sq];

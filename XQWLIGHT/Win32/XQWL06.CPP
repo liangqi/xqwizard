@@ -48,9 +48,11 @@ const int MAX_GEN_MOVES = 128; // 最大的生成走法数
 const int MAX_MOVES = 256;     // 最大的历史走法数
 const int LIMIT_DEPTH = 32;    // 最大的搜索深度
 const int MATE_VALUE = 10000;  // 最高分值，即将死的分值
-const int WIN_VALUE = MATE_VALUE - 100; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
+const int BAN_VALUE = MATE_VALUE - 100; // 长将判负的分值，低于该值将不写入置换表
+const int WIN_VALUE = MATE_VALUE - 200; // 搜索出胜负的分值界限，超出此值就说明已经搜索出杀棋了
 const int DRAW_VALUE = 20;     // 和棋时返回的分数(取负值)
 const int ADVANCED_VALUE = 3;  // 先行权分值
+const int RANDOM_MASK = 7;     // 随机性分值
 const int NULL_MARGIN = 400;   // 空步裁剪的子力边界
 const int NULL_DEPTH = 2;      // 空步裁剪的裁剪深度
 const int HASH_SIZE = 1 << 20; // 置换表大小
@@ -559,11 +561,16 @@ struct MoveStruct {
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   BYTE ucpcSquares[256];          // 棋盘上的棋子
-  int vlRed, vlBlack;             // 红、黑双方的子力价值
+  int vlWhite, vlBlack;           // 红、黑双方的子力价值
   int nDistance, nMoveNum;        // 距离根节点的步数，历史走法数
   MoveStruct mvsList[MAX_MOVES];  // 历史走法信息列表
   ZobristStruct zobr;             // Zobrist
 
+  void ClearBoard(void) {         // 清空棋盘
+    sdPlayer = vlWhite = vlBlack = nDistance = 0;
+    memset(ucpcSquares, 0, 256);
+    zobr.InitZero();
+  }
   void SetIrrev(void) {           // 清空(初始化)历史走法信息
     mvsList[0].Set(0, 0, Checked(), zobr.dwKey);
     nMoveNum = 1;
@@ -577,7 +584,7 @@ struct PositionStruct {
     ucpcSquares[sq] = pc;
     // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
     if (pc < 16) {
-      vlRed += cucvlPiecePos[pc - 8][sq];
+      vlWhite += cucvlPiecePos[pc - 8][sq];
       zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
@@ -588,7 +595,7 @@ struct PositionStruct {
     ucpcSquares[sq] = 0;
     // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
     if (pc < 16) {
-      vlRed -= cucvlPiecePos[pc - 8][sq];
+      vlWhite -= cucvlPiecePos[pc - 8][sq];
       zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
@@ -596,7 +603,9 @@ struct PositionStruct {
     }
   }
   int Evaluate(void) const {      // 局面评价函数
-    return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
+    int vl;
+    vl = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+    return vl == DrawValue() ? vl - 1 : vl;
   }
   BOOL InCheck(void) const {      // 是否被将军
     return mvsList[nMoveNum - 1].ucbCheck;
@@ -631,24 +640,26 @@ struct PositionStruct {
   BOOL LegalMove(int mv) const;               // 判断走法是否合理
   BOOL Checked(void) const;                   // 判断是否被将军
   BOOL IsMate(void);                          // 判断是否被杀
+  int DrawValue(void) const {                 // 和棋分值
+    return (nDistance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+  }
   int RepStatus(int nRecur = 1) const;        // 检测重复局面
   int RepValue(int nRepStatus) const {        // 重复局面分值
     int vlReturn;
-    vlReturn = ((nRepStatus & 2) == 0 ? 0 : nDistance - MATE_VALUE) +
-        ((nRepStatus & 4) == 0 ? 0 : MATE_VALUE - nDistance);
-    return vlReturn == 0 ? -DRAW_VALUE : vlReturn;
+    vlReturn = ((nRepStatus & 2) == 0 ? 0 : nDistance - BAN_VALUE) +
+        ((nRepStatus & 4) == 0 ? 0 : BAN_VALUE - nDistance);
+    return vlReturn == 0 ? DrawValue() : vlReturn;
   }
   BOOL NullOkay(void) const {                 // 判断是否允许空步裁剪
-    return (sdPlayer == 0 ? vlRed : vlBlack) > NULL_MARGIN;
+    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_MARGIN;
   }
+  void Mirror(PositionStruct &posMirror) const; // 对局面镜像
 };
 
 // 初始化棋盘
 void PositionStruct::Startup(void) {
   int sq, pc;
-  sdPlayer = vlRed = vlBlack = nDistance = 0;
-  memset(ucpcSquares, 0, 256);
-  zobr.InitZero();
+  ClearBoard();
   for (sq = 0; sq < 256; sq ++) {
     pc = cucpcStartup[sq];
     if (pc != 0) {
@@ -1042,6 +1053,22 @@ int PositionStruct::RepStatus(int nRecur) const {
   return 0;
 }
 
+// 对局面镜像
+void PositionStruct::Mirror(PositionStruct &posMirror) const {
+  int sq, pc;
+  posMirror.ClearBoard();
+  for (sq = 0; sq < 256; sq ++) {
+    pc = ucpcSquares[sq];
+    if (pc != 0) {
+      posMirror.AddPiece(MIRROR_SQUARE(sq), pc);
+    }
+  }
+  if (sdPlayer == 1) {
+    posMirror.ChangeSide();
+  }
+  posMirror.SetIrrev();
+}
+
 PositionStruct pos; // 局面实例
 
 // 与图形界面有关的全局变量
@@ -1057,7 +1084,7 @@ static struct {
 // 置换表项结构
 struct HashItem {
   BYTE ucDepth, ucFlag;
-  SHORT svl;
+  short svl;
   WORD wmv, wReserved;
   DWORD dwLock0, dwLock1;
 };
@@ -1083,11 +1110,19 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
   mv = hsh.wmv;
   bMate = FALSE;
   if (hsh.svl > WIN_VALUE) {
+    if (hsh.svl < BAN_VALUE) {
+      return -MATE_VALUE;
+    }
     hsh.svl -= pos.nDistance;
     bMate = TRUE;
   } else if (hsh.svl < -WIN_VALUE) {
+    if (hsh.svl > -BAN_VALUE) {
+      return -MATE_VALUE;
+    }
     hsh.svl += pos.nDistance;
     bMate = TRUE;
+  } else if (hsh.svl == pos.DrawValue()) {
+    return -MATE_VALUE;
   }
   if (hsh.ucDepth >= nDepth || bMate) {
     if (hsh.ucFlag == HASH_BETA) {
@@ -1110,9 +1145,17 @@ static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
   lphsh->ucFlag = nFlag;
   lphsh->ucDepth = nDepth;
   if (vl > WIN_VALUE) {
+    if (mv == 0 && vl <= BAN_VALUE) {
+      return;
+    }
     lphsh->svl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
+    if (mv == 0 && vl >= -BAN_VALUE) {
+      return;
+    }
     lphsh->svl = vl - pos.nDistance;
+  } else if (vl == pos.DrawValue() && mv == 0) {
+    return;
   } else {
     lphsh->svl = vl;
   }
@@ -1414,6 +1457,10 @@ static int SearchRoot(int nDepth) {
       if (vl > vlBest) {
         vlBest = vl;
         Search.mvResult = mv;
+        if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
+          vlBest += (rand() & RANDOM_MASK) - (rand() & RANDOM_MASK);
+          vlBest = (vlBest == pos.DrawValue() ? vlBest - 1 : vlBest);
+        }
       }
     }
   }
@@ -1781,6 +1828,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   WNDCLASSEX wce;
 
   // 初始化全局变量
+  srand((DWORD) time(NULL));
   InitZobrist();
   Xqwl.hInst = hInstance;
   Xqwl.bFlipped = FALSE;

@@ -67,13 +67,13 @@ public class Search {
 		mv[0] = hash.mv;
 		boolean mate = false;
 		if (hash.vl > WIN_VALUE) {
-			if (hash.vl < Position.BAN_VALUE) {
+			if (hash.vl <= BAN_VALUE) {
 				return -MATE_VALUE;
 			}
 			hash.vl -= pos.distance;
 			mate = true;
 		} else if (hash.vl < -WIN_VALUE) {
-			if (hash.vl > -BAN_VALUE) {
+			if (hash.vl >= -BAN_VALUE) {
 				return -MATE_VALUE;
 			}
 			hash.vl += pos.distance;

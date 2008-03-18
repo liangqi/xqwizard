@@ -554,7 +554,7 @@ struct MoveStruct {
 struct PositionStruct {
   int sdPlayer;                   // 轮到谁走，0=红方，1=黑方
   BYTE ucpcSquares[256];          // 棋盘上的棋子
-  int vlRed, vlBlack;             // 红、黑双方的子力价值
+  int vlWhite, vlBlack;           // 红、黑双方的子力价值
   int nDistance, nMoveNum;        // 距离根节点的步数，历史走法数
   MoveStruct mvsList[MAX_MOVES];  // 历史走法信息列表
   ZobristStruct zobr;             // Zobrist
@@ -572,7 +572,7 @@ struct PositionStruct {
     ucpcSquares[sq] = pc;
     // 红方加分，黑方(注意"cucvlPiecePos"取值要颠倒)减分
     if (pc < 16) {
-      vlRed += cucvlPiecePos[pc - 8][sq];
+      vlWhite += cucvlPiecePos[pc - 8][sq];
       zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack += cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
@@ -583,7 +583,7 @@ struct PositionStruct {
     ucpcSquares[sq] = 0;
     // 红方减分，黑方(注意"cucvlPiecePos"取值要颠倒)加分
     if (pc < 16) {
-      vlRed -= cucvlPiecePos[pc - 8][sq];
+      vlWhite -= cucvlPiecePos[pc - 8][sq];
       zobr.Xor(Zobrist.Table[pc - 8][sq]);
     } else {
       vlBlack -= cucvlPiecePos[pc - 16][SQUARE_FLIP(sq)];
@@ -591,7 +591,7 @@ struct PositionStruct {
     }
   }
   int Evaluate(void) const {      // 局面评价函数
-    return (sdPlayer == 0 ? vlRed - vlBlack : vlBlack - vlRed) + ADVANCED_VALUE;
+    return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
   }
   BOOL InCheck(void) const {      // 是否被将军
     return mvsList[nMoveNum - 1].ucbCheck;
@@ -634,14 +634,14 @@ struct PositionStruct {
     return vlReturn == 0 ? -DRAW_VALUE : vlReturn;
   }
   BOOL NullOkay(void) const {                 // 判断是否允许空步裁剪
-    return (sdPlayer == 0 ? vlRed : vlBlack) > NULL_MARGIN;
+    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_MARGIN;
   }
 };
 
 // 初始化棋盘
 void PositionStruct::Startup(void) {
   int sq, pc;
-  sdPlayer = vlRed = vlBlack = nDistance = 0;
+  sdPlayer = vlWhite = vlBlack = nDistance = 0;
   memset(ucpcSquares, 0, 256);
   zobr.InitZero();
   for (sq = 0; sq < 256; sq ++) {
