@@ -1,11 +1,13 @@
 /**
  * XiangQi Wizard Light - A Very Simple Chinese Chess Program
- * Designed by Morning Yellow, Version: 0.5, Last Modified: Mar. 2008
+ * Designed by Morning Yellow, Version: 0.6, Last Modified: Mar. 2008
  * Copyright (C) 2004-2008 www.elephantbase.net
  *
- * 象棋小巫师 0.5 的目标：
- * 一、实现置换表；
- * 二、采用置换表走法、杀手走法等多种启发方式。
+ * 象棋小巫师 0.6 的目标：
+ * 一、实现开局库；
+ * 二、实现PVS(主要变例搜索)；
+ * 三、把根节点的搜索单独处理，增加搜索的随机性；
+ * 四、克服由长将引起的置换表的不稳定性。
  */
 
 #include <stdlib.h>
@@ -14,7 +16,7 @@
 #include "resource.h"
 
 // 版本号
-const char *const cszAbout = "象棋小巫师 0.5\n象棋百科全书 荣誉出品\n\n"
+const char *const cszAbout = "象棋小巫师 0.6\n象棋百科全书 荣誉出品\n\n"
     "(C) 2004-2008 www.elephantbase.net\n本产品符合GNU通用公共许可协议\n\n"
     "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师";
 
@@ -1299,44 +1301,40 @@ const BOOL NO_NULL = TRUE;
 // 超出边界(Fail-Soft)的Alpha-Beta搜索过程
 static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE) {
   int nHashFlag, vl, vlBest;
-  int mv, mvBest, mvHash;
+  int mv, mvBest, mvHash, nNewDepth;
   SortStruct Sort;
   // 一个Alpha-Beta完全搜索分为以下几个阶段
 
-  if (pos.nDistance > 0) {
-    // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
-    if (nDepth <= 0) {
-      return SearchQuiesc(vlAlpha, vlBeta);
-    }
+  // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
+  if (nDepth <= 0) {
+    return SearchQuiesc(vlAlpha, vlBeta);
+  }
 
-    // 1-1. 检查重复局面(注意：不要在根节点检查，否则就没有走法了)
-    vl = pos.RepStatus();
-    if (vl != 0) {
-      return pos.RepValue(vl);
-    }
+  // 1-1. 检查重复局面(注意：不要在根节点检查，否则就没有走法了)
+  vl = pos.RepStatus();
+  if (vl != 0) {
+    return pos.RepValue(vl);
+  }
 
-    // 1-2. 到达极限深度就返回局面评价
-    if (pos.nDistance == LIMIT_DEPTH) {
-      return pos.Evaluate();
-    }
+  // 1-2. 到达极限深度就返回局面评价
+  if (pos.nDistance == LIMIT_DEPTH) {
+    return pos.Evaluate();
+  }
 
-    // 1-3. 尝试置换表裁剪，并得到置换表走法
-    vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash);
-    if (vl > -MATE_VALUE) {
+  // 1-3. 尝试置换表裁剪，并得到置换表走法
+  vl = ProbeHash(vlAlpha, vlBeta, nDepth, mvHash);
+  if (vl > -MATE_VALUE) {
+    return vl;
+  }
+
+  // 1-4. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
+  if (!bNoNull && !pos.InCheck() && pos.NullOkay()) {
+    pos.NullMove();
+    vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
+    pos.UndoNullMove();
+    if (vl >= vlBeta) {
       return vl;
     }
-
-    // 1-4. 尝试空步裁剪(根节点的Beta值是"MATE_VALUE"，所以不可能发生空步裁剪)
-    if (!bNoNull && !pos.InCheck() && pos.NullOkay()) {
-      pos.NullMove();
-      vl = -SearchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
-      pos.UndoNullMove();
-      if (vl >= vlBeta) {
-        return vl;
-      }
-    }
-  } else {
-    mvHash = 0;
   }
 
   // 2. 初始化最佳值和最佳走法
@@ -1351,7 +1349,16 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
   while ((mv = Sort.Next()) != 0) {
     if (pos.MakeMove(mv)) {
       // 将军延伸
-      vl = -SearchFull(-vlBeta, -vlAlpha, pos.InCheck() ? nDepth : nDepth - 1);
+      nNewDepth = pos.InCheck() ? nDepth : nDepth - 1;
+      // PVS
+      if (vlBest == -MATE_VALUE) {
+        vl = -SearchFull(-vlBeta, -vlAlpha, nNewDepth);
+      } else {
+        vl = -SearchFull(-vlAlpha - 1, -vlAlpha, nNewDepth);
+        if (vl > vlAlpha && vl < vlBeta) {
+          vl = -SearchFull(-vlBeta, -vlAlpha, nNewDepth);
+        }
+      }
       pos.UndoMakeMove();
 
       // 5. 进行Alpha-Beta大小判断和截断
@@ -1381,11 +1388,37 @@ static int SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull = FALSE)
   if (mvBest != 0) {
     // 如果不是Alpha走法，就将最佳走法保存到历史表
     SetBestMove(mvBest, nDepth);
-    if (pos.nDistance == 0) {
-      // 搜索根节点时，总是有一个最佳走法(因为全窗口搜索不会超出边界)，将这个走法保存下来
-      Search.mvResult = mvBest;
+  }
+  return vlBest;
+}
+
+// 根节点的Alpha-Beta搜索过程
+static int SearchRoot(int nDepth) {
+  int vl, vlBest, mv, nNewDepth;
+  SortStruct Sort;
+
+  vlBest = -MATE_VALUE;
+  Sort.Init(Search.mvResult);
+  while ((mv = Sort.Next()) != 0) {
+    if (pos.MakeMove(mv)) {
+      nNewDepth = pos.InCheck() ? nDepth : nDepth - 1;
+      if (vlBest == -MATE_VALUE) {
+        vl = -SearchFull(-MATE_VALUE, MATE_VALUE, nNewDepth, NO_NULL);
+      } else {
+        vl = -SearchFull(-vlBest - 1, -vlBest, nNewDepth);
+        if (vl > vlBest) {
+          vl = -SearchFull(-MATE_VALUE, -vlBest, nNewDepth, NO_NULL);
+        }
+      }
+      pos.UndoMakeMove();
+      if (vl > vlBest) {
+        vlBest = vl;
+        Search.mvResult = mv;
+      }
     }
   }
+  RecordHash(HASH_PV, vlBest, nDepth, Search.mvResult);
+  SetBestMove(Search.mvResult, nDepth);
   return vlBest;
 }
 
@@ -1402,7 +1435,7 @@ static void SearchMain(void) {
 
   // 迭代加深过程
   for (i = 1; i <= LIMIT_DEPTH; i ++) {
-    vl = SearchFull(-MATE_VALUE, MATE_VALUE, i);
+    vl = SearchRoot(i);
     // 搜索到杀棋，就终止搜索
     if (vl > WIN_VALUE || vl < -WIN_VALUE) {
       break;
