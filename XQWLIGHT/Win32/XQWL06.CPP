@@ -10,6 +10,7 @@
  * 四、克服由长将引起的置换表的不稳定性。
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
@@ -59,6 +60,7 @@ const int HASH_SIZE = 1 << 20; // 置换表大小
 const int HASH_ALPHA = 1;      // ALPHA节点的置换表项
 const int HASH_BETA = 2;       // BETA节点的置换表项
 const int HASH_PV = 3;         // PV节点的置换表项
+const int BOOK_SIZE = 16384;   // 开局库大小
 
 // 判断棋子是否在棋盘中的数组
 static const char ccInBoard[256] = {
@@ -1089,17 +1091,52 @@ struct HashItem {
   DWORD dwLock0, dwLock1;
 };
 
+// 开局库项结构
+struct BookItem {
+  DWORD dwLock1;
+  WORD wmv, vl;
+};
+
 // 与搜索有关的全局变量
 static struct {
   int mvResult;                  // 电脑走的棋
   int nHistoryTable[65536];      // 历史表
   int mvKillers[LIMIT_DEPTH][2]; // 杀手走法表
   HashItem HashTable[HASH_SIZE]; // 置换表
+  int nBookSize;                 // 开局库大小
+  BookItem BookTable[BOOK_SIZE]; // 开局库
 } Search;
+
+// 装入开局库
+static void LoadBook(void) {
+  char *lp;
+  FILE *fp;
+  char szBookFile[MAX_PATH];
+
+  GetModuleFileName(NULL, szBookFile, MAX_PATH);
+  lp = strrchr(szBookFile, '\\');
+  if (lp == NULL) {
+    strcpy(szBookFile, "BOOK.DAT");
+  } else {
+    strcpy(lp + 1, "BOOK.DAT");
+  }
+  fp = fopen(szBookFile, "rb");
+  if (fp == NULL) {
+    Search.nBookSize = 0;
+  } else {
+    Search.nBookSize = fread(Search.BookTable, sizeof(BookItem), BOOK_SIZE, fp);
+    fclose(fp);
+  }
+}
+
+// 搜索开局库
+static void SearchBook(void) {
+  //
+}
 
 // 提取置换表项
 static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
-  BOOL bMate;
+  BOOL bMate; // 杀棋标志：如果是杀棋，那么不需要满足深度条件
   HashItem hsh;
 
   hsh = Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)];
@@ -1111,18 +1148,18 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
   bMate = FALSE;
   if (hsh.svl > WIN_VALUE) {
     if (hsh.svl < BAN_VALUE) {
-      return -MATE_VALUE;
+      return -MATE_VALUE; // *
     }
     hsh.svl -= pos.nDistance;
     bMate = TRUE;
   } else if (hsh.svl < -WIN_VALUE) {
     if (hsh.svl > -BAN_VALUE) {
-      return -MATE_VALUE;
+      return -MATE_VALUE; // *
     }
     hsh.svl += pos.nDistance;
     bMate = TRUE;
   } else if (hsh.svl == pos.DrawValue()) {
-    return -MATE_VALUE;
+    return -MATE_VALUE;   // * 可能导致搜索的不稳定性，立刻退出，但最佳着法可能拿到
   }
   if (hsh.ucDepth >= nDepth || bMate) {
     if (hsh.ucFlag == HASH_BETA) {
@@ -1137,31 +1174,32 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
 
 // 保存置换表项
 static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
-  HashItem *lphsh;
-  lphsh = Search.HashTable + (pos.zobr.dwKey & (HASH_SIZE - 1));
-  if (lphsh->ucDepth > nDepth) {
+  HashItem hsh;
+  hsh = Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)];
+  if (hsh.ucDepth > nDepth) {
     return;
   }
-  lphsh->ucFlag = nFlag;
-  lphsh->ucDepth = nDepth;
+  hsh.ucFlag = nFlag;
+  hsh.ucDepth = nDepth;
   if (vl > WIN_VALUE) {
     if (mv == 0 && vl <= BAN_VALUE) {
-      return;
+      return; // *
     }
-    lphsh->svl = vl + pos.nDistance;
+    hsh.svl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
     if (mv == 0 && vl >= -BAN_VALUE) {
-      return;
+      return; // *
     }
-    lphsh->svl = vl - pos.nDistance;
+    hsh.svl = vl - pos.nDistance;
   } else if (vl == pos.DrawValue() && mv == 0) {
-    return;
+    return;   // * 可能导致搜索的不稳定性，并且没有最佳着法，立刻退出
   } else {
-    lphsh->svl = vl;
+    hsh.svl = vl;
   }
-  lphsh->wmv = mv;
-  lphsh->dwLock0 = pos.zobr.dwLock0;
-  lphsh->dwLock1 = pos.zobr.dwLock1;
+  hsh.wmv = mv;
+  hsh.dwLock0 = pos.zobr.dwLock0;
+  hsh.dwLock1 = pos.zobr.dwLock1;
+  Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)] = hsh;
 };
 
 // MVV/LVA每种子力的价值
@@ -1830,6 +1868,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   // 初始化全局变量
   srand((DWORD) time(NULL));
   InitZobrist();
+  LoadBook();
   Xqwl.hInst = hInstance;
   Xqwl.bFlipped = FALSE;
   Startup();

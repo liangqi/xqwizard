@@ -1073,7 +1073,7 @@ static struct {
 
 // 提取置换表项
 static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
-  BOOL bMate;
+  BOOL bMate; // 杀棋标志：如果是杀棋，那么不需要满足深度条件
   HashItem hsh;
 
   hsh = Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)];
@@ -1103,23 +1103,24 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
 
 // 保存置换表项
 static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
-  HashItem *lphsh;
-  lphsh = Search.HashTable + (pos.zobr.dwKey & (HASH_SIZE - 1));
-  if (lphsh->ucDepth > nDepth) {
+  HashItem hsh;
+  hsh = Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)];
+  if (hsh.ucDepth > nDepth) {
     return;
   }
-  lphsh->ucFlag = nFlag;
-  lphsh->ucDepth = nDepth;
+  hsh.ucFlag = nFlag;
+  hsh.ucDepth = nDepth;
   if (vl > WIN_VALUE) {
-    lphsh->svl = vl + pos.nDistance;
+    hsh.svl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
-    lphsh->svl = vl - pos.nDistance;
+    hsh.svl = vl - pos.nDistance;
   } else {
-    lphsh->svl = vl;
+    hsh.svl = vl;
   }
-  lphsh->wmv = mv;
-  lphsh->dwLock0 = pos.zobr.dwLock0;
-  lphsh->dwLock1 = pos.zobr.dwLock1;
+  hsh.wmv = mv;
+  hsh.dwLock0 = pos.zobr.dwLock0;
+  hsh.dwLock1 = pos.zobr.dwLock1;
+  Search.HashTable[pos.zobr.dwKey & (HASH_SIZE - 1)] = hsh;
 };
 
 // MVV/LVA每种子力的价值
