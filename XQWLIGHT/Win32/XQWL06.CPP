@@ -1093,7 +1093,7 @@ struct HashItem {
 
 // 开局库项结构
 struct BookItem {
-  DWORD dwLock1;
+  DWORD dwLock;
   WORD wmv, vl;
 };
 
@@ -1129,9 +1129,28 @@ static void LoadBook(void) {
   }
 }
 
+static int CompareBook(const void *lpbk1, const void *lpbk2) {
+  return ((BookItem *) lpbk1)->dwLock - ((BookItem *) lpbk2)->dwLock;
+}
+
 // 搜索开局库
 static void SearchBook(void) {
-  //
+  BOOL bMirror;
+  BookItem bkToSearch, *lpbkResult;
+  PositionStruct posMirror;
+
+  if (Search.nBookSize == 0) {
+    return;
+  }
+  bMirror = FALSE;
+  bkToSearch.dwLock = pos.zobr.dwLock1;
+  lpbkResult = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
+  if (lpbkResult == NULL) {
+    bMirror = TRUE;
+    pos.Mirror(posMirror);
+    bkToSearch.dwLock = posMirror.zobr.dwLock1;
+    lpbkResult = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
+  }
 }
 
 // 提取置换表项
