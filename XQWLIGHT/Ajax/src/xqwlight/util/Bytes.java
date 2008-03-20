@@ -288,20 +288,20 @@ public class Bytes {
 
 	private static final byte[] HEX_CHAR = "0123456789ABCDEF".getBytes();
 
-	private static void dumpLine(PrintStream out, byte[] b, int offMod16, int begin, int end) {
+	private static void dumpLine(PrintStream out, byte[] b, int offDiv16, int begin, int end) {
 		byte[] lpLine = "                                                                             ".getBytes();
-		lpLine[0] = HEX_CHAR[(offMod16 >>> 24) & 0xf];
-		lpLine[1] = HEX_CHAR[(offMod16 >>> 20) & 0xf];
-		lpLine[2] = HEX_CHAR[(offMod16 >>> 16) & 0xf];
-		lpLine[3] = HEX_CHAR[(offMod16 >>> 12) & 0xf];
+		lpLine[0] = HEX_CHAR[(offDiv16 >>> 24) & 0xf];
+		lpLine[1] = HEX_CHAR[(offDiv16 >>> 20) & 0xf];
+		lpLine[2] = HEX_CHAR[(offDiv16 >>> 16) & 0xf];
+		lpLine[3] = HEX_CHAR[(offDiv16 >>> 12) & 0xf];
 		lpLine[4] = ':';
-		lpLine[5] = HEX_CHAR[(offMod16 >>> 8) & 0xf];
-		lpLine[6] = HEX_CHAR[(offMod16 >>> 4) & 0xf];
-		lpLine[7] = HEX_CHAR[offMod16 & 0xf];
+		lpLine[5] = HEX_CHAR[(offDiv16 >>> 8) & 0xf];
+		lpLine[6] = HEX_CHAR[(offDiv16 >>> 4) & 0xf];
+		lpLine[7] = HEX_CHAR[offDiv16 & 0xf];
 		lpLine[8] = '0';
 		for (int i = 0; i < 16; i ++) {
 			if (i >= begin && i < end) {
-				int bInt = b[offMod16 * 16 + i];
+				int bInt = b[offDiv16 * 16 + i];
 				lpLine[i * 3 + 11] = HEX_CHAR[(bInt & 0xf0) >> 4];
 				lpLine[i * 3 + 12] = HEX_CHAR[bInt & 0xf];
 				if (bInt >= 32 && bInt < 127) {
@@ -319,17 +319,17 @@ public class Bytes {
 
 	public static void dump(PrintStream out, byte[] b, int off, int len) {
 		int end = off + len;
-		int offMod16 = off / 16;
-		int endMod16 = end / 16;
-		if (offMod16 == endMod16) {
-			dumpLine(out, b, offMod16, off % 16, end % 16);
+		int offDiv16 = off / 16;
+		int endDiv16 = end / 16;
+		if (offDiv16 == endDiv16) {
+			dumpLine(out, b, offDiv16, off % 16, end % 16);
 		} else {
-			dumpLine(out, b, offMod16, off % 16, 16);
-			for (int i = offMod16 + 1; i < endMod16; i ++) {
+			dumpLine(out, b, offDiv16, off % 16, 16);
+			for (int i = offDiv16 + 1; i < endDiv16; i ++) {
 				dumpLine(out, b, i, 0, 16);
 			}
 			if (end % 16 > 0) {
-				dumpLine(out, b, endMod16, 0, end % 16);
+				dumpLine(out, b, endDiv16, 0, end % 16);
 			}
 		}
 	}
