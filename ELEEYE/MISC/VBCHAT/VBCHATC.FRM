@@ -226,7 +226,7 @@ End Sub
 
 Private Sub Form_Load()
 
-txtHostName.Text = GetSetting("VBChat", "Client", "HostName", "127.0.0.1")
+txtHostName.Text = GetSetting("VBChat", "Client", "HostName", "localhost")
 txtPort.Text = GetSetting("VBChat", "Client", "Port", "23")
 txtMyName.Text = GetSetting("VBChat", "Client", "MyName", "My Name")
 chkAnonymous.Value = IIf(GetSetting("VBChat", "Client", "Anonymous", "0") = "0", 0, 1)

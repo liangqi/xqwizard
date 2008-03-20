@@ -2,10 +2,10 @@ VERSION 5.00
 Begin VB.Form frmRedirect 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Redirect Proxy"
-   ClientHeight    =   960
+   ClientHeight    =   1320
    ClientLeft      =   150
    ClientTop       =   435
-   ClientWidth     =   2265
+   ClientWidth     =   3120
    BeginProperty Font 
       Name            =   "ËÎÌו"
       Size            =   9
@@ -17,40 +17,78 @@ Begin VB.Form frmRedirect
    EndProperty
    Icon            =   "REDIRECT.frx":0000
    MaxButton       =   0   'False
-   ScaleHeight     =   960
-   ScaleWidth      =   2265
+   ScaleHeight     =   1320
+   ScaleWidth      =   3120
    StartUpPosition =   3  'Windows Default
+   Begin VB.CheckBox chkHex 
+      Caption         =   "Hex"
+      Height          =   300
+      Left            =   2400
+      TabIndex        =   9
+      Top             =   120
+      Width           =   615
+   End
+   Begin VB.TextBox txtServerPort 
+      Height          =   285
+      Left            =   2520
+      TabIndex        =   8
+      Top             =   480
+      Width           =   495
+   End
+   Begin VB.TextBox txtServerHost 
+      Height          =   270
+      Left            =   600
+      TabIndex        =   5
+      Top             =   480
+      Width           =   1695
+   End
    Begin VB.CommandButton btnExit 
       Cancel          =   -1  'True
       Caption         =   "Exit"
       Height          =   375
-      Left            =   1200
+      Left            =   1800
       TabIndex        =   4
-      Top             =   480
+      Top             =   840
       Width           =   855
    End
    Begin VB.CommandButton btnStart 
       Caption         =   "Start"
       Height          =   375
-      Left            =   240
+      Left            =   480
       TabIndex        =   3
-      Top             =   480
+      Top             =   840
       Width           =   855
    End
-   Begin VB.CheckBox chkNoEcho 
-      Caption         =   "No Echo"
+   Begin VB.CheckBox chkText 
+      Caption         =   "Text"
       Height          =   300
-      Left            =   1200
+      Left            =   1680
       TabIndex        =   2
       Top             =   120
-      Width           =   975
+      Width           =   735
    End
-   Begin VB.TextBox txtPort 
+   Begin VB.TextBox txtClientPort 
       Height          =   285
       Left            =   600
       TabIndex        =   1
       Top             =   120
       Width           =   495
+   End
+   Begin VB.Label lblSlash 
+      Caption         =   "/"
+      Height          =   255
+      Left            =   2400
+      TabIndex        =   7
+      Top             =   480
+      Width           =   135
+   End
+   Begin VB.Label lblDest 
+      Caption         =   "Dest"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   6
+      Top             =   480
+      Width           =   375
    End
    Begin VB.Label lblPort 
       Caption         =   "Port"
@@ -148,8 +186,10 @@ End Sub
 
 Private Sub Form_Load()
 
-txtPort.Text = Str2Lng(GetSetting("Redirect", "Server", "Port", "23"), 1, 65535)
-chkNoEcho.Value = IIf(GetSetting("Redirect", "Server", "NoEcho", "0") = "0", 0, 1)
+txtClientPort.Text = Str2Lng(GetSetting("VBChat", "Redirect", "ClientPort", "10023"), 1, 65535)
+txtServerHost.Text = GetSetting("VBChat", "Redirect", "ServerPort", "localhost")
+txtServerPort.Text = Str2Lng(GetSetting("VBChat", "Redirect", "ServerPort", "23"), 1, 65535)
+chkNoEcho.Value = IIf(GetSetting("VBChat", "Redirect", "NoEcho", "0") = "0", 0, 1)
 App_lpPrevWndFunc = SetWindowLongA(hWnd, GWL_WNDPROC, AddressOf NewWndFunc)
 
 End Sub
