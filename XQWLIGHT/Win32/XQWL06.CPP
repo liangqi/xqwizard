@@ -1092,7 +1092,7 @@ struct HashItem {
 // 开局库项结构
 struct BookItem {
   DWORD dwLock;
-  WORD wmv, vl;
+  WORD wmv, wvl;
 };
 
 // 与搜索有关的全局变量
@@ -1132,23 +1132,65 @@ static int CompareBook(const void *lpbk1, const void *lpbk2) {
 }
 
 // 搜索开局库
-static void SearchBook(void) {
+static int SearchBook(void) {
+  int i, vl, nBookMoves, mv;
+  int mvs[MAX_GEN_MOVES], vls[MAX_GEN_MOVES];
   BOOL bMirror;
-  BookItem bkToSearch, *lpbkResult;
+  BookItem bkToSearch, *lpbk;
   PositionStruct posMirror;
+  // 搜索开局库的过程有以下几个步骤
 
+  // 1. 如果没有开局库，则立即返回
   if (Search.nBookSize == 0) {
-    return;
+    return 0;
   }
+  // 2. 搜索当前局面
   bMirror = FALSE;
   bkToSearch.dwLock = pos.zobr.dwLock1;
-  lpbkResult = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
-  if (lpbkResult == NULL) {
+  lpbk = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
+  // 3. 如果没有找到，那么搜索当前局面的镜像局面
+  if (lpbk == NULL) {
     bMirror = TRUE;
     pos.Mirror(posMirror);
     bkToSearch.dwLock = posMirror.zobr.dwLock1;
-    lpbkResult = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
+    lpbk = (BookItem *) bsearch(&bkToSearch, Search.BookTable, Search.nBookSize, sizeof(BookItem), CompareBook);
   }
+  // 4. 如果镜像局面也没找到，则立即返回
+  if (lpbk == NULL) {
+    return 0;
+  }
+  // 5. 如果找到，则向前查第一个开局库项
+  while (lpbk >= Search.BookTable && lpbk->dwLock == bkToSearch.dwLock) {
+    lpbk --;
+  }
+  lpbk ++;
+  // 6. 把走法和分值写入到"mvs"和"vls"数组中
+  vl = nBookMoves = 0;
+  while (lpbk < Search.BookTable + Search.nBookSize && lpbk->dwLock == bkToSearch.dwLock) {
+    mv = (bMirror ? MIRROR_MOVE(lpbk->wmv) : lpbk->wmv);
+    if (pos.LegalMove(mv)) {
+      mvs[nBookMoves] = mv;
+      vls[nBookMoves] = lpbk->wvl;
+      vl += vls[nBookMoves];
+      nBookMoves ++;
+      if (nBookMoves == MAX_GEN_MOVES) {
+        break; // 防止"BOOK.DAT"中含有异常数据
+      }
+    }
+    lpbk ++;
+  }
+  if (vl == 0) {
+    return 0; // 防止"BOOK.DAT"中含有异常数据
+  }
+  // 7. 根据权重随机选择一个走法
+  vl = rand() % vl;
+  for (i = 0; i < nBookMoves; i ++) {
+    vl -= vls[i];
+    if (vl < 0) {
+      break;
+    }
+  }
+  return mvs[i];
 }
 
 // 提取置换表项
@@ -1521,7 +1563,8 @@ static int SearchRoot(int nDepth) {
 
 // 迭代加深搜索过程
 static void SearchMain(void) {
-  int i, t, vl;
+  int i, t, vl, nGenMoves;
+  int mvs[MAX_GEN_MOVES];
 
   // 初始化
   memset(Search.nHistoryTable, 0, 65536 * sizeof(int));      // 清空历史表
@@ -1529,6 +1572,31 @@ static void SearchMain(void) {
   memset(Search.HashTable, 0, HASH_SIZE * sizeof(HashItem)); // 清空置换表
   t = clock();       // 初始化定时器
   pos.nDistance = 0; // 初始步数
+
+  // 搜索开局库
+  Search.mvResult = SearchBook();
+  if (Search.mvResult != 0) {
+    pos.MakeMove(Search.mvResult);
+    if (pos.RepStatus(3) == 0) {
+      pos.UndoMakeMove();
+      return;
+    }
+    pos.UndoMakeMove();
+  }
+
+  // 检查是否只有唯一走法
+  vl = 0;
+  nGenMoves = pos.GenerateMoves(mvs);
+  for (i = 0; i < nGenMoves; i ++) {
+    if (pos.MakeMove(mvs[i])) {
+      pos.UndoMakeMove();
+      Search.mvResult = mvs[i];
+      vl ++;
+    }
+  }
+  if (vl == 1) {
+    return;
+  }
 
   // 迭代加深过程
   for (i = 1; i <= LIMIT_DEPTH; i ++) {
