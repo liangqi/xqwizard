@@ -459,17 +459,15 @@ Source: "SOUNDS\WIN.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\DRAW.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\LOSS.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 ; 音乐文件
-Source: "MUSICS\CLASSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\EXPRESS.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\FUNNY.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\WALTZ.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\CLASSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART1.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\MOZART4.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\MOONLITE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\FURELISE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\LOVDREAM.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\ANITRA.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\WALTZ.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\HUMOUR.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
-Source: "MUSICS\JINGLE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\PAL.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\CMUSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 ; 图片棋盘文件

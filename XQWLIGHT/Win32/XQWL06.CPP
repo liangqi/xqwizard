@@ -605,9 +605,7 @@ struct PositionStruct {
     }
   }
   int Evaluate(void) const {      // 局面评价函数
-    int vl;
-    vl = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
-    return vl == DrawValue() ? vl - 1 : vl;
+    return (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
   }
   BOOL InCheck(void) const {      // 是否被将军
     return mvsList[nMoveNum - 1].ucbCheck;
@@ -1167,18 +1165,16 @@ static int ProbeHash(int vlAlpha, int vlBeta, int nDepth, int &mv) {
   bMate = FALSE;
   if (hsh.svl > WIN_VALUE) {
     if (hsh.svl < BAN_VALUE) {
-      return -MATE_VALUE; // *
+      return -MATE_VALUE; // 可能导致搜索的不稳定性，立刻退出，但最佳着法可能拿到
     }
     hsh.svl -= pos.nDistance;
     bMate = TRUE;
   } else if (hsh.svl < -WIN_VALUE) {
     if (hsh.svl > -BAN_VALUE) {
-      return -MATE_VALUE; // *
+      return -MATE_VALUE; // 同上
     }
     hsh.svl += pos.nDistance;
     bMate = TRUE;
-  } else if (hsh.svl == pos.DrawValue()) {
-    return -MATE_VALUE;   // * 可能导致搜索的不稳定性，立刻退出，但最佳着法可能拿到
   }
   if (hsh.ucDepth >= nDepth || bMate) {
     if (hsh.ucFlag == HASH_BETA) {
@@ -1202,16 +1198,14 @@ static void RecordHash(int nFlag, int vl, int nDepth, int mv) {
   hsh.ucDepth = nDepth;
   if (vl > WIN_VALUE) {
     if (mv == 0 && vl <= BAN_VALUE) {
-      return; // *
+      return; // 可能导致搜索的不稳定性，并且没有最佳着法，立刻退出
     }
     hsh.svl = vl + pos.nDistance;
   } else if (vl < -WIN_VALUE) {
     if (mv == 0 && vl >= -BAN_VALUE) {
-      return; // *
+      return; // 同上
     }
     hsh.svl = vl - pos.nDistance;
-  } else if (vl == pos.DrawValue() && mv == 0) {
-    return;   // * 可能导致搜索的不稳定性，并且没有最佳着法，立刻退出
   } else {
     hsh.svl = vl;
   }
@@ -1516,7 +1510,6 @@ static int SearchRoot(int nDepth) {
         Search.mvResult = mv;
         if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
           vlBest += (rand() & RANDOM_MASK) - (rand() & RANDOM_MASK);
-          vlBest = (vlBest == pos.DrawValue() ? vlBest - 1 : vlBest);
         }
       }
     }

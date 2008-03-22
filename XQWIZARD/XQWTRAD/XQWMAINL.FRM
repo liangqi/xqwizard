@@ -1812,106 +1812,98 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnOptionsBoard_ 
          Caption         =   "棋盤(&B)"
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "櫟木(&W)"
+            Caption         =   "櫟木(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "綠色大理石(&G)"
+            Caption         =   "綠色大理石(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "白色大理石(&H)"
+            Caption         =   "白色大理石(&C)"
             Index           =   2
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "再生紙(&S)"
+            Caption         =   "再生紙(&D)"
             Index           =   3
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "畫布(&C)"
+            Caption         =   "畫布(&E)"
             Index           =   4
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "水滴(&D)"
+            Caption         =   "水滴(&F)"
             Index           =   5
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "淺紅象棋(&Q)"
+            Caption         =   "淺紅象棋(&G)"
             Index           =   6
          End
       End
       Begin VB.Menu mnOptionsPieces_ 
          Caption         =   "棋子(&P)"
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "木刻(&W)"
+            Caption         =   "木刻(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "精致(&D)"
+            Caption         =   "精致(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "光澤(&P)"
+            Caption         =   "光澤(&C)"
             Index           =   2
          End
       End
       Begin VB.Menu mnOptionsMusic_ 
          Caption         =   "音樂(&M)"
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "古典(&C)"
+            Caption         =   "緊張(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "緊張(&E)"
+            Caption         =   "風趣(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "風趣(&F)"
+            Caption         =   "巴赫(&C)"
             Index           =   2
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "圓舞曲(&W)"
+            Caption         =   "莫扎特一(&D)"
             Index           =   3
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "莫扎特一(&M)"
+            Caption         =   "莫扎特四(&E)"
             Index           =   4
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "莫扎特四(&Z)"
+            Caption         =   "貝多芬(&F)"
             Index           =   5
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "月光(&L)"
+            Caption         =   "李斯特(&G)"
             Index           =   6
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "愛之夢(&D)"
+            Caption         =   "柴可夫斯基(&H)"
             Index           =   7
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "皮爾‧金特(&A)"
+            Caption         =   "德沃夏克(&I)"
             Index           =   8
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "幽默曲(&H)"
+            Caption         =   "仙劍奇俠傳(&J)"
             Index           =   9
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "鈴儿響叮當(&J)"
+            Caption         =   "望江南(&K)"
             Index           =   10
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "仙劍奇俠傳(&P)"
+            Caption         =   "無聲(&L)"
             Index           =   11
-         End
-         Begin VB.Menu mnOptionsMusic 
-            Caption         =   "天策府(&T)"
-            Index           =   12
-         End
-         Begin VB.Menu mnOptionsMusic 
-            Caption         =   "無聲(&N)"
-            Index           =   13
          End
       End
       Begin VB.Menu mnOptionsTopMost 
