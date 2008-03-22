@@ -1398,9 +1398,9 @@ static void SearchMain(void) {
   int i, t, vl;
 
   // 初始化
-  memset(Search.nHistoryTable, 0, 65536 * sizeof(int));      // 清空历史表
-  memset(Search.mvKillers, 0, 65536 * sizeof(int[2]));       // 清空杀手走法表
-  memset(Search.HashTable, 0, HASH_SIZE * sizeof(HashItem)); // 清空置换表
+  memset(Search.nHistoryTable, 0, 65536 * sizeof(int));       // 清空历史表
+  memset(Search.mvKillers, 0, LIMIT_DEPTH * 2 * sizeof(int)); // 清空杀手走法表
+  memset(Search.HashTable, 0, HASH_SIZE * sizeof(HashItem));  // 清空置换表
   t = clock();       // 初始化定时器
   pos.nDistance = 0; // 初始步数
 
