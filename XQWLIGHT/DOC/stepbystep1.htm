@@ -53,28 +53,23 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">(WM_LBUTTONDOWN</font>消息<font
         face="Times New Roman">)</font>的处理过程就可以写成：</dt>
     <dd>　</dd>
-    <dd><font face="Times New Roman">if (</font>点击自己的子<font
-        face="Times New Roman">) {</font></dd>
-    <dd>　把点击的子选中<font face="Times New Roman">; //
-        </font>进入状态<font face="Times New Roman">A</font></dd>
-    <dd><font face="Times New Roman">} else if (</font>已经有子选中<font
-        face="Times New Roman">) {</font></dd>
-    <dd>　可以走这步棋<font face="Times New Roman">(</font>刚才选中位置<font
-        face="Times New Roman">-&gt;</font>现在点击的位置<font
-        face="Times New Roman">); // </font>进入状态<font
-        face="Times New Roman">B</font></dd>
-    <dd><font face="Times New Roman">}</font></dd>
+    <dd>if (点击自己的子) {</dd>
+    <dd>　把点击的子选中; // 进入状态A</dd>
+    <dd>} else if (已经有子选中) {</dd>
+    <dd>　可以走这步棋(刚才选中位置-&gt;现在点击的位置);
+        // 进入状态B</dd>
+    <dd>}</dd>
     <dt>　</dt>
     <dt>　　那么，如何把一枚棋子画在棋盘上呢？实际上只要用<font
         face="Times New Roman">BitBlt</font>和<font
         face="Times New Roman">TransparentBlt</font>两个函数就够了，过程如下：</dt>
-    <dt>　　<font face="Times New Roman">A. </font>把原来位置的棋子用棋盘图案覆盖掉<font
+    <dt>　　<font face="Times New Roman">(1) </font>把原来位置的棋子用棋盘图案覆盖掉<font
         face="Times New Roman">(</font>用<font
         face="Times New Roman">BitBlt</font>函数<font
         face="Times New Roman">)</font>；</dt>
-    <dt>　　<font face="Times New Roman">B. </font>在该位置贴上棋子的图案，由于棋子图案是透明的，所以要用<font
+    <dt>　　<font face="Times New Roman">(2) </font>在该位置贴上棋子的图案，由于棋子图案是透明的，所以要用<font
         face="Times New Roman">TransparentBlt</font>函数；</dt>
-    <dt>　　<font face="Times New Roman">C. </font>如果这枚棋子是选中的，那么再在该位置贴上选中的图案<font
+    <dt>　　<font face="Times New Roman">(3) </font>如果这枚棋子是选中的，那么再在该位置贴上选中的图案<font
         face="Times New Roman">(</font>再用一次<font
         face="Times New Roman">TransparentBlt</font>函数<font
         face="Times New Roman">)</font>。</dt>
@@ -83,8 +78,8 @@ content="text/html; charset=gb_2312-80">
         <font face="Times New Roman">ucpcSquares[256] </font>中<font
         face="Times New Roman">(</font>长度<font
         face="Times New Roman">256</font>的好处将在后面介绍<font
-        face="Times New Roman">)</font>，数组指标代表格子的编号，匈牙利标记<font
-        face="Times New Roman"> uc </font>表示每个元素占用一个字节，<font
+        face="Times New Roman">)</font>，数组指标代表格子的编号，匈牙利标记
+        <font face="Times New Roman">uc </font>表示每个元素占用一个字节，<font
         face="Times New Roman">pc</font> 表示棋子标识。棋子标识的含义如下：</dt>
     <dt>　　<font face="Times New Roman">A. 0</font>表示空格<font
         face="Times New Roman">(</font>没有棋子<font
@@ -114,9 +109,9 @@ content="text/html; charset=gb_2312-80">
 
 <dir>
     <li>上一篇</li>
-    <li>下一篇　<a href="eleeye_struct.htm">中国象棋程序设计探索<font
+    <li>下一篇　<a href="stepbystep2.htm">电脑象棋循序渐进<font
         face="Times New Roman">(</font>二<font
-        face="Times New Roman">)</font>：棋盘结构和着法生成器</a></li>
+        face="Times New Roman">)</font>：让电脑掌握象棋规则</a></li>
 </dir>
 <div align="center"><center>
 

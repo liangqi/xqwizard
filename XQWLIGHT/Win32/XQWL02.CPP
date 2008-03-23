@@ -441,7 +441,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
     case PIECE_KNIGHT:
       for (i = 0; i < 4; i ++) {
         sqDst = sqSrc + ccKingDelta[i];
-        if (ucpcSquares[sqDst] > 0) {
+        if (ucpcSquares[sqDst] != 0) {
           continue;
         }
         for (j = 0; j < 2; j ++) {
@@ -494,7 +494,7 @@ int PositionStruct::GenerateMoves(int *mvs) const {
         sqDst += nDelta;
         while (IN_BOARD(sqDst)) {
           pcDst = ucpcSquares[sqDst];
-          if (pcDst > 0) {
+          if (pcDst != 0) {
             if ((pcDst & pcOppSide) != 0) {
               mvs[nGenMoves] = MOVE(sqSrc, sqDst);
               nGenMoves ++;
@@ -580,7 +580,7 @@ BOOL PositionStruct::LegalMove(int mv) const {
     }
     if (sqPin == sqDst) {
       return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
-    } else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
+    } else if (pcDst != 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
       sqPin += nDelta;
       while (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
         sqPin += nDelta;
@@ -641,7 +641,7 @@ BOOL PositionStruct::Checked() const {
       sqDst = sqSrc + nDelta;
       while (IN_BOARD(sqDst)) {
         pcDst = ucpcSquares[sqDst];
-	if (pcDst > 0) {
+        if (pcDst != 0) {
           if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
             return TRUE;
           }
@@ -652,7 +652,7 @@ BOOL PositionStruct::Checked() const {
       sqDst += nDelta;
       while (IN_BOARD(sqDst)) {
         int pcDst = ucpcSquares[sqDst];
-        if (pcDst > 0) {
+        if (pcDst != 0) {
           if (pcDst == pcOppSide + PIECE_CANNON) {
             return TRUE;
           }
