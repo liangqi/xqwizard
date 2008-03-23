@@ -30,14 +30,14 @@ content="text/html; charset=gb_2312-80">
         size="5" face="楷体_GB2312"><strong>二</strong></font><font
         size="5" face="Arial"><strong>) </strong></font><font
         size="5" face="楷体_GB2312"><strong>让电脑掌握象棋规则</strong></font></dt>
-    <dt><font size="4"><strong></strong></font>　</dt>
+    <dt>　</dt>
     <dt><font size="4" face="Arial"><strong>2.1 </strong></font><font
         size="4" face="楷体_GB2312"><strong>走法生成器</strong></font></dt>
-    <dt><font size="4"><strong></strong></font>　</dt>
+    <dt>　</dt>
     <dt>　　走法生成器是象棋程序中的一个重要组成部分，它可以解决几乎所有象棋规则的问题。</dt>
     <dt>　　假设我们的棋盘使用<font
         face="Times New Roman">9x10</font>的数组，按照常规的做法，找到一个马的所有走法，这将是一件非常痛苦的事：</dt>
-    <dd><font face="Times New Roman"></font>　</dd>
+    <dd>　</dd>
     <dd>// 判断马的下面一格有没有子</dd>
     <dd>int yDst = ySrc + 2;</dd>
     <dd>if (yDst &lt;= Y_BOTTOM &amp;&amp; ucpcSquares[xSrc][ySrc
@@ -58,8 +58,8 @@ content="text/html; charset=gb_2312-80">
     <dt>　</dt>
     <dt>　　不仅代码数量庞大，运行速度缓慢，而且一不小心就容易写错。</dt>
     <dt>　　好在我们的棋盘是一个大小为<font
-        face="Times New Roman">16x16</font>的二维数组，只不过写在程序里的是<font
-        face="Times New Roman"> ucpcSquares[256] </font>而已。</dt>
+        face="Times New Roman">16x16</font>的二维数组，只不过写在程序里的是
+        <font face="Times New Roman">ucpcSquares[256] </font>而已。</dt>
 </dl>
 <div align="center"><center>
 
@@ -411,7 +411,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">(</font>将<font
         face="Times New Roman">)</font>的偏移值。</dt>
     <dt>　　这样，找到一个马的所有走法就容易很多了。首先判断某个方向上的马腿是否有子，然后判断该方向上的两个走法是否能走：</dt>
-    <dd><font face="Times New Roman"></font>　</dd>
+    <dd>　</dd>
     <dd>for (i = 0; i &lt; 4; i ++) {</dd>
     <dd>　sqPin = sqSrc + ccKingDelta[i];</dd>
     <dd>　if (IN_BOARD(sqPin) &amp;&amp; ucpcSquares[sqPin] == 0)
@@ -430,7 +430,7 @@ content="text/html; charset=gb_2312-80">
     <dt>　</dt>
     <dt><font size="4" face="Arial"><strong>2.2 </strong></font><font
         size="4" face="楷体_GB2312"><strong>判断走法是否符合规则</strong></font></dt>
-    <dt><font size="4"><strong></strong></font>　</dt>
+    <dt>　</dt>
     <dt>　　尽管我们已经使用了一些炫技，让走法生成器尽可能地小巧，但它仍然是象棋程序中最耗费时间的运算模块。有时候走法生成器真是大材小用了，比如用户点击鼠标走一步棋的时候，判断这步棋是否符合走法规则，就有几种不同的考虑：</dt>
     <dt>　　<font face="Times New Roman">A. </font>用走法生成器产生全部走法，看看这些走法中有没有用户刚才走出的那步棋，如果没有就说明用户在乱走；</dt>
     <dt>　　<font face="Times New Roman">B. </font>前一种做法中，大部分工作都是白费的，因为用户只是走了一个棋子，走法生成器没必要生成其他棋子的走法；</dt>
@@ -452,7 +452,7 @@ content="text/html; charset=gb_2312-80">
     <dt>　</dt>
     <dt><font size="4" face="Arial"><strong>2.3 </strong></font><font
         size="4" face="楷体_GB2312"><strong>判断将军</strong></font></dt>
-    <dt><font size="4"><strong></strong></font>　</dt>
+    <dt>　</dt>
     <dt>　　到现在为止，我们剩下一件事没有做了，那就是判断胜负。中国象棋的胜负标准就是帅<font
         face="Times New Roman">(</font>将<font
         face="Times New Roman">)</font>有没有被将死或困毙，我们的做法很简单——生成所有走法，如果走任意一步都会被将军，那么该局面就是将死或困毙的局面，棋局到此结束。</dt>
@@ -501,7 +501,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">)</font>：从图形界面做起</a></li>
     <li>下一篇　<a href="stepbystep3.htm">电脑象棋循序渐进<font
         face="Times New Roman">(</font>三<font
-        face="Times New Roman">)</font>：让电脑走棋</a></li>
+        face="Times New Roman">)</font>：最初级的人工智能</a></li>
 </dir>
 <div align="center"><center>
 

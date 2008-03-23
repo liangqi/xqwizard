@@ -1,0 +1,159 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>电脑象棋循序渐进(一)：最初级的人工智能</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">电脑象棋循序渐进</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>黄晨 <font face="Times New Roman">*</font>　<font
+        face="Times New Roman">2008</font>年<font
+        face="Times New Roman">3</font>月</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">( * </font>上海计算机博弈研究所，<font
+        face="Times New Roman">eMail</font>：<a
+        href="mailto:webmaster@elephantbase.net"><font
+        face="Times New Roman">webmaster@elephantbase.net</font></a><font
+        face="Times New Roman">)</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><strong>(</strong></font><font
+        size="5" face="楷体_GB2312"><strong>三</strong></font><font
+        size="5" face="Arial"><strong>) </strong></font><font
+        size="5" face="楷体_GB2312"><strong>最初级的人工智能</strong></font></dt>
+    <dt><font size="4" face="楷体_GB2312"><strong></strong></font>　</dt>
+    <dt><font size="4" face="Arial"><strong>3.1 </strong></font><font
+        size="4" face="楷体_GB2312"><strong>局面评价函数</strong></font></dt>
+    <dt><font size="4"><strong></strong></font>　</dt>
+    <dt>　　根据国际象棋程序的经验，局面评价函数中最关键的因素是子力价值，即“后九车五象马三兵一”。这个经验同样也适合于中国象棋，并且适当调整就可以得到更好的效果——子力价值是跟它的绝对位置相关的。最明显的例子是中国象棋中的兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>，过河前我们给它很低的分数，过河后分数大涨，越接近九宫分数就越高，九宫中心甚至接近一个马或炮的值。</dt>
+    <dt>　　如此一来，每个兵种就都会有一个与绝对位置相关的价值数组，因此我们的程序里有一个常量数组
+        <font face="Times New Roman">cucvlPiecePos[7][256]</font>，它是从开源的象棋程序
+        <font face="Times New Roman">ElephantEye </font>中照搬过来的。</dt>
+    <dt>　　现在要开始进行局面评价了，我们是不是应该这样做：</dt>
+    <dd>　</dd>
+    <dd>vlEvaluate = 0; //
+        相对于红方来说的局面评价值</dd>
+    <dd>for (sq = 0; sq &lt; 256; sq ++) {</dd>
+    <dd><font color="#FF0000">　pc = ucpcSquares[sq];</font></dd>
+    <dd><font color="#FF0000">　if (IS_RED(pc)) {</font></dd>
+    <dd><font color="#FF0000">　　vlEvaluate += cucvlPiecePos[PIECE_TYPE(pc)][sq];</font></dd>
+    <dd><font color="#FF0000">　} else if (IS_BLACK(pc)) {</font></dd>
+    <dd><font color="#FF0000">　　vlEvaluate -= cucvlPiecePos[PIECE_TYPE(pc)][SQUARE_FLIP(sq)];</font></dd>
+    <dd><font color="#FF0000">　}</font></dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　这样做太浪费时间了，因为根本没有必要每次都把棋盘扫描一便。在我们的程序里，每走一步棋都会调用两到三次
+        <font face="Times New Roman">AddPiece (</font>放枚棋子<font
+        face="Times New Roman">)</font>和 <font
+        face="Times New Roman">DelPiece (</font>取走一枚棋子<font
+        face="Times New Roman">)</font>，可以趁这个机会更新
+        <font face="Times New Roman">vlEvaluate(</font>将上面代码中红色的部分放到
+        <font face="Times New Roman">AddPiece </font>和 <font
+        face="Times New Roman">DelPiece </font>中<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　对于象棋小巫师来说，这样的局面评价函数已经足够好了。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Arial"><strong>3.2 Alpha-Beta</strong></font><font
+        size="4" face="楷体_GB2312"><strong>搜索复杂吗？</strong></font></dt>
+    <dt><font size="4" face="楷体_GB2312"><strong></strong></font>　</dt>
+    <dt>　　我们可以很容易地写出一个<font
+        face="Times New Roman">Alpha-Beta</font>搜索函数：</dt>
+    <dd>　</dd>
+    <dd>int AlphaBeta(int vlAlpha, int vlBeta, int nDepth) {</dd>
+    <dd>　if (nDepth == 0) {</dd>
+    <dd>　　return 局面评价函数;</dd>
+    <dd>　}</dd>
+    <dd>　生成全部走法;</dd>
+    <dd>　排序全部走法;</dd>
+    <dd>　for (每个生成的走法) {</dd>
+    <dd>　　走这个走法;</dd>
+    <dd>　　int vl = -AlphaBeta(-vlBeta, -vlAlpha, nDepth - 1);</dd>
+    <dd>　　撤消这个走法;　</dd>
+    <dd>　　if (vl &gt;= vlBeta) {</dd>
+    <dd>　　　return vlBeta;</dd>
+    <dd>　　}</dd>
+    <dd>　　if (vl &gt; vlAlpha) {</dd>
+    <dd>　　　vlAlpha = vl;</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　return vlAlpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　但是，这样的程序根本走不出棋来，因为它返回的是一个分数而不是一个走法。另外，我们还发现几个问题：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>排序的依据是什么？</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>是不是每个生成的走法都可以走？</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>没有生成的走法，那么返回<font
+        face="Times New Roman">vlAlpha</font>合理吗？</dt>
+    <dt><font face="Times New Roman"></font>　</dt>
+    <dd>int AlphaBeta(int vlAlpha, int vlBeta, int nDepth) {</dd>
+    <dd>　if (nDepth == 0) {</dd>
+    <dd>　　return 局面评价函数;</dd>
+    <dd>　}</dd>
+    <dd>　生成全部走法;</dd>
+    <dd><font color="#FF0000">　按历史表排序全部走法;</font></dd>
+    <dd>　for (每个生成的走法) {</dd>
+    <dd><font color="#FF0000">　　if (走这个走法不会被将军)
+        {</font></dd>
+    <dd>　　　走这个走法;</dd>
+    <dd>　　　int vl = -AlphaBeta(-vlBeta, -vlAlpha, nDepth -
+        1);</dd>
+    <dd>　　　撤消这个走法;　</dd>
+    <dd>　　　if (vl &gt;= vlBeta) {</dd>
+    <dd><font color="#FF0000">　　　　将这个走法记录到历史表中;</font></dd>
+    <dd>　　　　return vlBeta;</dd>
+    <dd>　　　}</dd>
+    <dd>　　　if (vl &gt; vlAlpha) {</dd>
+    <dd><font color="#FF0000">　　　　设置最佳走法;</font></dd>
+    <dd>　　　　vlAlpha = vl;</dd>
+    <dd>　　　}</dd>
+    <dd><font color="#FF0000">　　}</font></dd>
+    <dd>　}</dd>
+    <dd><font color="#FF0000">　if (没有走过任何走法) {</font></dd>
+    <dd><font color="#FF0000">　　return 杀棋的分数;</font></dd>
+    <dd><font color="#FF0000">　}</font></dd>
+    <dd><font color="#FF0000">　将最佳走法记录到历史表中;</font></dd>
+    <dd><font color="#FF0000">　if (根节点) {</font></dd>
+    <dd><font color="#FF0000">　　最佳走法就是电脑要走的棋;</font></dd>
+    <dd><font color="#FF0000">　}</font></dd>
+    <dd>　return vlAlpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="stepbystep2.htm">电脑象棋循序渐进<font
+        face="Times New Roman">(</font>二<font
+        face="Times New Roman">)</font>：让电脑掌握象棋规则</a></li>
+    <li>下一篇　<a href="stepbystep2.htm">电脑象棋循序渐进<font
+        face="Times New Roman">(</font>四<font
+        face="Times New Roman">)</font>：向水平线效应挑战</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.elephantbase.net/" target="_blank"><img
+        src="../elephantbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.elephantbase.net/"
+        target="_blank"><font size="2" face="Arial"><strong>www.elephantbase.net</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
