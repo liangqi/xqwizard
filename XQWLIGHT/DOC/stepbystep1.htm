@@ -47,17 +47,24 @@ content="text/html; charset=gb_2312-80">
     <dt>　　仅仅把棋盘和棋子画到窗口上是不够的，图形界面的另一个作用是让用户走棋。走棋的操作应该是非常简单的——用鼠标点击一枚棋子，该棋子就被选中<font
         face="Times New Roman">(</font>上面有个标记<font
         face="Times New Roman">)</font>，用户想让这枚棋子走到哪个位置，就用鼠标点击哪个位置。因此，操作过程可分为两状态：</dt>
-    <dt>　　<font face="Times New Roman">A. </font>让用户选子的状态，只能点击自己的子；</dt>
-    <dt>　　<font face="Times New Roman">B. </font>让用户落子的状态，如果点击自己的子，那么被选中的子改变了，如果点击对方的子或空格处，那么可以走这步棋。</dt>
+    <dt>　　<font face="Times New Roman">A. </font>让用户选子的状态：只能点击自己的子；</dt>
+    <dt>　　<font face="Times New Roman">B. </font>让用户落子的状态：如果点击自己的子，那么被选中的子改变了；如果点击对方的子或空格处，那么可以走这步棋。</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><img src="select.gif" width="265" height="145"></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
     <dt>　　这样，鼠标点击事件<font
         face="Times New Roman">(WM_LBUTTONDOWN</font>消息<font
         face="Times New Roman">)</font>的处理过程就可以写成：</dt>
     <dd>　</dd>
     <dd>if (点击自己的子) {</dd>
-    <dd>　把点击的子选中; // 进入状态A</dd>
+    <dd>　把点击的子选中; // 进入状态B(已选中)</dd>
     <dd>} else if (已经有子选中) {</dd>
     <dd>　可以走这步棋(刚才选中位置-&gt;现在点击的位置);
-        // 进入状态B</dd>
+        // 进入状态A(未选中)</dd>
     <dd>}</dd>
     <dt>　</dt>
     <dt>　　那么，如何把一枚棋子画在棋盘上呢？实际上只要用<font
