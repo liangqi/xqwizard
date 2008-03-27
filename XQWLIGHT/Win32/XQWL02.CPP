@@ -377,8 +377,6 @@ BOOL PositionStruct::MakeMove(int mv) {
   return TRUE;
 }
 
-// 撤消走一步棋
-
 // 生成所有走法
 int PositionStruct::GenerateMoves(int *mvs) const {
   int i, j, nGenMoves, nDelta, sqSrc, sqDst;

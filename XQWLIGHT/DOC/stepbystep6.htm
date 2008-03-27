@@ -1,0 +1,82 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>电脑象棋循序渐进(六)：质的飞跃</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">电脑象棋循序渐进</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>黄晨 <font face="Times New Roman">*</font>　<font
+        face="Times New Roman">2008</font>年<font
+        face="Times New Roman">3</font>月</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">( * </font>上海计算机博弈研究所，<font
+        face="Times New Roman">eMail</font>：<a
+        href="mailto:webmaster@elephantbase.net"><font
+        face="Times New Roman">webmaster@elephantbase.net</font></a><font
+        face="Times New Roman">)</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><strong>(</strong></font><font
+        size="5" face="楷体_GB2312"><strong>六</strong></font><font
+        size="5" face="Arial"><strong>) </strong></font><font
+        size="5" face="楷体_GB2312"><strong>质的飞跃</strong></font></dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Arial"><strong>6.1 </strong></font><font
+        size="4" face="楷体_GB2312"><strong>置换表</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　没有置换表，就称不上是完整的计算机博弈程序。</dt>
+    <dt>　　象棋小巫师的置换表非常简单，每个置换表项存储的内容无非就是：A.
+        深度，B. 标志，C. 分值，D. 最佳走法，E.
+        Zobrist校验码。置换表的处理函数也很传统——一个
+        ProbeHash 和一个 RecordHash 就足够了。</dt>
+    <dt>　　先说 RecordHash。即便采用深度优先的替换策略，RecordHash
+        也非常简单，在判断深度后，将 Hash
+        表项中的每个值填上就是了。</dt>
+    <dt>　　再看看 ProbeHash
+        是如何利用置换表信息的：</dt>
+    <dt>　　(1) 如果</dt>
+    <dt>　</dt>
+    <dt>6.2 杀棋分数调整</dt>
+    <dt>　</dt>
+    <dt>　　象棋小巫师从学会走棋开始，就已经考虑了杀棋分数。不过增加了置换表以后，这个分数要进行调整——置换表中的分值不能是距离根节点的杀棋分值，而是距离当前(置换表项)节点的分值。所以当分值接近<font
+        face="Times New Roman">INFINITY</font>或<font
+        face="Times New Roman">-INFINITY</font>时，ProbeHash
+        和 RecordHash 都要做细微的调整。</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="stepbystep5.htm">电脑象棋循序渐进<font
+        face="Times New Roman">(</font>五<font
+        face="Times New Roman">)</font>：稍微聪明些了</a></li>
+    <li>下一篇　<a href="stepbystep7.htm">电脑象棋循序渐进<font
+        face="Times New Roman">(</font>七<font
+        face="Times New Roman">)</font>：精益求精</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.elephantbase.net/" target="_blank"><img
+        src="../elephantbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.elephantbase.net/"
+        target="_blank"><font size="2" face="Arial"><strong>www.elephantbase.net</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
