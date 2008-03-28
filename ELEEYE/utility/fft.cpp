@@ -71,7 +71,7 @@ void Fft(complex *lpDst, const complex *lpSrc, const complex *lpExp, int nLen) {
   }
 }
 
-void RealFft::exec(complex *lpDst, const double *lpSrc) {
+void RealFft::Exec(complex *lpDst, const double *lpSrc) {
   int i, nLen2;
   complex z;
   if (nLen == 1) {
@@ -95,13 +95,13 @@ void RealFft::exec(complex *lpDst, const double *lpSrc) {
   }
 }
 
-void InvRealFft::exec(double *lpDst, const complex *lpSrc) {
+void InvRealFft::Exec(double *lpDst, const complex *lpSrc) {
   int i, nLen;
   nLen = rf.nLen;
   for (i = 0; i < nLen; i ++) {
     lpDst[i] = lpSrc[i].re + lpSrc[i].im;
   }
-  rf.exec(lpTemp2, lpDst);
+  rf.Exec(lpTemp2, lpDst);
   for (i = 0; i < nLen; i ++) {
     lpDst[i] = (lpTemp2[i].re - lpTemp2[i].im) / nLen;
   }

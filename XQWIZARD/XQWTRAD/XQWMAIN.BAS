@@ -324,6 +324,7 @@ Else
     szFileName = Replace(szFileName, ":", "：")
     szFileName = Replace(szFileName, "*", "＊")
     szFileName = Replace(szFileName, "?", "？")
+    ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
     szFileName = Replace(szFileName, Chr(34), "'")
     szFileName = Replace(szFileName, "<", "＜")
     szFileName = Replace(szFileName, ">", "＞")

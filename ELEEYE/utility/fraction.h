@@ -6,197 +6,200 @@
 const Bool SKIP_REDUCE = TRUE;
 const int DEFAULT_PRECISION = 4;
 
-extern int AutoReduce, DefaultPrecision;
+extern Bool bAutoReduce;
+extern int nDefaultPrecision;
 
 struct Fraction {
-  int Num, Den;
+  int nNum, nDen;
+
   void Reduce(void);
   Fraction(void) {
+    // Do Nothing
   }
-  Fraction(int Arg1, int Arg2 = 1, Bool SkipReduce = FALSE) {
-    Num = Arg1;
-    Den = Arg2;
-    if (AutoReduce && !SkipReduce) {
+  Fraction(int n1, int n2 = 1, Bool bSkipReduce = FALSE) {
+    nNum = n1;
+    nDen = n2;
+    if (bAutoReduce && !bSkipReduce) {
       Reduce();
     }
   }
-  Fraction(double Arg, int Precision = DefaultPrecision);
+  Fraction(double df, int nPrecision = nDefaultPrecision);
   Fraction operator +(void) const {
     return *this;
   }
   operator int(void) const {
-    return Num / Den;
+    return nNum / nDen;
   }
   operator double(void) const {
-    return (double) Num / Den;
+    return (double) nNum / nDen;
   }
   Fraction operator -(void) const {
-    return Fraction(-Num, Den, SKIP_REDUCE);
+    return Fraction(-nNum, nDen, SKIP_REDUCE);
   }
-  int operator <(Fraction Arg) const {
-    return Den * Arg.Den < 0 ? Num * Arg.Den > Arg.Num * Den : Num * Arg.Den < Arg.Num * Den;
+  int operator <(Fraction fract) const {
+    return nDen * fract.nDen < 0 ? nNum * fract.nDen > fract.nNum * nDen : nNum * fract.nDen < fract.nNum * nDen;
   }
-  int operator <=(Fraction Arg) const {
-    return Den * Arg.Den < 0 ? Num * Arg.Den >= Arg.Num * Den : Num * Arg.Den <= Arg.Num * Den;
+  int operator <=(Fraction fract) const {
+    return nDen * fract.nDen < 0 ? nNum * fract.nDen >= fract.nNum * nDen : nNum * fract.nDen <= fract.nNum * nDen;
   }
-  int operator >(Fraction Arg) const {
-    return Den * Arg.Den < 0 ? Num * Arg.Den < Arg.Num * Den : Num * Arg.Den > Arg.Num * Den;
+  int operator >(Fraction fract) const {
+    return nDen * fract.nDen < 0 ? nNum * fract.nDen < fract.nNum * nDen : nNum * fract.nDen > fract.nNum * nDen;
   }
-  int operator >=(Fraction Arg) const {
-    return Den * Arg.Den < 0 ? Num * Arg.Den <= Arg.Num * Den : Num * Arg.Den >= Arg.Num * Den;
+  int operator >=(Fraction fract) const {
+    return nDen * fract.nDen < 0 ? nNum * fract.nDen <= fract.nNum * nDen : nNum * fract.nDen >= fract.nNum * nDen;
   }
-  int operator ==(Fraction Arg) const {
-    return Num * Arg.Den == Arg.Num * Den;
+  int operator ==(Fraction fract) const {
+    return nNum * fract.nDen == fract.nNum * nDen;
   }
-  int operator !=(Fraction Arg) const {
-    return Num * Arg.Den != Arg.Num * Den;
+  int operator !=(Fraction fract) const {
+    return nNum * fract.nDen != fract.nNum * nDen;
   }
-  int operator <(int Arg) const {
-    return Den < 0 ? Num > Arg * Den : Num < Arg * Den;
+  int operator <(int n) const {
+    return nDen < 0 ? nNum > n * nDen : nNum < n * nDen;
   }
-  int operator <=(int Arg) const {
-    return Den < 0 ? Num >= Arg * Den : Num <= Arg * Den;
+  int operator <=(int n) const {
+    return nDen < 0 ? nNum >= n * nDen : nNum <= n * nDen;
   }
-  int operator >(int Arg) const {
-    return Den < 0 ? Num < Arg * Den : Num > Arg * Den;
+  int operator >(int n) const {
+    return nDen < 0 ? nNum < n * nDen : nNum > n * nDen;
   }
-  int operator >=(int Arg) const {    
-    return Den < 0 ? Num <= Arg * Den : Num >= Arg * Den;
+  int operator >=(int n) const {    
+    return nDen < 0 ? nNum <= n * nDen : nNum >= n * nDen;
   }
-  int operator ==(int Arg) const {
-    return Num == Arg * Den;
+  int operator ==(int n) const {
+    return nNum == n * nDen;
   }
-  int operator !=(int Arg) const {
-    return Num != Arg * Den;
+  int operator !=(int n) const {
+    return nNum != n * nDen;
   }
-  Fraction operator +(Fraction Arg) const {
-    return Fraction(Num * Arg.Den + Arg.Num * Den, Den * Arg.Den);
+  Fraction operator +(Fraction fract) const {
+    return Fraction(nNum * fract.nDen + fract.nNum * nDen, nDen * fract.nDen);
   }
-  Fraction operator -(Fraction Arg) const {
-    return Fraction(Num * Arg.Den - Arg.Num * Den, Den * Arg.Den);
+  Fraction operator -(Fraction fract) const {
+    return Fraction(nNum * fract.nDen - fract.nNum * nDen, nDen * fract.nDen);
   }
-  Fraction operator *(Fraction Arg) const {
-    return Fraction(Num * Arg.Num, Den * Arg.Den);
+  Fraction operator *(Fraction fract) const {
+    return Fraction(nNum * fract.nNum, nDen * fract.nDen);
   }
-  Fraction operator /(Fraction Arg) const {
-    return Fraction(Num * Arg.Den, Arg.Num * Den);
+  Fraction operator /(Fraction fract) const {
+    return Fraction(nNum * fract.nDen, fract.nNum * nDen);
   }
-  Fraction operator +(int Arg) const {
-    return Fraction(Num + Arg * Den, Den, SKIP_REDUCE);
+  Fraction operator +(int n) const {
+    return Fraction(nNum + n * nDen, nDen, SKIP_REDUCE);
   }
-  Fraction operator -(int Arg) const {
-    return Fraction(Num - Arg * Den, Den, SKIP_REDUCE);
+  Fraction operator -(int n) const {
+    return Fraction(nNum - n * nDen, nDen, SKIP_REDUCE);
   }
-  Fraction operator *(int Arg) const {
-    return Fraction(Num * Arg, Den);
+  Fraction operator *(int n) const {
+    return Fraction(nNum * n, nDen);
   }
-  Fraction operator /(int Arg) const {
-    return Fraction(Num, Den * Arg);
+  Fraction operator /(int n) const {
+    return Fraction(nNum, nDen * n);
   }
-  Fraction &operator +=(Fraction Arg) {
-    Num *= Arg.Den;
-    Num += Arg.Num * Den;
-    Den *= Arg.Den;
-    if (AutoReduce) {
+  Fraction &operator +=(Fraction fract) {
+    nNum *= fract.nDen;
+    nNum += fract.nNum * nDen;
+    nDen *= fract.nDen;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
-  Fraction &operator -=(Fraction Arg) {
-    Num *= Arg.Den;
-    Num -= Arg.Num * Den;
-    Den *= Arg.Den;
-    if (AutoReduce) {
+  Fraction &operator -=(Fraction fract) {
+    nNum *= fract.nDen;
+    nNum -= fract.nNum * nDen;
+    nDen *= fract.nDen;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
-  Fraction &operator *=(Fraction Arg) {
-    Num *= Arg.Num;
-    Den *= Arg.Den;
-    if (AutoReduce) {
+  Fraction &operator *=(Fraction fract) {
+    nNum *= fract.nNum;
+    nDen *= fract.nDen;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
-  Fraction &operator /=(Fraction Arg) {
-    Num *= Arg.Den;
-    Den *= Arg.Num;
-    if (AutoReduce) {
+  Fraction &operator /=(Fraction fract) {
+    nNum *= fract.nDen;
+    nDen *= fract.nNum;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
-  Fraction &operator +=(int Arg) {
-    Num += Arg * Den;
+  Fraction &operator +=(int n) {
+    nNum += n * nDen;
     return *this;
   }
-  Fraction &operator -=(int Arg) {
-    Num -= Arg * Den;
+  Fraction &operator -=(int n) {
+    nNum -= n * nDen;
     return *this;
   }
-  Fraction &operator *=(int Arg) {
-    Num *= Arg;
-    if (AutoReduce) {
+  Fraction &operator *=(int n) {
+    nNum *= n;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
-  Fraction &operator /=(int Arg) {
-    Den *= Arg;
-    if (AutoReduce) {
+  Fraction &operator /=(int n) {
+    nDen *= n;
+    if (bAutoReduce) {
       Reduce();
     }
     return *this;
   }
   Fraction operator ++(void) {
-    Num += Den;
+    nNum += nDen;
     return *this;
   }
   Fraction operator --(void) {
-    Num -= Den;
+    nNum -= nDen;
     return *this;
   }
-};
+}; // fract
 
-inline int operator <(int Arg1, Fraction Arg2) {
-  return Arg2.Den < 0 ? Arg1 * Arg2.Den > Arg2.Num : Arg1 * Arg2.Den < Arg2.Num;
+inline int operator <(int n, Fraction fract) {
+  return fract.nDen < 0 ? n * fract.nDen > fract.nNum : n * fract.nDen < fract.nNum;
 }
 
-inline int operator <=(int Arg1, Fraction Arg2) {
-  return Arg2.Den < 0 ? Arg1 * Arg2.Den >= Arg2.Num : Arg1 * Arg2.Den <= Arg2.Num;
+inline int operator <=(int n, Fraction fract) {
+  return fract.nDen < 0 ? n * fract.nDen >= fract.nNum : n * fract.nDen <= fract.nNum;
 }
 
-inline int operator >(int Arg1, Fraction Arg2) {
-  return Arg2.Den < 0 ? Arg1 * Arg2.Den < Arg2.Num : Arg1 * Arg2.Den > Arg2.Num;
+inline int operator >(int n, Fraction fract) {
+  return fract.nDen < 0 ? n * fract.nDen < fract.nNum : n * fract.nDen > fract.nNum;
 }
 
-inline int operator >=(int Arg1, Fraction Arg2) {
-  return Arg2.Den < 0 ? Arg1 * Arg2.Den <= Arg2.Num : Arg1 * Arg2.Den >= Arg2.Num;
+inline int operator >=(int n, Fraction fract) {
+  return fract.nDen < 0 ? n * fract.nDen <= fract.nNum : n * fract.nDen >= fract.nNum;
 }
 
-inline int operator ==(int Arg1, Fraction Arg2) {
-  return Arg1 * Arg2.Den == Arg2.Num;
+inline int operator ==(int n, Fraction fract) {
+  return n * fract.nDen == fract.nNum;
 }
 
-inline int operator !=(int Arg1, Fraction Arg2) {
-  return Arg1 * Arg2.Den != Arg2.Num;
+inline int operator !=(int n, Fraction fract) {
+  return n * fract.nDen != fract.nNum;
 }
 
-inline Fraction operator +(int Arg1, Fraction Arg2) {
-  return Fraction(Arg1 * Arg2.Den + Arg2.Num, Arg2.Den, SKIP_REDUCE);
+inline Fraction operator +(int n, Fraction fract) {
+  return Fraction(n * fract.nDen + fract.nNum, fract.nDen, SKIP_REDUCE);
 }
 
-inline Fraction operator -(int Arg1, Fraction Arg2) {
-  return Fraction(Arg1 * Arg2.Den - Arg2.Num, Arg2.Den, SKIP_REDUCE);
+inline Fraction operator -(int n, Fraction fract) {
+  return Fraction(n * fract.nDen - fract.nNum, fract.nDen, SKIP_REDUCE);
 }
 
-inline Fraction operator *(int Arg1, Fraction Arg2) {
-  return Fraction(Arg1 * Arg2.Num, Arg2.Den);
+inline Fraction operator *(int n, Fraction fract) {
+  return Fraction(n * fract.nNum, fract.nDen);
 }
 
-inline Fraction operator /(int Arg1, Fraction Arg2) {
-  return Fraction(Arg1 * Arg2.Den, Arg2.Num);
+inline Fraction operator /(int n, Fraction fract) {
+  return Fraction(n * fract.nDen, fract.nNum);
 }
 
 #endif

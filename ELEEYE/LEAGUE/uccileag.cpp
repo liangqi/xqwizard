@@ -564,6 +564,7 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForc
   if (lppgn->nResult == 0) {
     fprintf(fp, "            <param name=\"Step\" value=\"%d\">\n", lppgn->nMaxMove);
   }
+  fprintf(fp, "            请登录<a href=\"http://www.java.com/\" target=\"_blank\">www.java.com</a>下载Java运行包\n");
   fprintf(fp, "          </applet>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");

@@ -1,54 +1,52 @@
 #include "base.h"
 #include "fraction.h"
 
-int AutoReduce = 1;
-int DefaultPrecision = DEFAULT_PRECISION;
+Bool bAutoReduce = TRUE;
+int nDefaultPrecision = DEFAULT_PRECISION;
 
 void Fraction::Reduce(void) {
-  int TempNum, TempDen;
-  if (Den < 0) {
-    Den = -Den;
-    Num = -Num;
+  int nTempNum, nTempDen;
+  if (nDen < 0) {
+    nDen = -nDen;
+    nNum = -nNum;
   }
-  TempNum = ABS(Num);
-  TempDen = Den;
-  while (TempNum != 0 && TempDen != 0) {
-    if (TempNum > TempDen) {
-      TempNum %= TempDen;
+  nTempNum = ABS(nNum);
+  nTempDen = nDen;
+  while (nTempNum != 0 && nTempDen != 0) {
+    if (nTempNum > nTempDen) {
+      nTempNum %= nTempDen;
     } else {
-      TempDen %= TempNum;
+      nTempDen %= nTempNum;
     }
   }
-  if (TempNum == 0) {
-    TempNum = TempDen;
+  if (nTempNum == 0) {
+    nTempNum = nTempDen;
   }
-  Num /= TempNum;
-  Den /= TempNum;
+  nNum /= nTempNum;
+  nDen /= nTempNum;
 }
 
 const int MAX_PRECISION = 32;
 
-Fraction::Fraction(double Arg, int Precision) {
-  int i, TempNum, TempDen;
-  double Remainder;
-  int Series[MAX_PRECISION];
-  Remainder = Arg;
-  for (i = 0; i <= Precision; i ++) {
-    Series[i] = (int) (Remainder + (Remainder < 0 ? -0.5 : 0.5));
-    Remainder -= Series[i];
-    Remainder = 1.0 / Remainder;
+Fraction::Fraction(double df, int nPrecision) {
+  int i, nTempNum, nTempDen;
+  int nSequence[MAX_PRECISION];
+  for (i = 0; i <= nPrecision; i ++) {
+    nSequence[i] = (int) (df + (df < 0 ? -0.5 : 0.5));
+    df -= nSequence[i];
+    df = 1.0 / df;
   }
-  TempNum = Series[Precision];
-  TempDen = 1;
-  for (i = Precision - 1; i >= 0; i --) {
-    Swap(TempNum, TempDen);
-    TempNum += TempDen * Series[i];
+  nTempNum = nSequence[nPrecision];
+  nTempDen = 1;
+  for (i = nPrecision - 1; i >= 0; i --) {
+    SWAP(nTempNum, nTempDen);
+    nTempNum += nTempDen * nSequence[i];
   }
-  if (TempDen < 0) {
-    Num = -TempNum;
-    Den = -TempDen;
+  if (nTempDen < 0) {
+    nNum = -nTempNum;
+    nDen = -nTempDen;
   } else {
-    Num = TempNum;
-    Den = TempDen;
+    nNum = nTempNum;
+    nDen = nTempDen;
   }
 }

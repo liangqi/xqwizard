@@ -314,51 +314,24 @@ End Function
 Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
 Dim szFileName As String, szFilter As String
-1010:
-On Error GoTo lnBugReport ' DEBUG
-1020:
 szFilter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
-1030:
 If szSave = "" Then
-1040:
     szFileName = OpenFileDialog(szTitle, szFilter)
-1050:
 Else
-1060:
     szFileName = szSave
-1070:
     szFileName = Replace(szFileName, "\", "＼")
-1080:
     szFileName = Replace(szFileName, "/", "／")
-1090:
     szFileName = Replace(szFileName, ":", "：")
-1100:
     szFileName = Replace(szFileName, "*", "＊")
-1110:
     szFileName = Replace(szFileName, "?", "？")
-1121:
     ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
     szFileName = Replace(szFileName, Chr(34), "'")
-1130:
     szFileName = Replace(szFileName, "<", "＜")
-1140:
     szFileName = Replace(szFileName, ">", "＞")
-1150:
     szFileName = Replace(szFileName, "|", "｜")
-1160:
     szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt)
-1170:
 End If
-1180:
 FileDialog = szFileName
-1190:
-On Error GoTo 0 ' DEBUG
-
-Exit Function ' DEBUG
-lnBugReport: ' DEBUG
-MsgBox "象棋巫师遇到致命错误，我们对此引起的不便表示抱歉。强烈建议您将错误报告发送给象棋巫师开发团队，我们将此报告视为保密的和匿名的。感谢您对象棋巫师的支持。", vbExclamation
-ShellExecuteA 0, vbNullString, "mailto:webmaster@elephantbase.net?subject=象棋巫师错误报告&body=XQWMAIN.BAS 在第" + Str(Erl) + " 行发生错误", vbNullString, vbNullString, SW_SHOWNORMAL
-End
 
 End Function
 

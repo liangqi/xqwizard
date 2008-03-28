@@ -18,6 +18,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef XQFFILE_H
+#define XQFFILE_H
+
 struct XqfHeaderStruct {
   char szTag[16];
   char szPiecePos[32];
@@ -42,3 +45,5 @@ struct XqfHeaderStruct {
 struct XqfMoveStruct {
   unsigned char ucSrc, ucDst, ucTag, ucReserved;
 }; // xqfmv
+
+#endif

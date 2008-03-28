@@ -12,10 +12,11 @@ struct FftBigIntMul {
   complex *cDst, *cSrc1, *cSrc2;
 
   FftBigIntMul(void) {
+    // Do Nothing
   }
 
   FftBigIntMul(int nLenParam) {
-    init(nLenParam);
+    Init(nLenParam);
   }
 
   ~FftBigIntMul(void) {
@@ -27,10 +28,10 @@ struct FftBigIntMul {
     delete[] cSrc2;
   }
 
-  void init(int nLenParam) {
+  void Init(int nLenParam) {
     int nLen = nLenParam * 4;
-    rf.init(nLen);
-    irf.init(nLen);
+    rf.Init(nLen);
+    irf.Init(nLen);
     dfDst = new double[nLen];
     dfSrc1 = new double[nLen];
     dfSrc2 = new double[nLen];
@@ -39,10 +40,10 @@ struct FftBigIntMul {
     cSrc2 = new complex[nLen];
   }
 
-  void exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2);
+  void Exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2);
 };
 
-void FftBigIntMul::exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2) {
+void FftBigIntMul::Exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2) {
   int i, dw, nLen, nLen2;
   unsigned short *lpwDst;
   const unsigned short *lpcwSrc1, *lpcwSrc2;
@@ -58,12 +59,12 @@ void FftBigIntMul::exec(unsigned long *lpDst, const unsigned long *lpSrc1, const
     dfSrc2[i] = lpcwSrc2[i];
     dfSrc2[nLen2 + i] = 0.0;
   }
-  rf.exec(cSrc1, dfSrc1);
-  rf.exec(cSrc2, dfSrc2);
+  rf.Exec(cSrc1, dfSrc1);
+  rf.Exec(cSrc2, dfSrc2);
   for (i = 0; i < nLen; i ++) {
     cDst[i] = cSrc1[i] * cSrc2[i];
   }
-  irf.exec(dfDst, cDst);
+  irf.Exec(dfDst, cDst);
   dw = 0;
   for (i = 0; i < nLen; i ++) {
     dfDst[i] += dw;
@@ -103,7 +104,7 @@ int main(void) {
     printf("%5d  %5d", nArrLen * 32, tb.GetTimer() * 1000 / TEST_TIMES);
     tb.Init();
     for (i = 0; i < TEST_TIMES; i ++) {
-      fbim.exec(lpDst2, lpSrc1, lpSrc2);
+      fbim.Exec(lpDst2, lpSrc1, lpSrc2);
     }
     printf(" %5d\n", tb.GetTimer() * 1000 / TEST_TIMES);
     for (i = 0; i < nArrLen * 2; i ++) {

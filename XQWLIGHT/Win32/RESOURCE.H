@@ -1,3 +1,6 @@
+#ifndef RESOURCE_H
+#define RESOURCE_H
+
 #define IDI_APPICON    100
 
 #define IDB_BOARD      200
@@ -34,3 +37,5 @@
 #define IDM_FILE_BLACK 402
 #define IDM_FILE_EXIT  403
 #define IDM_HELP_ABOUT 404
+
+#endif

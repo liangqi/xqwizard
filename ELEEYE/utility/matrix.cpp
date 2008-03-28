@@ -1,294 +1,295 @@
-#include "base.h"
 #include "matrix.h"
 
-Matrix Matrix::DelRowCol(int RowStart, int RowLen, int ColStart, int ColLen) const {
-  Matrix RetVal(Row - RowLen, Col - ColLen);
-  RetVal.Load(0, 0, *this, 0, 0, RowStart, ColStart);
-  RetVal.Load(RowStart, 0, *this, RowStart + RowLen, 0, Row - RowStart - RowLen, ColStart);
-  RetVal.Load(0, ColStart, *this, 0, ColStart + ColLen, RowStart, Col - ColStart - ColLen);
-  RetVal.Load(RowStart, ColStart, *this, RowStart + RowLen, ColStart + ColLen, Row - RowStart - RowLen, Col - ColStart - ColLen);
-  return RetVal;
+Matrix Matrix::DelRowCol(int nRowStart, int nRowLen, int nColStart, int nColLen) const {
+  Matrix matrRet(nRow - nRowLen, nCol - nColLen);
+  matrRet.Load(0, 0, *this, 0, 0, nRowStart, nColStart);
+  matrRet.Load(nRowStart, 0, *this, nRowStart + nRowLen, 0, nRow - nRowStart - nRowLen, nColStart);
+  matrRet.Load(0, nColStart, *this, 0, nColStart + nColLen, nRowStart, nCol - nColStart - nColLen);
+  matrRet.Load(nRowStart, nColStart, *this, nRowStart + nRowLen, nColStart + nColLen,
+      nRow - nRowStart - nRowLen, nCol - nColStart - nColLen);
+  return matrRet;
 }
 
-Matrix Matrix::DelRow(int Start, int Len) const {
-  Matrix RetVal(Row - Len, Col);
-  RetVal.Load(0, 0, *this, 0, 0, Start, Col);
-  RetVal.Load(Start, 0, *this, Start + Len, 0, Row - Start - Len, Col);
-  return RetVal;
+Matrix Matrix::DelRow(int nStart, int nLen) const {
+  Matrix matrRet(nRow - nLen, nCol);
+  matrRet.Load(0, 0, *this, 0, 0, nStart, nCol);
+  matrRet.Load(nStart, 0, *this, nStart + nLen, 0, nRow - nStart - nLen, nCol);
+  return matrRet;
 }
 
-Matrix Matrix::DelCol(int Start, int Len) const {
-  Matrix RetVal(Row, Col - Len);
-  RetVal.Load(0, 0, *this, 0, 0, Row, Start);
-  RetVal.Load(0, Start, *this, 0, Start + Len, Row, Col - Start - Len);
-  return RetVal;
+Matrix Matrix::DelCol(int nStart, int nLen) const {
+  Matrix matrRet(nRow, nCol - nLen);
+  matrRet.Load(0, 0, *this, 0, 0, nRow, nStart);
+  matrRet.Load(0, nStart, *this, 0, nStart + nLen, nRow, nCol - nStart - nLen);
+  return matrRet;
 }
 
 Matrix Matrix::operator -(void) const {
   int i, j;
-  Matrix RetVal(Row, Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Col; j ++) {
-      RetVal[i][j] = -(*this)[i][j];
+  Matrix matrRet(nRow, nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < nCol; j ++) {
+      matrRet[i][j] = -(*this)[i][j];
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Matrix::operator +(const Matrix &Matr) const {
+Matrix Matrix::operator +(const Matrix &matr) const {
   int i, j;
-  Matrix RetVal(Row, Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Col; j ++) {
-      RetVal[i][j] = (*this)[i][j] + Matr[i][j];
+  Matrix matrRet(nRow, nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < nCol; j ++) {
+      matrRet[i][j] = (*this)[i][j] + matr[i][j];
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Matrix::operator -(const Matrix &Matr) const {
+Matrix Matrix::operator -(const Matrix &matr) const {
   int i, j;
-  Matrix RetVal(Row, Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Col; j ++) {
-      RetVal[i][j] = (*this)[i][j] - Matr[i][j];
+  Matrix matrRet(nRow, nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < nCol; j ++) {
+      matrRet[i][j] = (*this)[i][j] - matr[i][j];
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Matrix::operator *(double Real) const {
+Matrix Matrix::operator *(double dfReal) const {
   int i, j;
-  Matrix RetVal(Row, Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Col; j ++) {
-      RetVal[i][j] = (*this)[i][j] * Real;
+  Matrix matrRet(nRow, nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < nCol; j ++) {
+      matrRet[i][j] = (*this)[i][j] * dfReal;
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Matrix::operator /(double Real) const {
+Matrix Matrix::operator /(double dfReal) const {
   int i, j;
-  Matrix RetVal(Row, Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Col; j ++) {
-      RetVal[i][j] = (*this)[i][j] / Real;
+  Matrix matrRet(nRow, nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < nCol; j ++) {
+      matrRet[i][j] = (*this)[i][j] / dfReal;
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Matrix::operator *(const Matrix &Matr) const {
+Matrix Matrix::operator *(const Matrix &matr) const {
   int i, j, k;
-  Matrix RetVal(Row, Matr.Col);
-  for (i = 0; i < Row; i ++) {
-    for (j = 0; j < Matr.Col; j ++) {
-      for (k = 0; k < Col; k ++) {
-        RetVal[i][j] += (*this)[i][k] * Matr[k][j];
+  Matrix matrRet(nRow, matr.nCol);
+  for (i = 0; i < nRow; i ++) {
+    for (j = 0; j < matr.nCol; j ++) {
+      for (k = 0; k < nCol; k ++) {
+        matrRet[i][j] += (*this)[i][k] * matr[k][j];
       }
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
 Matrix Matrix::Trans(void) const {
   int i, j;
-  Matrix RetVal(Col, Row);
-  for (i = 0; i < Col; i ++) {
-    for (j = 0; j < Row; j ++) {
-      RetVal[i][j] = (*this)[j][i];
+  Matrix matrRet(nCol, nRow);
+  for (i = 0; i < nCol; i ++) {
+    for (j = 0; j < nRow; j ++) {
+      matrRet[i][j] = (*this)[j][i];
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
 double Matrix::Det(void) const {
-  int i, j, MaxJ;
-  double RetVal, ThisElem, MaxElem;
-  Matrix Temp(*this);
-  RetVal = 1.0;
-  for (i = 0; i < Row; i ++) {
-    // Stage 1:
-    MaxElem = 0.0;
-    MaxJ = i;
-    for (j = i; j < Row; j ++) {
-      ThisElem = ABS(Temp[i][j]);
-      if (ThisElem > MaxElem) {
-        MaxJ = j;
-        MaxElem = ThisElem;
+  int i, j, jMax;
+  double dfRet, dfThis, dfMax;
+  Matrix matrTmp(*this);
+  dfRet = 1.0;
+  for (i = 0; i < nRow; i ++) {
+    // Step 1:
+    dfMax = 0.0;
+    jMax = i;
+    for (j = i; j < nRow; j ++) {
+      dfThis = ABS(matrTmp[i][j]);
+      if (dfThis > dfMax) {
+        jMax = j;
+        dfMax = dfThis;
       }
     }
-    if (MaxElem == 0.0) {
+    if (dfMax == 0.0) {
       return 0.0;
     }
-    if (MaxJ != i) {
-      RetVal = -RetVal;
-      Temp.ColSwap(i, MaxJ);
+    if (jMax != i) {
+      dfRet = -dfRet;
+      matrTmp.ColSwap(i, jMax);
     }
-    // Stage 2:
-    RetVal *= Temp[i][i];
-    Temp.RowMul(i, 1.0 / Temp[i][i], i);
-    for (j = i + 1; j < Row; j ++) {
-      if (Temp[j][i] != 0.0) {
-        RetVal *= Temp[j][i];
-        Temp.RowMul(j, 1.0 / Temp[j][i], i);
-        Temp.RowSub(j, i, i);
+    // Step 2:
+    dfRet *= matrTmp[i][i];
+    matrTmp.RowMul(i, 1.0 / matrTmp[i][i], i);
+    for (j = i + 1; j < nRow; j ++) {
+      if (matrTmp[j][i] != 0.0) {
+        dfRet *= matrTmp[j][i];
+        matrTmp.RowMul(j, 1.0 / matrTmp[j][i], i);
+        matrTmp.RowSub(j, i, i);
       }
     }
   }
-  return RetVal;
+  return dfRet;
 }
 
-Matrix Matrix::LeftDiv(const Matrix &Matr) const {
-  int i, j, MaxJ;
-  double ThisElem, MaxElem;
-  int *SwapList;
-  Matrix RetVal(*this), Temp(Matr);
-  SwapList = new int[Row];
-  for (i = 0; i < Row; i ++) {
-    // Stage 1:
-    MaxElem = 0.0;
-    MaxJ = i;
-    for (j = i; j < Row; j ++) {
-      ThisElem = ABS(Temp[i][j]);
-      if (ThisElem > MaxElem) {
-        MaxJ = j;
-        MaxElem = ThisElem;
+Matrix Matrix::LeftDiv(const Matrix &matr) const {
+  int i, j, jMax;
+  double dfThis, dfMax;
+  int *nSwapList;
+  Matrix matrRet(*this), matrTmp(matr);
+  nSwapList = new int[nRow];
+  for (i = 0; i < nRow; i ++) {
+    // Step 1:
+    dfMax = 0.0;
+    jMax = i;
+    for (j = i; j < nRow; j ++) {
+      dfThis = ABS(matrTmp[i][j]);
+      if (dfThis > dfMax) {
+        jMax = j;
+        dfMax = dfThis;
       }
     }
-    if (MaxElem == 0.0) {
-      delete[] SwapList;
-      return Matrix(Row, Row);
+    if (dfMax == 0.0) {
+      delete[] nSwapList;
+      return Matrix(nRow, nRow);
     }
-    SwapList[i] = MaxJ;
-    if (MaxJ != i) {
-      Temp.ColSwap(i, MaxJ);
+    nSwapList[i] = jMax;
+    if (jMax != i) {
+      matrTmp.ColSwap(i, jMax);
     }
-    // Stage 2:
-    RetVal.RowMul(i, 1.0 / Temp[i][i]);
-    Temp.RowMul(i, 1.0 / Temp[i][i], i);
-    for (j = i + 1; j < Row; j ++) {
-      if (Temp[j][i] != 0.0) {
-        RetVal.RowMul(j, 1.0 / Temp[j][i]);        
-        RetVal.RowSub(j, i);
-        Temp.RowMul(j, 1.0 / Temp[j][i], i);
-        Temp.RowSub(j, i, i);
+    // Step 2:
+    matrRet.RowMul(i, 1.0 / matrTmp[i][i]);
+    matrTmp.RowMul(i, 1.0 / matrTmp[i][i], i);
+    for (j = i + 1; j < nRow; j ++) {
+      if (matrTmp[j][i] != 0.0) {
+        matrRet.RowMul(j, 1.0 / matrTmp[j][i]);        
+        matrRet.RowSub(j, i);
+        matrTmp.RowMul(j, 1.0 / matrTmp[j][i], i);
+        matrTmp.RowSub(j, i, i);
       }
     }
   }
-  // Stage 3:
-  for (i = Row - 1; i >= 0; i --) {
+  // Step 3:
+  for (i = nRow - 1; i >= 0; i --) {
     for (j = i - 1; j >= 0; j --) {
-      if (Temp[j][i] != 0.0) {
-        RetVal.RowSubMul(j, i, Temp[j][i]);
+      if (matrTmp[j][i] != 0.0) {
+        matrRet.RowSubMul(j, i, matrTmp[j][i]);
       }
     }
   }
-  // Stage 4:
-  for (i = Row - 1; i >= 0; i --) {
-    if (SwapList[i] != i) {
-      RetVal.RowSwap(i, SwapList[i]);
+  // Step 4:
+  for (i = nRow - 1; i >= 0; i --) {
+    if (nSwapList[i] != i) {
+      matrRet.RowSwap(i, nSwapList[i]);
     }
   }
-  delete[] SwapList;
-  return RetVal;
+  delete[] nSwapList;
+  return matrRet;
 }
 
-Matrix Matrix::RightDiv(const Matrix &Matr) const {
-  int i, j, MaxJ;
-  double ThisElem, MaxElem;
-  int *SwapList;
-  Matrix RetVal(*this), Temp(Matr);
-  SwapList = new int[Col];
-  for (i = 0; i < Col; i ++) {
-    // Stage 1:
-    MaxElem = 0.0;
-    MaxJ = i;
-    for (j = i; j < Col; j ++) {
-      ThisElem = ABS(Temp[j][i]);
-      if (ThisElem > MaxElem) {
-        MaxJ = j;
-        MaxElem = ThisElem;
+Matrix Matrix::RightDiv(const Matrix &matr) const {
+  int i, j, jMax;
+  double dfThis, dfMax;
+  int *nSwapList;
+  Matrix matrRet(*this), matrTmp(matr);
+  nSwapList = new int[nCol];
+  for (i = 0; i < nCol; i ++) {
+    // Step 1:
+    dfMax = 0.0;
+    jMax = i;
+    for (j = i; j < nCol; j ++) {
+      dfThis = ABS(matrTmp[j][i]);
+      if (dfThis > dfMax) {
+        jMax = j;
+        dfMax = dfThis;
       }
     }
-    if (MaxElem == 0.0) {
-      delete[] SwapList;
-      return Matrix(Col, Col);
+    if (dfMax == 0.0) {
+      delete[] nSwapList;
+      return Matrix(nCol, nCol);
     }
-    SwapList[i] = MaxJ;
-    if (MaxJ != i) {
-      Temp.RowSwap(i, MaxJ);
+    nSwapList[i] = jMax;
+    if (jMax != i) {
+      matrTmp.RowSwap(i, jMax);
     }
-    // Stage 2:
-    RetVal.ColMul(i, 1.0 / Temp[i][i]);
-    Temp.ColMul(i, 1.0 / Temp[i][i], i);
-    for (j = i + 1; j < Col; j ++) {
-      if (Temp[i][j] != 0.0) {
-        RetVal.ColMul(j, 1.0 / Temp[i][j]);
-        RetVal.ColSub(j, i);
-        Temp.ColMul(j, 1.0 / Temp[i][j], i);
-        Temp.ColSub(j, i, i);
+    // Step 2:
+    matrRet.ColMul(i, 1.0 / matrTmp[i][i]);
+    matrTmp.ColMul(i, 1.0 / matrTmp[i][i], i);
+    for (j = i + 1; j < nCol; j ++) {
+      if (matrTmp[i][j] != 0.0) {
+        matrRet.ColMul(j, 1.0 / matrTmp[i][j]);
+        matrRet.ColSub(j, i);
+        matrTmp.ColMul(j, 1.0 / matrTmp[i][j], i);
+        matrTmp.ColSub(j, i, i);
       }
     }
   }
-  // Stage 3:
-  for (i = Col - 1; i >= 0; i --) {
+  // Step 3:
+  for (i = nCol - 1; i >= 0; i --) {
     for (j = i - 1; j >= 0; j --) {
-      if (Temp[i][j] != 0.0) {
-        RetVal.ColSubMul(j, i, Temp[i][j]);
+      if (matrTmp[i][j] != 0.0) {
+        matrRet.ColSubMul(j, i, matrTmp[i][j]);
       }
     }
   }
-  // Stage 4:
-  for (i = Col - 1; i >= 0; i --) {
-    if (SwapList[i] != i) {
-      RetVal.ColSwap(i, SwapList[i]);
+  // Step 4:
+  for (i = nCol - 1; i >= 0; i --) {
+    if (nSwapList[i] != i) {
+      matrRet.ColSwap(i, nSwapList[i]);
     }
   }
-  delete[] SwapList;
-  return RetVal;
+  delete[] nSwapList;
+  return matrRet;
 }
 
 Matrix Matrix::Inv(void) const {
   int i;
-  Matrix RetVal(Row, Row);
-  for (i = 0; i < Row; i ++) {
-    RetVal[i][i] = 1.0;
+  Matrix matrRet(nRow, nRow);
+  for (i = 0; i < nRow; i ++) {
+    matrRet[i][i] = 1.0;
   }
-  return RetVal.LeftDiv(*this);
+  return matrRet.LeftDiv(*this);
 }
 
-Matrix operator *(double Real, const Matrix &Matr) {
+Matrix operator *(double dfReal, const Matrix &matr) {
   int i, j;
-  Matrix RetVal(Matr.Row, Matr.Col);
-  for (i = 0; i < Matr.Row; i ++) {
-    for (j = 0; j < Matr.Col; j ++) {
-      RetVal[i][j] = Matr[i][j] * Real;
+  Matrix matrRet(matr.nRow, matr.nCol);
+  for (i = 0; i < matr.nRow; i ++) {
+    for (j = 0; j < matr.nCol; j ++) {
+      matrRet[i][j] = matr[i][j] * dfReal;
     }
   }
-  return RetVal;
+  return matrRet;
 }
 
-Matrix Merge(const Matrix &UpLeft, const Matrix &DownLeft, const Matrix &UpRight, const Matrix &DownRight) {
-  Matrix RetVal(UpLeft.Row + DownLeft.Row, UpLeft.Col + UpRight.Col);
-  RetVal.Load(0, 0, UpLeft, 0, 0, UpLeft.Row, UpLeft.Col);
-  RetVal.Load(UpLeft.Row, 0, DownLeft, 0, 0, DownLeft.Row, DownLeft.Col);
-  RetVal.Load(0, UpLeft.Col, UpRight, 0, 0, UpRight.Row, UpRight.Col);
-  RetVal.Load(UpLeft.Row, UpLeft.Col, DownRight, 0, 0, DownRight.Row, DownRight.Col);
-  return RetVal;
+Matrix Merge(const Matrix &matrTopLeft, const Matrix &matrBottomLeft,
+    const Matrix &matrTopRight, const Matrix &matrBottomRight) {
+  Matrix matrRet(matrTopLeft.nRow + matrBottomLeft.nRow, matrTopLeft.nCol + matrTopRight.nCol);
+  matrRet.Load(0, 0, matrTopLeft, 0, 0, matrTopLeft.nRow, matrTopLeft.nCol);
+  matrRet.Load(matrTopLeft.nRow, 0, matrBottomLeft, 0, 0, matrBottomLeft.nRow, matrBottomLeft.nCol);
+  matrRet.Load(0, matrTopLeft.nCol, matrTopRight, 0, 0, matrTopRight.nRow, matrTopRight.nCol);
+  matrRet.Load(matrTopLeft.nRow, matrTopLeft.nCol, matrBottomRight, 0, 0, matrBottomRight.nRow, matrBottomRight.nCol);
+  return matrRet;
 }
 
-Matrix MergeRow(const Matrix &Up, const Matrix &Down) {
-  Matrix RetVal(Up.Row + Down.Row, Up.Col);
-  RetVal.Load(0, 0, Up, 0, 0, Up.Row, Up.Col);
-  RetVal.Load(Up.Row, 0, Down, 0, 0, Down.Row, Down.Col);
-  return RetVal;
+Matrix MergeRow(const Matrix &matrTop, const Matrix &matrBottom) {
+  Matrix matrRet(matrTop.nRow + matrBottom.nRow, matrTop.nCol);
+  matrRet.Load(0, 0, matrTop, 0, 0, matrTop.nRow, matrTop.nCol);
+  matrRet.Load(matrTop.nRow, 0, matrBottom, 0, 0, matrBottom.nRow, matrBottom.nCol);
+  return matrRet;
 }
 
-Matrix MergeCol(const Matrix &Left, const Matrix &Right) {
-  Matrix RetVal(Left.Row, Left.Col + Right.Col);
-  RetVal.Load(0, 0, Left, 0, 0, Left.Row, Left.Col);
-  RetVal.Load(0, Left.Col, Right, 0, 0, Right.Row, Right.Col);
-  return RetVal;
+Matrix MergeCol(const Matrix &matrLeft, const Matrix &matrRight) {
+  Matrix matrRet(matrLeft.nRow, matrLeft.nCol + matrRight.nCol);
+  matrRet.Load(0, 0, matrLeft, 0, 0, matrLeft.nRow, matrLeft.nCol);
+  matrRet.Load(0, matrLeft.nCol, matrRight, 0, 0, matrRight.nRow, matrRight.nCol);
+  return matrRet;
 }
