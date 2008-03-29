@@ -1124,7 +1124,7 @@ Attribute VB_Exposed = False
 ' POSEDIT.FRM - Source Code for XiangQi Wizard, Part III
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 3.66, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1264,7 +1264,7 @@ End If
 
 End Sub
 
-Private Sub imgSquares_MouseUp(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 Dim sq As Integer, pcSrc As Integer, pcDst As Integer
 If x < 0 Or x > imgSquares(nIndex).Width Or y < 0 Or y > imgSquares(nIndex).Height Then
@@ -1321,7 +1321,7 @@ End If
 
 End Sub
 
-Private Sub imgCaptured_Click(nIndex As Integer)
+Private Sub imgCaptured_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 Dim pc As Integer
 If Edit_sqSelected > 0 Then

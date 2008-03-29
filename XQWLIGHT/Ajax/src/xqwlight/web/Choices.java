@@ -40,8 +40,8 @@ public class Choices {
 	}
 
 	private static List<String> lstMusic = Arrays.asList(new String[] {
-		"古典", "紧张", "风趣", "圆舞曲", "莫扎特一", "莫扎特四", "爱之梦",
-		"月光", "皮尔·金特", "幽默曲", "铃儿响叮当", "仙剑奇侠传", "天策府",
+		"紧张", "风趣", "巴赫", "莫扎特一", "莫扎特四", "贝多芬",
+		"李斯特", "柴可夫斯基", "德沃夏克", "仙剑奇侠传", "望江南",
 	});
 
 	public static List<String> getMusicTypes() {

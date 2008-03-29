@@ -1998,7 +1998,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.61, Last Modified: Dec. 2007
+' Designed by Morning Yellow, Version: 3.66, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2766,7 +2766,7 @@ End Select
 
 End Sub
 
-Private Sub imgSquares_Click(nIndex As Integer)
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 Dim sq As Integer, pc As Integer, bCanPromote As Boolean, mv As Long
 sq = IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)

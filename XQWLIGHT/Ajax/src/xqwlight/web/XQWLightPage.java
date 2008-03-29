@@ -75,8 +75,8 @@ public class XQWLightPage extends WebPage {
 	};
 
 	private static final String[] MUSIC_NAME = {
-		"classic", "express", "funny", "waltz", "mozart1", "mozart4", "lovdream",
-		"moonlite", "anitra", "humour", "jingle", "pal", "cmusic"
+		"express", "funny", "classic", "mozart1", "mozart4", "furelise",
+		"lovdream", "waltz", "humour", "pal", "cmusic"
 	};
 
 	private static ResourceReference createImage(String imageName) {
@@ -305,7 +305,7 @@ public class XQWLightPage extends WebPage {
 		// 1. Start-Up Position ...
 		boolean flipped = getCookieValue("flipped", false);
 		int handicap = getCookieValue("handicap", 0, LEVEL_STRING.length - 1, 0);
-		int musicId = getCookieValue("music", 0, Choices.getMusicTypes().size() - 1, 9);
+		int musicId = getCookieValue("music", 0, Choices.getMusicTypes().size() - 1, 8);
 		cookieFen = getCookieValue("fen");
 		cookieFen = (cookieFen == null ? Position.STARTUP_FEN[handicap] : cookieFen);
 		pos.fromFen(cookieFen);
