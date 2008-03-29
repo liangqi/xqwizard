@@ -399,10 +399,8 @@ class XQWLCanvas extends Canvas {
 		if (phase == PHASE_THINKING) {
 			return;
 		}
-		cursorX = (x - left) / squareSize;
-		cursorY = (y - top) / squareSize;
-		cursorX = Util.MIN_MAX(0, cursorX, 8);
-		cursorY = Util.MIN_MAX(0, cursorY, 9);
+		cursorX = Util.MIN_MAX(0, (x - left) / squareSize, 8);
+		cursorY = Util.MIN_MAX(0, (y - top) / squareSize, 9);
 		clickSquare();
 		repaint();
 		serviceRepaints();

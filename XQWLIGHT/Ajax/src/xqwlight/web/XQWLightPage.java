@@ -61,17 +61,17 @@ public class XQWLightPage extends WebPage {
 		"bk", "ba", "bb", "bn", "br", "bc", "bp", null,
 	};
 
-	private static final String[] SOUND_NAME = {
-		"click", "illegal", "move", "move2", "capture", "capture2",
-		"check", "check2", "win", "draw", "loss",
-	};
-
 	private static final String[] BOARD_NAME = {
 		"wood", "green", "white", "sheet", "canvas", "drops", "qianhong"
 	};
 
 	private static final String[] PIECES_NAME = {
 		"wood", "delicate", "polish"
+	};
+
+	private static final String[] SOUND_NAME = {
+		"click", "illegal", "move", "move2", "capture", "capture2",
+		"check", "check2", "win", "draw", "loss",
 	};
 
 	private static final String[] MUSIC_NAME = {
