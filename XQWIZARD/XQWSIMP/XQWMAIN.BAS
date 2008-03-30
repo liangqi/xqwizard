@@ -3293,7 +3293,7 @@ Do While App_bRunning
                 If Gui_nAdvertIndex > Gui_nAdvertNum Then
                     Gui_nAdvertIndex = 1
                 End If
-                App_frmMain.web.Navigate App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
+                App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
             End If
             nEventIndex = EVENT_GUI
         Case EVENT_GUI ' ΩÁ√Ê

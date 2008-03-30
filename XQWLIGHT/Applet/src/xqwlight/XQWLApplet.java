@@ -24,12 +24,18 @@ package xqwlight;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Button;
+import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Label;
+import java.awt.List;
+import java.awt.Scrollbar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
@@ -51,6 +57,10 @@ public class XQWLApplet extends Applet {
 
 	private static final int PIECE_MARGIN = 8;
 	private static final int SQUARE_SIZE = 56;
+	private static final int BOARD_WIDTH = 521;
+	private static final int BOARD_HEIGHT = 577;
+	private static final int ITEM_WIDTH = 100;
+	private static final int ITEM_HEIGHT = 20;
 
 	private static final String CODE_BASE = "http://www.elephantbase.net/xqwlight/";
 
@@ -78,6 +88,10 @@ public class XQWLApplet extends Applet {
 		"lovdream", "waltz", "humour", "pal", "cmusic"
 	};
 
+	static final String[] LEVEL_TEXT = {
+		"入门", "业余", "专业", "大师", "特级大师"
+	};
+
 	static final URL[][] urlPieces = new URL[PIECES_NAME.length][PIECE_NAME.length];
 	static final URL[] urlSelecteds = new URL[PIECES_NAME.length];
 	static final URL[] urlBoards = new URL[BOARD_NAME.length];
@@ -89,7 +103,8 @@ public class XQWLApplet extends Applet {
 			for (int i = 0; i < PIECES_NAME.length; i ++) {
 				for (int j = 0; j < PIECE_NAME.length; j ++) {
 					urlPieces[i][j] = (PIECE_NAME[j] == null ? null :
-							new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/" + PIECE_NAME[j] + ".gif"));
+							new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/" +
+							PIECE_NAME[j] + ".gif"));
 				}
 			}
 			for (int i = 0; i < PIECES_NAME.length; i ++) {
@@ -114,7 +129,7 @@ public class XQWLApplet extends Applet {
 	AudioClip[] apSounds = new AudioClip[SOUND_NAME.length];
 	AudioClip apMusic;
 
-	Component panel = new Component() {
+	Canvas canvas = new Canvas() {
 		private static final long serialVersionUID = 1L;
 
 		public void paint(Graphics g) {
@@ -128,7 +143,8 @@ public class XQWLApplet extends Applet {
 					if (pc > 0) {
 						g.drawImage(imgPieces[pc], xx, yy, this);
 					}
-					if (sq == sqSelected || sq == Position.SRC(mvLast) || sq == Position.DST(mvLast)) {
+					if (sq == sqSelected || sq == Position.SRC(mvLast) ||
+							sq == Position.DST(mvLast)) {
 						g.drawImage(imgSelected, xx, yy, this);
 					}
 				}
@@ -147,7 +163,9 @@ public class XQWLApplet extends Applet {
 	int handicap = 0, level = 0, board = 0, pieces = 0, music = 8;
 
 	{
-		panel.addMouseListener(new MouseListener() {
+		setLayout(null);
+
+		canvas.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				// Do Nothing
 			}
@@ -172,41 +190,66 @@ public class XQWLApplet extends Applet {
 				// Do Nothing
 			}
 		});
-		panel.setBounds(0, 0, 521, 577);
+		canvas.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+		add(canvas);
 
-		btnMessage.setBounds(130, 278, 260, 20);
 		btnMessage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnMessage.setVisible(false);
 				currentFen = Position.STARTUP_FEN[handicap];
 				restart();
-				panel.repaint();
+				canvas.repaint();
 			}
 		});
+		btnMessage.setBounds(BOARD_WIDTH / 4, (BOARD_HEIGHT - ITEM_HEIGHT) / 2,
+				BOARD_WIDTH / 2, ITEM_HEIGHT);
 		btnMessage.setVisible(false);
+		add(btnMessage);
 
-		Button btnRestart = new Button("Restart");
+		Label lblFlipped = new Label("谁先走？");
+		addItem(lblFlipped, 0);
+		List optFlipped = new List(2);
+		optFlipped.add("我先走");
+		optFlipped.add("电脑先走");
+		optFlipped.select(flipped ? 1 : 0);
+		addItem(optFlipped, 1, 2);
+
+		Label lblHandicap = new Label("先走让子？");
+		addItem(lblHandicap, 3);
+		List optHandicap = new List(4);
+		optHandicap.add("不让子");
+		optHandicap.add("让左马");
+		optHandicap.add("让双马");
+		optHandicap.add("让九子");
+		optHandicap.select(handicap);
+		addItem(optHandicap, 4, 4);
+
+		Button btnRestart = new Button("重新开始");
 		btnRestart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Restart!");
 			}
 		});
-		btnRestart.setBounds(0, 577, 260, 20);
+		addItem(btnRestart, 8);
 
-		Button btnRetract = new Button("Retract");
+		Button btnRetract = new Button("悔棋");
 		btnRetract.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Retract!");
 			}
 		});
-		btnRetract.setBounds(261, 577, 260, 20);
 
-		setLayout(null);
-		add(panel);
-		add(btnMessage);
-		add(btnRestart);
-		add(btnRetract);
-
+		addItem(btnRetract, 9);
+		final Label lblLevel = new Label("级别：" + LEVEL_TEXT[level]);
+		addItem(lblLevel, 10);
+		Scrollbar sbLevel = new Scrollbar(Scrollbar.HORIZONTAL, 0, 1, 0, 5);
+		sbLevel.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				level = e.getValue();
+				lblLevel.setText("级别：" + LEVEL_TEXT[level]);
+			}
+		});
+		addItem(sbLevel, 11);
 	}
 
 	public void init() {
@@ -222,6 +265,15 @@ public class XQWLApplet extends Applet {
 		if (apMusic != null) {
 			apMusic.stop();
 		}
+	}
+
+	void addItem(Component component, int top) {
+		addItem(component, top, 1);
+	}
+
+	void addItem(Component component, int top, int height) {
+		component.setBounds(BOARD_WIDTH, ITEM_HEIGHT * top, ITEM_WIDTH, ITEM_HEIGHT * height);
+		add(component);
 	}
 
 	void clickSquare(int sq_) {
@@ -279,7 +331,7 @@ public class XQWLApplet extends Applet {
 	void drawSquare(int sq) {
 		int x = PIECE_MARGIN + (Position.FILE_X(sq) - Position.FILE_LEFT) * SQUARE_SIZE;
 		int y = PIECE_MARGIN + (Position.RANK_Y(sq) - Position.RANK_TOP) * SQUARE_SIZE;
-		panel.repaint(x, y, SQUARE_SIZE, SQUARE_SIZE);
+		canvas.repaint(x, y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 
 	void showMessage(String message) {
@@ -353,5 +405,8 @@ public class XQWLApplet extends Applet {
 		pos.fromFen(currentFen);
 		retractFen = currentFen;
 		sqSelected = mvLast = 0;
+		if (flipped && pos.sdPlayer == 0) {
+			thinking();
+		}
 	}
 }
