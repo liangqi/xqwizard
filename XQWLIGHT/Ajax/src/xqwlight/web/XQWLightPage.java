@@ -353,12 +353,11 @@ public class XQWLightPage extends WebPage {
 						board.drawSquare(sq, DRAW_SELECTED);
 						board.playSound(RESP_CLICK);
 					} else if (sqSelected > 0) {
-						mvLast = Position.MOVE(sqSelected, sq);
-						if (!pos.legalMove(mvLast)) {
+						int mv = Position.MOVE(sqSelected, sq);
+						if (!pos.legalMove(mv)) {
 							return;
 						}
-						pc = pos.squares[sqSelected];
-						if (!pos.makeMove(mvLast)) {
+						if (!pos.makeMove(mv)) {
 							board.playSound(RESP_ILLEGAL);
 							return;
 						}
@@ -367,9 +366,10 @@ public class XQWLightPage extends WebPage {
 						if (pos.captured()) {
 							pos.setIrrev();
 						}
-						sqSelected = 0;
-						board.drawMove(mvLast, DRAW_SELECTED);
+						board.drawMove(mv, DRAW_SELECTED);
 						board.playSound(response);
+						sqSelected = 0;
+						mvLast = mv;
 						if (getResult(board)) {
 							addCookieValue("fen", null);
 						} else {

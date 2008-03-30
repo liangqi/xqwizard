@@ -494,13 +494,10 @@ class XQWLCanvas extends Canvas {
 		serviceRepaints();
 		mvLast = search.searchMain(1000 << (midlet.level << 1));
 		pos.makeMove(mvLast);
-		int response = RESP_MOVE2;
+		int response = pos.inCheck() ? RESP_CHECK2 :
+				pos.captured() ? RESP_CAPTURE2 : RESP_MOVE2;
 		if (pos.captured()) {
-			response = RESP_CAPTURE2;
 			pos.setIrrev();
-		}
-		if (pos.inCheck()) {
-			response = RESP_CHECK2;
 		}
 		phase = PHASE_WAITING;
 		repaint();
