@@ -25,6 +25,8 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Button;
 import java.awt.Canvas;
+import java.awt.Checkbox;
+import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -36,6 +38,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
@@ -80,13 +84,15 @@ public class XQWLApplet extends Applet {
 
 	private static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
-		"check", "check2", "win", "draw", "loss",
+		"check", "check2", "win", "draw", "loss"
 	};
 
 	private static final String[] MUSIC_NAME = {
 		"express", "funny", "classic", "mozart1", "mozart4", "furelise",
 		"lovdream", "waltz", "humour", "pal", "cmusic"
 	};
+
+	static final int MUSIC_MUTE = MUSIC_NAME.length;
 
 	static final String[] LEVEL_TEXT = {
 		"入门", "业余", "专业", "大师", "特级大师"
@@ -126,8 +132,8 @@ public class XQWLApplet extends Applet {
 
 	Image[] imgPieces = new Image[PIECE_NAME.length];
 	Image imgSelected, imgBoard;
-	AudioClip[] apSounds = new AudioClip[SOUND_NAME.length];
-	AudioClip apMusic;
+	AudioClip[] acSounds = new AudioClip[SOUND_NAME.length];
+	AudioClip acMusic;
 
 	Canvas canvas = new Canvas() {
 		private static final long serialVersionUID = 1L;
@@ -137,6 +143,7 @@ public class XQWLApplet extends Applet {
 			for (int x = Position.FILE_LEFT; x <= Position.FILE_RIGHT; x ++) {
 				for (int y = Position.RANK_TOP; y <= Position.RANK_BOTTOM; y ++) {
 					int sq = Position.COORD_XY(x, y);
+					sq = (flipped ? Position.SQUARE_FLIP(sq) : sq);
 					int xx = PIECE_MARGIN + (x - Position.FILE_LEFT) * SQUARE_SIZE;
 					int yy = PIECE_MARGIN + (y - Position.RANK_TOP) * SQUARE_SIZE;
 					int pc = pos.squares[sq];
@@ -159,7 +166,7 @@ public class XQWLApplet extends Applet {
 	int sqSelected, mvLast;
 
 	volatile boolean thinking = false;
-	boolean flipped = false, mute = false;
+	boolean flipped = false, effect = true;
 	int handicap = 0, level = 0, board = 0, pieces = 0, music = 8;
 
 	{
@@ -206,17 +213,15 @@ public class XQWLApplet extends Applet {
 		btnMessage.setVisible(false);
 		add(btnMessage);
 
-		Label lblFlipped = new Label("谁先走？");
-		addItem(lblFlipped, 0);
-		List optFlipped = new List(2);
+		addItem("谁先走：", 0);
+		final List optFlipped = new List(2);
 		optFlipped.add("我先走");
 		optFlipped.add("电脑先走");
 		optFlipped.select(flipped ? 1 : 0);
 		addItem(optFlipped, 1, 2);
 
-		Label lblHandicap = new Label("先走让子？");
-		addItem(lblHandicap, 3);
-		List optHandicap = new List(4);
+		addItem("先走让子：", 3);
+		final List optHandicap = new List(4);
 		optHandicap.add("不让子");
 		optHandicap.add("让左马");
 		optHandicap.add("让双马");
@@ -227,7 +232,13 @@ public class XQWLApplet extends Applet {
 		Button btnRestart = new Button("重新开始");
 		btnRestart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Restart!");
+				if (!thinking) {
+					flipped = (optFlipped.getSelectedIndex() == 1);
+					handicap = optHandicap.getSelectedIndex();
+					currentFen = Position.STARTUP_FEN[handicap];
+					restart();
+					canvas.repaint();
+				}
 			}
 		});
 		addItem(btnRestart, 8);
@@ -235,36 +246,110 @@ public class XQWLApplet extends Applet {
 		Button btnRetract = new Button("悔棋");
 		btnRetract.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Retract!");
+				if (!thinking) {
+					currentFen = retractFen;
+					restart();
+					canvas.repaint();
+				}
 			}
 		});
-
 		addItem(btnRetract, 9);
+
 		final Label lblLevel = new Label("级别：" + LEVEL_TEXT[level]);
 		addItem(lblLevel, 10);
-		Scrollbar sbLevel = new Scrollbar(Scrollbar.HORIZONTAL, 0, 1, 0, 5);
+		final Scrollbar sbLevel = new Scrollbar(Scrollbar.HORIZONTAL, level, 1, 0, 5);
 		sbLevel.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent e) {
-				level = e.getValue();
+				level = sbLevel.getValue();
 				lblLevel.setText("级别：" + LEVEL_TEXT[level]);
 			}
 		});
 		addItem(sbLevel, 11);
+
+		addItem("棋盘：", -7);
+		final Choice optBoard = new Choice();
+		optBoard.add("栎木");
+		optBoard.add("绿色大理石");
+		optBoard.add("白色大理石");
+		optBoard.add("再生纸");
+		optBoard.add("画布");
+		optBoard.add("水滴");
+		optBoard.add("浅红象棋");
+		optBoard.select(board);
+		optBoard.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				board = optBoard.getSelectedIndex();
+				loadBoard();
+				canvas.repaint();
+			}
+		});
+		addItem(optBoard, -6);
+
+		addItem("棋子：", -5);
+		final Choice optPieces = new Choice();
+		optPieces.add("木刻");
+		optPieces.add("精致");
+		optPieces.add("光泽");
+		optPieces.select(pieces);
+		optPieces.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				pieces = optPieces.getSelectedIndex();
+				loadPieces();
+				canvas.repaint();
+			}
+		});
+		addItem(optPieces, -4);
+
+		final Checkbox chkMute = new Checkbox("音效", effect);
+		chkMute.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				effect = chkMute.getState();
+				playSound(0);
+			}			
+		});
+		addItem(chkMute, -3);
+
+		addItem("音乐：", -2);
+		final Choice optMusic = new Choice();
+		optMusic.add("紧张");
+		optMusic.add("风趣");
+		optMusic.add("巴赫");
+		optMusic.add("莫扎特一");
+		optMusic.add("莫扎特四");
+		optMusic.add("贝多芬");
+		optMusic.add("李斯特");
+		optMusic.add("柴可夫斯基");
+		optMusic.add("德沃夏克");
+		optMusic.add("仙剑奇侠传");
+		optMusic.add("望江南");
+		optMusic.add("无声");
+		optMusic.select(music);
+		optMusic.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				music = optMusic.getSelectedIndex();
+				stopMusic();
+				startMusic();
+			}
+		});
+		addItem(optMusic, -1);
 	}
 
 	public void init() {
+		loadBoard();
+		loadPieces();
 		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			apSounds[i] = getAudioClip(urlSounds[i]);
+			acSounds[i] = getAudioClip(urlSounds[i]);
 		}
-		apMusic = getAudioClip(urlMusics[music]);
-		apMusic.loop();
+		startMusic();
 		restart();
 	}
 
 	public void destroy() {
-		if (apMusic != null) {
-			apMusic.stop();
-		}
+		stopMusic();
+	}
+
+	void addItem(String label, int top) {
+		addItem(new Label(label), top);
 	}
 
 	void addItem(Component component, int top) {
@@ -272,15 +357,51 @@ public class XQWLApplet extends Applet {
 	}
 
 	void addItem(Component component, int top, int height) {
-		component.setBounds(BOARD_WIDTH, ITEM_HEIGHT * top, ITEM_WIDTH, ITEM_HEIGHT * height);
+		if (top < 0) {
+			component.setBounds(BOARD_WIDTH, BOARD_HEIGHT + ITEM_HEIGHT * top, ITEM_WIDTH, ITEM_HEIGHT * height);
+		} else {
+			component.setBounds(BOARD_WIDTH, ITEM_HEIGHT * top, ITEM_WIDTH, ITEM_HEIGHT * height);
+		}
 		add(component);
 	}
 
-	void clickSquare(int sq_) {
-		int sq = sq_;
-		if (flipped) {
-			sq = Position.SQUARE_FLIP(sq);
+	void loadBoard() {
+		imgBoard = getImage(urlBoards[board]);
+	}
+
+	void loadPieces() {
+		for (int i = 0; i < PIECE_NAME.length; i ++) {
+			imgPieces[i] = (urlPieces[pieces][i] == null ? null : getImage(urlPieces[pieces][i]));
 		}
+		imgSelected = getImage(urlSelecteds[pieces]);
+	}
+
+	void startMusic() {
+		if (music == MUSIC_MUTE) {
+			acMusic = null;
+		} else {
+			acMusic = getAudioClip(urlMusics[music]);
+			acMusic.loop();
+		}
+	}
+
+	void stopMusic() {
+		if (acMusic != null) {
+			acMusic.stop();
+		}
+	}
+
+	void restart() {
+		pos.fromFen(currentFen);
+		retractFen = currentFen;
+		sqSelected = mvLast = 0;
+		if (flipped && pos.sdPlayer == 0) {
+			thinking();
+		}
+	}
+
+	void clickSquare(int sq_) {
+		int sq = (flipped ? Position.SQUARE_FLIP(sq_) : sq_);
 		int pc = pos.squares[sq];
 		if ((pc & Position.SIDE_TAG(pos.sdPlayer)) != 0) {
 			if (sqSelected > 0) {
@@ -317,10 +438,11 @@ public class XQWLApplet extends Applet {
 		}
 	}
 
-	void playSound(int response) {
-		if (!mute) {
-			apSounds[response].play();
-		}
+	void drawSquare(int sq_) {
+		int sq = (flipped ? Position.SQUARE_FLIP(sq_) : sq_);
+		int x = PIECE_MARGIN + (Position.FILE_X(sq) - Position.FILE_LEFT) * SQUARE_SIZE;
+		int y = PIECE_MARGIN + (Position.RANK_Y(sq) - Position.RANK_TOP) * SQUARE_SIZE;
+		canvas.repaint(x, y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 
 	void drawMove(int mv) {
@@ -328,10 +450,10 @@ public class XQWLApplet extends Applet {
 		drawSquare(Position.DST(mv));
 	}
 
-	void drawSquare(int sq) {
-		int x = PIECE_MARGIN + (Position.FILE_X(sq) - Position.FILE_LEFT) * SQUARE_SIZE;
-		int y = PIECE_MARGIN + (Position.RANK_Y(sq) - Position.RANK_TOP) * SQUARE_SIZE;
-		canvas.repaint(x, y, SQUARE_SIZE, SQUARE_SIZE);
+	void playSound(int response) {
+		if (effect) {
+			acSounds[response].play();
+		}
 	}
 
 	void showMessage(String message) {
@@ -393,20 +515,5 @@ public class XQWLApplet extends Applet {
 			currentFen = pos.toFen();
 		}
 		return false;
-	}
-
-	void restart() {
-		for (int i = 0; i < PIECE_NAME.length; i ++) {
-			imgPieces[i] = (urlPieces[0][i] == null ? null : getImage(urlPieces[0][i]));
-		}
-		imgSelected = getImage(urlSelecteds[0]);
-		imgBoard = getImage(urlBoards[0]);
-
-		pos.fromFen(currentFen);
-		retractFen = currentFen;
-		sqSelected = mvLast = 0;
-		if (flipped && pos.sdPlayer == 0) {
-			thinking();
-		}
 	}
 }
