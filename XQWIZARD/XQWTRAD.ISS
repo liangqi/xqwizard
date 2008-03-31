@@ -583,8 +583,6 @@ Root: HKCR; Subkey: "XQWizard.CHE\DefaultIcon"; ValueType: string; ValueData: "{
 Root: HKCR; Subkey: "XQWizard.CHE\Shell"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: che
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"

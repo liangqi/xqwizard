@@ -317,7 +317,8 @@ Private Sub Form_Load()
 
 CchessInit
 EccoInitOpenVar
-txtBookFile.Text = GetSetting("XQWizard", "Engine", "BookFiles", "")
+txtBookFile.Text = GetSetting("XQWizard", "Engine", "BookFiles", _
+        App.Path + IIf(Right(App.Path, 1) = "\", "", "\") + "BOOK.DAT")
 Set fs = CreateObject("Scripting.FileSystemObject")
 
 End Sub
