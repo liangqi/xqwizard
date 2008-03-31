@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Streams {
-	private static final int BUFFER_SIZE = 8192;
+	private static final int BUFFER_SIZE = 2048;
 
 	public static void copy(InputStream in, OutputStream out) throws IOException {
 		byte[] buffer = new byte[BUFFER_SIZE];

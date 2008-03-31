@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Random;
 
@@ -427,22 +428,20 @@ public class Position {
 			}
 		}
 		try {
-			byte[] intData = new byte[4];
-			byte[] shortData = new byte[2];
 			InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
-			bookSize = in.available() / 8;
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			Util.copyStream(in, baos);
+			in.close();
+			byte[] bookData = baos.toByteArray();
+			bookSize = bookData.length / 8;
 			bookLock = new int[bookSize];
 			bookMove = new short[bookSize];
 			bookValue = new short[bookSize];
 			for (int i = 0; i < bookSize; i ++) {
-				in.read(intData);
-				bookLock[i] = Util.TO_INT(intData) >>> 1; // Convert into Unsigned
-				in.read(shortData);
-				bookMove[i] = (short) Util.TO_SHORT(shortData);
-				in.read(shortData);
-				bookValue[i] = (short) Util.TO_SHORT(shortData);
+				bookLock[i] = Util.TO_INT(bookData, i * 8) >>> 1; // Convert into Unsigned
+				bookMove[i] = (short) Util.TO_SHORT(bookData, i * 8 + 4);
+				bookValue[i] = (short) Util.TO_SHORT(bookData, i * 8 + 6);
 			}
-			in.close();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage()); // Never Occurs
 		}

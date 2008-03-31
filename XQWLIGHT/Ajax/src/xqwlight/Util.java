@@ -1,5 +1,9 @@
 package xqwlight;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class Util {
 	public static byte[] POP_COUNT_16 = new byte[65536];
 
@@ -17,33 +21,17 @@ public class Util {
 	}
 
 	/** byte[2] (Little Endian) -> short */
-	public static int TO_SHORT(byte[] b) {
-		return ((b[0] & 0xff) | ((b[1] & 0xff) << 8));
+	public static int TO_SHORT(byte[] b, int off) {
+		return ((b[off] & 0xff) | ((b[off + 1] & 0xff) << 8));
 	}
 
-	/** byte[4] (Little Endian) -> long */
-	public static int TO_INT(byte[] b) {
-		return (b[0] & 0xff) | ((b[1] & 0xff) << 8) | ((b[2] & 0xff) << 16) | ((b[3] & 0xff) << 24);
+	/** byte[4] (Little Endian) -> int */
+	public static int TO_INT(byte[] b, int off) {
+		return (b[off] & 0xff) | ((b[off + 1] & 0xff) << 8) | ((b[off + 2] & 0xff) << 16) | ((b[off + 3] & 0xff) << 24);
 	}
 
 	public static int MIN_MAX(int min, int mid, int max) {
 		return mid < min ? min : mid > max ? max : mid;
-	}
-
-	public static int binarySearch(int vl, int[] vls, int from, int to) {
-		int low = from;
-		int high = to - 1;
-		while (low <= high) {
-			int mid = (low + high) / 2;
-			if (vls[mid] < vl) {
-				low = mid + 1;
-			} else if (vls[mid] > vl) {
-				high = mid - 1;
-			} else {
-				return mid;
-			}
-		}
-		return -1;
 	}
 
 	public static class RC4 {
@@ -87,7 +75,34 @@ public class Util {
 		}
 	}
 
-	public static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
+	private static final int BUFFER_SIZE = 2048;
+
+	public static void copyStream(InputStream in, OutputStream out) throws IOException {
+		byte[] buffer = new byte[BUFFER_SIZE];
+		int bytesRead = in.read(buffer);
+		while (bytesRead > 0) {
+			out.write(buffer, 0, bytesRead);
+			bytesRead = in.read(buffer);
+		}
+	}
+
+	public static int binarySearch(int vl, int[] vls, int from, int to) {
+		int low = from;
+		int high = to - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (vls[mid] < vl) {
+				low = mid + 1;
+			} else if (vls[mid] > vl) {
+				high = mid - 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
+	}
+
+	private static final int[] SHELL_STEP = {0, 1, 4, 13, 40, 121, 364, 1093};
 
 	public static void shellSort(int[] mvs, int[] vls, int from, int to) {
 		int stepLevel = 1;

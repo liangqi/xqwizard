@@ -42,7 +42,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.net.URL;
 
 public class XQWLApplet extends Applet {
 	private static final long serialVersionUID = 1L;
@@ -65,8 +64,6 @@ public class XQWLApplet extends Applet {
 	private static final int BOARD_HEIGHT = 577;
 	private static final int ITEM_WIDTH = 100;
 	private static final int ITEM_HEIGHT = 20;
-
-	private static final String CODE_BASE = "http://www.elephantbase.net/xqwlight/";
 
 	private static final String[] PIECE_NAME = {
 		null, null, null, null, null, null, null, null,
@@ -98,37 +95,37 @@ public class XQWLApplet extends Applet {
 		"入门", "业余", "专业", "大师", "特级大师"
 	};
 
-	static final URL[][] urlPieces = new URL[PIECES_NAME.length][PIECE_NAME.length];
-	static final URL[] urlSelecteds = new URL[PIECES_NAME.length];
-	static final URL[] urlBoards = new URL[BOARD_NAME.length];
-	static final URL[] urlSounds = new URL[SOUND_NAME.length];
-	static final URL[] urlMusics = new URL[MUSIC_NAME.length];
-
-	static {
-		try {
-			for (int i = 0; i < PIECES_NAME.length; i ++) {
-				for (int j = 0; j < PIECE_NAME.length; j ++) {
-					urlPieces[i][j] = (PIECE_NAME[j] == null ? null :
-							new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/" +
-							PIECE_NAME[j] + ".gif"));
-				}
-			}
-			for (int i = 0; i < PIECES_NAME.length; i ++) {
-				urlSelecteds[i] = new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/oos.gif");
-			}
-			for (int i = 0; i < BOARD_NAME.length; i ++) {
-				urlBoards[i] = new URL(CODE_BASE + "boards/" + BOARD_NAME[i] + ".gif");
-			}
-			for (int i = 0; i < SOUND_NAME.length; i ++) {
-				urlSounds[i] = new URL(CODE_BASE + "sounds/" + SOUND_NAME[i] + ".wav");
-			}
-			for (int i = 0; i < MUSIC_NAME.length; i ++) {
-				urlMusics[i] = new URL(CODE_BASE + "musics/" + MUSIC_NAME[i] + ".mid");
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+//	static final URL[][] urlPieces = new URL[PIECES_NAME.length][PIECE_NAME.length];
+//	static final URL[] urlSelecteds = new URL[PIECES_NAME.length];
+//	static final URL[] urlBoards = new URL[BOARD_NAME.length];
+//	static final URL[] urlSounds = new URL[SOUND_NAME.length];
+//	static final URL[] urlMusics = new URL[MUSIC_NAME.length];
+//
+//	static {
+//		try {
+//			for (int i = 0; i < PIECES_NAME.length; i ++) {
+//				for (int j = 0; j < PIECE_NAME.length; j ++) {
+//					urlPieces[i][j] = (PIECE_NAME[j] == null ? null :
+//							new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/" +
+//							PIECE_NAME[j] + ".gif"));
+//				}
+//			}
+//			for (int i = 0; i < PIECES_NAME.length; i ++) {
+//				urlSelecteds[i] = new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/oos.gif");
+//			}
+//			for (int i = 0; i < BOARD_NAME.length; i ++) {
+//				urlBoards[i] = new URL(CODE_BASE + "boards/" + BOARD_NAME[i] + ".gif");
+//			}
+//			for (int i = 0; i < SOUND_NAME.length; i ++) {
+//				urlSounds[i] = new URL(CODE_BASE + "sounds/" + SOUND_NAME[i] + ".wav");
+//			}
+//			for (int i = 0; i < MUSIC_NAME.length; i ++) {
+//				urlMusics[i] = new URL(CODE_BASE + "musics/" + MUSIC_NAME[i] + ".mid");
+//			}
+//		} catch (Exception e) {
+//			throw new RuntimeException(e.getMessage());
+//		}
+//	}
 
 	Image[] imgPieces = new Image[PIECE_NAME.length];
 	Image imgSelected, imgBoard;
@@ -172,6 +169,19 @@ public class XQWLApplet extends Applet {
 	{
 		setLayout(null);
 
+		btnMessage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnMessage.setVisible(false);
+				currentFen = Position.STARTUP_FEN[handicap];
+				restart();
+				canvas.repaint();
+			}
+		});
+		btnMessage.setBounds(BOARD_WIDTH / 4, (BOARD_HEIGHT - ITEM_HEIGHT) / 2,
+				BOARD_WIDTH / 2, ITEM_HEIGHT);
+		btnMessage.setVisible(false);
+		add(btnMessage);
+
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				// Do Nothing
@@ -186,7 +196,7 @@ public class XQWLApplet extends Applet {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				if (!thinking) {
+				if (!thinking && !btnMessage.isVisible()) {
 					int x = Util.MIN_MAX(0, (e.getX() - PIECE_MARGIN) / SQUARE_SIZE, 8);
 					int y = Util.MIN_MAX(0, (e.getY() - PIECE_MARGIN) / SQUARE_SIZE, 9);
 					clickSquare(Position.COORD_XY(x + Position.FILE_LEFT, y + Position.RANK_TOP));
@@ -199,19 +209,6 @@ public class XQWLApplet extends Applet {
 		});
 		canvas.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 		add(canvas);
-
-		btnMessage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnMessage.setVisible(false);
-				currentFen = Position.STARTUP_FEN[handicap];
-				restart();
-				canvas.repaint();
-			}
-		});
-		btnMessage.setBounds(BOARD_WIDTH / 4, (BOARD_HEIGHT - ITEM_HEIGHT) / 2,
-				BOARD_WIDTH / 2, ITEM_HEIGHT);
-		btnMessage.setVisible(false);
-		add(btnMessage);
 
 		addItem("谁先走：", 0);
 		final List optFlipped = new List(2);
@@ -338,7 +335,7 @@ public class XQWLApplet extends Applet {
 		loadBoard();
 		loadPieces();
 		for (int i = 0; i < SOUND_NAME.length; i ++) {
-			acSounds[i] = getAudioClip(urlSounds[i]);
+			acSounds[i] = getAudioClip(getCodeBase(), "sounds/" + SOUND_NAME[i] + ".wav");
 		}
 		startMusic();
 		restart();
@@ -366,22 +363,25 @@ public class XQWLApplet extends Applet {
 	}
 
 	void loadBoard() {
-		imgBoard = getImage(urlBoards[board]);
+		imgBoard = getImage(getCodeBase(), "boards/" + BOARD_NAME[board] + ".gif");
 	}
 
 	void loadPieces() {
 		for (int i = 0; i < PIECE_NAME.length; i ++) {
-			imgPieces[i] = (urlPieces[pieces][i] == null ? null : getImage(urlPieces[pieces][i]));
+			imgPieces[i] = (PIECE_NAME[i] == null ? null : getImage(getCodeBase(),
+					"pieces/" + PIECES_NAME[pieces] + "/" + PIECE_NAME[i] + ".gif"));
 		}
-		imgSelected = getImage(urlSelecteds[pieces]);
+		imgSelected = getImage(getCodeBase(), "pieces/" + PIECES_NAME[pieces] + "/oos.gif");
 	}
 
 	void startMusic() {
 		if (music == MUSIC_MUTE) {
 			acMusic = null;
 		} else {
-			acMusic = getAudioClip(urlMusics[music]);
-			acMusic.loop();
+			acMusic = getAudioClip(getCodeBase(), "musics/" + MUSIC_NAME[music] + ".mid");
+			if (acMusic != null) {
+				acMusic.loop();
+			}
 		}
 	}
 
@@ -451,7 +451,7 @@ public class XQWLApplet extends Applet {
 	}
 
 	void playSound(int response) {
-		if (effect) {
+		if (effect && acSounds[response] != null) {
 			acSounds[response].play();
 		}
 	}
