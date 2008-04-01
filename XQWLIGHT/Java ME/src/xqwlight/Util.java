@@ -2,10 +2,13 @@ package xqwlight;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class Util {
-	public static byte[] POP_COUNT_16 = new byte[65536];
+	public static int MIN_MAX(int min, int mid, int max) {
+		return mid < min ? min : mid > max ? max : mid;
+	}
+
+	private static byte[] POP_COUNT_16 = new byte[65536];
 
 	static {
 		for (int i = 0; i < 65536; i ++) {
@@ -20,18 +23,24 @@ public class Util {
 		return POP_COUNT_16[data];
 	}
 
-	/** byte[2] (Little Endian) -> short */
-	public static int TO_SHORT(byte[] b, int off) {
-		return ((b[off] & 0xff) | ((b[off + 1] & 0xff) << 8));
+	public static int readShort(InputStream in) throws IOException {
+		int b0 = in.read();
+		int b1 = in.read();
+		if (b0 == -1 || b1 == -1) {
+			throw new IOException();
+		}
+		return b0 | (b1 << 8);
 	}
 
-	/** byte[4] (Little Endian) -> int */
-	public static int TO_INT(byte[] b, int off) {
-		return (b[off] & 0xff) | ((b[off + 1] & 0xff) << 8) | ((b[off + 2] & 0xff) << 16) | ((b[off + 3] & 0xff) << 24);
-	}
-
-	public static int MIN_MAX(int min, int mid, int max) {
-		return mid < min ? min : mid > max ? max : mid;
+	public static int readInt(InputStream in) throws IOException {
+		int b0 = in.read();
+		int b1 = in.read();
+		int b2 = in.read();
+		int b3 = in.read();
+		if (b0 == -1 || b1 == -1 || b2 == -1 || b3 == -1) {
+			throw new IOException();
+		}
+		return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
 	}
 
 	public static class RC4 {
@@ -72,17 +81,6 @@ public class Util {
 			n2 = nextByte();
 			n3 = nextByte();
 			return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
-		}
-	}
-
-	private static final int BUFFER_SIZE = 2048;
-
-	public static void copyStream(InputStream in, OutputStream out) throws IOException {
-		byte[] buffer = new byte[BUFFER_SIZE];
-		int bytesRead = in.read(buffer);
-		while (bytesRead > 0) {
-			out.write(buffer, 0, bytesRead);
-			bytesRead = in.read(buffer);
 		}
 	}
 

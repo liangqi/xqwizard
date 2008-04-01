@@ -2,7 +2,7 @@
 Position.java - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.21, Last Modified: Jan. 2008
+Designed by Morning Yellow, Version: 1.25, Last Modified: Mar. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Random;
 
@@ -36,6 +35,7 @@ public class Position {
 
 	public static final int MAX_MOVE_NUM = 256;
 	public static final int MAX_GEN_MOVES = 128;
+	public static final int MAX_BOOK_SIZE = 16384;
 
 	public static final int PIECE_KING = 0;
 	public static final int PIECE_ADVISOR = 1;
@@ -412,8 +412,9 @@ public class Position {
 	public static Random random = new Random();
 
 	public static int bookSize;
-	public static int[] bookLock;
-	public static short[] bookMove, bookValue;
+	public static int[] bookLock = new int[MAX_BOOK_SIZE];
+	public static short[] bookMove = new short[MAX_BOOK_SIZE];
+	public static short[] bookValue = new short[MAX_BOOK_SIZE];
 
 	static {
 		Util.RC4 rc4 = new Util.RC4(new byte[] {0});
@@ -427,23 +428,25 @@ public class Position {
 				PreGen_zobristLockTable[i][j] = rc4.nextLong();
 			}
 		}
-		try {
-			InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Util.copyStream(in, baos);
-			in.close();
-			byte[] bookData = baos.toByteArray();
-			bookSize = bookData.length / 8;
-			bookLock = new int[bookSize];
-			bookMove = new short[bookSize];
-			bookValue = new short[bookSize];
-			for (int i = 0; i < bookSize; i ++) {
-				bookLock[i] = Util.TO_INT(bookData, i * 8) >>> 1; // Convert into Unsigned
-				bookMove[i] = (short) Util.TO_SHORT(bookData, i * 8 + 4);
-				bookValue[i] = (short) Util.TO_SHORT(bookData, i * 8 + 6);
+
+		bookSize = 0;
+		InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
+		if (in != null) {
+			try {
+				while (true) {
+					bookLock[bookSize] = Util.readInt(in) >>> 1;
+					bookMove[bookSize] = (short) Util.readShort(in);
+					bookValue[bookSize] = (short) Util.readShort(in);
+					bookSize ++;
+				}
+			} catch (Exception e) {
+				// Exit "while" when IOException occurs
 			}
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage()); // Never Occurs
+			try {
+				in.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 	}
 
