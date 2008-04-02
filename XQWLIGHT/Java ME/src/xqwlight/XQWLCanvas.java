@@ -50,8 +50,7 @@ class XQWLCanvas extends Canvas {
 	private static final int RESP_DRAW = 9;
 	private static final int RESP_LOSS = 10;
 
-	private static Image imgXQWLight, imgBackground, imgThinking;
-	private Image imgBoard;
+	private static Image imgBackground = null, imgXQWLight, imgThinking;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
 		"rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
@@ -65,14 +64,20 @@ class XQWLCanvas extends Canvas {
 
 	static {
 		try {
-			imgXQWLight = Image.createImage("/images/xqwlight.png");
 			imgBackground = Image.createImage("/images/background.png");
+		} catch (Exception e) {
+			// Ignored
+		}
+		if (imgBackground != null) {
+			widthBackground = imgBackground.getWidth();
+			heightBackground = imgBackground.getHeight();
+		}
+		try {
+			imgXQWLight = Image.createImage("/images/xqwlight.png");
 			imgThinking = Image.createImage("/images/thinking.png");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		widthBackground = imgBackground.getWidth();
-		heightBackground = imgBackground.getHeight();
 	}
 
 	XQWLMIDlet midlet;
@@ -94,7 +99,7 @@ class XQWLCanvas extends Canvas {
 	volatile int phase = PHASE_LOADING;
 
 	private boolean init = false;
-	private Image imgSelected, imgSelected2, imgCursor, imgCursor2;
+	private Image imgBoard, imgSelected, imgSelected2, imgCursor, imgCursor2;
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
@@ -243,9 +248,14 @@ class XQWLCanvas extends Canvas {
 			}
 			phase = PHASE_WAITING;
 		}
-		for (int x = 0; x < width; x += widthBackground) {
-			for (int y = 0; y < height; y += heightBackground) {
-				g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
+		if (imgBackground == null) {
+			g.setColor(240, 224, 208);
+			g.fillRect(0, 0, width, height);
+		} else {
+			for (int x = 0; x < width; x += widthBackground) {
+				for (int y = 0; y < height; y += heightBackground) {
+					g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
+				}
 			}
 		}
 		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
