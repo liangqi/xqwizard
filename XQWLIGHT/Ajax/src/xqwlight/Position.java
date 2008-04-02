@@ -411,7 +411,7 @@ public class Position {
 
 	public static Random random = new Random();
 
-	public static int bookSize;
+	public static int bookSize = 0;
 	public static int[] bookLock = new int[MAX_BOOK_SIZE];
 	public static short[] bookMove = new short[MAX_BOOK_SIZE];
 	public static short[] bookValue = new short[MAX_BOOK_SIZE];
@@ -429,11 +429,10 @@ public class Position {
 			}
 		}
 
-		bookSize = 0;
 		InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
 		if (in != null) {
 			try {
-				while (true) {
+				while (bookSize < MAX_BOOK_SIZE) {
 					bookLock[bookSize] = Util.readInt(in) >>> 1;
 					bookMove[bookSize] = (short) Util.readShort(in);
 					bookValue[bookSize] = (short) Util.readShort(in);
