@@ -95,38 +95,6 @@ public class XQWLApplet extends Applet {
 		"入门", "业余", "专业", "大师", "特级大师"
 	};
 
-//	static final URL[][] urlPieces = new URL[PIECES_NAME.length][PIECE_NAME.length];
-//	static final URL[] urlSelecteds = new URL[PIECES_NAME.length];
-//	static final URL[] urlBoards = new URL[BOARD_NAME.length];
-//	static final URL[] urlSounds = new URL[SOUND_NAME.length];
-//	static final URL[] urlMusics = new URL[MUSIC_NAME.length];
-//
-//	static {
-//		try {
-//			for (int i = 0; i < PIECES_NAME.length; i ++) {
-//				for (int j = 0; j < PIECE_NAME.length; j ++) {
-//					urlPieces[i][j] = (PIECE_NAME[j] == null ? null :
-//							new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/" +
-//							PIECE_NAME[j] + ".gif"));
-//				}
-//			}
-//			for (int i = 0; i < PIECES_NAME.length; i ++) {
-//				urlSelecteds[i] = new URL(CODE_BASE + "pieces/" + PIECES_NAME[i] + "/oos.gif");
-//			}
-//			for (int i = 0; i < BOARD_NAME.length; i ++) {
-//				urlBoards[i] = new URL(CODE_BASE + "boards/" + BOARD_NAME[i] + ".gif");
-//			}
-//			for (int i = 0; i < SOUND_NAME.length; i ++) {
-//				urlSounds[i] = new URL(CODE_BASE + "sounds/" + SOUND_NAME[i] + ".wav");
-//			}
-//			for (int i = 0; i < MUSIC_NAME.length; i ++) {
-//				urlMusics[i] = new URL(CODE_BASE + "musics/" + MUSIC_NAME[i] + ".mid");
-//			}
-//		} catch (Exception e) {
-//			throw new RuntimeException(e.getMessage());
-//		}
-//	}
-
 	Image[] imgPieces = new Image[PIECE_NAME.length];
 	Image imgSelected, imgBoard;
 	AudioClip[] acSounds = new AudioClip[SOUND_NAME.length];
@@ -163,7 +131,7 @@ public class XQWLApplet extends Applet {
 	int sqSelected, mvLast;
 
 	volatile boolean thinking = false;
-	boolean flipped = false, effect = true;
+	boolean flipped = false, sound = true;
 	int handicap = 0, level = 0, board = 0, pieces = 0, music = 8;
 
 	{
@@ -297,10 +265,10 @@ public class XQWLApplet extends Applet {
 		});
 		addItem(optPieces, -4);
 
-		final Checkbox chkMute = new Checkbox("音效", effect);
+		final Checkbox chkMute = new Checkbox("音效", sound);
 		chkMute.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				effect = chkMute.getState();
+				sound = chkMute.getState();
 				playSound(0);
 			}			
 		});
@@ -451,7 +419,7 @@ public class XQWLApplet extends Applet {
 	}
 
 	void playSound(int response) {
-		if (effect && acSounds[response] != null) {
+		if (sound && acSounds[response] != null) {
 			acSounds[response].play();
 		}
 	}
