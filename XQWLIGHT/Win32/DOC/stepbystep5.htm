@@ -115,7 +115,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">(</font>返回和棋分数<font
         face="Times New Roman">)</font>。</dt>
     <dt>　　象棋小巫师用了一个 <font
-        face="Times New Roman">RepStatus() </font>函数来检查重复，如果局面存在重复，那么它的返回值将很有意思：</dt>
+        face="Times New Roman">RepStatus </font>函数来检查重复，如果局面存在重复，那么它的返回值将很有意思：</dt>
     <dd>　</dd>
     <dd>return 1 + (bPerpCheck ? 2 : 0) + (bOppPerpCheck ? 4 : 0);</dd>
     <dt>　</dt>
@@ -125,7 +125,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">)</font>都设为<font
         face="Times New Roman">TRUE</font>，当一方存在非将走法时就改为<font
         face="Times New Roman">FALSE</font>，这样 <font
-        face="Times New Roman">RepStatus() </font>的返回值有有这几种可能：</dt>
+        face="Times New Roman">RepStatus </font>的返回值有有这几种可能：</dt>
     <dt>　　<font face="Times New Roman">A. </font>返回<font
         face="Times New Roman">0</font>，表示没有重复局面；</dt>
     <dt>　　<font face="Times New Roman">B. </font>返回<font
