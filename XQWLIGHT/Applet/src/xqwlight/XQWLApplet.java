@@ -270,7 +270,7 @@ public class XQWLApplet extends Applet {
 			public void itemStateChanged(ItemEvent e) {
 				sound = chkMute.getState();
 				playSound(0);
-			}			
+			}
 		});
 		addItem(chkMute, -3);
 
