@@ -32,7 +32,45 @@ content="text/html; charset=gb_2312-80">
         size="5" face="楷体_GB2312"><strong>新的征程</strong></font></dt>
     <dt>　</dt>
     <dt>　　我们已经见证了一个中国象棋程序的制作过程。用这个过程按部就班地演绎国际象棋，凭借当今的软件开发工具和硬件水平，或许就能打造出一个和“深蓝”一样聪明的程序。</dt>
-    <dt>　　但是，国际象棋毕竟比中国象棋复杂，</dt>
+    <dt>　　但是，国际象棋毕竟比中国象棋复杂，要让一个国际象棋程序走出不是很糟的棋，以下问题是必须注意的。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Arial"><strong>8.1 </strong></font><font
+        size="4" face="楷体_GB2312"><strong>特殊的规则</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　国际象棋的初学者都会被王车易位、吃过路兵、兵的升变这三个特殊的规则所困扰，电脑程序设计师也不例外。由于王车易位和吃过路兵的引入，描述一个国际象棋局面并不简单，它所包括的内容有：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>棋盘上每个格子所放的棋子；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>轮到哪方走；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>是否永久丧失了王车易位的权利，这就包含了<font
+        face="Times New Roman">4</font>个布尔型变量，分别表示白方能否短易位和长易位，以及黑方能否短易位和长易位；</dt>
+    <dt>　　<font face="Times New Roman">(4) </font>是否能吃过路兵，即对方上一步棋是否把兵挺了两格，并且要知道是哪个兵挺了两格。</dt>
+    <dt>　　以上<font face="Times New Roman">4</font>点中，前两点与中国象棋没什么两样。</dt>
+    <dt>　　至于王车易位，执行一个走法的时候非常简单：一旦一方动了王，它就永远丧失了王车易位的权利。但撤消走法<font
+        face="Times New Roman">(UndoMove)</font>的时候，如何还原王车易位的权利呢？吃过路兵也存在同样的问题。</dt>
+    <dt>　　因此，描述一个国际象棋走法，也是相当复杂的：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>走法的起始格和目标格<font
+        face="Times New Roman">(</font>跟中国象棋一样<font
+        face="Times New Roman">)</font>；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>吃掉的棋子<font
+        face="Times New Roman">(</font>跟中国象棋一样<font
+        face="Times New Roman">)</font>；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>是否王车易位：在执行和撤消这种走法时，王和车都必须移动；</dt>
+    <dt>　　<font face="Times New Roman">(4) </font>是否永久丧失了王车易位的权利：撤消这种走法的时候，要还原这个权利；</dt>
+    <dt>　　<font face="Times New Roman">(5) </font>是否吃过路兵：撤消这种走法的时候，被吃的兵所还原的位置与走法的目标格不同；</dt>
+    <dt>　　<font face="Times New Roman">(6) </font>是否错过了吃过路兵的机会：撤消这种走法的时候，要还原这个机会。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Arial"><strong>8.2 </strong></font><font
+        size="4" face="楷体_GB2312"><strong>局面评价函数</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　和中国象棋一样，国际象棋的子力价值同样是局面评价函数中最关键的因素，而且每个子的价值跟位置是相关的。但是，仅仅用固定的绝对位置往往无法取得很好的效果，随着局面的进展和兵形的变化，子力的位置价值会发生很大的变化。</dt>
+    <dt>　　因此，评价国际象棋的局面时，需要考虑的因素有很多：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>子力的控制力：后、车、象等长兵器，辐射的格子越多，控制力就越强。另外，如果有其他棋子把它的辐射路线挡住，控制力就会打些折扣，如果是兵挡住了辐射路线则被认为辐射完全中断<font
+        face="Times New Roman">(</font>兵被认为是“死”的子，就好像棋盘的边界<font
+        face="Times New Roman">)</font>，而对于马这样的短兵器，能踩到的格子越多，攻击性就越强，而踩到棋盘中央区域要比踩到棋盘边缘好很多；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>王的位置：开中局阶段王在棋盘边缘比较有利，残局阶段王在棋盘中央比较有利，另外，优势一方要尽可能地让自己的王接近对方的王，这样才能使“车杀单王”等残局的行动有所方向；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>兵的绝对位置：兵越接近底线分数约高，而中路的兵通常比边路的兵分数高；</dt>
+    <dt>　　<font face="Times New Roman">(4) </font>兵形：兵形的评价内容实在丰富，这里只举一个最典型的例子：车在通路兵后面有较高的加分。</dt>
+    <dt>　</dt>
+    <dt>　　现在我们应该有足够信心去完成一个国际象棋程序了。只要掌握好以上几个要点，那么这个程序走出的棋不应该不会太业余。</dt>
 </dl>
 
 <dir>
