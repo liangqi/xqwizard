@@ -139,7 +139,6 @@ public class XQWLApplet extends Applet {
 
 		btnMessage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnMessage.setVisible(false);
 				currentFen = Position.STARTUP_FEN[handicap];
 				restart();
 				canvas.repaint();
@@ -360,6 +359,7 @@ public class XQWLApplet extends Applet {
 	}
 
 	void restart() {
+		btnMessage.setVisible(false);
 		pos.fromFen(currentFen);
 		retractFen = currentFen;
 		sqSelected = mvLast = 0;
