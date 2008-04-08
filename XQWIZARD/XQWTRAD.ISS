@@ -33,7 +33,6 @@ Name: "fen"; Description: "關聯局面文件(*.FEN)"; Types: default
 Name: "xqf"; Description: "關聯象棋演播室棋譜文件(*.XQF)"; Types: default
 Name: "mxq"; Description: "關聯弈天棋譜文件(*.MXQ)"; Types: default
 Name: "che"; Description: "關聯QQ象棋棋譜文件(*.CHE)"; Types: default
-Name: "eleeye"; Description: "加載 ElephantEye 引擎"; Types: default
 
 [Files]
 ; 系統文件
