@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <time.h>
 #include "../../utility/base.h"
-#include "../../utility/bigint32.h"
-#include "../../utility/complex.h"
-#include "../../utility/fft.h"
+#include "bigint32.h"
+#include "complex.h"
+#include "fft.h"
 
 struct FftBigIntMul {
   RealFft rf;

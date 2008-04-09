@@ -1,4 +1,4 @@
-#include "base.h"
+#include "../../utility/base.h"
 #include "crc32.h"
 
 #ifdef CRC32_DLL

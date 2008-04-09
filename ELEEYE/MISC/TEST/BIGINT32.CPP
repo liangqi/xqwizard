@@ -1,5 +1,5 @@
 #include <string.h>
-#include "x86asm.h"
+#include "../../utility/x86asm.h"
 
 #ifdef _MSC_VER
 

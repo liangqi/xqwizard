@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../../utility/base.h"
-#include "../../utility/matrix.h"
+#include "matrix.h"
 
 double Network1(int nHeight, int nWidth) {
   int nMatLen = nWidth * nHeight + 1;

@@ -1,4 +1,4 @@
-#include "base.h"
+#include "../../utility/base.h"
 #include "fraction.h"
 
 Bool bAutoReduce = TRUE;
