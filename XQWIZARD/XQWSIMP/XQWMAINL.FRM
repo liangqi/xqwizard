@@ -122,8 +122,8 @@ Begin VB.Form frmMainLarge
             Object.ToolTipText     =   "»§Œ∂œÛ∆Â"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardJava"
-            Object.ToolTipText     =   "∏¥÷∆Java∆Â≈Ã¥˙¬Î"
+            Key             =   "WizardJavaScript"
+            Object.ToolTipText     =   "∏¥÷∆JavaScript∆Â≈Ã¥˙¬Î"
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
@@ -1587,14 +1587,8 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
-      Begin VB.Menu mnWizardJava 
-         Caption         =   "∏¥÷∆&Java∆Â≈Ã¥˙¬Î"
-      End
-      Begin VB.Menu mnWizardWeb 
-         Caption         =   "…˙≥…&Web∆Â≈Ã"
-      End
-      Begin VB.Menu mnWizardAnsi 
-         Caption         =   "∏¥÷∆&ANSI∂ØÃ¨∆Â≈Ã"
+      Begin VB.Menu mnWizardJavaScript 
+         Caption         =   "∏¥÷∆&JavaScript∆Â≈Ã¥˙¬Î"
       End
       Begin VB.Menu mnWizardSep3 
          Caption         =   "-"
@@ -2337,21 +2331,9 @@ LoadEndgames "FUNNY", "»§Œ∂œÛ∆Â"
 
 End Sub
 
-Private Sub mnWizardJava_Click()
+Private Sub mnWizardJavaScript_Click()
 
-CopyJava
-
-End Sub
-
-Private Sub mnWizardWeb_Click()
-
-ViewWeb
-
-End Sub
-
-Private Sub mnWizardAnsi_Click()
-
-CopyAnsi
+CopyJavaScript
 
 End Sub
 
@@ -2707,8 +2689,8 @@ Case "WizardPlay"
     mnWizardPlay_Click
 Case "WizardFunny"
     mnWizardFunny_Click
-Case "WizardJava"
-    mnWizardJava_Click
+Case "WizardJavaScript"
+    mnWizardJavaScript_Click
 Case "WizardText"
     mnWizardText_Click
 Case "WizardBitmap"

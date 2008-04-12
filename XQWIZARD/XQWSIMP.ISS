@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.66 (简体中文版)
+AppVerName=象棋巫师 3.67 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -55,7 +55,6 @@ Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CHE2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "JavaXQ.class"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
@@ -64,8 +63,6 @@ Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "jsboard.htm"; DestDir: "{app}"; Flags: ignoreversion
-Source: "jsboard1.htm"; DestDir: "{app}"; Flags: ignoreversion
 ; 残局文件
 Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
@@ -510,23 +507,6 @@ Source: "PRINTBRD\BN.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\BR.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\BC.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\BP.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
-; Web棋盘文件
-Source: "jsboard\jsboard.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\oo.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rk.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\ra.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rb.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rn.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rr.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rc.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\rp.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\bk.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\ba.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\bb.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\bn.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\br.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\bc.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
-Source: "jsboard\bp.gif"; DestDir: "{app}\jsboard"; Flags: ignoreversion
 ; 帮助文件
 Source: "HELP\CONTENTS.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\OUTLINE.HTM"; DestDir: "{app}\HELP"; Flags: ignoreversion

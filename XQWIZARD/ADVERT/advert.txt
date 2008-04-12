@@ -1,9 +1,9 @@
 XQWizard Advert List
 elephantbase1,60,275,5618
-stepbystep1,60,308,7894
+stepbystep1,60,308,8216
 xqwlight_ad1,60,282,5759
 xqwlight_ad2,60,282,5871
 elephantbase2,60,275,5618
-stepbystep2,60,308,7894
+stepbystep2,60,308,8216
 xqwlight_ad3,60,282,5759
 xqwlight_ad4,60,282,5871

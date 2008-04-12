@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.66, Last Modified: Mar. 2008
+' Designed by Morning Yellow, Version: 3.67, Last Modified: Mar. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,9 +22,9 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.66"
+Public Const STRING_VERSION     As String = "3.67"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 29   ' 日积月累条目数
+Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
 Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
 ' 全局常量——可选参数
@@ -1365,223 +1365,8 @@ End Sub
 
 ' 以下是特色工具例程
 
-' 生成Java代码
-Public Sub CopyJava()
-
-Dim i As Integer, sq As Integer, sd As Integer, szJava As String, posJava As PositionStruct
-szJava = "<applet width=" + Chr(34) + "249" + Chr(34) + " height=" + Chr(34) + "301" + Chr(34) + _
-        " codebase=" + Chr(34) + Options_szJavaPath + Chr(34) + " code=" + Chr(34) + "JavaXQ" + Chr(34) + ">" + vbCrLf
-If Not Game_bStartPos Then
-    CchessFen2Board posJava, Game_szIrrevFen(0)
-    szJava = szJava + "<param name=" + Chr(34) + "Position" + Chr(34) + " value=" + Chr(34)
-    For sd = 0 To 1
-        For i = 1 To 16
-            sq = posJava.ucsqPieces(Choose(i, 23, 21, 19, 17, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31) + sd * 16)
-            szJava = szJava + IIf(sq = 0, "--", Chr(sq Mod 16 + 62) + Chr(60 - sq \ 16)) + ","
-        Next
-    Next
-    szJava = szJava + Chr(34) + ">" + vbCrLf
-End If
-szJava = szJava + "<param name=" + Chr(34) + "MoveList" + Chr(34) + " value=" + Chr(34)
-For i = 1 To Game_nMaxMove
-    szJava = szJava + Move2Iccs(Game_mvMove(i)) + " "
-Next
-szJava = szJava + Chr(34) + ">" + vbCrLf
-szJava = szJava + "请登录<a href=" + Chr(34) + "http://www.java.com/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.java.com</a>下载Java运行包" + vbCrLf
-szJava = szJava + "</applet>"
-If Not Game_bStartPos Then
-    szJava = szJava + "<p>" + Game_szIrrevFen(0) + "</p>"
-End If
-szJava = szJava + "<p>欢迎访问<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.elephantbase.net</a></p>"
-Clipboard.Clear
-Clipboard.SetText szJava
-MsgBox "Java棋盘代码已复制到剪贴板。", vbInformation
-
-End Sub
-
-' 生成Web棋盘
-Public Sub ViewWeb()
-
-Dim i As Integer
-Dim nFileNo As Integer, bReturned As Boolean, szCommStr As String
-ReDim szFenStrTable(0 To Game_nMaxMove) As String
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open App_szPath + "jsboard2.htm" For Output As #nFileNo
-On Error GoTo 0
-Print #nFileNo, "<html>"
-Print #nFileNo, "<body>"
-Print #nFileNo, "<script language=" + Chr(34) + "JavaScript" + Chr(34) + "><!--"
-Print #nFileNo, "var RightReady = 0;"
-Print #nFileNo, "--></script>"
-Print #nFileNo, "<dl>"
-Print #nFileNo, "<dt><center>" + EventString + "</center></dt>"
-Print #nFileNo, "<dt><center>" + ResultString + "</center></dt>"
-Print #nFileNo, "<dt><center>" + DateSiteString + "</center></dt>"
-Print #nFileNo, "<dt><center><a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(0)" + Chr(34) + ">";
-Print #nFileNo, IIf(OpenString = "", "===开始===", OpenString) + "</a></center></dt>"
-Print #nFileNo, "<dt>";
-szCommStr = Game_szComment(0)
-i = InStr(szCommStr, vbCrLf)
-Do While i > 0
-    Print #nFileNo, Left(szCommStr, i - 1) + "</dt>"
-    Print #nFileNo, "<dt>";
-    szCommStr = Mid(szCommStr, i + 2)
-    i = InStr(szCommStr, vbCrLf)
-Loop
-Print #nFileNo, szCommStr + "</dt>"
-Print #nFileNo, "<dt>";
-bReturned = True
-Do While Game_nCurrMove > 0
-    MoveBack
-Loop
-szFenStrTable(Game_nCurrMove) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
-Do While Game_nCurrMove < Game_nMaxMove
-    If bReturned Then
-        For i = 1 To 4 - Len(Str(Game_cntCurr))
-            Print #nFileNo, "&nbsp;";
-        Next
-        Print #nFileNo, LTrim(Str(Game_cntCurr)) + ".&nbsp";
-        If Game_sdCurr = 1 Then
-            For i = 1 To Choose(Game_nFormat + 1, 8, 4, 5)
-                Print #nFileNo, "&nbsp;";
-            Next
-        End If
-    End If
-    If Game_sdCurr = 0 Then
-        Print #nFileNo, "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
-                Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a>";
-        bReturned = False
-    Else
-        Print #nFileNo, "&nbsp;" + "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
-                Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a></dt>"
-        Print #nFileNo, "<dt>";
-        bReturned = True
-    End If
-    MoveForward
-    szFenStrTable(Game_nCurrMove) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
-    If Game_szComment(Game_nCurrMove) <> "" Then
-        If Not bReturned Then
-            Print #nFileNo, "</dt>"
-            Print #nFileNo, "<dt>";
-        End If
-        szCommStr = Game_szComment(Game_nCurrMove)
-        i = InStr(szCommStr, vbCrLf)
-        Do While i > 0
-            Print #nFileNo, Left(szCommStr, i - 1) + "</dt>"
-            Print #nFileNo, "<dt>";
-            szCommStr = Mid(szCommStr, i + 2)
-            i = InStr(szCommStr, vbCrLf)
-        Loop
-        Print #nFileNo, szCommStr + "</dt>"
-        Print #nFileNo, "<dt>";
-        bReturned = True
-    End If
-Loop
-Print #nFileNo, "</dt>"
-Print #nFileNo, "</dl>"
-Print #nFileNo, "<script language=" + Chr(34) + "JavaScript" + Chr(34) + "><!--"
-Print #nFileNo, "var MaxMove =" + Str(Game_nMaxMove) + ";"
-Print #nFileNo, "var LastPos = 0;"
-Print #nFileNo, "var FenStr = Array(" + LTrim(Str(Game_nMaxMove + 1)) + ");"
-For i = 0 To Game_nMaxMove
-    Print #nFileNo, "FenStr[" + LTrim(Str(i)); "] = " + Chr(34) + szFenStrTable(i) + Chr(34) + ";"
-Next
-Print #nFileNo, "RightReady = 1;"
-Print #nFileNo, "if (parent.frames[0].LeftReady) {"
-Print #nFileNo, "  parent.frames[0].ViewFen(0);"
-Print #nFileNo, "}"
-Print #nFileNo, "--></script>"
-Print #nFileNo, "</body>"
-Print #nFileNo, "</html>"
-Close #nFileNo
-MoveFlush
-Erase szFenStrTable
-ShellExecuteA 0, vbNullString, App_szPath + "jsboard.htm", vbNullString, vbNullString, SW_SHOWNORMAL
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + "jsboard2.htm", vbExclamation
-
-End Sub
-
-' 用ANSI定位光标
-Public Function AnsiSetCursor(ByVal nRow As Integer, ByVal nColumn As Integer)
-
-AnsiSetCursor = IIf(Options_bEscapeDouble, Chr(27), "") + Chr(27) + "[" + LTrim(Str(nRow)) + ";" + LTrim(Str(nColumn)) + "H"
-
-End Function
-
-' 生成ANSI动态棋盘
-Public Sub CopyAnsi()
-
-Dim nBoardTop As Integer, nBoardLeft As Integer
-Dim szSquares As String, szPieces As String, szEscape As String
-Dim szNormal As String, szRed As String, szBlack As String, szHighlight As String
-nBoardTop = -2
-nBoardLeft = 7
-szSquares = _
-        "┌┬┬┬┬┬┬┬┐" + _
-        "├┼┼┼※┼┼┼┤" + _
-        "├┼┼┼┼┼┼┼┤" + _
-        "├┼┼┼┼┼┼┼┤" + _
-        "├┴┴┴┴┴┴┴┤" + _
-        "├┬┬┬┬┬┬┬┤" + _
-        "├┼┼┼┼┼┼┼┤" + _
-        "├┼┼┼┼┼┼┼┤" + _
-        "├┼┼┼※┼┼┼┤" + _
-        "└┴┴┴┴┴┴┴┘"
-szPieces = _
-        "帅仕仕相相马马车车炮炮兵兵兵兵兵" + _
-        "将士士象象马马车车炮炮卒卒卒卒卒"
-szEscape = IIf(Options_bEscapeDouble, Chr(27), "") + Chr(27) + "["
-szNormal = szEscape + "0m"
-szRed = szEscape + "1;31m"
-szBlack = szEscape + "1;32m"
-szHighlight = szEscape + "1;33m"
-
-Dim sz As String, mv As Long
-Dim nRank As Integer, nFile As Integer
-Dim szSquare As String, szPiece As String
-Dim szSrc As String, szDst As String
-
-Do While Game_nCurrMove > 0
-    MoveBack
-Loop
-sz = MkBStr(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
-If Options_bEscapeDouble Then
-    sz = Replace(sz, Chr(27) + "[", szEscape)
-End If
-sz = Space(8) + "ANSI动态棋盘由" + szBlack + "象棋巫师" + szEscape + "0m生成，欢迎访问" + szHighlight + "www.elephantbase.net" + szNormal + vbCrLf + _
-        Space(28) + "请按“" + szHighlight + "↓" + szNormal + "”键欣赏" + vbCrLf + vbCrLf + _
-        Space(18) + Replace(sz, vbCrLf, vbCrLf + Space(18))
-Do While Game_nCurrMove < Game_nMaxMove
-    If Game_nCurrMove > 0 Then
-        sz = sz + szSrc + szEscape + "0m" + IIf(nFile = 0, " ", "-") + szSquare + IIf(nFile = 8, " ", "-") + _
-                szDst + IIf(Game_sdCurr = 0, szNormal + "[" + szBlack + szPiece + szNormal + "]", szNormal + "(" + szRed + szPiece + szNormal + ")")
-    End If
-    MoveForward
-    mv = Game_mvMove(Game_nCurrMove)
-    nRank = Src(mv) \ 16 - 3
-    nFile = Src(mv) Mod 16 - 3
-    szSquare = Mid(szSquares, nRank * 9 + nFile + 1, 1)
-    szPiece = Mid(szPieces, Game_posIrrev(Game_nCurrIrrev).ucpcSquares(Dst(mv)) - 15, 1)
-    szSrc = AnsiSetCursor((Src(mv) \ 16) * 2 + nBoardTop, (Src(mv) Mod 16) * 4 + nBoardLeft)
-    szDst = AnsiSetCursor((Dst(mv) \ 16) * 2 + nBoardTop, (Dst(mv) Mod 16) * 4 + nBoardLeft)
-    If Game_sdCurr = 0 Then
-        sz = sz + szSrc + szHighlight + "[" + szNormal + szSquare + szHighlight + "]" + _
-                szDst + szHighlight + "[" + szBlack + szPiece + szHighlight + "]"
-    Else
-        sz = sz + szSrc + szHighlight + "(" + szNormal + szSquare + szHighlight + ")" + _
-                szDst + szHighlight + "(" + szRed + szPiece + szHighlight + ")"
-    End If
-    sz = sz + AnsiSetCursor(22, 1) + vbCrLf
-Loop
-Clipboard.Clear
-Clipboard.SetText sz
-MoveFlush
-MsgBox "ANSI动态棋盘已复制到剪贴板。", vbInformation
+' 生成JavaScript棋盘
+Public Sub CopyJavaScript()
 
 End Sub
 
@@ -2715,25 +2500,22 @@ Gui_szTips(10) = "　　如果您是一个象棋巫师的初学者，请您仔细阅读本软件“帮助”选
 Gui_szTips(11) = "　　象棋巫师支持文件关联功能，双击PGN文件(图标是棋子“相”)可以打开棋谱，双击FEN文件(图标是棋盘)可以打开局面。"
 Gui_szTips(12) = "　　象棋巫师支持“象棋演播室”的棋谱。只要双击XQF文件(图标是“象”字)，或者点击“打开”按钮并选择一个XQF文件，象棋巫师就会打开这个棋谱。"
 Gui_szTips(13) = "　　象棋巫师最适合800x600和1024x768的显示分辩率，在“选项设置”对话框(“选项”选单中的“设置”一项)，把“界面”设成“大”，就可在1024x768的显示分辩率下得到最舒适的显示效果。"
-Gui_szTips(14) = "　　为了方便校园网字符BBS的使用者交流棋谱、棋图和发表文章，象棋巫师提供了文本棋谱和彩色ASCII字符棋图的输出功能。通过剪贴板，您可以在BBS上发表精美漂亮的棋谱和棋图了。"
-Gui_szTips(15) = "　　用Telnet在BBS上发ANSI动态棋谱时，点击“复制ANSI动态棋谱”按钮，再向Telnet中粘贴内容，保存贴子即可。" + vbCrLf + _
-        "　　查看含有ANSI动态棋谱的贴子时，可根据贴子上的提示，按“↓”键浏览棋谱，当棋谱完全显示出来后，按一次“↓”键棋局就走一步，很方便用户观赏棋局。"
-Gui_szTips(16) = "　　使用“复制文本棋盘”功能，可以在BBS上贴出静态的ANSI代码，各大高校的BBS站都支持ANSI代码。红子用红字表示，黑子用绿字表示，一目了然。" + vbCrLf + _
+Gui_szTips(14) = "　　使用“复制文本棋盘”功能，可以在BBS上贴出静态的ANSI代码，各大高校的BBS站都支持ANSI代码。红子用红字表示，黑子用绿字表示，一目了然。" + vbCrLf + _
         "　　如果BBS不支持ANSI代码，或者只是为了贴到普通文本上，可以在在“选项设置”对话框中把“使用ANSI文本棋盘”的钩去掉。区别红子和黑子的方法是：红子的两边带圆括号，黑子的两边带方括号。"
-Gui_szTips(17) = "　　如果该BBS系统是需要按两次Escape键才能键入一个Escape字符(也可能取决于Telnet终端的设置)，那么可以在“选项设置”对话框中把“用两个Esc输入ANSI”钩上。"
-Gui_szTips(18) = "　　文本棋盘的最后一行诸如 rnbakabnr/... 的字符串是棋盘编码(称为FEN串)，如果您在网络论坛上看到了这样的FEN串，可以使用“局面”选单的“导入FEN串”功能，把棋盘导入到象棋巫师中，免去了摆放棋子位置的烦恼。"
-Gui_szTips(19) = "　　点击“查看PGN文件”按钮，就可以看到棋谱文本，为粘贴到BBS上或者Word文档中提供了方便。"
-Gui_szTips(20) = "　　象棋巫师可读入联众、弈天、中国游戏中心等中国象棋的存盘文件和大部分的文本棋谱文件，把这些含有着法的文本复制到剪贴板，点击“从剪贴板导入”按钮，这些着法就会录制到象棋巫师中。"
-Gui_szTips(21) = "　　象棋巫师可将棋谱导出为支持Java动态棋盘的HTML文本，特别适合将棋谱在网上发表。"
-Gui_szTips(22) = "　　象棋巫师提供的棋谱键盘输入法为喜欢键盘录入棋谱的棋友提供了一种高效的棋谱输入方法，棋友可根据自己的习惯在数字小键盘或WXF字母格式中任意选择。"
-Gui_szTips(23) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示，演示的时间间隔可以自由调整。再次点击“播放棋局”按钮可停止自动演示。"
-Gui_szTips(24) = "　　点击“查看图片棋盘”按钮，把图片棋盘复制并粘贴到Word等文字处理软件中，可以生成漂亮的象棋稿件。"
-Gui_szTips(25) = "　　在欣赏棋谱的过程中，可以使用棋盘倒置和左右调换功能来从不同的角度欣赏棋局。其中左右调换功能还可以一次将类似于“炮八平五”开局这样的棋谱自动转换成大家习惯的“炮二平五”。反之亦然。"
-Gui_szTips(26) = "　　如果在欣赏棋谱时遇到复杂的局面，可以点击“分析局面”按钮，将当前棋局新开设一个象棋巫师的窗口，自由推演后续的变化。"
-Gui_szTips(27) = "　　在两个象棋巫师窗口中，灵活运用“查看PGN文件”和“从剪贴板导入”功能，可将推演棋盘中的棋谱记录导入到当前棋局中。"
-Gui_szTips(28) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" + vbCrLf + _
+Gui_szTips(15) = "　　如果该BBS系统是需要按两次Escape键才能键入一个Escape字符(也可能取决于Telnet终端的设置)，那么可以在“选项设置”对话框中把“用两个Esc输入ANSI”钩上。"
+Gui_szTips(16) = "　　文本棋盘的最后一行诸如 rnbakabnr/... 的字符串是棋盘编码(称为FEN串)，如果您在网络论坛上看到了这样的FEN串，可以使用“局面”选单的“导入FEN串”功能，把棋盘导入到象棋巫师中，免去了摆放棋子位置的烦恼。"
+Gui_szTips(17) = "　　点击“查看PGN文件”按钮，就可以看到棋谱文本，为粘贴到BBS上或者Word文档中提供了方便。"
+Gui_szTips(18) = "　　象棋巫师可读入联众、弈天、中国游戏中心等中国象棋的存盘文件和大部分的文本棋谱文件，把这些含有着法的文本复制到剪贴板，点击“从剪贴板导入”按钮，这些着法就会录制到象棋巫师中。"
+Gui_szTips(19) = "　　象棋巫师可将棋谱导出为支持JavaScript动态棋盘的HTML文本，特别适合将棋谱在网上发表。"
+Gui_szTips(20) = "　　象棋巫师提供的棋谱键盘输入法为喜欢键盘录入棋谱的棋友提供了一种高效的棋谱输入方法，棋友可根据自己的习惯在数字小键盘或WXF字母格式中任意选择。"
+Gui_szTips(21) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示，演示的时间间隔可以自由调整。再次点击“播放棋局”按钮可停止自动演示。"
+Gui_szTips(22) = "　　点击“查看图片棋盘”按钮，把图片棋盘复制并粘贴到Word等文字处理软件中，可以生成漂亮的象棋稿件。"
+Gui_szTips(23) = "　　在欣赏棋谱的过程中，可以使用棋盘倒置和左右调换功能来从不同的角度欣赏棋局。其中左右调换功能还可以一次将类似于“炮八平五”开局这样的棋谱自动转换成大家习惯的“炮二平五”。反之亦然。"
+Gui_szTips(24) = "　　如果在欣赏棋谱时遇到复杂的局面，可以点击“分析局面”按钮，将当前棋局新开设一个象棋巫师的窗口，自由推演后续的变化。"
+Gui_szTips(25) = "　　在两个象棋巫师窗口中，灵活运用“查看PGN文件”和“从剪贴板导入”功能，可将推演棋盘中的棋谱记录导入到当前棋局中。"
+Gui_szTips(26) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" + vbCrLf + _
         "　　象棋巫师的源程序发布在 http://sourceforge.net/projects/xqwizard/ 这个页面上，您可以根据自己的需要对源程序进行修改，并依照GPL协议发布您修改过的源程序。"
-Gui_szTips(29) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.elephantbase.net/ 。" + vbCrLf + _
+Gui_szTips(27) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.elephantbase.net/ 。" + vbCrLf + _
         "　　您也可以将本软件的主页链接到自己的站点上。请您使用 http://www.elephantbase.net/ 作为链接的路径。"
 
 End Sub
@@ -2925,7 +2707,7 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 1# Then
+            If Rnd < 0.0 Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
