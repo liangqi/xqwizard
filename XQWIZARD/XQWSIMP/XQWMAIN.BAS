@@ -161,7 +161,7 @@ Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_bAutoPlay        As Boolean  ' 自动播放
 Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
-Public Options_szJavaPath       As String   ' Java棋盘路径
+Public Options_szFlashPath      As String   ' Flash棋盘路径
 Public Options_bEscapeDouble    As Boolean  ' 用两个Esc输入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盘
 Public Options_bMonoBitmap      As Boolean  ' 图片棋盘的红子用白底红字表示
@@ -1365,8 +1365,8 @@ End Sub
 
 ' 以下是特色工具例程
 
-' 生成JavaScript棋盘
-Public Sub CopyJavaScript()
+' 生成Flash棋盘
+Public Sub CopyFlash()
 
 End Sub
 
@@ -2506,7 +2506,7 @@ Gui_szTips(15) = "　　如果该BBS系统是需要按两次Escape键才能键入一个Escape字符(也
 Gui_szTips(16) = "　　文本棋盘的最后一行诸如 rnbakabnr/... 的字符串是棋盘编码(称为FEN串)，如果您在网络论坛上看到了这样的FEN串，可以使用“局面”选单的“导入FEN串”功能，把棋盘导入到象棋巫师中，免去了摆放棋子位置的烦恼。"
 Gui_szTips(17) = "　　点击“查看PGN文件”按钮，就可以看到棋谱文本，为粘贴到BBS上或者Word文档中提供了方便。"
 Gui_szTips(18) = "　　象棋巫师可读入联众、弈天、中国游戏中心等中国象棋的存盘文件和大部分的文本棋谱文件，把这些含有着法的文本复制到剪贴板，点击“从剪贴板导入”按钮，这些着法就会录制到象棋巫师中。"
-Gui_szTips(19) = "　　象棋巫师可将棋谱导出为支持JavaScript动态棋盘的HTML文本，特别适合将棋谱在网上发表。"
+Gui_szTips(19) = "　　象棋巫师可将棋谱导出为支持Flash棋盘的HTML文本，特别适合将棋谱在网上发表。"
 Gui_szTips(20) = "　　象棋巫师提供的棋谱键盘输入法为喜欢键盘录入棋谱的棋友提供了一种高效的棋谱输入方法，棋友可根据自己的习惯在数字小键盘或WXF字母格式中任意选择。"
 Gui_szTips(21) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示，演示的时间间隔可以自由调整。再次点击“播放棋局”按钮可停止自动演示。"
 Gui_szTips(22) = "　　点击“查看图片棋盘”按钮，把图片棋盘复制并粘贴到Word等文字处理软件中，可以生成漂亮的象棋稿件。"
@@ -2565,7 +2565,7 @@ Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1"))
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
-Options_szJavaPath = GetSetting("XQWizard", "Options", "JavaPath", "http://www.elephantbase.net/java/")
+Options_szFlashPath = GetSetting("XQWizard", "Options", "FlashPath", "http://www.elephantbase.net/flashxq.swf")
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
@@ -2622,7 +2622,7 @@ SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
-SaveSetting "XQWizard", "Options", "JavaPath", Options_szJavaPath
+SaveSetting "XQWizard", "Options", "FlashPath", Options_szFlashPath
 SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
 SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
 SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")

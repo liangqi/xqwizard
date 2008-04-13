@@ -122,8 +122,8 @@ Begin VB.Form frmMainSmall
             Object.ToolTipText     =   "趣味象棋"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardJavaScript"
-            Object.ToolTipText     =   "复制JavaScript棋盘代码"
+            Key             =   "WizardFlash"
+            Object.ToolTipText     =   "复制Flash棋盘代码"
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
@@ -1587,8 +1587,8 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
-      Begin VB.Menu mnWizardJavaScript 
-         Caption         =   "复制&JavaScript棋盘代码"
+      Begin VB.Menu mnWizardFlash 
+         Caption         =   "复制F&lash棋盘代码"
       End
       Begin VB.Menu mnWizardSep3 
          Caption         =   "-"
@@ -1597,7 +1597,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "复制文本棋盘(&T)"
       End
       Begin VB.Menu mnWizardBitmap 
-         Caption         =   "生成图片棋盘(&V)"
+         Caption         =   "生成图片棋盘(&B)"
       End
       Begin VB.Menu mnWizardPrint 
          Caption         =   "生成印刷棋盘(&R)"
@@ -2367,9 +2367,9 @@ LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
-Private Sub mnWizardJavaScript_Click()
+Private Sub mnWizardFlash_Click()
 
-CopyJavaScript
+CopyFlash
 
 End Sub
 
@@ -2725,8 +2725,8 @@ Case "WizardPlay"
     mnWizardPlay_Click
 Case "WizardFunny"
     mnWizardFunny_Click
-Case "WizardJavaScript"
-    mnWizardJavaScript_Click
+Case "WizardFlash"
+    mnWizardFlash_Click
 Case "WizardText"
     mnWizardText_Click
 Case "WizardBitmap"
