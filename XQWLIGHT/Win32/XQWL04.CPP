@@ -15,7 +15,7 @@
 #include "resource.h"
 
 // 版本号
-const char *const cszAbout = "象棋小巫师 0.4\n象棋百科全书 荣誉出品\n\n"
+const LPCSTR cszAbout = "象棋小巫师 0.4\n象棋百科全书 荣誉出品\n\n"
     "(C) 2004-2008 www.elephantbase.net\n本产品符合GNU通用公共许可协议\n\n"
     "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师";
 
@@ -1335,7 +1335,7 @@ inline void PlayResWav(int nResId) {
 }
 
 // 弹出不带声音的提示框
-static void MessageBoxMute(char *lpszText) {
+static void MessageBoxMute(LPCSTR lpszText) {
   MSGBOXPARAMS mbp;
   mbp.cbSize = sizeof(MSGBOXPARAMS);
   mbp.hwndOwner = Xqwl.hWnd;

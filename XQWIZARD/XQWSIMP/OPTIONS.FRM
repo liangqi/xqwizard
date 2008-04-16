@@ -27,14 +27,14 @@ Begin VB.Form frmOptions
       Caption         =   "其他"
       Height          =   615
       Left            =   3480
-      TabIndex        =   31
+      TabIndex        =   29
       Top             =   2640
       Width           =   3255
       Begin VB.CheckBox chkPromptSave 
          Caption         =   "提示保存棋局"
          Height          =   255
          Left            =   120
-         TabIndex        =   32
+         TabIndex        =   30
          Top             =   240
          Width           =   1455
       End
@@ -42,7 +42,7 @@ Begin VB.Form frmOptions
          Caption         =   "自动保存棋局"
          Height          =   255
          Left            =   1680
-         TabIndex        =   33
+         TabIndex        =   31
          Top             =   240
          Width           =   1455
       End
@@ -51,20 +51,20 @@ Begin VB.Form frmOptions
       Caption         =   "引擎"
       Height          =   2415
       Left            =   3480
-      TabIndex        =   16
+      TabIndex        =   14
       Top             =   120
       Width           =   3255
       Begin VB.TextBox txtMoveDelay 
          Height          =   285
          Left            =   960
-         TabIndex        =   18
+         TabIndex        =   16
          Top             =   240
          Width           =   360
       End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   30
+         TabIndex        =   28
          Top             =   2040
          Width           =   1215
       End
@@ -72,7 +72,7 @@ Begin VB.Form frmOptions
          Caption         =   "输出到状态栏"
          Height          =   255
          Left            =   1680
-         TabIndex        =   26
+         TabIndex        =   24
          Top             =   1320
          Width           =   1455
       End
@@ -80,7 +80,7 @@ Begin VB.Form frmOptions
          Caption         =   "显示思考时间"
          Height          =   255
          Left            =   120
-         TabIndex        =   25
+         TabIndex        =   23
          Top             =   1320
          Width           =   1455
       End
@@ -88,7 +88,7 @@ Begin VB.Form frmOptions
          Caption         =   "允许提和认输"
          Height          =   255
          Left            =   1680
-         TabIndex        =   24
+         TabIndex        =   22
          Top             =   960
          Width           =   1455
       End
@@ -96,7 +96,7 @@ Begin VB.Form frmOptions
          Caption         =   "启用后台思考"
          Height          =   255
          Left            =   120
-         TabIndex        =   23
+         TabIndex        =   21
          Top             =   960
          Width           =   1455
       End
@@ -104,7 +104,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   28
+         TabIndex        =   26
          Top             =   1680
          Width           =   1215
       End
@@ -112,7 +112,7 @@ Begin VB.Form frmOptions
          Caption         =   "自动翻转棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   21
+         TabIndex        =   19
          Top             =   600
          Width           =   1455
       End
@@ -120,14 +120,14 @@ Begin VB.Form frmOptions
          Caption         =   "显示引擎名称"
          Height          =   255
          Left            =   1680
-         TabIndex        =   22
+         TabIndex        =   20
          Top             =   600
          Width           =   1455
       End
       Begin ComCtl2.UpDown updnMoveDelay 
          Height          =   285
          Left            =   1320
-         TabIndex        =   19
+         TabIndex        =   17
          Top             =   240
          Width           =   195
          _ExtentX        =   344
@@ -149,7 +149,7 @@ Begin VB.Form frmOptions
          Caption         =   "秒"
          Height          =   255
          Left            =   1560
-         TabIndex        =   20
+         TabIndex        =   18
          Top             =   240
          Width           =   255
       End
@@ -157,7 +157,7 @@ Begin VB.Form frmOptions
          Caption         =   "走子延时"
          Height          =   255
          Left            =   120
-         TabIndex        =   17
+         TabIndex        =   15
          Top             =   240
          Width           =   735
       End
@@ -165,7 +165,7 @@ Begin VB.Form frmOptions
          Caption         =   "人机对弈用户"
          Height          =   255
          Left            =   480
-         TabIndex        =   29
+         TabIndex        =   27
          Top             =   2040
          Width           =   1095
       End
@@ -173,7 +173,7 @@ Begin VB.Form frmOptions
          Caption         =   "新局引擎状态"
          Height          =   255
          Left            =   480
-         TabIndex        =   27
+         TabIndex        =   25
          Top             =   1680
          Width           =   1095
       End
@@ -183,7 +183,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3840
-      TabIndex        =   35
+      TabIndex        =   33
       Top             =   3360
       Width           =   975
    End
@@ -191,7 +191,7 @@ Begin VB.Form frmOptions
       Caption         =   "确定"
       Height          =   375
       Left            =   2040
-      TabIndex        =   34
+      TabIndex        =   32
       Top             =   3360
       Width           =   975
    End
@@ -246,7 +246,7 @@ Begin VB.Form frmOptions
          Caption         =   "用两个Esc输入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   13
+         TabIndex        =   11
          Top             =   1200
          Width           =   1935
       End
@@ -254,7 +254,7 @@ Begin VB.Form frmOptions
          Caption         =   "图片棋盘的红子用白底红字表示"
          Height          =   255
          Left            =   120
-         TabIndex        =   15
+         TabIndex        =   13
          Top             =   1920
          Width           =   2895
       End
@@ -262,16 +262,9 @@ Begin VB.Form frmOptions
          Caption         =   "使用ANSI文本棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   14
+         TabIndex        =   12
          Top             =   1560
          Width           =   1815
-      End
-      Begin VB.TextBox txtFlashPath 
-         Height          =   270
-         Left            =   120
-         TabIndex        =   12
-         Top             =   840
-         Width           =   3015
       End
       Begin ComCtl2.UpDown updnPlayIntv 
          Height          =   285
@@ -308,14 +301,6 @@ Begin VB.Form frmOptions
          TabIndex        =   6
          Top             =   240
          Width           =   1095
-      End
-      Begin VB.Label lblFlashPath 
-         Caption         =   "指定Flash棋盘路径"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   11
-         Top             =   600
-         Width           =   2415
       End
       Begin VB.Label lblPlayIntv 
          Caption         =   "播放延时"
@@ -379,7 +364,6 @@ chkSounds.Value = IIf(Options_bSounds, 1, 0)
 chkAutoPlay.Value = IIf(Options_bAutoPlay, 1, 0)
 nPlayIntv = Options_nPlayIntv
 txtPlayIntv.Text = nPlayIntv
-txtFlashPath.Text = Options_szFlashPath
 chkEscapeDouble.Value = IIf(Options_bEscapeDouble, 1, 0)
 chkAnsiText.Value = IIf(Options_bAnsiText, 1, 0)
 chkMonoBitmap.Value = IIf(Options_bMonoBitmap, 1, 0)
@@ -426,7 +410,6 @@ Options_bLargeGui = optLargeGui.Value
 Options_bSounds = (chkSounds.Value = 1)
 Options_nPlayIntv = nPlayIntv
 Options_bAutoPlay = (chkAutoPlay.Value = 1)
-Options_szFlashPath = txtFlashPath.Text
 Options_bEscapeDouble = (chkEscapeDouble.Value = 1)
 Options_bAnsiText = (chkAnsiText.Value = 1)
 Options_bMonoBitmap = (chkMonoBitmap.Value = 1)

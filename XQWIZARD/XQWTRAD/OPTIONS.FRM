@@ -266,13 +266,6 @@ Begin VB.Form frmOptions
          Top             =   1560
          Width           =   1815
       End
-      Begin VB.TextBox txtFlashPath 
-         Height          =   270
-         Left            =   120
-         TabIndex        =   12
-         Top             =   840
-         Width           =   3015
-      End
       Begin ComCtl2.UpDown updnPlayIntv 
          Height          =   285
          Left            =   2640
@@ -308,14 +301,6 @@ Begin VB.Form frmOptions
          TabIndex        =   6
          Top             =   240
          Width           =   1095
-      End
-      Begin VB.Label lblFlashPath 
-         Caption         =   "指定Flash棋盤路徑"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   11
-         Top             =   600
-         Width           =   2415
       End
       Begin VB.Label lblPlayIntv 
          Caption         =   "播放延時"
@@ -379,7 +364,6 @@ chkSounds.Value = IIf(Options_bSounds, 1, 0)
 chkAutoPlay.Value = IIf(Options_bAutoPlay, 1, 0)
 nPlayIntv = Options_nPlayIntv
 txtPlayIntv.Text = nPlayIntv
-txtFlashPath.Text = Options_szFlashPath
 chkEscapeDouble.Value = IIf(Options_bEscapeDouble, 1, 0)
 chkAnsiText.Value = IIf(Options_bAnsiText, 1, 0)
 chkMonoBitmap.Value = IIf(Options_bMonoBitmap, 1, 0)
@@ -426,7 +410,6 @@ Options_bLargeGui = optLargeGui.Value
 Options_bSounds = (chkSounds.Value = 1)
 Options_nPlayIntv = nPlayIntv
 Options_bAutoPlay = (chkAutoPlay.Value = 1)
-Options_szFlashPath = txtFlashPath.Text
 Options_bEscapeDouble = (chkEscapeDouble.Value = 1)
 Options_bAnsiText = (chkAnsiText.Value = 1)
 Options_bMonoBitmap = (chkMonoBitmap.Value = 1)

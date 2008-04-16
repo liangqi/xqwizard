@@ -161,7 +161,6 @@ Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_bAutoPlay        As Boolean  ' 自动播放
 Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
-Public Options_szFlashPath      As String   ' Flash棋盘路径
 Public Options_bEscapeDouble    As Boolean  ' 用两个Esc输入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盘
 Public Options_bMonoBitmap      As Boolean  ' 图片棋盘的红子用白底红字表示
@@ -1368,6 +1367,29 @@ End Sub
 ' 生成Flash棋盘
 Public Sub CopyFlash()
 
+Dim i As Integer, szPosition As String, szFlash As String
+szFlash = "<embed src=" + Chr(34) + "http://www.elephantbase.net/flashxq.swf" + Chr(34) + " width=" + Chr(34) + "216" + Chr(34) + " height=" + Chr(34) + "264" + Chr(34) + _
+        " allowScriptAccess=" + Chr(34) + "sameDomain" + Chr(34) + " quality=" + Chr(34) + "high" + Chr(34) + " wmode=" + Chr(34) + "transparent" + Chr(34) + " flashvars=" + Chr(34)
+If Not Game_bStartPos Then
+    szPosition = Game_szIrrevFen(0)
+    szPosition = Replace(szPosition, " ", "+")
+    szPosition = Replace(szPosition, "-", "%2D")
+    szPosition = Replace(szPosition, "/", "%2F")
+    szFlash = szFlash + "Position=" + szPosition + "&"
+End If
+szFlash = szFlash + "MoveList="
+For i = 1 To Game_nMaxMove
+    szFlash = szFlash + Replace(Move2Iccs(Game_mvMove(i)), "-", "%2D") + "+"
+Next
+szFlash = szFlash + Chr(34) + " type=" + Chr(34) + "application/x-shockwave-flash" + Chr(34) + " pluginspage=" + Chr(34) + "http://www.macromedia.com/go/getflashplayer" + Chr(34) + " />"
+If Not Game_bStartPos Then
+    szFlash = szFlash + "<p>" + Game_szIrrevFen(0) + "</p>"
+End If
+szFlash = szFlash + "<p>欢迎访问<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.elephantbase.net</a></p>"
+Clipboard.Clear
+Clipboard.SetText szFlash
+MsgBox "Flash棋盘代码已复制到剪贴板。", vbInformation
+
 End Sub
 
 ' 生成图片棋盘
@@ -2565,7 +2587,6 @@ Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1"))
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
-Options_szFlashPath = GetSetting("XQWizard", "Options", "FlashPath", "http://www.elephantbase.net/flashxq.swf")
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
@@ -2622,7 +2643,6 @@ SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
-SaveSetting "XQWizard", "Options", "FlashPath", Options_szFlashPath
 SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
 SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
 SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")
@@ -2707,7 +2727,7 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.0 Then
+            If Rnd < 0# Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
