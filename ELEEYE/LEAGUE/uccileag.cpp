@@ -1,6 +1,6 @@
 /*
 UCCILEAG - a Computer Chinese Chess League (UCCI Engine League) Emulator
-Designed by Morning Yellow, Version: 3.62, Last Modified: Nov. 2007
+Designed by Morning Yellow, Version: 3.67, Last Modified: Apr. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../utility/parse.h"
 #include "../utility/pipe.h"
 #include "../utility/wsockbas.h"
-#include "../utility/base64.h"
+#include "../codec/base64/base64.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -129,7 +129,7 @@ static char RobinTable[2 * MAX_TEAM - 2][MAX_TEAM / 2][2];
 static struct {
   sint8 cResult[MAX_ROBIN][2 * MAX_TEAM - 2][MAX_TEAM / 2];
   char szHost[MAX_CHAR], szPath[MAX_CHAR], szPassword[MAX_CHAR];
-  char szExt[MAX_CHAR], szJavaXQ[MAX_CHAR], szCounter[MAX_CHAR], szHeader[MAX_CHAR], szFooter[MAX_CHAR];
+  char szExt[MAX_CHAR], szCounter[MAX_CHAR], szHeader[MAX_CHAR], szFooter[MAX_CHAR];
   char szProxyHost[MAX_CHAR], szProxyUser[MAX_CHAR], szProxyPassword[MAX_CHAR];
   int nPort, nRefresh, nInterval, nProxyPort;
   TimerStruct tb;
@@ -481,10 +481,12 @@ static const char *const cszResultChin[4] = {
 inline void MOVE_ICCS(char *szIccs, int mv) {
   szIccs[0] = (FILE_X(SRC(mv))) + 'A' - FILE_LEFT;
   szIccs[1] = '9' + RANK_TOP - (RANK_Y(SRC(mv)));
-  szIccs[2] = '-';
-  szIccs[3] = (FILE_X(DST(mv))) + 'A' - FILE_LEFT;
-  szIccs[4] = '9' + RANK_TOP - (RANK_Y(DST(mv)));
-  szIccs[5] = '\0';
+  szIccs[2] = '%';
+  szIccs[3] = '2';
+  szIccs[4] = 'D';
+  szIccs[5] = (FILE_X(DST(mv))) + 'A' - FILE_LEFT;
+  szIccs[6] = '9' + RANK_TOP - (RANK_Y(DST(mv)));
+  szIccs[7] = '\0';
 }
 
 static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForce = FALSE) {
@@ -545,7 +547,7 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForc
     fprintf(fp, "    </p>\n");
   }
 
-  // 显示JavaXQ页面
+  // 显示Flash棋盘
   fprintf(fp, "    <table align=\"center\">\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
@@ -554,18 +556,16 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForc
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <applet code=\"JavaXQ\" codebase=\"%s\" align=\"baseline\" width=\"249\" height=\"301\">\n", Live.szJavaXQ);
-  fprintf(fp, "            <param name=\"MoveList\" value=\"");
+  fprintf(fp, "          <embed src=\"http://www.elephantbase.net/flashxq.swf\" width=\"216\" height=\"264\""
+      "allowScriptAccess=\"sameDomain\" quality=\"high\" wmode=\"transparent\" flashvars=\"MoveList=");
   for (i = 1; i <= lppgn->nMaxMove; i ++) {
     MOVE_ICCS(szIccs, lppgn->wmvMoveTable[i]);
-    fprintf(fp, "%s ", szIccs);
+    fprintf(fp, "%s+", szIccs);
   }
-  fprintf(fp, "\">\n");
   if (lppgn->nResult == 0) {
-    fprintf(fp, "            <param name=\"Step\" value=\"%d\">\n", lppgn->nMaxMove);
+    fprintf(fp, "&Step=%d", lppgn->nMaxMove);
   }
-  fprintf(fp, "            请登录<a href=\"http://www.java.com/\" target=\"_blank\">www.java.com</a>下载Java运行包\n");
-  fprintf(fp, "          </applet>\n");
+  fprintf(fp, "\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" />\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
@@ -1189,7 +1189,6 @@ int main(void) {
   Live.szHost[0] = Live.szPath[0] = Live.szPassword[0] = Live.szCounter[0] = '\0';
   Live.szProxyHost[0] = Live.szProxyUser[0] = Live.szProxyPassword[0] = '\0';
   strcpy(Live.szExt, "htm");
-  strcpy(Live.szJavaXQ, "http://www.elephantbase.net/java/");
   Live.nPort = Live.nProxyPort = 80;
   Live.nRefresh = Live.nInterval = 0;
 
@@ -1251,8 +1250,6 @@ int main(void) {
       strcpy(Live.szPassword, lp); // 上传页面口令
     } else if (StrEqvSkip(lp, "Extension=")) {
       strcpy(Live.szExt, lp);      // 上传文件后缀
-    } else if (StrEqvSkip(lp, "JavaXQ=")) {
-      strcpy(Live.szJavaXQ, lp);   // JavaXQ路径
     } else if (StrEqvSkip(lp, "Counter=")) {
       strcpy(Live.szCounter, lp);  // 计数器路径
     } else if (StrEqvSkip(lp, "Header=")) {
@@ -1297,7 +1294,7 @@ int main(void) {
   if (League.bPromotion) {
     printf("规则：　　允许仕(士)相(象)升变成兵(卒)\n");
   }
-  printf("模拟器：　UCCI引擎联赛模拟器 3.62\n\n");
+  printf("模拟器：　UCCI引擎联赛模拟器 3.67\n\n");
   printf("参赛引擎：\n\n");
   printf("   缩写 引擎名称");
   PrintDup(' ', League.nNameLen - 8);
