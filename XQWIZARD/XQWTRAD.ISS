@@ -33,6 +33,7 @@ Name: "fen"; Description: "關聯局面文件(*.FEN)"; Types: default
 Name: "xqf"; Description: "關聯象棋演播室棋譜文件(*.XQF)"; Types: default
 Name: "mxq"; Description: "關聯弈天棋譜文件(*.MXQ)"; Types: default
 Name: "che"; Description: "關聯QQ象棋棋譜文件(*.CHE)"; Types: default
+Name: "eleeye"; Description: "加載 ElephantEye 引擎"; Types: default
 
 [Files]
 ; 系統文件
@@ -562,6 +563,8 @@ Root: HKCR; Subkey: "XQWizard.CHE\DefaultIcon"; ValueType: string; ValueData: "{
 Root: HKCR; Subkey: "XQWizard.CHE\Shell"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "打開(&O)"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: che
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
