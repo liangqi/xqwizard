@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.7 (简体中文版)
+AppVerName=象棋巫师 3.71 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -47,6 +47,7 @@ Source: "ATOM.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LOADING.GIF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EVALUATE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion

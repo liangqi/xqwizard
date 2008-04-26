@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.7, Last Modified: Mar. 2008
+' Designed by Morning Yellow, Version: 3.71, Last Modified: Apr. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -21,8 +21,12 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
+Public Declare Function TransparentWindow Lib "TRANSWIN.DLL" Alias "_TransparentWindow@12" _
+        (ByVal hInstance As Long, ByVal hBitmap As Long, ByVal crTransparent As Long) As Long
+Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
+
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.7"
+Public Const STRING_VERSION     As String = "3.71"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -2878,17 +2882,19 @@ End Sub
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim i As Integer, sz As String
+Dim hWnd As Long, i As Integer, sz As String
+Dim imgLoading As Picture
 
-' 弹出启动画面
+' 弹出启动画面，初始化
 App_bPrevInstance = App.PrevInstance
-frmStartUp.Show
-frmStartUp.Width = frmStartUp.imgStartUp.Width
-frmStartUp.Height = frmStartUp.imgStartUp.Height
-frmStartUp.Refresh
-' 初始化，可能有等待，启动画面保持
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+hWnd = 0
+On Error GoTo lnSkipLoading
+Set imgLoading = LoadPicture(App_szPath + "LOADING.GIF")
+hWnd = TransparentWindow(App.hInstance, imgLoading.Handle, &H8000&)
+lnSkipLoading:
+On Error GoTo 0
 CchessInit
 ' 判断是否允许升变
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3013,7 +3019,9 @@ If Not App_bPromotion Then
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
-Unload frmStartUp
+If hWnd <> 0 Then
+    DestroyWindow hWnd
+End If
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If

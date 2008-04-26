@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.7, Last Modified: Apr. 2008
+' Designed by Morning Yellow, Version: 3.71, Last Modified: Apr. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -21,8 +21,12 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
+Public Declare Function TransparentWindow Lib "TRANSWIN.DLL" Alias "_TransparentWindow@12" _
+        (ByVal hInstance As Long, ByVal hBitmap As Long, ByVal crTransparent As Long) As Long
+Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
+
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.7"
+Public Const STRING_VERSION     As String = "3.71"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
@@ -2727,7 +2731,7 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 0.0 Then
+            If Rnd < 0# Then
                 ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/35392.html", vbNullString, vbNullString, SW_SHOWNORMAL
             Else
                 ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/47666.htm", vbNullString, vbNullString, SW_SHOWNORMAL
@@ -2878,17 +2882,19 @@ End Sub
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim i As Integer, sz As String
+Dim hWnd As Long, i As Integer, sz As String
+Dim imgLoading As Picture
 
-' 彈出啟動畫面
+' 弹出启动画面，初始化
 App_bPrevInstance = App.PrevInstance
-frmStartUp.Show
-frmStartUp.Width = frmStartUp.imgStartUp.Width
-frmStartUp.Height = frmStartUp.imgStartUp.Height
-frmStartUp.Refresh
-' 初始化，可能有等待，啟動畫面保持
 Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+hWnd = 0
+On Error GoTo lnSkipLoading
+Set imgLoading = LoadPicture(App_szPath + "LOADING.GIF")
+hWnd = TransparentWindow(App.hInstance, imgLoading.Handle, &H8000&)
+lnSkipLoading:
+On Error GoTo 0
 CchessInit CCHESS_TRADITIONAL
 ' 判断是否允许升变
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3014,7 +3020,9 @@ If Not App_bPromotion Then
 End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 SetWindowPos App_frmMain.hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
-Unload frmStartUp
+If hWnd <> 0 Then
+    DestroyWindow hWnd
+End If
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
