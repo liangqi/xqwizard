@@ -21,10 +21,6 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
-Public Declare Function TransparentWindow Lib "TRANSWIN.DLL" Alias "_TransparentWindow@12" _
-        (ByVal hInstance As Long, ByVal hBitmap As Long, ByVal crTransparent As Long) As Long
-Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
-
 ' 全局常量——象棋巫師信息
 Public Const STRING_VERSION     As String = "3.71"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"

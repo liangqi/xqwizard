@@ -28,6 +28,7 @@ Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
+Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
@@ -195,6 +196,39 @@ Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal l
 Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
 
 Private Stdio_si As StartupInfo
+
+' For Transparent Window
+Private Type Rect
+    nLeft   As Long
+    nTop    As Long
+    nRight  As Long
+    nBottom As Long
+End Type
+
+Private Type Bitmap
+    bmType      As Long
+    bmWidth     As Long
+    bmHeight    As Long
+    bmWidthBytes As Long
+    bmPlanes    As Integer
+    bmBitsPixel As Integer
+    bmBits      As Long
+End Type
+
+Private Const WS_VISIBLE As Long = &H10000000 ' CreateWindowExA
+
+Private Declare Sub GetWindowRect Lib "USER32.DLL" (ByVal hWnd As Long, ByRef lpRect As Rect)
+Private Declare Function GetDesktopWindow Lib "USER32.DLL" () As Long
+Private Declare Function CreateWindowExA Lib "USER32.DLL" (ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, ByVal dwStyle As Long, _
+        ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hWndParent As Long, ByVal hMenu As Long, ByVal hInstance As Long, ByVal lpParam As Long) As Long
+Private Declare Function GetDC Lib "USER32.DLL" (ByVal hWnd As Long) As Long
+Private Declare Sub ReleaseDC Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hdc As Long)
+Private Declare Function CreateCompatibleDC Lib "GDI32.DLL" (ByVal hdc As Long) As Long
+Private Declare Sub SelectObject Lib "GDI32.DLL" (ByVal hdc As Long, ByVal hgdiobj As Long)
+Private Declare Sub GetObjectA Lib "GDI32.DLL" (ByVal hgdiobj As Long, ByVal cbBuffer As Long, ByRef lpvObject As Any)
+Private Declare Sub DeleteDC Lib "GDI32.DLL" (ByVal hdc As Long)
+Private Declare Sub TransparentBlt Lib "MSIMG32.DLL" (ByVal hdcDest As Long, ByVal nXOriginDest As Long, ByVal nYOriginDest As Long, ByVal nWidthDest As Long, ByVal nHeightDest As Long, _
+        ByVal hdcSrc As Long, ByVal nXOriginSrc As Long, ByVal nYOriginSrc As Long, ByVal nWidthSrc As Long, ByVal nHeightSrc As Long, ByVal crTransparent As Long)
 
 ' === End Windows APIs ===
 
@@ -629,3 +663,26 @@ WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
 End Sub
 
 ' === End Stdio ===
+
+' === Begin Transparent Window ===
+
+Public Function TransparentWindow(ByVal hInstance As Long, ByVal hBitmap As Long, ByVal crTransparent As Long)
+
+Dim hWnd As Long, hdc As Long, hdcTmp As Long
+Dim RectVar As Rect, BmpVar As Bitmap
+
+GetWindowRect GetDesktopWindow, RectVar
+hWnd = CreateWindowExA(0, "TransparentWindow", vbNullString, 0, 0, 0, RectVar.nRight, RectVar.nBottom, 0, 0, hInstance, 0)
+hdc = GetDC(hWnd)
+hdcTmp = CreateCompatibleDC(hdc)
+SelectObject hdcTmp, hBitmap
+GetObjectA hBitmap, Len(BmpVar), BmpVar
+TransparentBlt hdc, (RectVar.nRight - BmpVar.bmWidth) \ 2, (RectVar.nBottom - BmpVar.bmHeight) \ 2, _
+        BmpVar.bmWidth, BmpVar.bmHeight, hdcTmp, 0, 0, BmpVar.bmWidth, BmpVar.bmHeight, crTransparent
+DeleteDC hdcTmp
+ReleaseDC hWnd, hdc
+TransparentWindow = hWnd
+
+End Function
+
+' === End Transparent Window ===
