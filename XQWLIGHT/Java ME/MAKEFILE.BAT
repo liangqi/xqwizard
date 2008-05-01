@@ -4,6 +4,6 @@ cd bin
 ..\makefile\7z a -tzip ..\XQWLight.jar *
 cd ..
 copy bin\META-INF\MANIFEST.MF XQWLight.jad
-echo. >> XQWLight.jad
+echo.>> XQWLight.jad
 makefile\SHOWSIZE XQWLight.jar "MIDlet-Jar-Size: %%d" >> XQWLight.jad
-echo MIDlet-Jar-URL: XQWLight.jar >> XQWLight.jad
+echo MIDlet-Jar-URL: XQWLight.jar>> XQWLight.jad

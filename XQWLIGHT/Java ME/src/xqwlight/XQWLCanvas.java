@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.24, Last Modified: Mar. 2008
+Designed by Morning Yellow, Version: 1.26, Last Modified: May 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ class XQWLCanvas extends Canvas {
 	private static final int RESP_DRAW = 9;
 	private static final int RESP_LOSS = 10;
 
-	private static Image imgBackground = null, imgXQWLight, imgThinking;
+	private static Image imgBackground, imgXQWLight, imgThinking;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
 		"rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
@@ -65,19 +65,13 @@ class XQWLCanvas extends Canvas {
 	static {
 		try {
 			imgBackground = Image.createImage("/images/background.png");
-		} catch (Exception e) {
-			// Ignored
-		}
-		if (imgBackground != null) {
-			widthBackground = imgBackground.getWidth();
-			heightBackground = imgBackground.getHeight();
-		}
-		try {
 			imgXQWLight = Image.createImage("/images/xqwlight.png");
 			imgThinking = Image.createImage("/images/thinking.png");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+		widthBackground = imgBackground.getWidth();
+		heightBackground = imgBackground.getHeight();
 	}
 
 	XQWLMIDlet midlet;
@@ -127,19 +121,11 @@ class XQWLCanvas extends Canvas {
 					if (false) {
 						// Code Style
 					} else if (c == cmdBack) {
-						midlet.rsData[0] = 0;
-						midlet.startMusic("form");
-						Display.getDisplay(midlet).setCurrent(midlet.form);
+						back();
 					} else if (c == cmdRetract) {
-						// Restore Retract Status
-						System.arraycopy(retractData, 0, midlet.rsData, 0, XQWLMIDlet.RS_DATA_LEN);
-						load();
-						repaint();
-						serviceRepaints();
+						retract();
 					} else if (c == cmdAbout) {
-						Display.getDisplay(midlet).setCurrent(altAbout);
-						phase = PHASE_LOADING;
-						setFullScreenMode(true);
+						about();
 					}
 				}
 			}
@@ -248,17 +234,12 @@ class XQWLCanvas extends Canvas {
 			}
 			phase = PHASE_WAITING;
 		}
-		if (imgBackground == null) {
-			g.setColor(240, 224, 208);
-			g.fillRect(0, 0, width, height);
-		} else {
-			for (int x = 0; x < width; x += widthBackground) {
-				for (int y = 0; y < height; y += heightBackground) {
-					g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
-				}
+		for (int x = 0; x < width; x += widthBackground) {
+			for (int y = 0; y < height; y += heightBackground) {
+				g.drawImage(imgBackground, x, y, Graphics.LEFT + Graphics.TOP);
 			}
 		}
-		g.drawImage(imgBoard, left, top, Graphics.LEFT + Graphics.TOP);
+		g.drawImage(imgBoard, width / 2, height / 2, Graphics.HCENTER + Graphics.VCENTER);
 		for (int sq = 0; sq < 256; sq ++) {
 			if (Position.IN_BOARD(sq)) {
 				int pc = pos.squares[sq];
@@ -324,21 +305,13 @@ class XQWLCanvas extends Canvas {
 		if (bCompatible) {
 			switch (code) {
 			case KEY_STAR:
-				midlet.rsData[0] = 0;
-				midlet.startMusic("form");
-				Display.getDisplay(midlet).setCurrent(midlet.form);
+				back();
 				return;
 			case KEY_NUM0:
-				// Restore Retract Status
-				System.arraycopy(retractData, 0, midlet.rsData, 0, XQWLMIDlet.RS_DATA_LEN);
-				load();
-				repaint();
-				serviceRepaints();
+				retract();
 				return;
 			case KEY_POUND:
-				Display.getDisplay(midlet).setCurrent(altAbout);
-				phase = PHASE_LOADING;
-				setFullScreenMode(true);
+				about();
 				return;
 			}
 		}
@@ -408,6 +381,19 @@ class XQWLCanvas extends Canvas {
 		}
 		if (phase == PHASE_THINKING) {
 			return;
+		}
+		if (bCompatible && height - y < fontSmall.getHeight()) {
+			switch (x * 3 / width) {
+			case 0:
+				back();
+				return;
+			case 1:
+				retract();
+				return;
+			case 2:
+				about();
+				return;
+			}
 		}
 		cursorX = Util.MIN_MAX(0, (x - left) / squareSize, 8);
 		cursorY = Util.MIN_MAX(0, (y - top) / squareSize, 9);
@@ -513,5 +499,25 @@ class XQWLCanvas extends Canvas {
 		repaint();
 		serviceRepaints();
 		return !getResult(response);
+	}
+
+	void back() {
+		midlet.rsData[0] = 0;
+		midlet.startMusic("form");
+		Display.getDisplay(midlet).setCurrent(midlet.form);
+	}
+
+	void retract() {
+		// Restore Retract Status
+		System.arraycopy(retractData, 0, midlet.rsData, 0, XQWLMIDlet.RS_DATA_LEN);
+		load();
+		repaint();
+		serviceRepaints();
+	}
+
+	void about() {
+		Display.getDisplay(midlet).setCurrent(altAbout);
+		phase = PHASE_LOADING;
+		setFullScreenMode(true);
 	}
 }
