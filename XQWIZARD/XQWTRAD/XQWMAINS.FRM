@@ -53,7 +53,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileViewPgn"
-            Object.ToolTipText     =   "查看PGN文件"
+            Object.ToolTipText     =   "查看文本棋譜"
          EndProperty
          BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileEditTags"
@@ -1460,7 +1460,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnFilePgn 
-         Caption         =   "琩&PGNゅン"
+         Caption         =   "琩ゅセ囱眯(&V)"
       End
       Begin VB.Menu mnFileTags 
          Caption         =   "絪胯夹帽(&T)..."
@@ -1991,7 +1991,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.7, Last Modified: Apr. 2008
+' Designed by Morning Yellow, Version: 3.72, Last Modified: May 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2094,7 +2094,7 @@ End Sub
 Private Sub mnFilePgn_Click()
 
 WriteFile WRITE_TEMP_FILE
-ShellExecuteA 0, vbNullString, App_szPath + "查看PGN文件(只讀).TXT", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath + "查看文本棋譜(只讀).TXT", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

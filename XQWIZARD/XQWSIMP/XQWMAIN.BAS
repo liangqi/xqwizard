@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.71, Last Modified: Apr. 2008
+' Designed by Morning Yellow, Version: 3.72, Last Modified: May 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' È«¾Ö³£Á¿¡ª¡ªÏóÆåÎ×Ê¦ÐÅÏ¢
-Public Const STRING_VERSION     As String = "3.71"
+Public Const STRING_VERSION     As String = "3.72"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' ÈÕ»ýÔÂÀÛÌõÄ¿Êý
 Public Const MAX_ADVERTS        As Integer = 100  ' ¹ã¸æµÄ×î´óÌõÄ¿Êý
@@ -631,7 +631,7 @@ Dim sd As Integer, cnt As Integer
 Dim i As Integer, bReturned As Boolean, nFileNo As Integer
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open IIf(bTempFile, App_szPath + "²é¿´PGNÎÄ¼þ(Ö»¶Á).TXT", App_szFileName) For Output As #nFileNo
+Open IIf(bTempFile, App_szPath + "²é¿´ÎÄ±¾ÆåÆ×(Ö»¶Á).TXT", App_szFileName) For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, PutLabel("Game", "Chinese Chess")
 Print #nFileNo, PutLabel("Event", Game_szEvent)
@@ -697,7 +697,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "ÎÞ·¨´ò¿ªÎÄ¼þ " + IIf(bTempFile, App_szPath + "²é¿´PGNÎÄ¼þ(Ö»¶Á).TXT", App_szFileName), vbExclamation
+MsgBox "ÎÞ·¨´ò¿ªÎÄ¼þ " + IIf(bTempFile, App_szPath + "²é¿´ÎÄ±¾ÆåÆ×(Ö»¶Á).TXT", App_szFileName), vbExclamation
 
 End Sub
 
@@ -2526,7 +2526,7 @@ Gui_szTips(14) = "¡¡¡¡Ê¹ÓÃ¡°¸´ÖÆÎÄ±¾ÆåÅÌ¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÌù³ö¾²Ì¬µÄANSI´úÂë£¬¸
         "¡¡¡¡Èç¹ûBBS²»Ö§³ÖANSI´úÂë£¬»òÕßÖ»ÊÇÎªÁËÌùµ½ÆÕÍ¨ÎÄ±¾ÉÏ£¬¿ÉÒÔÔÚÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖÐ°Ñ¡°Ê¹ÓÃANSIÎÄ±¾ÆåÅÌ¡±µÄ¹³È¥µô¡£Çø±ðºì×ÓºÍºÚ×ÓµÄ·½·¨ÊÇ£ººì×ÓµÄÁ½±ß´øÔ²À¨ºÅ£¬ºÚ×ÓµÄÁ½±ß´ø·½À¨ºÅ¡£"
 Gui_szTips(15) = "¡¡¡¡Èç¹û¸ÃBBSÏµÍ³ÊÇÐèÒª°´Á½´ÎEscape¼ü²ÅÄÜ¼üÈëÒ»¸öEscape×Ö·û(Ò²¿ÉÄÜÈ¡¾öÓÚTelnetÖÕ¶ËµÄÉèÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿òÖÐ°Ñ¡°ÓÃÁ½¸öEscÊäÈëANSI¡±¹³ÉÏ¡£"
 Gui_szTips(16) = "¡¡¡¡ÎÄ±¾ÆåÅÌµÄ×îºóÒ»ÐÐÖîÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆåÅÌ±àÂë(³ÆÎªFEN´®)£¬Èç¹ûÄúÔÚÍøÂçÂÛÌ³ÉÏ¿´µ½ÁËÕâÑùµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±Ñ¡µ¥µÄ¡°µ¼ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆåÅÌµ¼Èëµ½ÏóÆåÎ×Ê¦ÖÐ£¬ÃâÈ¥ÁË°Ú·ÅÆå×ÓÎ»ÖÃµÄ·³ÄÕ¡£"
-Gui_szTips(17) = "¡¡¡¡µã»÷¡°²é¿´PGNÎÄ¼þ¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖÐÌá¹©ÁË·½±ã¡£"
+Gui_szTips(17) = "¡¡¡¡µã»÷¡°²é¿´ÎÄ±¾ÆåÆ×¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖÐÌá¹©ÁË·½±ã¡£"
 Gui_szTips(18) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É¶ÁÈëÁªÖÚ¡¢ÞÄÌì¡¢ÖÐ¹úÓÎÏ·ÖÐÐÄµÈÖÐ¹úÏóÆåµÄ´æÅÌÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾ÆåÆ×ÎÄ¼þ£¬°ÑÕâÐ©º¬ÓÐ×Å·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÌù°å£¬µã»÷¡°´Ó¼ôÌù°åµ¼Èë¡±°´Å¥£¬ÕâÐ©×Å·¨¾Í»áÂ¼ÖÆµ½ÏóÆåÎ×Ê¦ÖÐ¡£"
 Gui_szTips(19) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É½«ÆåÆ×µ¼³öÎªÖ§³ÖFlashÆåÅÌµÄHTMLÎÄ±¾£¬ÌØ±ðÊÊºÏ½«ÆåÆ×ÔÚÍøÉÏ·¢±í¡£"
 Gui_szTips(20) = "¡¡¡¡ÏóÆåÎ×Ê¦Ìá¹©µÄÆåÆ×¼üÅÌÊäÈë·¨ÎªÏ²»¶¼üÅÌÂ¼ÈëÆåÆ×µÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßÐ§µÄÆåÆ×ÊäÈë·½·¨£¬ÆåÓÑ¿É¸ù¾Ý×Ô¼ºµÄÏ°¹ßÔÚÊý×ÖÐ¡¼üÅÌ»òWXF×ÖÄ¸¸ñÊ½ÖÐÈÎÒâÑ¡Ôñ¡£"
@@ -2534,7 +2534,7 @@ Gui_szTips(21) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬µã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¾Í¿É´Ó¸Ã²½×Ô¶¯ÑÝÊ¾
 Gui_szTips(22) = "¡¡¡¡µã»÷¡°²é¿´Í¼Æ¬ÆåÅÌ¡±°´Å¥£¬°ÑÍ¼Æ¬ÆåÅÌ¸´ÖÆ²¢Õ³Ìùµ½WordµÈÎÄ×Ö´¦ÀíÈí¼þÖÐ£¬¿ÉÒÔÉú³ÉÆ¯ÁÁµÄÏóÆå¸å¼þ¡£"
 Gui_szTips(23) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬¿ÉÒÔÊ¹ÓÃÆåÅÌµ¹ÖÃºÍ×óÓÒµ÷»»¹¦ÄÜÀ´´Ó²»Í¬µÄ½Ç¶ÈÐÀÉÍÆå¾Ö¡£ÆäÖÐ×óÓÒµ÷»»¹¦ÄÜ»¹¿ÉÒÔÒ»´Î½«ÀàËÆÓÚ¡°ÅÚ°ËÆ½Îå¡±¿ª¾ÖÕâÑùµÄÆåÆ××Ô¶¯×ª»»³É´ó¼ÒÏ°¹ßµÄ¡°ÅÚ¶þÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
 Gui_szTips(24) = "¡¡¡¡Èç¹ûÔÚÐÀÉÍÆåÆ×Ê±Óöµ½¸´ÔÓµÄ¾ÖÃæ£¬¿ÉÒÔµã»÷¡°·ÖÎö¾ÖÃæ¡±°´Å¥£¬½«µ±Ç°Æå¾ÖÐÂ¿ªÉèÒ»¸öÏóÆåÎ×Ê¦µÄ´°¿Ú£¬×ÔÓÉÍÆÑÝºóÐøµÄ±ä»¯¡£"
-Gui_szTips(25) = "¡¡¡¡ÔÚÁ½¸öÏóÆåÎ×Ê¦´°¿ÚÖÐ£¬Áé»îÔËÓÃ¡°²é¿´PGNÎÄ¼þ¡±ºÍ¡°´Ó¼ôÌù°åµ¼Èë¡±¹¦ÄÜ£¬¿É½«ÍÆÑÝÆåÅÌÖÐµÄÆåÆ×¼ÇÂ¼µ¼Èëµ½µ±Ç°Æå¾ÖÖÐ¡£"
+Gui_szTips(25) = "¡¡¡¡ÔÚÁ½¸öÏóÆåÎ×Ê¦´°¿ÚÖÐ£¬Áé»îÔËÓÃ¡°²é¿´ÎÄ±¾ÆåÆ×¡±ºÍ¡°´Ó¼ôÌù°åµ¼Èë¡±¹¦ÄÜ£¬¿É½«ÍÆÑÝÆåÅÌÖÐµÄÆåÆ×¼ÇÂ¼µ¼Èëµ½µ±Ç°Æå¾ÖÖÐ¡£"
 Gui_szTips(26) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¸ö×ÔÓÉÈí¼þ£¬Èç¹ûÄú¾õµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØ½«±¾Èí¼þÉÏÔØµ½ÈÎÒ»¸ö¹²ÏíÈí¼þÏÂÔØÕ¾µã¡£" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ê¦µÄÔ´³ÌÐò·¢²¼ÔÚ http://sourceforge.net/projects/xqwizard/ Õâ¸öÒ³ÃæÉÏ£¬Äú¿ÉÒÔ¸ù¾Ý×Ô¼ºµÄÐèÒª¶ÔÔ´³ÌÐò½øÐÐÐÞ¸Ä£¬²¢ÒÀÕÕGPLÐ­Òé·¢²¼ÄúÐÞ¸Ä¹ýµÄÔ´³ÌÐò¡£"
 Gui_szTips(27) = "¡¡¡¡ÏóÆåÎ×Ê¦ÔÚ¿ª·¢¹ý³ÌÖÐµÃµ½ÁË¹ã´óÆåÃÔÅóÓÑµÄÈÈÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔÐÄµÄ¸ÐÐ»£¬Í¬Ê±Ò²Ï£ÍûÄú¼ÌÐøÖ§³ÖÏóÆåÎ×Ê¦£¬¹Ø×¢ http://www.elephantbase.net/ ¡£" + vbCrLf + _

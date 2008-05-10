@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.71 (繁體中文版)
+AppVerName=象棋巫師 3.72 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -57,6 +57,7 @@ Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQF2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQ2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CHE2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "PGN2XQF.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
