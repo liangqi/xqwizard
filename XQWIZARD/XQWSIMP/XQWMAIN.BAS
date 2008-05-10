@@ -765,6 +765,20 @@ End If
 
 End Function
 
+' 实现“输出为XQF格式”功能
+Public Sub ExportXqf()
+
+Dim sz As String
+sz = FileDialog("输出为XQF格式", "象棋演播室棋谱", "XQF", DefaultFileName)
+If sz <> "" Then
+    WriteFile WRITE_TEMP_FILE
+    On Error Resume Next
+    Shell App_szPath + "PGN2XQF.EXE " + Chr(34) + App_szPath + "查看文本棋谱(只读).TXT" + Chr(34) + " " + Chr(34) + sz + Chr(34), vbHide
+    On Error GoTo 0
+End If
+
+End Sub
+
 ' 打开FEN局面
 Public Sub LoadFenFile(ByVal szFenFile As String)
 
@@ -2713,7 +2727,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2724,7 +2738,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0# Then
@@ -2752,7 +2766,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2802,7 +2816,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2815,7 +2829,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

@@ -765,6 +765,20 @@ End If
 
 End Function
 
+' 實現“輸出為XQF格式”功能
+Public Sub ExportXqf()
+
+Dim sz As String
+sz = FileDialog("輸出為XQF格式", "象棋演播室棋譜", "XQF", DefaultFileName)
+If sz <> "" Then
+    WriteFile WRITE_TEMP_FILE
+    On Error Resume Next
+    Shell App_szPath + "PGN2XQF.EXE " + Chr(34) + App_szPath + "查看文本棋譜(只讀).TXT" + Chr(34) + " " + Chr(34) + sz + Chr(34), vbHide
+    On Error GoTo 0
+End If
+
+End Sub
+
 ' 打開FEN局面
 Public Sub LoadFenFile(ByVal szFenFile As String)
 

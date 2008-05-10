@@ -198,7 +198,7 @@ Begin VB.Form frmMainSmall
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.CommandButton btnCoord 
@@ -1457,6 +1457,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnFileSaveAs 
          Caption         =   "另存为(&A)..."
       End
+      Begin VB.Menu mnFileExportXqf 
+         Caption         =   "输出为&XQF格式..."
+      End
       Begin VB.Menu mnFileSep1 
          Caption         =   "-"
       End
@@ -2089,6 +2092,12 @@ End Sub
 Private Sub mnFileSaveAs_Click()
 
 SaveFileAs
+
+End Sub
+
+Private Sub mnFileExportXqf_Click()
+
+ExportXqf
 
 End Sub
 

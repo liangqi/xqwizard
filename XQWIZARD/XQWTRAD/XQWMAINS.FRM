@@ -1456,6 +1456,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnFileSaveAs 
          Caption         =   "另存為(&A)..."
       End
+      Begin VB.Menu mnFileExportXqf 
+         Caption         =   "輸出為&XQF格式..."
+      End
       Begin VB.Menu mnFileSep1 
          Caption         =   "-"
       End
@@ -2088,6 +2091,12 @@ End Sub
 Private Sub mnFileSaveAs_Click()
 
 SaveFileAs
+
+End Sub
+
+Private Sub mnFileExportXqf_Click()
+
+ExportXqf
 
 End Sub
 
