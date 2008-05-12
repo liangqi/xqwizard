@@ -446,7 +446,7 @@ Else
                     If j > 0 Then
                         szMoveStr = Left(szMoveStr, 3) + Digit2Word(j)
                     End If
-                    MkLng mv, CchessFile2Move(CchessChin2File(CvC(szMoveStr)), Game_posIrrev(Game_nCurrIrrev))
+                    mv = CchessFile2Move(CchessChin2File(CvC(szMoveStr)), Game_posIrrev(Game_nCurrIrrev))
                     AddMove mv
                     bEndFor = False
                     Exit For
@@ -462,7 +462,7 @@ Else
                         szLineStr = Mid(szLineStr, j + 1)
                     End If
                     If Game_nFormat = 1 Then
-                        MkLng mv, CchessFile2Move(CvL(szMoveStr), Game_posIrrev(Game_nCurrIrrev))
+                        mv = CchessFile2Move(CvL(szMoveStr), Game_posIrrev(Game_nCurrIrrev))
                     Else
                         mv = Iccs2Move(szMoveStr)
                     End If

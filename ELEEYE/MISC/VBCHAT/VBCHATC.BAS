@@ -1,5 +1,4 @@
 Attribute VB_Name = "mdlVBChat"
-
 Option Explicit
 
 Public Const BUFFER_LEN As Long = 65536

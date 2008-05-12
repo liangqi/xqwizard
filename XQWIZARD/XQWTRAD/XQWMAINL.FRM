@@ -2756,7 +2756,7 @@ Private Sub txtMove_Change()
 
 Dim mv As Long
 If Len(txtMove.Text) = 4 Then
-    MkLng mv, CchessFile2Move(CvL(txtMove.Text), Game_posIrrev(Game_nCurrIrrev))
+    mv = CchessFile2Move(CvL(txtMove.Text), Game_posIrrev(Game_nCurrIrrev))
     If AddMove(mv, MOVE_WITH_ECHO) Then
         FileUpdated
     End If

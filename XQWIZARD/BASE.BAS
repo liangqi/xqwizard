@@ -36,25 +36,11 @@ Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Public Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
 ' For Atom Subs/Functions
-Public Declare Function VarPtr Lib "ATOM.DLL" Alias "_Lea@4" (ByRef lp As Any) As Long
-Public Declare Function CvBStr Lib "ATOM.DLL" Alias "_Lea@4" (ByVal lp As String) As Long
-Public Declare Function CvInt Lib "ATOM.DLL" Alias "_WordPtr@4" (ByRef lpw As Any) As Integer
-Public Declare Function CvLng Lib "ATOM.DLL" Alias "_DWordPtr@4" (ByRef lpdw As Any) As Long
-Public Declare Function CvCur Lib "ATOM.DLL" Alias "_QWordPtr@4" (ByRef lpqw As Any) As Currency
-Public Declare Function CvSng Lib "ATOM.DLL" Alias "_Real4Ptr@4" (ByRef lpsf As Any) As Single
-Public Declare Function CvDbl Lib "ATOM.DLL" Alias "_Real8Ptr@4" (ByRef lpdf As Any) As Double
-Public Declare Function CvI Lib "ATOM.DLL" Alias "_WordPtr@4" (ByVal lpw As String) As Integer
-Public Declare Function CvL Lib "ATOM.DLL" Alias "_DWordPtr@4" (ByVal lpdw As String) As Long
-Public Declare Function CvC Lib "ATOM.DLL" Alias "_QWordPtr@4" (ByVal lpqw As String) As Currency
-Public Declare Function CvS Lib "ATOM.DLL" Alias "_Real4Ptr@4" (ByVal lpsf As String) As Single
-Public Declare Function CvD Lib "ATOM.DLL" Alias "_Real8Ptr@4" (ByVal lpdf As String) As Double
-Public Declare Sub MkInt Lib "ATOM.DLL" Alias "_MovWordPtr@8" (ByRef lpw As Any, ByVal w As Integer)
-Public Declare Sub MkLng Lib "ATOM.DLL" Alias "_MovDWordPtr@8" (ByRef lpdw As Any, ByVal dw As Long)
-Public Declare Sub MkCur Lib "ATOM.DLL" Alias "_MovQWordPtr@12" (ByRef lpqw As Any, ByVal qw As Currency)
-Public Declare Sub MkSng Lib "ATOM.DLL" Alias "_MovDWordPtr@8" (ByRef lpdw As Any, ByVal dw As Single)
-Public Declare Sub MkDbl Lib "ATOM.DLL" Alias "_MovQWordPtr@12" (ByRef lpqw As Any, ByVal qw As Double)
-Public Declare Function StrAlloc Lib "ATOM.DLL" Alias "_StrAlloc@4" (ByVal lpsz As String) As Long
-Public Declare Sub StrFree Lib "ATOM.DLL" Alias "_StrFree@4" (ByVal lpsz As Long)
+Public Declare Function VarPtr Lib "MSVBVM60.DLL" (ByRef lp As Any) As Long
+Public Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
+Declare Sub GetMem2 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+Declare Sub GetMem4 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+Declare Sub GetMem8 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
 
 ' For URLs
 Public Type UrlType
@@ -233,6 +219,46 @@ Private Declare Sub TransparentBlt Lib "MSIMG32.DLL" (ByVal hdcDest As Long, ByV
 ' === End Windows APIs ===
 
 ' === Begin Atom Subs/Functions ===
+
+Public Function CvI(ByVal sz As String) As Integer
+
+Dim w As Integer
+GetMem2 CvBStr(sz), VarPtr(w)
+CvI = w
+
+End Function
+
+Public Function CvL(ByVal sz As String) As Long
+
+Dim dw As Long
+GetMem4 CvBStr(sz), VarPtr(dw)
+CvL = dw
+
+End Function
+
+Public Function CvC(ByVal sz As String) As Currency
+
+Dim qw As Currency
+GetMem8 CvBStr(sz), VarPtr(qw)
+CvC = qw
+
+End Function
+
+Public Function CvS(ByVal sz As String) As Single
+
+Dim sf As Single
+GetMem4 CvBStr(sz), VarPtr(sf)
+CvS = sf
+
+End Function
+
+Public Function CvD(ByVal sz As String) As Double
+
+Dim df As Double
+GetMem8 CvBStr(sz), VarPtr(df)
+CvD = df
+
+End Function
 
 Public Function MkI(ByVal w As Integer) As String
 

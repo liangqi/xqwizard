@@ -138,7 +138,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
@@ -156,9 +155,8 @@ If nSocket = INVALID_SOCKET Then
             MsgBox "Connection Failed", vbExclamation
         Else
             If chkAnonymous.Value = 0 Then
-                lpsz = StrAlloc("[" + txtMyName.Text + " Connected at " + Time$ + "]" + vbCrLf)
+                lpsz = CvBStr("[" + txtMyName.Text + " Connected at " + Time$ + "]" + vbCrLf)
                 WSBSend nSocket, lpsz, lstrlenA(lpsz)
-                StrFree lpsz
             End If
             frmVBChat.btnConnect.Caption = "Disconnect"
             frmVBChat.btnSend.Enabled = True
@@ -166,9 +164,8 @@ If nSocket = INVALID_SOCKET Then
     End If
 Else
     If chkAnonymous.Value = 0 Then
-        lpsz = StrAlloc("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
+        lpsz = CvBStr("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
         WSBSend nSocket, lpsz, lstrlenA(lpsz)
-        StrFree lpsz
     End If
     WSBDisconnect nSocket
     nSocket = INVALID_SOCKET
@@ -205,9 +202,8 @@ End Sub
 Private Sub btnSend_Click()
 
 Dim lpsz As Long
-lpsz = StrAlloc(IIf(chkAnonymous.Value = 0, "[" + txtMyName.Text + " Sent at " + Time$ + "]" + vbCrLf + txtSend.Text + vbCrLf, txtSend.Text))
+lpsz = CvBStr(IIf(chkAnonymous.Value = 0, "[" + txtMyName.Text + " Sent at " + Time$ + "]" + vbCrLf + txtSend.Text + vbCrLf, txtSend.Text))
 WSBSend nSocket, lpsz, lstrlenA(lpsz)
-StrFree lpsz
 txtSend.Text = ""
 
 End Sub
@@ -242,9 +238,8 @@ Private Sub Form_UnLoad(nCancel As Integer)
 Dim lpsz As Long
 If nSocket <> INVALID_SOCKET Then
     If chkAnonymous.Value = 0 Then
-        lpsz = StrAlloc("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
+        lpsz = CvBStr("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
         WSBSend nSocket, lpsz, lstrlenA(lpsz)
-        StrFree lpsz
     End If
     WSBDisconnect nSocket
     nSocket = INVALID_SOCKET
