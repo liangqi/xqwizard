@@ -927,12 +927,7 @@ Public Function DefaultFileName() As String
 
 Dim sz As String
 sz = EventString
-If sz = "" Then
-    sz = ResultString
-Else
-    sz = sz + " - " + ResultString
-End If
-DefaultFileName = sz
+DefaultFileName = IIf(sz = "", "", sz + " - ") + ResultString
 
 End Function
 
