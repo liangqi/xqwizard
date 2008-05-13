@@ -319,7 +319,7 @@ If cmbSend.Text <> vbNullString Then
             i = i + 7
             Do While i < Len(sz)
                 mv = Coord2Move(Mid(sz, i))
-                CchessTryMove App_posRoot, nStatus, CvLng(mv)
+                CchessTryMove App_posRoot, nStatus, mv
                 i = i + 5
             Loop
         End If

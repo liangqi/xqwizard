@@ -1,6 +1,6 @@
 《象棋巫师》源程序常见问题解答
 
-《象棋巫师》开发团队(webmaster@elephantbase.net)　2007年12月
+《象棋巫师》开发团队(webmaster@elephantbase.net)　2008年5月
 
 1. 哪里能下载到《象棋巫师》的源程序？
 
@@ -39,12 +39,12 @@
 
 6. 为什么会找不到DLL文件？
 
-　　如果源程序在VB6的集成开发环境下运行，那么可能会遇到找不到DLL文件的问题，只要将主目录下的"ATOM.DLL"、"PIPE.DLL"、"ECCO.DLL"和"CCHESS.DLL"复制到"WINDOWS"或"SYSTEM32"目录下即可。
-　　如果运行编译后的执行程序(XQWIZARD.EXE)，那么只要保证上述4个DLL文件与"XQWIZARD.EXE"在同一目录下即可正常运行。
+　　如果源程序在VB6的集成开发环境下运行，那么可能会遇到找不到DLL文件的问题，只要将主目录下的"PIPE.DLL"、"ECCO.DLL"和"CCHESS.DLL"复制到"WINDOWS"或"SYSTEM32"目录下即可。
+　　如果运行编译后的执行程序(XQWIZARD.EXE)，那么只要保证上述3个DLL文件与"XQWIZARD.EXE"在同一目录下即可正常运行。
 
 7. 主目录中的EXE和DLL文件有源程序吗？
 
-　　主目录中的EXE和DLL文件(包括上述4个执行程序需要调用的DLL文件)都源于 SourceForge 的 ElephantEye 项目，可参阅"ELEEYE.TXT"。
+　　主目录中的EXE和DLL文件(包括上述3个执行程序需要调用的DLL文件)都源于 SourceForge 的 ElephantEye 项目，可参阅"ELEEYE.TXT"。
 
 8. 如何修改资源文件？
 

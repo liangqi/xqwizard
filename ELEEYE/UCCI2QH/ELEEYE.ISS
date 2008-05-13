@@ -33,7 +33,6 @@ Source: "..\BIN\BOOK.DAT"; DestDir: "{app}\BIN"; Flags: ignoreversion
 Source: "..\BIN\MAKEBOOK.EXE"; DestDir: "{app}\BIN"; Flags: ignoreversion
 Source: "..\BIN\MAKEBOOK.DLL"; DestDir: "{app}\BIN"; Flags: ignoreversion
 Source: "..\BIN\CCHESS.DLL"; DestDir: "{app}\BIN"; Flags: ignoreversion
-Source: "..\BIN\ATOM.DLL"; DestDir: "{app}\BIN"; Flags: ignoreversion
 
 [Registry]
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\BIN\ELEEYE.EXE"

@@ -36,63 +36,7 @@ content="text/html; charset=gb_2312-80">
     <dt>　　<font face="Times New Roman">ElephantEye</font>的源程序包里有个<font
         face="Times New Roman">&lt;utility&gt;</font>目录，其中包含了很多实用程序片段，不仅仅是针对象棋程序的。由于程序片段中没有中文注释，所以这里作一下简要的介绍。</dt>
     <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.1 Visual Basic</strong></font><font
-        size="4" face="楷体_GB2312"><strong>下的原子语句</strong></font><font
-        size="4" face="Arial"><strong>(atom.c/atom.bas)</strong></font></dt>
-    <dt>　</dt>
-    <dt>　　<font face="Times New Roman">ElephantEye</font>的部分代码可编译成<font
-        face="Times New Roman">CCHESS.DLL</font>，成为界面程序<font
-        face="Times New Roman">ElephantBoard</font>的一部分。然而由于<font
-        face="Times New Roman">Visual Basic</font>处理数据结构的能力很弱，调用<font
-        face="Times New Roman">CCHESS.DLL</font>时需要调用一些低级语句<font
-        face="Times New Roman">(</font>例如<font
-        face="Times New Roman">QuickBasic</font>的<font
-        face="Times New Roman">VARPTR</font>、<font
-        face="Times New Roman">MKI</font>、<font
-        face="Times New Roman">CVI</font>等在<font
-        face="Times New Roman">Visual Basic</font>中已经淘汰的语句<font
-        face="Times New Roman">)</font>，为此<font
-        face="Times New Roman">ElephantEye</font>提供了这些原子，以保证数据结构使用的便利。</dt>
-    <dt>　　在<font face="Times New Roman">Visual Basic</font>调用<font
-        face="Times New Roman">API</font>函数的参数传递过程中，注意事项有：</dt>
-    <dt>　　<font face="Times New Roman">(1) </font>指针型变量用<font
-        face="Times New Roman">ByRef</font>声明，自定义结构只能用<font
-        face="Times New Roman">ByRef(</font>引用方式<font
-        face="Times New Roman">)</font>传递参数；</dt>
-    <dt>　　<font face="Times New Roman">(2) </font>如果自定义结构用<font
-        face="Times New Roman">ByVal(</font>传值方式<font
-        face="Times New Roman">)</font>传递参数，则必须把它们转化为<font
-        face="Times New Roman">Visual Basic</font>的内部类型；</dt>
-    <dt>　　<font face="Times New Roman">(3) Visual Basic</font>的字符串类型<font
-        face="Times New Roman">(Windows</font>内部类型是<font
-        face="Times New Roman">BSTR)</font>必须用<font
-        face="Times New Roman">ByVal</font>传递参数，<font
-        face="Times New Roman">Visual Basic</font>会自动将其转化为<font
-        face="Times New Roman">LPCSTR</font>类型；</dt>
-    <dt>　　<font face="Times New Roman">(4) API</font>函数返回<font
-        face="Times New Roman">LPCSTR</font>类型时，在<font
-        face="Times New Roman">Visual Basic</font>下必须假定为<font
-        face="Times New Roman">Long</font>类型。</dt>
-    <dt>　　我们最感兴趣的是最后一条，<font
-        face="Times New Roman">LPCSTR</font>类型的字符串由<font
-        face="Times New Roman">&lt;atom.bas&gt;</font>中的<font
-        face="Times New Roman">MkBStr</font>函数转换为<font
-        face="Times New Roman">Visual Basic</font>的字符串类型<font
-        face="Times New Roman">(BSTR)</font>。例如在<font
-        face="Times New Roman">Visual Basic</font>下调用开局编号分析器<font
-        face="Times New Roman">ECCO.DLL</font>，调用方式如下：</dt>
-    <dd>　</dd>
-    <dd>Declare Function EccoIndex Lib &quot;ECCO.DLL&quot; Alias
-        &quot;_EccoIndex@4&quot; (ByVal FileMoveStr As String) As
-        Long ' ECCO.DLL中的EccoIndex函数在Visual Basic下的接口</dd>
-    <dd>Declare Function EccoOpening Lib &quot;ECCO.DLL&quot;
-        Alias &quot;_EccoOpening@4&quot; (ByVal EccoIndex As Long)
-        As Long ' ECCO.DLL中的EccoOpening函数在Visual Basic下的接口</dd>
-    <dd>EccoStr = MkL(EccoIndex(&quot;C2.5N8+7&quot;)) ' 获得ECCO编号的字符串，这里将返回&quot;B05&quot;</dd>
-    <dd>OpeningStr = MkBStr(CvL(EccoStr)) '
-        获得上述编号对应的开局名称，这里将返回&quot;中炮对进左马&quot;</dd>
-    <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.2 </strong></font><font
+    <dt><font size="4" face="Arial"><strong>10.1 </strong></font><font
         size="4" face="楷体_GB2312"><strong>汇编语言</strong></font><font
         size="4" face="Arial"><strong>(x86asm.h)</strong></font></dt>
     <dt>　</dt>
@@ -115,7 +59,7 @@ content="text/html; charset=gb_2312-80">
     <dt>　　尽管<font face="Times New Roman">Windows</font>和<font
         face="Times New Roman">Unix</font>也有相应的库函数来支持这些功能，但是汇编语言通常以内联的形式调用，所以速度上会有优势。</dt>
     <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.3 </strong></font><font
+    <dt><font size="4" face="Arial"><strong>10.2 </strong></font><font
         size="4" face="楷体_GB2312"><strong>基本功能</strong></font><font
         size="4" face="Arial"><strong>(base.h)</strong></font></dt>
     <dt>　</dt>
@@ -147,39 +91,10 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">C</font>语言的编译器中给出的<font
         face="Times New Roman">rand()</font>函数，我们无法确定其工作原理是否相同，因此也就不知道它们是否会产生相同的<font
         face="Times New Roman">Zobrist</font>键值了。</dt>
-    <dt>　　<font face="Times New Roman">LongRand()</font>采用了“乘同余法”，公式是这样的：</dt>
-    <dd><font face="Times New Roman"><em>I</em><sub><em>j</em>+1</sub>
-        = (<em>a</em> x <em>I</em><sub><em>j</em></sub>) mod <em>m</em></font></dd>
-    <dt>　　该公式可以用<font face="Times New Roman">&lt;x86asm.h&gt;</font>中的<font
-        face="Times New Roman">LongMulMod()</font>函数来实现。这个算法在<font
-        face="Times New Roman">1969</font>年首先由<font
-        face="Times New Roman">Lewis</font>、<font
-        face="Times New Roman">Goodman</font>和<font
-        face="Times New Roman">Miller</font>提出，这里<font
-        face="Times New Roman"><em>a</em></font>和<font
-        face="Times New Roman"><em>m</em></font>的推荐值是：</dt>
-    <dd><font face="Times New Roman"><em>a</em> = 7<sup>5</sup> =
-        16807</font></dd>
-    <dd><font face="Times New Roman"><em>m</em> = 2<sup>31</sup> </font><font
-        face="Symbol">-</font><font face="Times New Roman"> 1 =
-        2147483647</font></dd>
-    <dt>　　这就使得随机数<font face="Times New Roman"><em>I</em></font>的范围从<font
-        face="Times New Roman">1</font>到<font
-        face="Times New Roman">2<sup>31</sup> </font><font
-        face="Symbol">-</font><font face="Times New Roman"> 2(</font>即<font
-        face="Times New Roman">31</font>位<font
-        face="Times New Roman">)</font>，初始化种子数时，可以用<font
-        face="Times New Roman">1</font>到<font
-        face="Times New Roman">2<sup>31</sup> </font><font
-        face="Symbol">-</font><font face="Times New Roman"> 2</font>中的任意一个数。<font
-        face="Times New Roman">ElephantEye</font>在产生<font
-        face="Times New Roman">Zobrist</font>键值时，用<font
-        face="Times New Roman">1</font>作种子数，而用作其他用途时，可以用<font
-        face="Times New Roman">time()</font>作种子数。</dt>
     <dt>　</dt>
     <dt>　　<font face="Times New Roman">(3) </font>计时函数<font
         face="Times New Roman">TimerStruct::Init()</font>和<font
-        face="Times New Roman">TimerStruct::GetTimer</font>：</dt>
+        face="Times New Roman">TimerStruct::GetTimer()</font>：</dt>
     <dt>　　<font face="Times New Roman">C</font>语言里有很多计时函数，如<font
         face="Times New Roman">&lt;time.h&gt;</font>中的<font
         face="Times New Roman">time()</font>、<font
@@ -193,7 +108,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">(</font>毫秒<font
         face="Times New Roman">)</font>。</dt>
     <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.4 </strong></font><font
+    <dt><font size="4" face="Arial"><strong>10.3 </strong></font><font
         size="4" face="楷体_GB2312"><strong>管道的行输入和行输出</strong></font><font
         size="4" face="Arial"><strong>(pipe.h/pipe.cpp)</strong></font></dt>
     <dt>　</dt>
@@ -232,7 +147,7 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">UCCILEAG(UCCI</font>引擎联赛模拟器<font
         face="Times New Roman">)</font>的源程序。</dt>
     <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.5 </strong></font><font
+    <dt><font size="4" face="Arial"><strong>10.4 </strong></font><font
         size="4" face="楷体_GB2312"><strong>位处理</strong></font><font
         size="4" face="Arial"><strong>(popcnt.h/popcnt.cpp)</strong></font></dt>
     <dt>　</dt>
@@ -257,28 +172,11 @@ content="text/html; charset=gb_2312-80">
         face="Times New Roman">BitScanReverse()</font>函数做位搜索操作，耗时比直接调用汇编指令少一半，但切记使用查表函数前务必用<font
         face="Times New Roman">BitScanInit()</font>函数初始化。</dt>
     <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.6 </strong></font><font
+    <dt><font size="4" face="Arial"><strong>10.5 </strong></font><font
         size="4" face="楷体_GB2312"><strong>字符串分析</strong></font><font
         size="4" face="Arial"><strong>(parse.h)</strong></font></dt>
     <dt>　</dt>
     <dt>　　提供了字符串比较和文件路径定位的若干实用函数。</dt>
-    <dt>　</dt>
-    <dt><font size="4" face="Arial"><strong>10.7 96</strong></font><font
-        size="4" face="楷体_GB2312"><strong>位位棋盘</strong></font><font
-        size="4" face="Arial"><strong>(bitboard.h)</strong></font></dt>
-    <dt>　</dt>
-    <dt>　　尽管<font face="Times New Roman">ElephantEye</font>没有使用位棋盘，但位棋盘<font
-        face="Times New Roman">(BitBoard)</font>仍然是一个富有活力的数据结构，为此<font
-        face="Times New Roman">ElephantEye</font>的源程序包里保留了位棋盘结构的描述，即<font
-        face="Times New Roman">&lt;bitboard.h&gt;</font>。位棋盘的赋值、比较、位操作<font
-        face="Times New Roman">(</font>与或非等<font
-        face="Times New Roman">)</font>、位移、位搜索都由该文件来定义<font
-        face="Times New Roman">(</font>定义为内联函数的运算符<font
-        face="Times New Roman">)</font>，另外还有为“折叠位棋盘”<font
-        face="Times New Roman">(</font>专门处理蹩马腿和塞象眼的算法<font
-        face="Times New Roman">)</font>而设计的操作，即<font
-        face="Times New Roman">CheckSum()</font>和<font
-        face="Times New Roman">Duplicate()</font>函数。</dt>
 </dl>
 
 <dir>
