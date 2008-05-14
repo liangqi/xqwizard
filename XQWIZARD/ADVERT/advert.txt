@@ -1,5 +1,5 @@
 XQWizard Advert List
-elephantbase1,1,287,2907
+elephantbase1,60,287,2907
 jiuzai1,60,310,5618
 stepbystep1,60,320,8216
 xqwlight_ad1,60,298,5759
