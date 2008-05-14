@@ -714,7 +714,7 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = OpenFileDialog("打开棋谱文件", "可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|所有文件 (*.*)|*.*")
+szFileName = OpenFileDialog("打开棋谱文件", "所有棋谱 (*.PGN;*.XQF;*.MXQ;*.CHE)|*.PGN;*.XQF;*.MXQ;*.CHE|可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|所有文件 (*.*)|*.*")
 If szFileName <> "" Then
     App_szFileName = szFileName
     ReadFile
