@@ -1,11 +1,12 @@
 Manifest-Version: 1.0
 MIDlet-1: 象棋小巫师, /images/xqwlight.png, xqwlight.XQWLMIDlet
+MIDlet-2: 象棋图书馆, /images/pgnviewer.png, pgnviewer.PGNViewerMIDlet
 MIDlet-Name: 象棋小巫师
-MIDlet-Description: 手机象棋游戏 - 象棋小巫师 1.26
+MIDlet-Description: 手机象棋游戏 - 象棋小巫师 1.30
 MIDlet-Vendor: www.elephantbase.net
 MIDlet-Info-URL: http://www.elephantbase.net/
 MIDlet-Icon: /images/xqwlight.png
-MIDlet-Version: 1.26
+MIDlet-Version: 1.30
 MicroEdition-Configuration: CLDC-1.0
 MicroEdition-Profile: MIDP-2.0
 XQWLight-Compatible: false
