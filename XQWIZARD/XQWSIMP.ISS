@@ -105,6 +105,14 @@ Source: "ADVERT\elephantbase1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversio
 Source: "ADVERT\elephantbase1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\onefound1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\onefound1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\onefound2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\onefound2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\stepbystep1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\stepbystep1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\stepbystep2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\stepbystep2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
