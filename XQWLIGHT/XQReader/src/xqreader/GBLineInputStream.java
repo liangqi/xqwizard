@@ -29,14 +29,24 @@ public class GBLineInputStream {
 		this.in = in;
 	}
 
-	public String readLine() throws IOException {
+	public String readLine() {
 		StringBuffer sb = new StringBuffer();
-		int b = in.read();
+		int b;
+		try {
+			b = in.read();
+		} catch (Exception e) {
+			return null;
+		}
 		while (b != -1) {
 			if (b == '\n') {
 				return sb.toString();
 			} else if (b >= 128) {
-				int b2 = in.read();
+				int b2;
+				try {
+					b2 = in.read();
+				} catch (Exception e) {
+					return null;
+				}
 				if (b2 == -1) {
 					sb.append((char) b);
 					break;
@@ -45,9 +55,13 @@ public class GBLineInputStream {
 			} else if (b != '\r') {
 				sb.append((char) b);
 			}
-			b = in.read();
+			try {
+				b = in.read();
+			} catch (Exception e) {
+				return null;
+			}
 		}
-		return sb.length() == 0 ? null : sb.toString(); 
+		return sb.length() == 0 ? null : sb.toString();
 	}
 
 	public void close() throws IOException {

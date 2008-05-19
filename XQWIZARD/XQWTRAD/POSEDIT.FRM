@@ -1267,9 +1267,6 @@ End Sub
 Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 Dim sq As Integer, pcSrc As Integer, pcDst As Integer
-If x < 0 Or x > imgSquares(nIndex).Width Or y < 0 Or y > imgSquares(nIndex).Height Then
-    Exit Sub
-End If
 sq = (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3
 If nButton = vbLeftButton Then
     If Edit_sqSelected > 0 Or Edit_pcSelected > 0 Then

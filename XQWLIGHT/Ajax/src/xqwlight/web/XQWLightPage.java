@@ -554,13 +554,13 @@ public class XQWLightPage extends WebPage {
 			vlRep = (response < 0 ? pos.repValue(vlRep) : -pos.repValue(vlRep));
 			if (vlRep > Position.WIN_VALUE) {
 				board.playSound(RESP_LOSS);
-				board.setMessage("长打作负，请不要气馁！" , STATUS_LOSS);
+				board.setMessage("长打作负，请不要气馁！", STATUS_LOSS);
 			} else if (vlRep < -Position.WIN_VALUE) {
 				board.playSound(RESP_WIN);
-				board.setMessage("电脑长打作负，祝贺你取得胜利！" , STATUS_WIN);
+				board.setMessage("电脑长打作负，祝贺你取得胜利！", STATUS_WIN);
 			} else {
 				board.playSound(RESP_DRAW);
-				board.setMessage("双方不变作和，辛苦了！" , STATUS_DRAW);
+				board.setMessage("双方不变作和，辛苦了！", STATUS_DRAW);
 			}
 			return true;
 		}

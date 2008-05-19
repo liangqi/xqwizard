@@ -759,7 +759,7 @@ Begin VB.Form frmBbsChess
       Top             =   120
       Width           =   495
    End
-   Begin VB.Image ChessBoard 
+   Begin VB.Image imgBoard 
       Height          =   3840
       Left            =   2040
       Picture         =   "BBSCHESS.frx":323C
@@ -773,8 +773,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' BBS Chess - A Chess Position Edit Program
-' Designed by Morning Yellow, Version: 1.0, Last Modified: Apr. 2006
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 1.1, Last Modified: May. 2008
+' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This library is free software; you can redistribute it and/or
 ' modify it under the terms of the GNU Lesser General Public
@@ -908,7 +908,7 @@ End Sub
 
 Private Sub DrawSquare(ByVal x As Integer, ByVal y As Integer)
 
-imgSquares((x - 1) * 8 + (y - 1)).Picture = LoadResPicture(nBoard(x, y) + 2, 1)
+imgSquares((x - 1) * 8 + (y - 1)).Picture = imgPieces(nBoard(x, y)).Picture
 
 End Sub
 
@@ -1054,6 +1054,13 @@ End If
 
 End Sub
 
+Private Sub optPieces_Click(nIndex As Integer)
+
+nSelected = nIndex
+optPieces(nIndex).Value = True
+
+End Sub
+
 Private Sub imgPieces_Click(nIndex As Integer)
 
 nSelected = nIndex
@@ -1061,9 +1068,13 @@ optPieces(nIndex).Value = True
 
 End Sub
 
-Private Sub imgSquares_Click(nIndex As Integer)
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
-nBoard(nIndex \ 8 + 1, nIndex Mod 8 + 1) = nSelected
+If nButton = vbLeftButton Then
+    nBoard(nIndex \ 8 + 1, nIndex Mod 8 + 1) = nSelected
+ElseIf nButton = vbRightButton Then
+    nBoard(nIndex \ 8 + 1, nIndex Mod 8 + 1) = 0
+End If
 DrawSquare nIndex \ 8 + 1, nIndex Mod 8 + 1
 Board2Fen
 txtFen.Text = szFen
