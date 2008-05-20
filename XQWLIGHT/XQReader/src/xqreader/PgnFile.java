@@ -17,10 +17,11 @@ public class PgnFile {
 	public PgnFile(GBLineInputStream in) {
 		posStart.fromFen(Position.STARTUP_FEN[0]);
 		boolean returned = false, detail = false;
-		int remLevel = 0, remLen = 0, notation = 0, counter = 1;
+		int remLevel = 0, notation = 0;
 		String s = in.readLine();
 		int index = 0;
-		boolean endFor;
+		lstMove.addElement(null);
+		lstComment.addElement(new StringBuffer());
 		while (s != null && returned) {
 			if (returned) {
 				s = in.readLine();
@@ -29,15 +30,62 @@ public class PgnFile {
 			}
 			if (detail) {
 				if (remLevel > 0) {
-					endFor = true;
+					boolean endFor = true;
 					while (index < s.length()) {
 						char c = s.charAt(index);
 						remLevel += (c == '(' || c == '{' ? 1 : c == ')' || c == '}' ? -1 : 0);
 						if (remLevel == 0) {
-							
+							endFor = false;
+							index ++;
+							break;
+						}
+						((StringBuffer) lstComment.elementAt(maxMoves)).append(c);
+						index ++;
+					}
+					if (endFor) {
+						((StringBuffer) lstComment.elementAt(maxMoves)).append("\n\r\f");
+						returned = true;
+					}
+				} else {
+					boolean endFor = true;
+					while (index < s.length()) {
+						char c = s.charAt(index);
+						switch (c) {
+						case '(':
+						case '{':
+							remLevel ++;
+							endFor = false;
+							break;
+						case '0':
+							// 0-1
+							break;
+						case '1':
+							// 1-0 || 1/2-1/2
+							break;
+						case '*':
+							// *
+							break;
+						default:
+							if (notation > 0) {
+								if ((c >= 'A' && c <= 'Z' ) || (c >= 'a' && c <= 'z')) {
+									if (notation == 1) {
+										// WXF
+									} else {
+										// ICCS
+									}
+								}
+							}
+						}
+						if (!endFor) {
+							break;
 						}
 					}
+					if (endFor) {
+						returned = true;
+					}
 				}
+			} else {
+				// Labels
 			}
 		}
 	}

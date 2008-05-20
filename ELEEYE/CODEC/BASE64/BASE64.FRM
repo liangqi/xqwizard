@@ -77,7 +77,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
@@ -110,15 +109,13 @@ End Sub
 
 Private Sub ReadClipboard(ByVal sz As String)
 
-Dim i As Long, lpData As Long, nFileLen As Long
+Dim i As Long, nFileLen As Long
 
-lpData = StrAlloc(sz)
-nFileLen = lstrlenA(lpData)
+nFileLen = lstrlenA(StrPtr(sz))
 ReDim ucText(1 To (nFileLen \ 33 + 1) * 46) As Byte
-Base64Enc VarPtr(ucText(1)), lpData, nFileLen, chkMultiLine.Value * 11
+Base64Enc VarPtr(ucText(1)), StrPtr(sz), nFileLen, chkMultiLine.Value * 11
 txtCode.Text = MkBStr(VarPtr(ucText(1)))
 Erase ucText
-StrFree lpData
 
 End Sub
 

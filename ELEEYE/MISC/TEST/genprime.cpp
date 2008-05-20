@@ -2,20 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../utility/base.h"
-#include "../../utility/popcnt.h"
 
-const unsigned long MAX_DIVISOR = 65536;
-const unsigned long TABLE_LEN = MAX_DIVISOR / 16 * MAX_DIVISOR;
+const uint32 MAX_DIVISOR = 65536;
+const uint32 TABLE_LEN = MAX_DIVISOR / 16 * MAX_DIVISOR;
 
 int main(void) {
-  unsigned long i, j, k;
-  unsigned char *ucPrimeTable;
+  uint32 i, j, k;
+  uint8 *ucPrimeTable;
   TimerStruct tbTimer;
 
-  ucPrimeTable = new unsigned char[TABLE_LEN];
+  ucPrimeTable = new uint8[TABLE_LEN];
   tbTimer.Init();
   printf("Generating prime numbers below %d^2...\n", (int) MAX_DIVISOR);
-  PopCntInit();
   memset(ucPrimeTable, 0xff, TABLE_LEN);
   k = 4;
   for (i = 3; i < MAX_DIVISOR; i += 2) {
@@ -30,8 +28,8 @@ int main(void) {
     }
   }
   j = 0;
-  for (i = 0; i < TABLE_LEN; i ++) {    
-    j += PopCnt16[ucPrimeTable[i]];
+  for (i = 0; i < TABLE_LEN / 4; i ++) {
+    j += PopCnt32(((uint32 *) ucPrimeTable)[i]);
   }
   printf("Numbers below %d are sifted, using %dms.\n", (int) MAX_DIVISOR, tbTimer.GetTimer());
   printf("There are %d prime numbers below %d^2.\n", (int) j, (int) MAX_DIVISOR);

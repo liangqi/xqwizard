@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "../../utility/base.h"
-#include "../../utility/popcnt.h"
 #include "../pregen.h"
 #include "../position.h"
 #include "preeval.h"
@@ -350,7 +349,8 @@ int StringHold(const PositionStruct *lppos) {
               // 被牵制子必须是对方的子，下同
               if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
                 // 如果被牵制子是有价值的，而且被牵制子没有保护(被目标子保护不算)，那么牵制是有价值的，下同
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
+                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -362,7 +362,8 @@ int StringHold(const PositionStruct *lppos) {
               sqStr = lpsmv->ucRookCap[nDir] + RANK_DISP(y);
               __ASSERT_SQUARE(sqStr);
               if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
+                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -427,7 +428,8 @@ int StringHold(const PositionStruct *lppos) {
               sqStr = lpsmv->ucCannonCap[nDir] + FILE_DISP(x);
               __ASSERT_SQUARE(sqStr);
               if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
+                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -439,7 +441,8 @@ int StringHold(const PositionStruct *lppos) {
               sqStr = lpsmv->ucCannonCap[nDir] + RANK_DISP(y);
               __ASSERT_SQUARE(sqStr);
               if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
+                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -460,7 +463,8 @@ int StringHold(const PositionStruct *lppos) {
                 sqStr = lpsmv->ucCannonCap[nDir] + FILE_DISP(x);
                 __ASSERT_SQUARE(sqStr);
                 if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
+                      !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
@@ -472,7 +476,8 @@ int StringHold(const PositionStruct *lppos) {
                 sqStr = lpsmv->ucCannonCap[nDir] + RANK_DISP(y);
                 __ASSERT_SQUARE(sqStr);
                 if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
+                      !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
@@ -502,7 +507,8 @@ int RookMobility(const PositionStruct *lppos) {
         __ASSERT_SQUARE(sqSrc);
         x = FILE_X(sqSrc);
         y = RANK_Y(sqSrc);
-        vlRookMobility[sd] += PopCnt16[lppos->RankMaskPtr(x, y)->wNonCap] + PopCnt16[lppos->FileMaskPtr(x, y)->wNonCap];
+        vlRookMobility[sd] += PreEvalEx.cPopCnt16[lppos->RankMaskPtr(x, y)->wNonCap] +
+            PreEvalEx.cPopCnt16[lppos->FileMaskPtr(x, y)->wNonCap];
       }
     }
     __ASSERT(vlRookMobility[sd] <= 34);
