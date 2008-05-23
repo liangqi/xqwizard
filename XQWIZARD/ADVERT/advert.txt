@@ -1,11 +1,9 @@
 XQWizard Advert List
-elephantbase1,60,287,2907
-onefound1,60,296,7667
-stepbystep1,60,320,8216
+mourning,60,290,3828
+onefound,60,295,7667
+xhwenchuan,60,301,9750
+gongyi,60,276,5890
+elephantbase,60,286,5618
+stepbystep,60,319,8216
 xqwlight_ad1,60,298,5759
 xqwlight_ad2,60,298,5871
-elephantbase2,60,287,2907
-onefound2,60,296,7667
-stepbystep2,60,320,8216
-xqwlight_ad3,60,298,5759
-xqwlight_ad4,60,298,5871
