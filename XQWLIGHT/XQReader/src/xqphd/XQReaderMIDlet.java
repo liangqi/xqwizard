@@ -1,4 +1,4 @@
-package xqreader;
+package xqphd;
 
 import java.util.Enumeration;
 
