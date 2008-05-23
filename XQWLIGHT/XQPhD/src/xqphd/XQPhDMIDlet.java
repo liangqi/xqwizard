@@ -14,7 +14,7 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDlet;
 
-public class XQReaderMIDlet extends MIDlet {
+public class XQPhDMIDlet extends MIDlet {
 	private boolean started = false;
 
 	String currDir = null;
