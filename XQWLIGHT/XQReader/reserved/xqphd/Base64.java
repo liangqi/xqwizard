@@ -1,3 +1,4 @@
+package xqphd;
 public class Base64 {
     private static final int PADDING_BYTE = '=';
 

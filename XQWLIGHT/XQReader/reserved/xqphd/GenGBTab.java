@@ -1,3 +1,4 @@
+package xqphd;
 public class GenGBTab {
 	public static void main(String[] args) throws Exception {
 		byte[] gbByteTab = new byte[65536];
