@@ -7,7 +7,7 @@ public class MoveParser {
 		return 0;
 	}
 
-	public static int iccs2Move(String strIccs, Position pos) {
+	public static int iccs2Move(String strIccs) {
 		return 0;
 	}
 

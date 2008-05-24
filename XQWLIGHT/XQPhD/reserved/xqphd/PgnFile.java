@@ -5,6 +5,12 @@ import java.util.Vector;
 import xqwlight.Position;
 
 public class PgnFile {
+	private static byte[] copySquares(byte[] squares) {
+		byte[] bb = new byte[squares.length];
+		System.arraycopy(squares, 0, bb, 0, squares.length);
+		return bb;
+	}
+
 	private static String getLabel(String s, String label) {
 		if (s.toUpperCase().startsWith("[" + label + " \"")) {
 			int n = s.indexOf("\"]");
@@ -17,10 +23,10 @@ public class PgnFile {
 
 	public String event = null, round = null, date = null, site = null;
 	public String redTeam = null, red = null, redElo = null, blackTeam = null, black = null, blackElo = null;
-	public String ecco = null, open = null, var = null;
+	public String ecco = null, opening = null, variation = null;
 	public int maxMoves = 0, result = 0;
 	public Vector lstComment = new Vector();
-	public Vector lstPieces = new Vector();
+	public Vector lstSquares = new Vector();
 
 	public PgnFile(GBLineInputStream in) {
 		Position pos = new Position();
@@ -33,6 +39,7 @@ public class PgnFile {
 		}
 		int index = 0;
 		lstComment.addElement(new StringBuffer());
+		lstSquares.addElement(copySquares(pos.squares));
 		while (true) {
 			if (detail) {
 				if (remLevel > 0) {
@@ -86,7 +93,7 @@ public class PgnFile {
 											index += 3;
 										}
 									} else {
-										mv = MoveParser.iccs2Move(s.substring(index - 1, index + 4), pos);
+										mv = MoveParser.iccs2Move(s.substring(index - 1, index + 4));
 										if (mv > 0) {
 											index += 4;
 										}
@@ -115,11 +122,44 @@ public class PgnFile {
 			} else {
 				if (s.length() > 0) {
 					if (s.charAt(0) == '[') {
-						while (true) {
-							event = getLabel(s, "EVENT");
-							if (event != null) {
-								break;
-							}
+						String value;
+						if (false) {
+							// Code Style
+						} else if ((value = getLabel(s, "EVENT")) != null) {
+							event = value;
+						} else if ((value = getLabel(s, "ROUND")) != null) {
+							round = value;
+						} else if ((value = getLabel(s, "DATE")) != null) {
+							date = value;
+						} else if ((value = getLabel(s, "SITE")) != null) {
+							site = value;
+						} else if ((value = getLabel(s, "REDTEAM")) != null) {
+							redTeam = value;
+						} else if ((value = getLabel(s, "RED")) != null) {
+							red = value;
+						} else if ((value = getLabel(s, "REDELO")) != null) {
+							redElo = value;
+						} else if ((value = getLabel(s, "BLACKTEAM")) != null) {
+							blackTeam = value;
+						} else if ((value = getLabel(s, "BLACK")) != null) {
+							black = value;
+						} else if ((value = getLabel(s, "BLACKELO")) != null) {
+							blackElo = value;
+						} else if ((value = getLabel(s, "RESULT")) != null) {
+							result = value.equals("*") ? 0 : value.equals("1-0") ? 1 :
+									value.equals("1/2-1/2") ? 2 : value.equals("0-1") ? 3 : 0;
+						} else if ((value = getLabel(s, "ECCO")) != null) {
+							ecco = value;
+						} else if ((value = getLabel(s, "OPENING")) != null) {
+							opening = value;
+						} else if ((value = getLabel(s, "VARIATION")) != null) {
+							variation = value;
+						} else if ((value = getLabel(s, "FORMAT")) != null) {
+							notation = value.toUpperCase().startsWith("WFX") ? 1 :
+								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
+						} else if ((value = getLabel(s, "FEN")) != null) {
+							pos.fromFen(value);
+							lstSquares.setElementAt(copySquares(pos.squares), index);
 						}
 					} else {
 						detail = false;
