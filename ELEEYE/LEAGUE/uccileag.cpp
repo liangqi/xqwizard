@@ -1,6 +1,6 @@
 /*
 UCCILEAG - a Computer Chinese Chess League (UCCI Engine League) Emulator
-Designed by Morning Yellow, Version: 3.67, Last Modified: Apr. 2008
+Designed by Morning Yellow, Version: 3.7, Last Modified: Apr. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -1294,7 +1294,7 @@ int main(void) {
   if (League.bPromotion) {
     printf("规则：　　允许仕(士)相(象)升变成兵(卒)\n");
   }
-  printf("模拟器：　UCCI引擎联赛模拟器 3.67\n\n");
+  printf("模拟器：　UCCI引擎联赛模拟器 3.7\n\n");
   printf("参赛引擎：\n\n");
   printf("   缩写 引擎名称");
   PrintDup(' ', League.nNameLen - 8);

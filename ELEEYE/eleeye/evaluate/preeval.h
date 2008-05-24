@@ -29,6 +29,6 @@ extern struct PreEvalStructEx {
   int vlHollowThreat[16], vlCentralThreat[16];
   int vlWhiteBottomThreat[16], vlBlackBottomThreat[16];
   char cPopCnt16[65536]; // 加速PopCnt16的数组，只需要初始化一次
-} PreEvalEx;0
+} PreEvalEx;
 
 #endif
