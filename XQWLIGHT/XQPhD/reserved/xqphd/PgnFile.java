@@ -22,7 +22,8 @@ public class PgnFile {
 	}
 
 	public String event = null, round = null, date = null, site = null;
-	public String redTeam = null, red = null, redElo = null, blackTeam = null, black = null, blackElo = null;
+	public String redTeam = null, red = null, redElo = null;
+	public String blackTeam = null, black = null, blackElo = null;
 	public String ecco = null, opening = null, variation = null;
 	public int maxMoves = 0, result = 0;
 	public Vector lstComment = new Vector();
@@ -70,14 +71,17 @@ public class PgnFile {
 							endFor = false;
 							break;
 						case '0':
-							if (s.substring(index, index + 2).equals("-1")) {
+							if (index + 2 <= s.length() &&
+									s.substring(index, index + 2).equals("-1")) {
 								return;
 							}
 							break;
 						case '1':
-							if (s.substring(index, index + 2).equals("-0")) {
+							if (index + 2 <= s.length() &&
+									s.substring(index, index + 2).equals("-0")) {
 								return;
-							} else if (s.substring(index, index + 6).equals("/2-1/2")) {
+							} else if (index + 6 <= s.length() &&
+									s.substring(index, index + 6).equals("/2-1/2")) {
 								return;
 							}
 							break;
@@ -88,20 +92,25 @@ public class PgnFile {
 							if (notation > 0) {
 								if ((c >= 'A' && c <= 'Z' ) || (c >= 'a' && c <= 'z')) {
 									if (notation == 1) {
-										mv = MoveParser.file2Move(s.substring(index - 1, index + 3), pos);
-										if (mv > 0) {
-											index += 3;
+										if (index + 3 <= s.length()) {
+											mv = MoveParser.file2Move(s.
+													substring(index - 1, index + 3), pos);
+											if (mv > 0) {
+												index += 3;
+											}
 										}
-									} else {
-										mv = MoveParser.iccs2Move(s.substring(index - 1, index + 4));
+									} else if (index + 4 <= s.length()) {
+										mv = MoveParser.iccs2Move(s.
+												substring(index - 1, index + 4));
 										if (mv > 0) {
 											index += 4;
 										}
 									}
 								}
 							} else {
-								if (c >= (char) 128) {
-									String strFile = MoveParser.chin2File(s.substring(index - 1, index + 3));
+								if (c >= (char) 128 && index + 3 <= s.length()) {
+									String strFile = MoveParser.chin2File(s.
+											substring(index - 1, index + 3));
 									mv = MoveParser.file2Move(strFile, pos);
 									if (mv > 0) {
 										index += 3;
@@ -109,6 +118,8 @@ public class PgnFile {
 								}
 							}
 							// Try Move
+							lstComment.addElement(new StringBuffer());
+							maxMoves ++;
 							endFor = false;
 						}
 						if (!endFor) {
@@ -161,11 +172,11 @@ public class PgnFile {
 							pos.fromFen(value);
 							lstSquares.setElementAt(copySquares(pos.squares), index);
 						}
+						returned = true;
 					} else {
-						detail = false;
+						detail = true;
 					}
 				}
-				returned = true;
 			}
 			if (returned) {
 				s = in.readLine();
