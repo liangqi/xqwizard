@@ -23,6 +23,22 @@ public class MoveParser {
 		"一二三四五前中后", "⒈⒉⒊⒋玡い"
 	};
 
+	private static int digit2Char(int n) {
+		return '1' + n;
+	}
+
+	private static int piece2Char(int n) {
+		return n < 0 || n >= 7 ? ' ' : PIECE_TO_CHAR.charAt(n);
+	}
+
+	private static int direct2Char(int n) {
+		return n < 0 || n >= 3 ? ' ' : "+.-".charAt(n);
+	}
+
+	private static int pos2Char(int n) {
+		return n < 0 || n >= 8 ? ' ' : "abcde+.-".charAt(n);
+	}
+
 	private static int char2Digit(int c) {
 		return c >= '1' && c <= '9' ? c - '1' : -1;
 	}
@@ -48,7 +64,7 @@ public class MoveParser {
 
 	private static int word2Digit(int w) {
 		for (int i = 0; i < DIGIT_TO_WORD.length; i ++) {
-			int index = DIGIT_TO_WORD[i].charAt(w);
+			int index = DIGIT_TO_WORD[i].indexOf(w);
 			if (index >= 0) {
 				return index;
 			}
@@ -69,7 +85,7 @@ public class MoveParser {
 			return 5;
 		}
 		for (int i = 0; i < PIECE_TO_WORD.length; i ++) {
-			int index = PIECE_TO_WORD[i].charAt(w);
+			int index = PIECE_TO_WORD[i].indexOf(w);
 			if (index >= 0) {
 				return index;
 			}
@@ -81,8 +97,8 @@ public class MoveParser {
 		if (w == '進') {
 			return 0;
 		}
-		for (int i = 0; i < POS_TO_WORD.length; i ++) {
-			int index = POS_TO_WORD[i].charAt(w);
+		for (int i = 0; i < DIRECT_TO_WORD.length; i ++) {
+			int index = DIRECT_TO_WORD[i].indexOf(w);
 			if (index >= 0) {
 				return index;
 			}
@@ -94,8 +110,8 @@ public class MoveParser {
 		if (w == '後' || w == '') { // [后]
 			return DIRECT_TO_POS + 2;
 		}
-		for (int i = 0; i < DIRECT_TO_WORD.length; i ++) {
-			int index = DIRECT_TO_WORD[i].charAt(w);
+		for (int i = 0; i < POS_TO_WORD.length; i ++) {
+			int index = POS_TO_WORD[i].indexOf(w);
 			if (index >= 0) {
 				return index;
 			}
@@ -112,8 +128,21 @@ public class MoveParser {
 	}
 
 	public static String chin2File(String strChin) {
-		char[] c = new char[4];
-		
-		return new String(c);
+		if (strChin.length() != 4) {
+			return "";
+		}
+		char[] cChin = strChin.toCharArray();
+		char[] cFile = new char[4];
+		int pos = word2Pos(cChin[0]);
+		cFile[0] = (char) piece2Char(word2Piece(pos < 0 ? cChin[0] : cChin[1]));
+		cFile[1] = (char) (pos < 0 ? digit2Char(word2Digit(cChin[1])) : pos2Char(pos));
+		if ((cChin[2] == '变' || cChin[2] == '跑' || cChin[2] == '變') && cChin[3] == 6) { // 跑[變]
+			cFile[2] = '=';
+			cFile[3] = 'P';
+		} else {
+			cFile[2] = (char) direct2Char(word2Direct(cChin[2]));
+			cFile[3] = (char) digit2Char(word2Digit(cChin[3]));
+		}
+		return new String(cFile);
 	}
 }

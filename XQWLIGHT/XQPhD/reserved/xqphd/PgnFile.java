@@ -111,6 +111,7 @@ public class PgnFile {
 								if (c >= (char) 128 && index + 3 <= s.length()) {
 									String strFile = MoveParser.chin2File(s.
 											substring(index - 1, index + 3));
+									System.out.println(s.substring(index - 1, index + 3) + "->" + strFile);
 									mv = MoveParser.file2Move(strFile, pos);
 									if (mv > 0) {
 										index += 3;
