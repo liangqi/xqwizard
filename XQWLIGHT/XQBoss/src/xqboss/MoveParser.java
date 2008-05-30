@@ -1,4 +1,4 @@
-package xqphd;
+package xqboss;
 
 import xqwlight.Position;
 

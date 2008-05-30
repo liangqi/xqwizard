@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-MIDlet-1: 象棋小博士, /images/xqphd.png, xqphd.XQPhDMIDlet
+MIDlet-1: 象棋小博士, /images/xqboss.png, xqboss.XQBossMIDlet
 MIDlet-Name: 象棋小博士
 MIDlet-Description: 象棋小博士 1.0 Beta 1
 MIDlet-Vendor: www.elephantbase.net
 MIDlet-Info-URL: http://www.elephantbase.net/
-MIDlet-Icon: /images/xqphd.png
+MIDlet-Icon: /images/xqboss.png
 MIDlet-Version: 1.0
 MicroEdition-Configuration: CLDC-1.0
 MicroEdition-Profile: MIDP-2.0

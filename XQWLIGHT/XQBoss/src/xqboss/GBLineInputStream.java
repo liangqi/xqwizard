@@ -1,4 +1,4 @@
-package xqphd;
+package xqboss;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +9,7 @@ public class GBLineInputStream {
 	static {
 		try {
 			InputStream inGB = new GBLineInputStream().getClass().
-					getResourceAsStream("/xqphd/GB.DAT");
+					getResourceAsStream("GB.DAT");
 			for (int i = 0; i < 32768; i ++) {
 				gbCharTab[i] = (char) (inGB.read() << 8 | inGB.read());
 			}

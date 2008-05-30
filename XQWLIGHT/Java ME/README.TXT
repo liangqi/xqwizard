@@ -9,6 +9,6 @@
 　　对于某些没有足够存储器播放音效和音乐的手机，可删除 XQWLight.jar 压缩包中的 sounds 和 musics 文件夹，然后重新安装 XQWLight.jar。
 　　如手机安装程序时需要 jad 文件，而 XQWLight.jar 已作修改，则 XQWLight.jad 中的 XQWLight-Compatible 和 MIDlet-Jar-Size 的值均要与 XQWLight.jar 保持一致。
 
-　　象棋小博士(XQPhD)是手机上的中国象棋棋谱阅读器，用“象棋巫师”生成的“象棋小博士”棋谱(*.XQPhD)复制到手机上，就可以随时随地观赏精彩棋局。
+　　象棋小博士(XQBoss)是手机上的中国象棋棋谱阅读器，用“象棋巫师”生成的可移植棋谱(*.PGN)复制到手机上，就可以随时随地观赏精彩棋局。
 
 　　欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师

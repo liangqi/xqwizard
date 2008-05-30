@@ -1,4 +1,4 @@
-package xqphd;
+package xqboss;
 
 import java.util.Enumeration;
 
@@ -14,11 +14,11 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDlet;
 
-public class XQPhDMIDlet extends MIDlet {
+public class XQBossMIDlet extends MIDlet {
 	private boolean started = false;
 
 	String currDir = null;
-	Form form = new Form("象棋图书馆");
+	Form form = new Form("象棋小博士");
 
 	void openFile(String file) {
 		file.getClass();

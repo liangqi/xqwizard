@@ -1,4 +1,4 @@
-package xqphd;
+package xqboss;
 public class GenGBTab {
 	public static void main(String[] args) throws Exception {
 		byte[] gbByteTab = new byte[65536];
