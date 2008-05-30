@@ -3,28 +3,63 @@ package xqboss;
 import xqwlight.Position;
 
 public class MoveParser {
+	/** 8个位置分别是"abcde+.-"，当"+.-"由方向转换为位置时，要加上该值 */
 	private static final int DIRECT_TO_POS = 5;
 
+	/** 棋子代号"KABNRCP"分别表示"帅(将)仕(士)相(象)马车炮兵(卒)" */
 	private static final String PIECE_TO_CHAR = "KABNRCP";
 
+	/** 可识别的数字有：中文数字、全角阿拉伯数字，以及它们的BIG5编码 */
 	private static final String[] DIGIT_TO_WORD = {
 		"一二三四五六七八九", "１２３４５６７８９", "きせ", "⒈⒉⒊⒋⒌⒍⒎⒏"
 	};
 
+	/** 可识别的棋子有：红方的"帅仕相马车炮兵"、黑方的"将士象马车炮卒"，以及它们的BIG5编码 */
 	private static final String[] PIECE_TO_WORD = {
 		"帅仕相马车炮兵", "将士象马车炮卒", "皑ó", "盢禜皑ó"
 	};
 
+	/** 可识别的方向有"进平退"以及它们的BIG5编码 */
 	private static final String[] DIRECT_TO_WORD = {
 		"进平退", "秈キ癶"
 	};
 
+	/** 可识别的位置有"一二三四五前中后"以及它们的BIG5编码 */
 	private static final String[] POS_TO_WORD = {
 		"一二三四五前中后", "⒈⒉⒊⒋玡い"
 	};
 
+	/** 确定的纵线表示一共有仕(士)的8种、相(象)的16种和仕(士)相(象)升变成兵(卒)的4种 */
+	private static final String[] FIX_FILE = {
+		"A4-5", "A4+5", "A5-4", "A5+4", "A5-6", "A5+6", "A6-5", "A6+5",
+		"B1-3", "B1+3", "B3-1", "B3+1", "B3-5", "B3+5", "B5-3", "B5+3",
+		"B5-7", "B5+7", "B7-5", "B7+5", "B7-9", "B7+9", "B9-7", "B9+7",
+		"A4=P", "A6=P", "B3=P", "B7=P" 
+	};
+
+	/** 确定的纵线表示，对应红方走法的起点和终点坐标，黑方需要对这些坐标作翻转 */
+	private static final short[][] FIX_MOVE = {
+		{0xa8, 0xb7}, {0xc8, 0xb7}, {0xb7, 0xc8}, {0xb7, 0xa8}, {0xb7, 0xc6}, {0xb7, 0xa6}, {0xa6, 0xb7}, {0xc6, 0xb7},
+		{0xab, 0xc9}, {0xab, 0x89}, {0x89, 0xab}, {0xc9, 0xab}, {0x89, 0xa7}, {0xc9, 0xa7}, {0xa7, 0xc9}, {0xa7, 0x89},
+		{0xa7, 0xc5}, {0xa7, 0x85}, {0x85, 0xa7}, {0xc5, 0xa7}, {0x85, 0xa3}, {0xc5, 0xa3}, {0xa3, 0xc5}, {0xa3, 0x85},
+		{0xc8, 0xc8}, {0xc6, 0xc6}, {0xc9, 0xc9}, {0xc5, 0xc5}
+	};
+
+	/** 按位置(前中后)来查找棋子，对应的坐标 */
+	private static final short[] POS_SEQ = {
+		0x3b, 0x4b, 0x5b, 0x6b, 0x7b, 0x8b, 0x9b, 0xab, 0xbb, 0xcb,
+		0x3a, 0x4a, 0x5a, 0x6a, 0x7a, 0x8a, 0x9a, 0xaa, 0xba, 0xca,
+		0x39, 0x49, 0x59, 0x69, 0x79, 0x89, 0x99, 0xa9, 0xb9, 0xc9,
+		0x38, 0x48, 0x58, 0x68, 0x78, 0x88, 0x98, 0xa8, 0xb8, 0xc8,
+		0x37, 0x47, 0x57, 0x67, 0x77, 0x87, 0x97, 0xa7, 0xb7, 0xc7,
+		0x36, 0x46, 0x56, 0x66, 0x76, 0x86, 0x96, 0xa6, 0xb6, 0xc6,
+		0x35, 0x45, 0x55, 0x65, 0x75, 0x85, 0x95, 0xa5, 0xb5, 0xc5,
+		0x34, 0x44, 0x54, 0x64, 0x74, 0x84, 0x94, 0xa4, 0xb4, 0xc4,
+		0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xa3, 0xb3, 0xc3
+	};
+
 	private static int digit2Char(int n) {
-		return '1' + n;
+		return n < 0 || n > 9 ? ' ' : '1' + n;
 	}
 
 	private static int piece2Char(int n) {
@@ -119,14 +154,77 @@ public class MoveParser {
 		return -1;
 	}
 
-	public static int file2Move(String strFile, Position pos) {
+	/** WXF表示转换为内部着法表示 */
+	public static int file2Move(String strFile, Position position) {
+		if (strFile.length() != 4) {
+			return 0;
+		}
+		char[] cFile = strFile.toCharArray();
+		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
+
+		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，在这之前首先必须把数字、小写等不统一的格式转换为统一格式；
+		switch (cFile[0]) {
+		case 'a':
+			cFile[0] = 'A';
+			break;
+		case 'b':
+		case 'E':
+		case 'e':
+			cFile[0] = 'B';
+			break;
+		}
+		if (cFile[3] == 'p') {
+			cFile[3] = 'P';
+		}
+		String strFile2 = new String(cFile);
+		for (int i = 0; i < FIX_FILE.length; i ++) {
+			if (strFile2.equals(FIX_FILE[i])) {
+				if (position.sdPlayer == 0) {
+					return Position.MOVE(FIX_MOVE[i][0], FIX_MOVE[i][1]);
+				}
+				return Position.MOVE(Position.SQUARE_FLIP(FIX_MOVE[i][0]),
+						Position.SQUARE_FLIP(FIX_MOVE[i][1]));
+			}
+		}
+
+		// 2. 如果不是这28种固定纵线表示，那么把棋子、位置和纵线序号(列号)解析出来
+		int pt;
+		int pos = char2Direct(cFile[0]);
+		if (pos == -1) {
+			pt = char2Piece(cFile[0]);
+			pos = char2Pos(cFile[1]);
+		} else {
+			pt = char2Piece(cFile[1]);
+			pos += DIRECT_TO_POS;
+		}
+		int sq = 0;
+		if (pos == -1) {
+
+			// 3. 如果棋子是用列号表示的，那么可以直接根据纵线来找到棋子序号；
+			int xSrc = char2Digit(cFile[1]);
+			// TODO 找到棋子
+		} else {
+			
+			// 4. 如果棋子是用位置表示的，那么必须按照"POS_SEQ"数组的顺序找到棋子；
+			if (pos >= DIRECT_TO_POS) {
+				pos -= DIRECT_TO_POS;
+			}
+		}
+
+		if (sq == -1) {
+			return 0;
+		}
+
+		// 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
 		return 0;
 	}
 
+	/** ICCS表示转换为内部着法表示 */
 	public static int iccs2Move(String strIccs) {
 		return 0;
 	}
 
+	/** 中文表示转换为WXF表示 */
 	public static String chin2File(String strChin) {
 		if (strChin.length() != 4) {
 			return "";

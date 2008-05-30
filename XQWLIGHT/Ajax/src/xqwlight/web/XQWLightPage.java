@@ -541,7 +541,7 @@ public class XQWLightPage extends WebPage {
 	boolean getResult(AjaxBoard board, int response) {
 		if (pos.isMate()) {
 			if (response < 0) {
-				board.playSound(response < 0 ? RESP_WIN : RESP_LOSS);
+				board.playSound(RESP_WIN);
 				board.setMessage("×£ºØÄãÈ¡µÃÊ¤Àû£¡", STATUS_WIN);
 			} else {
 				board.playSound(RESP_LOSS);
