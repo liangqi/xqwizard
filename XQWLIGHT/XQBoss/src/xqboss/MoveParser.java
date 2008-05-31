@@ -286,8 +286,12 @@ public class MoveParser {
 
 		// 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
 		int xDst, yDst;
+		int n = char2Digit(cFile[3]);
+		if (n < 0) {
+			return 0;
+		}
 		if (pt == SimplePos.PIECE_KNIGHT) {
-			xDst = char2Digit(cFile[3]);
+			xDst = n;
 			if (cFile[2] == '+') {
 				yDst = ySrc - 3 + Math.abs(xDst - xSrc);
 			} else {
@@ -296,12 +300,12 @@ public class MoveParser {
 		} else {
 			if (cFile[2] == '+') {
 				xDst = xSrc;
-				yDst = ySrc - char2Digit(cFile[3]) - 1;
+				yDst = ySrc - n - 1;
 			} else if (cFile[2] == '-') {
 				xDst = xSrc;
-				yDst = ySrc + char2Digit(cFile[3]) + 1;
+				yDst = ySrc + n + 1;
 			} else {
-				xDst = char2Digit(cFile[3]);
+				xDst = n;
 				yDst = ySrc;
 			}
 		}

@@ -76,7 +76,7 @@ class XQBossCanvas extends Canvas {
 			public void commandAction(Command c, Displayable d) {
 				new Thread() {
 					public void run() {
-						midlet.listDir();
+						midlet.list();
 					}
 				}.start();
 			}
@@ -233,12 +233,14 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void comment() {
-		Alert alt = new Alert(index + " / " + pgn.size(),
-				pgn.comment(index), null, AlertType.INFO);
-		alt.setTimeout(Alert.FOREVER);
-		Display.getDisplay(midlet).setCurrent(alt);
-		loading = true;
-		setFullScreenMode(true);
+		if (pgn.comment(index).length() > 0) {
+			Alert alt = new Alert(index + " / " + pgn.size(),
+					pgn.comment(index), null, AlertType.INFO);
+			alt.setTimeout(Alert.FOREVER);
+			Display.getDisplay(midlet).setCurrent(alt);
+			loading = true;
+			setFullScreenMode(true);
+		}
 	}
 
 	private void next() {
@@ -252,7 +254,7 @@ class XQBossCanvas extends Canvas {
 	private void back() {
 		new Thread() {
 			public void run() {
-				midlet.listDir();
+				midlet.list();
 			}
 		}.start();
 	}

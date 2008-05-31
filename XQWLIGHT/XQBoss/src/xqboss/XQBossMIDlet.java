@@ -53,7 +53,7 @@ public class XQBossMIDlet extends MIDlet {
 
 	String currDir = null;
 
-	void openFile(String file) {
+	void open(String file) {
 		FileConnection dir = null;
 		try {
 			dir = (FileConnection) Connector.open("file://localhost/" +
@@ -72,40 +72,52 @@ public class XQBossMIDlet extends MIDlet {
 					// Ignored
 				}
 			}
+			destroyApp(false);
+			notifyDestroyed();
 		}
 	}
 
-	void chDir(String strDir) {
-		if (strDir.equals("..")) {
-			// __ASSERT(currDir != null);
-			int i = currDir.lastIndexOf('/');
-			if (i < 0) {
-				currDir = null;
-			} else {
-				currDir = currDir.substring(0, i);
-			}
+	void enter(String strDir) {
+		if (currDir == null) {
+			currDir = strDir;
 		} else {
-			if (currDir == null) {
-				currDir = strDir;
-			} else {
-				currDir += "/" + strDir;
-			}
+			currDir += "/" + strDir;
 		}
 	}
 
-	void listDir() {
+	void leave() {
+		// __ASSERT(currDir != null);
+		int i = currDir.lastIndexOf('/');
+		if (i < 0) {
+			currDir = null;
+		} else {
+			currDir = currDir.substring(0, i);
+		}
+	}
+
+	void list() {
 		final Command cmdOpen = new Command("打开", Command.OK, 1);
+		final Command cmdBack = new Command("返回", Command.BACK, 1);
 		final Command cmdExit = new Command("退出", Command.EXIT, 1);
 		final List lstDir = new List("象棋小博士", Choice.IMPLICIT);
 
 		Enumeration enumDir;
 		if (currDir == null) {
-			enumDir = FileSystemRegistry.listRoots();
+			lstDir.addCommand(cmdExit);
+			try {
+				enumDir = FileSystemRegistry.listRoots();
+			} catch (Exception e) {
+				destroyApp(false);
+				notifyDestroyed();
+				return;
+			}
 		} else {
+			lstDir.addCommand(cmdBack);
 			FileConnection dir = null;
 			try {
 				dir = (FileConnection) Connector.open("file://localhost/" + currDir + "/");
 				enumDir = dir.list();
+				dir.close();
 			} catch (Exception e) {
 				if (dir != null) {
 					try {
@@ -114,9 +126,10 @@ public class XQBossMIDlet extends MIDlet {
 						// Ignored
 					}
 				}
+				destroyApp(false);
+				notifyDestroyed();
 				return;
 			}
-			lstDir.append("[..]", imgFolder);
 		}
 		while (enumDir.hasMoreElements()) {
 			String strDir = (String) enumDir.nextElement();
@@ -127,25 +140,33 @@ public class XQBossMIDlet extends MIDlet {
 			}
 		}
 		lstDir.setSelectCommand(cmdOpen);
-		lstDir.addCommand(cmdExit);
 		lstDir.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
-				if (c == cmdOpen) {
+				if (false) {
+					// Code Style
+				} else if (c == cmdOpen) {
 					final String selDir = lstDir.getString(lstDir.getSelectedIndex());
 					if (selDir.startsWith("[") && selDir.endsWith("]")) {
 						new Thread() {
 							public void run() {
-								chDir(selDir.substring(1, selDir.length() - 1));
-								listDir();
+								enter(selDir.substring(1, selDir.length() - 1));
+								list();
 							}
 						}.start();
 					} else {
 						new Thread() {
 							public void run() {
-								openFile(selDir);
+								open(selDir);
 							}
 						}.start();
 					}
+				} else if (c == cmdBack) {
+					new Thread() {
+						public void run() {
+							leave();
+							list();
+						}
+					}.start();
 				} else if (c == cmdExit) {
 					destroyApp(false);
 					notifyDestroyed();
@@ -160,7 +181,7 @@ public class XQBossMIDlet extends MIDlet {
 			return;
 		}
 		started = true;
-		listDir();
+		list();
 	}
 
 	protected void pauseApp() {
