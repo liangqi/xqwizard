@@ -100,7 +100,7 @@ class XQWLCanvas extends Canvas {
 	private boolean bCompatible = false;
 
 	XQWLCanvas(XQWLMIDlet midlet_) {
-		this.midlet = midlet_;
+		midlet = midlet_;
 		setFullScreenMode(true);
 		altAbout.setTimeout(Alert.FOREVER);
 		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +

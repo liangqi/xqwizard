@@ -1,5 +1,25 @@
-package xqboss;
+/*
+MoveParser.java - Source Code for XiangQi Boss, Part II
 
+XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+package xqboss;
 
 public class MoveParser {
 	/** 最大的列数 */
@@ -42,9 +62,12 @@ public class MoveParser {
 
 	/** 确定的纵线表示，对应红方走法的起点和终点坐标，黑方需要对这些坐标作翻转 */
 	private static final short[][] FIX_MOVE = {
-		{0xa8, 0xb7}, {0xc8, 0xb7}, {0xb7, 0xc8}, {0xb7, 0xa8}, {0xb7, 0xc6}, {0xb7, 0xa6}, {0xa6, 0xb7}, {0xc6, 0xb7},
-		{0xab, 0xc9}, {0xab, 0x89}, {0x89, 0xab}, {0xc9, 0xab}, {0x89, 0xa7}, {0xc9, 0xa7}, {0xa7, 0xc9}, {0xa7, 0x89},
-		{0xa7, 0xc5}, {0xa7, 0x85}, {0x85, 0xa7}, {0xc5, 0xa7}, {0x85, 0xa3}, {0xc5, 0xa3}, {0xa3, 0xc5}, {0xa3, 0x85},
+		{0xa8, 0xb7}, {0xc8, 0xb7}, {0xb7, 0xc8}, {0xb7, 0xa8},
+		{0xb7, 0xc6}, {0xb7, 0xa6}, {0xa6, 0xb7}, {0xc6, 0xb7},
+		{0xab, 0xc9}, {0xab, 0x89}, {0x89, 0xab}, {0xc9, 0xab},
+		{0x89, 0xa7}, {0xc9, 0xa7}, {0xa7, 0xc9}, {0xa7, 0x89},
+		{0xa7, 0xc5}, {0xa7, 0x85}, {0x85, 0xa7}, {0xc5, 0xa7},
+		{0x85, 0xa3}, {0xc5, 0xa3}, {0xa3, 0xc5}, {0xa3, 0x85},
 		{0xc8, 0xc8}, {0xc6, 0xc6}, {0xc9, 0xc9}, {0xc5, 0xc5}
 	};
 
@@ -170,7 +193,8 @@ public class MoveParser {
 	public static int file2Move(String strFile, SimplePos p) {
 		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
 
-		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，在这之前首先必须把数字、小写等不统一的格式转换为统一格式；
+		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，
+		// 在这之前首先必须把数字、小写等不统一的格式转换为统一格式；
 		char[] cFile = strFile.toCharArray();
 		switch (cFile[0]) {
 		case 'a':
@@ -235,20 +259,20 @@ public class MoveParser {
 				for (int y = 0; y < MAX_RANK; y ++) {
 					if (findPiece(pt, x, y, p)) {
 						// 注意：排除一列上只有一枚棋子的情况
-						int yy = y + 1;
-						for (; yy < MAX_RANK; yy ++) {
+						int n = 0;
+						for (int yy = 0; yy < MAX_RANK && n <= 1; yy ++) {
 							if (findPiece(pt, x, yy, p)) {
-								break;
+								n ++;
 							}
 						}
-						if (yy < MAX_RANK) {
+						if (n == 1) {
 							break;
 						}
+						xSrc = x;
+						ySrc = y;
 						// 判断是否到达了相应的位置
 						pos --;
 						if (pos < 0) {
-							xSrc = x;
-							ySrc = y;
 							x = MAX_FILE;
 							break;
 						}
@@ -263,7 +287,7 @@ public class MoveParser {
 		// 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
 		int xDst, yDst;
 		if (pt == SimplePos.PIECE_KNIGHT) {
-			xDst = cFile[3];
+			xDst = char2Digit(cFile[3]);
 			if (cFile[2] == '+') {
 				yDst = ySrc - 3 + Math.abs(xDst - xSrc);
 			} else {
@@ -294,8 +318,10 @@ public class MoveParser {
 				cIccs[3] < 'A' || cIccs[3] > 'I' || cIccs[4] < '0' || cIccs[4] > '9') {
 			return 0;
 		}
-		int sqSrc = SimplePos.COORD_XY(cIccs[0] - 'A' + SimplePos.FILE_LEFT, '9' + SimplePos.RANK_TOP - cIccs[1]);
-		int sqDst = SimplePos.COORD_XY(cIccs[3] - 'A' + SimplePos.FILE_LEFT, '9' + SimplePos.RANK_TOP - cIccs[4]);
+		int sqSrc = SimplePos.COORD_XY(cIccs[0] - 'A' + SimplePos.FILE_LEFT,
+				'9' + SimplePos.RANK_TOP - cIccs[1]);
+		int sqDst = SimplePos.COORD_XY(cIccs[3] - 'A' + SimplePos.FILE_LEFT,
+				'9' + SimplePos.RANK_TOP - cIccs[4]);
 		return SimplePos.MOVE(sqSrc, sqDst);
 	}
 

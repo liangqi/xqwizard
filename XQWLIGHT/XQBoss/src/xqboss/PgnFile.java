@@ -1,7 +1,27 @@
+/*
+PgnFile.java - Source Code for XiangQi Boss, Part III
+
+XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 package xqboss;
 
 import java.util.Vector;
-
 
 public class PgnFile {
 	private static byte[] copySquares(byte[] squares) {
@@ -25,8 +45,8 @@ public class PgnFile {
 	public String blackTeam = null, black = null, blackElo = null;
 	public String ecco = null, opening = null, variation = null;
 	public int maxMoves = 0, result = 0;
-	public Vector lstComment = new Vector();
 	public Vector lstSquares = new Vector();
+	public Vector lstComment = new Vector();
 
 	public PgnFile(GBLineInputStream in) {
 		SimplePos pos = new SimplePos();
@@ -111,19 +131,30 @@ public class PgnFile {
 									String strFile = MoveParser.chin2File(s.
 											substring(index - 1, index + 3));
 									mv = MoveParser.file2Move(strFile, pos);
+									System.out.print(s.substring(index - 1, index + 3) + "->" + strFile);
 									if (mv > 0) {
-										System.out.println(s.substring(index - 1, index + 3) + "->" + strFile + "(" +
-												Integer.toHexString(SimplePos.SRC(mv)) + "," + Integer.toHexString(SimplePos.DST(mv)) + ")");
 										index += 3;
+										System.out.print("(" + Integer.toHexString(SimplePos.SRC(mv)) +
+												"," + Integer.toHexString(SimplePos.DST(mv)) + ")");
 									}
+									System.out.println();
 								}
 							}
-							// Try Move
 							if (mv > 0) {
+								int sqSrc = SimplePos.SRC(mv);
+								int sqDst = SimplePos.DST(mv);
+								if (sqSrc == sqDst) {
+									pos.squares[sqDst] = (byte) (SimplePos.SIDE_TAG(pos.sdPlayer) +
+											SimplePos.PIECE_PAWN);
+								} else {
+									pos.squares[sqDst] = pos.squares[sqSrc];
+									pos.squares[sqSrc] = 0;									
+								}
 								pos.changeSide();
+								maxMoves ++;
+								lstComment.addElement(new StringBuffer());
+								lstSquares.addElement(copySquares(pos.squares));
 							}
-							lstComment.addElement(new StringBuffer());
-							maxMoves ++;
 							endFor = false;
 						}
 						if (!endFor) {
@@ -174,7 +205,7 @@ public class PgnFile {
 								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
 						} else if ((value = getLabel(s, "FEN")) != null) {
 							pos.fromFen(value);
-							lstSquares.setElementAt(copySquares(pos.squares), index);
+							lstSquares.setElementAt(copySquares(pos.squares), 0);
 						}
 						returned = true;
 					} else {
@@ -191,5 +222,17 @@ public class PgnFile {
 				returned = false;
 			}
 		}
+	}
+
+	public String toString() {
+		return "";
+	}
+	
+	public byte[] squares(int index) {
+		return (byte[]) lstSquares.elementAt(index);
+	}
+
+	public String comment(int index) {
+		return ((StringBuffer) lstComment.elementAt(index)).toString();
 	}
 }

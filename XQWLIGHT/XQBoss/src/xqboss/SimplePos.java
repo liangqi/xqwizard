@@ -1,8 +1,8 @@
 /*
-Position.java - Source Code for XiangQi Wizard Light, Part I
+SimplePos.java - Source Code for XiangQi Boss, Part I
 
-XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.25, Last Modified: Mar. 2008
+XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -35,11 +35,42 @@ public class SimplePos {
 	public static final int FILE_LEFT = 3;
 	public static final int FILE_RIGHT = 11;
 
+	public static final byte[] IN_BOARD = new byte[] {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	};
+
 	public static final String STARTUP_FEN =
 			"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1";
 
+	public static boolean IN_BOARD(int sq) {
+		return IN_BOARD[sq] != 0;
+	}
+
 	public static int COORD_XY(int x, int y) {
 		return x + (y << 4);
+	}
+
+	public static int RANK_Y(int sq) {
+		return sq >> 4;
+	}
+
+	public static int FILE_X(int sq) {
+		return sq & 15;
 	}
 
 	public static int SQUARE_FLIP(int sq) {
