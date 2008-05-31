@@ -286,7 +286,7 @@ class XQWLCanvas extends Canvas {
 		if (bCompatible) {
 			g.setFont(fontSmall);
 			g.setColor(0x0000ff);
-			g.drawString("* - 退出", 0, height, Graphics.LEFT + Graphics.BASELINE);
+			g.drawString("* - 返回", 0, height, Graphics.LEFT + Graphics.BASELINE);
 			g.drawString("0 - 悔棋", width / 2, height, Graphics.HCENTER + Graphics.BASELINE);
 			g.drawString("# - 关于", width, height, Graphics.RIGHT + Graphics.BASELINE);
 		}

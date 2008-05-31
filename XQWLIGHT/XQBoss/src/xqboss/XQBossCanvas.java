@@ -24,13 +24,16 @@ package xqboss;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 class XQBossCanvas extends Canvas {
-	private static Image imgBackground, imgXQBoss;
+	private static Image imgBackground, imgPgn;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
 		"rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
@@ -43,7 +46,7 @@ class XQBossCanvas extends Canvas {
 	static {
 		try {
 			imgBackground = Image.createImage("/images/background.png");
-			imgXQBoss = Image.createImage("/images/xqboss.png");
+			imgPgn = Image.createImage("/images/pgn.png");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -54,12 +57,11 @@ class XQBossCanvas extends Canvas {
 	XQBossMIDlet midlet;
 
 	private PgnFile pgn;
+	private String file;
 	private int index;
 	// Assume FullScreenMode = false
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
-
-	private Alert altAbout = new Alert("关于\"象棋小博士\"", null, imgXQBoss, AlertType.INFO);
 
 	private boolean init = false, loading = true;
 	private Image imgBoard;
@@ -69,15 +71,21 @@ class XQBossCanvas extends Canvas {
 	XQBossCanvas(XQBossMIDlet midlet_) {
 		midlet = midlet_;
 		setFullScreenMode(true);
-		altAbout.setTimeout(Alert.FOREVER);
-		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +
-				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
-				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
-				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
+		addCommand(new Command("返回", Command.BACK, 1));
+		setCommandListener(new CommandListener() {
+			public void commandAction(Command c, Displayable d) {
+				new Thread() {
+					public void run() {
+						midlet.listDir();
+					}
+				}.start();
+			}
+		});
 	}
 
-	void load(PgnFile pgn_) {
+	void load(PgnFile pgn_, String file_) {
 		pgn = pgn_;
+		file = file_;
 		index = 0;
 		setFullScreenMode(true);
 		loading = true;
@@ -158,29 +166,29 @@ class XQBossCanvas extends Canvas {
 		g.drawString("4 - 上一步", 0, 0, Graphics.LEFT + Graphics.TOP);
 		g.setColor(pgn.comment(index).length() > 0 ? 0x0000ff : 0x808080);
 		g.drawString("5 - 读注释", width / 2, 0, Graphics.HCENTER + Graphics.TOP);
-		g.setColor(index < pgn.maxMoves ? 0x0000ff : 0x808080);
+		g.setColor(index < pgn.size() ? 0x0000ff : 0x808080);
 		g.drawString("6 - 下一步", width, 0, Graphics.RIGHT + Graphics.TOP);
 		g.setColor(0x0000ff);
-		g.drawString("* - 退出", 0, height, Graphics.LEFT + Graphics.BASELINE);
-		g.drawString(index + " / " + pgn.maxMoves, width / 2, height,
+		g.drawString("* - 返回", 0, height, Graphics.LEFT + Graphics.BASELINE);
+		g.drawString(index + " / " + pgn.size(), width / 2, height,
 				Graphics.HCENTER + Graphics.BASELINE);
-		g.drawString("# - 关于", width, height, Graphics.RIGHT + Graphics.BASELINE);
+		g.drawString("# - 信息", width, height, Graphics.RIGHT + Graphics.BASELINE);
 	}
 
 	protected void keyPressed(int code) {
 		int action = getGameAction(code);
 		if (false) {
 			// Code Style
-		} else if (action == LEFT || action == UP || code == KEY_NUM4) {
+		} else if (action == UP || action == LEFT || code == KEY_NUM2 || code == KEY_NUM4) {
 			prev();
 		} else if (action == FIRE || code == KEY_NUM5) {
 			comment();
-		} else if (action == RIGHT || action == DOWN || code == KEY_NUM6) {
+		} else if (action == RIGHT || action == DOWN || code == KEY_NUM6 || code == KEY_NUM8) {
 			next();
 		} else if (code == KEY_STAR) {
 			back();
 		} else if (code == KEY_POUND) {
-			about();
+			info();
 		}
 	}
 
@@ -204,7 +212,7 @@ class XQBossCanvas extends Canvas {
 				back();
 				return;
 			case 2:
-				about();
+				info();
 				return;
 			}
 		}
@@ -225,7 +233,7 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void comment() {
-		Alert alt = new Alert(index + " / " + pgn.maxMoves,
+		Alert alt = new Alert(index + " / " + pgn.size(),
 				pgn.comment(index), null, AlertType.INFO);
 		alt.setTimeout(Alert.FOREVER);
 		Display.getDisplay(midlet).setCurrent(alt);
@@ -234,7 +242,7 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void next() {
-		if (index < pgn.maxMoves) {
+		if (index < pgn.size()) {
 			index ++;
 			repaint();
 			serviceRepaints();
@@ -249,8 +257,10 @@ class XQBossCanvas extends Canvas {
 		}.start();
 	}
 
-	private void about() {
-		Display.getDisplay(midlet).setCurrent(altAbout);
+	private void info() {
+		Alert alt = new Alert(file, pgn.toString(), imgPgn, AlertType.INFO);
+		alt.setTimeout(Alert.FOREVER);
+		Display.getDisplay(midlet).setCurrent(alt);
 		loading = true;
 		setFullScreenMode(true);
 	}

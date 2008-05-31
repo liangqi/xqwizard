@@ -40,13 +40,13 @@ public class PgnFile {
 		return null;
 	}
 
-	public String event = null, round = null, date = null, site = null;
-	public String redTeam = null, red = null, redElo = null;
-	public String blackTeam = null, black = null, blackElo = null;
-	public String ecco = null, opening = null, variation = null;
-	public int maxMoves = 0, result = 0;
-	public Vector lstSquares = new Vector();
-	public Vector lstComment = new Vector();
+	private String event = "", round = "", date = "", site = "";
+	private String redTeam = "", red = "", redElo = "";
+	private String blackTeam = "", black = "", blackElo = "";
+	private String ecco = "", opening = "", variation = "";
+	private int maxMoves = 0, result = 0, sdStart = 0;
+	private Vector lstSquares = new Vector();
+	private Vector lstComment = new Vector();
 
 	public PgnFile(GBLineInputStream in) {
 		SimplePos pos = new SimplePos();
@@ -131,11 +131,8 @@ public class PgnFile {
 									String strFile = MoveParser.chin2File(s.
 											substring(index - 1, index + 3));
 									mv = MoveParser.file2Move(strFile, pos);
-									System.out.print(s.substring(index - 1, index + 3) + "->" + strFile);
 									if (mv > 0) {
 										index += 3;
-										System.out.print("(" + Integer.toHexString(SimplePos.SRC(mv)) +
-												"," + Integer.toHexString(SimplePos.DST(mv)) + ")");
 									}
 									System.out.println();
 								}
@@ -202,10 +199,11 @@ public class PgnFile {
 							variation = value;
 						} else if ((value = getLabel(s, "FORMAT")) != null) {
 							notation = value.toUpperCase().startsWith("WFX") ? 1 :
-								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
+									value.toUpperCase().startsWith("ICCS") ? 2 : 0;
 						} else if ((value = getLabel(s, "FEN")) != null) {
 							pos.fromFen(value);
 							lstSquares.setElementAt(copySquares(pos.squares), 0);
+							sdStart = pos.sdPlayer;
 						}
 						returned = true;
 					} else {
@@ -225,9 +223,59 @@ public class PgnFile {
 	}
 
 	public String toString() {
-		return "";
+		StringBuffer sb = new StringBuffer();
+		// 1. Event String
+		sb.append(event);
+		if (round.length() > 0) {
+			sb.append(event.length() == 0 ? "" : " ");
+			try {
+				int nRound = Integer.parseInt(round);
+				sb.append(nRound == 98 ? "半决赛" : nRound == 99 ? "决赛" : "第" + nRound + "轮");
+			} catch (Exception e) {
+				sb.append(round);
+			}
+		}
+		sb.append("\n\r\f");
+		// 2. Result String
+		if (red.length() == 0 || black.length() == 0) {
+			sb.append("(着法：" + (sdStart == 0 ? "红先" : "黑先"));
+			sb.append((result == 0 ? "" : result == 1 ? (sdStart == 0 ? "胜" : "负") :
+					result == 2 ? "和" : (sdStart == 0 ? "负" : "胜")) + ")");
+		} else {
+			sb.append(redTeam + (redTeam.length() == 0 ? "" : " ") + red);
+			sb.append(redElo.length() == 0 ? "" : " (" + redElo + ")");
+			sb.append(result == 0 ? " (对) " :
+					result == 1 ? (sdStart == 0 ? " (先胜) " : " (后胜) ") :
+					result == 2 ? (sdStart == 0 ? " (先和) " : " (后和) ") :
+					(sdStart == 0 ? " (先负) " : " (后负) "));
+			sb.append(blackTeam + (blackTeam.length() == 0 ? "" : " ") + black);
+			sb.append(blackElo.length() == 0 ? "" : " (" + blackElo + ")");
+		}
+		sb.append("\n\r\f");
+		// 3. Date/Site String
+		if (date.length() == 0) {
+			sb.append(site.length() == 0 ? "" : "(弈于 " + site + ")");
+		} else {
+			sb.append("(" + date + (site.length() == 0 ? ")" : " 弈于 " + site + ")"));
+		}
+		sb.append("\n\r\f");
+		// 4. Open String
+		sb.append(opening + (opening.length() == 0 || variation.length() == 0 ? "" : "——"));
+		sb.append(variation);
+		if (ecco.length() > 0) {
+			if (opening.length() == 0 && variation.length() == 0) {
+				sb.append("(ECCO开局编号：" + ecco + ")");
+			} else {
+				sb.append("(" + ecco + ")");
+			}
+		}
+		return sb.toString();
 	}
-	
+
+	public int size() {
+		return maxMoves;
+	}
+
 	public byte[] squares(int index) {
 		return (byte[]) lstSquares.elementAt(index);
 	}

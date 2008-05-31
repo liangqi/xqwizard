@@ -26,17 +26,27 @@ import java.util.Enumeration;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDlet;
 
 public class XQBossMIDlet extends MIDlet {
+	private static Image imgFolder, imgPgn;
+
+	static {
+		try {
+			imgFolder = Image.createImage("/images/folder.png");
+			imgPgn = Image.createImage("/images/pgn_s.png");
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
 	private boolean started = false;
 
 	private XQBossCanvas canvas = new XQBossCanvas(this);
@@ -52,10 +62,7 @@ public class XQBossMIDlet extends MIDlet {
 			PgnFile pgn = new PgnFile(in);
 			in.close();
 			dir.close();
-			Alert alt = new Alert(file, pgn.toString(), null, AlertType.INFO);
-			alt.setTimeout(Alert.FOREVER);
-			Display.getDisplay(this).setCurrent(alt);
-			canvas.load(pgn);
+			canvas.load(pgn, file);
 			Display.getDisplay(this).setCurrent(canvas);
 		} catch (Exception e) {
 			if (dir != null) {
@@ -89,7 +96,7 @@ public class XQBossMIDlet extends MIDlet {
 	void listDir() {
 		final Command cmdOpen = new Command("打开", Command.OK, 1);
 		final Command cmdExit = new Command("退出", Command.EXIT, 1);
-		final List lstDir = new List("选择棋谱文件", Choice.IMPLICIT);
+		final List lstDir = new List("象棋小博士", Choice.IMPLICIT);
 
 		Enumeration enumDir;
 		if (currDir == null) {
@@ -109,14 +116,14 @@ public class XQBossMIDlet extends MIDlet {
 				}
 				return;
 			}
-			lstDir.append("[..]", null);
+			lstDir.append("[..]", imgFolder);
 		}
 		while (enumDir.hasMoreElements()) {
 			String strDir = (String) enumDir.nextElement();
 			if (strDir.endsWith("/")) {
-				lstDir.append("[" + strDir.substring(0, strDir.length() - 1) + "]", null);
+				lstDir.append("[" + strDir.substring(0, strDir.length() - 1) + "]", imgFolder);
 			} else if (strDir.toLowerCase().endsWith(".pgn")) {
-				lstDir.append(strDir, null);
+				lstDir.append(strDir, imgPgn);
 			}
 		}
 		lstDir.setSelectCommand(cmdOpen);
