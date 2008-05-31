@@ -1,5 +1,5 @@
 XQWizard Advert List
-dizhen,60,288,3876
+dizhen,60,288,3748
 llj_dizhen,60,300,8644
 xhwenchuan,60,301,9750
 gongyi,60,276,5890

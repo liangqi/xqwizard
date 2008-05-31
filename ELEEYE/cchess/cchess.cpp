@@ -2,7 +2,7 @@
 cchess.h/cchess.cpp - Source Code for ElephantEye, Additional Part
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.1, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 3.13, Last Modified: Jun. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ extern "C" __declspec(dllexport) LONG WINAPI CchessFile2Move(LONG dwFileStr, con
 extern "C" __declspec(dllexport) LONG WINAPI CchessMove2File(LONG mv, const PositionStruct *lppos);
 
 // 驱动程序的版本号，在《象棋巫师》中使用“关于规则”功能可以看到。
-static const char *const cszCchessVersion = "Chinese Chess Driver 3.1";
+static const char *const cszCchessVersion = "Chinese Chess Driver 3.13";
 
 LPCSTR WINAPI CchessVersion(VOID) {
   return cszCchessVersion;
@@ -212,7 +212,8 @@ LONG WINAPI CchessMove2File(LONG mv, const PositionStruct *lppos) {
 
 /* 以下常量规定了着法表示使用的数字、棋子、方向(进平退)、位置(前后)等的最大个数。
  * 
- * 表示位置的符号共有8个，除了“前中后”以外还有“一二三四五”，参考《中国象棋电脑应用规范(二)：着法表示》(简称《规范》)，即以下网页：
+ * 表示位置的符号共有8个，除了“前中后”以外还有“一二三四五”，参考
+ * 《中国象棋电脑应用规范(二)：着法表示》(简称《规范》)，即以下网页：
  * 　　http://www.elephantbase.net/protocol/cchess_move.htm
  * 由于“前中后”被安排在“一二三四五”以后，但又和“进平退”在符号上一致，因此要加减"DIRECT_TO_POS"作转换。
  * 另外，由于仕(士)相(象)的着法表示的纵线形式和坐标形式有一一对应的关系(固定纵线表示)，
@@ -243,9 +244,11 @@ static const char ccPos2Byte[12] = {
 
 static const unsigned short cwDigit2WordSimp[2][10] = {
   {
-    0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/, 0xf9c1/*六*/, 0xdfc6/*七*/, 0xcbb0/*八*/, 0xc5be/*九*/, 0xa1a1/*　*/
+    0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/,
+    0xf9c1/*六*/, 0xdfc6/*七*/, 0xcbb0/*八*/, 0xc5be/*九*/, 0xa1a1/*　*/
   }, {
-    0xb1a3/*１*/, 0xb2a3/*２*/, 0xb3a3/*３*/, 0xb4a3/*４*/, 0xb5a3/*５*/, 0xb6a3/*６*/, 0xb7a3/*７*/, 0xb8a3/*８*/, 0xb9a3/*９*/, 0xa1a1/*　*/
+    0xb1a3/*１*/, 0xb2a3/*２*/, 0xb3a3/*３*/, 0xb4a3/*４*/, 0xb5a3/*５*/,
+    0xb6a3/*６*/, 0xb7a3/*７*/, 0xb8a3/*８*/, 0xb9a3/*９*/, 0xa1a1/*　*/
   }
 };
 
@@ -262,22 +265,27 @@ static const unsigned short cwDirect2WordSimp[4] = {
 };
 
 static const unsigned short cwPos2WordSimp[10] = {
-  0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/, 0xb0c7/*前*/, 0xd0d6/*中*/, 0xf3ba/*后*/, 0xa1a1/*　*/, 0xa1a1/*　*/
+  0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/,
+  0xb0c7/*前*/, 0xd0d6/*中*/, 0xf3ba/*后*/, 0xa1a1/*　*/, 0xa1a1/*　*/
 };
 
 static const unsigned short cwDigit2WordTrad[2][10] = {
   {
-    0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/, 0xbba4/*せ[六]*/, 0x43a4/*[七]*/, 0x4ba4/*[八]*/, 0x45a4/*[九]*/, 0x40a1/**/
+    0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/,
+    0xbba4/*せ[六]*/, 0x43a4/*[七]*/, 0x4ba4/*[八]*/, 0x45a4/*[九]*/, 0x40a1/**/
   }, {
-    0xb0a2/*[１]*/, 0xb1a2/*⒈[２]*/, 0xb2a2/*⒉[３]*/, 0xb3a2/*⒊[４]*/, 0xb4a2/*⒋[５]*/, 0xb5a2/*⒌[６]*/, 0xb6a2/*⒍[７]*/, 0xb7a2/*⒎[８]*/, 0xb8a2/*⒏[９]*/, 0x40a1/**/
+    0xb0a2/*[１]*/, 0xb1a2/*⒈[２]*/, 0xb2a2/*⒉[３]*/, 0xb3a2/*⒊[４]*/, 0xb4a2/*⒋[５]*/,
+    0xb5a2/*⒌[６]*/, 0xb6a2/*⒍[７]*/, 0xb7a2/*⒎[８]*/, 0xb8a2/*⒏[９]*/, 0x40a1/**/
   }
 };
 
 static const unsigned short cwPiece2WordTrad[2][8] = {
   {
-    0xd3ab/*[帥]*/, 0x4ba5/*[仕]*/, 0xdbac/*[相]*/, 0xa8b0/*皑[馬]*/, 0xaea8/*ó[車]*/, 0xb6ac/*[炮]*/, 0x4ca7/*[兵]*/, 0x40a1/**/
+    0xd3ab/*[帥]*/, 0x4ba5/*[仕]*/, 0xdbac/*[相]*/, 0xa8b0/*皑[馬]*/,
+    0xaea8/*ó[車]*/, 0xb6ac/*[炮]*/, 0x4ca7/*[兵]*/, 0x40a1/**/
   }, {
-    0x4eb1/*盢[將]*/, 0x68a4/*[士]*/, 0x48b6/*禜[象]*/, 0xa8b0/*皑[馬]*/, 0xaea8/*ó[車]*/, 0xb6ac/*[炮]*/, 0xf2a8/*[卒]*/, 0x40a1/**/
+    0x4eb1/*盢[將]*/, 0x68a4/*[士]*/, 0x48b6/*禜[象]*/, 0xa8b0/*皑[馬]*/,
+    0xaea8/*ó[車]*/, 0xb6ac/*[炮]*/, 0xf2a8/*[卒]*/, 0x40a1/**/
   }
 };
 
@@ -286,14 +294,18 @@ static const unsigned short cwDirect2WordTrad[4] = {
 };
 
 static const unsigned short cwPos2WordTrad[10] = {
-  0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/, 0x65ab/*玡[前]*/, 0xa4a4/*い[中]*/, 0xe1ab/*[後]*/, 0x40a1/**/, 0x40a1/**/
+  0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/,
+  0x65ab/*玡[前]*/, 0xa4a4/*い[中]*/, 0xe1ab/*[後]*/, 0x40a1/**/, 0x40a1/**/
 };
 
 // 固定纵线表示的纵线数组
 static const uint32 cdwFixFile[28] = {
-  0x352d3441/*A4-5*/, 0x352b3441/*A4+5*/, 0x342d3541/*A5-4*/, 0x342b3541/*A5+4*/, 0x362d3541/*A5-6*/, 0x362b3541/*A5+6*/, 0x352d3641/*A6-5*/, 0x352b3641/*A6+5*/,
-  0x332d3142/*B1-3*/, 0x332b3142/*B1+3*/, 0x312d3342/*B3-1*/, 0x312b3342/*B3+1*/, 0x352d3342/*B3-5*/, 0x352b3342/*B3+5*/, 0x332d3542/*B5-3*/, 0x332b3542/*B5+3*/,
-  0x372d3542/*B5-7*/, 0x372b3542/*B5+7*/, 0x352d3742/*B7-5*/, 0x352b3742/*B7+5*/, 0x392d3742/*B7-9*/, 0x392b3742/*B7+9*/, 0x372d3942/*B9-7*/, 0x372b3942/*B9+7*/,
+  0x352d3441/*A4-5*/, 0x352b3441/*A4+5*/, 0x342d3541/*A5-4*/, 0x342b3541/*A5+4*/,
+  0x362d3541/*A5-6*/, 0x362b3541/*A5+6*/, 0x352d3641/*A6-5*/, 0x352b3641/*A6+5*/,
+  0x332d3142/*B1-3*/, 0x332b3142/*B1+3*/, 0x312d3342/*B3-1*/, 0x312b3342/*B3+1*/,
+  0x352d3342/*B3-5*/, 0x352b3342/*B3+5*/, 0x332d3542/*B5-3*/, 0x332b3542/*B5+3*/,
+  0x372d3542/*B5-7*/, 0x372b3542/*B5+7*/, 0x352d3742/*B7-5*/, 0x352b3742/*B7+5*/,
+  0x392d3742/*B7-9*/, 0x392b3742/*B7+9*/, 0x372d3942/*B9-7*/, 0x372b3942/*B9+7*/,
   0x503d3441/*A4=P*/, 0x503d3641/*A6=P*/, 0x503d3342/*B3=P*/, 0x503d3742/*B7=P*/
 };
 
@@ -452,7 +464,8 @@ inline int Piece2Byte(int nArg) {
 }
 
 inline int Byte2Piece(int nArg) {
-  return (nArg >= '1' && nArg <= '7' ? nArg - '1' : nArg >= 'A' && nArg <= 'Z' ? FenPiece(nArg) : nArg >= 'a' && nArg <= 'z' ? FenPiece(nArg - 'a' + 'A') : MAX_PIECE);
+  return (nArg >= '1' && nArg <= '7' ? nArg - '1' : nArg >= 'A' && nArg <= 'Z' ? FenPiece(nArg) :
+      nArg >= 'a' && nArg <= 'z' ? FenPiece(nArg - 'a' + 'A') : MAX_PIECE);
 }
 
 inline int Byte2Direct(int nArg) {
@@ -466,7 +479,8 @@ inline int Byte2Pos(int nArg) {
 static int Word2Digit(int nArg) {
   int i;
   for (i = 0; i < MAX_DIGIT; i ++) {
-    if (nArg == cwDigit2WordSimp[0][i] || nArg == cwDigit2WordSimp[1][i] || nArg == cwDigit2WordTrad[0][i] || nArg == cwDigit2WordTrad[1][i]) {
+    if (nArg == cwDigit2WordSimp[0][i] || nArg == cwDigit2WordSimp[1][i] ||
+        nArg == cwDigit2WordTrad[0][i] || nArg == cwDigit2WordTrad[1][i]) {
       break;
     }
   }
@@ -486,7 +500,8 @@ static int Word2Piece(int nArg) {
     return 5;
   } else {
     for (i = 0; i < MAX_PIECE; i ++) {
-      if (nArg == cwPiece2WordSimp[0][i] || nArg == cwPiece2WordSimp[1][i] || nArg == cwPiece2WordTrad[0][i] || nArg == cwPiece2WordTrad[1][i]) {
+      if (nArg == cwPiece2WordSimp[0][i] || nArg == cwPiece2WordSimp[1][i] ||
+          nArg == cwPiece2WordTrad[0][i] || nArg == cwPiece2WordTrad[1][i]) {
         break;
       }
     }
@@ -615,9 +630,11 @@ void BoardText(char *szBoard, const PositionStruct &pos, Bool bAnsi) {
       for (j = FILE_LEFT; j <= FILE_RIGHT; j ++) {
         pc = pos.ucpcSquares[COORD_XY(j, i / 2 + RANK_TOP)];
         if ((pc & SIDE_TAG(0)) != 0) {
-          lpBoard += sprintf(lpBoard, bAnsi ? "(\33[1;31m%.2s\33[0m)" : "(%.2s)", (const char *) &lpcwPiece2Word[0][PIECE_TYPE(pc)]);
+          lpBoard += sprintf(lpBoard, bAnsi ? "(\33[1;31m%.2s\33[0m)" :
+              "(%.2s)", (const char *) &lpcwPiece2Word[0][PIECE_TYPE(pc)]);
         } else if ((pc & SIDE_TAG(1)) != 0) {
-          lpBoard += sprintf(lpBoard, bAnsi ? "[\33[1;32m%.2s\33[0m]" : "[%.2s]", (const char *) &lpcwPiece2Word[1][PIECE_TYPE(pc)]);
+          lpBoard += sprintf(lpBoard, bAnsi ? "[\33[1;32m%.2s\33[0m]" :
+              "[%.2s]", (const char *) &lpcwPiece2Word[1][PIECE_TYPE(pc)]);
         } else {
           lpBoard += sprintf(lpBoard, "%.4s", lpcszBoardStr[i] + (j - FILE_LEFT) * 4);
         }
@@ -686,8 +703,9 @@ void FenMirror(char *szFenDst, const char *szFenSrc) {
  *
  * 纵线的符号表示基本类似于汉字表示，但当出现类似“前炮退二”这样的表示时，符号表示就会有不同的情况。
  * 按照《规范》的建议，表示成"C+-2"最容易被识别，但是也有表示成"+C-2"的，即符号和汉字完全对应，因此本函数也会考虑这种形式。
- * 对一般着法而言，纵线表示的镜像是唯一的，但是对于“两条的纵线上有多个兵(卒)”的罕见情况，本函数只能考虑最不罕见的一种特例，
- * 即两条纵线上各有两个兵(卒)，这样，"Paxx"和"Pbxx"分别跟"Pcxx"和"Pdxx"镜像，而对于其他情况则无法作出正确转换。
+ * 对一般着法而言，纵线表示的镜像是唯一的，但是对于“两条的纵线上有多个兵(卒)”的罕见情况，
+ * 本函数只能考虑最不罕见的一种特例，即两条纵线上各有两个兵(卒)，这样，"Paxx"和"Pbxx"分别跟"Pcxx"和"Pdxx"镜像，
+ * 而对于其他情况则无法作出正确转换。
  * 注意：符号表示由4个字节构成，所以可以用一个"uint32"类型作快速传输(同理，汉字表示用"uint64")。
  */
 uint32 FileMirror(uint32 dwFileStr) {
@@ -738,7 +756,8 @@ uint32 Chin2File(uint64 qwChinStr) {
   nPos = Word2Pos(lpwArg[0]);
   Ret.c[0] = PIECE_BYTE(Word2Piece(nPos == MAX_POS ? lpwArg[0] : lpwArg[1]));
   Ret.c[1] = (nPos == MAX_POS ? Digit2Byte(Word2Digit(lpwArg[1])) : ccPos2Byte[nPos]);
-  if ((lpwArg[2] == 0xe4b1/*变*/ || lpwArg[2] == 0xdcc5/*跑*/ || lpwArg[2] == 0x83d7/*變*/) && Word2Piece(lpwArg[3]) == 6) {
+  if ((lpwArg[2] == 0xe4b1/*变*/ || lpwArg[2] == 0xdcc5/*跑*/ || lpwArg[2] == 0x83d7/*變*/) &&
+      Word2Piece(lpwArg[3]) == 6) {
     Ret.c[2] = '=';
     Ret.c[3] = 'P';
   } else {
@@ -762,7 +781,8 @@ uint64 File2Chin(uint32 dwFileStr, int sdPlayer) {
   if (nPos == MAX_DIRECT) {
     nPos = Byte2Pos(lpArg[1]);
     Ret.w[0] = (nPos == MAX_POS ? lpcwPiece2Word[sdPlayer][Byte2Piece(lpArg[0])] : lpcwPos2Word[nPos]);
-    Ret.w[1] = (nPos == MAX_POS ? lpcwDigit2Word[sdPlayer][Byte2Digit(lpArg[1])] : lpcwPiece2Word[sdPlayer][Byte2Piece(lpArg[0])]);
+    Ret.w[1] = (nPos == MAX_POS ? lpcwDigit2Word[sdPlayer][Byte2Digit(lpArg[1])] :
+        lpcwPiece2Word[sdPlayer][Byte2Piece(lpArg[0])]);
   } else {
     Ret.w[0] = lpcwPos2Word[nPos + DIRECT_TO_POS];
     Ret.w[1] = lpcwPiece2Word[sdPlayer][Byte2Piece(lpArg[1])];
@@ -784,7 +804,7 @@ uint64 File2Chin(uint32 dwFileStr, int sdPlayer) {
  */
 int File2Move(uint32 dwFileStr, const PositionStruct &pos) {
   int i, j, nPos, pt, sq, nPieceNum;
-  int mv, xSrc, ySrc, xDst, yDst;
+  int xSrc, ySrc, xDst, yDst;
   C4dwStruct FileStr;
   int nFileList[9], nPieceList[5];
   // 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
@@ -810,141 +830,127 @@ int File2Move(uint32 dwFileStr, const PositionStruct &pos) {
   }
   for (i = 0; i < MAX_FIX_FILE; i ++) {
     if (FileStr.dw == cdwFixFile[i]) {
-      break;
+      if (pos.sdPlayer == 0) {
+        return MOVE(cucFixMove[i][0], cucFixMove[i][1]);
+      } else {
+        return MOVE(SQUARE_FLIP(cucFixMove[i][0]), SQUARE_FLIP(cucFixMove[i][1]));
+      }
     }
   }
-  if (i == MAX_FIX_FILE) {
 
-    // 2. 如果不是这28种固定纵线表示，那么把棋子、位置和纵线序号(列号)解析出来
-    nPos = Byte2Direct(FileStr.c[0]);
-    if (nPos == MAX_DIRECT) {
-      pt = Byte2Piece(FileStr.c[0]);
-      nPos = Byte2Pos(FileStr.c[1]);
+  // 2. 如果不是这28种固定纵线表示，那么把棋子、位置和纵线序号(列号)解析出来
+  nPos = Byte2Direct(FileStr.c[0]);
+  if (nPos == MAX_DIRECT) {
+    pt = Byte2Piece(FileStr.c[0]);
+    nPos = Byte2Pos(FileStr.c[1]);
+  } else {
+    pt = Byte2Piece(FileStr.c[1]);
+    nPos += DIRECT_TO_POS;
+  }
+  if (nPos == MAX_POS) {
+
+    // 3. 如果棋子是用列号表示的，那么可以直接根据纵线来找到棋子序号；
+    xSrc = Byte2Digit(FileStr.c[1]);
+    if (pt == KING_TYPE) {
+      sq = FILESQ_SIDE_PIECE(pos, 0);
+    } else if (pt >= KNIGHT_TYPE && pt <= PAWN_TYPE) {
+      j = (pt == PAWN_TYPE ? 5 : 2);
+      for (i = 0; i < j; i ++) {
+        sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
+        if (sq != -1) {
+          if (FILESQ_FILE_X(sq) == xSrc) {
+            break;
+          }
+        }
+      }
+      sq = (i == j ? -1 : sq);
     } else {
-      pt = Byte2Piece(FileStr.c[1]);
-      nPos += DIRECT_TO_POS;
-    }
-    if (nPos == MAX_POS) {
-
-      // 3. 如果棋子是用列号表示的，那么可以直接根据纵线来找到棋子序号；
-      xSrc = Byte2Digit(FileStr.c[1]);
-      if (pt == KING_TYPE) {
-        sq = FILESQ_SIDE_PIECE(pos, 0);
-      } else if (pt >= KNIGHT_TYPE && pt <= PAWN_TYPE) {
-        j = (pt == PAWN_TYPE ? 5 : 2);
-        for (i = 0; i < j; i ++) {
-          sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
-          if (sq != -1) {
-            if (FILESQ_FILE_X(sq) == xSrc) {
-              break;
-            }
-          }
-        }
-        sq = (i == j ? -1 : sq);
-      } else {
-        sq = -1;
-      }
-    } else {
-
-      // 4. 如果棋子是用位置表示的，那么必须挑选出含有多个该种棋子的所有纵线，这是本函数最难处理的地方；
-      if (pt >= KNIGHT_TYPE && pt <= PAWN_TYPE) {
-        for (i = 0; i < 9; i ++) {
-          nFileList[i] = 0;
-        }
-        j = (pt == PAWN_TYPE ? 5 : 2);
-        for (i = 0; i < j; i ++) {
-          sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
-          if (sq != -1) {
-            nFileList[FILESQ_FILE_X(sq)] ++;
-          }
-        }
-        nPieceNum = 0;
-        for (i = 0; i < j; i ++) {
-          sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
-          if (sq != -1) {
-            if (nFileList[FILESQ_FILE_X(sq)] > 1) {
-              nPieceList[nPieceNum] = FIRST_PIECE(pt, i);
-              nPieceNum ++;
-            }
-          }
-        }
-
-        // 5. 找到这些纵线以后，对这些纵线上的棋子进行排序，然后根据位置来确定棋子序号；
-        for (i = 0; i < nPieceNum - 1; i ++) {
-          for (j = nPieceNum - 1; j > i; j --) {
-            if (FILESQ_SIDE_PIECE(pos, nPieceList[j - 1]) > FILESQ_SIDE_PIECE(pos, nPieceList[j])) {
-              SWAP(nPieceList[j - 1], nPieceList[j]);
-            }
-          }
-        }
-        // 提示：如果只有两个棋子，那么“后”表示第二个棋子，如果有多个棋子，那么“一二三四五”依次代表第一个到第五个棋子，“前中后”依次代表第一个到第三个棋子。
-        if (nPieceNum == 2 && nPos == 2 + DIRECT_TO_POS) {
-          sq = FILESQ_SIDE_PIECE(pos, nPieceList[1]);
-        } else {
-          nPos -= (nPos >= DIRECT_TO_POS ? DIRECT_TO_POS : 0);
-          sq = (nPos >= nPieceNum ? -1 : FILESQ_SIDE_PIECE(pos, nPieceList[nPos]));
-        }
-      } else {
-        sq = -1;
-      }
-    }
-    if (sq == -1) {
-      mv = 0;
-    } else {
-
-      // 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
-      xSrc = FILESQ_FILE_X(sq);
-      ySrc = FILESQ_RANK_Y(sq);
-      if (pt == KNIGHT_TYPE) {
-        // 提示：马的进退处理比较特殊。
-        xDst = Byte2Digit(FileStr.c[3]);
-        switch (Byte2Direct(FileStr.c[2])) {
-        case 0:
-          yDst = ySrc - 3 + ABS(xDst - xSrc);
-          break;
-        case 2:
-          yDst = ySrc + 3 - ABS(xDst - xSrc);
-          break;
-        default:
-          yDst = ySrc;
-          break;
-        }
-      } else {
-        switch (Byte2Direct(FileStr.c[2])) {
-        case 0:
-          xDst = xSrc;
-          yDst = ySrc - Byte2Digit(FileStr.c[3]) - 1;
-          break;
-        case 1:
-          xDst = Byte2Digit(FileStr.c[3]);
-          yDst = ySrc;
-          break;
-        case 2:
-          xDst = xSrc;
-          yDst = ySrc + Byte2Digit(FileStr.c[3]) + 1;
-          break;
-        default:
-          xDst = xSrc;
-          yDst = ySrc;
-          break;
-        }
-      }
-
-      // 7. 把相对走子方的坐标转换为固定坐标，得到着法的起点和终点。
-      if (pos.sdPlayer == 0) {
-        mv = MOVE(FILESQ_SQUARE(FILESQ_COORD_XY(xSrc, ySrc)), FILESQ_SQUARE(FILESQ_COORD_XY(xDst, yDst)));
-      } else {
-        mv = MOVE(SQUARE_FLIP(FILESQ_SQUARE(FILESQ_COORD_XY(xSrc, ySrc))), SQUARE_FLIP(FILESQ_SQUARE(FILESQ_COORD_XY(xDst, yDst))));
-      }
+      sq = -1;
     }
   } else {
-    if (pos.sdPlayer == 0) {
-      mv = MOVE(cucFixMove[i][0], cucFixMove[i][1]);
+
+    // 4. 如果棋子是用位置表示的，那么必须挑选出含有多个该种棋子的所有纵线，这是本函数最难处理的地方；
+    if (pt >= KNIGHT_TYPE && pt <= PAWN_TYPE) {
+      for (i = 0; i < 9; i ++) {
+        nFileList[i] = 0;
+      }
+      j = (pt == PAWN_TYPE ? 5 : 2);
+      for (i = 0; i < j; i ++) {
+        sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
+        if (sq != -1) {
+          nFileList[FILESQ_FILE_X(sq)] ++;
+        }
+      }
+      nPieceNum = 0;
+      for (i = 0; i < j; i ++) {
+        sq = FILESQ_SIDE_PIECE(pos, FIRST_PIECE(pt, i));
+        if (sq != -1) {
+          if (nFileList[FILESQ_FILE_X(sq)] > 1) {
+            nPieceList[nPieceNum] = FIRST_PIECE(pt, i);
+            nPieceNum ++;
+          }
+        }
+      }
+
+      // 5. 找到这些纵线以后，对这些纵线上的棋子进行排序，然后根据位置来确定棋子序号；
+      for (i = 0; i < nPieceNum - 1; i ++) {
+        for (j = nPieceNum - 1; j > i; j --) {
+          if (FILESQ_SIDE_PIECE(pos, nPieceList[j - 1]) > FILESQ_SIDE_PIECE(pos, nPieceList[j])) {
+            SWAP(nPieceList[j - 1], nPieceList[j]);
+          }
+        }
+      }
+      // 提示：如果只有两个棋子，那么“后”表示第二个棋子，如果有多个棋子，
+      // 那么“一二三四五”依次代表第一个到第五个棋子，“前中后”依次代表第一个到第三个棋子。
+      if (nPieceNum == 2 && nPos == 2 + DIRECT_TO_POS) {
+        sq = FILESQ_SIDE_PIECE(pos, nPieceList[1]);
+      } else {
+        nPos -= (nPos >= DIRECT_TO_POS ? DIRECT_TO_POS : 0);
+        sq = (nPos >= nPieceNum ? -1 : FILESQ_SIDE_PIECE(pos, nPieceList[nPos]));
+      }
     } else {
-      mv = MOVE(SQUARE_FLIP(cucFixMove[i][0]), SQUARE_FLIP(cucFixMove[i][1]));
+      sq = -1;
     }
   }
-  return mv;
+  if (sq == -1) {
+    return 0;
+  }
+
+  // 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
+  xSrc = FILESQ_FILE_X(sq);
+  ySrc = FILESQ_RANK_Y(sq);
+  if (pt == KNIGHT_TYPE) {
+    // 提示：马的进退处理比较特殊。
+    xDst = Byte2Digit(FileStr.c[3]);
+    if (FileStr.c[2] == '+') {
+      yDst = ySrc - 3 + ABS(xDst - xSrc);
+    } else {
+      yDst = ySrc + 3 - ABS(xDst - xSrc);
+    }
+  } else {
+    if (FileStr.c[2] == '+') {
+      xDst = xSrc;
+      yDst = ySrc - Byte2Digit(FileStr.c[3]) - 1;
+    } else if (FileStr.c[2] == '-') {
+      xDst = xSrc;
+      yDst = ySrc + Byte2Digit(FileStr.c[3]) + 1;
+    } else {
+      xDst = Byte2Digit(FileStr.c[3]);
+      yDst = ySrc;
+    }
+  }
+  // 注意：yDst有可能超过范围！
+  if (yDst < 0 || yDst > 9) {
+    return 0;
+  }
+
+  // 7. 把相对走子方的坐标转换为固定坐标，得到着法的起点和终点。
+  if (pos.sdPlayer == 0) {
+    return MOVE(FILESQ_SQUARE(FILESQ_COORD_XY(xSrc, ySrc)), FILESQ_SQUARE(FILESQ_COORD_XY(xDst, yDst)));
+  } else {
+    return MOVE(SQUARE_FLIP(FILESQ_SQUARE(FILESQ_COORD_XY(xSrc, ySrc))),
+        SQUARE_FLIP(FILESQ_SQUARE(FILESQ_COORD_XY(xDst, yDst))));
+  }
 }
 
 // 将内部着法表示转换为纵线符号
@@ -1012,7 +1018,8 @@ uint32 Move2File(int mv, const PositionStruct &pos) {
           break;
         }
       }
-      Ret.c[1] = (nPieceNum == 2 && i == 1 ? ccPos2Byte[2 + DIRECT_TO_POS] : ccPos2Byte[nPieceNum > 3 ? i : i + DIRECT_TO_POS]);
+      Ret.c[1] = (nPieceNum == 2 && i == 1 ? ccPos2Byte[2 + DIRECT_TO_POS] :
+          ccPos2Byte[nPieceNum > 3 ? i : i + DIRECT_TO_POS]);
     } else {
       Ret.c[1] = Digit2Byte(xSrc);
     }

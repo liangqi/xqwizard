@@ -2,7 +2,6 @@ package xqboss;
 
 import java.util.Vector;
 
-import xqwlight.Position;
 
 public class PgnFile {
 	private static byte[] copySquares(byte[] squares) {
@@ -30,8 +29,8 @@ public class PgnFile {
 	public Vector lstSquares = new Vector();
 
 	public PgnFile(GBLineInputStream in) {
-		Position pos = new Position();
-		pos.fromFen(Position.STARTUP_FEN[0]);
+		SimplePos pos = new SimplePos();
+		pos.fromFen(SimplePos.STARTUP_FEN);
 		boolean returned = false, detail = false;
 		int remLevel = 0, notation = 0;
 		String s = in.readLine();
@@ -111,14 +110,18 @@ public class PgnFile {
 								if (c >= (char) 128 && index + 3 <= s.length()) {
 									String strFile = MoveParser.chin2File(s.
 											substring(index - 1, index + 3));
-									System.out.println(s.substring(index - 1, index + 3) + "->" + strFile);
 									mv = MoveParser.file2Move(strFile, pos);
 									if (mv > 0) {
+										System.out.println(s.substring(index - 1, index + 3) + "->" + strFile + "(" +
+												Integer.toHexString(SimplePos.SRC(mv)) + "," + Integer.toHexString(SimplePos.DST(mv)) + ")");
 										index += 3;
 									}
 								}
 							}
 							// Try Move
+							if (mv > 0) {
+								pos.changeSide();
+							}
 							lstComment.addElement(new StringBuffer());
 							maxMoves ++;
 							endFor = false;

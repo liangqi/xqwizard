@@ -1,8 +1,11 @@
 package xqboss;
 
-import xqwlight.Position;
 
 public class MoveParser {
+	/** 最大的列数 */
+	private static final int MAX_FILE = 9;
+	/** 最大的行数 */
+	private static final int MAX_RANK = 10;
 	/** 8个位置分别是"abcde+.-"，当"+.-"由方向转换为位置时，要加上该值 */
 	private static final int DIRECT_TO_POS = 5;
 
@@ -46,7 +49,7 @@ public class MoveParser {
 	};
 
 	/** 按位置(前中后)来查找棋子，对应的坐标 */
-	private static final short[] POS_SEQ = {
+	private static final short[] XY_TO_SQ = {
 		0x3b, 0x4b, 0x5b, 0x6b, 0x7b, 0x8b, 0x9b, 0xab, 0xbb, 0xcb,
 		0x3a, 0x4a, 0x5a, 0x6a, 0x7a, 0x8a, 0x9a, 0xaa, 0xba, 0xca,
 		0x39, 0x49, 0x59, 0x69, 0x79, 0x89, 0x99, 0xa9, 0xb9, 0xc9,
@@ -94,7 +97,7 @@ public class MoveParser {
 			return c - 'a';
 		}
 		int dir = char2Direct(c);
-		return dir == -1 ? -1 : dir + DIRECT_TO_POS;
+		return dir < 0 ? -1 : dir + DIRECT_TO_POS;
 	}
 
 	private static int word2Digit(int w) {
@@ -154,15 +157,21 @@ public class MoveParser {
 		return -1;
 	}
 
+	private static int xy2Sq(int x, int y, int sd) {
+		int sq = XY_TO_SQ[x * 10 + y];
+		return sd == 0 ? sq : SimplePos.SQUARE_FLIP(sq);
+	}
+
+	private static boolean findPiece(int pt, int x, int y, SimplePos p) {
+		return p.squares[xy2Sq(x, y, p.sdPlayer)] == SimplePos.SIDE_TAG(p.sdPlayer) + pt;
+	}
+
 	/** WXF表示转换为内部着法表示 */
-	public static int file2Move(String strFile, Position position) {
-		if (strFile.length() != 4) {
-			return 0;
-		}
-		char[] cFile = strFile.toCharArray();
+	public static int file2Move(String strFile, SimplePos p) {
 		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
 
 		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，在这之前首先必须把数字、小写等不统一的格式转换为统一格式；
+		char[] cFile = strFile.toCharArray();
 		switch (cFile[0]) {
 		case 'a':
 			cFile[0] = 'A';
@@ -179,56 +188,119 @@ public class MoveParser {
 		String strFile2 = new String(cFile);
 		for (int i = 0; i < FIX_FILE.length; i ++) {
 			if (strFile2.equals(FIX_FILE[i])) {
-				if (position.sdPlayer == 0) {
-					return Position.MOVE(FIX_MOVE[i][0], FIX_MOVE[i][1]);
+				if (p.sdPlayer == 0) {
+					return SimplePos.MOVE(FIX_MOVE[i][0], FIX_MOVE[i][1]);
 				}
-				return Position.MOVE(Position.SQUARE_FLIP(FIX_MOVE[i][0]),
-						Position.SQUARE_FLIP(FIX_MOVE[i][1]));
+				return SimplePos.MOVE(SimplePos.SQUARE_FLIP(FIX_MOVE[i][0]),
+						SimplePos.SQUARE_FLIP(FIX_MOVE[i][1]));
 			}
 		}
 
 		// 2. 如果不是这28种固定纵线表示，那么把棋子、位置和纵线序号(列号)解析出来
 		int pt;
 		int pos = char2Direct(cFile[0]);
-		if (pos == -1) {
+		if (pos < 0) {
 			pt = char2Piece(cFile[0]);
 			pos = char2Pos(cFile[1]);
 		} else {
 			pt = char2Piece(cFile[1]);
 			pos += DIRECT_TO_POS;
 		}
-		int sq = 0;
-		if (pos == -1) {
+		if (pt < 0) {
+			return 0;
+		}
+		int xSrc = -1, ySrc = -1;
+		if (pos < 0) {
 
 			// 3. 如果棋子是用列号表示的，那么可以直接根据纵线来找到棋子序号；
-			int xSrc = char2Digit(cFile[1]);
-			// TODO 找到棋子
+			xSrc = char2Digit(cFile[1]);
+			if (xSrc < 0) {
+				return 0;
+			}
+			for (ySrc = 0; ySrc < MAX_RANK; ySrc ++) {
+				if (findPiece(pt, xSrc, ySrc, p)) {
+					break;
+				}
+			}
+			if (ySrc == MAX_RANK) {
+				return 0;
+			}
 		} else {
 			
-			// 4. 如果棋子是用位置表示的，那么必须按照"POS_SEQ"数组的顺序找到棋子；
+			// 4. 如果棋子是用位置表示的，那么必须按顺序找到棋盘上所有的棋子；
 			if (pos >= DIRECT_TO_POS) {
 				pos -= DIRECT_TO_POS;
 			}
-		}
-
-		if (sq == -1) {
-			return 0;
+			for (int x = 0; x < MAX_FILE; x ++) {
+				for (int y = 0; y < MAX_RANK; y ++) {
+					if (findPiece(pt, x, y, p)) {
+						// 注意：排除一列上只有一枚棋子的情况
+						int yy = y + 1;
+						for (; yy < MAX_RANK; yy ++) {
+							if (findPiece(pt, x, yy, p)) {
+								break;
+							}
+						}
+						if (yy < MAX_RANK) {
+							break;
+						}
+						// 判断是否到达了相应的位置
+						pos --;
+						if (pos < 0) {
+							xSrc = x;
+							ySrc = y;
+							x = MAX_FILE;
+							break;
+						}
+					}
+				}
+			}
+			if (xSrc < 0 || ySrc < 0) {
+				return 0;
+			}
 		}
 
 		// 6. 现在已知了着法的起点，就可以根据纵线表示的后两个符号来确定着法的终点；
-		return 0;
+		int xDst, yDst;
+		if (pt == SimplePos.PIECE_KNIGHT) {
+			xDst = cFile[3];
+			if (cFile[2] == '+') {
+				yDst = ySrc - 3 + Math.abs(xDst - xSrc);
+			} else {
+				yDst = ySrc + 3 - Math.abs(xDst - xSrc);
+			}
+		} else {
+			if (cFile[2] == '+') {
+				xDst = xSrc;
+				yDst = ySrc - char2Digit(cFile[3]) - 1;
+			} else if (cFile[2] == '-') {
+				xDst = xSrc;
+				yDst = ySrc + char2Digit(cFile[3]) + 1;
+			} else {
+				xDst = char2Digit(cFile[3]);
+				yDst = ySrc;
+			}
+		}
+		if (yDst < 0 || yDst >= MAX_RANK) {
+			return 0;
+		}
+		return SimplePos.MOVE(xy2Sq(xSrc, ySrc, p.sdPlayer), xy2Sq(xDst, yDst, p.sdPlayer));
 	}
 
 	/** ICCS表示转换为内部着法表示 */
 	public static int iccs2Move(String strIccs) {
-		return 0;
+		char[] cIccs = strIccs.toCharArray();
+		if (cIccs[0] < 'A' || cIccs[0] > 'I' || cIccs[1] < '0' || cIccs[1] > '9' ||
+				cIccs[3] < 'A' || cIccs[3] > 'I' || cIccs[4] < '0' || cIccs[4] > '9') {
+			return 0;
+		}
+		int sqSrc = SimplePos.COORD_XY(cIccs[0] - 'A' + SimplePos.FILE_LEFT, '9' + SimplePos.RANK_TOP - cIccs[1]);
+		int sqDst = SimplePos.COORD_XY(cIccs[3] - 'A' + SimplePos.FILE_LEFT, '9' + SimplePos.RANK_TOP - cIccs[4]);
+		return SimplePos.MOVE(sqSrc, sqDst);
 	}
 
 	/** 中文表示转换为WXF表示 */
 	public static String chin2File(String strChin) {
-		if (strChin.length() != 4) {
-			return "";
-		}
 		char[] cChin = strChin.toCharArray();
 		char[] cFile = new char[4];
 		int pos = word2Pos(cChin[0]);
