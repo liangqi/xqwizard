@@ -44,9 +44,9 @@ Source: "MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneverun
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ALPHABLT.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LOADING.GIF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EVALUATE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "BOOK.DAT"; DestDir: "{app}"; Flags: ignoreversion
@@ -99,10 +99,10 @@ Source: "ENDGAMES\BOOTH_Q.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\BOOTH_R.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\mourning.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\mourning.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\onefound.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\onefound.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\dizhen.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\dizhen.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\llj_dizhen.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\llj_dizhen.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xhwenchuan.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xhwenchuan.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\gongyi.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion

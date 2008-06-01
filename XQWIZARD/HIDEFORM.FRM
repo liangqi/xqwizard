@@ -833,10 +833,24 @@ Begin VB.Form frmHide
       Top             =   120
       Width           =   5655
    End
+   Begin VB.Image imgMickey 
+      Height          =   5400
+      Left            =   120
+      Picture         =   "HIDEFORM.frx":3A83C
+      Top             =   3360
+      Width           =   3750
+   End
+   Begin VB.Image imgMickeyAlpha 
+      Height          =   5400
+      Left            =   3960
+      Picture         =   "HIDEFORM.frx":3F06F
+      Top             =   3360
+      Width           =   3750
+   End
    Begin VB.Image imgBoardLarge 
       Height          =   8655
       Left            =   120
-      Picture         =   "HIDEFORM.frx":3A83C
+      Picture         =   "HIDEFORM.frx":40CFA
       Top             =   120
       Width           =   7815
    End
