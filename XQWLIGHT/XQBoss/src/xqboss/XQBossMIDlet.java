@@ -102,6 +102,7 @@ public class XQBossMIDlet extends MIDlet {
 		final List lstDir = new List("œÛ∆Â–°≤© ø", Choice.IMPLICIT);
 
 		Enumeration enumDir;
+		lstDir.addCommand(cmdOpen);
 		if (currDir == null) {
 			lstDir.addCommand(cmdExit);
 			try {
