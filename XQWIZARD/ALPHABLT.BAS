@@ -1,4 +1,4 @@
-Attribute VB_Name = "mdlALphaBlt"
+Attribute VB_Name = "mdlAlphaBlt"
 Option Explicit
 
 Private Declare Sub AlphaBlt Lib "ALPHABLT.DLL" Alias "_AlphaBlt@44" (ByVal hdcDest As Long, ByVal xDest As Long, ByVal yDest As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
