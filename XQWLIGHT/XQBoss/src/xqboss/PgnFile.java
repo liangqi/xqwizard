@@ -134,7 +134,6 @@ public class PgnFile {
 									if (mv > 0) {
 										index += 3;
 									}
-									System.out.println();
 								}
 							}
 							if (mv > 0) {
@@ -198,7 +197,7 @@ public class PgnFile {
 						} else if ((value = getLabel(s, "VARIATION")) != null) {
 							variation = value;
 						} else if ((value = getLabel(s, "FORMAT")) != null) {
-							notation = value.toUpperCase().startsWith("WFX") ? 1 :
+							notation = value.toUpperCase().startsWith("WXF") ? 1 :
 									value.toUpperCase().startsWith("ICCS") ? 2 : 0;
 						} else if ((value = getLabel(s, "FEN")) != null) {
 							pos.fromFen(value);
@@ -209,6 +208,8 @@ public class PgnFile {
 					} else {
 						detail = true;
 					}
+				} else {
+					returned = true;
 				}
 			}
 			if (returned) {
