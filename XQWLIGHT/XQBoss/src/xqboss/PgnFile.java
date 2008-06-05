@@ -162,54 +162,52 @@ public class PgnFile {
 					}
 				}
 			} else {
-				if (s.length() > 0) {
-					if (s.charAt(0) == '[') {
-						String value;
-						if (false) {
-							// Code Style
-						} else if ((value = getLabel(s, "EVENT")) != null) {
-							event = value;
-						} else if ((value = getLabel(s, "ROUND")) != null) {
-							round = value;
-						} else if ((value = getLabel(s, "DATE")) != null) {
-							date = value;
-						} else if ((value = getLabel(s, "SITE")) != null) {
-							site = value;
-						} else if ((value = getLabel(s, "REDTEAM")) != null) {
-							redTeam = value;
-						} else if ((value = getLabel(s, "RED")) != null) {
-							red = value;
-						} else if ((value = getLabel(s, "REDELO")) != null) {
-							redElo = value;
-						} else if ((value = getLabel(s, "BLACKTEAM")) != null) {
-							blackTeam = value;
-						} else if ((value = getLabel(s, "BLACK")) != null) {
-							black = value;
-						} else if ((value = getLabel(s, "BLACKELO")) != null) {
-							blackElo = value;
-						} else if ((value = getLabel(s, "RESULT")) != null) {
-							result = value.equals("*") ? 0 : value.equals("1-0") ? 1 :
-									value.equals("1/2-1/2") ? 2 : value.equals("0-1") ? 3 : 0;
-						} else if ((value = getLabel(s, "ECCO")) != null) {
-							ecco = value;
-						} else if ((value = getLabel(s, "OPENING")) != null) {
-							opening = value;
-						} else if ((value = getLabel(s, "VARIATION")) != null) {
-							variation = value;
-						} else if ((value = getLabel(s, "FORMAT")) != null) {
-							notation = value.toUpperCase().startsWith("WXF") ? 1 :
-									value.toUpperCase().startsWith("ICCS") ? 2 : 0;
-						} else if ((value = getLabel(s, "FEN")) != null) {
-							pos.fromFen(value);
-							lstSquares.setElementAt(copySquares(pos.squares), 0);
-							sdStart = pos.sdPlayer;
-						}
-						returned = true;
-					} else {
-						detail = true;
-					}
-				} else {
+				if (s.length() == 0) {
 					returned = true;
+				} else if (s.charAt(0) == '[') {
+					String value;
+					if (false) {
+						// Code Style
+					} else if ((value = getLabel(s, "EVENT")) != null) {
+						event = value;
+					} else if ((value = getLabel(s, "ROUND")) != null) {
+						round = value;
+					} else if ((value = getLabel(s, "DATE")) != null) {
+						date = value;
+					} else if ((value = getLabel(s, "SITE")) != null) {
+						site = value;
+					} else if ((value = getLabel(s, "REDTEAM")) != null) {
+						redTeam = value;
+					} else if ((value = getLabel(s, "RED")) != null) {
+						red = value;
+					} else if ((value = getLabel(s, "REDELO")) != null) {
+						redElo = value;
+					} else if ((value = getLabel(s, "BLACKTEAM")) != null) {
+						blackTeam = value;
+					} else if ((value = getLabel(s, "BLACK")) != null) {
+						black = value;
+					} else if ((value = getLabel(s, "BLACKELO")) != null) {
+						blackElo = value;
+					} else if ((value = getLabel(s, "RESULT")) != null) {
+						result = value.equals("*") ? 0 : value.equals("1-0") ? 1 :
+								value.equals("1/2-1/2") ? 2 : value.equals("0-1") ? 3 : 0;
+					} else if ((value = getLabel(s, "ECCO")) != null) {
+						ecco = value;
+					} else if ((value = getLabel(s, "OPENING")) != null) {
+						opening = value;
+					} else if ((value = getLabel(s, "VARIATION")) != null) {
+						variation = value;
+					} else if ((value = getLabel(s, "FORMAT")) != null) {
+						notation = value.toUpperCase().startsWith("WXF") ? 1 :
+								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
+					} else if ((value = getLabel(s, "FEN")) != null) {
+						pos.fromFen(value);
+						lstSquares.setElementAt(copySquares(pos.squares), 0);
+						sdStart = pos.sdPlayer;
+					}
+					returned = true;
+				} else {
+					detail = true;
 				}
 			}
 			if (returned) {

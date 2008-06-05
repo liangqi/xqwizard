@@ -336,7 +336,8 @@ public class MoveParser {
 		int pos = word2Pos(cChin[0]);
 		cFile[0] = (char) piece2Char(word2Piece(pos < 0 ? cChin[0] : cChin[1]));
 		cFile[1] = (char) (pos < 0 ? digit2Char(word2Digit(cChin[1])) : pos2Char(pos));
-		if ((cChin[2] == '±δ' || cChin[2] == 'Εά' || cChin[2] == 'Χƒ') && cChin[3] == 6) { // Εά[Χƒ]
+		if ((cChin[2] == '±δ' || cChin[2] == 'Εά' || cChin[2] == 'Χƒ') &&
+				word2Piece(cChin[3]) == 6) { // Εά[Χƒ]
 			cFile[2] = '=';
 			cFile[3] = 'P';
 		} else {
