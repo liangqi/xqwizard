@@ -13,7 +13,7 @@ VOID WINAPI AlphaBlt(HDC hdcDest, int xDest, int yDest, int nWidth, int nHeight,
   BITMAPINFO bmi;
 
   memset(&bmi, 0, sizeof(BITMAPINFO));
-  bmi.bmiHeader.biSize = sizeof(BITMAPINFO);
+  bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
   bmi.bmiHeader.biWidth = nWidth;
   bmi.bmiHeader.biHeight = nHeight;
   bmi.bmiHeader.biPlanes = 1;
