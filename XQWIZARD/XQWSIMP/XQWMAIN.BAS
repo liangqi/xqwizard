@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.73, Last Modified: Jun. 2008
+' Designed by Morning Yellow, Version: 3.74, Last Modified: Jun. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.73"
+Public Const STRING_VERSION     As String = "3.74"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
@@ -185,6 +185,8 @@ Public Options_szUser           As String   ' 人机对弈用户
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
 Public Gui_nEndgamesIndex       As Integer  ' 残局的条目序号
+Public Gui_szEpdName            As String   ' 残局文件名
+Public Gui_szEpdTitle           As String   ' 残局标题
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
@@ -1575,8 +1577,8 @@ App_frmMain.mnPosLoad.Enabled = Not bBusy
 App_frmMain.mnWizardPlay.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("WizardPlay").Enabled = Not bBusy
 App_frmMain.mnWizardHandicap_.Enabled = Not bBusy
-App_frmMain.mnWizardFunny.Enabled = Not bBusy
-App_frmMain.tlb.Buttons("WizardFunny").Enabled = Not bBusy
+App_frmMain.mnEndgamesStart.Enabled = Not bBusy
+App_frmMain.tlb.Buttons("EndgamesStart").Enabled = Not bBusy
 App_frmMain.mnEndgames_.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
@@ -2580,6 +2582,8 @@ Else
     frmEndgames.lstGames.ListIndex = Gui_nEndgamesIndex
     frmEndgames.Caption = szTitle
     frmEndgames.Show vbModal, App_frmMain
+    Gui_szEpdName = szEpdName
+    Gui_szEpdTitle = szTitle
 End If
 
 Exit Sub
@@ -2619,6 +2623,8 @@ Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
+Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
+Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "趣味象棋")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -2675,6 +2681,8 @@ SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
 SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
+SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
+SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
@@ -3011,7 +3019,7 @@ App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
-For i = 1 To 30
+For i = 1 To 31
     App_frmMain.tlb.Buttons(i).Image = i
 Next
 If Not App_bPromotion Then

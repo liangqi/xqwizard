@@ -38,7 +38,7 @@ Begin VB.Form frmMainSmall
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   30
+         NumButtons      =   31
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新建"
@@ -118,51 +118,55 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardFunny"
-            Object.ToolTipText     =   "趣味象棋"
-         EndProperty
-         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardFlash"
             Object.ToolTipText     =   "复制Flash棋盤代碼"
          EndProperty
-         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
             Object.ToolTipText     =   "复制文本棋盤"
          EndProperty
-         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardBitmap"
             Object.ToolTipText     =   "查看圖片棋盤"
          EndProperty
-         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "EndgamesStart"
+            Object.ToolTipText     =   "立即開始"
+         EndProperty
          BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+            MixedState      =   -1  'True
+         EndProperty
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "設置級別"
             Style           =   1
          EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "引擎執紅"
             Style           =   1
          EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "引擎執黑"
             Style           =   1
          EndProperty
-         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "後台思考"
             Style           =   1
          EndProperty
-         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "引擎分析"
             Style           =   1
          EndProperty
-         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button31 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考/立即走棋"
          EndProperty
@@ -1583,9 +1587,6 @@ Begin VB.Form frmMainSmall
             Index           =   6
          End
       End
-      Begin VB.Menu mnWizardFunny 
-         Caption         =   "届禜囱(&F)"
-      End
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
@@ -1607,6 +1608,18 @@ Begin VB.Form frmMainSmall
    End
    Begin VB.Menu mnEndgames_ 
       Caption         =   "珼驹(&C)"
+      Begin VB.Menu mnEndgamesStart 
+         Caption         =   "ミ秨﹍(&S)"
+      End
+      Begin VB.Menu mnEndgamesSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnEndgamesFunny 
+         Caption         =   "届禜囱(&Y)"
+      End
+      Begin VB.Menu mnEndgamesSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnEndgames 
          Caption         =   "膀セ炳猭(&A)"
          Index           =   0
@@ -1994,7 +2007,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.72, Last Modified: May 2008
+' Designed by Morning Yellow, Version: 3.74, Last Modified: Jun. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2366,15 +2379,6 @@ EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
-Private Sub mnWizardFunny_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "FUNNY", "趣味象棋"
-
-End Sub
-
 Private Sub mnWizardFlash_Click()
 
 CopyFlash
@@ -2408,6 +2412,24 @@ End Sub
 Private Sub mnWizardPrint_Click()
 
 ViewPrintBitmap
+
+End Sub
+
+Private Sub mnEndgamesStart_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames Gui_szEpdName, Gui_szEpdTitle
+
+End Sub
+
+Private Sub mnEndgamesFunny_Click()
+
+If CancelSave Then
+    Exit Sub
+End If
+LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
@@ -2731,14 +2753,15 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
-Case "WizardFunny"
-    mnWizardFunny_Click
 Case "WizardFlash"
     mnWizardFlash_Click
 Case "WizardText"
     mnWizardText_Click
 Case "WizardBitmap"
     mnWizardBitmap_Click
+' Separator
+Case "EndgamesStart"
+    mnEndgamesStart_Click
 ' Separator
 Case "EngineLevel"
     mnEngineLevel_Click
