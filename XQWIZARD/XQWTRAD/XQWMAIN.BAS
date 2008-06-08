@@ -25,6 +25,8 @@ Option Explicit
 Public Const STRING_VERSION     As String = "3.74"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
+Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
+Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
 ' 全局常量——可選參數
@@ -190,6 +192,7 @@ Public Gui_szEpdTitle           As String   ' 残局标题
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
+Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
@@ -2550,6 +2553,19 @@ Gui_szTips(26) = "　　象棋巫師是個自由軟件，如果您覺得好用，可以自由地將本軟件上
         "　　象棋巫師的源程序發布在 http://sourceforge.net/projects/xqwizard/ 這個頁面上，您可以根据自己的需要對源程序進行修改，并依照GPL協議發布您修改過的源程序。"
 Gui_szTips(27) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此表示衷心的感謝，同時也希望您繼續支持象棋巫師，關注 http://www.elephantbase.net/ 。" + vbCrLf + _
         "　　您也可以將本軟件的主頁鏈接到自己的站點上。請您使用 http://www.elephantbase.net/ 作為鏈接的路徑。"
+
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而篇》"
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公篇》"
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問篇》"
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張篇》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而篇》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而篇》"
 
 End Sub
 

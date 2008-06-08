@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
@@ -1967,6 +1967,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpHowTo 
          Caption         =   "日积月累(&W)..."
       End
+      Begin VB.Menu mnHelpQuote 
+         Caption         =   "名言(&Q)..."
+      End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
@@ -2664,6 +2667,12 @@ End Sub
 Private Sub mnHelpHowTo_Click()
 
 frmHowTo.Show vbModal, Me
+
+End Sub
+
+Private Sub mnHelpQuote_Click()
+
+MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "名言", , ICON_QUOTE
 
 End Sub
 

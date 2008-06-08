@@ -1931,6 +1931,9 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpHowTo 
          Caption         =   "日積月累(&W)..."
       End
+      Begin VB.Menu mnHelpQuote 
+         Caption         =   "名言(&Q)..."
+      End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
@@ -2628,6 +2631,12 @@ End Sub
 Private Sub mnHelpHowTo_Click()
 
 frmHowTo.Show vbModal, Me
+
+End Sub
+
+Private Sub mnHelpQuote_Click()
+
+MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "靡晟", , ICON_QUOTE
 
 End Sub
 
