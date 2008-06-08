@@ -408,7 +408,7 @@ End Function
 
 ' === Begin MsgBoxWithIcon/MsgBoxMute ===
 
-Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, Optional ByVal szIconFile As String = vbNullString)
+Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1)
 
 Dim mbp As MsgBoxParams
 Dim hInstance As Long, hIcon As Long
@@ -436,7 +436,7 @@ Else
     mbp.lpszText = szPrompt
     mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
     mbp.dwStyle = MB_USERICON
-    mbp.lpszIcon = 1
+    mbp.lpszIcon = nIcon
     mbp.dwContextHelpId = 0
     mbp.lpfnMsgBoxCallback = 0
     mbp.dwLanguageId = 0

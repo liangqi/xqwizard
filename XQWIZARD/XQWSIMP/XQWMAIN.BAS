@@ -196,7 +196,7 @@ Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
 Public Gui_nAdvertNum           As Integer  ' 广告数量
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
-Public Gui_nAdvertFiles(1 To MAX_ADVERTS) As String  ' 每个广告的文件
+Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每个广告的文件
 Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
 ' 全局变量——棋局
 Public Game_szEvent             As String   ' 赛事
@@ -2868,7 +2868,7 @@ If Not EOF(nFileNo) Then
             szs = Split(sz, ",")
             If UBound(szs) >= 0 Then
                 Gui_nAdvertNum = Gui_nAdvertNum + 1
-                Gui_nAdvertFiles(Gui_nAdvertNum) = szs(0)
+                Gui_szAdvertFiles(Gui_nAdvertNum) = szs(0)
                 If UBound(szs) >= 1 Then
                     Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
                     If UBound(szs) >= 3 Then
@@ -2998,7 +2998,7 @@ If Gui_nAdvertNum = 0 Then
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
-        Gui_nAdvertFiles(1) = "elephantbase"
+        Gui_szAdvertFiles(1) = "elephantbase"
         Gui_nAdvertTimes(1) = 32767
     Else
         Gui_szAdvertDate = Date
@@ -3110,7 +3110,7 @@ Do While App_bRunning
                 If Gui_nAdvertIndex > Gui_nAdvertNum Then
                     Gui_nAdvertIndex = 1
                 End If
-                App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\" + Gui_nAdvertFiles(Gui_nAdvertIndex) + ".htm"
+                App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
             End If
             nEventIndex = EVENT_GUI
         Case EVENT_GUI ' 界面
