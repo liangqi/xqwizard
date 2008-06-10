@@ -342,7 +342,7 @@ End Function
 ' ≤•∑≈…˘“Ù
 Public Sub PlayWavSound(ByVal szSoundFile As String)
 
-PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
 
 End Sub
 
@@ -3145,7 +3145,7 @@ If Gui_szAdvertDate <> Date Then
     End If
 End If
 SaveRegs
-PlaySoundA vbNullString, 0, 0
+PlaySoundA 0, 0, 0
 frmHide.mci.Command = "Close"
 Unload frmHide
 

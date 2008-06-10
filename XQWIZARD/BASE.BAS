@@ -16,6 +16,7 @@ Public Const IDI_APPLICATION    As Long = 32512     ' LoadIconA
 Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
 Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
 Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
+Public Const SND_RESOURCE       As Long = 262148    ' PlaySoundA
 Public Const HWND_TOPMOST       As Long = -1        ' SetWindowPos
 Public Const HWND_NOTOPMOST     As Long = -2        ' SetWindowPos
 Public Const SWP_NOSIZE         As Long = 1         ' SetWindowPos
@@ -27,7 +28,7 @@ Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
-Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal lpszSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
+Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal pszSound As Long, ByVal hmod As Long, ByVal fdwSound As Long)
 Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
