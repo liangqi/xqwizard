@@ -492,7 +492,7 @@ Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 Dim i As Integer, nFileNo As Integer
 Dim bNoTitle As Boolean, bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
-Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
+Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As Integer
 
 bNoTitle = False
 On Error GoTo lnErrorOpen
@@ -522,12 +522,23 @@ Open App_szFileName For Input As #nFileNo
 On Error GoTo 0
 bCchess = False
 bDetail = False
+szLineStrEx = ""
 szLineStr = ""
 szRemStr = ""
 nRemLevel = 0
-Do While Not (EOF(nFileNo) And szLineStr = "")
+Do While Not (EOF(nFileNo) And szLineStr = "" And szLineStrEx = "")
     If szLineStr = "" Then
-        Line Input #nFileNo, szLineStr
+        If szLineStrEx = "" Then
+            Line Input #nFileNo, szLineStrEx
+        End If
+        i = InStr(szLineStrEx, Chr(10))
+        If i > 0 Then
+            szLineStr = Left(szLineStrEx, i - 1)
+            szLineStrEx = Mid(szLineStrEx, i + 1)
+        Else
+            szLineStr = szLineStrEx
+            szLineStrEx = ""
+        End If
     End If
     If bDetail Then
         If Not (bCchess Or App_szFileName = "") Then
@@ -2746,7 +2757,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2757,7 +2768,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             If Rnd < 0# Then
@@ -2785,7 +2796,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2835,7 +2846,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2848,7 +2859,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

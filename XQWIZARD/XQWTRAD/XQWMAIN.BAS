@@ -492,7 +492,7 @@ Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 Dim i As Integer, nFileNo As Integer
 Dim bNoTitle As Boolean, bCchess As Boolean, bDetail As Boolean
 Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr As String
-Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
+Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As Integer
 
 bNoTitle = False
 On Error GoTo lnErrorOpen
@@ -522,12 +522,23 @@ Open App_szFileName For Input As #nFileNo
 On Error GoTo 0
 bCchess = False
 bDetail = False
+szLineStrEx = ""
 szLineStr = ""
 szRemStr = ""
 nRemLevel = 0
-Do While Not (EOF(nFileNo) And szLineStr = "")
+Do While Not (EOF(nFileNo) And szLineStr = "" And szLineStrEx = "")
     If szLineStr = "" Then
-        Line Input #nFileNo, szLineStr
+        If szLineStrEx = "" Then
+            Line Input #nFileNo, szLineStrEx
+        End If
+        i = InStr(szLineStrEx, Chr(10))
+        If i > 0 Then
+            szLineStr = Left(szLineStrEx, i - 1)
+            szLineStrEx = Mid(szLineStrEx, i + 1)
+        Else
+            szLineStr = szLineStrEx
+            szLineStrEx = ""
+        End If
     End If
     If bDetail Then
         If Not (bCchess Or App_szFileName = "") Then
