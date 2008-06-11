@@ -3006,6 +3006,7 @@ On Error Resume Next
 frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
 On Error GoTo 0
 ' 加载广告，如果加载失败，则下载广告列表，再次加载失败则放弃
+Gui_dfLastTime = 0#
 Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
