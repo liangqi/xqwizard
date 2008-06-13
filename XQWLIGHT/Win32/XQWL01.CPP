@@ -150,7 +150,7 @@ void PositionStruct::MovePiece(int mv) {
   AddPiece(sqDst, pc);
 }
 
-PositionStruct pos; // 局面实例
+static PositionStruct pos; // 局面实例
 
 // 与图形界面有关的全局变量
 static struct {

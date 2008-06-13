@@ -10,7 +10,6 @@
  * 四、克服由长将引起的置换表的不稳定性。
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
@@ -1069,7 +1068,7 @@ void PositionStruct::Mirror(PositionStruct &posMirror) const {
   posMirror.SetIrrev();
 }
 
-PositionStruct pos; // 局面实例
+static PositionStruct pos; // 局面实例
 
 // 与图形界面有关的全局变量
 static struct {
@@ -1107,24 +1106,14 @@ static struct {
 
 // 装入开局库
 static void LoadBook(void) {
-  char *lp;
-  FILE *fp;
-  char szBookFile[MAX_PATH];
-
-  GetModuleFileName(NULL, szBookFile, MAX_PATH);
-  lp = strrchr(szBookFile, '\\');
-  if (lp == NULL) {
-    strcpy(szBookFile, "BOOK.DAT");
-  } else {
-    strcpy(lp + 1, "BOOK.DAT");
+  HRSRC hrsrc;
+  hrsrc = FindResource(Xqwl.hInst, "BOOK_DATA", RT_RCDATA);
+  Search.nBookSize = SizeofResource(Xqwl.hInst, hrsrc) / sizeof(BookItem);
+  if (Search.nBookSize > BOOK_SIZE) {
+    Search.nBookSize = BOOK_SIZE;
   }
-  fp = fopen(szBookFile, "rb");
-  if (fp == NULL) {
-    Search.nBookSize = 0;
-  } else {
-    Search.nBookSize = fread(Search.BookTable, sizeof(BookItem), BOOK_SIZE, fp);
-    fclose(fp);
-  }
+  memcpy(Search.BookTable, LockResource(LoadResource(Xqwl.hInst, hrsrc)),
+      Search.nBookSize * sizeof(BookItem));
 }
 
 static int CompareBook(const void *lpbk1, const void *lpbk2) {
@@ -1948,8 +1937,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   // 初始化全局变量
   srand((DWORD) time(NULL));
   InitZobrist();
-  LoadBook();
   Xqwl.hInst = hInstance;
+  LoadBook();
   Xqwl.bFlipped = FALSE;
   Startup();
 
