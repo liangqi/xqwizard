@@ -3,7 +3,7 @@ search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
 Designed by Morning Yellow, Version: 3.12, Last Modified: Dec. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -224,7 +224,7 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
 #ifdef HASH_QUIESC
   // 3. 置换裁剪；
   vl = ProbeHashQ(pos, vlAlpha, vlBeta);
-  if (vl > -MATE_VALUE) {
+  if (Search.bUseHash && vl > -MATE_VALUE) {
     return vl;
   }
 #endif
@@ -329,7 +329,7 @@ static int SearchCut(int vlBeta, int nDepth, Bool bNoNull = FALSE) {
 
   // 3. 置换裁剪；
   vl = ProbeHash(Search.pos, vlBeta - 1, vlBeta, nDepth, bNoNull, mvHash);
-  if (vl > -MATE_VALUE) {
+  if (Search.bUseHash && vl > -MATE_VALUE) {
     return vl;
   }
 
@@ -455,7 +455,7 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16 *lpwmvPvLine) {
 
   // 3. 置换裁剪；
   vl = ProbeHash(Search.pos, vlAlpha, vlBeta, nDepth, NO_NULL, mvHash);
-  if (vl > -MATE_VALUE) {
+  if (Search.bUseHash && vl > -MATE_VALUE) {
     // 由于PV结点不适用置换裁剪，所以不会发生PV路线中断的情况
     return vl;
   }

@@ -2,8 +2,8 @@
 ucci.h/ucci.cpp - Source Code for ElephantEye, Part I
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.0, Last Modified: Nov. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This part (ucci.h/ucci.cpp only) of codes is NOT published under LGPL, and
 can be used without restriction.
@@ -18,7 +18,7 @@ const int UCCI_MAX_DEPTH = 32; // UCCI引擎思考的极限深度
 
 // 和UCCI指令中关键字有关的选项
 enum UcciOptionEnum {
-  UCCI_OPTION_UNKNOWN, UCCI_OPTION_BATCH, UCCI_OPTION_DEBUG, UCCI_OPTION_PONDER, UCCI_OPTION_USEBOOK, UCCI_OPTION_USEEGTB,
+  UCCI_OPTION_UNKNOWN, UCCI_OPTION_BATCH, UCCI_OPTION_DEBUG, UCCI_OPTION_PONDER, UCCI_OPTION_USEHASH, UCCI_OPTION_USEBOOK, UCCI_OPTION_USEEGTB,
   UCCI_OPTION_BOOKFILES, UCCI_OPTION_EGTBPATHS, UCCI_OPTION_EVALAPI, UCCI_OPTION_HASHSIZE, UCCI_OPTION_THREADS, UCCI_OPTION_PROMOTION,
   UCCI_OPTION_IDLE, UCCI_OPTION_PRUNING, UCCI_OPTION_KNOWLEDGE, UCCI_OPTION_RANDOMNESS, UCCI_OPTION_STYLE, UCCI_OPTION_NEWGAME
 }; // 由"setoption"指定的选项

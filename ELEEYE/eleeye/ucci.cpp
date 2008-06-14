@@ -2,8 +2,8 @@
 ucci.h/ucci.cpp - Source Code for ElephantEye, Part I
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.0, Last Modified: Nov. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This part (ucci.h/ucci.cpp only) of codes is NOT published under LGPL, and
 can be used without restriction.
@@ -128,7 +128,18 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.bCheck = FALSE;
       }
 
-    // (4) "usebook"选项
+    // (4) "usehash"选项
+    } else if (StrEqvSkip(lp, "usehash ")) {
+      UcciComm.Option = UCCI_OPTION_USEHASH;
+      if (StrEqv(lp, "off")) {
+        UcciComm.bCheck = FALSE;
+      } else if (StrEqv(lp, "false")) {
+        UcciComm.bCheck = FALSE;
+      } else {
+        UcciComm.bCheck = TRUE;
+      }
+
+    // (5) "usebook"选项
     } else if (StrEqvSkip(lp, "usebook ")) {
       UcciComm.Option = UCCI_OPTION_USEBOOK;
       if (StrEqv(lp, "off")) {
@@ -139,7 +150,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.bCheck = TRUE;
       }
 
-    // (5) "useegtb"选项
+    // (6) "useegtb"选项
     } else if (StrEqvSkip(lp, "useegtb ")) {
       UcciComm.Option = UCCI_OPTION_USEEGTB;
       if (StrEqv(lp, "off")) {
@@ -150,32 +161,32 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.bCheck = TRUE;
       }
 
-    // (6) "bookfiles"选项
+    // (7) "bookfiles"选项
     } else if (StrEqvSkip(lp, "bookfiles ")) {
       UcciComm.Option = UCCI_OPTION_BOOKFILES;
       UcciComm.szOption = lp;
 
-    // (7) "egtbpaths"选项
+    // (8) "egtbpaths"选项
     } else if (StrEqvSkip(lp, "egtbpaths ")) {
       UcciComm.Option = UCCI_OPTION_EGTBPATHS;
       UcciComm.szOption = lp;
 
-    // (8) "evalapi"选项
+    // (9) "evalapi"选项
     } else if (StrEqvSkip(lp, "evalapi ")) {
       UcciComm.Option = UCCI_OPTION_EVALAPI;
       UcciComm.szOption = lp;
 
-    // (9) "hashsize"选项
+    // (10) "hashsize"选项
     } else if (StrEqvSkip(lp, "hashsize ")) {
       UcciComm.Option = UCCI_OPTION_HASHSIZE;
       UcciComm.nSpin = Str2Digit(lp, 0, 1024);
 
-    // (10) "threads"选项
+    // (11) "threads"选项
     } else if (StrEqvSkip(lp, "threads ")) {
       UcciComm.Option = UCCI_OPTION_THREADS;
       UcciComm.nSpin = Str2Digit(lp, 0, 32);
 
-    // (11) "promotion"选项
+    // (12) "promotion"选项
     } else if (StrEqvSkip(lp, "promotion ")) {
       UcciComm.Option = UCCI_OPTION_PROMOTION;
       if (StrEqv(lp, "on")) {
@@ -186,7 +197,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.bCheck = FALSE;
       }
 
-    // (12) "idle"选项
+    // (13) "idle"选项
     } else if (StrEqvSkip(lp, "idle ")) {
       UcciComm.Option = UCCI_OPTION_IDLE;
       if (FALSE) {
@@ -202,7 +213,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       }
 
-    // (13) "pruning"选项
+    // (14) "pruning"选项
     } else if (StrEqvSkip(lp, "pruning ")) {
       UcciComm.Option = UCCI_OPTION_PRUNING;
       if (FALSE) {
@@ -218,7 +229,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.Grade = UCCI_GRADE_LARGE;
       }
 
-    // (14) "knowledge"选项
+    // (15) "knowledge"选项
     } else if (StrEqvSkip(lp, "knowledge ")) {
       UcciComm.Option = UCCI_OPTION_KNOWLEDGE;
       if (FALSE) {
@@ -234,7 +245,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.Grade = UCCI_GRADE_LARGE;
       }
 
-    // (15) "randomness"选项
+    // (16) "randomness"选项
     } else if (StrEqvSkip(lp, "randomness ")) {
       UcciComm.Option = UCCI_OPTION_RANDOMNESS;
       if (FALSE) {
@@ -250,7 +261,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       }
 
-    // (16) "style"选项
+    // (17) "style"选项
     } else if (StrEqvSkip(lp, "style ")) {
       UcciComm.Option = UCCI_OPTION_STYLE;
       if (FALSE) {
@@ -264,11 +275,11 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.Style = UCCI_STYLE_NORMAL;
       }
 
-    // (17) "newgame"选项
+    // (18) "newgame"选项
     } else if (StrEqv(lp, "newgame")) {
       UcciComm.Option = UCCI_OPTION_NEWGAME;
 
-    // (18) 无法识别的选项，有扩充的余地
+    // (19) 无法识别的选项，有扩充的余地
     } else {
       UcciComm.Option = UCCI_OPTION_UNKNOWN;
     }
