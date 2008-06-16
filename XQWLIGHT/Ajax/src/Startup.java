@@ -16,6 +16,8 @@ public class Startup {
 				// Ignored if "port" cannot be parsed
 			}
 		}
-		new JettyServer(DEFAULT_HOME, port).start();
+		JettyServer server = new JettyServer(DEFAULT_HOME, port);
+		server.start();
+		server.join();
 	}
 }
