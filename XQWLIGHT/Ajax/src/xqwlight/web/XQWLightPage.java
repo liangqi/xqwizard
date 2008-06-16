@@ -25,6 +25,7 @@ import org.apache.wicket.util.time.Duration;
 import xqwlight.Position;
 import xqwlight.Search;
 import xqwlight.Util;
+import xqwlight.XQWLightApp;
 import xqwlight.util.wicket.AjaxPlayerPanel;
 import xqwlight.util.wicket.RefreshPage;
 import xqwlight.util.wicket.ResourceComponent;
@@ -143,8 +144,8 @@ public class XQWLightPage extends WebPage {
 	};
 
 	int status = STATUS_READY;
-	Position pos = new Position();
-	Search search = new Search(pos, 16);
+	Position pos = ((XQWLightApp) getApplication()).getPosition(this);
+	Search search = ((XQWLightApp) getApplication()).getSearch(this);
 	int boardId = getCookieValue("board", 0, Choices.getBoardTypes().size() - 1, 0);
 	int piecesId = getCookieValue("pieces", 0, Choices.getPiecesTypes().size() - 1, 0);
 	int level = getCookieValue("level", 0, LEVEL_STRING.length - 1, 0);
