@@ -2181,3 +2181,145 @@ void CXQWLightCtrl::Restart()
 	}
 	ReleaseDC(pdc);
 }
+
+/* === 以下是象棋小巫师的安全代码 === */
+
+BEGIN_INTERFACE_MAP(CXQWLightCtrl, COleControl) 
+	INTERFACE_PART(CXQWLightCtrl, IID_IObjectSafety, ObjectSafety) 
+END_INTERFACE_MAP() 
+
+// Implementation of IObjectSafety 
+STDMETHODIMP CXQWLightCtrl::XObjectSafety::GetInterfaceSafetyOptions( 
+			REFIID riid,  
+			DWORD __RPC_FAR *pdwSupportedOptions,  
+			DWORD __RPC_FAR *pdwEnabledOptions) 
+{ 
+	METHOD_PROLOGUE_EX(CXQWLightCtrl, ObjectSafety) 
+
+	if (!pdwSupportedOptions || !pdwEnabledOptions) 
+	{ 
+		return E_POINTER; 
+	} 
+
+	*pdwSupportedOptions = INTERFACESAFE_FOR_UNTRUSTED_CALLER | INTERFACESAFE_FOR_UNTRUSTED_DATA; 
+	*pdwEnabledOptions = 0; 
+
+	if (NULL == pThis->GetInterface(&riid)) 
+	{ 
+		TRACE("Requested interface is not supported.\n"); 
+		return E_NOINTERFACE; 
+	} 
+
+	// What interface is being checked out anyhow? 
+	OLECHAR szGUID[39]; 
+	int i = StringFromGUID2(riid, szGUID, 39); 
+
+	if (riid == IID_IDispatch) 
+	{ 
+		// Client wants to know if object is safe for scripting 
+		*pdwEnabledOptions = INTERFACESAFE_FOR_UNTRUSTED_CALLER; 
+		return S_OK; 
+	} 
+	else if (riid == IID_IPersistPropertyBag  
+		  || riid == IID_IPersistStreamInit 
+		  || riid == IID_IPersistStorage 
+		  || riid == IID_IPersistMemory) 
+	{ 
+		// Those are the persistence interfaces COleControl derived controls support 
+		// as indicated in AFXCTL.H 
+		// Client wants to know if object is safe for initializing from persistent data 
+		*pdwEnabledOptions = INTERFACESAFE_FOR_UNTRUSTED_DATA; 
+		return S_OK; 
+	} 
+	else 
+	{ 
+		// Find out what interface this is, and decide what options to enable 
+		TRACE("We didn’t account for the safety of this interface, and it’s one we support...\n"); 
+		return E_NOINTERFACE; 
+	} 
+} 
+
+STDMETHODIMP CXQWLightCtrl::XObjectSafety::SetInterfaceSafetyOptions( 
+		REFIID riid,  
+		DWORD dwOptionSetMask,  
+		DWORD dwEnabledOptions) 
+{ 
+	METHOD_PROLOGUE_EX(CXQWLightCtrl, ObjectSafety) 
+
+	OLECHAR szGUID[39]; 
+	// What is this interface anyway? 
+	// We can do a quick lookup in the registry under HKEY_CLASSES_ROOT\Interface 
+	int i = StringFromGUID2(riid, szGUID, 39); 
+
+	if (0 == dwOptionSetMask && 0 == dwEnabledOptions) 
+	{ 
+		// the control certainly supports NO requests through the specified interface 
+		// so it’s safe to return S_OK even if the interface isn’t supported. 
+		return S_OK; 
+	} 
+
+	// Do we support the specified interface? 
+	if (NULL == pThis->GetInterface(&riid)) 
+	{ 
+		TRACE1("%s is not support.\n", szGUID); 
+		return E_FAIL; 
+	} 
+
+
+	if (riid == IID_IDispatch) 
+	{ 
+		TRACE("Client asking if it’s safe to call through IDispatch.\n"); 
+		TRACE("In other words, is the control safe for scripting?\n"); 
+		if (INTERFACESAFE_FOR_UNTRUSTED_CALLER == dwOptionSetMask && INTERFACESAFE_FOR_UNTRUSTED_CALLER == dwEnabledOptions) 
+		{ 
+			return S_OK; 
+		} 
+		else 
+		{ 
+			return E_FAIL; 
+		} 
+	} 
+	else if (riid == IID_IPersistPropertyBag  
+		  || riid == IID_IPersistStreamInit 
+		  || riid == IID_IPersistStorage 
+		  || riid == IID_IPersistMemory) 
+	{ 
+		TRACE("Client asking if it’s safe to call through IPersist*.\n"); 
+		TRACE("In other words, is the control safe for initializing from persistent data?\n"); 
+
+		if (INTERFACESAFE_FOR_UNTRUSTED_DATA == dwOptionSetMask && INTERFACESAFE_FOR_UNTRUSTED_DATA == dwEnabledOptions) 
+		{ 
+			return NOERROR; 
+		} 
+		else 
+		{ 
+			return E_FAIL; 
+		} 
+	} 
+	else 
+	{ 
+		TRACE1("We didn’t account for the safety of %s, and it’s one we support...\n", szGUID); 
+		return E_FAIL; 
+	} 
+} 
+
+STDMETHODIMP_(ULONG) CXQWLightCtrl::XObjectSafety::AddRef() 
+{ 
+	METHOD_PROLOGUE_EX_(CXQWLightCtrl, ObjectSafety) 
+	return (ULONG)pThis->ExternalAddRef(); 
+} 
+
+STDMETHODIMP_(ULONG) CXQWLightCtrl::XObjectSafety::Release() 
+{ 
+	METHOD_PROLOGUE_EX_(CXQWLightCtrl, ObjectSafety) 
+	return (ULONG)pThis->ExternalRelease(); 
+} 
+
+STDMETHODIMP CXQWLightCtrl::XObjectSafety::QueryInterface( 
+	REFIID iid, LPVOID* ppvObj) 
+{ 
+	METHOD_PROLOGUE_EX_(CXQWLightCtrl, ObjectSafety) 
+	return (HRESULT)pThis->ExternalQueryInterface(&iid, ppvObj); 
+} 
+
+/* === 以上是象棋小巫师的安全代码 === */

@@ -7,6 +7,8 @@
 
 // XQWLightCtl.h : Declaration of the CXQWLightCtrl ActiveX Control class.
 
+#include <objsafe.h>
+
 /* === 以下是象棋小巫师的引擎代码 === */
 
 // 其他常数
@@ -191,6 +193,13 @@ class CXQWLightCtrl : public COleControl
 
 // Constructor
 public:
+	BEGIN_INTERFACE_PART(ObjectSafety, IObjectSafety) 
+		STDMETHOD(GetInterfaceSafetyOptions)(REFIID riid, DWORD __RPC_FAR *pdwSupportedOptions, DWORD __RPC_FAR *pdwEnabledOptions); 
+		STDMETHOD(SetInterfaceSafetyOptions)(REFIID riid, DWORD dwOptionSetMask, DWORD dwEnabledOptions); 
+	END_INTERFACE_PART(ObjectSafety) 
+
+	DECLARE_INTERFACE_MAP(); 
+
 	CXQWLightCtrl();
 
 // Overrides
