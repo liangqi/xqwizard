@@ -165,21 +165,6 @@ void CXQWLightCtrl::OnResetState()
 	// TODO: Reset any other control state here.
 }
 
-BOOL CXQWLightCtrl::GetFlip() 
-{
-	// TODO: Add your property handler here
-
-	return Xqwl.bFlipped;
-}
-
-void CXQWLightCtrl::SetFlip(BOOL bNewValue) 
-{
-	// TODO: Add your property handler here
-
-	Xqwl.bFlipped = bNewValue;
-	SetModifiedFlag();
-}
-
 /* === 以下是象棋小巫师的资源配置 === */
 
 static volatile BOOL bXqwlInit = FALSE;
@@ -1507,20 +1492,22 @@ const int PHASE_REST = 4;
 
 // 走法排序结构
 struct SortStruct {
-  const PositionStruct *lppos;
-  const int (*lpmvKillers)[2];
+  PositionStruct *lppos;
+  int (*mvKillers)[2];
+  int *nHistoryTable;
   int mvHash, mvKiller1, mvKiller2; // 置换表走法和两个杀手走法
   int nPhase, nIndex, nGenMoves;    // 当前阶段，当前采用第几个走法，总共有几个走法
   int mvs[MAX_GEN_MOVES];           // 所有的走法
 
-  SortStruct(const PositionStruct &pos, const int (*lpmvKillers_)[2]) {
+  SortStruct(PositionStruct &pos, int (*mvKillers_)[2], int *nHistoryTable_) {
     lppos = &pos;
-    lpmvKillers = lpmvKillers_;
+    mvKillers = mvKillers_;
+    nHistoryTable = nHistoryTable_;
   }
   void Init(int mvHash_) { // 初始化，设定置换表走法和两个杀手走法
     mvHash = mvHash_;
-    mvKiller1 = lpmvKillers[lppos->nDistance][0];
-    mvKiller2 = lpmvKillers[lppos->nDistance][1];
+    mvKiller1 = mvKillers[lppos->nDistance][0];
+    mvKiller2 = mvKillers[lppos->nDistance][1];
     nPhase = PHASE_HASH;
   }
   int Next(void); // 得到下一个走法
@@ -1528,7 +1515,7 @@ struct SortStruct {
 
 // 得到下一个走法
 int SortStruct::Next(void) {
-  int mv;
+  int mv, i, j;
   switch (nPhase) {
   // "nPhase"表示着法启发的若干阶段，依次为：
 
@@ -1560,6 +1547,15 @@ int SortStruct::Next(void) {
     nGenMoves = lppos->GenerateMoves(mvs);
     // 由于这里不适合用"qsort"，因此改用冒泡排序
     // qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
+    for (i = nGenMoves - 1; i > 0; i --) {
+      for (j = 0; j < i; j ++) {
+        if (nHistoryTable[mvs[j]] < nHistoryTable[mvs[j + 1]]) {
+          mv = mvs[j];
+          mvs[j] = mvs[j + 1];
+          mvs[j + 1] = mv;
+        }
+      }
+    }
     nIndex = 0;
 
   // 4. 对剩余着法做历史表启发；
@@ -1591,8 +1587,8 @@ void CXQWLightCtrl::SetBestMove(int mv, int nDepth) {
 
 // 静态(Quiescence)搜索过程
 int CXQWLightCtrl::SearchQuiesc(int vlAlpha, int vlBeta) {
-  int i, nGenMoves;
-  int vl, vlBest;
+  int i, j, mv, nGenMoves;
+  int vl, vlBest, vl1, vl2;
   int mvs[MAX_GEN_MOVES];
   // 一个静态搜索分为以下几个阶段
 
@@ -1615,6 +1611,15 @@ int CXQWLightCtrl::SearchQuiesc(int vlAlpha, int vlBeta) {
     nGenMoves = pos.GenerateMoves(mvs);
     // 由于这里不适合用"qsort"，因此改用冒泡排序
     // qsort(mvs, nGenMoves, sizeof(int), CompareHistory);
+    for (i = nGenMoves - 1; i > 0; i --) {
+      for (j = 0; j < i; j ++) {
+        if (Search.nHistoryTable[mvs[j]] < Search.nHistoryTable[mvs[j + 1]]) {
+          mv = mvs[j];
+          mvs[j] = mvs[j + 1];
+          mvs[j + 1] = mv;
+        }
+      }
+    }
   } else {
 
     // 5. 如果不被将军，先做局面评价
@@ -1633,6 +1638,17 @@ int CXQWLightCtrl::SearchQuiesc(int vlAlpha, int vlBeta) {
     nGenMoves = pos.GenerateMoves(mvs, GEN_CAPTURE);
     // 由于这里不适合用"qsort"，因此改用冒泡排序
     // qsort(mvs, nGenMoves, sizeof(int), CompareMvvLva);
+    for (i = nGenMoves - 1; i > 0; i --) {
+      for (j = 0; j < i; j ++) {
+        vl1 = (cucMvvLva[pos.ucpcSquares[DST(mvs[j])]] << 3) - cucMvvLva[pos.ucpcSquares[SRC(mvs[j])]];
+        vl2 = (cucMvvLva[pos.ucpcSquares[DST(mvs[j + 1])]] << 3) - cucMvvLva[pos.ucpcSquares[SRC(mvs[j + 1])]];
+        if (vl1 < vl2) {
+          mv = mvs[j];
+          mvs[j] = mvs[j + 1];
+          mvs[j + 1] = mv;
+        }
+      }
+    }
   }
 
   // 7. 逐一走这些走法，并进行递归
@@ -1665,7 +1681,7 @@ const BOOL NO_NULL = TRUE;
 int CXQWLightCtrl::SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull) {
   int nHashFlag, vl, vlBest;
   int mv, mvBest, mvHash, nNewDepth;
-  SortStruct Sort(pos, Search.mvKillers);
+  SortStruct Sort(pos, Search.mvKillers, Search.nHistoryTable);
   // 一个Alpha-Beta完全搜索分为以下几个阶段
 
   // 1. 到达水平线，则调用静态搜索(注意：由于空步裁剪，深度可能小于零)
@@ -1758,7 +1774,7 @@ int CXQWLightCtrl::SearchFull(int vlAlpha, int vlBeta, int nDepth, BOOL bNoNull)
 // 根节点的Alpha-Beta搜索过程
 int CXQWLightCtrl::SearchRoot(int nDepth) {
   int vl, vlBest, mv, nNewDepth;
-  SortStruct Sort(pos, Search.mvKillers);
+  SortStruct Sort(pos, Search.mvKillers, Search.nHistoryTable);
 
   vlBest = -MATE_VALUE;
   Sort.Init(Search.mvResult);
@@ -1923,10 +1939,10 @@ inline void PlayResWav(int nResId) {
 }
 
 // 弹出不带声音的提示框
-static void MessageBoxMute(LPCSTR lpszText) {
+void CXQWLightCtrl::MessageBoxMute(LPCSTR lpszText) {
   MSGBOXPARAMS mbp;
   mbp.cbSize = sizeof(MSGBOXPARAMS);
-  mbp.hwndOwner = NULL;
+  mbp.hwndOwner = m_hWnd;
   mbp.hInstance = NULL;
   mbp.lpszText = lpszText;
   mbp.lpszCaption = "象棋小巫师";
@@ -2109,6 +2125,7 @@ CXQWLightCtrl::CXQWLightCtrl()
 			__Xqwl.bmpPieces[SIDE_TAG(1) + i] = LoadResBmp(IDB_BK + i);
 		}
 	}
+    SetInitialSize(BOARD_WIDTH, BOARD_HEIGHT);
 	Xqwl.bFlipped = FALSE;
 	Startup();
 }
@@ -2125,6 +2142,29 @@ void CXQWLightCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 
 	COleControl::OnLButtonDown(nFlags, point);
+}
+
+BOOL CXQWLightCtrl::OnSetExtent(LPSIZEL lpSizeL) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	
+	// return COleControl::OnSetExtent(lpSizeL);
+	return FALSE;
+}
+
+BOOL CXQWLightCtrl::GetFlip() 
+{
+	// TODO: Add your property handler here
+
+	return Xqwl.bFlipped;
+}
+
+void CXQWLightCtrl::SetFlip(BOOL bNewValue) 
+{
+	// TODO: Add your property handler here
+
+	Xqwl.bFlipped = bNewValue;
+	SetModifiedFlag();
 }
 
 void CXQWLightCtrl::Restart() 

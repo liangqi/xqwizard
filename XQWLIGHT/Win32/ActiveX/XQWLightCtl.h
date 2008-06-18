@@ -200,6 +200,7 @@ public:
 	virtual void OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid);
 	virtual void DoPropExchange(CPropExchange* pPX);
 	virtual void OnResetState();
+	virtual BOOL OnSetExtent(LPSIZEL lpSizeL);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -264,6 +265,7 @@ public:
   int SearchRoot(int nDepth);
   void SearchMain(void);
   void DrawBoard(HDC hdc);
+  void MessageBoxMute(LPCSTR lpszText);
   void DrawSquare(int sq, BOOL bSelected = FALSE);
   void ResponseMove(void);
   void ClickSquare(int sq);

@@ -44,6 +44,7 @@ RSC=rc.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
 # PROP Target_Ext "ocx"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
 # ADD CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /c
@@ -56,7 +57,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 /nologo /subsystem:windows /dll /machine:I386
+# ADD LINK32 WINMM.LIB /nologo /subsystem:windows /dll /machine:I386
 # Begin Custom Build - Registering ActiveX Control...
 OutDir=.\Release
 TargetPath=.\Release\XQWLight.ocx
@@ -278,56 +279,15 @@ SOURCE=..\RES\BOARD.BMP
 # End Source File
 # Begin Source File
 
+SOURCE=..\BOOK.DAT
+# End Source File
+# Begin Source File
+
 SOURCE=..\RES\BP.BMP
 # End Source File
 # Begin Source File
 
 SOURCE=..\RES\BR.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RA.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RB.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RC.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RK.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RN.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RP.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\RR.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\SELECTED.BMP
-# End Source File
-# Begin Source File
-
-SOURCE=..\RES\XQWIZARD.ICO
-# End Source File
-# Begin Source File
-
-SOURCE=.\XQWLightCtl.bmp
-# End Source File
-# End Group
-# Begin Source File
-
-SOURCE=..\BOOK.DAT
 # End Source File
 # Begin Source File
 
@@ -371,11 +331,52 @@ SOURCE=..\RES\MOVE2.WAV
 # End Source File
 # Begin Source File
 
-SOURCE=.\ReadMe.txt
+SOURCE=..\RES\RA.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RB.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RC.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RK.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RN.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RP.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\RR.BMP
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\SELECTED.BMP
 # End Source File
 # Begin Source File
 
 SOURCE=..\RES\WIN.WAV
+# End Source File
+# Begin Source File
+
+SOURCE=..\RES\XQWIZARD.ICO
+# End Source File
+# Begin Source File
+
+SOURCE=.\XQWLightCtl.bmp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\ReadMe.txt
 # End Source File
 # End Target
 # End Project
