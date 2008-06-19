@@ -1,7 +1,7 @@
 /*
 CHE->PGN Convertor - a Chinese Chess Score Convertion Program
-Designed by Morning Yellow, Version: 2.04, Last Modified: Jul. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -79,6 +79,7 @@ int Che2Pgn(const char *szCheFile, const char *szPgnFile, const EccoApiStruct &E
     ReadInt(fp);
 
     mv = MOVE(COORD_XY(xSrc, ySrc), COORD_XY(xDst, yDst));
+    mv &= 0xffff; // 防止TryMove时数组越界
     pgn.nMaxMove ++;
     if (pgn.nMaxMove <= 20) {
       dwFileMove[pgn.nMaxMove - 1] = Move2File(mv, pos);

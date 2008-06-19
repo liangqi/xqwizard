@@ -1,7 +1,7 @@
 /*
-MXQ->PGN Convertor - a Chinese Chess Score Convertion Program
+CHN->PGN Convertor - a Chinese Chess Score Convertion Program
 Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Copyright (C) 2004-2007 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -27,85 +27,58 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 #include "../utility/base.h"
 #include "../utility/base2.h"
-#include "../utility/parse.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
 #include "../cchess/pgnfile.h"
 
-inline void ReadRecord(FILE *fp, char *sz) {
-  uint8 ucLen;
-  fread(&ucLen, 1, 1, fp);
-  fread(sz, 1, ucLen, fp);
-  sz[ucLen] = '\0';
-}
+static const int CHN2PGN_ERROR_OPEN = -2;
+static const int CHN2PGN_ERROR_CREATE = -1;
+static const int CHN2PGN_OK = 0;
 
-static const int MXQ2PGN_ERROR_OPEN = -2;
-static const int MXQ2PGN_ERROR_CREATE = -1;
-static const int MXQ2PGN_OK = 0;
+struct ChnRecord {
+  uint16 wStepNo, wUnknown;
+  uint16 wxSrc, wySrc, wxDst, wyDst;
+  uint16 wReserved[10];
+};
 
-int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
-  int i, mv, nStatus;
-  char *lpEvent;
-  char szRecord[256], szComment[256];
+int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
+  int mv, nStatus;
+  Bool bFlip;
   PgnFileStruct pgn;
   PositionStruct pos;
-
+  ChnRecord Chn;
   FILE *fp;
   uint32 dwEccoIndex, dwFileMove[20];
 
-  fp = fopen(szMxqFile, "rb");
+  fp = fopen(szChnFile, "rb");
   if (fp == NULL) {
-    return MXQ2PGN_ERROR_OPEN;
+    return CHN2PGN_ERROR_OPEN;
   }
-
-  ReadRecord(fp, pgn.szSite);
-  ReadRecord(fp, pgn.szDate);
-  ReadRecord(fp, pgn.szEvent);
-  lpEvent = pgn.szEvent;
-  if (FALSE) {
-  } else if (StrScanSkip(lpEvent, "-胜-")) {
-    pgn.nResult = 1;
-  } else if (StrScanSkip(lpEvent, "-衊-")) {
-    pgn.nResult = 1;
-  } else if (StrScanSkip(lpEvent, "-和-")) {
-    pgn.nResult = 2;
-  } else if (StrScanSkip(lpEvent, "-㎝-")) {
-    pgn.nResult = 2;
-  } else if (StrScanSkip(lpEvent, "-负-")) {
-    pgn.nResult = 3;
-  } else if (StrScanSkip(lpEvent, "-璽-")) {
-    pgn.nResult = 3;
-  } else if (StrScanSkip(lpEvent, "-負-")) {
-    pgn.nResult = 3;
-  } else {
-    pgn.nResult = 0;
-  }
-  if (pgn.nResult != 0) {
-    strcpy(pgn.szRed, pgn.szEvent);
-    *(pgn.szRed + (lpEvent - pgn.szEvent - 4)) = '\0';
-    strcpy(pgn.szBlack, lpEvent);
-  }
-  ReadRecord(fp, pgn.szRedElo);
-  ReadRecord(fp, pgn.szBlackElo);
-  for (i = 0; i < 5; i ++) {
-    ReadRecord(fp, szRecord);
-  }
-  ReadRecord(fp, szComment);
-  ReadRecord(fp, szRecord);
 
   pgn.posStart.FromFen(cszStartFen);
   pos = pgn.posStart;
 
-  ReadRecord(fp, szRecord);
-  while (!StrEqv(szRecord, "Ends") && pgn.nMaxMove < MAX_MOVE_LEN - 1) {
-    mv = MOVE(COORD_XY(szRecord[0] - '0' + 3, 'J' - szRecord[1] + 3), COORD_XY(szRecord[3] - '0' + 3, 'J' - szRecord[4] + 3));
+  bFlip = FALSE;
+  fseek(fp, 188, SEEK_SET);
+  while (fread(&Chn, sizeof(ChnRecord), 1, fp) > 0) {
+    if (Chn.wStepNo == 1 && Chn.wySrc < 5) {
+      bFlip = TRUE;
+    }
+    if (bFlip) {
+      Chn.wxSrc = 8 - Chn.wxSrc;
+      Chn.wySrc = 9 - Chn.wySrc;
+      Chn.wxDst = 8 - Chn.wxDst;
+      Chn.wyDst = 9 - Chn.wyDst;
+    }
+    mv = MOVE(COORD_XY(Chn.wxSrc + FILE_LEFT, Chn.wySrc + RANK_TOP),
+        COORD_XY(Chn.wxDst + FILE_LEFT, Chn.wyDst + RANK_TOP));
     mv &= 0xffff; // 防止TryMove时数组越界
     pgn.nMaxMove ++;
     if (pgn.nMaxMove <= 20) {
       dwFileMove[pgn.nMaxMove - 1] = Move2File(mv, pos);
     }
-    // 弈天可能允许把将吃掉，但ElephantEye不允许，所以跳过非法着法
+    // 联众可能允许把将吃掉，但ElephantEye不允许，所以跳过非法着法
     if (TryMove(pos, nStatus, mv)) {
       pgn.wmvMoveTable[pgn.nMaxMove] = mv;
     } else {
@@ -114,10 +87,7 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
     if (pos.nMoveNum == MAX_MOVE_NUM) {
       pos.SetIrrev();
     }
-    ReadRecord(fp, szRecord);
   }
-  pgn.szCommentTable[pgn.nMaxMove] = new char[256];
-  strcpy(pgn.szCommentTable[pgn.nMaxMove], szComment);
 
   if (pgn.nMaxMove < 20) {
     dwFileMove[pgn.nMaxMove] = 0;
@@ -130,7 +100,7 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
   }
 
   fclose(fp);
-  return (pgn.Write(szPgnFile) ? MXQ2PGN_OK : MXQ2PGN_ERROR_CREATE);
+  return (pgn.Write(szPgnFile) ? CHN2PGN_OK : CHN2PGN_ERROR_CREATE);
 }
 
 #ifndef MXQFCONV_EXE
@@ -140,8 +110,8 @@ int main(int argc, char **argv) {
   char szLibEccoPath[1024];
 
   if (argc < 2) {
-    printf("=== MXQ->PGN Convertor ===\n");
-    printf("Usage: MXQ2PGN MXQ-File [PGN-File]\n");
+    printf("=== CHN->PGN Convertor ===\n");
+    printf("Usage: CHN2PGN CHN-File [PGN-File]\n");
     return 0;
   }
 
@@ -150,17 +120,17 @@ int main(int argc, char **argv) {
   LocatePath(szLibEccoPath, cszLibEccoFile);
   EccoApi.Startup(szLibEccoPath);
 
-  switch (Mxq2Pgn(argv[1], argc == 2 ? "MXQ2PGN.PGN" : argv[2], EccoApi)) {
-  case MXQ2PGN_ERROR_OPEN:
+  switch (Chn2Pgn(argv[1], argc == 2 ? "CHN2PGN.PGN" : argv[2], EccoApi)) {
+  case CHN2PGN_ERROR_OPEN:
     printf("%s: File Opening Error!\n", argv[1]);
     break;
-  case MXQ2PGN_ERROR_CREATE:
+  case CHN2PGN_ERROR_CREATE:
     printf("File Creation Error!\n");
     break;
-  case MXQ2PGN_OK:
+  case CHN2PGN_OK:
 #ifdef _WIN32
     if (argc == 2) {
-      ShellExecute(NULL, NULL, "MXQ2PGN.PGN", NULL, NULL, SW_SHOW);
+      ShellExecute(NULL, NULL, "CHN2PGN.PGN", NULL, NULL, SW_SHOW);
     }
 #endif
     break;
