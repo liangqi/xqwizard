@@ -105,8 +105,6 @@ Source: "ADVERT\llj_dizhen.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\llj_dizhen.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xhwenchuan.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xhwenchuan.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\gongyi.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\gongyi.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\stepbystep.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
