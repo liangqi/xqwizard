@@ -1,5 +1,5 @@
 /* 
-MXQ/XQF/CHE/CHN->PGN Convertor - a Chinese Chess Score Convertion Program
+MXQ/XQF/CHE/CHN/CCM->PGN Convertor - a Chinese Chess Score Convertion Program
 Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
@@ -31,6 +31,7 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
 int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Che2Pgn(const char *szCheFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
+int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 
 static void SearchFolder(const char *szFolderPath, const EccoApiStruct &EccoApi);
 
@@ -57,6 +58,10 @@ static void SearchFile(const char *szFilePath, const WIN32_FIND_DATA &wfd, const
         strncpy(szPgnFile, szFilePath, nPathLen);
         strcpy(szPgnFile + nPathLen, ".PGN");
         Chn2Pgn(szFilePath, szPgnFile, EccoApi);
+      } else if (strnicmp(szFilePath + nPathLen, ".CCM", 4) == 0) {
+        strncpy(szPgnFile, szFilePath, nPathLen);
+        strcpy(szPgnFile + nPathLen, ".PGN");
+        Ccm2Pgn(szFilePath, szPgnFile, EccoApi);
       }
     }
   } else {
@@ -100,7 +105,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   bi.hwndOwner = NULL;
   bi.pidlRoot = NULL;
   bi.pszDisplayName = NULL;
-  bi.lpszTitle = "请选择象棋演播室棋谱(*.XQF)、弈天棋谱(*.MXQ)、QQ象棋棋谱(*.CHE)和联众象棋棋谱(*.CHN)所在的文件夹";
+  bi.lpszTitle = "请选择象棋演播室棋谱(*.XQF)、弈天棋谱(*.MXQ)、QQ象棋棋谱(*.CHE)、联众象棋棋谱(*.CHN)和中游象棋棋谱(*.CCM)所在的文件夹";
   bi.ulFlags = BIF_RETURNONLYFSDIRS;
   bi.lpfn = NULL;
   bi.lParam = NULL;
@@ -113,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     EccoApi.Startup(szLibEccoFile);
     SearchFolder(szPath, EccoApi);
     EccoApi.Shutdown();
-    MessageBox(NULL, "象棋演播室棋谱(*.XQF)、弈天棋谱(*.MXQ)、QQ象棋棋谱(*.CHE)和联众象棋棋谱(*.CHN)已全部转换为可移植棋谱(*.PGN)。",
+    MessageBox(NULL, "象棋演播室棋谱(*.XQF)、弈天棋谱(*.MXQ)、QQ象棋棋谱(*.CHE)、联众象棋棋谱(*.CHN)和中游象棋棋谱(*.CCM)已全部转换为可移植棋谱(*.PGN)。",
         "象棋棋谱批量转换工具", MB_ICONINFORMATION);
   }
   return 0;

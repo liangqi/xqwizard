@@ -1,5 +1,5 @@
 /*
-CHN->PGN Convertor - a Chinese Chess Score Convertion Program
+CCM->PGN Convertor - a Chinese Chess Score Convertion Program
 Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
 Copyright (C) 2004-2007 www.elephantbase.net
 
@@ -32,56 +32,49 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../cchess/ecco.h"
 #include "../cchess/pgnfile.h"
 
-static const int CHN2PGN_ERROR_OPEN = -2;
-static const int CHN2PGN_ERROR_CREATE = -1;
-static const int CHN2PGN_OK = 0;
+static const int CCM2PGN_ERROR_OPEN = -2;
+static const int CCM2PGN_ERROR_CREATE = -1;
+static const int CCM2PGN_OK = 0;
 
-struct ChnRecord {
-  uint16 wReserved1[2];
-  uint16 wxSrc, wySrc, wxDst, wyDst;
-  uint16 wReserved2[10];
-};
-
-int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
+int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
   int mv, nStatus;
   Bool bRead, bFlip;
   PgnFileStruct pgn;
   PositionStruct pos;
-  ChnRecord Chn;
+  char cCcm[8];
   FILE *fp;
   uint32 dwEccoIndex, dwFileMove[20];
 
-  fp = fopen(szChnFile, "rb");
+  fp = fopen(szCcmFile, "rb");
   if (fp == NULL) {
-    return CHN2PGN_ERROR_OPEN;
+    return CCM2PGN_ERROR_OPEN;
   }
 
   pgn.posStart.FromFen(cszStartFen);
   pos = pgn.posStart;
 
   bRead = bFlip = FALSE;
-  fseek(fp, 188, SEEK_SET);
-  while (fread(&Chn, sizeof(ChnRecord), 1, fp) > 0) {
+  while (fread(&cCcm, 7, 1, fp) > 0) {
     if (!bRead) {
       bRead = TRUE;
-      if (Chn.wySrc < 5) {
+      if (cCcm[5] < 5) {
         bFlip = TRUE;
       }
     }
     if (bFlip) {
-      Chn.wxSrc = 8 - Chn.wxSrc;
-      Chn.wySrc = 9 - Chn.wySrc;
-      Chn.wxDst = 8 - Chn.wxDst;
-      Chn.wyDst = 9 - Chn.wyDst;
+      cCcm[3] = 8 - cCcm[3];
+      cCcm[5] = 9 - cCcm[5];
+      cCcm[4] = 8 - cCcm[4];
+      cCcm[6] = 9 - cCcm[6];
     }
-    mv = MOVE(COORD_XY(Chn.wxSrc + FILE_LEFT, Chn.wySrc + RANK_TOP),
-        COORD_XY(Chn.wxDst + FILE_LEFT, Chn.wyDst + RANK_TOP));
+    mv = MOVE(COORD_XY(cCcm[3] + FILE_LEFT, cCcm[5] + RANK_TOP),
+        COORD_XY(cCcm[4] + FILE_LEFT, cCcm[6] + RANK_TOP));
     mv &= 0xffff; // 防止TryMove时数组越界
     pgn.nMaxMove ++;
     if (pgn.nMaxMove <= 20) {
       dwFileMove[pgn.nMaxMove - 1] = Move2File(mv, pos);
     }
-    // 联众可能允许把将吃掉，但ElephantEye不允许，所以跳过非法着法
+    // 中游可能允许把将吃掉，但ElephantEye不允许，所以跳过非法着法
     if (TryMove(pos, nStatus, mv)) {
       pgn.wmvMoveTable[pgn.nMaxMove] = mv;
     } else {
@@ -103,7 +96,7 @@ int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &E
   }
 
   fclose(fp);
-  return (pgn.Write(szPgnFile) ? CHN2PGN_OK : CHN2PGN_ERROR_CREATE);
+  return (pgn.Write(szPgnFile) ? CCM2PGN_OK : CCM2PGN_ERROR_CREATE);
 }
 
 #ifndef MXQFCONV_EXE
@@ -113,8 +106,8 @@ int main(int argc, char **argv) {
   char szLibEccoPath[1024];
 
   if (argc < 2) {
-    printf("=== CHN->PGN Convertor ===\n");
-    printf("Usage: CHN2PGN CHN-File [PGN-File]\n");
+    printf("=== CCM->PGN Convertor ===\n");
+    printf("Usage: CCM2PGN CCM-File [PGN-File]\n");
     return 0;
   }
 
@@ -123,17 +116,17 @@ int main(int argc, char **argv) {
   LocatePath(szLibEccoPath, cszLibEccoFile);
   EccoApi.Startup(szLibEccoPath);
 
-  switch (Chn2Pgn(argv[1], argc == 2 ? "CHN2PGN.PGN" : argv[2], EccoApi)) {
-  case CHN2PGN_ERROR_OPEN:
+  switch (Ccm2Pgn(argv[1], argc == 2 ? "CCM2PGN.PGN" : argv[2], EccoApi)) {
+  case CCM2PGN_ERROR_OPEN:
     printf("%s: File Opening Error!\n", argv[1]);
     break;
-  case CHN2PGN_ERROR_CREATE:
+  case CCM2PGN_ERROR_CREATE:
     printf("File Creation Error!\n");
     break;
-  case CHN2PGN_OK:
+  case CCM2PGN_OK:
 #ifdef _WIN32
     if (argc == 2) {
-      ShellExecute(NULL, NULL, "CHN2PGN.PGN", NULL, NULL, SW_SHOW);
+      ShellExecute(NULL, NULL, "CCM2PGN.PGN", NULL, NULL, SW_SHOW);
     }
 #endif
     break;
