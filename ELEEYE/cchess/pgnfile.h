@@ -29,6 +29,8 @@ const int MAX_MOVE_LEN = 1999;
 const int MAX_COUNTER = 1000;
 const int MAX_REM_LEN = 4096;
 
+const Bool NO_ADVERT = TRUE;
+
 struct PgnFileStruct {
   char szEvent[MAX_STR_LEN], szRound[MAX_STR_LEN], szDate[MAX_STR_LEN], szSite[MAX_STR_LEN];
   char szRedTeam[MAX_STR_LEN], szRed[MAX_STR_LEN], szRedElo[MAX_STR_LEN];
@@ -48,8 +50,8 @@ struct PgnFileStruct {
     this->~PgnFileStruct();
     Init();
   }
-  Bool Read(const char *szFileName);
-  Bool Write(const char *szFileName) const;
+  Bool Read(const char *szFileName, Bool bNoAdvert = FALSE);
+  Bool Write(const char *szFileName, Bool bNoAdvert = FALSE) const;
 }; // pgn
 
 #endif

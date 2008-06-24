@@ -102,7 +102,7 @@ static const char *const cszAdvertStr = "\r\n"
     " 推荐用《象棋巫师》观赏棋谱 \r\n"
     "http://www.elephantbase.net/\r\n";
 
-Bool PgnFileStruct::Read(const char *szFileName) {
+Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
   FILE *fp;
   int nRemLevel, nRemLen;
   Bool bReturned, bDetail, bEndFor;
@@ -171,20 +171,26 @@ Bool PgnFileStruct::Read(const char *szFileName) {
             break;
           case '0':
             if (strncmp(lpLineChar, "0-1", 3) == 0) {
-              AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+              if (!bNoAdvert) {
+                AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+              }
               fclose(fp);
               return TRUE;
             }
             break;
           case '1':
             if (strncmp(lpLineChar, "1-0", 3) == 0 || strncmp(lpLineChar, "1/2-1/2", 7) == 0) {
-              AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+              if (!bNoAdvert) {
+                AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+              }
               fclose(fp);
               return TRUE;
             }
             break;
           case '*':
-            AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+            if (!bNoAdvert) {
+              AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+            }
             fclose(fp);
             return TRUE;
             break;
@@ -296,7 +302,9 @@ Bool PgnFileStruct::Read(const char *szFileName) {
       }
     }
   }
-  AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+  if (!bNoAdvert) {
+    AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
+  }
   fclose(fp);
   return TRUE;
 }
@@ -307,7 +315,7 @@ inline void PrintLabel(FILE *fp, const char *szTag, const char *szValue) {
   }
 }
 
-Bool PgnFileStruct::Write(const char *szFileName) const {
+Bool PgnFileStruct::Write(const char *szFileName, Bool bNoAdvert) const {
   int i, nCounter, nStatus;
   Bool bReturned;
   uint64 dqChinMove;
@@ -377,7 +385,7 @@ Bool PgnFileStruct::Write(const char *szFileName) const {
       }
     }
   }
-  fprintf(fp, " %s%s", cszResult[nResult], cszAdvertStr);
+  fprintf(fp, " %s%s", cszResult[nResult], bNoAdvert ? "" : cszAdvertStr);
   fclose(fp);
   return TRUE;
 }
