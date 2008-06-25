@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.74, Last Modified: Jun. 2008
+' Designed by Morning Yellow, Version: 3.75, Last Modified: Jul. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.74"
+Public Const STRING_VERSION     As String = "3.75"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
@@ -486,7 +486,7 @@ ImportLine = False
 
 End Function
 
-' 读PGN棋谱，如果是XQF、MXQ或CHE棋谱则首先转换为PGN棋谱
+' 读PGN棋谱，如果是XQF、MXQ、CHE、CHN或CCM棋谱则首先转换为PGN棋谱
 Public Sub ReadFile(Optional ByVal bAutoSave As Boolean = False)
 
 Dim i As Integer, nFileNo As Integer
@@ -504,6 +504,12 @@ ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
     Shell App_szPath + "CHE2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    bNoTitle = True
+ElseIf UCase(Right(App_szFileName, 4)) = ".CHN" Then
+    Shell App_szPath + "CHN2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    bNoTitle = True
+ElseIf UCase(Right(App_szFileName, 4)) = ".CCM" Then
+    Shell App_szPath + "CCM2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
     bNoTitle = True
 End If
 On Error GoTo 0
@@ -730,7 +736,8 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = OpenFileDialog("打开棋谱文件", "所有棋谱 (*.PGN;*.XQF;*.MXQ;*.CHE)|*.PGN;*.XQF;*.MXQ;*.CHE|可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|所有文件 (*.*)|*.*")
+szFileName = OpenFileDialog("打开棋谱文件", "所有棋谱 (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" + _
+        "可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|联众象棋棋谱 (*.CHN)|*.CHN|中游象棋棋谱 (*.CCM)|*.CCM|所有文件 (*.*)|*.*")
 If szFileName <> "" Then
     App_szFileName = szFileName
     ReadFile
