@@ -140,10 +140,9 @@ struct PositionStruct {
 
 // 搬一步棋的棋子
 void PositionStruct::MovePiece(int mv) {
-  int sqSrc, sqDst, pc, pcCaptured;
+  int sqSrc, sqDst, pc;
   sqSrc = SRC(mv);
   sqDst = DST(mv);
-  pcCaptured = ucpcSquares[sqDst];
   DelPiece(sqDst);
   pc = ucpcSquares[sqSrc];
   DelPiece(sqSrc);
