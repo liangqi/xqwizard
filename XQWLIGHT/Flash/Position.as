@@ -82,6 +82,10 @@
 			return x + (y << 4);
 		}
 
+		public static function SQUARE_FLIP(sq:int):int {
+			return 254 - sq;
+		}
+
 		public static function IN_BOARD(sq:int):Boolean {
 			return cnInBoard[sq] != 0;
 		}
@@ -90,14 +94,70 @@
 			return cnInFort[sq] != 0;
 		}
 
+		public static function FILE_FLIP(x:int):int {
+			return 14 - x;
+		}
+
+		public static function RANK_FLIP(y:int):int {
+			return 15 - y;
+		}
+
+		public static function SIDE_TAG(sd:int):int {
+			return 8 + (sd << 3);
+		}
+
+		public static function OPP_SIDE_TAG(sd:int):int {
+			return 16 - (sd << 3);
+		}
+
+		public static function SRC(mv:int):int {
+			return mv & 255;
+		}
+
+		public static function DST(mv:int):int {
+			return mv >> 8;
+		}
+
+		public static function MOVE(sqSrc:int, sqDst:int):int {
+			return sqSrc + sqDst * 256;
+		}
+
 		public var pcSquares:Array = new Array(256);
 		public var sdPlayer:int = 0;
 
-		public function Position() {
+		public function startup():void {
 			var sq:int;
 			for (sq = 0; sq < 256; sq ++) {
 				pcSquares[sq] = cpcStartup[sq];
 			}
+			sdPlayer = 0;
+		}
+
+		public function changeSide():void {
+			sdPlayer = 1 - sdPlayer;
+		}
+
+		public function addPiece(sq:int, pc:int):void {
+			pcSquares[sq] = pc;
+		}
+
+		public function delPiece(sq:int):void {
+			pcSquares[sq] = 0;
+		}
+
+		public function movePiece(mv:int):void {
+			var sqSrc:int = SRC(mv);
+			var sqDst:int = DST(mv);
+			var pcCaptured:int = pcSquares[sqDst];
+			delPiece(sqDst);
+			var pc:int = pcSquares[sqSrc];
+			delPiece(sqSrc);
+			addPiece(sqDst, pc);
+		}
+
+		public function makeMove(mv:int):void {
+			movePiece(mv);
+			changeSide();
 		}
 	}
 }
