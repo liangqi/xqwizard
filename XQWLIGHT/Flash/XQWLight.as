@@ -1,53 +1,110 @@
 ﻿package {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.media.Sound;
 
-	public class XQWLight extends MovieClip {
-		private const FILE_LEFT:int = Position.FILE_LEFT;
-		private const RANK_TOP:int = Position.RANK_TOP;
+	public class XQWLight extends Sprite {
+		[Embed("images/board.gif")] private static const BoardBitmap:Class;
 
-		private const BOARD_EDGE:int = 8;
-		private const SQUARE_SIZE:int = 56;
-		private const BITMAP_SIZE:int = 57;
+		[Embed("pieces/oo.gif")] private static const EmptySquareBitmap:Class;
+		[Embed("pieces/rk.gif")] private static const RedKingBitmap:Class;
+		[Embed("pieces/ra.gif")] private static const RedAdvisorBitmap:Class;
+		[Embed("pieces/rb.gif")] private static const RedBishopBitmap:Class;
+		[Embed("pieces/rn.gif")] private static const RedKnightBitmap:Class;
+		[Embed("pieces/rr.gif")] private static const RedRookBitmap:Class;
+		[Embed("pieces/rc.gif")] private static const RedCannonBitmap:Class;
+		[Embed("pieces/rp.gif")] private static const RedPawnBitmap:Class;
+		[Embed("pieces/bk.gif")] private static const BlackKingBitmap:Class;
+		[Embed("pieces/ba.gif")] private static const BlackAdvisorBitmap:Class;
+		[Embed("pieces/bb.gif")] private static const BlackBishopBitmap:Class;
+		[Embed("pieces/bn.gif")] private static const BlackKnightBitmap:Class;
+		[Embed("pieces/br.gif")] private static const BlackRookBitmap:Class;
+		[Embed("pieces/bc.gif")] private static const BlackCannonBitmap:Class;
+		[Embed("pieces/bp.gif")] private static const BlackPawnBitmap:Class;
 
-		private const bmpOo:BitmapData = new EmptySquare(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRk:BitmapData = new RedKing(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRa:BitmapData = new RedAdvisor(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRb:BitmapData = new RedBishop(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRn:BitmapData = new RedKnight(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRr:BitmapData = new RedRook(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRc:BitmapData = new RedCannon(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRp:BitmapData = new RedPawn(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBk:BitmapData = new BlackKing(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBa:BitmapData = new BlackAdvisor(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBb:BitmapData = new BlackBishop(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBn:BitmapData = new BlackKnight(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBr:BitmapData = new BlackRook(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBc:BitmapData = new BlackCannon(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBp:BitmapData = new BlackPawn(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpOos:BitmapData = new EmptySquareSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRks:BitmapData = new RedKingSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRas:BitmapData = new RedAdvisorSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRbs:BitmapData = new RedBishopSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRns:BitmapData = new RedKnightSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRrs:BitmapData = new RedRookSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRcs:BitmapData = new RedCannonSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpRps:BitmapData = new RedPawnSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBks:BitmapData = new BlackKingSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBas:BitmapData = new BlackAdvisorSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBbs:BitmapData = new BlackBishopSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBns:BitmapData = new BlackKnightSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBrs:BitmapData = new BlackRookSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBcs:BitmapData = new BlackCannonSelected(BITMAP_SIZE, BITMAP_SIZE);
-		private const bmpBps:BitmapData = new BlackPawnSelected(BITMAP_SIZE, BITMAP_SIZE);
+		[Embed("pieces/oos.gif")] private static const SelectedEmptySquareBitmap:Class;
+		[Embed("pieces/rks.gif")] private static const SelectedRedKingBitmap:Class;
+		[Embed("pieces/ras.gif")] private static const SelectedRedAdvisorBitmap:Class;
+		[Embed("pieces/rbs.gif")] private static const SelectedRedBishopBitmap:Class;
+		[Embed("pieces/rns.gif")] private static const SelectedRedKnightBitmap:Class;
+		[Embed("pieces/rrs.gif")] private static const SelectedRedRookBitmap:Class;
+		[Embed("pieces/rcs.gif")] private static const SelectedRedCannonBitmap:Class;
+		[Embed("pieces/rps.gif")] private static const SelectedRedPawnBitmap:Class;
+		[Embed("pieces/bks.gif")] private static const SelectedBlackKingBitmap:Class;
+		[Embed("pieces/bas.gif")] private static const SelectedBlackAdvisorBitmap:Class;
+		[Embed("pieces/bbs.gif")] private static const SelectedBlackBishopBitmap:Class;
+		[Embed("pieces/bns.gif")] private static const SelectedBlackKnightBitmap:Class;
+		[Embed("pieces/brs.gif")] private static const SelectedBlackRookBitmap:Class;
+		[Embed("pieces/bcs.gif")] private static const SelectedBlackCannonBitmap:Class;
+		[Embed("pieces/bps.gif")] private static const SelectedBlackPawnBitmap:Class;
 
-		private const sndClick:Sound = new ClickSound();
-		private const sndMove:Sound = new MoveSound();
-		private const sndCapture:Sound = new CaptureSound();
+		[Embed("sounds/click.mp3")] private static const ClickSound:Class;
+		[Embed("sounds/illegal.mp3")] private static const IllegalSound:Class;
+		[Embed("sounds/move.mp3")] private static const MoveSound:Class;
+		[Embed("sounds/move2.mp3")] private static const Move2Sound:Class;
+		[Embed("sounds/capture.mp3")] private static const CaptureSound:Class;
+		[Embed("sounds/capture2.mp3")] private static const Capture2Sound:Class;
+		[Embed("sounds/check.mp3")] private static const CheckSound:Class;
+		[Embed("sounds/check2.mp3")] private static const Check2Sound:Class;
+		[Embed("sounds/win.mp3")] private static const WinSound:Class;
+		[Embed("sounds/draw.mp3")] private static const DrawSound:Class;
+		[Embed("sounds/loss.mp3")] private static const LossSound:Class;
+
+		private static const FILE_LEFT:int = Position.FILE_LEFT;
+		private static const RANK_TOP:int = Position.RANK_TOP;
+
+		private static const BOARD_EDGE:int = 8;
+		private static const SQUARE_SIZE:int = 56;
+		private static const BITMAP_SIZE:int = 57;
+		private static const BOARD_WIDTH:int = BOARD_EDGE + SQUARE_SIZE * 9 + BOARD_EDGE;
+		private static const BOARD_HEIGHT:int = BOARD_EDGE + SQUARE_SIZE * 10 + BOARD_EDGE;
+
+		private static const bmpBoard:BitmapData = Bitmap(new BoardBitmap()).bitmapData;
+		private static const bmpOo:BitmapData = Bitmap(new EmptySquareBitmap()).bitmapData;
+		private static const bmpRk:BitmapData = Bitmap(new RedKingBitmap()).bitmapData;
+		private static const bmpRa:BitmapData = Bitmap(new RedAdvisorBitmap()).bitmapData;
+		private static const bmpRb:BitmapData = Bitmap(new RedBishopBitmap()).bitmapData;
+		private static const bmpRn:BitmapData = Bitmap(new RedKnightBitmap()).bitmapData;
+		private static const bmpRr:BitmapData = Bitmap(new RedRookBitmap()).bitmapData;
+		private static const bmpRc:BitmapData = Bitmap(new RedCannonBitmap()).bitmapData;
+		private static const bmpRp:BitmapData = Bitmap(new RedPawnBitmap()).bitmapData;
+		private static const bmpBk:BitmapData = Bitmap(new BlackKingBitmap()).bitmapData;
+		private static const bmpBa:BitmapData = Bitmap(new BlackAdvisorBitmap()).bitmapData;
+		private static const bmpBb:BitmapData = Bitmap(new BlackBishopBitmap()).bitmapData;
+		private static const bmpBn:BitmapData = Bitmap(new BlackKnightBitmap()).bitmapData;
+		private static const bmpBr:BitmapData = Bitmap(new BlackRookBitmap()).bitmapData;
+		private static const bmpBc:BitmapData = Bitmap(new BlackCannonBitmap()).bitmapData;
+		private static const bmpBp:BitmapData = Bitmap(new BlackPawnBitmap()).bitmapData;
+
+		private static const bmpOos:BitmapData = Bitmap(new SelectedEmptySquareBitmap()).bitmapData;
+		private static const bmpRks:BitmapData = Bitmap(new SelectedRedKingBitmap()).bitmapData;
+		private static const bmpRas:BitmapData = Bitmap(new SelectedRedAdvisorBitmap()).bitmapData;
+		private static const bmpRbs:BitmapData = Bitmap(new SelectedRedBishopBitmap()).bitmapData;
+		private static const bmpRns:BitmapData = Bitmap(new SelectedRedKnightBitmap()).bitmapData;
+		private static const bmpRrs:BitmapData = Bitmap(new SelectedRedRookBitmap()).bitmapData;
+		private static const bmpRcs:BitmapData = Bitmap(new SelectedRedCannonBitmap()).bitmapData;
+		private static const bmpRps:BitmapData = Bitmap(new SelectedRedPawnBitmap()).bitmapData;
+		private static const bmpBks:BitmapData = Bitmap(new SelectedBlackKingBitmap()).bitmapData;
+		private static const bmpBas:BitmapData = Bitmap(new SelectedBlackAdvisorBitmap()).bitmapData;
+		private static const bmpBbs:BitmapData = Bitmap(new SelectedBlackBishopBitmap()).bitmapData;
+		private static const bmpBns:BitmapData = Bitmap(new SelectedBlackKnightBitmap()).bitmapData;
+		private static const bmpBrs:BitmapData = Bitmap(new SelectedBlackRookBitmap()).bitmapData;
+		private static const bmpBcs:BitmapData = Bitmap(new SelectedBlackCannonBitmap()).bitmapData;
+		private static const bmpBps:BitmapData = Bitmap(new SelectedBlackPawnBitmap()).bitmapData;
+
+		private static const sndClick:Sound = new ClickSound();
+		private static const sndIllegal:Sound = new IllegalSound();
+		private static const sndMove:Sound = new MoveSound();
+		private static const sndMove2:Sound = new Move2Sound();
+		private static const sndCapture:Sound = new CaptureSound();
+		private static const sndCapture2:Sound = new Capture2Sound();
+		private static const sndCheck:Sound = new CheckSound();
+		private static const sndCheck2:Sound = new Check2Sound();
+		private static const sndWin:Sound = new WinSound();
+		private static const sndDraw:Sound = new DrawSound();
+		private static const sndLoss:Sound = new LossSound();
 
 		private const bmpPieces:Array = new Array(
 			bmpOo, null, null, null, null, null, null, null,
@@ -93,14 +150,24 @@
 				}
 				sndClick.play();
 			} else if (sqSelected != 0) {
-				mvLast = Position.MOVE(sqSelected, sq);
-				pos.makeMove(mvLast);
-				drawMove(mvLast, DRAW_SELECTED);
-				sqSelected = 0;
-				if (pc == 0) {
-					sndMove.play();
-				} else {
-					sndCapture.play();
+				var mv:int = Position.MOVE(sqSelected, sq);
+				if (pos.legalMove(mv)) {
+					if (pos.makeMove(mv)) {
+						mvLast = mv;
+						drawMove(mvLast, DRAW_SELECTED);
+						sqSelected = 0;
+						if (pos.isMate()) {
+							sndWin.play();
+						} else if (pos.checked()) {
+							sndCheck.play();
+						} else if (pc != 0) {
+							sndCapture.play();
+						} else {
+							sndMove.play();
+						}
+					} else {
+						sndIllegal.play();
+					}
 				}
 			}
 		}
@@ -123,18 +190,21 @@
 		}
 
 		public function XQWLight() {
+			var sprite:Sprite = new Sprite();
+			var board:Bitmap = new Bitmap();
+			board.bitmapData = bmpBoard;
+			sprite.addChild(board);
 			var sq:int;
-			var board:Sprite = new Sprite();
 			for (sq = 0; sq < 256; sq ++) {
 				if (Position.IN_BOARD(sq)) {
 					bmpSquares[sq] = new Bitmap();
 					bmpSquares[sq].x = BOARD_EDGE + (Position.FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
 					bmpSquares[sq].y = BOARD_EDGE + (Position.RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
-					board.addChild(bmpSquares[sq]);
+					sprite.addChild(bmpSquares[sq]);
 				}
 			}
-			board.addEventListener(MouseEvent.MOUSE_DOWN, onClick);
-			addChild(board);
+			sprite.addEventListener(MouseEvent.MOUSE_DOWN, onClick);
+			addChild(sprite);
 			pos.startup();
 			drawBoard();
 		}
