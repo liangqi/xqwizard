@@ -1,8 +1,9 @@
 XQWizard Advert List
-dizhen,30,288,3748
-llj_dizhen,30,300,8644
-xhwenchuan,30,301,9750
-elephantbase,30,286,5618
-stepbystep,30,319,8216
-xqwlight_ad1,30,298,5759
-xqwlight_ad2,30,298,5871
+dizhen,30,283,3748
+llj_dizhen,30,295,8644
+xhwenchuan,30,296,9750
+elephantbase,30,281,5618
+stepbystep,30,314,8216
+xqwlight_ad1,30,293,5759
+xqwlight_ad2,30,293,5871
+scores,30,294,9007
