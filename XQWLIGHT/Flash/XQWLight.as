@@ -111,6 +111,29 @@ package {
 			drawSquare(Position.DST(mvLast), bSelected);
 		}
 
+		private function addMove(mv:int):Boolean {
+			if (pos.legalMove(mv)) {
+				if (pos.makeMove(mv)) {
+					mvLast = mv;
+					drawMove(mvLast, DRAW_SELECTED);
+					sqSelected = 0;
+					if (pos.isMate()) {
+						sndWin.play();
+					} else if (pos.checked()) {
+						sndCheck.play();
+					} else if (pc != 0) {
+						sndCapture.play();
+					} else {
+						sndMove.play();
+					}
+					return true;
+				} else {
+					sndIllegal.play();
+				}
+			}
+			return false;
+		}
+
 		private function clickSquare(sq:int):void {
 			sq = bFlipped ? Position.SQUARE_FLIP(sq) : sq;
 			var pc:int = pos.pcSquares[sq];
@@ -126,24 +149,6 @@ package {
 				sndClick.play();
 			} else if (sqSelected != 0) {
 				var mv:int = Position.MOVE(sqSelected, sq);
-				if (pos.legalMove(mv)) {
-					if (pos.makeMove(mv)) {
-						mvLast = mv;
-						drawMove(mvLast, DRAW_SELECTED);
-						sqSelected = 0;
-						if (pos.isMate()) {
-							sndWin.play();
-						} else if (pos.checked()) {
-							sndCheck.play();
-						} else if (pc != 0) {
-							sndCapture.play();
-						} else {
-							sndMove.play();
-						}
-					} else {
-						sndIllegal.play();
-					}
-				}
 			}
 		}
 
