@@ -877,6 +877,22 @@ package {
 			return vl == drawValue() ? vl - 1 : vl;
 		}
 
+		public function nullOkay():Boolean {
+			return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_OKAY_MARGIN;
+		}
+
+		public function nullSafe():Boolean {
+			return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_SAFE_MARGIN;
+		}
+
+		public function inCheck():Boolean {
+			return bCheckList[nMoveNum - 1];
+		}
+
+		public function captured():Boolean {
+			return pcList[nMoveNum - 1] > 0;
+		}
+
 		public function repValue(vlRep:int):int {
 			var vlReturn:int = ((vlRep & 2) == 0 ? 0 : nDistance - BAN_VALUE) +
 					((vlRep & 4) == 0 ? 0 : BAN_VALUE - nDistance);

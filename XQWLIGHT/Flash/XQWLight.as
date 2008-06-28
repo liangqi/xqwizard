@@ -28,6 +28,18 @@ package {
 	import flash.media.Sound;
 
 	public class XQWLight extends Sprite {
+		private static const RESP_CLICK:int = 0;
+		private static const RESP_ILLEGAL:int = 1;
+		private static const RESP_MOVE:int = 2;
+		private static const RESP_MOVE2:int = 3;
+		private static const RESP_CAPTURE:int = 4;
+		private static const RESP_CAPTURE2:int = 5;
+		private static const RESP_CHECK:int = 6;
+		private static const RESP_CHECK2:int = 7;
+		private static const RESP_WIN:int = 8;
+		private static const RESP_DRAW:int = 9;
+		private static const RESP_LOSS:int = 10;
+
 		private static const FILE_LEFT:int = Position.FILE_LEFT;
 		private static const RANK_TOP:int = Position.RANK_TOP;
 
@@ -93,8 +105,14 @@ package {
 			bmpBks, bmpBas, bmpBbs, bmpBns, bmpBrs, bmpBcs, bmpBps, null
 		);
 
+		private const sndResponse:Array = new Array(
+			sndClick, sndIllegal, sndMove, sndMove2, sndCapture, sndCapture2,
+			sndCheck, sndCheck2, sndWin, sndDraw, sndLoss
+		);
+
 		private var bmpSquares:Array = new Array(256);
 		private var pos:Position = new Position();
+		private var search:Search = new Search(pos, 16);
 		private var bFlipped:Boolean = false;
 		private var sqSelected:int = 0, mvLast:int = 0;
 
@@ -111,27 +129,70 @@ package {
 			drawSquare(Position.DST(mvLast), bSelected);
 		}
 
+		private function playSound(nResponse:int) {
+			Sound(sndResponse[nResponse]).play();
+		}
+
+		private function getResult(nResponse:int = -1):Boolean {
+			if (pos.isMate()) {
+				playSound(nResponse < 0 ? RESP_WIN : RESP_LOSS);
+				// TODO 显示胜利或失败
+				// message = (response < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
+				return true;
+			}
+			var vlRep:int = pos.repStatus(3);
+			if (vlRep > 0) {
+				vlRep = (nResponse < 0 ? pos.repValue(vlRep) : -pos.repValue(vlRep));
+				playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS :
+						vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
+				// TODO 显示胜利或失败
+				// message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" :
+				//		vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+				return true;
+			}
+			if (pos.nMoveNum > 100) {
+				playSound(RESP_DRAW);
+				// TODO 显示和棋
+				// message = "超过自然限着作和，辛苦了！";
+				return true;
+			}
+			if (nResponse >= 0) {
+				playSound(nResponse);
+				// TODO 处理悔棋
+			}
+			return false;
+		}
+
 		private function addMove(mv:int):Boolean {
 			if (pos.legalMove(mv)) {
 				if (pos.makeMove(mv)) {
 					mvLast = mv;
 					drawMove(mvLast, DRAW_SELECTED);
 					sqSelected = 0;
-					if (pos.isMate()) {
-						sndWin.play();
-					} else if (pos.checked()) {
-						sndCheck.play();
-					} else if (pc != 0) {
-						sndCapture.play();
-					} else {
-						sndMove.play();
-					}
+					playSound(pos.inCheck() ? RESP_CHECK : pos.captured() ? RESP_CAPTURE : RESP_MOVE);
 					return true;
 				} else {
-					sndIllegal.play();
+					playSound(RESP_ILLEGAL);
 				}
 			}
 			return false;
+		}
+
+		private function responseMove():Boolean {
+			if (getResult()) {
+				return false;
+			}
+			// TODO 可能需要用定时器来触发
+			var mv:int = search.searchMain(1000);
+			drawMove(mvLast);
+			mvLast = mv;
+			pos.makeMove(mvLast);
+			drawMove(mvLast, DRAW_SELECTED);
+			var nResponse:int = pos.inCheck() ? RESP_CHECK2 : pos.captured() ? RESP_CAPTURE2 : RESP_MOVE2;
+			if (pos.captured()) {
+				pos.setIrrev();
+			}
+			return !getResult(nResponse);
 		}
 
 		private function clickSquare(sq:int):void {
@@ -149,6 +210,11 @@ package {
 				sndClick.play();
 			} else if (sqSelected != 0) {
 				var mv:int = Position.MOVE(sqSelected, sq);
+				if (addMove(mv)) {
+					if (!responseMove()) {
+						// TODO 退出
+					}
+				}
 			}
 		}
 

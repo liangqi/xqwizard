@@ -1,4 +1,4 @@
-/*
+﻿/*
 Search.as - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Flash Chinese Chess Program
@@ -36,7 +36,7 @@ package {
 		private var nHashMask:int, mvResult:int, nAllNodes:int, nAllMillis:int;
 		private var hshTable:Array;
 
-		public var Position pos;
+		public var pos:Position;
 		public var nHistoryTable = new Array(4096);
 		public var mvKiller1 = new Array(LIMIT_DEPTH);
 		public var mvKiller2 = new Array(LIMIT_DEPTH);
@@ -55,7 +55,7 @@ package {
 			return hshTable[pos.dwKey & nHashMask];
 		}
 
-		private probeHash(vlAlpha:int, vlBeta:int, nDepth:int, mv:Array):int  {
+		private function probeHash(vlAlpha:int, vlBeta:int, nDepth:int, mv:Array):int {
 			var hsh:HashItem = getHashItem();
 			if (hsh.dwLock != pos.dwLock) {
 				mv[0] = 0;
@@ -67,21 +67,21 @@ package {
 				if (hsh.vl <= BAN_VALUE) {
 					return -MATE_VALUE;
 				}
-				hsh.vl -= pos.distance;
+				hsh.vl -= pos.nDistance;
 				bMate = true;
 			} else if (hsh.vl < -WIN_VALUE) {
 				if (hsh.vl >= -BAN_VALUE) {
 					return -MATE_VALUE;
 				}
-				hsh.vl += pos.distance;
+				hsh.vl += pos.nDistance;
 				bMate = true;
 			} else if (hsh.vl == pos.drawValue()) {
 				return -MATE_VALUE;
 			}
-			if (hsh.depth >= nDepth || nMate) {
-				if (hsh.flag == HASH_BETA) {
+			if (hsh.nDepth >= nDepth || bMate) {
+				if (hsh.nFlag == HASH_BETA) {
 					return (hsh.vl >= vlBeta ? hsh.vl : -MATE_VALUE);
-				} else if (hsh.flag == HASH_ALPHA) {
+				} else if (hsh.nFlag == HASH_ALPHA) {
 					return (hsh.vl <= vlAlpha ? hsh.vl : -MATE_VALUE);
 				}
 				return hsh.vl;
@@ -89,13 +89,13 @@ package {
 			return -MATE_VALUE;
 		}
 
-		private function recordHash(nFlag:int, vl:int, nDepth:int, int mv):void {
+		private function recordHash(nFlag:int, vl:int, nDepth:int, mv:int):void {
 			var hsh:HashItem = getHashItem();
-			if (hsh.depth > depth) {
+			if (hsh.nDepth > nDepth) {
 				return;
 			}
-			hsh.flag = nFlag;
-			hsh.depth = nDepth;
+			hsh.nFlag = nFlag;
+			hsh.nDepth = nDepth;
 			if (vl > WIN_VALUE) {
 				if (mv == 0 && vl <= BAN_VALUE) {
 					return;
@@ -109,23 +109,23 @@ package {
 			} else if (vl == pos.drawValue() && mv == 0) {
 				return;
 			} else {
-				hsh.vl = (short) vl;
+				hsh.vl = vl;
 			}
 			hsh.mv = mv;
 			hsh.dwLock = pos.dwLock;
 		}
 
 		private function setBestMove(mv:int, nDepth:int):void {
-			nHistoryTable[pos.historyIndex(mv)] += depth * depth;
+			nHistoryTable[pos.historyIndex(mv)] += nDepth * nDepth;
 			if (mvKiller1[pos.nDistance] != mv) {
 				mvKiller2[pos.nDistance] = mvKiller1[pos.nDistance];
 				mvKiller1[pos.nDistance] = mv;
 			}
 		}
 
-		private searchQuiesc(vlAlpha:int, vlBeta:int):int {
+		private function searchQuiesc(vlAlpha:int, vlBeta:int):int {
 			nAllNodes ++;
-			var vl:int = MATE_VALUE - pos.nDistance;
+			var vl:int = pos.nDistance - MATE_VALUE;
 			if (vl >= vlBeta) {
 				return vl;
 			}
@@ -139,11 +139,12 @@ package {
 			var vlBest:int = -MATE_VALUE;
 			var i:int, nGenMoves:int;
 			var mvs:Array = new Array(MAX_GEN_MOVES);
+			var vls:Array;
 			if (pos.inCheck()) {
 				nGenMoves = pos.generateMoves(mvs);
-				int[] vls = new int[MAX_GEN_MOVES];
-				for (int i = 0; i < nGenMoves; i ++) {
-					vls[i] = historyTable[pos.historyIndex(mvs[i])];
+				vls = new Array(MAX_GEN_MOVES);
+				for (i = 0; i < nGenMoves; i ++) {
+					vls[i] = nHistoryTable[pos.historyIndex(mvs[i])];
 				}
 				Util.shellSort(mvs, vls, 0, nGenMoves);
 			} else {
@@ -157,7 +158,7 @@ package {
 						vlAlpha = vl;
 					}
 				}
-				int[] vls = new int[MAX_GEN_MOVES];
+				vls = new Array(MAX_GEN_MOVES);
 				nGenMoves = pos.generateMoves(mvs, vls);
 				Util.shellSort(mvs, vls, 0, nGenMoves);
 				for (i = 0; i < nGenMoves; i ++) {
@@ -181,99 +182,97 @@ package {
 					vlAlpha = Math.max(vl, vlAlpha);
 				}
 			}
-			return vlBest == -MATE_VALUE ? pos.mateValue() : vlBest;
+			return vlBest == -MATE_VALUE ? pos.nDistance - MATE_VALUE: vlBest;
 		}
 
 		private function searchFull(vlAlpha:int, vlBeta:int, nDepth:int, bNoNull:Boolean = false):int {
-			int vlAlpha = vlAlpha_;
-			int vl;
-			if (depth <= 0) {
+			if (nDepth <= 0) {
 				return searchQuiesc(vlAlpha, vlBeta);
 			}
-			allNodes ++;
-			vl = pos.mateValue();
+			nAllNodes ++;
+			var vl:int = pos.nDistance - MATE_VALUE;
 			if (vl >= vlBeta) {
 				return vl;
 			}
-			int vlRep = pos.repStatus();
+			var vlRep:int = pos.repStatus();
 			if (vlRep > 0) {
 				return pos.repValue(vlRep);
 			}
-			int[] mvHash = new int[1];
-			vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
+			var mvHash:Array = new Array(1);
+			vl = probeHash(vlAlpha, vlBeta, nDepth, mvHash);
 			if (vl > -MATE_VALUE) {
 				return vl;
 			}
-			if (pos.distance == LIMIT_DEPTH) {
+			if (pos.nDistance == LIMIT_DEPTH) {
 				return pos.evaluate();
 			}
-			if (!noNull && !pos.inCheck() && pos.nullOkay()) {
+			if (!bNoNull && !pos.inCheck() && pos.nullOkay()) {
 				pos.nullMove();
-				vl = -searchFull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1, NO_NULL);
+				vl = -searchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
 				pos.undoNullMove();
-				if (vl >= vlBeta && (pos.nullSafe() && searchFull(vlAlpha, vlBeta, depth, NO_NULL) >= vlBeta)) {
+				if (vl >= vlBeta && (pos.nullSafe() && searchFull(vlAlpha, vlBeta, nDepth, NO_NULL) >= vlBeta)) {
 					return vl;
 				}
 			}
-			int hashFlag = HASH_ALPHA;
-			int vlBest = -MATE_VALUE;
-			int mvBest = 0;
-			SortItem sort = new SortItem(mvHash[0]);
-			int mv;
-			while ((mv = sort.next()) > 0) {
+			var nHashFlag:int = HASH_ALPHA;
+			var vlBest:int = -MATE_VALUE;
+			var mvBest:int = 0;
+			var sort:SortItem = new SortItem(this, mvHash[0]);
+			var mv:int;
+			while ((mv = sort.nextMove()) > 0) {
 				if (!pos.makeMove(mv)) {
 					continue;
 				}
-				int newDepth = pos.inCheck() ? depth : depth - 1;
+				var nNewDepth:int = pos.inCheck() ? nDepth : nDepth - 1;
 				if (vlBest == -MATE_VALUE) {
-					vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
+					vl = -searchFull(-vlBeta, -vlAlpha, nNewDepth);
 				} else {
-					vl = -searchFull(-vlAlpha - 1, -vlAlpha, newDepth);
+					vl = -searchFull(-vlAlpha - 1, -vlAlpha, nNewDepth);
 					if (vl > vlAlpha && vl < vlBeta) {
-						vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
+						vl = -searchFull(-vlBeta, -vlAlpha, nNewDepth);
 					}
 				}
 				pos.undoMakeMove();
 				if (vl > vlBest) {
 					vlBest = vl;
 					if (vl >= vlBeta) {
-						hashFlag = HASH_BETA;
+						nHashFlag = HASH_BETA;
 						mvBest = mv;
 						break;
 					}
 					if (vl > vlAlpha) {
 						vlAlpha = vl;
-						hashFlag = HASH_PV;
+						nHashFlag = HASH_PV;
 						mvBest = mv;
 					}
 				}
 			}
 			if (vlBest == -MATE_VALUE) {
-				return pos.mateValue();
+				return pos.nDistance - MATE_VALUE;
 			}
-			recordHash(hashFlag, vlBest, depth, mvBest);
+			recordHash(nHashFlag, vlBest, nDepth, mvBest);
 			if (mvBest > 0) {
-				setBestMove(mvBest, depth);
+				setBestMove(mvBest, nDepth);
 			}
 			return vlBest;
 		}
 
 		private function searchRoot(nDepth):int {
-			int vlBest = -MATE_VALUE;
-			SortItem sort = new SortItem(mvResult);
-			int mv;
-			while ((mv = sort.next()) > 0) {
+			var vlBest:int = -MATE_VALUE;
+			var sort:SortItem = new SortItem(this, mvResult);
+			var mv:int;
+			while ((mv = sort.nextMove()) > 0) {
 				if (!pos.makeMove(mv)) {
 					continue;
 				}
-				int newDepth = pos.inCheck() ? depth : depth - 1;
-				int vl;
+				var nNewDepth = pos.inCheck() ? nDepth : nDepth - 1;
+				var vl:int;
 				if (vlBest == -MATE_VALUE) {
-					vl = -searchFull(-MATE_VALUE, MATE_VALUE, newDepth, NO_NULL);
+					vl = -searchFull(-MATE_VALUE, MATE_VALUE, nNewDepth, NO_NULL);
 				} else {
-					vl = -searchFull(-vlBest - 1, -vlBest, newDepth);
+					vl = -searchFull(-vlBest - 1, -vlBest, nNewDepth);
 					if (vl > vlBest) {
-						vl = -searchFull(-MATE_VALUE, -vlBest, newDepth, NO_NULL);
+						vl = -searchFull(-MATE_VALUE, -vlBest, nNewDepth, NO_NULL);
 					}
 				}
 				pos.undoMakeMove();
@@ -281,17 +280,16 @@ package {
 					vlBest = vl;
 					mvResult = mv;
 					if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
-						vlBest += (Position.random.nextInt() & RANDOM_MASK) -
-								(Position.random.nextInt() & RANDOM_MASK);
+						vlBest += int(Math.random() * RANDOM_MASK) - int(Math.random() * RANDOM_MASK);
 						vlBest = (vlBest == pos.drawValue() ? vlBest - 1 : vlBest);
 					}
 				}
 			}
-			setBestMove(mvResult, depth);
+			setBestMove(mvResult, nDepth);
 			return vlBest;
 		}
 
-		public int searchMain(int millis, nDepth:int = LIMIT_DEPTH) {
+		public function searchMain(nMillis:int, nDepth:int = LIMIT_DEPTH):int {
 			mvResult = pos.bookMove();
 			if (mvResult > 0) {
 				pos.makeMove(mvResult);
@@ -303,7 +301,7 @@ package {
 			}
 			var vl:int = 0;
 			var mvs:Array = new Array(MAX_GEN_MOVES);
-			int nGenMoves = pos.generateMoves(mvs);
+			var nGenMoves:int = pos.generateMoves(mvs);
 			var i:int;
 			for (i = 0; i < nGenMoves; i ++) {
 				if (pos.makeMove(mvs[i])) {
@@ -315,11 +313,10 @@ package {
 			if (vl == 1) {
 				return mvResult;
 			}
-			for (i = 0; i <= hashMask; i ++) {
-				HashItem hash = hashTable[i];
-				hash.depth = hash.flag = 0;
-				hash.vl = 0;
-				hash.mv = hash.zobristLock = 0;
+			for (i = 0; i <= nHashMask; i ++) {
+				var hsh:HashItem = hshTable[i];
+				hsh.nDepth = hsh.nFlag = hsh.vl = hsh.mv = 0;
+				hsh.dwLock = 0;
 			}
 			for (i = 0; i < LIMIT_DEPTH; i ++) {
 				mvKiller1[i] = mvKiller2[i] = 0;
@@ -330,14 +327,14 @@ package {
 			mvResult = 0;
 			nAllNodes = 0;
 			pos.nDistance = 0;
-			long t = System.currentTimeMillis();
-			for (i = 1; i <= depth; i ++) {
+			var t:Number = new Date().getTime();
+			for (i = 1; i <= nDepth; i ++) {
 				vl = searchRoot(i);
 				if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 					break;
 				}
-				allMillis = (int) (System.currentTimeMillis() - t);
-				if (allMillis > millis) {
+				nAllMillis = new Date().getTime() - t;
+				if (nAllMillis > nMillis) {
 					break;
 				}
 			}

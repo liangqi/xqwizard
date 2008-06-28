@@ -1,6 +1,6 @@
-package {
+﻿package {
 	public class HashItem {
-		var depth:int, flag:int, vl:int, mv:int;
-		var dwLock:uint;
+		public var nDepth:int, nFlag:int, vl:int, mv:int;
+		public var dwLock:uint;
 	}
 }
