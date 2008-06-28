@@ -1,4 +1,26 @@
-﻿package {
+﻿/*
+Position.as - Source Code for XiangQi Wizard Light, Part I
+
+XiangQi Wizard Light - a Flash Chinese Chess Program
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
+Copyright (C) 2004-2008 www.elephantbase.net
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+package {
 	public class Position {
 		public static const MATE_VALUE:int = 10000;
 		public static const BAN_VALUE:int = MATE_VALUE - 100;
@@ -24,6 +46,8 @@
 		public static const RANK_BOTTOM:int = 12;
 		public static const FILE_LEFT:int = 3;
 		public static const FILE_RIGHT:int = 11;
+
+		public static const DEL_PIECE:Boolean = true;
 
 		private static const cnInBoard:Array = new Array(
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -371,47 +395,47 @@
 			return cnMvvValue[pc & 7] - nLva;
 		}
 
-		public static var dwzobrKeyPlayer:uint;
-		public static var dwzobrLockPlayer:uint;
-		public static var dwzobrKeyTable:Array = new Array(14);
-		public static var dwzobrLockTable:Array = new Array(14);
+		public static var dwKeyPlayer:uint;
+		public static var dwLockPlayer:uint;
+		public static var dwKeyTable:Array = new Array(14);
+		public static var dwLockTable:Array = new Array(14);
 
 		public static var nBookSize:int = 0;
-		public static var nBookLock:Array = new Array(MAX_BOOK_SIZE);
-		public static var nBookMove:Array = new Array(MAX_BOOK_SIZE);
-		public static var nBookValue:Array = new Array(MAX_BOOK_SIZE);
+		public static var dwBookLock:Array = new Array(MAX_BOOK_SIZE);
+		public static var mvBook:Array = new Array(MAX_BOOK_SIZE);
+		public static var vlBook:Array = new Array(MAX_BOOK_SIZE);
 
 		private static function clinit():Object {
 			var rc4:RC4 = new RC4(new Array(0));
-			dwzobrKeyPlayer = rc4.nextLong();
+			dwKeyPlayer = rc4.nextLong();
 			rc4.nextLong(); // Skip ZobristLock0
-			dwzobrLockPlayer = rc4.nextLong();
+			dwLockPlayer = rc4.nextLong();
 			var i:int, j:int;
 			for (i = 0; i < 14; i ++) {
-				dwzobrKeyTable[i] = new Array(256);
-				dwzobrLockTable[i] = new Array(256);
+				dwKeyTable[i] = new Array(256);
+				dwLockTable[i] = new Array(256);
 				for (j = 0; j < 256; j ++) {
-					dwzobrKeyTable[i][j] = rc4.nextLong();
+					dwKeyTable[i][j] = rc4.nextLong();
 					rc4.nextLong(); // Skip ZobristLock0
-					dwzobrLockTable[i][j] = rc4.nextLong();
+					dwLockTable[i][j] = rc4.nextLong();
 				}
 			}
 			return null;
 		}
 
-		clinit();
+		private static const _clinit_:Object = clinit();
 
 		public var sdPlayer:int;
 		public var pcSquares:Array = new Array(256);
 
-		public var dwzobrKey:uint, dwzobrLock:uint;
+		public var dwKey:uint, dwLock:uint;
 		public var vlWhite:int, vlBlack:int;
 		public var nMoveNum:int, nDistance:int;
 
 		public var mvList:Array = new Array(MAX_MOVE_NUM);
 		public var pcList:Array = new Array(MAX_MOVE_NUM);
-		public var keyList:Array = new Array(MAX_MOVE_NUM);
-		public var chkList:Array = new Array(MAX_MOVE_NUM);
+		public var dwKeyList:Array = new Array(MAX_MOVE_NUM);
+		public var bCheckList:Array = new Array(MAX_MOVE_NUM);
 
 		public function clearBoard():void {
 			sdPlayer = 0;
@@ -419,65 +443,108 @@
 			for (sq = 0; sq < 256; sq ++) {
 				pcSquares[sq] = 0;
 			}
-			dwzobrKey = dwzobrLock = 0;
+			dwKey = dwLock = 0;
 			vlWhite = vlBlack = 0;
 		}
 
 		public function setIrrev():void {
 			mvList[0] = pcList[0] = 0;
-			chkList[0] = checked();
+			bCheckList[0] = checked();
 			nMoveNum = 1;
 			nDistance = 0;
 		}
 
 		public function startup():void {
+			clearBoard();
 			var sq:int;
 			for (sq = 0; sq < 256; sq ++) {
-				pcSquares[sq] = cpcStartup[sq];
+				if (cpcStartup[sq] > 0) {
+					addPiece(sq, cpcStartup[sq]);
+				}
 			}
-			sdPlayer = 0;
+			setIrrev();
+		}
+
+		public function addPiece(sq:int, pc:int, bDel:Boolean = false):void {
+			var pcAdjust:int;
+			pcSquares[sq] = bDel ? 0 : pc;
+			if (pc < 16) {
+				pcAdjust = pc - 8;
+				vlWhite += bDel ? -cnPieceValue[pcAdjust][sq] : cnPieceValue[pcAdjust][sq];
+			} else {
+				pcAdjust = pc - 16;
+				vlWhite += bDel ? -cnPieceValue[pcAdjust][SQUARE_FLIP(sq)] :
+						cnPieceValue[pcAdjust][SQUARE_FLIP(sq)];
+				pcAdjust += 7;
+			}
+			dwKey ^= dwKeyTable[pcAdjust][sq];
+			dwLock ^= dwLockTable[pcAdjust][sq];
+		}
+
+		public function movePiece():void {
+			var sqSrc:int = SRC(mvList[nMoveNum]);
+			var sqDst:int = DST(mvList[nMoveNum]);
+			pcList[nMoveNum] = pcSquares[sqDst];
+			if (pcList[nMoveNum] > 0) {
+				addPiece(sqDst, pcList[nMoveNum], DEL_PIECE);
+			}
+			var pc:int = pcSquares[sqSrc];
+			addPiece(sqSrc, pc, DEL_PIECE);
+			addPiece(sqDst, pc);
+		}
+
+		public function undoMovePiece():void {
+			var sqSrc:int = SRC(mvList[nMoveNum]);
+			var sqDst:int = DST(mvList[nMoveNum]);
+			var pc:int = pcSquares[sqDst];
+			addPiece(sqDst, pc, DEL_PIECE);
+			addPiece(sqSrc, pc);
+			if (pcList[nMoveNum] > 0) {
+				addPiece(sqDst, pcList[nMoveNum]);
+			}
 		}
 
 		public function changeSide():void {
 			sdPlayer = 1 - sdPlayer;
-		}
-
-		public function addPiece(sq:int, pc:int):void {
-			pcSquares[sq] = pc;
-		}
-
-		public function delPiece(sq:int):void {
-			pcSquares[sq] = 0;
-		}
-
-		public function movePiece(mv:int):int {
-			var sqSrc:int = SRC(mv);
-			var sqDst:int = DST(mv);
-			var pcCaptured:int = pcSquares[sqDst];
-			delPiece(sqDst);
-			var pc:int = pcSquares[sqSrc];
-			delPiece(sqSrc);
-			addPiece(sqDst, pc);
-			return pcCaptured;
-		}
-
-		public function undoMovePiece(mv:int, pcCaptured:int):void {
-			var sqSrc:int = SRC(mv);
-			var sqDst:int = DST(mv);
-			var pc:int = pcSquares[sqDst];
-			delPiece(sqDst);
-			addPiece(sqSrc, pc);
-			addPiece(sqDst, pcCaptured);
+			dwKey ^= dwKeyPlayer;
+			dwLock ^= dwLockPlayer;
 		}
 
 		public function makeMove(mv:int):Boolean {
-			var pc:int = movePiece(mv);
+			dwKeyList[nMoveNum] = dwKey;
+			mvList[nMoveNum] = mv;
+			movePiece();
 			if (checked()) {
-				undoMovePiece(mv, pc);
+				undoMovePiece();
 				return false;
 			}
 			changeSide();
+			bCheckList[nMoveNum] = checked();
+			nMoveNum ++;
+			nDistance ++;
 			return true;
+		}
+
+		public function undoMakeMove():void {
+			nMoveNum --;
+			nDistance --;
+			changeSide();
+			undoMovePiece();
+		}
+
+		public function nullMove():void {
+			dwKeyList[nMoveNum] = dwKey;
+			changeSide();
+			mvList[nMoveNum] = pcList[nMoveNum] = 0;
+			bCheckList[nMoveNum] = false;
+			nMoveNum ++;
+			nDistance ++;
+		}
+
+		public function undoNullMove():void {
+			nMoveNum --;
+			nDistance --;
+			changeSide();
 		}
 
 		public function generateMoves(mvs:Array, vls:Array = null):int {
@@ -791,17 +858,123 @@
 		public function isMate():Boolean {
 			var mvs:Array = new Array(MAX_GEN_MOVES);
 			var nMoves:int = generateMoves(mvs);
-			var i:int, pcCaptured:int;
+			var i:int;
 			for (i = 0; i < nMoves; i ++) {
-				pcCaptured = movePiece(mvs[i]);
-				if (!checked()) {
-					undoMovePiece(mvs[i], pcCaptured);
+				if (makeMove(mvs[i])) {
+					undoMakeMove();
 					return false;
-				} else {
-					undoMovePiece(mvs[i], pcCaptured);
 				}
 			}
 			return true;
+		}
+
+		public function drawValue():int {
+			return (nDistance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+		}
+
+		public function evaluate():int {
+			var vl:int = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+			return vl == drawValue() ? vl - 1 : vl;
+		}
+
+		public function repValue(vlRep:int):int {
+			var vlReturn:int = ((vlRep & 2) == 0 ? 0 : nDistance - BAN_VALUE) +
+					((vlRep & 4) == 0 ? 0 : BAN_VALUE - nDistance);
+			return vlReturn == 0 ? drawValue() : vlReturn;
+		}
+
+		public function repStatus(nRecur:int = 1):int {
+			var bSelfSide:Boolean = false;
+			var bPerpCheck:Boolean = true;
+			var bOppPerpCheck:Boolean = true;
+			var nIndex:int = nMoveNum - 1;
+			while (mvList[nIndex] > 0 && pcList[nIndex] == 0) {
+				if (bSelfSide) {
+					bPerpCheck = bPerpCheck && bCheckList[nIndex];
+					if (dwKeyList[nIndex] == dwKey) {
+						nRecur --;
+						if (nRecur == 0) {
+							return 1 + (bPerpCheck ? 2 : 0) + (bOppPerpCheck ? 4 : 0);
+						}
+					}
+				} else {
+					bOppPerpCheck = bOppPerpCheck && bCheckList[nIndex];
+				}
+				bSelfSide = !bSelfSide;
+				nIndex --;
+			}
+			return 0;
+		}
+
+		public function mirror():Position {
+			var pos:Position = new Position();
+			pos.clearBoard();
+			var sq:int;
+			for (sq = 0; sq < 256; sq ++) {
+				var pc:int = pcSquares[sq];
+				if (pc > 0) {
+					pos.addPiece(MIRROR_SQUARE(sq), pc);
+				}
+			}
+			if (sdPlayer == 1) {
+				pos.changeSide();
+			}
+			return pos;
+		}
+
+		public function bookMove():int {
+			if (nBookSize == 0) {
+				return 0;
+			}
+			var bMirror:Boolean = false;
+			var dwMirrorLock:uint = dwLock;
+			var nIndex = Util.binarySearch(dwLock, dwBookLock, 0, nBookSize);
+			if (nIndex < 0) {
+				bMirror = true;
+				dwMirrorLock = mirror().dwLock;
+				nIndex = Util.binarySearch(dwMirrorLock, dwBookLock, 0, nBookSize);
+			}
+			if (nIndex < 0) {
+				return 0;
+			}
+			nIndex --;
+			while (nIndex >= 0 && dwBookLock[nIndex] == dwMirrorLock) {
+				nIndex --;
+			}
+			var mvs:Array = new Array[MAX_GEN_MOVES];
+			var vls:Array = new Array[MAX_GEN_MOVES];
+			var vl:int = 0;
+			var nMoves:int = 0;
+			nIndex ++;
+			while (nIndex < nBookSize && dwBookLock[nIndex] == dwMirrorLock) {
+				var mv:int = mvBook[nIndex];
+				mv = (bMirror ? MIRROR_MOVE(mv) : mv);
+				if (legalMove(mv)) {
+					mvs[nMoves] = mv;
+					vls[nMoves] = vlBook[nIndex];
+					vl += vls[nMoves];
+					nMoves ++;
+					if (nMoves == MAX_GEN_MOVES) {
+						break;
+					}
+				}
+				nIndex ++;
+			}
+			if (vl == 0) {
+				return 0;
+			}
+			vl = int(Math.random() * vl);
+			for (nIndex = 0; nIndex < nMoves; nIndex ++) {
+				vl -= vls[nIndex];
+				if (vl < 0) {
+					break;
+				}
+			}
+			return mvs[nIndex];
+		}
+
+		public function historyIndex(mv:int):int {
+			return ((pcSquares[SRC(mv)] - 8) << 8) + DST(mv);
 		}
 	}
 }
