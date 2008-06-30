@@ -406,7 +406,7 @@ package {
 		public static var vlBook:Array = new Array(MAX_BOOK_SIZE);
 
 		private static function clinit():Object {
-			var rc4:RC4 = new RC4(new Array(0));
+			var rc4:RC4 = new RC4(new Array(0, 0));
 			dwKeyPlayer = rc4.nextLong();
 			rc4.nextLong(); // Skip ZobristLock0
 			dwLockPlayer = rc4.nextLong();
@@ -473,7 +473,7 @@ package {
 				vlWhite += bDel ? -cnPieceValue[pcAdjust][sq] : cnPieceValue[pcAdjust][sq];
 			} else {
 				pcAdjust = pc - 16;
-				vlWhite += bDel ? -cnPieceValue[pcAdjust][SQUARE_FLIP(sq)] :
+				vlBlack += bDel ? -cnPieceValue[pcAdjust][SQUARE_FLIP(sq)] :
 						cnPieceValue[pcAdjust][SQUARE_FLIP(sq)];
 				pcAdjust += 7;
 			}

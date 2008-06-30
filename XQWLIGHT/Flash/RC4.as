@@ -17,7 +17,7 @@
 			}
 			var j:int = 0;
 			for (i = 0; i < 256; i ++) {
-				j = (j + nState[i] + nKey[i % nKey.length]) % 0xff;
+				j = (j + nState[i] + nKey[i % nKey.length]) & 0xff;
 				swap(i, j);
 			}
 		}
@@ -31,12 +31,12 @@
 		}
 
 		public function nextLong():uint {
-			var n0:uint, n1:uint, n2:uint, n3:uint;
-			n0 = nextByte();
-			n1 = nextByte();
-			n2 = nextByte();
-			n3 = nextByte();
-			return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
+			var dw0:uint, dw1:uint, dw2:uint, dw3:uint;
+			dw0 = nextByte();
+			dw1 = nextByte();
+			dw2 = nextByte();
+			dw3 = nextByte();
+			return dw0 + (dw1 << 8) + (dw2 << 16) + (dw3 << 24);
 		}
 	}
 }

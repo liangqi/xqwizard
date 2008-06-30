@@ -25,9 +25,17 @@ package {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
+	import flash.text.TextField;
+	import flash.utils.Timer;
 
 	public class XQWLight extends Sprite {
+		private static const PHASE_LOADING:int = 0;
+		private static const PHASE_WAITING:int = 1;
+		private static const PHASE_THINKING:int = 2;
+		private static const PHASE_EXITTING:int = 3;
+
 		private static const RESP_CLICK:int = 0;
 		private static const RESP_ILLEGAL:int = 1;
 		private static const RESP_MOVE:int = 2;
@@ -115,6 +123,7 @@ package {
 		private var search:Search = new Search(pos, 16);
 		private var bFlipped:Boolean = false;
 		private var sqSelected:int = 0, mvLast:int = 0;
+		private var nPhase:int = PHASE_LOADING;
 
 		private const DRAW_SELECTED:Boolean = true;
 
@@ -133,11 +142,15 @@ package {
 			Sound(sndResponse[nResponse]).play();
 		}
 
+		private function setMessage(s:String) {
+			lblMessage.htmlText = "<b><i>" + s + "</b></i>";
+			lblMessage.visible = true;
+		}
+
 		private function getResult(nResponse:int = -1):Boolean {
 			if (pos.isMate()) {
 				playSound(nResponse < 0 ? RESP_WIN : RESP_LOSS);
-				// TODO 显示胜利或失败
-				// message = (response < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
+				setMessage(nResponse < 0 ? "祝贺你取得胜利！" : "请再接再厉！");
 				return true;
 			}
 			var vlRep:int = pos.repStatus(3);
@@ -145,20 +158,17 @@ package {
 				vlRep = (nResponse < 0 ? pos.repValue(vlRep) : -pos.repValue(vlRep));
 				playSound(vlRep > Position.WIN_VALUE ? RESP_LOSS :
 						vlRep < -Position.WIN_VALUE ? RESP_WIN : RESP_DRAW);
-				// TODO 显示胜利或失败
-				// message = (vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" :
-				//		vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
+				setMessage(vlRep > Position.WIN_VALUE ? "长打作负，请不要气馁！" :
+						vlRep < -Position.WIN_VALUE ? "电脑长打作负，祝贺你取得胜利！" : "双方不变作和，辛苦了！");
 				return true;
 			}
 			if (pos.nMoveNum > 100) {
 				playSound(RESP_DRAW);
-				// TODO 显示和棋
-				// message = "超过自然限着作和，辛苦了！";
+				setMessage("超过自然限着作和，辛苦了！");
 				return true;
 			}
 			if (nResponse >= 0) {
 				playSound(nResponse);
-				// TODO 处理悔棋
 			}
 			return false;
 		}
@@ -178,12 +188,8 @@ package {
 			return false;
 		}
 
-		private function responseMove():Boolean {
-			if (getResult()) {
-				return false;
-			}
-			// TODO 可能需要用定时器来触发
-			var mv:int = search.searchMain(1000);
+		private function responseMove(e:TimerEvent):void {
+			var mv:int = search.searchMain(100);
 			drawMove(mvLast);
 			mvLast = mv;
 			pos.makeMove(mvLast);
@@ -192,7 +198,7 @@ package {
 			if (pos.captured()) {
 				pos.setIrrev();
 			}
-			return !getResult(nResponse);
+			nPhase = getResult(nResponse) ? PHASE_EXITTING : PHASE_WAITING;
 		}
 
 		private function clickSquare(sq:int):void {
@@ -211,18 +217,25 @@ package {
 			} else if (sqSelected != 0) {
 				var mv:int = Position.MOVE(sqSelected, sq);
 				if (addMove(mv)) {
-					if (!responseMove()) {
-						// TODO 退出
+					if (getResult()) {
+						nPhase = PHASE_EXITTING;
+					} else {
+						nPhase = PHASE_THINKING;
+						var timer:Timer = new Timer(100, 1);
+						timer.addEventListener(TimerEvent.TIMER, responseMove);
+						timer.start();
 					}
 				}
 			}
 		}
 
 		private function onClick(e:MouseEvent):void {
-			var xx:int = FILE_LEFT + (e.localX - BOARD_EDGE) / SQUARE_SIZE;
-			var yy:int = RANK_TOP + (e.localY - BOARD_EDGE) / SQUARE_SIZE;
-			if (xx >= FILE_LEFT && xx <= Position.FILE_RIGHT && yy >= RANK_TOP && yy <= Position.RANK_BOTTOM) {
-				clickSquare(Position.COORD_XY(xx, yy));
+			if (nPhase == PHASE_WAITING) {
+				var xx:int = FILE_LEFT + (e.localX - BOARD_EDGE) / SQUARE_SIZE;
+				var yy:int = RANK_TOP + (e.localY - BOARD_EDGE) / SQUARE_SIZE;
+				if (xx >= FILE_LEFT && xx <= Position.FILE_RIGHT && yy >= RANK_TOP && yy <= Position.RANK_BOTTOM) {
+					clickSquare(Position.COORD_XY(xx, yy));
+				}
 			}
 		}
 
@@ -250,6 +263,9 @@ package {
 			addChild(board);
 			pos.startup();
 			drawBoard();
+			setChildIndex(lblMessage, numChildren - 1);
+			lblMessage.visible = false;
+			nPhase = PHASE_WAITING;
 		}
 	}
 }
