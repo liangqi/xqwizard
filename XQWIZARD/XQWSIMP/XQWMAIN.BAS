@@ -2803,7 +2803,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2853,7 +2853,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2866,7 +2866,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
@@ -2907,6 +2907,15 @@ If Not EOF(nFileNo) Then
                     Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
                     If UBound(szs) >= 3 Then
                         CheckAdvert szs(0), Str2Lng(szs(2)), Str2Lng(szs(3))
+                        If UBound(szs) >= 4 Then
+                            sz = ""
+                            On Error Resume Next
+                            sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert_online.txt")
+                            On Error GoTo 0
+                            If Left(sz, 15) <> "XQWizard Advert" Then
+                                Gui_nAdvertNum = Gui_nAdvertNum - 1
+                            End If
+                        End If
                     End If
                 Else
                     Gui_nAdvertTimes(Gui_nAdvertNum) = 10
