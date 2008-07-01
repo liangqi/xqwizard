@@ -35,7 +35,6 @@ package {
 		private static const PHASE_LOADING:int = 0;
 		private static const PHASE_WAITING:int = 1;
 		private static const PHASE_THINKING:int = 2;
-		private static const PHASE_EXITTING:int = 3;
 
 		private static const RESP_CLICK:int = 0;
 		private static const RESP_ILLEGAL:int = 1;
@@ -49,12 +48,10 @@ package {
 		private static const RESP_DRAW:int = 9;
 		private static const RESP_LOSS:int = 10;
 
-		private static const FILE_LEFT:int = Position.FILE_LEFT;
-		private static const RANK_TOP:int = Position.RANK_TOP;
-
 		private static const BOARD_EDGE:int = 8;
 		private static const SQUARE_SIZE:int = 56;
 		private static const BITMAP_SIZE:int = 57;
+		private static const THINKING_SIZE:int = 48;
 		private static const BOARD_WIDTH:int = BOARD_EDGE + SQUARE_SIZE * 9 + BOARD_EDGE;
 		private static const BOARD_HEIGHT:int = BOARD_EDGE + SQUARE_SIZE * 10 + BOARD_EDGE;
 
@@ -102,23 +99,24 @@ package {
 		private static const sndDraw:Sound = new DrawSound();
 		private static const sndLoss:Sound = new LossSound();
 
-		private const bmpPieces:Array = new Array(
+		private static const bmpPieces:Array = new Array(
 			bmpOo, null, null, null, null, null, null, null,
 			bmpRk, bmpRa, bmpRb, bmpRn, bmpRr, bmpRc, bmpRp, null,
 			bmpBk, bmpBa, bmpBb, bmpBn, bmpBr, bmpBc, bmpBp, null
 		);
 
-		private const bmpSelected:Array = new Array(
+		private static const bmpSelected:Array = new Array(
 			bmpOos, null, null, null, null, null, null, null,
 			bmpRks, bmpRas, bmpRbs, bmpRns, bmpRrs, bmpRcs, bmpRps, null,
 			bmpBks, bmpBas, bmpBbs, bmpBns, bmpBrs, bmpBcs, bmpBps, null
 		);
 
-		private const sndResponse:Array = new Array(
+		private static const sndResponse:Array = new Array(
 			sndClick, sndIllegal, sndMove, sndMove2, sndCapture, sndCapture2,
 			sndCheck, sndCheck2, sndWin, sndDraw, sndLoss
 		);
 
+		private var bmpThinking:Bitmap = new Bitmap();
 		private var bmpSquares:Array = new Array(256);
 		private var pos:Position = new Position();
 		private var search:Search = new Search(pos, 16);
@@ -126,7 +124,7 @@ package {
 		private var sqSelected:int = 0, mvLast:int = 0;
 		private var nPhase:int = PHASE_LOADING;
 
-		private const DRAW_SELECTED:Boolean = true;
+		private static const DRAW_SELECTED:Boolean = true;
 
 		private function drawSquare(sq:int, bSelected:Boolean = false):void {
 			var pc:int = pos.pcSquares[sq];
@@ -199,7 +197,17 @@ package {
 			if (pos.captured()) {
 				pos.setIrrev();
 			}
-			nPhase = getResult(nResponse) ? PHASE_EXITTING : PHASE_WAITING;
+			bmpThinking.visible = false;
+			nPhase = getResult(nResponse) ? PHASE_LOADING : PHASE_WAITING;
+		}
+
+		private function thinking():void {
+			nPhase = PHASE_THINKING;
+			var sq:int = Position.DST(mvLast);
+			bmpThinking.visible = true;
+			var timer:Timer = new Timer(100, 1);
+			timer.addEventListener(TimerEvent.TIMER, responseMove);
+			timer.start();
 		}
 
 		private function clickSquare(sq:int):void {
@@ -219,12 +227,9 @@ package {
 				var mv:int = Position.MOVE(sqSelected, sq);
 				if (addMove(mv)) {
 					if (getResult()) {
-						nPhase = PHASE_EXITTING;
+						nPhase = PHASE_LOADING;
 					} else {
-						nPhase = PHASE_THINKING;
-						var timer:Timer = new Timer(100, 1);
-						timer.addEventListener(TimerEvent.TIMER, responseMove);
-						timer.start();
+						thinking();
 					}
 				}
 			}
@@ -232,9 +237,10 @@ package {
 
 		private function onClick(e:MouseEvent):void {
 			if (Position.nBookSize >= 0 && nPhase == PHASE_WAITING) {
-				var xx:int = FILE_LEFT + (e.localX - BOARD_EDGE) / SQUARE_SIZE;
-				var yy:int = RANK_TOP + (e.localY - BOARD_EDGE) / SQUARE_SIZE;
-				if (xx >= FILE_LEFT && xx <= Position.FILE_RIGHT && yy >= RANK_TOP && yy <= Position.RANK_BOTTOM) {
+				var xx:int = Position.FILE_LEFT + (e.localX - BOARD_EDGE) / SQUARE_SIZE;
+				var yy:int = Position.RANK_TOP + (e.localY - BOARD_EDGE) / SQUARE_SIZE;
+				if (xx >= Position.FILE_LEFT && xx <= Position.FILE_RIGHT &&
+						yy >= Position.RANK_TOP && yy <= Position.RANK_BOTTOM) {
 					clickSquare(Position.COORD_XY(xx, yy));
 				}
 			}
@@ -249,13 +255,19 @@ package {
 			}
 		}
 
-		public function restart(bComputerBlack:Boolean = false) {
-			bFlipped = bComputerBlack;
-			pos.startup();
-			drawBoard();
-			setChildIndex(lblMessage, numChildren - 1);
-			lblMessage.visible = false;
-			nPhase = PHASE_WAITING;
+		public function restart(bComputerRed:Boolean = false) {
+			if (nPhase != PHASE_THINKING) {
+				nPhase = PHASE_LOADING;
+				bFlipped = bComputerRed;
+				pos.startup();
+				drawBoard();
+				lblMessage.visible = false;
+				if (bComputerRed) {
+					thinking();
+				} else {
+					nPhase = PHASE_WAITING;
+				}
+			}
 		}
 
 		public function XQWLight() {
@@ -264,13 +276,19 @@ package {
 			for (sq = 0; sq < 256; sq ++) {
 				if (Position.IN_BOARD(sq)) {
 					bmpSquares[sq] = new Bitmap();
-					bmpSquares[sq].x = BOARD_EDGE + (Position.FILE_X(sq) - FILE_LEFT) * SQUARE_SIZE;
-					bmpSquares[sq].y = BOARD_EDGE + (Position.RANK_Y(sq) - RANK_TOP) * SQUARE_SIZE;
+					bmpSquares[sq].x = BOARD_EDGE + (Position.FILE_X(sq) - Position.FILE_LEFT) * SQUARE_SIZE;
+					bmpSquares[sq].y = BOARD_EDGE + (Position.RANK_Y(sq) - Position.RANK_TOP) * SQUARE_SIZE;
 					board.addChild(bmpSquares[sq]);
 				}
 			}
 			board.addEventListener(MouseEvent.MOUSE_DOWN, onClick);
+			bmpThinking.bitmapData = new ThinkingImage(THINKING_SIZE, THINKING_SIZE);
+			bmpThinking.x = (BOARD_WIDTH - THINKING_SIZE) / 2;
+			bmpThinking.y = (BOARD_HEIGHT - THINKING_SIZE) / 2;
+			bmpThinking.visible = false;
+			board.addChild(bmpThinking);
 			addChild(board);
+			setChildIndex(lblMessage, numChildren - 1);
 			restart();
 			ExternalInterface.addCallback("restart", restart);
 		}
