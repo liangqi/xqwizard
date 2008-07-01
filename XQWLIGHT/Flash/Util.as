@@ -1,6 +1,6 @@
 ﻿package {
 	public class Util {
-		public static function binarySearch(vl:int, vls:Array, nFrom:int, nTo:int):int {
+		public static function binarySearch(vl:uint, vls:Array, nFrom:int, nTo:int):int {
 			var vlLow:int = nFrom;
 			var vlHigh:int = nTo - 1;
 			while (vlLow <= vlHigh) {

@@ -26,6 +26,7 @@ package {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.external.ExternalInterface;
 	import flash.media.Sound;
 	import flash.text.TextField;
 	import flash.utils.Timer;
@@ -189,7 +190,7 @@ package {
 		}
 
 		private function responseMove(e:TimerEvent):void {
-			var mv:int = search.searchMain(100);
+			var mv:int = search.searchMain(1000);
 			drawMove(mvLast);
 			mvLast = mv;
 			pos.makeMove(mvLast);
@@ -230,7 +231,7 @@ package {
 		}
 
 		private function onClick(e:MouseEvent):void {
-			if (nPhase == PHASE_WAITING) {
+			if (Position.nBookSize >= 0 && nPhase == PHASE_WAITING) {
 				var xx:int = FILE_LEFT + (e.localX - BOARD_EDGE) / SQUARE_SIZE;
 				var yy:int = RANK_TOP + (e.localY - BOARD_EDGE) / SQUARE_SIZE;
 				if (xx >= FILE_LEFT && xx <= Position.FILE_RIGHT && yy >= RANK_TOP && yy <= Position.RANK_BOTTOM) {
@@ -248,6 +249,15 @@ package {
 			}
 		}
 
+		public function restart(bComputerBlack:Boolean = false) {
+			bFlipped = bComputerBlack;
+			pos.startup();
+			drawBoard();
+			setChildIndex(lblMessage, numChildren - 1);
+			lblMessage.visible = false;
+			nPhase = PHASE_WAITING;
+		}
+
 		public function XQWLight() {
 			var board:Sprite = new Sprite();
 			var sq:int;
@@ -261,11 +271,8 @@ package {
 			}
 			board.addEventListener(MouseEvent.MOUSE_DOWN, onClick);
 			addChild(board);
-			pos.startup();
-			drawBoard();
-			setChildIndex(lblMessage, numChildren - 1);
-			lblMessage.visible = false;
-			nPhase = PHASE_WAITING;
+			restart();
+			ExternalInterface.addCallback("restart", restart);
 		}
 	}
 }

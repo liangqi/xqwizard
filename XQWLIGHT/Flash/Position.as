@@ -21,6 +21,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 package {
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.net.URLRequest;
+	import flash.net.URLStream;
+	import flash.utils.Endian;
+
 	public class Position {
 		public static const MATE_VALUE:int = 10000;
 		public static const BAN_VALUE:int = MATE_VALUE - 100;
@@ -32,7 +38,7 @@ package {
 
 		public static const MAX_MOVE_NUM:int = 256;
 		public static const MAX_GEN_MOVES:int = 128;
-		public static const MAX_BOOK_SIZE:int = 16384;
+		// public static const MAX_BOOK_SIZE:int = 16384;
 
 		public static const PIECE_KING:int = 0;
 		public static const PIECE_ADVISOR:int = 1;
@@ -400,10 +406,30 @@ package {
 		public static var dwKeyTable:Array = new Array(14);
 		public static var dwLockTable:Array = new Array(14);
 
-		public static var nBookSize:int = 0;
-		public static var dwBookLock:Array = new Array(MAX_BOOK_SIZE);
-		public static var mvBook:Array = new Array(MAX_BOOK_SIZE);
-		public static var vlBook:Array = new Array(MAX_BOOK_SIZE);
+		public static var nBookSize:int = -1;
+		public static var dwBookLock:Array;
+		public static var mvBook:Array;
+		public static var vlBook:Array;
+
+		private static var stream:URLStream = new URLStream();
+
+		private static function loadBook(e:Event):void {
+			var n:int = stream.bytesAvailable / 8;
+			dwBookLock = new Array(n);
+			mvBook = new Array(n);
+			vlBook = new Array(n);
+			var i:int;
+			for (i = 0; i < n; i ++) {
+				dwBookLock[i] = stream.readUnsignedInt();
+				mvBook[i] = stream.readUnsignedShort();
+				vlBook[i] = stream.readUnsignedShort();
+			}
+			nBookSize = n;
+		}
+
+		private static function noBook(e:Event):void {
+			nBookSize = 0;
+		}
 
 		private static function clinit():Object {
 			var rc4:RC4 = new RC4(new Array(0, 0));
@@ -420,6 +446,11 @@ package {
 					dwLockTable[i][j] = rc4.nextLong();
 				}
 			}
+
+			stream.endian = Endian.LITTLE_ENDIAN;
+			stream.addEventListener(Event.COMPLETE, loadBook);
+			stream.addEventListener(IOErrorEvent.IO_ERROR, noBook);
+			stream.load(new URLRequest("BOOK.DAT"));
 			return null;
 		}
 
@@ -944,7 +975,7 @@ package {
 			}
 			var bMirror:Boolean = false;
 			var dwMirrorLock:uint = dwLock;
-			var nIndex = Util.binarySearch(dwLock, dwBookLock, 0, nBookSize);
+			var nIndex = Util.binarySearch(dwMirrorLock, dwBookLock, 0, nBookSize);
 			if (nIndex < 0) {
 				bMirror = true;
 				dwMirrorLock = mirror().dwLock;
@@ -957,8 +988,8 @@ package {
 			while (nIndex >= 0 && dwBookLock[nIndex] == dwMirrorLock) {
 				nIndex --;
 			}
-			var mvs:Array = new Array[MAX_GEN_MOVES];
-			var vls:Array = new Array[MAX_GEN_MOVES];
+			var mvs:Array = new Array(MAX_GEN_MOVES);
+			var vls:Array = new Array(MAX_GEN_MOVES);
 			var vl:int = 0;
 			var nMoves:int = 0;
 			nIndex ++;
