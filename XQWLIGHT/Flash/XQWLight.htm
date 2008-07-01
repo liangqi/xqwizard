@@ -1,1 +1,78 @@
-<embed src="xqwlight.swf" align="baseline" border="0" width="520" height="576" allowscriptaccess="sameDomain" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" type="application/x-shockwave-flash" wmode="transparent" />
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><object id="XQWLight"
+        classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"
+        align="middle" border="0" width="520" height="576"><param
+        name="allowScriptAccess" value="sameDomain"><param
+        name="allowFullScreen" value="false"><param name="movie"
+        value="XQWLight.swf"><param name="quality" value="high"><embed src="XQWLight.swf" align="middle" border="0" width="520" height="576" quality="high" name="XQWLight" allowscriptaccess="sameDomain" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></td>
+        <td>　</td>
+        <td valign="top"><dl>
+            <dt><script language="JavaScript"><!--
+var XQWLight = document.getElementById("XQWLight");
+
+function restart_click() {
+  XQWLight.restart(selFlipped.selectedIndex == 1, selHandicap.selectedIndex);
+}
+
+function retract_click() {
+  XQWLight.retract();
+}
+
+function level_change() {
+  XQWLight.setLevel(selLevel.selectedIndex);
+}
+
+function sound_click() {
+  XQWLight.setSound(chkSound.checked);
+}
+// --></script><font
+                size="2">谁先走：</font></dt>
+            <dt><font size="2"><select name="selFlipped" size="2">
+                    <option selected value="0">我先走　</option>
+                    <option value="1">电脑先走</option>
+                </select></font></dt>
+            <dt><font size="2">先走让子：</font></dt>
+            <dt><font size="2"><select name="selHandicap"
+                size="4">
+                    <option selected value="0">不让子　</option>
+                    <option value="1">让左马　</option>
+                    <option value="2">让双马　</option>
+                    <option value="3">让九子　</option>
+                </select></font></dt>
+            <dt><font color="#008080" size="2"><strong><input
+                type="button" name="btnRestart"
+                value="重新开始" onclick="restart_click()"></strong></font></dt>
+            <dt><font color="#008080" size="2"><strong><input
+                type="button" name="btnRetract"
+                value="　悔棋　" onclick="retract_click()"></strong></font></dt>
+            <dt><font size="2"></font>　</dt>
+            <dt><font size="2">电脑水平：</font></dt>
+            <dt><font size="2"><select name="selLevel" size="3" onchange="level_change()">
+                    <option selected value="0">入门　　</option>
+                    <option value="1">业余　　</option>
+                    <option value="2">专业　　</option>
+                </select></font></dt>
+            <dt><font size="2"></font>　</dt>
+            <dt><font size="2"><input type="checkbox" checked
+                name="chkSound" id="chkSound" onclick="sound_click()"><label for="chkSound">音效</label></font></dt>
+        </dl>
+        </td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

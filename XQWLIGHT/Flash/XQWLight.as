@@ -120,8 +120,11 @@ package {
 		private var bmpSquares:Array = new Array(256);
 		private var pos:Position = new Position();
 		private var search:Search = new Search(pos, 16);
-		private var bFlipped:Boolean = false;
+		private var bFlipped:Boolean = false, bSound:Boolean = true;
+		private var nHandicap:int = 0, nLevel:int = 0;
 		private var sqSelected:int = 0, mvLast:int = 0;
+		private var sdCurrent:int, sdRetract:int = 0;
+		private var pcCurrent:Array = new Array(256), pcRetract:Array = new Array(256);
 		private var nPhase:int = PHASE_LOADING;
 
 		private static const DRAW_SELECTED:Boolean = true;
@@ -138,12 +141,31 @@ package {
 		}
 
 		private function playSound(nResponse:int) {
-			Sound(sndResponse[nResponse]).play();
+			if (bSound) {
+				Sound(sndResponse[nResponse]).play();
+			}
 		}
 
 		private function setMessage(s:String) {
 			lblMessage.htmlText = "<b><i>" + s + "</b></i>";
 			lblMessage.visible = true;
+		}
+
+		private function saveCurrent():void {
+			sdCurrent = pos.sdPlayer;
+			var sq:int;
+			for (sq = 0; sq < 256; sq ++) {
+				pcCurrent[sq] = pos.pcSquares[sq];
+			}
+		}
+
+		private function saveRetract():void {
+			sdRetract = sdCurrent;
+			var sq:int;
+			for (sq = 0; sq < 256; sq ++) {
+				pcRetract[sq] = pcCurrent[sq];
+			}
+			saveCurrent();
 		}
 
 		private function getResult(nResponse:int = -1):Boolean {
@@ -168,6 +190,7 @@ package {
 			}
 			if (nResponse >= 0) {
 				playSound(nResponse);
+				saveRetract();
 			}
 			return false;
 		}
@@ -188,8 +211,10 @@ package {
 		}
 
 		private function responseMove(e:TimerEvent):void {
-			var mv:int = search.searchMain(1000);
-			drawMove(mvLast);
+			var mv:int = search.searchMain(1000 << (nLevel << 1));
+			if (mvLast > 0) {
+				drawMove(mvLast);
+			}
 			mvLast = mv;
 			pos.makeMove(mvLast);
 			drawMove(mvLast, DRAW_SELECTED);
@@ -222,7 +247,7 @@ package {
 				if (mvLast != 0) {
 					drawMove(mvLast);
 				}
-				sndClick.play();
+				playSound(RESP_CLICK);
 			} else if (sqSelected != 0) {
 				var mv:int = Position.MOVE(sqSelected, sq);
 				if (addMove(mv)) {
@@ -255,19 +280,56 @@ package {
 			}
 		}
 
-		public function restart(bComputerRed:Boolean = false) {
+		public function restart(bFlipped_:Boolean = false, nHandicap_:int = 0):void {
 			if (nPhase != PHASE_THINKING) {
 				nPhase = PHASE_LOADING;
-				bFlipped = bComputerRed;
-				pos.startup();
+				bFlipped = bFlipped_;
+				nHandicap = nHandicap_;
+				pos.startup(nHandicap);
+				sdCurrent = pos.sdPlayer;
+				saveCurrent();
+				saveRetract();
+				sqSelected = mvLast = 0;
 				drawBoard();
 				lblMessage.visible = false;
-				if (bComputerRed) {
+				if (bFlipped) {
 					thinking();
 				} else {
 					nPhase = PHASE_WAITING;
 				}
 			}
+		}
+
+		public function retract():void {
+			lblMessage.visible = false;
+			pos.clearBoard();
+			var sq:int;
+			for (sq = 0; sq < 256; sq ++) {
+				if (pcRetract[sq] > 0) {
+					pos.addPiece(sq, pcRetract[sq]);
+				}
+			}
+			if (sdRetract == 1) {
+				pos.changeSide();
+			}
+			pos.setIrrev();
+			saveCurrent();
+			sqSelected = mvLast = 0;
+			drawBoard();
+			if (bFlipped && pos.sdPlayer == 0) {
+				thinking();
+			} else {
+				nPhase = PHASE_WAITING
+			}
+		}
+
+		public function setLevel(nLevel_:int):void {
+			nLevel = nLevel_;
+		}
+
+		public function setSound(bSound_:Boolean):void {
+			bSound = bSound_;
+			playSound(RESP_CLICK);
 		}
 
 		public function XQWLight() {
@@ -291,6 +353,9 @@ package {
 			setChildIndex(lblMessage, numChildren - 1);
 			restart();
 			ExternalInterface.addCallback("restart", restart);
+			ExternalInterface.addCallback("retract", retract);
+			ExternalInterface.addCallback("setLevel", setLevel);
+			ExternalInterface.addCallback("setSound", setSound);
 		}
 	}
 }
