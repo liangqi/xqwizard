@@ -2,7 +2,7 @@
 XQWLight.as - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Flash Chinese Chess Program
-Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
