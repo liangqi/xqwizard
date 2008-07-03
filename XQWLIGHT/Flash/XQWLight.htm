@@ -18,11 +18,11 @@ content="text/html; charset=gb_2312-80">
         align="middle" border="0" width="520" height="576"><param
         name="allowScriptAccess" value="sameDomain"><param
         name="allowFullScreen" value="false"><param name="movie"
-        value="XQWLight.swf"><param name="quality" value="high"><embed src="XQWLight.swf" align="middle" border="0" width="520" height="576" quality="high" allowscriptaccess="sameDomain" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></td>
+        value="XQWLight.swf"><param name="quality" value="high"><embed src="XQWLight.swf" name="XQWLight" align="middle" border="0" width="520" height="576" quality="high" allowscriptaccess="sameDomain" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object></td>
         <td>　</td>
         <td valign="top"><dl>
             <dt><script language="JavaScript"><!--
-var XQWLight = document.getElementById("XQWLight");
+var XQWLight = document["XQWLight"];
 
 function restart_click() {
   XQWLight.restart(selFlipped.selectedIndex == 1, selHandicap.selectedIndex);
@@ -41,12 +41,12 @@ function sound_click() {
 }
 // --></script><font
                 size="2">谁先走：</font></dt>
-            <dt><font size="2"><select name="selFlipped" size="2">
+            <dt><font size="2"><select name="selFlipped" id="selFlipped" size="2">
                     <option selected value="0">我先走　</option>
                     <option value="1">电脑先走</option>
                 </select></font></dt>
             <dt><font size="2">先走让子：</font></dt>
-            <dt><font size="2"><select name="selHandicap"
+            <dt><font size="2"><select name="selHandicap" id="selHandicap"
                 size="4">
                     <option selected value="0">不让子　</option>
                     <option value="1">让左马　</option>
@@ -54,14 +54,12 @@ function sound_click() {
                     <option value="3">让九子　</option>
                 </select></font></dt>
             <dt><font color="#008080" size="2"><strong><input
-                type="button" name="btnRestart"
-                value="重新开始" onclick="restart_click()"></strong></font></dt>
+                type="button" value="重新开始" onclick="restart_click()"></strong></font></dt>
             <dt><font color="#008080" size="2"><strong><input
-                type="button" name="btnRetract"
-                value="　悔棋　" onclick="retract_click()"></strong></font></dt>
+                type="button" value="　悔棋　" onclick="retract_click()"></strong></font></dt>
             <dt><font size="2"></font>　</dt>
             <dt><font size="2">电脑水平：</font></dt>
-            <dt><font size="2"><select name="selLevel" size="3" onchange="level_change()">
+            <dt><font size="2"><select name="selLevel" id="selLevel" size="3" onchange="level_change()">
                     <option selected value="0">入门　　</option>
                     <option value="1">业余　　</option>
                     <option value="2">专业　　</option>
