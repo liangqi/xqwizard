@@ -2,7 +2,7 @@
 eleeye.cpp - Source Code for ElephantEye, Part IX
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -132,7 +132,7 @@ int main(void) {
   Search.pos.nDistance = 0;
   Search.PreEvaluate(&Search.pos, &PreEval);
   Search.nBanMoves = 0;
-  Search.bQuit = Search.bBatch = Search.bDebug = FALSE;
+  Search.bQuit = Search.bBatch = Search.bDebug = Search.bCheckOnly = FALSE;
   Search.bUseHash = Search.bUseBook = Search.bNullMove = Search.bKnowledge = TRUE;
   Search.bIdle = FALSE;
   Search.nCountMask = INTERRUPT_COUNT - 1;
@@ -145,7 +145,7 @@ int main(void) {
     printf("id name %s / ElephantEye\n", szEngineName);
     fflush(stdout);
   }
-  PrintLn("id version 3.14");
+  PrintLn("id version 3.15");
   PrintLn("id copyright 2004-2008 www.elephantbase.net");
   PrintLn("id author Morning Yellow");
   PrintLn("id user ElephantEye Test Team");
@@ -154,6 +154,7 @@ int main(void) {
   PrintLn("option batch type check default false");
   PrintLn("option debug type check default false");
   PrintLn("option ponder type check default false");
+  PrintLn("option checkonly type check default false");
   PrintLn("option usehash type check default true");
   PrintLn("option usebook type check default true");
   printf("option bookfiles type string default %s\n", Search.szBookFile);
@@ -202,6 +203,9 @@ int main(void) {
         break;
       case UCCI_OPTION_PONDER:
         bPonderTime = UcciComm.bCheck;
+        break;
+      case UCCI_OPTION_CHECKONLY:
+        Search.bCheckOnly = UcciComm.bCheck;
         break;
       case UCCI_OPTION_USEHASH:
         Search.bUseHash = UcciComm.bCheck;

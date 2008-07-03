@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.12, Last Modified: Dec. 2007
+Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -229,6 +229,12 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
   }
 #endif
 
+  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
+  if (Search.bCheckOnly && pos.LastMove().ChkChs <= 0 &&
+      pos.rbsList[pos.nMoveNum - 2].mvs.ChkChs <= 0) {
+    return MATE_VALUE - pos.nDistance;
+  }
+
   // 4. 达到极限深度，直接返回评价值；
   if (pos.nDistance == LIMIT_DEPTH) {
     return Evaluate(pos, vlAlpha, vlBeta);
@@ -331,6 +337,12 @@ static int SearchCut(int vlBeta, int nDepth, Bool bNoNull = FALSE) {
   vl = ProbeHash(Search.pos, vlBeta - 1, vlBeta, nDepth, bNoNull, mvHash);
   if (Search.bUseHash && vl > -MATE_VALUE) {
     return vl;
+  }
+
+  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
+  if (Search.bCheckOnly && Search.pos.LastMove().ChkChs <= 0 &&
+      Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
+    return MATE_VALUE - Search.pos.nDistance;
   }
 
   // 4. 达到极限深度，直接返回评价值；
@@ -458,6 +470,12 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16 *lpwmvPvLine) {
   if (Search.bUseHash && vl > -MATE_VALUE) {
     // 由于PV结点不适用置换裁剪，所以不会发生PV路线中断的情况
     return vl;
+  }
+
+  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
+  if (Search.bCheckOnly && Search.pos.LastMove().ChkChs <= 0 &&
+      Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
+    return MATE_VALUE - Search.pos.nDistance;
   }
 
   // 4. 达到极限深度，直接返回评价值；
@@ -776,8 +794,8 @@ void SearchMain(int nDepth) {
       break;
     }
 
-    // 11. 是唯一着法，则终止搜索
-    if (SearchUnique(1 - WIN_VALUE, i)) {
+    // 11. 是唯一着法，则终止搜索(如果是解连将杀排局，则跳过此检查)
+    if (!Search.bCheckOnly && SearchUnique(1 - WIN_VALUE, i)) {
       bUnique = TRUE;
       break;
     }

@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -46,6 +46,7 @@ struct SearchStruct {
   Bool bBatch, bDebug;             // 是否批处理模式和调试模式
   Bool bUseHash, bUseBook;         // 是否使用置换表裁剪和开局库
   Bool bNullMove, bKnowledge;      // 是否空着裁剪和使用局面评价知识
+  Bool bCheckOnly;                 // 是否只将军(解连将杀排局)
   Bool bIdle;                      // 是否空闲
   RC4Struct rc4Random;             // 随机数
   int nGoMode, nNodes, nCountMask; // 搜索模式、结点数和
