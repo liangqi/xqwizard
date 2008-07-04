@@ -411,7 +411,7 @@ package {
 		}
 
 		public static function MOVE(sqSrc:int, sqDst:int):int {
-			return sqSrc + sqDst * 256;
+			return sqSrc + (sqDst << 8);
 		}
 
 		public static function MIRROR_MOVE(mv:int):int {
