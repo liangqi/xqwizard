@@ -2294,8 +2294,8 @@ End Sub
 
 Private Sub mnPosAnalyze_Click()
 
-Shell App_szPath + App.EXEName + IIf(App_bPromotion, " /P /S ", " /S ") + Chr(34) + _
-        MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + Chr(34), vbNormalFocus
+Shell App_szPath + App.EXEName + IIf(App_bPromotion, " /P /S ", " /S ") + """" + _
+        MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + """", vbNormalFocus
 
 End Sub
 

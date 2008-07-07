@@ -96,7 +96,7 @@ If bResponse Then
     End If
     App_bLogon = True
 Else
-    MsgBox "Server " + Chr(34) + Set_szServerUrl + Chr(34) + " not connected!", vbExclamation
+    MsgBox "Server """ + Set_szServerUrl + """ not connected!", vbExclamation
     If bSettings Then
         frmSettings.Show vbModal, frm
         If App_bUpdated Then

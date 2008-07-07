@@ -2,30 +2,30 @@
 Public Sub CopyJava()
 
 Dim i As Integer, sq As Integer, sd As Integer, szJava As String, posJava As PositionStruct
-szJava = "<applet width=" + Chr(34) + "249" + Chr(34) + " height=" + Chr(34) + "301" + Chr(34) + _
-        " codebase=" + Chr(34) + Options_szJavaPath + Chr(34) + " code=" + Chr(34) + "JavaXQ" + Chr(34) + ">" + vbCrLf
+szJava = "<applet width=""249"" height=""301""" + _
+        " codebase=""" + Options_szJavaPath + """ code=""JavaXQ"">" + vbCrLf
 If Not Game_bStartPos Then
     CchessFen2Board posJava, Game_szIrrevFen(0)
-    szJava = szJava + "<param name=" + Chr(34) + "Position" + Chr(34) + " value=" + Chr(34)
+    szJava = szJava + "<param name=""Position"" value="""
     For sd = 0 To 1
         For i = 1 To 16
             sq = posJava.ucsqPieces(Choose(i, 23, 21, 19, 17, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31) + sd * 16)
             szJava = szJava + IIf(sq = 0, "--", Chr(sq Mod 16 + 62) + Chr(60 - sq \ 16)) + ","
         Next
     Next
-    szJava = szJava + Chr(34) + ">" + vbCrLf
+    szJava = szJava + """>" + vbCrLf
 End If
-szJava = szJava + "<param name=" + Chr(34) + "MoveList" + Chr(34) + " value=" + Chr(34)
+szJava = szJava + "<param name=""MoveList"" value="""
 For i = 1 To Game_nMaxMove
     szJava = szJava + Move2Iccs(Game_mvMove(i)) + " "
 Next
-szJava = szJava + Chr(34) + ">" + vbCrLf
-szJava = szJava + "请登录<a href=" + Chr(34) + "http://www.java.com/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.java.com</a>下载Java运行包" + vbCrLf
+szJava = szJava + """>" + vbCrLf
+szJava = szJava + "请登录<a href=""http://www.java.com/"" target=""_blank"">www.java.com</a>下载Java运行包" + vbCrLf
 szJava = szJava + "</applet>"
 If Not Game_bStartPos Then
     szJava = szJava + "<p>" + Game_szIrrevFen(0) + "</p>"
 End If
-szJava = szJava + "<p>欢迎访问<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.elephantbase.net</a></p>"
+szJava = szJava + "<p>欢迎访问<a href=""http://www.elephantbase.net/"" target=""_blank"">www.elephantbase.net</a></p>"
 Clipboard.Clear
 Clipboard.SetText szJava
 MsgBox "Java棋盘代码已复制到剪贴板。", vbInformation
@@ -44,14 +44,14 @@ Open App_szPath + "jsboard2.htm" For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, "<html>"
 Print #nFileNo, "<body>"
-Print #nFileNo, "<script language=" + Chr(34) + "JavaScript" + Chr(34) + "><!--"
+Print #nFileNo, "<script language=""JavaScript""><!--"
 Print #nFileNo, "var RightReady = 0;"
 Print #nFileNo, "--></script>"
 Print #nFileNo, "<dl>"
 Print #nFileNo, "<dt><center>" + EventString + "</center></dt>"
 Print #nFileNo, "<dt><center>" + ResultString + "</center></dt>"
 Print #nFileNo, "<dt><center>" + DateSiteString + "</center></dt>"
-Print #nFileNo, "<dt><center><a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(0)" + Chr(34) + ">";
+Print #nFileNo, "<dt><center><a href=""JavaScript:parent.frames[0].ViewFen(0)"">";
 Print #nFileNo, IIf(OpenString = "", "===开始===", OpenString) + "</a></center></dt>"
 Print #nFileNo, "<dt>";
 szCommStr = Game_szComment(0)
@@ -82,11 +82,11 @@ Do While Game_nCurrMove < Game_nMaxMove
         End If
     End If
     If Game_sdCurr = 0 Then
-        Print #nFileNo, "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
+        Print #nFileNo, "<a href=""JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")"">" + _
                 Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a>";
         bReturned = False
     Else
-        Print #nFileNo, "&nbsp;" + "<a href=" + Chr(34) + "JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")" + Chr(34) + ">" + _
+        Print #nFileNo, "&nbsp;" + "<a href=""JavaScript:parent.frames[0].ViewFen(" + LTrim(Str(Game_nCurrMove + 1)) + ")"">" + _
                 Game_szMoveText(Game_nFormat, Game_nCurrMove + 1) + "</a></dt>"
         Print #nFileNo, "<dt>";
         bReturned = True
@@ -113,12 +113,12 @@ Do While Game_nCurrMove < Game_nMaxMove
 Loop
 Print #nFileNo, "</dt>"
 Print #nFileNo, "</dl>"
-Print #nFileNo, "<script language=" + Chr(34) + "JavaScript" + Chr(34) + "><!--"
+Print #nFileNo, "<script language=""JavaScript""><!--"
 Print #nFileNo, "var MaxMove =" + Str(Game_nMaxMove) + ";"
 Print #nFileNo, "var LastPos = 0;"
 Print #nFileNo, "var FenStr = Array(" + LTrim(Str(Game_nMaxMove + 1)) + ");"
 For i = 0 To Game_nMaxMove
-    Print #nFileNo, "FenStr[" + LTrim(Str(i)); "] = " + Chr(34) + szFenStrTable(i) + Chr(34) + ";"
+    Print #nFileNo, "FenStr[" + LTrim(Str(i)); "] = """ + szFenStrTable(i) + """;"
 Next
 Print #nFileNo, "RightReady = 1;"
 Print #nFileNo, "if (parent.frames[0].LeftReady) {"

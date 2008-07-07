@@ -329,7 +329,7 @@ Else
     szFileName = Replace(szFileName, "*", "＊")
     szFileName = Replace(szFileName, "?", "？")
     ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
-    szFileName = Replace(szFileName, Chr(34), "'")
+    szFileName = Replace(szFileName, """", "'")
     szFileName = Replace(szFileName, "<", "＜")
     szFileName = Replace(szFileName, ">", "＞")
     szFileName = Replace(szFileName, "|", "｜")
@@ -355,8 +355,8 @@ Public Function GetLabel(ByRef szDst As String, ByVal szSrc As String, ByVal szL
 
 Dim nLen As Integer, i As Integer
 nLen = Len(szLabelName)
-If UCase(Left(szSrc, nLen + 3)) = "[" + szLabelName + " " + Chr(34) Then
-    i = InStr(nLen + 4, szSrc, Chr(34))
+If UCase(Left(szSrc, nLen + 3)) = "[" + szLabelName + " """ Then
+    i = InStr(nLen + 4, szSrc, """")
     If i > 0 Then
         szDst = Mid(szSrc, nLen + 4, i - nLen - 4)
     Else
@@ -497,19 +497,19 @@ Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As
 bNoTitle = False
 On Error GoTo lnErrorOpen
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    Shell App_szPath + "XQF2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    Shell App_szPath + "XQF2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
-    Shell App_szPath + "MXQ2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    Shell App_szPath + "MXQ2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
-    Shell App_szPath + "CHE2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    Shell App_szPath + "CHE2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHN" Then
-    Shell App_szPath + "CHN2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    Shell App_szPath + "CHN2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CCM" Then
-    Shell App_szPath + "CCM2PGN.EXE " + Chr(34) + App_szFileName + Chr(34) + " " + Chr(34) + App_szPath + "AUTOSAVE.PGN" + Chr(34), vbHide
+    Shell App_szPath + "CCM2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
     bNoTitle = True
 End If
 On Error GoTo 0
@@ -642,7 +642,7 @@ Public Function PutLabel(ByVal LabelName As String, ByVal LabelValue As String) 
 
 LabelValue = Replace(LabelValue, Chr(13), "")
 LabelValue = Replace(LabelValue, Chr(10), "")
-PutLabel = "[" + LabelName + " " + Chr(34) + LabelValue + Chr(34) + "]"
+PutLabel = "[" + LabelName + " """ + LabelValue + """]"
 
 End Function
 
@@ -796,7 +796,7 @@ sz = FileDialog("輸出為XQF格式", "象棋演播室棋譜", "XQF", DefaultFileName)
 If sz <> "" Then
     WriteFile WRITE_TEMP_FILE
     On Error Resume Next
-    Shell App_szPath + "PGN2XQF.EXE " + Chr(34) + App_szPath + "查看文本棋譜(只讀).TXT" + Chr(34) + " " + Chr(34) + sz + Chr(34), vbHide
+    Shell App_szPath + "PGN2XQF.EXE """ + App_szPath + "查看文本棋譜(只讀).TXT"" """ + sz + """", vbHide
     On Error GoTo 0
 End If
 
@@ -1406,8 +1406,8 @@ End Sub
 Public Sub CopyFlash()
 
 Dim i As Integer, szPosition As String, szFlash As String
-szFlash = "<embed src=" + Chr(34) + "http://www.elephantbase.net/flashxq.swf" + Chr(34) + " width=" + Chr(34) + "216" + Chr(34) + " height=" + Chr(34) + "264" + Chr(34) + _
-        " allowScriptAccess=" + Chr(34) + "sameDomain" + Chr(34) + " quality=" + Chr(34) + "high" + Chr(34) + " wmode=" + Chr(34) + "transparent" + Chr(34) + " flashvars=" + Chr(34)
+szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""216"" height=""264""" + _
+        " allowScriptAccess=""sameDomain"" quality=""high"" wmode=""transparent"" flashvars="""
 If Not Game_bStartPos Then
     szPosition = Game_szIrrevFen(0)
     szPosition = Replace(szPosition, " ", "+")
@@ -1419,11 +1419,11 @@ szFlash = szFlash + "MoveList="
 For i = 1 To Game_nMaxMove
     szFlash = szFlash + Replace(Move2Iccs(Game_mvMove(i)), "-", "%2D") + "+"
 Next
-szFlash = szFlash + Chr(34) + " type=" + Chr(34) + "application/x-shockwave-flash" + Chr(34) + " pluginspage=" + Chr(34) + "http://www.macromedia.com/go/getflashplayer" + Chr(34) + " />"
+szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" />"
 If Not Game_bStartPos Then
     szFlash = szFlash + "<p>" + Game_szIrrevFen(0) + "</p>"
 End If
-szFlash = szFlash + "<p>歡迎訪問<a href=" + Chr(34) + "http://www.elephantbase.net/" + Chr(34) + " target=" + Chr(34) + "_blank" + Chr(34) + ">www.elephantbase.net</a></p>"
+szFlash = szFlash + "<p>歡迎訪問<a href=""http://www.elephantbase.net/"" target=""_blank"">www.elephantbase.net</a></p>"
 Clipboard.Clear
 Clipboard.SetText szFlash
 MsgBox "Flash棋盤代碼已复制到剪貼板。", vbInformation
@@ -1633,7 +1633,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
     On Error GoTo lnErrorOpen
     Open Engine_szLogFile For Append As #nLogFileNo
-    Print #nLogFileNo, "<font color=" + Chr(34) + IIf(bSlaveEngine, "#FF00FF", "#FF0000") + Chr(34) + ">" + szLineStr + "</font><br>"
+    Print #nLogFileNo, "<font color=""" + IIf(bSlaveEngine, "#FF00FF", "#FF0000") + """>" + szLineStr + "</font><br>"
     Close #nLogFileNo
 End If
 
@@ -1650,7 +1650,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
     On Error GoTo lnErrorOpen
     Open Engine_szLogFile For Append As #nLogFileNo
-    Print #nLogFileNo, "<font color=" + Chr(34) + IIf(bSlaveEngine, "#000080", "#0000FF") + Chr(34) + ">" + szLineStr + "</font><br>"
+    Print #nLogFileNo, "<font color=""" + IIf(bSlaveEngine, "#000080", "#0000FF") + """>" + szLineStr + "</font><br>"
     Close #nLogFileNo
 End If
 
@@ -3010,19 +3010,19 @@ If sz = "" Then
 Else
     If UCase(Left(sz, 3)) = "/S " Or UCase(Left(sz, 3)) = "-S " Then
         sz = Mid(sz, 4)
-        If Left(sz, 1) = Chr(34) And Right(sz, 1) = Chr(34) Then
+        If Left(sz, 1) = """" And Right(sz, 1) = """" Then
             sz = Mid(sz, 2, Len(sz) - 2)
         End If
         LoadFenStr sz
     ElseIf UCase(Left(sz, 3)) = "/F " Or UCase(Left(sz, 3)) = "-F " Then
         sz = Mid(sz, 4)
-        If Left(sz, 1) = Chr(34) And Right(sz, 1) = Chr(34) Then
+        If Left(sz, 1) = """" And Right(sz, 1) = """" Then
             sz = Mid(sz, 2, Len(sz) - 2)
         End If
         LoadFenFile sz
     Else
         App_szFileName = sz
-        If Left(App_szFileName, 1) = Chr(34) And Right(App_szFileName, 1) = Chr(34) Then
+        If Left(App_szFileName, 1) = """" And Right(App_szFileName, 1) = """" Then
             App_szFileName = Mid(App_szFileName, 2, Len(App_szFileName) - 2)
         End If
         ReadFile

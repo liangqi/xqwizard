@@ -113,7 +113,7 @@ Private Sub Form_Load()
 Dim sz As String
 sz = Command
 If sz <> "" Then
-    If Left(sz, 1) = Chr(34) And Right(sz, 1) = Chr(34) Then
+    If Left(sz, 1) = """" And Right(sz, 1) = """" Then
         sz = Mid(sz, 2, Len(sz) - 2)
     End If
     ReadFile sz

@@ -7,7 +7,7 @@ Dim nFileIn As Integer, nFileOut As Integer, szFileName As String, szLineStr As 
 If Command = "" Then
     szFileName = OpenFileDialog("Open GB File", "Text Files (*.TXT)|*.TXT|All Files (*.*)|*.*")
 Else
-    If Left(Command, 1) = Chr(34) And Right(Command, 1) = Chr(34) Then
+    If Left(Command, 1) = """" And Right(Command, 1) = """" Then
         szFileName = Mid(Command, 2, Len(Command) - 2)
     Else
         szFileName = Command
