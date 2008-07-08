@@ -74,16 +74,16 @@ Begin VB.Form frmXQWLight
       Width           =   1095
    End
    Begin ShockwaveFlashObjectsCtl.ShockwaveFlash flash 
-      Height          =   8655
+      Height          =   8640
       Left            =   120
       TabIndex        =   0
       Top             =   120
-      Width           =   7815
-      _cx             =   13785
-      _cy             =   15266
+      Width           =   7800
+      _cx             =   13758
+      _cy             =   15240
       FlashVars       =   ""
-      Movie           =   "http://www.elephantbase.net/xqwlight/XQWLight.swf"
-      Src             =   "http://www.elephantbase.net/xqwlight/XQWLight.swf"
+      Movie           =   ""
+      Src             =   ""
       WMode           =   "Window"
       Play            =   0   'False
       Loop            =   -1  'True
@@ -157,6 +157,7 @@ End Function
 
 Private Sub Form_Load()
 
+flash.Movie = App.Path + IIf(Right(App.Path, 1) = "\", "", "\") + "XQWLight.swf"
 bLoaded = False
 lstFlipped.ListIndex = 0
 lstHandicap.ListIndex = 0
