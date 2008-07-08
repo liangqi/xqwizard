@@ -139,10 +139,9 @@ package {
 			var vlBest:int = -MATE_VALUE;
 			var i:int, nGenMoves:int;
 			var mvs:Array = new Array(MAX_GEN_MOVES);
-			var vls:Array;
+			var vls:Array = new Array(MAX_GEN_MOVES);
 			if (pos.inCheck()) {
 				nGenMoves = pos.generateMoves(mvs);
-				vls = new Array(MAX_GEN_MOVES);
 				for (i = 0; i < nGenMoves; i ++) {
 					vls[i] = nHistoryTable[pos.historyIndex(mvs[i])];
 				}
@@ -158,7 +157,6 @@ package {
 						vlAlpha = vl;
 					}
 				}
-				vls = new Array(MAX_GEN_MOVES);
 				nGenMoves = pos.generateMoves(mvs, vls);
 				Util.shellSort(mvs, vls, 0, nGenMoves);
 				for (i = 0; i < nGenMoves; i ++) {
@@ -179,7 +177,9 @@ package {
 						return vl;
 					}
 					vlBest = vl;
-					vlAlpha = Math.max(vl, vlAlpha);
+					if (vl > vlAlpha) {
+						vlAlpha = vl;
+					}
 				}
 			}
 			return vlBest == -MATE_VALUE ? pos.nDistance - MATE_VALUE: vlBest;
