@@ -55,7 +55,7 @@ PgnFileStruct::~PgnFileStruct(void) {
 
 static Bool GetLabel(char *szDestStr, const char *szLineStr, const char *szLabelName) {
   int nValueLen;
-  char *lpLabelEnd;
+  const char *lpLabelEnd;
   char szTempLabel[MAX_STR_LEN];
   strcpy(szTempLabel, "[");
   strcat(szTempLabel, szLabelName);
