@@ -1,4 +1,4 @@
-﻿package {
+package {
 	public class SortItem {
 		private static const PHASE_HASH:int = 0;
 		private static const PHASE_KILLER_1:int = 1;

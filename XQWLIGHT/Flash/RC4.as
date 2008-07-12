@@ -1,4 +1,4 @@
-﻿package {
+package {
 	public class RC4 {
 		private var nState:Array = new Array(256);
 		private var x:int, y:int;

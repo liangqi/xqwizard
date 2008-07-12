@@ -202,6 +202,9 @@ package {
 					drawMove(mvLast, DRAW_SELECTED);
 					sqSelected = 0;
 					playSound(pos.inCheck() ? RESP_CHECK : pos.captured() ? RESP_CAPTURE : RESP_MOVE);
+					if (pos.captured()) {
+						pos.setIrrev();
+					}
 					return true;
 				} else {
 					playSound(RESP_ILLEGAL);
