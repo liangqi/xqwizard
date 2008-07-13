@@ -1,7 +1,7 @@
 del XQBoss.ja?
 makefile\preverify.exe -classpath lib\cldcapi10.jar;lib\midpapi20.jar -d bin bin
 cd bin
-..\makefile\7z a -tzip ..\XQBoss.jar *
+..\makefile\ZIP -r ..\XQBoss.jar *
 cd ..
 copy bin\META-INF\MANIFEST.MF XQBoss.jad
 echo.>> XQBoss.jad
