@@ -132,7 +132,7 @@ int main(void) {
   Search.pos.nDistance = 0;
   Search.PreEvaluate(&Search.pos, &PreEval);
   Search.nBanMoves = 0;
-  Search.bQuit = Search.bBatch = Search.bDebug = Search.bCheckOnly = FALSE;
+  Search.bQuit = Search.bBatch = Search.bDebug = Search.bAlwaysCheck = FALSE;
   Search.bUseHash = Search.bUseBook = Search.bNullMove = Search.bKnowledge = TRUE;
   Search.bIdle = FALSE;
   Search.nCountMask = INTERRUPT_COUNT - 1;
@@ -154,7 +154,7 @@ int main(void) {
   PrintLn("option batch type check default false");
   PrintLn("option debug type check default false");
   PrintLn("option ponder type check default false");
-  PrintLn("option checkonly type check default false");
+  PrintLn("option alwayscheck type check default false");
   PrintLn("option usehash type check default true");
   PrintLn("option usebook type check default true");
   printf("option bookfiles type string default %s\n", Search.szBookFile);
@@ -204,8 +204,8 @@ int main(void) {
       case UCCI_OPTION_PONDER:
         bPonderTime = UcciComm.bCheck;
         break;
-      case UCCI_OPTION_CHECKONLY:
-        Search.bCheckOnly = UcciComm.bCheck;
+      case UCCI_OPTION_ALWAYSCHECK:
+        Search.bAlwaysCheck = UcciComm.bCheck;
         break;
       case UCCI_OPTION_USEHASH:
         Search.bUseHash = UcciComm.bCheck;

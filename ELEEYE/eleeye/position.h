@@ -225,7 +225,7 @@ struct RollbackStruct {
   MoveStruct mvs;       // 着法
 }; // rbs
 
-const int DEL_PIECE = TRUE; // 函数"PositionStruct::AddPiece()"的选项
+const Bool DEL_PIECE = TRUE; // 函数"PositionStruct::AddPiece()"的选项
 
 // 局面结构
 struct PositionStruct {

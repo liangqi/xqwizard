@@ -128,9 +128,9 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
         UcciComm.bCheck = FALSE;
       }
 
-    // (4-1) "checkonly"选项
-    } else if (StrEqvSkip(lp, "checkonly ")) {
-      UcciComm.Option = UCCI_OPTION_CHECKONLY;
+    // (4-1) "alwayscheck"选项
+    } else if (StrEqvSkip(lp, "alwayscheck ")) {
+      UcciComm.Option = UCCI_OPTION_ALWAYSCHECK;
       if (StrEqv(lp, "on")) {
         UcciComm.bCheck = TRUE;
       } else if (StrEqv(lp, "true")) {

@@ -230,7 +230,7 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
 #endif
 
   // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bCheckOnly && pos.LastMove().ChkChs <= 0 &&
+  if (Search.bAlwaysCheck && pos.LastMove().ChkChs <= 0 &&
       pos.rbsList[pos.nMoveNum - 2].mvs.ChkChs <= 0) {
     return MATE_VALUE - pos.nDistance;
   }
@@ -340,7 +340,7 @@ static int SearchCut(int vlBeta, int nDepth, Bool bNoNull = FALSE) {
   }
 
   // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bCheckOnly && Search.pos.LastMove().ChkChs <= 0 &&
+  if (Search.bAlwaysCheck && Search.pos.LastMove().ChkChs <= 0 &&
       Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
     return MATE_VALUE - Search.pos.nDistance;
   }
@@ -473,7 +473,7 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16 *lpwmvPvLine) {
   }
 
   // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bCheckOnly && Search.pos.LastMove().ChkChs <= 0 &&
+  if (Search.bAlwaysCheck && Search.pos.LastMove().ChkChs <= 0 &&
       Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
     return MATE_VALUE - Search.pos.nDistance;
   }
@@ -794,8 +794,8 @@ void SearchMain(int nDepth) {
       break;
     }
 
-    // 11. 是唯一着法，则终止搜索(如果是解连将杀排局，则跳过此检查)
-    if (!Search.bCheckOnly && SearchUnique(1 - WIN_VALUE, i)) {
+    // 11. 是唯一着法，则终止搜索
+    if (SearchUnique(1 - WIN_VALUE, i)) {
       bUnique = TRUE;
       break;
     }
