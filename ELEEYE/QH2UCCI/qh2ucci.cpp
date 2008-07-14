@@ -110,7 +110,7 @@ int main(void) {
   uint32_t dwMoveStr;
   FILE *fpIniFile;
   char *lp;
-  TimerStruct tbTimer;
+  int64_t llTime;
   UcciCommStruct UcciComm;
   char szIccs[8];
   char szIniFile[MAX_CHAR], szCommand[MAX_CHAR];
@@ -233,12 +233,12 @@ int main(void) {
           nThinkTime = UcciComm.nTime / 20 + UcciComm.nIncrement;
         }
         Adapter2QH("AI");
-        tbTimer.Init();
+        llTime = GetTime();
         bTimeOut = false;
         while (!bQuit) {
           // 等待思考结果，需要检查以下几方面内容：
           // (1) 控制时间
-          if (!bTimeOut && tbTimer.GetTimer() > nThinkTime) {
+          if (!bTimeOut && (int) (GetTime() - llTime) > nThinkTime) {
             Adapter2QH("TIMEOUT");
             bTimeOut = true;
           }
@@ -290,8 +290,8 @@ int main(void) {
 
   // 4. 关闭浅红插件和管道
   Adapter2QH("QUIT");
-  tbTimer.Init();
-  while (tbTimer.GetTimer() < 1000) {
+  llTime = GetTime();
+  while ((int) (GetTime() - llTime) < 1000) {
     if (QH2Adapter(szLineStr)) {
       if (StrEqv(szLineStr, "BYE")) {
         break;

@@ -176,7 +176,7 @@ static void BlockSend(int nSocket, const char *lpBuffer, int nLen, int nTimeOut)
 
   nOffset = 0;
   llTime = GetTime();
-  while (nLen > 0 && GetTime() - llTime < nTimeOut) {
+  while (nLen > 0 && (int) (GetTime() - llTime) < nTimeOut) {
     nBytesWritten = WSBSend(nSocket, lpBuffer + nOffset, nLen);
     if (nBytesWritten == 0) {
       Idle();
@@ -243,13 +243,13 @@ static const char *const cszResultDigit[4] = {
 };
 
 static bool SkipUpload(bool bForce) {
-  if (GetTime() - Live.llTime < Live.nInterval) {
+  if ((int) (GetTime() - Live.llTime) < Live.nInterval) {
     // 如果与上次上传间隔太近，那么暂缓上传
     if (!bForce) {
       return true;
     }
     // 如果强制上传，那么必须等待
-    while (GetTime() - Live.llTime < Live.nInterval) {
+    while ((int) (GetTime() - Live.llTime) < Live.nInterval) {
       Idle();
     }
   }
@@ -697,12 +697,12 @@ struct GameStruct {
 
   void Send(const char *szLineStr) {
     pipe[sd].LineOutput(szLineStr);
-    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (GetTime() - llTime), szLineStr);
+    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
     fflush(fpLogFile);
   }
   bool Receive(char *szLineStr) {
     if (pipe[sd].LineInput(szLineStr)) {
-      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (GetTime() - llTime), szLineStr);
+      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
       fflush(fpLogFile);
       return true;
     } else {
@@ -824,7 +824,7 @@ void GameStruct::RunEngine(void) {
     pipe[sd].Open(szFileName);
     Send("ucci");
     // 发送"ucci"指令后，在10秒钟内等待"ucciok"反馈信息
-    while (GetTime() - llTime < 10000) {
+    while ((int) (GetTime() - llTime) < 10000) {
       if (Receive(szLineStr)) {
         if (StrEqv(szLineStr, "option usemillisec ")) {
           bUseMilliSec[sd] = true;
@@ -1013,11 +1013,11 @@ void GameStruct::ResumeGame(void) {
     // 如果没有读到反馈着法，就判断引擎是否超时
     if (chkRecord.mv == BESTMOVE_THINKING) {
       if (bTimeout) {
-        if (GetTime() - llTime > nTimer[sd] + League.nStopTime) {
+        if ((int) (GetTime() - llTime) > nTimer[sd] + League.nStopTime) {
           chkRecord.mv = BESTMOVE_TIMEOUT; // 只有时间超出停止时间后，才给空着以表示超时
         }
       } else {
-        if (GetTime() - llTime > nTimer[sd]) {
+        if ((int) (GetTime() - llTime) > nTimer[sd]) {
           Send("stop");
           bTimeout = true;
         }
@@ -1025,7 +1025,7 @@ void GameStruct::ResumeGame(void) {
     }
     // 如果有反馈着法(包括超时返回的空着)，就走这个着法
     if (chkRecord.mv != BESTMOVE_THINKING) {
-      nTimer[sd] -= GetTime() - llTime;
+      nTimer[sd] -= (int) (GetTime() - llTime);
       if (nTimer[sd] < 0) {
         nTimer[sd] = 0;
       }
@@ -1042,7 +1042,7 @@ void GameStruct::ResumeGame(void) {
           if (bStarted[sd]) {
             llTime = GetTime();
             Send("quit");
-            while (GetTime() - llTime < 1000) {
+            while ((int) (GetTime() - llTime) < 1000) {
               if (Receive(szLineStr)) {
                 if (StrEqv(szLineStr, "bye")) {
                   break;
