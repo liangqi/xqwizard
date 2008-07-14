@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "../eleeye/position.h"
 #include "../eleeye/book.h"
 #include "../cchess/cchess.h"
@@ -33,7 +33,7 @@ extern "C" __declspec(dllexport) LONG WINAPI GetBookMoves(const PositionStruct *
     LPCSTR szFile, LPLONG lpMoves, LPLONG lpValues);
 
 struct TempStruct {
-  uint32 dwZobristLock0, dwZobristLock1;
+  uint32_t dwZobristLock0, dwZobristLock1;
   int mv, vl;
   TempStruct() {
   }
@@ -49,11 +49,11 @@ struct TempStruct {
     mv = mvArg;
     vl = vlArg;
   }
-  Bool operator <(TempStruct tmp) const {
-    return dwZobristLock1 < tmp.dwZobristLock1 ? TRUE :
-        dwZobristLock1 > tmp.dwZobristLock1 ? FALSE :
-        dwZobristLock0 < tmp.dwZobristLock0 ? TRUE :
-        dwZobristLock0 > tmp.dwZobristLock0 ? FALSE : mv < tmp.mv;
+  bool operator <(TempStruct tmp) const {
+    return dwZobristLock1 < tmp.dwZobristLock1 ? true :
+        dwZobristLock1 > tmp.dwZobristLock1 ? false :
+        dwZobristLock0 < tmp.dwZobristLock0 ? true :
+        dwZobristLock0 > tmp.dwZobristLock0 ? false : mv < tmp.mv;
   }
 };
 
@@ -290,7 +290,7 @@ static void MakeBook() {
   }
 }
 
-static Bool bInit = FALSE;
+static bool bInit = false;
 
 BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
     LONG nWin, LONG nDraw, LONG nLoss, LONG nRatio) {

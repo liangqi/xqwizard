@@ -20,7 +20,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "pregen.h"
 #include "position.h"
 
@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 // 本模块只涉及到"PositionStruct"中的"sdPlayer"、"ucpcSquares"和"ucsqPieces"三个成员，故省略前面的"this->"
 
 // 棋子保护判断
-Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
+bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
   // 参数"sqExcept"表示排除保护的棋子(指格子编号)，考虑被牵制子的保护时，需要排除牵制目标子的保护
   int i, sqDst, sqPin, pc, x, y, nSideTag;
   SlideMaskStruct *lpsmsRank, *lpsmsFile;
@@ -57,7 +57,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
       if (sqDst != 0 && sqDst != sqExcept) {
         __ASSERT_SQUARE(sqDst);
         if (KING_SPAN(sqSrc, sqDst)) {
-          return TRUE;
+          return true;
         }
       }
 
@@ -67,7 +67,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
         if (sqDst != 0 && sqDst != sqExcept) {
           __ASSERT_SQUARE(sqDst);
           if (ADVISOR_SPAN(sqSrc, sqDst)) {
-            return TRUE;
+            return true;
           }
         }
       }
@@ -79,7 +79,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
       if (sqDst != 0 && sqDst != sqExcept) {
         __ASSERT_SQUARE(sqDst);
         if (BISHOP_SPAN(sqSrc, sqDst) && ucpcSquares[BISHOP_PIN(sqSrc, sqDst)] == 0) {
-          return TRUE;
+          return true;
         }
       }
     }
@@ -92,7 +92,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
       if (sqDst != sqExcept) {
         pc = ucpcSquares[sqDst];
         if ((pc & nSideTag) != 0 && PIECE_INDEX(pc) >= PAWN_FROM) {
-          return TRUE;
+          return true;
         }
       }
     }
@@ -105,7 +105,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
   if (sqDst != sqExcept) {
     pc = ucpcSquares[sqDst];
     if ((pc & nSideTag) != 0 && PIECE_INDEX(pc) >= PAWN_FROM) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -116,7 +116,7 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
       __ASSERT_SQUARE(sqDst);
       sqPin = KNIGHT_PIN(sqDst, sqSrc); // 注意，sqSrc和sqDst是反的！
       if (sqPin != sqDst && ucpcSquares[sqPin] == 0) {
-        return TRUE;
+        return true;
       }
     }
   }
@@ -132,11 +132,11 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
     if (sqDst != 0 && sqDst != sqSrc && sqDst != sqExcept) {
       if (x == FILE_X(sqDst)) {
         if ((lpsmsFile->wRookCap & PreGen.wBitFileMask[sqDst]) != 0) {
-          return TRUE;
+          return true;
         }
       } else if (y == RANK_Y(sqDst)) {
         if ((lpsmsRank->wRookCap & PreGen.wBitRankMask[sqDst]) != 0) {
-          return TRUE;
+          return true;
         }
       }
     }
@@ -148,16 +148,16 @@ Bool PositionStruct::Protected(int sd, int sqSrc, int sqExcept) const {
     if (sqDst && sqDst != sqSrc && sqDst != sqExcept) {
       if (x == FILE_X(sqDst)) {
         if ((lpsmsFile->wCannonCap & PreGen.wBitFileMask[sqDst]) != 0) {
-          return TRUE;
+          return true;
         }
       } else if (y == RANK_Y(sqDst)) {
         if ((lpsmsRank->wCannonCap & PreGen.wBitRankMask[sqDst]) != 0) {
-          return TRUE;
+          return true;
         }
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 /* 计算MVV(LVA)值的函数
@@ -186,9 +186,9 @@ int PositionStruct::MvvLva(int sqDst, int pcCaptured, int nLva) const {
 int PositionStruct::GenCapMoves(MoveStruct *lpmvs) const {
   int i, sqSrc, sqDst, pcCaptured;
   int x, y, nSideTag, nOppSideTag;
-  Bool bCanPromote;
+  bool bCanPromote;
   SlideMoveStruct *lpsmv;
-  uint8 *lpucsqDst, *lpucsqPin;
+  uint8_t *lpucsqDst, *lpucsqPin;
   MoveStruct *lpmvsCurr;
   // 生成吃子着法的过程包括以下几个步骤：
 
@@ -447,7 +447,7 @@ int PositionStruct::GenCapMoves(MoveStruct *lpmvs) const {
 int PositionStruct::GenNonCapMoves(MoveStruct *lpmvs) const {
   int i, sqSrc, sqDst, x, y, nSideTag;
   SlideMoveStruct *lpsmv;
-  uint8 *lpucsqDst, *lpucsqPin;
+  uint8_t *lpucsqDst, *lpucsqPin;
   MoveStruct *lpmvsCurr;
   // 生成不吃子着法的过程包括以下几个步骤：
 
@@ -613,7 +613,7 @@ int PositionStruct::GenNonCapMoves(MoveStruct *lpmvs) const {
 int PositionStruct::ChasedBy(int mv) const {
   int i, nSideTag, pcMoved, pcCaptured;
   int sqSrc, sqDst, x, y;
-  uint8 *lpucsqDst, *lpucsqPin;
+  uint8_t *lpucsqDst, *lpucsqPin;
   SlideMoveStruct *lpsmv;
 
   sqSrc = DST(mv);

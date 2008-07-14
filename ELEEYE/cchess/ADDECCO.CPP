@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <string.h>
 #include <windows.h>
 #include <shlobj.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "../eleeye/pregen.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -30,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 static void AddEcco(const char *szPgnFile, const EccoApiStruct &EccoApi) {
   int i, nStatus;
-  uint32 dwEccoIndex, dwFileMove[20];
+  uint32_t dwEccoIndex, dwFileMove[20];
   PgnFileStruct pgn;
   PositionStruct pos;
 

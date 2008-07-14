@@ -1,39 +1,18 @@
+#include "base.h"
+
 #ifndef X86ASM_H
 #define X86ASM_H
 
-#ifdef _MSC_VER
-
-#define FORMAT_I64 "I64"
-
-typedef signed __int64 sint64;     // ll
-typedef unsigned __int64 uint64;   // qw
-
-#else
-
-#define FORMAT_I64 "ll"
-
-typedef signed long long sint64;   // ll
-typedef unsigned long long uint64; // qw
-
-#endif
-
-typedef signed long sint32;        // l
-typedef unsigned long uint32;      // dw
-typedef signed short sint16;       // s
-typedef unsigned short uint16;     // w
-typedef signed char sint8;         // c
-typedef unsigned char uint8;       // uc
-
-inline uint32 LOW_LONG(uint64 Operand) {
-  return (uint32) Operand;
+inline uint32_t LOW_LONG(uint64_t Operand) {
+  return (uint32_t) Operand;
 }
 
-inline uint32 HIGH_LONG(uint64 Operand) {
-  return (uint32) (Operand >> 32);
+inline uint32_t HIGH_LONG(uint64_t Operand) {
+  return (uint32_t) (Operand >> 32);
 }
 
-inline uint64 MAKE_LONG_LONG(uint32 LowLong, uint32 HighLong) {
-  return (uint64) LowLong | ((uint64) HighLong << 32);
+inline uint64_t MAKE_LONG_LONG(uint32_t LowLong, uint32_t HighLong) {
+  return (uint64_t) LowLong | ((uint64_t) HighLong << 32);
 }
 
 #ifdef _MSC_VER
@@ -65,39 +44,39 @@ __forceinline int ExchangeAdd(volatile int *Addend, int Increment) {
   }
 }
 
-__forceinline int Bsf(uint32 Operand) {
+__forceinline int Bsf(uint32_t Operand) {
   __asm {
     bsf eax, Operand;
   }
 }
 
-__forceinline int Bsr(uint32 Operand) {
+__forceinline int Bsr(uint32_t Operand) {
   __asm {
     bsr eax, Operand;
   }
 }
 
-__forceinline uint64 TimeStampCounter(void) {
+__forceinline uint64_t TimeStampCounter(void) {
   __asm {
     rdtsc;
   }
 }
 
-__forceinline uint64 LongMul(uint32 Multiplier, uint32 Multiplicand) {
+__forceinline uint64_t LongMul(uint32_t Multiplier, uint32_t Multiplicand) {
   __asm {
     mov eax, Multiplier;
     mul Multiplicand;
   }
 }
 
-__forceinline uint64 LongSqr(uint32 Multiplier) {
+__forceinline uint64_t LongSqr(uint32_t Multiplier) {
   __asm {
     mov eax, Multiplier;
     mul Multiplier;
   }
 }
 
-__forceinline uint32 LongDiv(uint64 Dividend, uint32 Divisor) {
+__forceinline uint32_t LongDiv(uint64_t Dividend, uint32_t Divisor) {
   __asm {
     mov eax, dword ptr Dividend[0];
     mov edx, dword ptr Dividend[4];
@@ -105,7 +84,7 @@ __forceinline uint32 LongDiv(uint64 Dividend, uint32 Divisor) {
   }
 }
 
-__forceinline uint32 LongMod(uint64 Dividend, uint32 Divisor) {
+__forceinline uint32_t LongMod(uint64_t Dividend, uint32_t Divisor) {
   __asm {
     mov eax, dword ptr Dividend[0];
     mov edx, dword ptr Dividend[4];
@@ -114,7 +93,7 @@ __forceinline uint32 LongMod(uint64 Dividend, uint32 Divisor) {
   }
 }
 
-__forceinline uint32 LongMulDiv(uint32 Multiplier, uint32 Multiplicand, uint32 Divisor) {
+__forceinline uint32_t LongMulDiv(uint32_t Multiplier, uint32_t Multiplicand, uint32_t Divisor) {
   __asm {
     mov eax, Multiplier;
     mul Multiplicand;
@@ -122,7 +101,7 @@ __forceinline uint32 LongMulDiv(uint32 Multiplier, uint32 Multiplicand, uint32 D
   }
 }
 
-__forceinline uint32 LongMulMod(uint32 Multiplier, uint32 Multiplicand, uint32 Divisor) {
+__forceinline uint32_t LongMulMod(uint32_t Multiplier, uint32_t Multiplicand, uint32_t Divisor) {
   __asm {
     mov eax, Multiplier;
     mul Multiplicand;
@@ -131,7 +110,7 @@ __forceinline uint32 LongMulMod(uint32 Multiplier, uint32 Multiplicand, uint32 D
   }
 }
 
-__forceinline uint32 Shld(uint32 HighLong, uint32 LowLong, uint32 Count) {
+__forceinline uint32_t Shld(uint32_t HighLong, uint32_t LowLong, uint32_t Count) {
   __asm {
     mov eax, HighLong;
     mov edx, LowLong;
@@ -140,7 +119,7 @@ __forceinline uint32 Shld(uint32 HighLong, uint32 LowLong, uint32 Count) {
   }
 }
 
-__forceinline uint32 Shrd(uint32 LowLong, uint32 HighLong, uint32 Count) {
+__forceinline uint32_t Shrd(uint32_t LowLong, uint32_t HighLong, uint32_t Count) {
   __asm {
     mov eax, LowLong;
     mov edx, HighLong;
@@ -183,7 +162,7 @@ static __inline__ int ExchangeAdd(volatile int *Addend, int Increment) {
   return eax;
 }
 
-static __inline__ int Bsf(uint32 Operand) {
+static __inline__ int Bsf(uint32_t Operand) {
   int eax;
   asm __volatile__ (
     "bsfl %0, %0" "\n\t"
@@ -193,7 +172,7 @@ static __inline__ int Bsf(uint32 Operand) {
   return eax;
 }
 
-static __inline__ int Bsr(uint32 Operand) {
+static __inline__ int Bsr(uint32_t Operand) {
   int eax;
   asm __volatile__ (
     "bsrl %0, %0" "\n\t"
@@ -203,8 +182,8 @@ static __inline__ int Bsr(uint32 Operand) {
   return eax;
 }
 
-static __inline__ uint64 TimeStampCounter(void) {
-  uint32 eax, edx;
+static __inline__ uint64_t TimeStampCounter(void) {
+  uint32_t eax, edx;
   asm __volatile__ (
     "rdtsc" "\n\t"
     : "=a" (eax), "=d" (edx)
@@ -213,8 +192,8 @@ static __inline__ uint64 TimeStampCounter(void) {
   return MAKE_LONG_LONG(eax, edx);
 }
 
-static __inline__ uint64 LongMul(uint32 Multiplier, uint32 Multiplicand) {
-  uint32 eax, edx;
+static __inline__ uint64_t LongMul(uint32_t Multiplier, uint32_t Multiplicand) {
+  uint32_t eax, edx;
   asm __volatile__ (
     "mull %1" "\n\t"
     : "=a" (eax), "=d" (edx)
@@ -223,8 +202,8 @@ static __inline__ uint64 LongMul(uint32 Multiplier, uint32 Multiplicand) {
   return MAKE_LONG_LONG(eax, edx);
 }
 
-static __inline__ uint64 LongSqr(uint32 Multiplier) {
-  uint32 eax, edx;
+static __inline__ uint64_t LongSqr(uint32_t Multiplier) {
+  uint32_t eax, edx;
   asm __volatile__ (
     "mull %1" "\n\t"
     : "=a" (eax), "=d" (edx)
@@ -233,8 +212,8 @@ static __inline__ uint64 LongSqr(uint32 Multiplier) {
   return MAKE_LONG_LONG(eax, edx);
 }
 
-static __inline__ uint32 LongDiv(uint64 Dividend, uint32 Divisor) {
-  uint32 eax, edx, dummy;
+static __inline__ uint32_t LongDiv(uint64_t Dividend, uint32_t Divisor) {
+  uint32_t eax, edx, dummy;
   asm __volatile__ (
     "divl %2" "\n\t"
     : "=a" (eax), "=d" (edx), "=g" (dummy)
@@ -243,8 +222,8 @@ static __inline__ uint32 LongDiv(uint64 Dividend, uint32 Divisor) {
   return eax;
 }
 
-static __inline__ uint32 LongMod(uint64 Dividend, uint32 Divisor) {
-  uint32 eax, edx, dummy;
+static __inline__ uint32_t LongMod(uint64_t Dividend, uint32_t Divisor) {
+  uint32_t eax, edx, dummy;
   asm __volatile__ (
     "divl %2"     "\n\t"
     : "=a" (eax), "=d" (edx), "=g" (dummy)
@@ -253,8 +232,8 @@ static __inline__ uint32 LongMod(uint64 Dividend, uint32 Divisor) {
   return edx;
 }
 
-static __inline__ uint32 LongMulDiv(uint32 Multiplier, uint32 Multiplicand, uint32 Divisor) {
-  uint32 eax, edx, dummy;
+static __inline__ uint32_t LongMulDiv(uint32_t Multiplier, uint32_t Multiplicand, uint32_t Divisor) {
+  uint32_t eax, edx, dummy;
   asm __volatile__ (
     "mull %1" "\n\t"
     "divl %2" "\n\t"
@@ -264,8 +243,8 @@ static __inline__ uint32 LongMulDiv(uint32 Multiplier, uint32 Multiplicand, uint
   return eax;
 }
 
-static __inline__ uint32 LongMulMod(uint32 Multiplier, uint32 Multiplicand, uint32 Divisor) {
-  uint32 eax, edx, dummy;
+static __inline__ uint32_t LongMulMod(uint32_t Multiplier, uint32_t Multiplicand, uint32_t Divisor) {
+  uint32_t eax, edx, dummy;
   asm __volatile__ (
     "mull %1"     "\n\t"
     "divl %2"     "\n\t"
@@ -275,8 +254,8 @@ static __inline__ uint32 LongMulMod(uint32 Multiplier, uint32 Multiplicand, uint
   return edx;
 }
 
-static __inline uint32 Shld(uint32 High, uint32 Low, uint32 Count) {
-  uint32 eax, edx, ecx;
+static __inline uint32_t Shld(uint32_t High, uint32_t Low, uint32_t Count) {
+  uint32_t eax, edx, ecx;
   asm __volatile__ (
     "shldl %%cl, %1, %0" "\n\t"
     : "=a" (eax), "=d" (edx), "=c" (ecx)
@@ -285,8 +264,8 @@ static __inline uint32 Shld(uint32 High, uint32 Low, uint32 Count) {
   return eax;
 }
 
-static __inline uint32 Shrd(uint32 Low, uint32 High, uint32 Count) {
-  uint32 eax, edx, ecx;
+static __inline uint32_t Shrd(uint32_t Low, uint32_t High, uint32_t Count) {
+  uint32_t eax, edx, ecx;
   asm __volatile__ (
     "shrdl %%cl, %1, %0" "\n\t"
     : "=a" (eax), "=d" (edx), "=c" (ecx)
@@ -297,7 +276,7 @@ static __inline uint32 Shrd(uint32 Low, uint32 High, uint32 Count) {
 
 #endif
 
-inline uint64 LongShl(uint64 Operand, uint32 Count) {
+inline uint64_t LongShl(uint64_t Operand, uint32_t Count) {
   if (Count < 32) {
     return MAKE_LONG_LONG(LOW_LONG(Operand) << Count, Shld(HIGH_LONG(Operand), LOW_LONG(Operand), Count));
   } else if (Count < 64) {
@@ -307,7 +286,7 @@ inline uint64 LongShl(uint64 Operand, uint32 Count) {
   }
 }
 
-inline uint64 LongShr(uint64 Operand, uint32 Count) {
+inline uint64_t LongShr(uint64_t Operand, uint32_t Count) {
   if (Count < 32) {
     return MAKE_LONG_LONG(Shrd(LOW_LONG(Operand), HIGH_LONG(Operand), Count), HIGH_LONG(Operand) >> Count);
   } else if (Count < 64) {

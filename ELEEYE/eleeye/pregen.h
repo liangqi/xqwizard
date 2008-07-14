@@ -20,7 +20,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
+#include "../base/rc4prng.h"
 
 #ifndef PREGEN_H
 #define PREGEN_H
@@ -36,29 +37,29 @@ const int FILE_LEFT = 3;
 const int FILE_CENTER = 7;
 const int FILE_RIGHT = 11;
 
-extern const BoolChar cbcInBoard[256];    // 棋盘区域表
-extern const BoolChar cbcInFort[256];     // 城池区域表
-extern const BoolChar cbcCanPromote[256]; // 升变区域表
-extern const sint8 ccLegalSpanTab[512];   // 合理着法跨度表
-extern const sint8 ccKnightPinTab[512];   // 马腿表
+extern const bool cbcInBoard[256];    // 棋盘区域表
+extern const bool cbcInFort[256];     // 城池区域表
+extern const bool cbcCanPromote[256]; // 升变区域表
+extern const int8_t ccLegalSpanTab[512];   // 合理着法跨度表
+extern const int8_t ccKnightPinTab[512];   // 马腿表
 
-inline BoolChar IN_BOARD(int sq) {
+inline bool IN_BOARD(int sq) {
   return cbcInBoard[sq];
 }
 
-inline BoolChar IN_FORT(int sq) {
+inline bool IN_FORT(int sq) {
   return cbcInFort[sq];
 }
 
-inline BoolChar CAN_PROMOTE(int sq) {
+inline bool CAN_PROMOTE(int sq) {
   return cbcCanPromote[sq];
 }
 
-inline sint8 LEGAL_SPAN_TAB(int nDisp) {
+inline int8_t LEGAL_SPAN_TAB(int nDisp) {
   return ccLegalSpanTab[nDisp];
 }
 
-inline sint8 KNIGHT_PIN_TAB(int nDisp) {
+inline int8_t KNIGHT_PIN_TAB(int nDisp) {
   return ccKnightPinTab[nDisp];
 }
 
@@ -98,15 +99,15 @@ inline int SQUARE_BACKWARD(int sq, int sd) {
   return sq + 16 - (sd << 5);
 }
 
-inline Bool KING_SPAN(int sqSrc, int sqDst) {
+inline bool KING_SPAN(int sqSrc, int sqDst) {
   return LEGAL_SPAN_TAB(sqDst - sqSrc + 256) == 1;
 }
 
-inline Bool ADVISOR_SPAN(int sqSrc, int sqDst) {
+inline bool ADVISOR_SPAN(int sqSrc, int sqDst) {
   return LEGAL_SPAN_TAB(sqDst - sqSrc + 256) == 2;
 }
 
-inline Bool BISHOP_SPAN(int sqSrc, int sqDst) {
+inline bool BISHOP_SPAN(int sqSrc, int sqDst) {
   return LEGAL_SPAN_TAB(sqDst - sqSrc + 256) == 3;
 }
 
@@ -118,27 +119,27 @@ inline int KNIGHT_PIN(int sqSrc, int sqDst) {
   return sqSrc + KNIGHT_PIN_TAB(sqDst - sqSrc + 256);
 }
 
-inline Bool WHITE_HALF(int sq) {
+inline bool WHITE_HALF(int sq) {
   return (sq & 0x80) != 0;
 }
 
-inline Bool BLACK_HALF(int sq) {
+inline bool BLACK_HALF(int sq) {
   return (sq & 0x80) == 0;
 }
 
-inline Bool HOME_HALF(int sq, int sd) {
+inline bool HOME_HALF(int sq, int sd) {
   return (sq & 0x80) != (sd << 7);
 }
 
-inline Bool AWAY_HALF(int sq, int sd) {
+inline bool AWAY_HALF(int sq, int sd) {
   return (sq & 0x80) == (sd << 7);
 }
 
-inline Bool SAME_HALF(int sqSrc, int sqDst) {
+inline bool SAME_HALF(int sqSrc, int sqDst) {
   return ((sqSrc ^ sqDst) & 0x80) == 0;
 }
 
-inline Bool DIFF_HALF(int sqSrc, int sqDst) {
+inline bool DIFF_HALF(int sqSrc, int sqDst) {
   return ((sqSrc ^ sqDst) & 0x80) != 0;
 }
 
@@ -152,19 +153,19 @@ inline int FILE_DISP(int x) {
 
 // 借助“位行”和“位列”生成车炮着法的预置结构
 struct SlideMoveStruct {
-  uint8 ucNonCap[2];    // 不吃子能走到的最大一格/最小一格
-  uint8 ucRookCap[2];   // 车吃子能走到的最大一格/最小一格
-  uint8 ucCannonCap[2]; // 炮吃子能走到的最大一格/最小一格
-  uint8 ucSuperCap[2];  // 超级炮(隔两子吃子)能走到的最大一格/最小一格
+  uint8_t ucNonCap[2];    // 不吃子能走到的最大一格/最小一格
+  uint8_t ucRookCap[2];   // 车吃子能走到的最大一格/最小一格
+  uint8_t ucCannonCap[2]; // 炮吃子能走到的最大一格/最小一格
+  uint8_t ucSuperCap[2];  // 超级炮(隔两子吃子)能走到的最大一格/最小一格
 }; // smv
 
 // 借助“位行”和“位列”判断车炮着法合理性的预置结构
 struct SlideMaskStruct {
-  uint16 wNonCap, wRookCap, wCannonCap, wSuperCap;
+  uint16_t wNonCap, wRookCap, wCannonCap, wSuperCap;
 }; // sms
 
 struct ZobristStruct {
-  uint32 dwKey, dwLock0, dwLock1;
+  uint32_t dwKey, dwLock0, dwLock1;
   void InitZero(void) {
     dwKey = dwLock0 = dwLock1 = 0;
   }
@@ -190,8 +191,8 @@ extern struct PreGenStruct {
   ZobristStruct zobrPlayer;
   ZobristStruct zobrTable[14][256];
 
-  uint16 wBitRankMask[256]; // 每个格子的位行的屏蔽位
-  uint16 wBitFileMask[256]; // 每个格子的位列的屏蔽位
+  uint16_t wBitRankMask[256]; // 每个格子的位行的屏蔽位
+  uint16_t wBitFileMask[256]; // 每个格子的位列的屏蔽位
 
   /* 借助“位行”和“位列”生成车炮着法和判断车炮着法合理性的预置数组
    *
@@ -216,21 +217,21 @@ extern struct PreGenStruct {
    * 使用数组时，可以根据起始格来确定一个指针"g_...Moves[Square]"，这个指针指向一系列目标格，以0结束。
    * 为了对齐地址，数组[256][n]中n总是4的倍数，而且必须大于n(因为数组包括了结束标识符0)，除了象眼和马腿数组。
    */
-  uint8 ucsqKingMoves[256][8];
-  uint8 ucsqAdvisorMoves[256][8];
-  uint8 ucsqBishopMoves[256][8];
-  uint8 ucsqBishopPins[256][4];
-  uint8 ucsqKnightMoves[256][12];
-  uint8 ucsqKnightPins[256][8];
-  uint8 ucsqPawnMoves[2][256][4];
+  uint8_t ucsqKingMoves[256][8];
+  uint8_t ucsqAdvisorMoves[256][8];
+  uint8_t ucsqBishopMoves[256][8];
+  uint8_t ucsqBishopPins[256][4];
+  uint8_t ucsqKnightMoves[256][12];
+  uint8_t ucsqKnightPins[256][8];
+  uint8_t ucsqPawnMoves[2][256][4];
 } PreGen;
 
 // 局面预评价结构
 extern struct PreEvalStruct {
-  Bool bPromotion;
+  bool bPromotion;
   int vlAdvanced;
-  uint8 ucvlWhitePieces[7][256];
-  uint8 ucvlBlackPieces[7][256];
+  uint8_t ucvlWhitePieces[7][256];
+  uint8_t ucvlBlackPieces[7][256];
 } PreEval;
 
 void PreGenInit(void);

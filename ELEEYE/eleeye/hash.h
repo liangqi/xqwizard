@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <string.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "position.h"
 
 #ifndef HASH_H
@@ -37,11 +37,11 @@ const int NULL_DEPTH = 2;    // 空着裁剪的深度
 
 // 置换表结构，置换表信息夹在两个Zobrist校验锁中间，可以防止存取冲突
 struct HashStruct {
-  uint32 dwZobristLock0;           // Zobrist校验锁，第一部分
-  uint16 wmv;                      // 最佳着法
-  uint8 ucAlphaDepth, ucBetaDepth; // 深度(上边界和下边界)
-  sint16 svlAlpha, svlBeta;        // 分值(上边界和下边界)
-  uint32 dwZobristLock1;           // Zobrist校验锁，第二部分
+  uint32_t dwZobristLock0;           // Zobrist校验锁，第一部分
+  uint16_t wmv;                      // 最佳着法
+  uint8_t ucAlphaDepth, ucBetaDepth; // 深度(上边界和下边界)
+  int16_t svlAlpha, svlBeta;         // 分值(上边界和下边界)
+  uint32_t dwZobristLock1;           // Zobrist校验锁，第二部分
 }; // hsh
 
 // 置换表信息
@@ -75,7 +75,7 @@ inline void DelHash(void) {           // 释放置换表
 }
 
 // 判断置换表是否符合局面(Zobrist锁是否相等)
-inline Bool HASH_POS_EQUAL(const HashStruct &hsh, const PositionStruct &pos) {
+inline bool HASH_POS_EQUAL(const HashStruct &hsh, const PositionStruct &pos) {
   return hsh.dwZobristLock0 == pos.zobr.dwLock0 && hsh.dwZobristLock1 == pos.zobr.dwLock1;
 }
 
@@ -86,13 +86,13 @@ inline HashStruct &HASH_ITEM(const PositionStruct &pos, int nLayer) {
 
 // 置换表的管理过程
 void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv);                    // 存储置换表局面信息
-int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, Bool bNoNull, int &mv); // 获取置换表局面信息
+int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, bool bNoNull, int &mv); // 获取置换表局面信息
 #ifdef HASH_QUIESC
   void RecordHashQ(const PositionStruct &pos, int vlBeta, int vlAlpha); // 存储置换表局面信息(静态搜索)
   int ProbeHashQ(const PositionStruct &pos, int vlAlpha, int vlBeta);   // 获取置换表局面信息(静态搜索)
 #endif
 
 // UCCI支持 - 输出Hash表中的局面信息
-Bool PopHash(const PositionStruct &pos);
+bool PopHash(const PositionStruct &pos);
 
 #endif

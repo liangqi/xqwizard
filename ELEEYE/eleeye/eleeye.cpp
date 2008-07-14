@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdio.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
 #include "ucci.h"
 #include "pregen.h"
 #include "position.h"
@@ -108,7 +108,7 @@ inline void PrintLn(const char *sz) {
 
 int main(void) {
   int i;
-  Bool bPonderTime;
+  bool bPonderTime;
   UcciCommStruct UcciComm;
   char szLibEvalFile[1024];
   const char *szEngineName;
@@ -125,16 +125,16 @@ int main(void) {
   LocatePath(Search.szBookFile, "BOOK.DAT");
   LocatePath(szLibEvalFile, cszLibEvalFile);
   hModule = LoadEvalApi(szLibEvalFile);
-  bPonderTime = FALSE;
+  bPonderTime = false;
   PreGenInit();
   NewHash(24); // 24=16MB, 25=32MB, 26=64MB, ...
   Search.pos.FromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
   Search.pos.nDistance = 0;
   Search.PreEvaluate(&Search.pos, &PreEval);
   Search.nBanMoves = 0;
-  Search.bQuit = Search.bBatch = Search.bDebug = Search.bAlwaysCheck = FALSE;
-  Search.bUseHash = Search.bUseBook = Search.bNullMove = Search.bKnowledge = TRUE;
-  Search.bIdle = FALSE;
+  Search.bQuit = Search.bBatch = Search.bDebug = Search.bAlwaysCheck = false;
+  Search.bUseHash = Search.bUseBook = Search.bNullMove = Search.bKnowledge = true;
+  Search.bIdle = false;
   Search.nCountMask = INTERRUPT_COUNT - 1;
   Search.nRandomMask = 0;
   Search.rc4Random.InitRand();
@@ -241,19 +241,19 @@ int main(void) {
       case UCCI_OPTION_IDLE:
         switch (UcciComm.Grade) {
         case UCCI_GRADE_NONE:
-          Search.bIdle = FALSE;
+          Search.bIdle = false;
           Search.nCountMask = INTERRUPT_COUNT - 1;
           break;
         case UCCI_GRADE_SMALL:
-          Search.bIdle = TRUE;
+          Search.bIdle = true;
           Search.nCountMask = INTERRUPT_COUNT / 4 - 1;
           break;
         case UCCI_GRADE_MEDIUM:
-          Search.bIdle = TRUE;
+          Search.bIdle = true;
           Search.nCountMask = INTERRUPT_COUNT / 16 - 1;
           break;
         case UCCI_GRADE_LARGE:
-          Search.bIdle = TRUE;
+          Search.bIdle = true;
           Search.nCountMask = INTERRUPT_COUNT / 64 - 1;
           break;
         default:
@@ -331,7 +331,7 @@ int main(void) {
       }
       break;
     case UCCI_COMM_QUIT:
-      Search.bQuit = TRUE;
+      Search.bQuit = true;
       break;
     default:
       break;

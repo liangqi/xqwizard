@@ -21,17 +21,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
-#include "../utility/pipe.h"
+#include "../base/base.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
+#include "../base/pipe.h"
 #include "../eleeye/ucci.h"
 
 const int MAX_CHAR = 1024; // 配置文件的最大长度
 
 // ICCS格式转换：浅红到UCCI
-inline uint32 ICCS_QH_UCCI(const char *szIccs) {
-  C4dwStruct Ret;
+inline uint32_t ICCS_QH_UCCI(const char *szIccs) {
+  union {
+    char c[4];
+    uint32_t dw;
+  } Ret;
   Ret.c[0] = szIccs[0] - 'A' + 'a';
   Ret.c[1] = szIccs[1];
   Ret.c[2] = szIccs[3] - 'A' + 'a';
@@ -40,7 +43,7 @@ inline uint32 ICCS_QH_UCCI(const char *szIccs) {
 }
 
 // ICCS格式转换：UCCI到浅红
-inline void ICCS_UCCI_QH(char *szIccs, uint32 dwMoveStr) {
+inline void ICCS_UCCI_QH(char *szIccs, uint32_t dwMoveStr) {
   char *lpMoveStr;
   lpMoveStr = (char *) &dwMoveStr;
   szIccs[0] = lpMoveStr[0] - 'a' + 'A';
@@ -52,7 +55,7 @@ inline void ICCS_UCCI_QH(char *szIccs, uint32 dwMoveStr) {
 }
 
 // 把UCCI引擎的FEN串转换为浅红插件的FEN串
-static void FenUcci2QH(char *lp, Bool bBlackMoves) {
+static void FenUcci2QH(char *lp, bool bBlackMoves) {
   while (*lp != ' ' && *lp != '\0') {
     switch (*lp) {
     case 'B':
@@ -85,13 +88,13 @@ inline void Adapter2QH(const char *szLineStr) {
 }
 
 // 接收浅红插件的反馈信息
-inline Bool QH2Adapter(char *szLineStr) {
+inline bool QH2Adapter(char *szLineStr) {
   if (pipePlugin.LineInput(szLineStr)) {
     printf("info lineinput [%s]\n", szLineStr);
     fflush(stdout);
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -103,8 +106,8 @@ inline void PrintLn(const char *sz) {
 // 主函数
 int main(void) {
   int i, nLevel, nThinkTime;
-  Bool bQuit, bBlackMoves, bTimeOut;
-  uint32 dwMoveStr;
+  bool bQuit, bBlackMoves, bTimeOut;
+  uint32_t dwMoveStr;
   FILE *fpIniFile;
   char *lp;
   TimerStruct tbTimer;
@@ -134,7 +137,7 @@ int main(void) {
       *lp = '\0';
     }
     lp = szLineStr;
-    if (FALSE) {
+    if (false) {
     } else if (StrEqvSkip(lp, "Command=")) {
       LocatePath(szCommand, lp);
     } else if (StrEqvSkip(lp, "Name=")) {
@@ -156,7 +159,7 @@ int main(void) {
   fclose(fpIniFile);
 
   // 2. 初使化适配器参数
-  bQuit = bBlackMoves = FALSE;
+  bQuit = bBlackMoves = false;
   pipePlugin.Open(szCommand);
   sprintf(szLineStr, "LEVEL %d", nLevel);
   Adapter2QH(szLineStr);
@@ -173,7 +176,7 @@ int main(void) {
 
   // 3. 接收UCCI指令
   while (!bQuit) {
-    switch (IdleLine(UcciComm, FALSE)) {
+    switch (IdleLine(UcciComm, false)) {
     case UCCI_COMM_ISREADY:
       PrintLn("readyok");
       break;
@@ -231,25 +234,25 @@ int main(void) {
         }
         Adapter2QH("AI");
         tbTimer.Init();
-        bTimeOut = FALSE;
+        bTimeOut = false;
         while (!bQuit) {
           // 等待思考结果，需要检查以下几方面内容：
           // (1) 控制时间
           if (!bTimeOut && tbTimer.GetTimer() > nThinkTime) {
             Adapter2QH("TIMEOUT");
-            bTimeOut = TRUE;
+            bTimeOut = true;
           }
           // (2) 处理UCCI指令
-          switch (BusyLine(UcciComm, FALSE)) {
+          switch (BusyLine(UcciComm, false)) {
           case UCCI_COMM_STOP:
             if (!bTimeOut) {
               Adapter2QH("TIMEOUT");
-              bTimeOut = TRUE;
+              bTimeOut = true;
             }
             break;
           case UCCI_COMM_QUIT:
             Adapter2QH("ABORT");
-            bQuit = TRUE;
+            bQuit = true;
             break;
           default:
             break;
@@ -278,7 +281,7 @@ int main(void) {
       }
       break;
     case UCCI_COMM_QUIT:
-      bQuit = TRUE;
+      bQuit = true;
       break;
     default:
       break;

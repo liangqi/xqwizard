@@ -18,7 +18,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
 #include "../cchess/cchess.h"
 
 #ifndef PGNFILE_H
@@ -29,7 +28,7 @@ const int MAX_MOVE_LEN = 1999;
 const int MAX_COUNTER = 1000;
 const int MAX_REM_LEN = 4096;
 
-const Bool NO_ADVERT = TRUE;
+const bool NO_ADVERT = true;
 
 struct PgnFileStruct {
   char szEvent[MAX_STR_LEN], szRound[MAX_STR_LEN], szDate[MAX_STR_LEN], szSite[MAX_STR_LEN];
@@ -50,8 +49,8 @@ struct PgnFileStruct {
     this->~PgnFileStruct();
     Init();
   }
-  Bool Read(const char *szFileName, Bool bNoAdvert = FALSE);
-  Bool Write(const char *szFileName, Bool bNoAdvert = FALSE) const;
+  bool Read(const char *szFileName, bool bNoAdvert = false);
+  bool Write(const char *szFileName, bool bNoAdvert = false) const;
 }; // pgn
 
 #endif

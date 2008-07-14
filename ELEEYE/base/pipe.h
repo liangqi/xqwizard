@@ -22,9 +22,9 @@ struct PipeStruct {
   void Open(const char *szExecFile = NULL);
   void Close(void) const;
   void ReadInput(void);
-  Bool CheckInput(void);
-  Bool GetBuffer(char *szLineStr);
-  Bool LineInput(char *szLineStr);
+  bool CheckInput(void);
+  bool GetBuffer(char *szLineStr);
+  bool LineInput(char *szLineStr);
   void LineOutput(const char *szLineStr) const;
 }; // pipe
 

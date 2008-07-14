@@ -1,4 +1,4 @@
-#include "../../utility/base.h"
+#include "../../base/base.h"
 #include "crc32.h"
 
 #ifdef CRC32_DLL
@@ -19,7 +19,7 @@ VOID WINAPI Crc32Reset(LPDWORD lpdwCrc) {
 }
 
 VOID WINAPI Crc32Update(LPDWORD lpdwCrc, LPCSTR lpBuffer, LONG nLen) {
-  ((Crc32 *) lpdwCrc)->Update((const uint8 *) lpBuffer, nLen);
+  ((Crc32 *) lpdwCrc)->Update((const uint8_t *) lpBuffer, nLen);
 }
 
 DWORD WINAPI Crc32Digest(LPDWORD lpdwCrc) {
@@ -28,13 +28,13 @@ DWORD WINAPI Crc32Digest(LPDWORD lpdwCrc) {
 
 #endif
 
-static const uint32 CRC32_IV = 0xedb88320;
+static const uint32_t CRC32_IV = 0xedb88320;
 
-uint32 dwCrc32Table[256];
+uint32_t dwCrc32Table[256];
 
 void InitCrc32Table(void) {
   int i, j;
-  uint32 r;
+  uint32_t r;
   for (i = 0; i < 256; i ++) {
     r = i;
     for (j = 0; j < 8; j ++) {
@@ -44,7 +44,7 @@ void InitCrc32Table(void) {
   }
 }
 
-void Crc32::Update(const uint8 *lpuc, int nLen) {
+void Crc32::Update(const uint8_t *lpuc, int nLen) {
   int i;
   for (i = 0; i < nLen; i ++) {
     Update(lpuc[i]);

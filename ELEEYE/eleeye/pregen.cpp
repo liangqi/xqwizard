@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <string.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "pregen.h"
 
-const BoolChar cbcInBoard[256] = {
+const bool cbcInBoard[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -43,7 +43,7 @@ const BoolChar cbcInBoard[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const BoolChar cbcInFort[256] = {
+const bool cbcInFort[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -62,7 +62,7 @@ const BoolChar cbcInFort[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const BoolChar cbcCanPromote[256] = {
+const bool cbcCanPromote[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -81,7 +81,7 @@ const BoolChar cbcCanPromote[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const sint8 ccLegalSpanTab[512] = {
+const int8_t ccLegalSpanTab[512] = {
                        0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -117,7 +117,7 @@ const sint8 ccLegalSpanTab[512] = {
   0, 0, 0, 0, 0, 0, 0
 };
 
-const sint8 ccKnightPinTab[512] = {
+const int8_t ccKnightPinTab[512] = {
                                0,  0,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -407,5 +407,5 @@ void PreGenInit(void) {
 
   // 最后清空局面预评价结构
   memset(&PreEval, 0, sizeof(PreEvalStruct));
-  PreEval.bPromotion = FALSE; // 缺省是不允许升变的
+  PreEval.bPromotion = false; // 缺省是不允许升变的
 }

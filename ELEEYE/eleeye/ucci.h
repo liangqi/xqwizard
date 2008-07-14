@@ -9,7 +9,7 @@ This part (ucci.h/ucci.cpp only) of codes is NOT published under LGPL, and
 can be used without restriction.
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
 
 #ifndef UCCI_H
 #define UCCI_H
@@ -52,7 +52,7 @@ union UcciCommStruct {
     UcciOptionEnum Option; // 选项类型
     union {                // 选项值
       int nSpin;           // "spin"类型的选项的值
-      Bool bCheck;         // "check"类型的选项的值
+      bool bCheck;         // "check"类型的选项的值
       UcciRepetEnum Repet; // "combo"类型的选项"repetition"的值
       UcciGradeEnum Grade; // "combo"类型的选项"pruning"、"knowledge"和"selectivity"的值
       UcciStyleEnum Style; // "combo"类型的选项"style"的值
@@ -65,9 +65,9 @@ union UcciCommStruct {
    *    例如，position startpos moves h2e2 h9g8，FEN串就是"startpos"代表的FEN串，着法数(MoveNum)就是2
    */
   struct {
-    char *szFenStr;         // FEN串，特殊局面(如"startpos"等)也由解释器最终转换成FEN串
-    int nMoveNum;           // 后续着法数
-    uint32 *lpdwMovesCoord; // 后续着法，指向程序"IdleLine()"中的一个静态数组，但可以把"CoordList"本身看成数组
+    char *szFenStr;           // FEN串，特殊局面(如"startpos"等)也由解释器最终转换成FEN串
+    int nMoveNum;             // 后续着法数
+    uint32_t *lpdwMovesCoord; // 后续着法，指向程序"IdleLine()"中的一个静态数组，但可以把"CoordList"本身看成数组
   };
 
   /* 3. "banmoves"指令传递的信息，适合于"e_CommBanMoves"指令类型
@@ -75,7 +75,7 @@ union UcciCommStruct {
    */
   struct {
     int nBanMoveNum;
-    uint32 *lpdwBanMovesCoord;
+    uint32_t *lpdwBanMovesCoord;
   };
 
   /* 4. "go"指令传递的信息，适合于"UCCI_COMM_GO指令类型
@@ -83,8 +83,8 @@ union UcciCommStruct {
    */
   struct {
     UcciGoEnum Go; // 思考模式
-    Bool bPonder;  // 后台思考
-    Bool bDraw;    // 提和
+    bool bPonder;  // 后台思考
+    bool bDraw;    // 提和
     union {
       int nDepth, nNodes, nTime;
     }; // 深度、结点数或时间
@@ -96,7 +96,7 @@ union UcciCommStruct {
 
 // 下面三个函数用来解释UCCI指令，但适用于不同场合
 UcciCommEnum BootLine(void);                                  // UCCI引擎启动的第一条指令，只接收"ucci"
-UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug); // 引擎空闲时接收指令
-UcciCommEnum BusyLine(UcciCommStruct &UcciComm, Bool bDebug); // 引擎思考时接收指令，只允许接收"stop"、"ponderhit"和"probe"
+UcciCommEnum IdleLine(UcciCommStruct &UcciComm, bool bDebug); // 引擎空闲时接收指令
+UcciCommEnum BusyLine(UcciCommStruct &UcciComm, bool bDebug); // 引擎思考时接收指令，只允许接收"stop"、"ponderhit"和"probe"
 
 #endif

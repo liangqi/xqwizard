@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "base.h"
 
 #ifndef PARSE_H
 #define PARSE_H
@@ -34,11 +33,11 @@ inline void StrCutCrLf(char *sz) {
   }
 }
 
-inline Bool StrEqv(const char *sz1, const char *sz2) {
+inline bool StrEqv(const char *sz1, const char *sz2) {
   return strncasecmp(sz1, sz2, strlen(sz2)) == 0;
 }
 
-inline Bool StrEqvSkip(const char *&sz1, const char *sz2) {
+inline bool StrEqvSkip(const char *&sz1, const char *sz2) {
   if (strncasecmp(sz1, sz2, strlen(sz2)) == 0) {
     sz1 += strlen(sz2);
     return TRUE;
@@ -47,7 +46,7 @@ inline Bool StrEqvSkip(const char *&sz1, const char *sz2) {
   }
 }
 
-inline Bool StrEqvSkip(char *&sz1, const char *sz2) {
+inline bool StrEqvSkip(char *&sz1, const char *sz2) {
   if (strncasecmp(sz1, sz2, strlen(sz2)) == 0) {
     sz1 += strlen(sz2);
     return TRUE;
@@ -56,11 +55,11 @@ inline Bool StrEqvSkip(char *&sz1, const char *sz2) {
   }
 }
 
-inline Bool StrScan(const char *sz1, const char *sz2) {
+inline bool StrScan(const char *sz1, const char *sz2) {
   return strcasestr(sz1, sz2) != NULL;
 }
 
-inline Bool StrScanSkip(const char *&sz1, const char *sz2) {
+inline bool StrScanSkip(const char *&sz1, const char *sz2) {
   const char *lpsz;
   lpsz = strcasestr(sz1, sz2);
   if (lpsz == NULL) {
@@ -71,7 +70,7 @@ inline Bool StrScanSkip(const char *&sz1, const char *sz2) {
   }
 }
 
-inline Bool StrScanSkip(char *&sz1, const char *sz2) {
+inline bool StrScanSkip(char *&sz1, const char *sz2) {
   char *lpsz;
   lpsz = strcasestr(sz1, sz2);
   if (lpsz == NULL) {
@@ -82,7 +81,7 @@ inline Bool StrScanSkip(char *&sz1, const char *sz2) {
   }
 }
 
-inline Bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL) {
+inline bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL) {
   const char *lpsz;
   lpsz = strchr(szSrc, nSeperator);
   if (lpsz == NULL) {
@@ -101,7 +100,7 @@ inline Bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL)
   }
 }
 
-inline Bool StrSplitSkip(char *&szSrc, int nSeperator, char *szDst = NULL) {
+inline bool StrSplitSkip(char *&szSrc, int nSeperator, char *szDst = NULL) {
   char *lpsz;
   lpsz = strchr(szSrc, nSeperator);
   if (lpsz == NULL) {

@@ -24,12 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define BOOK_H
 
 #include <stdio.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "position.h"
 
 struct BookStruct {
-  uint32 dwZobristLock;
-  uint16 wmv, wvl;
+  uint32_t dwZobristLock;
+  uint16_t wmv, wvl;
 }; // bk
 
 inline int BOOK_POS_CMP(const BookStruct &bk, const PositionStruct &pos) {
@@ -40,14 +40,14 @@ inline int BOOK_POS_CMP(const BookStruct &bk, const PositionStruct &pos) {
 struct BookFileStruct {
   FILE *fp;
   int nLen;
-  Bool Open(const char *szFileName) {
+  bool Open(const char *szFileName) {
     fp = fopen(szFileName, "rb");
     if (fp == NULL) {
-      return FALSE;
+      return false;
     } else {
       fseek(fp, 0, SEEK_END);
       nLen = ftell(fp) / sizeof(BookStruct);
-      return TRUE;
+      return true;
     }
   }
   void Close(void) const {

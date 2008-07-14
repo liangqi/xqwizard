@@ -5,6 +5,7 @@
   #include <unistd.h>
 #endif
 #include <string.h>
+#include "base.h"
 
 #ifndef BASE2_H
 #define BASE2_H
@@ -19,7 +20,7 @@ inline void Idle(void) {
 
 const int PATH_SEPERATOR = '\\';
 
-inline Bool AbsolutePath(const char *sz) {
+inline bool AbsolutePath(const char *sz) {
   return sz[0] == '\\' || (((sz[0] >= 'A' && sz[0] <= 'Z') || (sz[0] >= 'a' && sz[0] <= 'z')) && sz[1] == ':');
 }
 
@@ -35,7 +36,7 @@ inline void Idle(void) {
 
 const int PATH_SEPERATOR = '/';
 
-inline Bool AbsolutePath(const char *sz) {
+inline bool AbsolutePath(const char *sz) {
   return sz[0] == '/' || (sz[0] == '~' && sz[1] == '/');
 }
 

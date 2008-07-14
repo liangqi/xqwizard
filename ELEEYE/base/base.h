@@ -1,28 +1,33 @@
 #include <assert.h>
 #include <sys/timeb.h>
-#include "x86asm.h"
 
 #ifndef BASE_H
 #define BASE_H
+
+#ifdef _MSC_VER
+  typedef signed   __int64  int64_t; // ll
+  typedef unsigned __int64 uint64_t; // qw
+  typedef signed   __int32  int32_t; // l
+  typedef unsigned __int32 uint32_t; // dw
+  typedef signed   __int16  int16_t; // s
+  typedef unsigned __int16 uint16_t; // w
+  typedef signed   __int8   int8_t;  // c
+  typedef unsigned __int8  uint8_t;  // uc
+  #define FORMAT_I64 "I64"
+#else
+  #include <stdint.h>
+  #define FORMAT_I64 "ll"
+#endif
 
 #define __ASSERT(a) assert(a)
 #define __ASSERT_BOUND(a, b, c) assert((a) <= (b) && (b) <= (c))
 #define __ASSERT_BOUND_2(a, b, c, d) assert((a) <= (b) && (b) <= (c) && (c) <= (d))
 
-typedef int Bool;            // b
-typedef sint8 BoolChar;      // bc
-typedef sint16 BoolShort;    // bs
-typedef sint32 BoolLong;     // bl
-typedef sint64 BoolLongLong; // bll
-
-#define FALSE 0
-#define TRUE 1
-
-inline Bool EQV(Bool bArg1, Bool bArg2) {
+inline bool EQV(bool bArg1, bool bArg2) {
   return bArg1 ? bArg2 : !bArg2;
 }
 
-inline Bool XOR(Bool bArg1, Bool bArg2) {
+inline bool XOR(bool bArg1, bool bArg2) {
   return bArg1 ? !bArg2 : bArg2;
 }
 
@@ -49,14 +54,14 @@ template <typename T> inline void SWAP(T &Arg1, T &Arg2) {
   Arg2 = Temp;
 }
 
-inline int PopCnt8(uint8 uc) {
+inline int PopCnt8(uint8_t uc) {
   int n;
   n = ((uc >> 1) & 0x55) + (uc & 0x55);
   n = ((n >> 2) & 0x33) + (n & 0x33);
   return (n >> 4) + (n & 0x0f);
 }
 
-inline int PopCnt16(uint16 w) {
+inline int PopCnt16(uint16_t w) {
   int n;
   n = ((w >> 1) & 0x5555) + (w & 0x5555);
   n = ((n >> 2) & 0x3333) + (n & 0x3333);
@@ -64,7 +69,7 @@ inline int PopCnt16(uint16 w) {
   return (n >> 8) + (n & 0x00ff); 
 }
 
-inline int PopCnt32(uint32 dw) {
+inline int PopCnt32(uint32_t dw) {
   int n;
   n = ((dw >> 1) & 0x55555555) + (dw & 0x55555555);
   n = ((n >> 2) & 0x33333333) + (n & 0x33333333);
@@ -73,117 +78,73 @@ inline int PopCnt32(uint32 dw) {
   return (n >> 16) + (n & 0x0000ffff);
 }
 
-/* Note: "MutexAssign(bLock, TRUE)" is equivalent to "Lock(bLock)":
- *
- * inline Bool Lock(volatile Bool &bLock) {
- *   return MutexAssign(bLock, TRUE);
- * }
- */
-inline Bool MutexAssign(volatile int &nDst, int nSrc) {
-  return Exchange(&nDst, nSrc) != nSrc;
+inline int64_t GetTime() {
+  timeb tb;
+  ftime(&tb);
+  return (int64_t) tb.time * 1000 + tb.millitm;
 }
 
-inline Bool MutexAssignEqv(volatile int &nDst, int nSrc, int nComp) {
-  return CompareExchange(&nDst, nSrc, nComp) == nComp;
-}
+template <class T> class Stack {
+  int nSize, nTop;
+  T *Elements;
 
-inline int MutexAdd(volatile int &nDst, int nSrc) {
-  return ExchangeAdd(&nDst, nSrc) + nSrc;
-}
-
-inline int MutexIncr(volatile int &nDst) {
-  return ExchangeAdd(&nDst, 1) + 1;
-}
-
-inline int MutexDecr(volatile int &nDst) {
-  return ExchangeAdd(&nDst, -1) - 1;
-}
-
-union C4dwStruct {
-    char c[4];
-    uint32 dw;
+public:
+  Stack(int nSize_) {
+    nSize = nSize_;
+    nTop = 0;
+    Elements = new T[nSize];
+  }
+  ~Stack(void) {
+    delete[] Elements;
+  }
+  bool Push(T o) {
+    if (nTop == nSize) {
+      return false;
+    }
+    Elements[nTop] = o;
+    nTop ++;
+    return true;
+  }
+  bool Pop(T &o) {
+    if (nTop == 0) {
+      return false;
+    }
+    nTop --;
+    o = Elements[nTop];
+    return true;
+  }
 };
 
-struct TimerStruct {
-  timeb tbStart;
-  void Init(void) {
-    ftime(&tbStart);
-  }  
-  int GetTimer(void) {
-    timeb tb;
-    ftime(&tb);
-    return (tb.time - tbStart.time) * 1000 + tb.millitm - tbStart.millitm;
+template <class T> class Queue {
+  int nSize, nHead, nTail;
+  T *Elements;
+
+public:
+  Queue(int nSize_) {
+    nSize = nSize_;
+    nHead = nTail = 0;
+    Elements = new T[nSize];
   }
-}; // tb
-
-/* Here is the random number algorithm issued by Lewis, Goodman and Miller in 1969:
- * Multiplier = 7 ^ 5;
- * Divisor = 2 ^ 31 - 1; // which is a prime number
- * Seed *= Multiplier;
- * Seed %= Divisor;
- */
-/* Deprecated
-inline uint32 LongRand(uint32 &dwSeed, uint32 dwMultiplier = 16807) {
-  dwSeed = LongMulMod(dwSeed, dwMultiplier, 0x7fffffff);
-  return dwSeed;
-}
-
-inline uint32 GenLongSeed(void) {
-  return (uint32) TimeStampCounter() & 0x7fffffff;
-}
-*/
-
-struct RC4Struct {
-  uint8 s[256];
-  int x, y;
-
-  void Init(void *lpKey, int nKeyLen) {
-    int i, j;
-    x = y = j = 0;
-    for (i = 0; i < 256; i ++) {
-      s[i] = i;
+  ~Queue(void) {
+    delete[] Elements;
+  }
+  bool Offer(T o) {
+    int nNewTail = (nTail + 1) % nSize;
+    if (nNewTail == nHead) {
+      return false;
     }
-    for (i = 0; i < 256; i ++) {
-      j = (j + s[i] + ((uint8 *) lpKey)[i % nKeyLen]) & 255;
-      SWAP(s[i], s[j]);
+    Elements[nTail] = o;
+    nTail = nNewTail;
+    return true;
+  }
+  bool Poll(T &o) {
+    if (nTail == nHead) {
+      return false;
     }
-  }
-
-  void InitZero(void) {
-    uint32 dwKey;
-    dwKey = 0;
-    Init(&dwKey, 4);
-  }
-
-  void InitRand(void) {
-    union {
-      uint32 dw[2];
-      uint64 qw;
-    } Seed;
-    timeb tb;
-    ftime(&tb);
-    Seed.qw = TimeStampCounter();
-    Seed.dw[1] ^= (tb.time << 10) ^ tb.millitm;
-    Init(&Seed, 8);
-  }
-
-  uint8 NextByte(void) {
-    x = (x + 1) & 255;
-    y = (y + s[x]) & 255;
-    SWAP(s[x], s[y]);
-    return s[(s[x] + s[y]) & 255];
-  }
-
-  uint32 NextLong(void) {
-    union {
-      uint8 uc[4];
-      uint32 dw;
-    } Ret;
-    Ret.uc[0] = NextByte();
-    Ret.uc[1] = NextByte();
-    Ret.uc[2] = NextByte();
-    Ret.uc[3] = NextByte();
-    return Ret.dw;
+    int nOldHead = nHead;
+    nHead = (nHead + 1) % nSize;
+    o = Elements[nOldHead];
+    return true;
   }
 };
 

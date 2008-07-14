@@ -28,11 +28,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dlfcn.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
-#include "../utility/pipe.h"
-#include "../utility/wsockbas.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
+#include "../base/pipe.h"
+#include "../base/wsockbas.h"
 #include "../codec/base64/base64.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
@@ -56,7 +55,7 @@ struct CheckStruct {
 struct CheckFileStruct {
   FILE *fp;
   int nLen, nPtr;
-  Bool Eof(void) {                    // 判断进程文件是否读完
+  bool Eof(void) {                    // 判断进程文件是否读完
     return nPtr == nLen;
   }
   void Open(const char *szFileName);  // 打开进程文件
@@ -104,7 +103,7 @@ void CheckFileStruct::Open(const char *szFileName) {
 
 // 参赛队结构
 struct TeamStruct {
-  uint32 dwAbbr;
+  uint32_t dwAbbr;
   int nEloValue, nKValue;
   char szEngineName[MAX_CHAR], szEngineFile[MAX_CHAR], szOptionFile[MAX_CHAR], szUrl[MAX_CHAR];
   int nWin, nDraw, nLoss, nScore;
@@ -117,7 +116,7 @@ static TeamStruct TeamList[MAX_TEAM];
 static struct {
   int nTeamNum, nRobinNum, nRoundNum, nGameNum, nRemainProcs;
   int nInitTime, nIncrTime, nStopTime, nStandardCpuTime, nNameLen;
-  Bool bPromotion;
+  bool bPromotion;
   char szEvent[MAX_CHAR], szSite[MAX_CHAR];
   EccoApiStruct EccoApi;
 } League;
@@ -127,12 +126,12 @@ static char RobinTable[2 * MAX_TEAM - 2][MAX_TEAM / 2][2];
 
 // 直播全局变量
 static struct {
-  sint8 cResult[MAX_ROBIN][2 * MAX_TEAM - 2][MAX_TEAM / 2];
+  int8_t cResult[MAX_ROBIN][2 * MAX_TEAM - 2][MAX_TEAM / 2];
   char szHost[MAX_CHAR], szPath[MAX_CHAR], szPassword[MAX_CHAR];
   char szExt[MAX_CHAR], szCounter[MAX_CHAR], szHeader[MAX_CHAR], szFooter[MAX_CHAR];
   char szProxyHost[MAX_CHAR], szProxyUser[MAX_CHAR], szProxyPassword[MAX_CHAR];
   int nPort, nRefresh, nInterval, nProxyPort;
-  TimerStruct tb;
+  int64_t llTime;
 } Live;
 
 static const char *const cszContent1 =
@@ -173,11 +172,11 @@ static const char *const cszAuthFormat =
 
 static void BlockSend(int nSocket, const char *lpBuffer, int nLen, int nTimeOut) {
   int nBytesWritten, nOffset;
-  TimerStruct tb;
+  int64_t llTime;
 
   nOffset = 0;
-  tb.Init();
-  while (nLen > 0 && tb.GetTimer() < nTimeOut) {
+  llTime = GetTime();
+  while (nLen > 0 && GetTime() - llTime < nTimeOut) {
     nBytesWritten = WSBSend(nSocket, lpBuffer + nOffset, nLen);
     if (nBytesWritten == 0) {
       Idle();
@@ -189,7 +188,7 @@ static void BlockSend(int nSocket, const char *lpBuffer, int nLen, int nTimeOut)
   }
 }
 
-const Bool FORCE_PUBLISH = TRUE;
+const bool FORCE_PUBLISH = true;
 
 static void HttpUpload(const char *szFileName) {
   FILE *fpUpload;
@@ -243,19 +242,19 @@ static const char *const cszResultDigit[4] = {
   "-", "(1-0)", "(1/2-1/2)", "(0-1)"
 };
 
-static Bool SkipUpload(Bool bForce) {
-  if (Live.tb.GetTimer() < Live.nInterval) {
+static bool SkipUpload(bool bForce) {
+  if (GetTime() - Live.llTime < Live.nInterval) {
     // 如果与上次上传间隔太近，那么暂缓上传
     if (!bForce) {
-      return TRUE;
+      return true;
     }
     // 如果强制上传，那么必须等待
-    while (Live.tb.GetTimer() < Live.nInterval) {
+    while (GetTime() - Live.llTime < Live.nInterval) {
       Idle();
     }
   }
-  Live.tb.Init();
-  return FALSE;
+  Live.llTime = GetTime();
+  return false;
 }
 
 static void PrintFile(FILE *fp, const char *szFileName) {
@@ -278,13 +277,13 @@ static void PrintFile(FILE *fp, const char *szFileName) {
 static void PublishLeague(void) {
   int nSortList[MAX_TEAM];
   int i, j, k, nLastRank ,nLastScore, nResult;
-  uint32 dwHome, dwAway;
+  uint32_t dwHome, dwAway;
   TeamStruct *lpTeam;
   char szEmbeddedFile[MAX_CHAR];
   char szUploadFile[16];
   FILE *fp;
 
-  SkipUpload(FORCE_PUBLISH); // 始终返回 FALSE
+  SkipUpload(FORCE_PUBLISH); // 始终返回 false
   if (Live.nPort == 0) {
     return;
   }
@@ -489,9 +488,9 @@ inline void MOVE_ICCS(char *szIccs, int mv) {
   szIccs[7] = '\0';
 }
 
-static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForce = FALSE) {
+static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForce = false) {
   int i, mv, nStatus, nCounter;
-  uint64 dqChinMove;
+  uint64_t dqChinMove;
   char szEmbeddedFile[MAX_CHAR];
   char szUploadFile[16];
   char szIccs[8];
@@ -684,37 +683,37 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, Bool bForc
 // 比赛结构，0代表主队(先行方)，1代表客队(后行方)
 struct GameStruct {
   int sd, nCounter, nResult, nTimer[2];
-  Bool bTimeout, bStarted[2], bUseMilliSec[2], bDraw;
-  TimerStruct tbTimer;
+  bool bTimeout, bStarted[2], bUseMilliSec[2], bDraw;
+  int64_t llTime;
   TeamStruct *lpTeam[2];
   PipeStruct pipe[2];
   PositionStruct posIrrev;
   char szIrrevFen[MAX_CHAR];
   char szGameFile[16];
   PgnFileStruct *lppgn;
-  uint32 dwFileMove[20];
+  uint32_t dwFileMove[20];
   FILE *fpLogFile;
   CheckFileStruct CheckFile;
 
   void Send(const char *szLineStr) {
     pipe[sd].LineOutput(szLineStr);
-    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - tbTimer.GetTimer(), szLineStr);
+    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (GetTime() - llTime), szLineStr);
     fflush(fpLogFile);
   }
-  Bool Receive(char *szLineStr) {
+  bool Receive(char *szLineStr) {
     if (pipe[sd].LineInput(szLineStr)) {
-      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - tbTimer.GetTimer(), szLineStr);
+      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (GetTime() - llTime), szLineStr);
       fflush(fpLogFile);
-      return TRUE;
+      return true;
     } else {
-      return FALSE;
+      return false;
     }
   }
   void AddMove(int mv);  // 走一个着法
   void RunEngine(void);  // 让引擎运行
   void BeginGame(int nRobin, int nRound, int nGame); // 开始一个棋局
   void ResumeGame(void); // 继续上次挂起的棋局
-  Bool EndGame(int nRobin, int nRound, int nGame);   // 终止一个棋局
+  bool EndGame(int nRobin, int nRound, int nGame);   // 终止一个棋局
 };
 
 static const char *const cszColorStr[2] = {
@@ -729,7 +728,7 @@ const int BESTMOVE_TIMEOUT = -3; // 引擎超时的反馈值
 // 走一个着法
 void GameStruct::AddMove(int mv) {
   int nStatus;
-  uint32 dwEccoIndex;
+  uint32_t dwEccoIndex;
   char *szComment;
   if (mv < BESTMOVE_THINKING) {
     szComment = new char[MAX_CHAR];
@@ -769,7 +768,7 @@ void GameStruct::AddMove(int mv) {
       // 如果是终止着法，那么根据状态判定结果
       szComment = new char[MAX_CHAR];
       lppgn->szCommentTable[lppgn->nMaxMove] = szComment;
-      if (FALSE) {
+      if (false) {
       } else if ((nStatus & MOVE_ILLEGAL) != 0 || (nStatus & MOVE_INCHECK) != 0) {
         sprintf(szComment, "%s走法违例", cszColorStr[sd]);
         nResult = 3 - sd * 2;
@@ -815,20 +814,20 @@ void GameStruct::RunEngine(void) {
   int i, nStatus, nMoveNum, nBanMoves;
   int mvBanList[MAX_GEN_MOVES];
   MoveStruct mvs[MAX_GEN_MOVES];
-  uint32 dwMoveStr;
+  uint32_t dwMoveStr;
   FILE *fpOptionFile;
 
   if (!bStarted[sd]) {
     // 如果引擎尚未启动，那么启动引擎
-    tbTimer.Init();
+    llTime = GetTime();
     LocatePath(szFileName, lpTeam[sd]->szEngineFile);
     pipe[sd].Open(szFileName);
     Send("ucci");
     // 发送"ucci"指令后，在10秒钟内等待"ucciok"反馈信息
-    while (tbTimer.GetTimer() < 10000) {
+    while (GetTime() - llTime < 10000) {
       if (Receive(szLineStr)) {
         if (StrEqv(szLineStr, "option usemillisec ")) {
-          bUseMilliSec[sd] = TRUE;
+          bUseMilliSec[sd] = true;
         }
         if (StrEqv(szLineStr, "ucciok")) {
           break;
@@ -861,11 +860,11 @@ void GameStruct::RunEngine(void) {
       }
       fclose(fpOptionFile);
     }
-    bStarted[sd] = TRUE;
+    bStarted[sd] = true;
   }
 
   // 向引擎发送当前局面
-  tbTimer.Init();
+  llTime = GetTime();
   lpLineChar = szLineStr;
   lpLineChar += sprintf(lpLineChar, "position fen %s - - 0 1", szIrrevFen);
   if (posIrrev.nMoveNum > 1) {
@@ -910,7 +909,7 @@ void GameStruct::RunEngine(void) {
         League.nIncrTime * League.nStandardCpuTime / 1000, nTimer[1 - sd] / 1000, League.nIncrTime * League.nStandardCpuTime / 1000);
   }
   Send(szLineStr);
-  bTimeout = FALSE;
+  bTimeout = false;
 }
 
 // 开始一个棋局
@@ -930,7 +929,7 @@ void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   lpTeam[1] = TeamList + RobinTable[nRound][nGame][1];
   sd = nCounter = nResult = 0;
   nTimer[0] = nTimer[1] = League.nInitTime * League.nStandardCpuTime * 60;
-  bStarted[0] = bStarted[1] = bUseMilliSec[0] = bUseMilliSec[1] = bDraw = FALSE;
+  bStarted[0] = bStarted[1] = bUseMilliSec[0] = bUseMilliSec[1] = bDraw = false;
   strcpy(szIrrevFen, cszStartFen);
   posIrrev.FromFen(szIrrevFen);
 
@@ -990,7 +989,7 @@ void GameStruct::ResumeGame(void) {
     while (Receive(szLineStr)) {
       lp = szLineStr;
       if (StrEqvSkip(lp, "bestmove ")) {
-        chkRecord.mv = COORD_MOVE(*(uint32 *) lp);
+        chkRecord.mv = COORD_MOVE(*(uint32_t *) lp);
         lp += 4;
         if (StrScan(lp, " resign")) {
           chkRecord.mv = BESTMOVE_RESIGN;
@@ -999,10 +998,10 @@ void GameStruct::ResumeGame(void) {
             if (bDraw) {
               chkRecord.mv = BESTMOVE_DRAW;
             } else {
-              bDraw = TRUE;
+              bDraw = true;
             }
           } else {
-            bDraw = FALSE;
+            bDraw = false;
           };
         };
         break;
@@ -1014,19 +1013,19 @@ void GameStruct::ResumeGame(void) {
     // 如果没有读到反馈着法，就判断引擎是否超时
     if (chkRecord.mv == BESTMOVE_THINKING) {
       if (bTimeout) {
-        if (tbTimer.GetTimer() > nTimer[sd] + League.nStopTime) {
+        if (GetTime() - llTime > nTimer[sd] + League.nStopTime) {
           chkRecord.mv = BESTMOVE_TIMEOUT; // 只有时间超出停止时间后，才给空着以表示超时
         }
       } else {
-        if (tbTimer.GetTimer() > nTimer[sd]) {
+        if (GetTime() - llTime > nTimer[sd]) {
           Send("stop");
-          bTimeout = TRUE;
+          bTimeout = true;
         }
       }
     }
     // 如果有反馈着法(包括超时返回的空着)，就走这个着法
     if (chkRecord.mv != BESTMOVE_THINKING) {
-      nTimer[sd] -= tbTimer.GetTimer();
+      nTimer[sd] -= GetTime() - llTime;
       if (nTimer[sd] < 0) {
         nTimer[sd] = 0;
       }
@@ -1041,9 +1040,9 @@ void GameStruct::ResumeGame(void) {
         // 如果棋局已经结束，那么终止两个引擎
         for (sd = 0; sd < 2; sd ++) {
           if (bStarted[sd]) {
-            tbTimer.Init();
+            llTime = GetTime();
             Send("quit");
-            while (tbTimer.GetTimer() < 1000) {
+            while (GetTime() - llTime < 1000) {
               if (Receive(szLineStr)) {
                 if (StrEqv(szLineStr, "bye")) {
                   break;
@@ -1080,7 +1079,7 @@ inline void PrintDup(int nChar, int nDup) {
 }
 
 // 终止一个棋局
-Bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
+bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
   char szLineStr[MAX_CHAR];
   double dfWeHome;
   const ResultStruct *lpResult;
@@ -1116,9 +1115,9 @@ Bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
     // 整理直播
     Live.cResult[nRobin][nRound][nGame] = nResult;
     PublishLeague();
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -1184,7 +1183,7 @@ int main(void) {
   League.nRemainProcs = League.nRobinNum = 1;
   League.nStandardCpuTime = 1000;
   League.nNameLen = nEngineFileLen = 8; // 引擎名称和引擎文件的最小长度
-  League.bPromotion = FALSE;
+  League.bPromotion = false;
   League.szEvent[0] = League.szSite[0] = '\0';
   Live.szHost[0] = Live.szPath[0] = Live.szPassword[0] = Live.szCounter[0] = '\0';
   Live.szProxyHost[0] = Live.szProxyUser[0] = Live.szProxyPassword[0] = '\0';
@@ -1201,7 +1200,7 @@ int main(void) {
   while (fgets(szLineStr, MAX_CHAR, fpIniFile) != NULL) {
     StrCutCrLf(szLineStr);
     lp = szLineStr;
-    if (FALSE) {
+    if (false) {
     } else if (StrEqvSkip(lp, "Event=")) {
       strcpy(League.szEvent, lp);
     } else if (StrEqvSkip(lp, "Site=")) {
@@ -1220,14 +1219,14 @@ int main(void) {
       League.nStandardCpuTime = Str2Digit(lp, 100, 10000);
     } else if (StrEqvSkip(lp, "Promotion=")) {
       if (StrEqv(lp, "True")) {
-        League.bPromotion = TRUE;
+        League.bPromotion = true;
       } else if (StrEqv(lp, "On")) {
-        League.bPromotion = TRUE;
+        League.bPromotion = true;
       }
     } else if (StrEqvSkip(lp, "Team=")) {
       if (League.nTeamNum < MAX_TEAM) {
         lpTeam = TeamList + League.nTeamNum;
-        lpTeam->dwAbbr = *(uint32 *) lp;
+        lpTeam->dwAbbr = *(uint32_t *) lp;
         StrSplitSkip(lp, ',');
         StrSplitSkip(lp, ',', lpTeam->szEngineName);
         League.nNameLen = MAX(League.nNameLen, (int) strlen(lpTeam->szEngineName));
@@ -1393,7 +1392,7 @@ int main(void) {
   } else {
     WSBDisconnect(nSocket);
   }
-  Live.tb.Init();
+  Live.llTime = GetTime();
 
   // 现在开始控制棋局队列，这是本模拟器的核心部分
   printf("=== 联赛进程开始 ===\n\n");

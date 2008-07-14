@@ -20,7 +20,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
+#include "../base/x86asm.h"
 #include "position.h"
 #include "movesort.h"
 
@@ -80,7 +81,7 @@ void MoveSortStruct::ShellSort(void) {
  * 3. 其他着法，按历史表排序(从1到SORT_VALUE_MAX - 3)；
  * 4. 不能解将的着法(0)，这些着法会过滤掉。
  */
-int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16 *lpwmvKiller) {
+int MoveSortStruct::InitEvade(PositionStruct &pos, int mv, const uint16_t *lpwmvKiller) {
   int i, nLegal;
   nPhase = PHASE_REST;
   nMoveIndex = 0;
@@ -176,7 +177,7 @@ int MoveSortStruct::NextFull(const PositionStruct &pos) {
 }
 
 // 生成根结点的着法
-void MoveSortStruct::InitRoot(const PositionStruct &pos, int nBanMoves, const uint16 *lpwmvBanList) {
+void MoveSortStruct::InitRoot(const PositionStruct &pos, int nBanMoves, const uint16_t *lpwmvBanList) {
   int i, j, nBanned;
   nMoveIndex = 0;
   nMoveNum = pos.GenAllMoves(mvs);

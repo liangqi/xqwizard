@@ -20,7 +20,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../../utility/base.h"
+#include "../../base/base.h"
 #include "../pregen.h"
 #include "../position.h"
 #include "preeval.h"
@@ -97,7 +97,7 @@ int AdvisorShape(const PositionStruct *lppos) {
     if (lppos->ucsqPieces[SIDE_TAG(0) + KING_FROM] == 0xc7) {
       sqAdv1 = lppos->ucsqPieces[SIDE_TAG(0) + ADVISOR_FROM];
       sqAdv2 = lppos->ucsqPieces[SIDE_TAG(0) + ADVISOR_TO];
-      if (FALSE) {
+      if (false) {
       } else if (sqAdv1 == 0xc6) { // 红方一个仕在左侧底线
         nShape = (sqAdv2 == 0xc8 ? SHAPE_CENTER : sqAdv2 == 0xb7 ? SHAPE_LEFT : SHAPE_NONE);
       } else if (sqAdv1 == 0xc8) { // 红方一个仕在右侧底线
@@ -182,7 +182,7 @@ int AdvisorShape(const PositionStruct *lppos) {
     if (lppos->ucsqPieces[SIDE_TAG(1) + KING_FROM] == 0x37) {
       sqAdv1 = lppos->ucsqPieces[SIDE_TAG(1) + ADVISOR_FROM];
       sqAdv2 = lppos->ucsqPieces[SIDE_TAG(1) + ADVISOR_TO];
-      if (FALSE) {
+      if (false) {
       } else if (sqAdv1 == 0x36) { // 黑方一个士在左侧底线
         nShape = (sqAdv2 == 0x38 ? SHAPE_CENTER : sqAdv2 == 0x47 ? SHAPE_LEFT : SHAPE_NONE);
       } else if (sqAdv1 == 0x38) { // 黑方一个士在右侧底线
@@ -521,7 +521,7 @@ int RookMobility(const PositionStruct *lppos) {
 // 以下是第四部分，马受到阻碍的评价
 
 // 常数表"cbcEdgeSquares"给定了不利于马的位置，处于棋盘边缘和两个花心位置的马都是坏马
-static const BoolChar cbcEdgeSquares[256] = {
+static const bool cbcEdgeSquares[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -542,7 +542,7 @@ static const BoolChar cbcEdgeSquares[256] = {
 
 int KnightTrap(const PositionStruct *lppos) {
   int sd, i, sqSrc, sqDst, nSideTag, nMovable;
-  uint8 *lpucsqDst, *lpucsqPin;
+  uint8_t *lpucsqDst, *lpucsqPin;
   int vlKnightTraps[2];
 
   for (sd = 0; sd < 2; sd ++) {

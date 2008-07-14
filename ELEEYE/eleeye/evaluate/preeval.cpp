@@ -20,7 +20,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../../utility/base.h"
+#include "../../base/base.h"
 #include "../pregen.h"
 #include "../position.h"
 #include "preeval.h"
@@ -60,7 +60,7 @@ extern "C" void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEv
  */
 
 // 1. 开中局、有进攻机会的帅(将)和兵(卒)，参照“梦入神蛋”
-static const uint8 cucvlKingPawnMidgameAttacking[256] = {
+static const uint8_t cucvlKingPawnMidgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -80,7 +80,7 @@ static const uint8 cucvlKingPawnMidgameAttacking[256] = {
 };
 
 // 2. 开中局、没有进攻机会的帅(将)和兵(卒)
-static const uint8 cucvlKingPawnMidgameAttackless[256] = {
+static const uint8_t cucvlKingPawnMidgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -100,7 +100,7 @@ static const uint8 cucvlKingPawnMidgameAttackless[256] = {
 };
 
 // 3. 残局、有进攻机会的帅(将)和兵(卒)
-static const uint8 cucvlKingPawnEndgameAttacking[256] = {
+static const uint8_t cucvlKingPawnEndgameAttacking[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -120,7 +120,7 @@ static const uint8 cucvlKingPawnEndgameAttacking[256] = {
 };
 
 // 4. 残局、没有进攻机会的帅(将)和兵(卒)
-static const uint8 cucvlKingPawnEndgameAttackless[256] = {
+static const uint8_t cucvlKingPawnEndgameAttackless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -140,7 +140,7 @@ static const uint8 cucvlKingPawnEndgameAttackless[256] = {
 };
 
 // 5. 没受威胁的仕(士)和相(象)
-static const uint8 cucvlAdvisorBishopThreatless[256] = {
+static const uint8_t cucvlAdvisorBishopThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -160,7 +160,7 @@ static const uint8 cucvlAdvisorBishopThreatless[256] = {
 };
 
 // 5'. 可升变的，没受威胁的仕(士)和相(象)
-static const uint8 cucvlAdvisorBishopPromotionThreatless[256] = {
+static const uint8_t cucvlAdvisorBishopPromotionThreatless[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -180,7 +180,7 @@ static const uint8 cucvlAdvisorBishopPromotionThreatless[256] = {
 };
 
 // 6. 受到威胁的仕(士)和相(象)，参照“梦入神蛋”
-static const uint8 cucvlAdvisorBishopThreatened[256] = {
+static const uint8_t cucvlAdvisorBishopThreatened[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -200,7 +200,7 @@ static const uint8 cucvlAdvisorBishopThreatened[256] = {
 };
 
 // 7. 开中局的马，参照“梦入神蛋”
-static const uint8 cucvlKnightMidgame[256] = {
+static const uint8_t cucvlKnightMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -220,7 +220,7 @@ static const uint8 cucvlKnightMidgame[256] = {
 };
 
 // 8. 残局的马
-static const uint8 cucvlKnightEndgame[256] = {
+static const uint8_t cucvlKnightEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -240,7 +240,7 @@ static const uint8 cucvlKnightEndgame[256] = {
 };
 
 // 9. 开中局的车，参照“梦入神蛋”
-static const uint8 cucvlRookMidgame[256] = {
+static const uint8_t cucvlRookMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -260,7 +260,7 @@ static const uint8 cucvlRookMidgame[256] = {
 };
 
 // 10. 残局的车
-static const uint8 cucvlRookEndgame[256] = {
+static const uint8_t cucvlRookEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -280,7 +280,7 @@ static const uint8 cucvlRookEndgame[256] = {
 };
 
 // 11. 开中局的炮，参照“梦入神蛋”
-static const uint8 cucvlCannonMidgame[256] = {
+static const uint8_t cucvlCannonMidgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -300,7 +300,7 @@ static const uint8 cucvlCannonMidgame[256] = {
 };
 
 // 12. 残局的炮
-static const uint8 cucvlCannonEndgame[256] = {
+static const uint8_t cucvlCannonEndgame[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -351,16 +351,16 @@ const int TOTAL_ATTACK_VALUE = 8;
 const int ADVISOR_BISHOP_ATTACKLESS_VALUE = 80;
 const int TOTAL_ADVISOR_LEAKAGE = 80;
 
-static Bool bInit = FALSE;
+static bool bInit = false;
 
 PreEvalStructEx PreEvalEx;
 
 void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
   int i, sq, nMidgameValue, nWhiteAttacks, nBlackAttacks, nWhiteSimpleValue, nBlackSimpleValue;
-  uint8 ucvlPawnPiecesAttacking[256], ucvlPawnPiecesAttackless[256];
+  uint8_t ucvlPawnPiecesAttacking[256], ucvlPawnPiecesAttackless[256];
 
   if (!bInit) {
-    bInit = TRUE;
+    bInit = true;
     // 初始化"PreEvalEx.cPopCnt16"数组，只需要初始化一次
     for (i = 0; i < 65536; i ++) {
       PreEvalEx.cPopCnt16[i] = PopCnt16(i);
@@ -381,16 +381,16 @@ void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
   __ASSERT_BOUND(0, PreEval.vlAdvanced, TOTAL_ADVANCED_VALUE);
   for (sq = 0; sq < 256; sq ++) {
     if (IN_BOARD(sq)) {
-      PreEval.ucvlWhitePieces[0][sq] = PreEval.ucvlBlackPieces[0][SQUARE_FLIP(sq)] = (uint8)
+      PreEval.ucvlWhitePieces[0][sq] = PreEval.ucvlBlackPieces[0][SQUARE_FLIP(sq)] = (uint8_t)
           ((cucvlKingPawnMidgameAttacking[sq] * nMidgameValue + cucvlKingPawnEndgameAttacking[sq] * (TOTAL_MIDGAME_VALUE - nMidgameValue)) / TOTAL_MIDGAME_VALUE);
-      PreEval.ucvlWhitePieces[3][sq] = PreEval.ucvlBlackPieces[3][SQUARE_FLIP(sq)] = (uint8)
+      PreEval.ucvlWhitePieces[3][sq] = PreEval.ucvlBlackPieces[3][SQUARE_FLIP(sq)] = (uint8_t)
           ((cucvlKnightMidgame[sq] * nMidgameValue + cucvlKnightEndgame[sq] * (TOTAL_MIDGAME_VALUE - nMidgameValue)) / TOTAL_MIDGAME_VALUE);
-      PreEval.ucvlWhitePieces[4][sq] = PreEval.ucvlBlackPieces[4][SQUARE_FLIP(sq)] = (uint8)
+      PreEval.ucvlWhitePieces[4][sq] = PreEval.ucvlBlackPieces[4][SQUARE_FLIP(sq)] = (uint8_t)
           ((cucvlRookMidgame[sq] * nMidgameValue + cucvlRookEndgame[sq] * (TOTAL_MIDGAME_VALUE - nMidgameValue)) / TOTAL_MIDGAME_VALUE);
-      PreEval.ucvlWhitePieces[5][sq] = PreEval.ucvlBlackPieces[5][SQUARE_FLIP(sq)] = (uint8)
+      PreEval.ucvlWhitePieces[5][sq] = PreEval.ucvlBlackPieces[5][SQUARE_FLIP(sq)] = (uint8_t)
           ((cucvlCannonMidgame[sq] * nMidgameValue + cucvlCannonEndgame[sq] * (TOTAL_MIDGAME_VALUE - nMidgameValue)) / TOTAL_MIDGAME_VALUE);
       ucvlPawnPiecesAttacking[sq] = PreEval.ucvlWhitePieces[0][sq];
-      ucvlPawnPiecesAttackless[sq] = (uint8)
+      ucvlPawnPiecesAttackless[sq] = (uint8_t)
           ((cucvlKingPawnMidgameAttackless[sq] * nMidgameValue + cucvlKingPawnEndgameAttackless[sq] * (TOTAL_MIDGAME_VALUE - nMidgameValue)) / TOTAL_MIDGAME_VALUE);
     }
   }
@@ -440,13 +440,13 @@ void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
   __ASSERT_BOUND(0, PreEvalEx.vlBlackAdvisorLeakage, TOTAL_ADVISOR_LEAKAGE);
   for (sq = 0; sq < 256; sq ++) {
     if (IN_BOARD(sq)) {
-      PreEval.ucvlWhitePieces[1][sq] = PreEval.ucvlWhitePieces[2][sq] = (uint8) ((cucvlAdvisorBishopThreatened[sq] * nBlackAttacks +
+      PreEval.ucvlWhitePieces[1][sq] = PreEval.ucvlWhitePieces[2][sq] = (uint8_t) ((cucvlAdvisorBishopThreatened[sq] * nBlackAttacks +
           (PreEval.bPromotion ? cucvlAdvisorBishopPromotionThreatless[sq] : cucvlAdvisorBishopThreatless[sq]) * (TOTAL_ATTACK_VALUE - nBlackAttacks)) / TOTAL_ATTACK_VALUE);
-      PreEval.ucvlBlackPieces[1][sq] = PreEval.ucvlBlackPieces[2][sq] = (uint8) ((cucvlAdvisorBishopThreatened[SQUARE_FLIP(sq)] * nWhiteAttacks +
+      PreEval.ucvlBlackPieces[1][sq] = PreEval.ucvlBlackPieces[2][sq] = (uint8_t) ((cucvlAdvisorBishopThreatened[SQUARE_FLIP(sq)] * nWhiteAttacks +
           (PreEval.bPromotion ? cucvlAdvisorBishopPromotionThreatless[SQUARE_FLIP(sq)] : cucvlAdvisorBishopThreatless[SQUARE_FLIP(sq)]) * (TOTAL_ATTACK_VALUE - nWhiteAttacks)) / TOTAL_ATTACK_VALUE);
-      PreEval.ucvlWhitePieces[6][sq] = (uint8) ((ucvlPawnPiecesAttacking[sq] * nWhiteAttacks +
+      PreEval.ucvlWhitePieces[6][sq] = (uint8_t) ((ucvlPawnPiecesAttacking[sq] * nWhiteAttacks +
           ucvlPawnPiecesAttackless[sq] * (TOTAL_ATTACK_VALUE - nWhiteAttacks)) / TOTAL_ATTACK_VALUE);
-      PreEval.ucvlBlackPieces[6][sq] = (uint8) ((ucvlPawnPiecesAttacking[SQUARE_FLIP(sq)] * nBlackAttacks +
+      PreEval.ucvlBlackPieces[6][sq] = (uint8_t) ((ucvlPawnPiecesAttacking[SQUARE_FLIP(sq)] * nBlackAttacks +
           ucvlPawnPiecesAttackless[SQUARE_FLIP(sq)] * (TOTAL_ATTACK_VALUE - nBlackAttacks)) / TOTAL_ATTACK_VALUE);
     }
   }

@@ -10,10 +10,9 @@ can be used without restriction.
 */
 
 #include <stdio.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
-#include "../utility/pipe.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
+#include "../base/pipe.h"
 #include "ucci.h"  
 
 /* UCCI指令分析模块由三各UCCI指令解释器组成。
@@ -28,9 +27,9 @@ static PipeStruct pipeStd;
 const int MAX_MOVE_NUM = 256;
 
 static char szFen[LINE_INPUT_MAX_CHAR];
-static uint32 dwCoordList[MAX_MOVE_NUM];
+static uint32_t dwCoordList[MAX_MOVE_NUM];
 
-static Bool ParsePos(UcciCommStruct &UcciComm, char *lp) {
+static bool ParsePos(UcciCommStruct &UcciComm, char *lp) {
   int i;
   // 首先判断是否指定了FEN串
   if (StrEqvSkip(lp, "fen ")) {
@@ -41,7 +40,7 @@ static Bool ParsePos(UcciCommStruct &UcciComm, char *lp) {
     UcciComm.szFenStr = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1";
   // 如果两者都不是，就立即返回
   } else {
-    return FALSE;
+    return false;
   }
   // 然后寻找是否指定了后续着法，即是否有"moves"关键字
   UcciComm.nMoveNum = 0;
@@ -49,12 +48,12 @@ static Bool ParsePos(UcciCommStruct &UcciComm, char *lp) {
     *(lp - strlen(" moves ")) = '\0';
     UcciComm.nMoveNum = MIN((int) (strlen(lp) + 1) / 5, MAX_MOVE_NUM); // 提示："moves"后面的每个着法都是1个空格和4个字符
     for (i = 0; i < UcciComm.nMoveNum; i ++) {
-      dwCoordList[i] = *(uint32 *) lp; // 4个字符可转换为一个"uint32"，存储和处理起来方便
-      lp += sizeof(uint32) + 1;
+      dwCoordList[i] = *(uint32_t *) lp; // 4个字符可转换为一个"uint32_t"，存储和处理起来方便
+      lp += sizeof(uint32_t) + 1;
     }
     UcciComm.lpdwMovesCoord = dwCoordList;
   }
-  return TRUE;
+  return true;
 }
 
 UcciCommEnum BootLine(void) {
@@ -70,11 +69,11 @@ UcciCommEnum BootLine(void) {
   }
 }
 
-UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
+UcciCommEnum IdleLine(UcciCommStruct &UcciComm, bool bDebug) {
   char szLineStr[LINE_INPUT_MAX_CHAR];
   char *lp;
   int i;
-  Bool bGoTime;
+  bool bGoTime;
 
   while (!pipeStd.LineInput(szLineStr)) {
     Idle();
@@ -84,7 +83,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     printf("info idleline [%s]\n", lp);
     fflush(stdout);
   }
-  if (FALSE) {
+  if (false) {
   // "IdleLine()"是最复杂的UCCI指令解释器，大多数的UCCI指令都由它来解释，包括：
 
   // 1. "isready"指令
@@ -93,83 +92,83 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
 
   // 2. "setoption <option> [<arguments>]"指令
   } else if (StrEqvSkip(lp, "setoption ")) {
-    if (FALSE) {
+    if (false) {
 
     // (1) "batch"选项
     } else if (StrEqvSkip(lp, "batch ")) {
       UcciComm.Option = UCCI_OPTION_BATCH;
       if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } // 由于"batch"选项默认是关闭的，所以只有设定"on"或"true"时才打开，下同
 
     // (2) "debug"选项
     } else if (StrEqvSkip(lp, "debug ")) {
       UcciComm.Option = UCCI_OPTION_DEBUG;
       if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       }
 
     // (3) "ponder"选项
     } else if (StrEqvSkip(lp, "ponder ")) {
       UcciComm.Option = UCCI_OPTION_PONDER;
       if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       }
 
     // (4-1) "alwayscheck"选项
     } else if (StrEqvSkip(lp, "alwayscheck ")) {
       UcciComm.Option = UCCI_OPTION_ALWAYSCHECK;
       if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       }
 
     // (4-2) "usehash"选项
     } else if (StrEqvSkip(lp, "usehash ")) {
       UcciComm.Option = UCCI_OPTION_USEHASH;
       if (StrEqv(lp, "off")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else if (StrEqv(lp, "false")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       }
 
     // (5) "usebook"选项
     } else if (StrEqvSkip(lp, "usebook ")) {
       UcciComm.Option = UCCI_OPTION_USEBOOK;
       if (StrEqv(lp, "off")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else if (StrEqv(lp, "false")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       }
 
     // (6) "useegtb"选项
     } else if (StrEqvSkip(lp, "useegtb ")) {
       UcciComm.Option = UCCI_OPTION_USEEGTB;
       if (StrEqv(lp, "off")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else if (StrEqv(lp, "false")) {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       } else {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       }
 
     // (7) "bookfiles"选项
@@ -201,17 +200,17 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     } else if (StrEqvSkip(lp, "promotion ")) {
       UcciComm.Option = UCCI_OPTION_PROMOTION;
       if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = TRUE;
+        UcciComm.bCheck = true;
       } else {
-        UcciComm.bCheck = FALSE;
+        UcciComm.bCheck = false;
       }
 
     // (13) "idle"选项
     } else if (StrEqvSkip(lp, "idle ")) {
       UcciComm.Option = UCCI_OPTION_IDLE;
-      if (FALSE) {
+      if (false) {
       } else if (StrEqv(lp, "none")) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       } else if (StrEqv(lp, "small")) {
@@ -227,7 +226,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     // (14) "pruning"选项
     } else if (StrEqvSkip(lp, "pruning ")) {
       UcciComm.Option = UCCI_OPTION_PRUNING;
-      if (FALSE) {
+      if (false) {
       } else if (StrEqv(lp, "none")) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       } else if (StrEqv(lp, "small")) {
@@ -243,7 +242,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     // (15) "knowledge"选项
     } else if (StrEqvSkip(lp, "knowledge ")) {
       UcciComm.Option = UCCI_OPTION_KNOWLEDGE;
-      if (FALSE) {
+      if (false) {
       } else if (StrEqv(lp, "none")) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       } else if (StrEqv(lp, "small")) {
@@ -259,7 +258,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     // (16) "randomness"选项
     } else if (StrEqvSkip(lp, "randomness ")) {
       UcciComm.Option = UCCI_OPTION_RANDOMNESS;
-      if (FALSE) {
+      if (false) {
       } else if (StrEqv(lp, "none")) {
         UcciComm.Grade = UCCI_GRADE_NONE;
       } else if (StrEqv(lp, "small")) {
@@ -275,7 +274,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     // (17) "style"选项
     } else if (StrEqvSkip(lp, "style ")) {
       UcciComm.Option = UCCI_OPTION_STYLE;
-      if (FALSE) {
+      if (false) {
       } else if (StrEqv(lp, "solid")) {
         UcciComm.Style = UCCI_STYLE_SOLID;
       } else if (StrEqv(lp, "normal")) {
@@ -304,24 +303,24 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
   } else if (StrEqvSkip(lp, "banmoves ")) {
     UcciComm.nBanMoveNum = MIN((int) (strlen(lp) + 1) / 5, MAX_MOVE_NUM);
     for (i = 0; i < UcciComm.nBanMoveNum; i ++) {
-      dwCoordList[i] = *(uint32 *) lp;
-      lp += sizeof(uint32) + 1;
+      dwCoordList[i] = *(uint32_t *) lp;
+      lp += sizeof(uint32_t) + 1;
     }
     UcciComm.lpdwBanMovesCoord = dwCoordList;
     return UCCI_COMM_BANMOVES;
 
   // 5. "go [ponder | draw] <mode>"指令
   } else if (StrEqvSkip(lp, "go ")) {
-    UcciComm.bPonder = UcciComm.bDraw = FALSE;
+    UcciComm.bPonder = UcciComm.bDraw = false;
     // 首先判断到底是"go"、"go ponder"还是"go draw"
     if (StrEqvSkip(lp, "ponder ")) {
-      UcciComm.bPonder = TRUE;
+      UcciComm.bPonder = true;
     } else if (StrEqvSkip(lp, "draw ")) {
-      UcciComm.bDraw = TRUE;
+      UcciComm.bDraw = true;
     }
     // 然后判断思考模式
-    bGoTime = FALSE;
-    if (FALSE) {
+    bGoTime = false;
+    if (false) {
     } else if (StrEqvSkip(lp, "depth ")) {
       UcciComm.Go = UCCI_GO_DEPTH;
       UcciComm.nDepth = Str2Digit(lp, 0, UCCI_MAX_DEPTH);
@@ -330,7 +329,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
       UcciComm.nDepth = Str2Digit(lp, 0, 2000000000);
     } else if (StrEqvSkip(lp, "time ")) {
       UcciComm.nTime = Str2Digit(lp, 0, 2000000000);
-      bGoTime = TRUE;
+      bGoTime = true;
     // 如果没有说明是固定深度还是设定时限，就固定深度为"UCCI_MAX_DEPTH"
     } else {
       UcciComm.Go = UCCI_GO_DEPTH;
@@ -338,7 +337,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
     }
     // 如果是设定时限，就要判断是时段制还是加时制
     if (bGoTime) {
-      if (FALSE) {
+      if (false) {
       } else if (StrScanSkip(lp, " movestogo ")) {
         UcciComm.Go = UCCI_GO_TIME_MOVESTOGO;
         UcciComm.nMovesToGo = Str2Digit(lp, 1, 999);
@@ -371,7 +370,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, Bool bDebug) {
   }
 }
 
-UcciCommEnum BusyLine(UcciCommStruct &UcciComm, Bool bDebug) {
+UcciCommEnum BusyLine(UcciCommStruct &UcciComm, bool bDebug) {
   char szLineStr[LINE_INPUT_MAX_CHAR];
   char *lp;
   if (pipeStd.LineInput(szLineStr)) {
@@ -380,7 +379,7 @@ UcciCommEnum BusyLine(UcciCommStruct &UcciComm, Bool bDebug) {
       fflush(stdout);
     }
     // "BusyLine"只能接收"isready"、"ponderhit"和"stop"这三条指令
-    if (FALSE) {
+    if (false) {
     } else if (StrEqv(szLineStr, "isready")) {
       return UCCI_COMM_ISREADY;
     } else if (StrEqv(szLineStr, "ponderhit draw")) {

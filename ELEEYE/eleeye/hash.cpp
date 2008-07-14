@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdio.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "position.h"
 #include "hash.h"
 
@@ -114,63 +114,63 @@ void RecordHash(const PositionStruct &pos, int nFlag, int vl, int nDepth, int mv
  * 四、如果分值是"DrawValue()"(是第一种情况的特殊情况)，则不能获取置换表中的值(原因与第二种情况相同)。
  * 注意：对于第三种情况，要对杀棋步数进行调整！
  */
-inline int ValueAdjust(const PositionStruct &pos, Bool &bBanNode, Bool &bMateNode, int vl) {
-  bBanNode = bMateNode = FALSE;
+inline int ValueAdjust(const PositionStruct &pos, bool &bBanNode, bool &bMateNode, int vl) {
+  bBanNode = bMateNode = false;
   if (vl > WIN_VALUE) {
     if (vl <= BAN_VALUE) {
-      bBanNode = TRUE;
+      bBanNode = true;
     } else {
-      bMateNode = TRUE;
+      bMateNode = true;
       vl -= pos.nDistance;
     }
   } else if (vl < -WIN_VALUE) {
     if (vl >= -BAN_VALUE) {
-      bBanNode = TRUE;
+      bBanNode = true;
     } else {
-      bMateNode = TRUE;
+      bMateNode = true;
       vl += pos.nDistance;
     }
   } else if (vl == pos.DrawValue()) {
-    bBanNode = TRUE;
+    bBanNode = true;
   }
   return vl;
 }
 
 // 检测下一个着法是否稳定，有助于减少置换表的不稳定性
-inline Bool MoveStable(PositionStruct &pos, int mv) {
+inline bool MoveStable(PositionStruct &pos, int mv) {
   // 判断下一个着法是否稳定的依据是：
   // 1. 没有后续着法，则假定是稳定的；
   if (mv == 0) {
-    return TRUE;
+    return true;
   }
   // 2. 吃子着法是稳定的；
   __ASSERT(pos.LegalMove(mv));
   if (pos.ucpcSquares[DST(mv)] != 0) {
-    return TRUE;
+    return true;
   }
   // 3. 可能因置换表引起路线迁移，使得路线超过"MAX_MOVE_NUM"，此时应立刻终止路线，并假定是稳定的。
   if (!pos.MakeMove(mv)) {
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // 检测后续路线是否稳定(不是循环路线)，有助于减少置换表的不稳定性
-static Bool PosStable(const PositionStruct &pos, int mv) {
+static bool PosStable(const PositionStruct &pos, int mv) {
   HashStruct hsh;
   int i, nMoveNum;
-  Bool bStable;
+  bool bStable;
   // pos会沿着路线变化，但最终会还原，所以被视为"const"，而让"posMutable"承担非"const"的角色
   PositionStruct &posMutable = (PositionStruct &) pos;
 
   __ASSERT(mv != 0);
   nMoveNum = 0;
-  bStable = TRUE;
+  bStable = true;
   while (!MoveStable(posMutable, mv)) {
     nMoveNum ++; // "!MoveStable()"表明已经执行了一个着法，以后需要撤消
     // 执行这个着法，如果产生循环，那么终止后续路线，并确认该路线不稳定
     if (posMutable.RepStatus() > 0) {
-      bStable = FALSE;
+      bStable = false;
       break;
     }
     // 逐层获取置换表项，方法同"ProbeHash()"
@@ -190,10 +190,10 @@ static Bool PosStable(const PositionStruct &pos, int mv) {
 }
 
 // 获取置换表局面信息(没有命中时，返回"-MATE_VALUE")
-int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, Bool bNoNull, int &mv) {
+int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, bool bNoNull, int &mv) {
   HashStruct hsh;
   int i, vl;
-  Bool bBanNode, bMateNode;
+  bool bBanNode, bMateNode;
   // 获取置换表局面信息的过程包括以下几个步骤：
 
   // 1. 逐层获取置换表项
@@ -273,9 +273,9 @@ int ProbeHashQ(const PositionStruct &pos, int vlAlpha, int vlBeta) {
 #endif
 
 // UCCI支持 - 输出Hash表中的局面信息
-Bool PopHash(const PositionStruct &pos) {
+bool PopHash(const PositionStruct &pos) {
   HashStruct hsh;
-  uint32 dwMoveStr;
+  uint32_t dwMoveStr;
   int i;
 
   for (i = 0; i < HASH_LAYERS; i ++) {
@@ -295,8 +295,8 @@ Bool PopHash(const PositionStruct &pos) {
       }
       printf("\n");
       fflush(stdout);
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

@@ -20,23 +20,23 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "../eleeye/position.h"
 
 #ifndef CCHESS_H
 #define CCHESS_H
 
-void ChineseInit(Bool bTraditional = FALSE);
-Bool TryMove(PositionStruct &pos, int &nStatus, int mv);
+void ChineseInit(bool bTraditional = false);
+bool TryMove(PositionStruct &pos, int &nStatus, int mv);
 void ExchangeSide(PositionStruct &pos);
 void FlipBoard(PositionStruct &pos);
-void BoardText(char *szBoard, const PositionStruct &pos, Bool bAnsi = FALSE);
+void BoardText(char *szBoard, const PositionStruct &pos, bool bAnsi = false);
 void FenMirror(char *szFenDst, const char *szFenSrc);
-uint32 FileMirror(uint32 dwFileStr);
-uint32 Chin2File(uint64 qwChinStr);
-uint64 File2Chin(uint32 dwFileStr, int sdPlayer);
-int File2Move(uint32 dwFileStr, const PositionStruct &pos);
-uint32 Move2File(int mv, const PositionStruct &pos);
+uint32_t FileMirror(uint32_t dwFileStr);
+uint32_t Chin2File(uint64_t qwChinStr);
+uint64_t File2Chin(uint32_t dwFileStr, int sdPlayer);
+int File2Move(uint32_t dwFileStr, const PositionStruct &pos);
+uint32_t Move2File(int mv, const PositionStruct &pos);
 
 // 以下常量规定了"TryMove()"的返回状态
 const int MOVE_ILLEGAL = 256;       // 不合法的着法

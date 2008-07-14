@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdio.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "ucci.h"
 #include "pregen.h"
 #include "position.h"
@@ -43,15 +42,15 @@ SearchStruct Search;
 
 // 搜索信息，是封装在模块内部的
 static struct {
-  TimerStruct tbTimer;              // 计时器
-  Bool bStop, bPonderStop;          // 中止信号和后台思考认为的中止信号
-  Bool bPopPv, bPopCurrMove;        // 是否输出pv和currmove
-  int nPopDepth, vlPopValue;        // 输出的深度和分值
-  int nAllNodes, nMainNodes;        // 总结点数和主搜索树的结点数
-  int nUnchanged;                   // 未改变最佳着法的深度
-  uint16 wmvPvLine[MAX_MOVE_NUM];   // 主要变例路线上的着法列表
-  uint16 wmvKiller[LIMIT_DEPTH][2]; // 杀手着法表
-  MoveSortStruct MoveSort;          // 根结点的着法序列
+  int64_t llTime;                     // 计时器
+  bool bStop, bPonderStop;            // 中止信号和后台思考认为的中止信号
+  bool bPopPv, bPopCurrMove;          // 是否输出pv和currmove
+  int nPopDepth, vlPopValue;          // 输出的深度和分值
+  int nAllNodes, nMainNodes;          // 总结点数和主搜索树的结点数
+  int nUnchanged;                     // 未改变最佳着法的深度
+  uint16_t wmvPvLine[MAX_MOVE_NUM];   // 主要变例路线上的着法列表
+  uint16_t wmvKiller[LIMIT_DEPTH][2]; // 杀手着法表
+  MoveSortStruct MoveSort;            // 根结点的着法序列
 } Search2;
 
 void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
@@ -70,7 +69,7 @@ void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
 }
 
 // 中断例程
-static Bool Interrupt(void) {
+static bool Interrupt(void) {
   UcciCommStruct UcciComm;
   PositionStruct posProbe;
   if (Search.bIdle) {
@@ -79,21 +78,21 @@ static Bool Interrupt(void) {
   switch (Search.nGoMode) {
   case GO_MODE_NODES:
     if (Search2.nAllNodes > Search.nNodes) {
-      Search2.bStop = TRUE;
-      return TRUE;
+      Search2.bStop = true;
+      return true;
     }
     break;
   case GO_MODE_TIMER:
-    if (!Search.bPonder && Search2.tbTimer.GetTimer() > Search.nMaxTimer) {
-      Search2.bStop = TRUE;
-      return TRUE;
+    if (!Search.bPonder && (int) (GetTime() - Search2.llTime) > Search.nMaxTimer) {
+      Search2.bStop = true;
+      return true;
     }
     break;
   default:
     break;
   }
   if (Search.bBatch) {
-    return FALSE;
+    return false;
   }
 
   // 如果不是批处理模式，那么先调用UCCI解释程序，再判断是否中止
@@ -102,48 +101,48 @@ static Bool Interrupt(void) {
     // "isready"指令实际上没有意义
     printf("readyok\n");
     fflush(stdout);
-    return FALSE;
+    return false;
   case UCCI_COMM_PONDERHIT:
     // "ponderhit"指令启动计时功能，如果"SearchMain()"例程认为已经搜索了足够的时间， 那么发出中止信号
     if (Search2.bPonderStop) {
-      Search2.bStop = TRUE;
-      return TRUE;
+      Search2.bStop = true;
+      return true;
     } else {
-      Search.bPonder = FALSE;
-      return FALSE;
+      Search.bPonder = false;
+      return false;
     }
   case UCCI_COMM_PONDERHIT_DRAW:
     // "ponderhit draw"指令启动计时功能，并设置提和标志
-    Search.bDraw = TRUE;
+    Search.bDraw = true;
     if (Search2.bPonderStop) {
-      Search2.bStop = TRUE;
-      return TRUE;
+      Search2.bStop = true;
+      return true;
     } else {
-      Search.bPonder = FALSE;
-      return FALSE;
+      Search.bPonder = false;
+      return false;
     }
   case UCCI_COMM_STOP:
     // "stop"指令发送中止信号
-    Search2.bStop = TRUE;
-    return TRUE;
+    Search2.bStop = true;
+    return true;
   case UCCI_COMM_PROBE:
     // "probe"指令输出Hash表信息
     BuildPos(posProbe, UcciComm);
     PopHash(posProbe);
-    return FALSE;
+    return false;
   case UCCI_COMM_QUIT:
     // "quit"指令发送退出信号
-    Search.bQuit = Search2.bStop = TRUE;
-    return TRUE;
+    Search.bQuit = Search2.bStop = true;
+    return true;
   default:
-    return FALSE;
+    return false;
   }
 }
 
 // 输出主要变例
 static void PopPvLine(int nDepth = 0, int vl = 0) {
-  uint16 *lpwmv;
-  uint32 dwMoveStr;
+  uint16_t *lpwmv;
+  uint32_t dwMoveStr;
   // 如果尚未达到需要输出的深度，那么记录该深度和分值，以后再输出
   if (nDepth > 0 && !Search2.bPopPv && !Search.bDebug) {
     Search2.nPopDepth = nDepth;
@@ -151,7 +150,7 @@ static void PopPvLine(int nDepth = 0, int vl = 0) {
     return;
   }
   // 输出时间和搜索结点数
-  printf("info time %d nodes %d\n", Search2.tbTimer.GetTimer(), Search2.nAllNodes);
+  printf("info time %d nodes %d\n", (int) (GetTime() - Search2.llTime), Search2.nAllNodes);
   fflush(stdout);
   if (nDepth == 0) {
     // 如果是搜索结束后的输出，并且已经输出过，那么不必再输出
@@ -210,7 +209,7 @@ inline int Evaluate(const PositionStruct &pos, int vlAlpha, int vlBeta) {
 // 静态搜索例程
 static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
   int vlBest, vl, mv;
-  Bool bInCheck;
+  bool bInCheck;
   MoveSortStruct MoveSort;  
   // 静态搜索例程包括以下几个步骤：
   Search2.nAllNodes ++;
@@ -311,10 +310,10 @@ void PopLeaf(PositionStruct &pos) {
   fflush(stdout);
 }
 
-const Bool NO_NULL = TRUE; // "SearchCut()"的参数，是否禁止空着裁剪
+const bool NO_NULL = true; // "SearchCut()"的参数，是否禁止空着裁剪
 
 // 零窗口完全搜索例程
-static int SearchCut(int vlBeta, int nDepth, Bool bNoNull = FALSE) {
+static int SearchCut(int vlBeta, int nDepth, bool bNoNull = false) {
   int nNewDepth, vlBest, vl;
   int mvHash, mv, mvEvade;
   MoveSortStruct MoveSort;
@@ -425,7 +424,7 @@ static int SearchCut(int vlBeta, int nDepth, Bool bNoNull = FALSE) {
 }
 
 // 连接主要变例
-static void AppendPvLine(uint16 *lpwmvDst, uint16 mv, const uint16 *lpwmvSrc) {
+static void AppendPvLine(uint16_t *lpwmvDst, uint16_t mv, const uint16_t *lpwmvSrc) {
   *lpwmvDst = mv;
   lpwmvDst ++;
   while (*lpwmvSrc != 0) {
@@ -444,11 +443,11 @@ static void AppendPvLine(uint16 *lpwmvDst, uint16 mv, const uint16 *lpwmvSrc) {
  * 4. PV结点要获取主要变例；
  * 5. 考虑PV结点处理最佳着法的情况。
  */
-static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16 *lpwmvPvLine) {
+static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16_t *lpwmvPvLine) {
   int nNewDepth, nHashFlag, vlBest, vl;
   int mvBest, mvHash, mv, mvEvade;
   MoveSortStruct MoveSort;
-  uint16 wmvPvLine[LIMIT_DEPTH];
+  uint16_t wmvPvLine[LIMIT_DEPTH];
   // 完全搜索例程包括以下几个步骤：
 
   // 1. 在叶子结点处调用静态搜索；
@@ -580,8 +579,8 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16 *lpwmvPvLine) {
  */
 static int SearchRoot(int nDepth) {
   int nNewDepth, vlBest, vl, mv;
-  uint32 dwMoveStr;
-  uint16 wmvPvLine[LIMIT_DEPTH];
+  uint32_t dwMoveStr;
+  uint16_t wmvPvLine[LIMIT_DEPTH];
   // 根结点搜索例程包括以下几个步骤：
 
   // 1. 初始化
@@ -644,7 +643,7 @@ static int SearchRoot(int nDepth) {
 // 唯一着法检验是ElephantEye在搜索上的一大特色，用来判断用以某种深度进行的搜索是否找到了唯一着法。
 // 其原理是把找到的最佳着法设成禁止着法，然后以(-WIN_VALUE, 1 - WIN_VALUE)的窗口重新搜索，
 // 如果低出边界则说明其他着法都将被杀。
-static Bool SearchUnique(int vlBeta, int nDepth) {
+static bool SearchUnique(int vlBeta, int nDepth) {
   int vl, mv;
   Search2.MoveSort.ResetRoot(ROOT_UNIQUE);
   // 跳过第一个着法
@@ -653,19 +652,19 @@ static Bool SearchUnique(int vlBeta, int nDepth) {
       vl = -SearchCut(1 - vlBeta, Search.pos.LastMove().ChkChs > 0 ? nDepth : nDepth - 1);
       Search.pos.UndoMakeMove();
       if (Search2.bStop || vl >= vlBeta) {
-        return FALSE;
+        return false;
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 // 主搜索例程
 void SearchMain(int nDepth) {
   int i, vl, vlLast, nBookMoves;
   int nCurrTimer, nLimitTimer;
-  Bool bUnique;
-  uint32 dwMoveStr;
+  bool bUnique;
+  uint32_t dwMoveStr;
   MoveStruct mvsBook[MAX_GEN_MOVES];
   // 主搜索例程包括以下几个步骤：
 
@@ -689,7 +688,7 @@ void SearchMain(int nDepth) {
         fflush(stdout);
       }
       // b. 根据权重随机选择一个走法
-      vl = Search.rc4Random.NextLong() % (uint32) vl;
+      vl = Search.rc4Random.NextLong() % (uint32_t) vl;
       for (i = 0; i < nBookMoves; i ++) {
         vl -= mvsBook[i].wvl;
         if (vl < 0) {
@@ -731,7 +730,7 @@ void SearchMain(int nDepth) {
   Search2.MoveSort.InitRoot(Search.pos, Search.nBanMoves, Search.wmvBanList);
 
   // 5. 初始化时间和计数器
-  Search2.bStop = Search2.bPonderStop = Search2.bPopPv = Search2.bPopCurrMove = FALSE;
+  Search2.bStop = Search2.bPonderStop = Search2.bPopPv = Search2.bPopCurrMove = false;
   Search2.nPopDepth = Search2.vlPopValue = 0;
   Search2.nAllNodes = Search2.nMainNodes = Search2.nUnchanged = 0;
   Search2.wmvPvLine[0] = 0;
@@ -739,13 +738,13 @@ void SearchMain(int nDepth) {
   ClearHistory();
   ClearHash();
   // 由于 ClearHash() 需要消耗一定时间，所以计时从这以后开始比较合理
-  Search2.tbTimer.Init();
+  Search2.llTime = GetTime();
   vlLast = 0;
   // 如果走了10回合无用着法，那么允许主动提和，以后每隔8回合提和一次
   if (Search.pos.nMoveNum > 5 && ((Search.pos.nMoveNum - 4) / 2) % 8 == 0) {
-    Search.bDraw = TRUE;
+    Search.bDraw = true;
   }
-  bUnique = FALSE;
+  bUnique = false;
   nCurrTimer = 0;
 
   // 6. 做迭代加深搜索
@@ -769,7 +768,7 @@ void SearchMain(int nDepth) {
       break; // 没有跳出，则"vl"是可靠值
     }
 
-    nCurrTimer = Search2.tbTimer.GetTimer();
+    nCurrTimer = (int) (GetTime() - Search2.llTime);
     // 9. 如果搜索时间超过适当时限，则终止搜索
     if (Search.nGoMode == GO_MODE_TIMER) {
       // a. 如果没有使用空着裁剪，那么适当时限减半(因为分枝因子加倍了)
@@ -780,7 +779,7 @@ void SearchMain(int nDepth) {
       nLimitTimer = (Search2.nUnchanged >= UNCHANGED_DEPTH ? nLimitTimer / 2 : nLimitTimer);
       if (nCurrTimer > nLimitTimer) {
         if (Search.bPonder) {        
-          Search2.bPonderStop = TRUE; // 如果处于后台思考模式，那么只是在后台思考命中后立即中止搜索。
+          Search2.bPonderStop = true; // 如果处于后台思考模式，那么只是在后台思考命中后立即中止搜索。
         } else {
           vlLast = vl;
           break; // 不管是否跳出，"vlLast"都已更新
@@ -796,7 +795,7 @@ void SearchMain(int nDepth) {
 
     // 11. 是唯一着法，则终止搜索
     if (SearchUnique(1 - WIN_VALUE, i)) {
-      bUnique = TRUE;
+      bUnique = true;
       break;
     }
   }

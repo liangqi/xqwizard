@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <string.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "pregen.h"
 
 /* ElephantEye源程序使用的匈牙利记号约定：
@@ -53,7 +53,7 @@ const int NULLOKAY_MARGIN = 200;        // 空着裁剪可以不检验的子力价值边界
 const int NULLSAFE_MARGIN = 400;        // 允许使用空着裁剪的条件的子力价值边界
 const int DRAW_VALUE = 20;              // 和棋时返回的分数(取负值)
 
-const Bool CHECK_LAZY = TRUE;   // 偷懒检测将军
+const bool CHECK_LAZY = true;   // 偷懒检测将军
 const int CHECK_MULTI = 48;     // 被多个子将军
 
 // 每种子力的类型编号
@@ -91,19 +91,19 @@ const int PAWN_BITPIECE = (1 << PAWN_FROM) | (1 << (PAWN_FROM + 1)) |
     (1 << (PAWN_FROM + 2)) | (1 << (PAWN_FROM + 3)) | (1 << PAWN_TO);
 const int ATTACK_BITPIECE = KNIGHT_BITPIECE | ROOK_BITPIECE | CANNON_BITPIECE | PAWN_BITPIECE;
 
-inline uint32 BIT_PIECE(int pc) {
+inline uint32_t BIT_PIECE(int pc) {
   return 1 << (pc - 16);
 }
 
-inline uint32 WHITE_BITPIECE(int nBitPiece) {
+inline uint32_t WHITE_BITPIECE(int nBitPiece) {
   return nBitPiece;
 }
 
-inline uint32 BLACK_BITPIECE(int nBitPiece) {
+inline uint32_t BLACK_BITPIECE(int nBitPiece) {
   return nBitPiece << 16;
 }
 
-inline uint32 BOTH_BITPIECE(int nBitPiece) {
+inline uint32_t BOTH_BITPIECE(int nBitPiece) {
   return nBitPiece + (nBitPiece << 16);
 }
 
@@ -136,11 +136,11 @@ inline int PIECE_INDEX(int pc) {
   return pc & 15;
 }
 
-extern const char *const cszStartFen;   // 起始局面的FEN串
-extern const char *const cszPieceBytes; // 棋子类型对应的棋子符号
-extern const int cnPieceTypes[48];      // 棋子序号对应的棋子类型
-extern const int cnSimpleValues[48];    // 棋子的简单分值
-extern const uint8 cucsqMirrorTab[256]; // 坐标的镜像(左右对称)数组
+extern const char *const cszStartFen;     // 起始局面的FEN串
+extern const char *const cszPieceBytes;   // 棋子类型对应的棋子符号
+extern const int cnPieceTypes[48];        // 棋子序号对应的棋子类型
+extern const int cnSimpleValues[48];      // 棋子的简单分值
+extern const uint8_t cucsqMirrorTab[256]; // 坐标的镜像(左右对称)数组
 
 inline char PIECE_BYTE(int pt) {
   return cszPieceBytes[pt];
@@ -154,7 +154,7 @@ inline int SIMPLE_VALUE(int pc) {
   return cnSimpleValues[pc];
 }
 
-inline uint8 SQUARE_MIRROR(int sq) {
+inline uint8_t SQUARE_MIRROR(int sq) {
   return cucsqMirrorTab[sq];
 }
 
@@ -163,13 +163,13 @@ int FenPiece(int Arg);
 
 // 复杂着法结构
 union MoveStruct {
-  uint32 dwmv;            // 填满整个结构用
+  uint32_t dwmv;           // 填满整个结构用
   struct {
-    uint16 wmv, wvl;      // 着法和分值
+    uint16_t wmv, wvl;     // 着法和分值
   };
   struct {
-    uint8 Src, Dst;       // 起始格和目标格
-    sint8 CptDrw, ChkChs; // 被吃子(+)/和棋着法数(-)、将军子(+)/被捉子(-)
+    uint8_t Src, Dst;      // 起始格和目标格
+    int8_t CptDrw, ChkChs; // 被吃子(+)/和棋着法数(-)、将军子(+)/被捉子(-)
   };
 }; // mvs
 
@@ -188,8 +188,11 @@ inline int MOVE(int sqSrc, int sqDst) {   // 由起点和终点得到着法
   return sqSrc + (sqDst << 8);
 }
 
-inline uint32 MOVE_COORD(int mv) {        // 把着法转换成字符串
-  C4dwStruct Ret;
+inline uint32_t MOVE_COORD(int mv) {      // 把着法转换成字符串
+  union {
+    char c[4];
+    uint32_t dw;
+  } Ret;
   Ret.c[0] = FILE_X(SRC(mv)) - FILE_LEFT + 'a';
   Ret.c[1] = '9' - RANK_Y(SRC(mv)) + RANK_TOP;
   Ret.c[2] = FILE_X(DST(mv)) - FILE_LEFT + 'a';
@@ -202,7 +205,7 @@ inline uint32 MOVE_COORD(int mv) {        // 把着法转换成字符串
   return Ret.dw;
 }
 
-inline int COORD_MOVE(uint32 dwMoveStr) { // 把字符串转换成着法
+inline int COORD_MOVE(uint32_t dwMoveStr) { // 把字符串转换成着法
   int sqSrc, sqDst;
   char *lpArgPtr;
   lpArgPtr = (char *) &dwMoveStr;
@@ -225,23 +228,23 @@ struct RollbackStruct {
   MoveStruct mvs;       // 着法
 }; // rbs
 
-const Bool DEL_PIECE = TRUE; // 函数"PositionStruct::AddPiece()"的选项
+const bool DEL_PIECE = true; // 函数"PositionStruct::AddPiece()"的选项
 
 // 局面结构
 struct PositionStruct {
   // 基本成员
-  int sdPlayer;           // 轮到哪方走，0表示红方，1表示黑方
-  uint8 ucpcSquares[256]; // 每个格子放的棋子，0表示没有棋子
-  uint8 ucsqPieces[48];   // 每个棋子放的位置，0表示被吃
-  ZobristStruct zobr;     // Zobrist
+  int sdPlayer;             // 轮到哪方走，0表示红方，1表示黑方
+  uint8_t ucpcSquares[256]; // 每个格子放的棋子，0表示没有棋子
+  uint8_t ucsqPieces[48];   // 每个棋子放的位置，0表示被吃
+  ZobristStruct zobr;       // Zobrist
 
   // 位结构成员，用来增强棋盘的处理
   union {
-    uint32 dwBitPiece;    // 32位的棋子位，0到31位依次表示序号为16到47的棋子是否还在棋盘上
-    uint16 wBitPiece[2];  // 拆分成两个
+    uint32_t dwBitPiece;    // 32位的棋子位，0到31位依次表示序号为16到47的棋子是否还在棋盘上
+    uint16_t wBitPiece[2];  // 拆分成两个
   };
-  uint16 wBitRanks[16];   // 位行数组，注意用法是"wBitRanks[RANK_Y(sq)]"
-  uint16 wBitFiles[16];   // 位列数组，注意用法是"wBitFiles[FILE_X(sq)]"
+  uint16_t wBitRanks[16];   // 位行数组，注意用法是"wBitRanks[RANK_Y(sq)]"
+  uint16_t wBitFiles[16];   // 位列数组，注意用法是"wBitFiles[FILE_X(sq)]"
 
   // 局面评价数据
   int vlWhite, vlBlack;   // 红方和黑方的子力价值
@@ -249,7 +252,7 @@ struct PositionStruct {
   // 回滚着法，用来检测循环局面
   int nMoveNum, nDistance;              // 回滚着法数和搜索深度
   RollbackStruct rbsList[MAX_MOVE_NUM]; // 回滚列表
-  uint8 ucRepHash[REP_HASH_MASK + 1];   // 判断重复局面的迷你置换表
+  uint8_t ucRepHash[REP_HASH_MASK + 1]; // 判断重复局面的迷你置换表
 
   // 获取着法预生成信息
   SlideMoveStruct *RankMovePtr(int x, int y) const {
@@ -272,8 +275,8 @@ struct PositionStruct {
     memset(ucsqPieces, 0, 48);
     zobr.InitZero();
     dwBitPiece = 0;
-    memset(wBitRanks, 0, 16 * sizeof(uint16));
-    memset(wBitFiles, 0, 16 * sizeof(uint16));
+    memset(wBitRanks, 0, 16 * sizeof(uint16_t));
+    memset(wBitFiles, 0, 16 * sizeof(uint16_t));
     vlWhite = vlBlack = 0;
     // "ClearBoard()"后面紧跟的是"SetIrrev()"，来初始化其它成员
   }
@@ -295,14 +298,14 @@ struct PositionStruct {
     vlWhite = lprbs->vlWhite;
     vlBlack = lprbs->vlBlack;
   }
-  void AddPiece(int sq, int pc, Bool bDel = FALSE); // 棋盘上增加棋子
+  void AddPiece(int sq, int pc, bool bDel = false); // 棋盘上增加棋子
   int MovePiece(int mv);                            // 移动棋子
   void UndoMovePiece(int mv, int pcCaptured);       // 撤消移动棋子
   int Promote(int sq);                              // 升变
   void UndoPromote(int sq, int pcCaptured);         // 撤消升变
 
   // 着法处理过程
-  Bool MakeMove(int mv);   // 执行一个着法
+  bool MakeMove(int mv);   // 执行一个着法
   void UndoMakeMove(void); // 撤消一个着法
   void NullMove(void);     // 执行一个空着
   void UndoNullMove(void); // 撤消一个空着
@@ -320,34 +323,34 @@ struct PositionStruct {
   void Mirror(void);               // 局面镜像
 
   // 着法检测过程
-  Bool GoodCap(int mv) const {     // 好的吃子着法检测，这样的着法不记录到历史表和杀手着法表中
+  bool GoodCap(int mv) const {     // 好的吃子着法检测，这样的着法不记录到历史表和杀手着法表中
     int pcMoved, pcCaptured;
     pcCaptured = ucpcSquares[DST(mv)];
     if (pcCaptured == 0) {
-      return FALSE;
+      return false;
     }
     if (!Protected(OPP_SIDE(sdPlayer), DST(mv))) {
-      return TRUE;
+      return true;
     }
     pcMoved = ucpcSquares[SRC(mv)];
     return SIMPLE_VALUE(pcCaptured) > SIMPLE_VALUE(pcMoved);
   }
-  Bool LegalMove(int mv) const;            // 着法合理性检测，仅用在“杀手着法”的检测中
-  int CheckedBy(Bool bLazy = FALSE) const; // 被哪个子将军
-  Bool IsMate(void);                       // 判断是已被将死
+  bool LegalMove(int mv) const;            // 着法合理性检测，仅用在“杀手着法”的检测中
+  int CheckedBy(bool bLazy = false) const; // 被哪个子将军
+  bool IsMate(void);                       // 判断是已被将死
   MoveStruct LastMove(void) const {        // 前一步着法，该着法保存了局面的将军状态
     return rbsList[nMoveNum - 1].mvs;
   }
-  Bool CanPromote(void) const {            // 判断是否能升变
+  bool CanPromote(void) const {            // 判断是否能升变
     return (wBitPiece[sdPlayer] & PAWN_BITPIECE) != PAWN_BITPIECE && LastMove().ChkChs <= 0;
   }
-  Bool NullOkay(void) const {              // 允许使用空着裁剪的条件
+  bool NullOkay(void) const {              // 允许使用空着裁剪的条件
     return (sdPlayer == 0 ? vlWhite : vlBlack) > NULLOKAY_MARGIN;
   }
-  Bool NullSafe(void) const {              // 空着裁剪可以不检验的条件
+  bool NullSafe(void) const {              // 空着裁剪可以不检验的条件
     return (sdPlayer == 0 ? vlWhite : vlBlack) > NULLSAFE_MARGIN;
   }
-  Bool IsDraw(void) const {                // 和棋判断
+  bool IsDraw(void) const {                // 和棋判断
     return (!PreEval.bPromotion && (dwBitPiece & BOTH_BITPIECE(ATTACK_BITPIECE)) == 0) ||
         -LastMove().CptDrw >= DRAW_MOVES || nMoveNum == MAX_MOVE_NUM;
   }
@@ -365,7 +368,7 @@ struct PositionStruct {
   }
 
   // 着法生成过程，由于这些过程代码量特别大，所以把他们都集中在"genmoves.cpp"中
-  Bool Protected(int sd, int sqSrc, int sqExcept = 0) const; // 棋子保护判断
+  bool Protected(int sd, int sqSrc, int sqExcept = 0) const; // 棋子保护判断
   int ChasedBy(int mv) const;                                // 捉哪个子
   int MvvLva(int sqDst, int pcCaptured, int nLva) const;     // 计算MVV(LVA)值
   int GenCapMoves(MoveStruct *lpmvs) const;                  // 吃子着法生成器

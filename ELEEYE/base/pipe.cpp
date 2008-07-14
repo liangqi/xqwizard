@@ -4,7 +4,6 @@
 #else
   #include <unistd.h>
 #endif
-#include "base.h"
 #include "base2.h"
 #include "pipe.h"
 
@@ -116,7 +115,7 @@ void PipeStruct::ReadInput(void) {
   }
 }
 
-Bool PipeStruct::CheckInput(void) {
+bool PipeStruct::CheckInput(void) {
   DWORD dwEvents, dwBytes;
   if (bConsole) { // a tty, or an un-redirected handle
     GetNumberOfConsoleInputEvents(hInput, &dwEvents);
@@ -192,7 +191,7 @@ void PipeStruct::ReadInput(void) {
   nReadEnd += read(nInput, szBuffer + nReadEnd, LINE_INPUT_MAX_CHAR - nReadEnd);
 }
 
-Bool PipeStruct::CheckInput(void) {
+bool PipeStruct::CheckInput(void) {
   fd_set set;
   timeval tv;
   int val;
@@ -215,7 +214,7 @@ void PipeStruct::LineOutput(const char *szLineStr) const {
 
 #endif
 
-Bool PipeStruct::GetBuffer(char *szLineStr) {
+bool PipeStruct::GetBuffer(char *szLineStr) {
   char *lpFeedEnd;
   int nFeedEnd;
   lpFeedEnd = (char *) memchr(szBuffer, '\n', nReadEnd);
@@ -236,7 +235,7 @@ Bool PipeStruct::GetBuffer(char *szLineStr) {
   }
 }
 
-Bool PipeStruct::LineInput(char *szLineStr) {
+bool PipeStruct::LineInput(char *szLineStr) {
   if (GetBuffer(szLineStr)) {
     return TRUE;
   } else if (CheckInput()) {

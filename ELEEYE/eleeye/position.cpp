@@ -20,7 +20,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../utility/base.h"
+#include "../base/base.h"
+#include "../base/x86asm.h"
 #include "pregen.h"
 #include "position.h"
 
@@ -66,7 +67,7 @@ const int cnSimpleValues[48] = {
 };
 
 // 该数组很方便地实现了坐标的镜像(左右对称)
-const uint8 cucsqMirrorTab[256] = {
+const uint8_t cucsqMirrorTab[256] = {
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
@@ -112,7 +113,7 @@ int FenPiece(int nArg) {
 // 以下是一些棋盘处理过程
 
 // 棋盘上增加棋子
-void PositionStruct::AddPiece(int sq, int pc, Bool bDel) {
+void PositionStruct::AddPiece(int sq, int pc, bool bDel) {
   int pt;
 
   __ASSERT_SQUARE(sq);
@@ -151,7 +152,7 @@ void PositionStruct::AddPiece(int sq, int pc, Bool bDel) {
 // 移动棋子
 int PositionStruct::MovePiece(int mv) {
   int sqSrc, sqDst, pcMoved, pcCaptured, pt;
-  uint8 *lpucvl;
+  uint8_t *lpucvl;
   // 移动棋子包括以下几个步骤：
 
   // 1. 得到移动的棋子序号和被吃的棋子序号；
@@ -303,14 +304,14 @@ void PositionStruct::UndoPromote(int sq, int pcCaptured) {
 // 以下是一些着法处理过程
 
 // 执行一个着法
-Bool PositionStruct::MakeMove(int mv) {
+bool PositionStruct::MakeMove(int mv) {
   int sq, pcCaptured;
-  uint32 dwOldZobristKey;
+  uint32_t dwOldZobristKey;
   RollbackStruct *lprbs;
 
   // 如果达到最大着法数，那么判定为非法着法
   if (this->nMoveNum == MAX_MOVE_NUM) {
-    return FALSE;
+    return false;
   }
   __ASSERT(this->nMoveNum < MAX_MOVE_NUM);
   // 执行一个着法要包括以下几个步骤：
@@ -330,7 +331,7 @@ Bool PositionStruct::MakeMove(int mv) {
     if (CheckedBy(CHECK_LAZY) > 0) {
       UndoMovePiece(mv, pcCaptured);
       Rollback();
-      return FALSE;
+      return false;
     }
   }
 
@@ -365,7 +366,7 @@ Bool PositionStruct::MakeMove(int mv) {
   this->nMoveNum ++;
   this->nDistance ++;
 
-  return TRUE;
+  return true;
 }
 
 // 撤消一个着法
@@ -545,8 +546,8 @@ void PositionStruct::ToFen(char *szFen) const {
 // 局面镜像
 void PositionStruct::Mirror(void) {
   int i, sq, nMoveNumSave;
-  uint16 wmvList[MAX_MOVE_NUM];
-  uint8 ucsqList[32];
+  uint16_t wmvList[MAX_MOVE_NUM];
+  uint8_t ucsqList[32];
   // 局面镜像需要按以下步骤依次进行：
 
   // 1. 记录所有历史着法
@@ -589,7 +590,7 @@ void PositionStruct::Mirror(void) {
 // 以下是一些着法检测过程
 
 // 着法合理性检测，仅用在“杀手着法”的检测中
-Bool PositionStruct::LegalMove(int mv) const {
+bool PositionStruct::LegalMove(int mv) const {
   int sqSrc, sqDst, sqPin, pcMoved, pcCaptured, x, y, nSideTag;
   // 着法合理性检测包括以下几个步骤：
 
@@ -599,7 +600,7 @@ Bool PositionStruct::LegalMove(int mv) const {
   sqDst = DST(mv);
   pcMoved = this->ucpcSquares[sqSrc];
   if ((pcMoved & nSideTag) == 0) {
-    return FALSE;
+    return false;
   }
   __ASSERT_SQUARE(sqSrc);
   __ASSERT_SQUARE(sqDst);
@@ -608,7 +609,7 @@ Bool PositionStruct::LegalMove(int mv) const {
   // 2. 检查吃到的子是否为对方棋子(如果有吃子并且没有升变的话)
   pcCaptured = this->ucpcSquares[sqDst];
   if (sqSrc != sqDst && (pcCaptured & nSideTag) != 0) {
-    return FALSE;
+    return false;
   }
   __ASSERT_BOUND(0, PIECE_INDEX(pcMoved), 15);
   switch (PIECE_INDEX(pcMoved)) {
@@ -659,7 +660,7 @@ Bool PositionStruct::LegalMove(int mv) const {
         return (RankMaskPtr(x, y)->wRookCap & PreGen.wBitRankMask[sqDst]) != 0;
       }
     } else {
-      return FALSE;
+      return false;
     }
 
   // 7. 如果是炮，判断起来和车一样
@@ -680,13 +681,13 @@ Bool PositionStruct::LegalMove(int mv) const {
         return (RankMaskPtr(x, y)->wCannonCap & PreGen.wBitRankMask[sqDst]) != 0;
       }
     } else {
-      return FALSE;
+      return false;
     }
 
   // 8. 如果是兵(卒)，则按红方和黑方分情况讨论
   default:
     if (AWAY_HALF(sqDst, this->sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
-      return TRUE;
+      return true;
     } else {
       return sqDst == SQUARE_FORWARD(sqSrc, this->sdPlayer);
     }
@@ -694,7 +695,7 @@ Bool PositionStruct::LegalMove(int mv) const {
 }
 
 // 将军检测
-int PositionStruct::CheckedBy(Bool bLazy) const {
+int PositionStruct::CheckedBy(bool bLazy) const {
   int pcCheckedBy, i, sqSrc, sqDst, sqPin, pc, x, y, nOppSideTag;
   SlideMaskStruct *lpsmsRank, *lpsmsFile;
 
@@ -815,14 +816,14 @@ int PositionStruct::CheckedBy(Bool bLazy) const {
 }
 
 // 判断是否被将死
-Bool PositionStruct::IsMate(void) {
+bool PositionStruct::IsMate(void) {
   int i, nGenNum;
   MoveStruct mvsGen[MAX_GEN_MOVES];
   nGenNum = GenCapMoves(mvsGen);
   for (i = 0; i < nGenNum; i ++) {
     if (MakeMove(mvsGen[i].wmv)) {
       UndoMakeMove();
-      return FALSE;
+      return false;
     }
   }
   // 着法生成分两部分做，这样可以节约时间
@@ -830,14 +831,14 @@ Bool PositionStruct::IsMate(void) {
   for (i = 0; i < nGenNum; i ++) {
     if (MakeMove(mvsGen[i].wmv)) {
       UndoMakeMove();
-      return FALSE;
+      return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 // 设置将军状态位
-inline void SetPerpCheck(uint32 &dwPerpCheck, int nChkChs) {
+inline void SetPerpCheck(uint32_t &dwPerpCheck, int nChkChs) {
   if (nChkChs == 0) {
     dwPerpCheck = 0;
   } else if (nChkChs > 0) {
@@ -851,7 +852,7 @@ inline void SetPerpCheck(uint32 &dwPerpCheck, int nChkChs) {
 int PositionStruct::RepStatus(int nRecur) const {
   // 参数"nRecur"指重复次数，在搜索中取1以提高搜索效率(默认值)，根结点处取3以适应规则
   int sd;
-  uint32 dwPerpCheck, dwOppPerpCheck;
+  uint32_t dwPerpCheck, dwOppPerpCheck;
   const RollbackStruct *lprbs;
   /* 重复局面检测包括以下几个步骤：
    *

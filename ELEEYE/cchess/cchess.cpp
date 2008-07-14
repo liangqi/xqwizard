@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <stdio.h>
 #include <string.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 #include "../eleeye/position.h"
 #include "cchess.h"
 
@@ -69,15 +69,15 @@ LPCSTR WINAPI CchessVersion(VOID) {
 
 VOID WINAPI CchessInit(BOOL bTraditional) {
   PreGenInit();
-  ChineseInit(bTraditional);
+  ChineseInit(bTraditional != FALSE);
 }
 
 VOID WINAPI CchessPromotion(BOOL bPromotion) {
-  PreEval.bPromotion = bPromotion;
+  PreEval.bPromotion = bPromotion != FALSE;
 }
 
 VOID WINAPI CchessAddPiece(PositionStruct *lppos, LONG sq, LONG pc, BOOL bDel) {
-  lppos->AddPiece(sq, pc, bDel);
+  lppos->AddPiece(sq, pc, bDel != FALSE);
 }
 
 BOOL WINAPI CchessCanPromote(PositionStruct *lppos, LONG sq) {
@@ -154,7 +154,7 @@ VOID WINAPI CchessFlipBoard(PositionStruct *lppos) {
 
 LPSTR WINAPI CchessBoardText(const PositionStruct *lppos, BOOL bAnsi) {
   static char szBoard[2048];
-  BoardText(szBoard, *lppos, bAnsi);
+  BoardText(szBoard, *lppos, bAnsi != FALSE);
   return szBoard;
 }
 
@@ -299,7 +299,7 @@ static const unsigned short cwPos2WordTrad[10] = {
 };
 
 // 固定纵线表示的纵线数组
-static const uint32 cdwFixFile[28] = {
+static const uint32_t cdwFixFile[28] = {
   0x352d3441/*A4-5*/, 0x352b3441/*A4+5*/, 0x342d3541/*A5-4*/, 0x342b3541/*A5+4*/,
   0x362d3541/*A5-6*/, 0x362b3541/*A5+6*/, 0x352d3641/*A6-5*/, 0x352b3641/*A6+5*/,
   0x332d3142/*B1-3*/, 0x332b3142/*B1+3*/, 0x312d3342/*B3-1*/, 0x312b3342/*B3+1*/,
@@ -310,7 +310,7 @@ static const uint32 cdwFixFile[28] = {
 };
 
 // 固定纵线表示的坐标数组
-static const uint8 cucFixMove[28][2] = {
+static const uint8_t cucFixMove[28][2] = {
   {0xa8, 0xb7}, {0xc8, 0xb7}, {0xb7, 0xc8}, {0xb7, 0xa8}, {0xb7, 0xc6}, {0xb7, 0xa6}, {0xa6, 0xb7}, {0xc6, 0xb7},
   {0xab, 0xc9}, {0xab, 0x89}, {0x89, 0xab}, {0xc9, 0xab}, {0x89, 0xa7}, {0xc9, 0xa7}, {0xa7, 0xc9}, {0xa7, 0x89},
   {0xa7, 0xc5}, {0xa7, 0x85}, {0x85, 0xa7}, {0xc5, 0xa7}, {0x85, 0xa3}, {0xc5, 0xa3}, {0xa3, 0xc5}, {0xa3, 0x85},
@@ -370,7 +370,7 @@ static const char *cszBoardStrTrad[19] = {
  * 转换后的坐标仍然是16x16的冗余数组，整除16后就是列号(右边线是0)，对16取余就是行号(上边线是0)。
  */
 
-static const uint8 cucSquare2FileSq[256] = {
+static const uint8_t cucSquare2FileSq[256] = {
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
@@ -389,7 +389,7 @@ static const uint8 cucSquare2FileSq[256] = {
   0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
 };
 
-static const uint8 cucFileSq2Square[256] = {
+static const uint8_t cucFileSq2Square[256] = {
   0x3b, 0x4b, 0x5b, 0x6b, 0x7b, 0x8b, 0x9b, 0xab, 0xbb, 0xcb, 0, 0, 0, 0, 0, 0,
   0x3a, 0x4a, 0x5a, 0x6a, 0x7a, 0x8a, 0x9a, 0xaa, 0xba, 0xca, 0, 0, 0, 0, 0, 0,
   0x39, 0x49, 0x59, 0x69, 0x79, 0x89, 0x99, 0xa9, 0xb9, 0xc9, 0, 0, 0, 0, 0, 0,
@@ -410,13 +410,13 @@ static const uint8 cucFileSq2Square[256] = {
 // 汉字符号的指针，即规定了简体还是繁体，由"ChineseInit()"进行赋值
 static const unsigned short (*lpcwDigit2Word)[10], (*lpcwPiece2Word)[8], *lpcwDirect2Word, *lpcwPos2Word;
 static const char **lpcszBoardStr;
-static uint16 wPromote;
+static uint16_t wPromote;
 
-inline uint8 SQUARE_FILESQ(int sq) {
+inline uint8_t SQUARE_FILESQ(int sq) {
   return cucSquare2FileSq[sq];
 }
 
-inline uint8 FILESQ_SQUARE(int sq) {
+inline uint8_t FILESQ_SQUARE(int sq) {
   return cucFileSq2Square[sq];
 }
 
@@ -489,7 +489,7 @@ static int Word2Digit(int nArg) {
 
 static int Word2Piece(int nArg) {
   int i;
-  if (FALSE) {
+  if (false) {
   } else if (nArg == 0x9b8e/*帥*/ || nArg == 0xa28c/*將*/) {
     return 0;
   } else if (nArg == 0x52f1/*馬*/ || nArg == 0xd882/*傌*/ || nArg == 0x58d8/*豖[傌]*/) {
@@ -538,7 +538,7 @@ static int Word2Pos(int nArg) {
 }
 
 // 确定使用简体汉字和繁体汉字
-void ChineseInit(Bool bTraditional) {
+void ChineseInit(bool bTraditional) {
   if (bTraditional) {
     lpcwDigit2Word = cwDigit2WordTrad;
     lpcwPiece2Word = cwPiece2WordTrad;
@@ -557,14 +557,14 @@ void ChineseInit(Bool bTraditional) {
 }
 
 // 尝试某个着法，并返回着法状态，参阅"cchess.h"
-Bool TryMove(PositionStruct &pos, int &nStatus, int mv) {
+bool TryMove(PositionStruct &pos, int &nStatus, int mv) {
   if (!pos.LegalMove(mv)) {
     nStatus = MOVE_ILLEGAL;
-    return FALSE;
+    return false;
   }
   if (!pos.MakeMove(mv)) {
     nStatus = MOVE_INCHECK;
-    return FALSE;
+    return false;
   }
   nStatus = 0;
   nStatus += (pos.LastMove().CptDrw > 0 ? MOVE_CAPTURE : 0);
@@ -572,7 +572,7 @@ Bool TryMove(PositionStruct &pos, int &nStatus, int mv) {
   nStatus += (pos.IsMate() ? MOVE_MATE : 0);
   nStatus += pos.RepStatus(3) * MOVE_PERPETUAL; // 提示：参阅"position.cpp"中的"IsRep()"函数
   nStatus += (pos.IsDraw() ? MOVE_DRAW : 0);
-  return TRUE;
+  return true;
 }
 
 // 局面镜像
@@ -580,7 +580,7 @@ Bool TryMove(PositionStruct &pos, int &nStatus, int mv) {
 // 红黑互换
 void ExchangeSide(PositionStruct &pos) {
   int i, sq;
-  uint8 ucsqList[32];
+  uint8_t ucsqList[32];
   for (i = 16; i < 48; i ++) {
     sq = pos.ucsqPieces[i];
     ucsqList[i - 16] = sq;
@@ -600,7 +600,7 @@ void ExchangeSide(PositionStruct &pos) {
 // 翻转棋盘
 void FlipBoard(PositionStruct &pos) {
   int i, sq;
-  uint8 ucsqList[32];
+  uint8_t ucsqList[32];
   for (i = 16; i < 48; i ++) {
     sq = pos.ucsqPieces[i];
     ucsqList[i - 16] = sq;
@@ -617,7 +617,7 @@ void FlipBoard(PositionStruct &pos) {
 }
 
 // 生成文本棋盘(红子用()表示，黑子用[]表示)
-void BoardText(char *szBoard, const PositionStruct &pos, Bool bAnsi) {
+void BoardText(char *szBoard, const PositionStruct &pos, bool bAnsi) {
   char *lpBoard;
   int i, j, pc;
 
@@ -699,6 +699,11 @@ void FenMirror(char *szFenDst, const char *szFenSrc) {
   return;
 }
 
+union C4dwStruct {
+  char c[4];
+  uint32_t dw;
+};
+
 /* 函数"FileMirror()"对着法的纵线表示作镜像。
  *
  * 纵线的符号表示基本类似于汉字表示，但当出现类似“前炮退二”这样的表示时，符号表示就会有不同的情况。
@@ -706,9 +711,9 @@ void FenMirror(char *szFenDst, const char *szFenSrc) {
  * 对一般着法而言，纵线表示的镜像是唯一的，但是对于“两条的纵线上有多个兵(卒)”的罕见情况，
  * 本函数只能考虑最不罕见的一种特例，即两条纵线上各有两个兵(卒)，这样，"Paxx"和"Pbxx"分别跟"Pcxx"和"Pdxx"镜像，
  * 而对于其他情况则无法作出正确转换。
- * 注意：符号表示由4个字节构成，所以可以用一个"uint32"类型作快速传输(同理，汉字表示用"uint64")。
+ * 注意：符号表示由4个字节构成，所以可以用一个"uint32_t"类型作快速传输(同理，汉字表示用"uint64_t")。
  */
-uint32 FileMirror(uint32 dwFileStr) {
+uint32_t FileMirror(uint32_t dwFileStr) {
   int nPos, nFile, pt;
   C4dwStruct Ret;
   Ret.dw = dwFileStr;
@@ -747,7 +752,7 @@ uint32 FileMirror(uint32 dwFileStr) {
 }
 
 // 将汉字表示转换为符号表示
-uint32 Chin2File(uint64 qwChinStr) {
+uint32_t Chin2File(uint64_t qwChinStr) {
   int nPos;
   unsigned short *lpwArg;
   C4dwStruct Ret;
@@ -768,12 +773,12 @@ uint32 Chin2File(uint64 qwChinStr) {
 }
 
 // 将符号表示转换为汉字表示
-uint64 File2Chin(uint32 dwFileStr, int sdPlayer) {
+uint64_t File2Chin(uint32_t dwFileStr, int sdPlayer) {
   int nPos;
   char *lpArg;
   union {
-    uint16 w[4];
-    uint64 qw;
+    uint16_t w[4];
+    uint64_t qw;
   } Ret;
 
   lpArg = (char *) &dwFileStr;
@@ -802,7 +807,7 @@ uint64 File2Chin(uint32 dwFileStr, int sdPlayer) {
  * 这个函数以及后面的"Move2File()"函数是本模块最难处理的两个函数，特别是在处理“两条的纵线上有多个兵(卒)”的问题上。
  * 在棋谱的快速时，允许只使用数字键盘，因此1到7依次代表帅(将)到兵(卒)这七种棋子，"File2Move()"函数也考虑到了这个问题。
  */
-int File2Move(uint32 dwFileStr, const PositionStruct &pos) {
+int File2Move(uint32_t dwFileStr, const PositionStruct &pos) {
   int i, j, nPos, pt, sq, nPieceNum;
   int xSrc, ySrc, xDst, yDst;
   C4dwStruct FileStr;
@@ -954,7 +959,7 @@ int File2Move(uint32 dwFileStr, const PositionStruct &pos) {
 }
 
 // 将内部着法表示转换为纵线符号
-uint32 Move2File(int mv, const PositionStruct &pos) {
+uint32_t Move2File(int mv, const PositionStruct &pos) {
   int i, j, sq, pc, pt, nPieceNum;
   int xSrc, ySrc, xDst, yDst;
   int nFileList[9], nPieceList[5];

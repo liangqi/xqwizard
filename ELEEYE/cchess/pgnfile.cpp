@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <stdio.h>
 #include <string.h>
-#include "../utility/base.h"
-#include "../utility/parse.h"
+#include "../base/base.h"
+#include "../base/parse.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "pgnfile.h"
@@ -53,7 +53,7 @@ PgnFileStruct::~PgnFileStruct(void) {
   }
 }
 
-static Bool GetLabel(char *szDestStr, const char *szLineStr, const char *szLabelName) {
+static bool GetLabel(char *szDestStr, const char *szLineStr, const char *szLabelName) {
   int nValueLen;
   const char *lpLabelEnd;
   char szTempLabel[MAX_STR_LEN];
@@ -72,9 +72,9 @@ static Bool GetLabel(char *szDestStr, const char *szLineStr, const char *szLabel
     }
     strncpy(szDestStr, szLineStr, nValueLen);
     szDestStr[nValueLen] = '\0';
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -102,10 +102,10 @@ static const char *const cszAdvertStr = "\r\n"
     " 推荐用《象棋巫师》观赏棋谱 \r\n"
     "http://www.elephantbase.net/\r\n";
 
-Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
+bool PgnFileStruct::Read(const char *szFileName, bool bNoAdvert) {
   FILE *fp;
   int nRemLevel, nRemLen;
-  Bool bReturned, bDetail, bEndFor;
+  bool bReturned, bDetail, bEndFor;
   int nNotation, nCounter, nStatus, mv;
   const char *lpLineChar;
   char szLineStr[MAX_STR_LEN], szRem[MAX_REM_LEN];
@@ -114,11 +114,11 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
   Reset();
   fp = fopen(szFileName, "rb");
   if (fp == NULL) {
-    return FALSE;
+    return false;
   }
   posStart.FromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
-  bReturned = TRUE;
-  bDetail = FALSE;
+  bReturned = true;
+  bDetail = false;
   nRemLevel = 0;
   nRemLen = 0;
   nNotation = 0;
@@ -129,18 +129,18 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
     if (bReturned) {
       fgets(szLineStr, 256, fp);
       lpLineChar = szLineStr;
-      bReturned = FALSE;
+      bReturned = false;
     }
     if (bDetail) {
       if (nRemLevel > 0) {
-        bEndFor = TRUE;
+        bEndFor = true;
         while (*lpLineChar != '\0' && *lpLineChar != '\r' && *lpLineChar != '\n') {
           nRemLevel += (*lpLineChar == '(' || *lpLineChar == '{' ? 1 : *lpLineChar == ')' || *lpLineChar == '}' ? -1 : 0);
           if (nRemLevel == 0) {
             szRem[nRemLen] = '\0';
             AppendStr(szCommentTable[nMaxMove], szRem);
             nRemLen = 0;
-            bEndFor = FALSE;
+            bEndFor = false;
             lpLineChar ++;
             break;
           } else {
@@ -158,16 +158,16 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
           if (*lpLineChar == '\r' || *lpLineChar == '\n') {
             AppendStr(szCommentTable[nMaxMove], "\r\n");
           }
-          bReturned = TRUE;
+          bReturned = true;
         }
       } else {
-        bEndFor = TRUE;
+        bEndFor = true;
         while (*lpLineChar != '\0' && *lpLineChar != '\r' && *lpLineChar != '\n') {
           switch (*lpLineChar) {
           case '(':
           case '{':
             nRemLevel ++;
-            bEndFor = FALSE;
+            bEndFor = false;
             break;
           case '0':
             if (strncmp(lpLineChar, "0-1", 3) == 0) {
@@ -175,7 +175,7 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
                 AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
               }
               fclose(fp);
-              return TRUE;
+              return true;
             }
             break;
           case '1':
@@ -184,7 +184,7 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
                 AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
               }
               fclose(fp);
-              return TRUE;
+              return true;
             }
             break;
           case '*':
@@ -192,7 +192,7 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
               AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
             }
             fclose(fp);
-            return TRUE;
+            return true;
             break;
           default:
             if (nNotation > 0) {
@@ -219,12 +219,12 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
                     }
                   }
                 }
-                bEndFor = FALSE;
+                bEndFor = false;
                 break;
               }
             } else {
               if (*lpLineChar < 0) {
-                mv = File2Move(Chin2File(*(uint64 *) lpLineChar), pos);
+                mv = File2Move(Chin2File(*(uint64_t *) lpLineChar), pos);
                 if (TryMove(pos, nStatus, mv)) {
                   if (pos.nMoveNum == MAX_MOVE_NUM) {
                     pos.SetIrrev();
@@ -248,14 +248,14 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
           }
         }
         if (bEndFor) {
-          bReturned = TRUE;
+          bReturned = true;
         }
       }
     } else {
       if (szLineStr[0] == '\0') {
-        bReturned = TRUE;
+        bReturned = true;
       } else if (szLineStr[0] == '[') {
-        if (FALSE) {
+        if (false) {
         } else if (GetLabel(szEvent, szLineStr, "EVENT")) {
         } else if (GetLabel(szRound, szLineStr, "ROUND")) {
         } else if (GetLabel(szDate, szLineStr, "DATE")) {
@@ -267,7 +267,7 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
         } else if (GetLabel(szBlack, szLineStr, "BLACK")) {
         } else if (GetLabel(szBlackElo, szLineStr, "BLACKELO")) {
         } else if (GetLabel(szRem, szLineStr, "RESULT")) {
-          if (FALSE) {
+          if (false) {
           } else if (strcmp(szRem, "*") == 0) {
             nResult = 0;
           } else if (strcmp(szRem, "1-0") == 0) {
@@ -296,9 +296,9 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
           pos = posStart;
           nCounter = 1;
         }
-        bReturned = TRUE;
+        bReturned = true;
       } else {
-        bDetail = TRUE;
+        bDetail = true;
       }
     }
   }
@@ -306,7 +306,7 @@ Bool PgnFileStruct::Read(const char *szFileName, Bool bNoAdvert) {
     AppendStr(szCommentTable[nMaxMove], cszAdvertStr);
   }
   fclose(fp);
-  return TRUE;
+  return true;
 }
 
 inline void PrintLabel(FILE *fp, const char *szTag, const char *szValue) {
@@ -315,17 +315,17 @@ inline void PrintLabel(FILE *fp, const char *szTag, const char *szValue) {
   }
 }
 
-Bool PgnFileStruct::Write(const char *szFileName, Bool bNoAdvert) const {
+bool PgnFileStruct::Write(const char *szFileName, bool bNoAdvert) const {
   int i, nCounter, nStatus;
-  Bool bReturned;
-  uint64 dqChinMove;
+  bool bReturned;
+  uint64_t dqChinMove;
   char szFen[128];
   FILE *fp;
   PositionStruct pos;
 
   fp = fopen(szFileName, "wb");
   if (fp == NULL) {
-    return FALSE;
+    return false;
   }
   PrintLabel(fp, "Game", "Chinese Chess");
   PrintLabel(fp, "Event", szEvent);
@@ -350,7 +350,7 @@ Bool PgnFileStruct::Write(const char *szFileName, Bool bNoAdvert) const {
     fprintf(fp, "{%s}\r\n", szCommentTable[0]);
   }
   pos = posStart;
-  bReturned = TRUE;
+  bReturned = true;
   nCounter = 1;
   for (i = 1; i <= nMaxMove; i ++) {
     if (bReturned) {
@@ -362,17 +362,17 @@ Bool PgnFileStruct::Write(const char *szFileName, Bool bNoAdvert) const {
     dqChinMove = File2Chin(Move2File(wmvMoveTable[i], pos), pos.sdPlayer);
     if (pos.sdPlayer == 0) {
       fprintf(fp, "%.8s", &dqChinMove);
-      bReturned = FALSE;
+      bReturned = false;
     } else {
       fprintf(fp, " %.8s\r\n", &dqChinMove);
-      bReturned = TRUE;
+      bReturned = true;
     }
     if (szCommentTable[i] != NULL) {
       if (!bReturned) {
         fprintf(fp, "\r\n");
       }
       fprintf(fp, "{%s}\r\n", szCommentTable[i]);
-      bReturned = TRUE;
+      bReturned = true;
     }
     TryMove(pos, nStatus, wmvMoveTable[i]);
     if (pos.nMoveNum == MAX_MOVE_NUM) {
@@ -387,5 +387,5 @@ Bool PgnFileStruct::Write(const char *szFileName, Bool bNoAdvert) const {
   }
   fprintf(fp, " %s%s", cszResult[nResult], bNoAdvert ? "" : cszAdvertStr);
   fclose(fp);
-  return TRUE;
+  return true;
 }
