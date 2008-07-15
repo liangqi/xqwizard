@@ -1,6 +1,7 @@
 #ifdef _WIN32
   #include <windows.h>
 #else
+  #include <pthread.h>
   #include <stdlib.h>
   #include <unistd.h>
 #endif
@@ -28,6 +29,11 @@ inline void GetSelfExe(char *szDst) {
   GetModuleFileName(NULL, szDst, PATH_MAX_CHAR);
 }
 
+inline void StartThread(void *ThreadEntry(void *), void *lpParameter) {
+  DWORD dwThreadId;
+  CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE) ThreadEntry, (LPVOID) lpParameter, 0, &dwThreadId);
+}
+
 #else
 
 inline void Idle(void) {
@@ -42,6 +48,14 @@ inline bool AbsolutePath(const char *sz) {
 
 inline void GetSelfExe(char *szDst) {
   readlink("/proc/self/exe", szDst, PATH_MAX_CHAR);
+}
+
+inline void StartThread(void *ThreadEntry(void *), void *lpParameter) {
+  pthread_t pthread;
+  pthread_attr_t pthread_attr;
+  pthread_attr_init(&pthread_attr);
+  pthread_attr_setscope(&pthread_attr, PTHREAD_SCOPE_SYSTEM);
+  pthread_create(&pthread, &pthread_attr, ThreadEntry, lpParameter);
 }
 
 #endif
