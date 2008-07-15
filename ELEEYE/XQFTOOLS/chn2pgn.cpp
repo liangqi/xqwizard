@@ -25,8 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dlfcn.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -37,19 +36,19 @@ static const int CHN2PGN_ERROR_CREATE = -1;
 static const int CHN2PGN_OK = 0;
 
 struct ChnRecord {
-  uint16 wReserved1[2];
-  uint16 wxSrc, wySrc, wxDst, wyDst;
-  uint16 wReserved2[10];
+  uint16_t wReserved1[2];
+  uint16_t wxSrc, wySrc, wxDst, wyDst;
+  uint16_t wReserved2[10];
 };
 
 int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
   int mv, nStatus;
-  Bool bRead, bFlip;
+  bool bRead, bFlip;
   PgnFileStruct pgn;
   PositionStruct pos;
   ChnRecord Chn;
   FILE *fp;
-  uint32 dwEccoIndex, dwFileMove[20];
+  uint32_t dwEccoIndex, dwFileMove[20];
 
   fp = fopen(szChnFile, "rb");
   if (fp == NULL) {
@@ -59,13 +58,13 @@ int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &E
   pgn.posStart.FromFen(cszStartFen);
   pos = pgn.posStart;
 
-  bRead = bFlip = FALSE;
+  bRead = bFlip = false;
   fseek(fp, 188, SEEK_SET);
   while (fread(&Chn, sizeof(ChnRecord), 1, fp) > 0) {
     if (!bRead) {
-      bRead = TRUE;
+      bRead = true;
       if (Chn.wySrc < 5) {
-        bFlip = TRUE;
+        bFlip = true;
       }
     }
     if (bFlip) {

@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdio.h>
-#include "../utility/base.h"
-#include "../utility/base.h"
 #include "../eleeye/position.h"
 
 const int MAX_CHAR = 1024;

@@ -1,12 +1,12 @@
-#include "../../utility/x86asm.h"
+#include "../../base/base.h"
 
 #ifndef BIGINT32_H
 #define BIGINT32_H
 
-uint32 BigIntAdd(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen);
-uint32 BigIntSub(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen);
-uint32 BigIntInc(uint32 *lp, uint32 nLen);
-uint32 BigIntDec(uint32 *lp, uint32 nLen);
-void BigIntMul(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen1, uint32 nLen2);
+uint32_t BigIntAdd(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen);
+uint32_t BigIntSub(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen);
+uint32_t BigIntInc(uint32_t *lp, uint32_t nLen);
+uint32_t BigIntDec(uint32_t *lp, uint32_t nLen);
+void BigIntMul(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen1, uint32_t nLen2);
 
 #endif

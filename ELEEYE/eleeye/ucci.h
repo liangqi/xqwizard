@@ -46,7 +46,7 @@ union UcciCommStruct {
    *
    * 1. "setoption"指令传递的信息，适合于"UCCI_COMM_SETOPTION"指令类型
    *    "setoption"指令用来设定选项，因此引擎接受到的信息有“选项类型”和“选项值”
-   *    例如，"setoption batch on"，选项类型就是"UCCI_OPTION_DEBUG"，值(Value.bCheck)就是"TRUE"
+   *    例如，"setoption batch on"，选项类型就是"UCCI_OPTION_DEBUG"，值(Value.bCheck)就是"true"
    */
   struct {
     UcciOptionEnum Option; // 选项类型

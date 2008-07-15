@@ -25,9 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dirent.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/pgnfile.h"
@@ -36,29 +35,29 @@ const int MAX_CHAR = 1024;
 const int MAX_PLAYER = 16;
 
 static struct {
-  Bool bWinMove, bDrawMove, bLossMove, bUnknownMove;
+  bool bWinMove, bDrawMove, bLossMove, bUnknownMove;
   int nPlayerNum, nSkipHead, nSkipTail;
   char szPlayerList[MAX_PLAYER][MAX_CHAR];
   FILE *fpOutput;
 } MakeTest;
 
-static Bool InPlayerList(const char *szPlayer) {
+static bool InPlayerList(const char *szPlayer) {
   int i;
   if (MakeTest.nPlayerNum == 0) {
-    return TRUE;
+    return true;
   }
   for (i = 0; i < MakeTest.nPlayerNum; i ++) {
     if (StrEqv(szPlayer, MakeTest.szPlayerList[i])) {
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 static void BuildTestFromFile(const char *szFilePath) {
   int i, mv;
-  Bool bOutput[2];
-  uint32 dwMoveStr;
+  bool bOutput[2];
+  uint32_t dwMoveStr;
   char szFen[128];
   char szFileName[MAX_CHAR];
   char *szResult, *lpSeperator;
@@ -177,7 +176,7 @@ static void SearchFolder(const char *szFolderPath) {
 static void SearchFolder(const char *szFolderPath);
 
 static void SearchFile(const char *szFilePath, const dirent *lpdir) {
-  if (FALSE) {
+  if (false) {
   } else if (lpdir->d_type == DT_REG) {
     if (strlen(szFilePath) > 4) {
       if (strncasecmp(szFilePath + strlen(szFilePath) - 4, ".PGN", 4) == 0) {
@@ -227,7 +226,7 @@ int main(void) {
     printf("%s: File Opening Error!\n", szIniFile);
     return 0;
   }
-  MakeTest.bUnknownMove = MakeTest.bWinMove = MakeTest.bDrawMove = MakeTest.bLossMove = FALSE;
+  MakeTest.bUnknownMove = MakeTest.bWinMove = MakeTest.bDrawMove = MakeTest.bLossMove = false;
   MakeTest.nPlayerNum = MakeTest.nSkipHead = MakeTest.nSkipTail = 0;
   MakeTest.fpOutput = stdout;
   szOutput[0] = '\0';
@@ -235,23 +234,23 @@ int main(void) {
   while (fgets(szLineStr, MAX_CHAR, fpIniFile) != NULL) {
     StrCutCrLf(szLineStr);
     lp = szLineStr;
-    if (FALSE) {
+    if (false) {
     } else if (StrEqvSkip(lp, "WinMove=On")) {
-      MakeTest.bWinMove = TRUE;
+      MakeTest.bWinMove = true;
     } else if (StrEqvSkip(lp, "WinMove=True")) {
-      MakeTest.bWinMove = TRUE;
+      MakeTest.bWinMove = true;
     } else if (StrEqvSkip(lp, "DrawMove=On")) {
-      MakeTest.bDrawMove = TRUE;
+      MakeTest.bDrawMove = true;
     } else if (StrEqvSkip(lp, "DrawMove=True")) {
-      MakeTest.bDrawMove = TRUE;
+      MakeTest.bDrawMove = true;
     } else if (StrEqvSkip(lp, "LossMove=On")) {
-      MakeTest.bLossMove = TRUE;
+      MakeTest.bLossMove = true;
     } else if (StrEqvSkip(lp, "LossMove=True")) {
-      MakeTest.bLossMove = TRUE;
+      MakeTest.bLossMove = true;
     } else if (StrEqvSkip(lp, "UnknownMove=On")) {
-      MakeTest.bUnknownMove = TRUE;
+      MakeTest.bUnknownMove = true;
     } else if (StrEqvSkip(lp, "UnknownMove=True")) {
-      MakeTest.bUnknownMove = TRUE;
+      MakeTest.bUnknownMove = true;
 
     } else if (StrEqvSkip(lp, "Player=")) {
       if (MakeTest.nPlayerNum < MAX_PLAYER) {

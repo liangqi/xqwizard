@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../../utility/base.h"
+#include "../../base/base.h"
 #include "matrix.h"
 
 double Network(int nLength) {
@@ -41,10 +41,10 @@ double Network(int nLength) {
 
 int main(void) {
   int i;
-  TimerStruct tb;
-  tb.Init();
+  int64_t llTime;
+  llTime = GetTime();
   for (i = 2; i <= 64; i += 2) {
-    printf("R(%d)=%.15f(%dms)\n", i, Network(i), tb.GetTimer());
+    printf("R(%d)=%.15f(%dms)\n", i, Network(i), (int) (GetTime() - llTime));
   }
   return 0;
 }

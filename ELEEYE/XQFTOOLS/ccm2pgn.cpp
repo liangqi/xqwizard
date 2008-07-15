@@ -25,8 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dlfcn.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -38,12 +37,12 @@ static const int CCM2PGN_OK = 0;
 
 int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
   int mv, nStatus;
-  Bool bRead, bFlip;
+  bool bRead, bFlip;
   PgnFileStruct pgn;
   PositionStruct pos;
   char cCcm[8];
   FILE *fp;
-  uint32 dwEccoIndex, dwFileMove[20];
+  uint32_t dwEccoIndex, dwFileMove[20];
 
   fp = fopen(szCcmFile, "rb");
   if (fp == NULL) {
@@ -53,12 +52,12 @@ int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &E
   pgn.posStart.FromFen(cszStartFen);
   pos = pgn.posStart;
 
-  bRead = bFlip = FALSE;
+  bRead = bFlip = false;
   while (fread(&cCcm, 7, 1, fp) > 0) {
     if (!bRead) {
-      bRead = TRUE;
+      bRead = true;
       if (cCcm[5] < 5) {
-        bFlip = TRUE;
+        bFlip = true;
       }
     }
     if (bFlip) {

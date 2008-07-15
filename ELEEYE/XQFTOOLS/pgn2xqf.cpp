@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifdef _WIN32
   #include <windows.h>
 #endif
+#include "../base/base.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/pgnfile.h"

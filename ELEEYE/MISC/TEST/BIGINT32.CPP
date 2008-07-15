@@ -1,11 +1,11 @@
 #include <string.h>
-#include "../../utility/x86asm.h"
+#include "../../base/base.h"
 
 #ifdef _MSC_VER
 
 #pragma warning(disable: 4035)
 
-uint32 BigIntAdd(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen) {
+uint32_t BigIntAdd(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen) {
   __asm {
     mov ecx, nLen;
     or ecx, ecx;
@@ -27,7 +27,7 @@ uint32 BigIntAdd(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint
   }
 }
 
-uint32 BigIntSub(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen) {
+uint32_t BigIntSub(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen) {
   __asm {
     mov ecx, nLen;
     or ecx, ecx;
@@ -49,9 +49,9 @@ uint32 BigIntSub(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint
   }
 }
 
-uint32 BigIntInc(uint32 *lp, uint32 nLen) {
-  /* uint32 cf = 1;
-   * for (uint32 i = 0; i < nLen; i ++) {
+uint32_t BigIntInc(uint32_t *lp, uint32_t nLen) {
+  /* uint32_t cf = 1;
+   * for (uint32_t i = 0; i < nLen; i ++) {
    *   cf:lp[i] += cf;
    *   if (cf != 0) {
    *     break;
@@ -78,9 +78,9 @@ uint32 BigIntInc(uint32 *lp, uint32 nLen) {
   }
 }
 
-uint32 BigIntDec(uint32 *lp, uint32 nLen) {
-  /* uint32 cf = -1;
-   * for (uint32 i = 0; i < nLen; i ++) {
+uint32_t BigIntDec(uint32_t *lp, uint32_t nLen) {
+  /* uint32_t cf = -1;
+   * for (uint32_t i = 0; i < nLen; i ++) {
    *   cf:lp[i] -= cf;
    *   if (cf != 0) {
    *     break;
@@ -109,13 +109,13 @@ uint32 BigIntDec(uint32 *lp, uint32 nLen) {
 
 #pragma warning(default: 4035)
 
-void BigIntMul(uint32 *lpDst, const uint32 *lpSrc1, const uint32 *lpSrc2, uint32 nLen1, uint32 nLen2) {
-  uint32 i, iSrc1;
-  memset(lpDst, 0, (nLen1 + nLen2) * sizeof(uint32));
+void BigIntMul(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2, uint32_t nLen1, uint32_t nLen2) {
+  uint32_t i, iSrc1;
+  memset(lpDst, 0, (nLen1 + nLen2) * sizeof(uint32_t));
   for (i = 0; i < nLen1; i ++) {
     iSrc1 = lpSrc1[i];
-    /* for (uint32 j = 0; j < nLen2; j ++) {
-     *   uint32 ebx = 0;
+    /* for (uint32_t j = 0; j < nLen2; j ++) {
+     *   uint32_t ebx = 0;
      *   edx:eax = lpSrc[i] * lpSrc[j] + lpDst[i + j] + ebx;
      *   lpDst[i + j] = eax;
      *   ebx = edx;

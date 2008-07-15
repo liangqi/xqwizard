@@ -25,8 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dlfcn.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -66,7 +65,7 @@ inline void ReadAndDecrypt(FILE *fp, void *lp, int nLen, const int *nEncStream, 
   int i;
   fread(lp, nLen, 1, fp);
   for (i = 0; i < nLen; i ++) {
-    ((uint8 *) lp)[i] -= nEncStream[nEncIndex];
+    ((uint8_t *) lp)[i] -= nEncStream[nEncIndex];
     nEncIndex = (nEncIndex + 1) % 32;
   }
 }
@@ -84,7 +83,7 @@ static const int XQF2PGN_OK = 0;
 int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &EccoApi) {
   int i, nArg0, nArgs[4];
   int nCommentLen, mv, nStatus;
-  Bool bHasNext;
+  bool bHasNext;
   PgnFileStruct pgn;
   PositionStruct pos;
 
@@ -100,7 +99,7 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
   // 局面初始位置
   int nPiecePos[32];
 
-  uint32 dwEccoIndex, dwFileMove[20];
+  uint32_t dwEccoIndex, dwFileMove[20];
 
   fp = fopen(szXqfFile, "rb");
   if (fp == NULL) {
@@ -118,13 +117,13 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
       }
     } else {
       // 局面初始位置的加密偏移值
-      nPieceOff = (uint8) (Square54Plus221((uint8) xqfhd.szTag[13]) * (uint8) xqfhd.szTag[13]);
+      nPieceOff = (uint8_t) (Square54Plus221((uint8_t) xqfhd.szTag[13]) * (uint8_t) xqfhd.szTag[13]);
       // 着法起点的加密偏移值
-      nSrcOff = (uint8) (Square54Plus221((uint8) xqfhd.szTag[14]) * nPieceOff);
+      nSrcOff = (uint8_t) (Square54Plus221((uint8_t) xqfhd.szTag[14]) * nPieceOff);
       // 着法终点的加密偏移值
-      nDstOff = (uint8) (Square54Plus221((uint8) xqfhd.szTag[15]) * nSrcOff);
+      nDstOff = (uint8_t) (Square54Plus221((uint8_t) xqfhd.szTag[15]) * nSrcOff);
       // 注释的加密偏移值
-      nCommentOff = ((uint8) xqfhd.szTag[12] * 256 + (uint8) xqfhd.szTag[13]) % 32000 + 767;
+      nCommentOff = ((uint8_t) xqfhd.szTag[12] * 256 + (uint8_t) xqfhd.szTag[13]) % 32000 + 767;
       // 基本掩码
       nArg0 = xqfhd.szTag[3];
       // 密钥 = 前段密钥 | (后段密钥 & 基本掩码)
@@ -133,7 +132,7 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
       }
       // 密钥流 = 密钥 & 密钥流掩码
       for (i = 0; i < 32; i ++) {
-        nEncStream[i] = (uint8) (nArgs[i % 4] & cszEncStreamMask[i]);
+        nEncStream[i] = (uint8_t) (nArgs[i % 4] & cszEncStreamMask[i]);
       }
     }
     nEncIndex = 0;
@@ -158,11 +157,11 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
       // 当版本号达到12时，还要进一步解密局面初始位置
       if (nXqfVer < 12) {
         for (i = 0; i < 32; i ++) {
-          nPiecePos[i] = (uint8) (xqfhd.szPiecePos[i] - nPieceOff);
+          nPiecePos[i] = (uint8_t) (xqfhd.szPiecePos[i] - nPieceOff);
         }
       } else {
         for (i = 0; i < 32; i ++) {
-          nPiecePos[(nPieceOff + 1 + i) % 32] = (uint8) (xqfhd.szPiecePos[i] - nPieceOff);
+          nPiecePos[(nPieceOff + 1 + i) % 32] = (uint8_t) (xqfhd.szPiecePos[i] - nPieceOff);
         }
       }
       // 把"nPiecePos[32]"的数据放到"PositionStruct"中
@@ -176,14 +175,14 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
     }
     pos = pgn.posStart;
 
-    bHasNext = TRUE;
+    bHasNext = true;
     while (bHasNext && pgn.nMaxMove < MAX_MOVE_LEN) {
       // 读取着法记录
       if (nXqfVer < 11) {
         fread(&xqfmv, sizeof(xqfmv), 1, fp);
         fread(&nCommentLen, sizeof(int), 1, fp);
         if ((xqfmv.ucTag & 0xf0) == 0) {
-          bHasNext = FALSE;
+          bHasNext = false;
         }
       } else {
         ReadAndDecrypt(fp, &xqfmv, sizeof(xqfmv), nEncStream, nEncIndex);
@@ -194,12 +193,12 @@ int Xqf2Pgn(const char *szXqfFile, const char *szPgnFile, const EccoApiStruct &E
           nCommentLen = 0;
         }
         if ((xqfmv.ucTag & 0x80) == 0) {
-          bHasNext = FALSE;
+          bHasNext = false;
         }
       }
       if (pgn.nMaxMove > 0) {
         // 记录着法
-        mv = MOVE(cucsqXqf2Square[(uint8) (xqfmv.ucSrc - 24 - nSrcOff)], cucsqXqf2Square[(uint8) (xqfmv.ucDst - 32 - nDstOff)]);
+        mv = MOVE(cucsqXqf2Square[(uint8_t) (xqfmv.ucSrc - 24 - nSrcOff)], cucsqXqf2Square[(uint8_t) (xqfmv.ucDst - 32 - nDstOff)]);
         if (pgn.nMaxMove == 1) {
           if ((pgn.posStart.ucpcSquares[SRC(mv)] & 32) != 0) {
             pgn.posStart.ChangeSide();

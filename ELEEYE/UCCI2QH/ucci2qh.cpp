@@ -20,10 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <stdio.h>
 #include <string.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
-#include "../utility/pipe.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
+#include "../base/pipe.h"
 #include "../eleeye/position.h"
 
 const int MAX_CHAR = 1024;      // 配置文件的最大长度
@@ -58,7 +57,7 @@ const int BUSY_PONDERHIT = 7;
 
 static struct {
   // 适配器状态选项
-  Bool bDebug, bUcciOkay, bBgThink;       // 是否调试模式，UCCI引擎是否启动，后台思考是否启用
+  bool bDebug, bUcciOkay, bBgThink;       // 是否调试模式，UCCI引擎是否启动，后台思考是否启用
   int nLevel, nStatus;                    // 级别和状态
   int mvPonder, mvPonderFinished;         // 后台思考的猜测着法和后台思考完成的着法
   int mvPonderFinishedPonder;             // 后台思考结束后，思考结果的后台思考猜测着法
@@ -152,44 +151,44 @@ inline void Adapter2UCCI(const char *szLineStr) {
 }
 
 // 接收“浅红象棋”的指令
-inline Bool QH2Adapter(char *szLineStr) {
+inline bool QH2Adapter(char *szLineStr) {
   if (Ucci2QH.pipeStdin.LineInput(szLineStr)) {
     if (Ucci2QH.bDebug) {
       fprintf(stderr, "Qianhong->Adapter: %s\n", szLineStr);
       fflush(stderr);
     }
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
 // 接收UCCI引擎的反馈信息
-inline Bool UCCI2Adapter(char *szLineStr) {
+inline bool UCCI2Adapter(char *szLineStr) {
   if (Ucci2QH.pipeEngine.LineInput(szLineStr)) {
     if (Ucci2QH.bDebug) {
       fprintf(stderr, "UCCI-Engine->Adapter: %s\n", szLineStr);
       fflush(stderr);
     }
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
 // 浅红模式下更新内部局面的过程
-static Bool MakeMove(int mv) {
+static bool MakeMove(int mv) {
   if (mv == 0 || Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].ucpcSquares[SRC(mv)] == 0) {
-    return FALSE;
+    return false;
   }
   if (Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].ucpcSquares[DST(mv)] == 0) {
     // 如果不是吃子着法，那么在上一个可逆局面下执行着法
     if (Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].nMoveNum < MAX_IRREV_MOVE) {
       Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].MakeMove(mv);
       Ucci2QH.nBanMoveNum = 0;
-      return TRUE;
+      return true;
     } else {
-      return FALSE;
+      return false;
     }
   } else {
     // 如果是吃子着法，那么重新设立一个不可逆局面
@@ -200,9 +199,9 @@ static Bool MakeMove(int mv) {
       Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].SetIrrev();
       Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].ToFen(Ucci2QH.szIrrevFen[Ucci2QH.nIrrevPosNum]);
       Ucci2QH.nBanMoveNum = 0;
-      return TRUE;
+      return true;
     } else {
-      return FALSE;
+      return false;
     }
   }
 }
@@ -242,7 +241,7 @@ static void PrintPosition(const PositionStruct &pos) {
 // 给UCCI引擎发送思考指令
 static void RunEngine(void) {
   int i;
-  uint32 dwMoveStr;
+  uint32_t dwMoveStr;
   char *lp;
   char szLineStr[LINE_INPUT_MAX_CHAR];
   // 发送思考指令要分三个步骤：
@@ -283,19 +282,19 @@ static void RunEngine(void) {
 }
 
 // UCCI反馈信息的接收过程
-static Bool ReceiveUCCI(void) {
+static bool ReceiveUCCI(void) {
   int mv;
   char *lp;
   char szIccs[8];
   char szLineStr[LINE_INPUT_MAX_CHAR];
   if (!UCCI2Adapter(szLineStr)) {
-    return FALSE;
+    return false;
   }
   lp = szLineStr;
   if (Ucci2QH.bUcciOkay) {
     if (StrEqvSkip(lp, "bestmove ")) {
-      mv = COORD_MOVE(*(uint32 *) lp);
-      lp += sizeof(uint32);
+      mv = COORD_MOVE(*(uint32_t *) lp);
+      lp += sizeof(uint32_t);
       switch (Ucci2QH.nStatus) {
       // 一旦收到反馈着法，就根据"bStatus"决定相应的处理过程，并转入空闲状态：
 
@@ -310,7 +309,7 @@ static Bool ReceiveUCCI(void) {
         Adapter2QH(szIccs);
         MakeMove(mv);
         if (Ucci2QH.bBgThink && StrEqvSkip(lp, " ponder ")) {
-          Ucci2QH.mvPonder = COORD_MOVE(*(uint32 *) lp);
+          Ucci2QH.mvPonder = COORD_MOVE(*(uint32_t *) lp);
           SetStatus(BUSY_PONDER);
           RunEngine();
         } else {
@@ -332,7 +331,7 @@ static Bool ReceiveUCCI(void) {
         Ucci2QH.mvPonderFinished = mv;
         SetStatus(Ucci2QH.nStatus == BUSY_PONDER ? IDLE_PONDER_FINISHED : IDLE_PONDERHIT_FINISHED);
         if (Ucci2QH.bBgThink && StrEqvSkip(lp, " ponder ")) {
-          Ucci2QH.mvPonderFinishedPonder = COORD_MOVE(*(uint32 *) lp);
+          Ucci2QH.mvPonderFinishedPonder = COORD_MOVE(*(uint32_t *) lp);
         } else {
           Ucci2QH.mvPonderFinishedPonder = 0;
         }
@@ -359,23 +358,23 @@ static Bool ReceiveUCCI(void) {
       SetStatus(IDLE_NONE);
 
     } else if (StrEqv(lp, "bye")) {
-      Ucci2QH.bUcciOkay = FALSE;
+      Ucci2QH.bUcciOkay = false;
     }
   } else {
     if (StrEqv(lp, "ucciok")) {
-      Ucci2QH.bUcciOkay = TRUE;
+      Ucci2QH.bUcciOkay = true;
     }
   }
-  return TRUE;
+  return true;
 }
 
 // 中止UCCI引擎的思考
 static void StopEngine(void) {
-  TimerStruct tbTimer;
+  int64_t llTime;
   SetStatus(BUSY_WAIT);
   Adapter2UCCI("stop");
-  tbTimer.Init();
-  while (Ucci2QH.nStatus != IDLE_NONE && tbTimer.GetTimer() < 1000) {
+  llTime = GetTime();
+  while (Ucci2QH.nStatus != IDLE_NONE && (int) (GetTime() - llTime) < 1000) {
     if (!ReceiveUCCI()) {
       Idle();
     }
@@ -384,19 +383,19 @@ static void StopEngine(void) {
 }
 
 // 浅红象棋指令的接收过程
-static Bool ReceiveQH(void) {
+static bool ReceiveQH(void) {
   int i, j;
   int mv;
-  TimerStruct tbTimer;
+  int64_t llTime;
   char *lp;
   char szIccs[8];
   char szLineStr[LINE_INPUT_MAX_CHAR];
 
   if (!QH2Adapter(szLineStr)) {
-    return FALSE;
+    return false;
   }
   lp = szLineStr;
-  if (FALSE) {
+  if (false) {
   // 浅红象棋协议接收到的指令大致有以下几种：
 
   // 1. "SCR"指令(略)；
@@ -416,7 +415,7 @@ static Bool ReceiveQH(void) {
   } else if (StrEqvSkip(lp, "FEN ")) {
     if (Ucci2QH.nStatus == BUSY_THINK || Ucci2QH.nStatus == BUSY_HINTS) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     Ucci2QH.nIrrevPosNum = 0;
     Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].FromFen(lp);
@@ -433,12 +432,12 @@ static Bool ReceiveQH(void) {
   } else if (StrEqvSkip(lp, "PLAY ")) {
     if (Ucci2QH.nStatus == BUSY_THINK || Ucci2QH.nStatus == BUSY_HINTS) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     mv = ICCS_MOVE(lp);
     if (!MakeMove(mv)) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     // 至此着法执行完毕，以下是更改后台思考状态
     switch (Ucci2QH.nStatus) {
@@ -474,7 +473,7 @@ static Bool ReceiveQH(void) {
         }
       }
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     for (j = 0; j < i; j ++) {
       while (!QH2Adapter(szLineStr)) {
@@ -494,7 +493,7 @@ static Bool ReceiveQH(void) {
   } else if (StrEqv(lp, "AI")) {
     if (Ucci2QH.nStatus == BUSY_THINK || Ucci2QH.nStatus == BUSY_HINTS) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     switch (Ucci2QH.nStatus) {
     case IDLE_NONE:
@@ -537,24 +536,24 @@ static Bool ReceiveQH(void) {
       StopEngine();
     }
     Adapter2UCCI("quit");
-    tbTimer.Init();
-    while (Ucci2QH.bUcciOkay && tbTimer.GetTimer() < 1000) {
+    llTime = GetTime();
+    while (Ucci2QH.bUcciOkay && (int) (GetTime() - llTime) < 1000) {
       if (!ReceiveUCCI()) {
         Idle();
       }
     }
-    Ucci2QH.bUcciOkay = FALSE;
+    Ucci2QH.bUcciOkay = false;
 
   // 9. "UNDO"指令，撤消着法，并且清除后台思考状态；
   } else if (StrEqv(lp, "UNDO")) {
     if (Ucci2QH.nStatus == BUSY_THINK || Ucci2QH.nStatus == BUSY_HINTS) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     if (Ucci2QH.posIrrev[Ucci2QH.nIrrevPosNum].nMoveNum == 1) {
       if (Ucci2QH.nIrrevPosNum == 0) {
         Adapter2QH("ERROR");
-        return TRUE;
+        return true;
       }
       Ucci2QH.nIrrevPosNum --;
     } else {
@@ -571,7 +570,7 @@ static Bool ReceiveQH(void) {
   } else if (StrEqv(lp, "HINTS")) {
     if (Ucci2QH.nStatus == BUSY_THINK || Ucci2QH.nStatus == BUSY_HINTS) {
       Adapter2QH("ERROR");
-      return TRUE;
+      return true;
     }
     if (Ucci2QH.nStatus == BUSY_PONDER || Ucci2QH.nStatus == BUSY_PONDERHIT) {
       // 如果正在后台思考，则输出后台思考的猜测着法，作为提示着法
@@ -602,22 +601,22 @@ static Bool ReceiveQH(void) {
 
   // 12. "BGTHINK"指令(略)；
   } else if (StrEqv(lp, "BGTHINK ON")) {
-    Ucci2QH.bBgThink = TRUE;
+    Ucci2QH.bBgThink = true;
     Adapter2QH("OK");
   } else if (StrEqv(lp, "BGTHINK OFF")) {
-    Ucci2QH.bBgThink = FALSE;
+    Ucci2QH.bBgThink = false;
     Adapter2QH("OK");
 
   // 13. "TIMEOUT"指令(略)。
   } else if (StrEqv(lp, "TIMEOUT")) {
     Adapter2UCCI("stop");
   }
-  return TRUE;
+  return true;
 }
 
 // 主函数
 int main(int argc, char **argv) {
-  TimerStruct tbTimer;
+  int64_t llTime;
   char szLineStr[MAX_CHAR];
   char *lp;
   FILE *fpIniFile;
@@ -636,7 +635,7 @@ int main(int argc, char **argv) {
   while (fgets(szLineStr, MAX_CHAR, fpIniFile) != NULL) {
     StrCutCrLf(szLineStr);
     lp = szLineStr;
-    if (FALSE) {
+    if (false) {
     } else if (StrEqvSkip(lp, "Name=")) {
       strcpy(Ucci2QH.szEngineName, lp);
     } else if (StrEqvSkip(lp, "File=")) {
@@ -668,17 +667,17 @@ int main(int argc, char **argv) {
     Ucci2QH.szThinkModes[nCurrLevel][0] = '\0';
   }
 
-  if (FALSE) {
+  if (false) {
   // 浅红引擎有以下两种命令格式：
 
   // 1. 启动引擎：UCCI2QH -plugin [debug]
   } else if (StrEqv(argv[1], "-plugin")) {
-    Ucci2QH.bDebug = Ucci2QH.bUcciOkay = Ucci2QH.bBgThink = FALSE;
+    Ucci2QH.bDebug = Ucci2QH.bUcciOkay = Ucci2QH.bBgThink = false;
     Ucci2QH.nLevel = 0;
     SetStatus(IDLE_NONE);
     if (argc > 2) {
       if (StrEqv(argv[2], "debug")) {
-        Ucci2QH.bDebug = TRUE;
+        Ucci2QH.bDebug = true;
       }
     }
     Ucci2QH.pipeStdin.Open();
@@ -688,9 +687,9 @@ int main(int argc, char **argv) {
     Ucci2QH.nIrrevPosNum = 0;
     strcpy(Ucci2QH.szIrrevFen[0], cszStartFen);
     Ucci2QH.posIrrev[0].FromFen(Ucci2QH.szIrrevFen[0]);
-    tbTimer.Init();
+    llTime = GetTime();
     // 等待10秒钟，如果引擎无法正常启动，就直接退出。
-    while (!Ucci2QH.bUcciOkay && tbTimer.GetTimer() < 10000) {
+    while (!Ucci2QH.bUcciOkay && (int) (GetTime() - llTime) < 10000) {
       if (!ReceiveUCCI()) {
         Idle();
       }

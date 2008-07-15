@@ -296,7 +296,7 @@ BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
     LONG nWin, LONG nDraw, LONG nLoss, LONG nRatio) {
   BOOL bSuccess;
   if (!bInit) {
-    bInit = TRUE;
+    bInit = true;
     PreGenInit();
     ChineseInit();
   }
@@ -329,7 +329,7 @@ LONG WINAPI GetBookMoves(const PositionStruct *lppos,
     LPCSTR szFile, LPLONG lpMoves, LPLONG lpValues) { 
   int i, nMoves;
   if (!bInit) {
-    bInit = TRUE;
+    bInit = true;
     PreGenInit();
     ChineseInit();
   }

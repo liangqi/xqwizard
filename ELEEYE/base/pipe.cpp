@@ -121,12 +121,12 @@ bool PipeStruct::CheckInput(void) {
     GetNumberOfConsoleInputEvents(hInput, &dwEvents);
     return dwEvents > 1;
   } else if (nBytesLeft > 0) { // a pipe with remainder data
-    return TRUE;
+    return true;
   } else if (PeekNamedPipe(hInput, NULL, 0, NULL, &dwBytes, NULL)) { // a pipe without remainder data 
     nBytesLeft = dwBytes;
     return nBytesLeft > 0;
-  } else { // a file, always TRUE
-    return TRUE;
+  } else { // a file, always true
+    return true;
   }
 }
 
@@ -219,7 +219,7 @@ bool PipeStruct::GetBuffer(char *szLineStr) {
   int nFeedEnd;
   lpFeedEnd = (char *) memchr(szBuffer, '\n', nReadEnd);
   if (lpFeedEnd == NULL) {
-    return FALSE;
+    return false;
   } else {
     nFeedEnd = lpFeedEnd - szBuffer;
     memcpy(szLineStr, szBuffer, nFeedEnd);
@@ -231,27 +231,27 @@ bool PipeStruct::GetBuffer(char *szLineStr) {
     if (lpFeedEnd != NULL) {
       *lpFeedEnd = '\0';
     }
-    return TRUE;
+    return true;
   }
 }
 
 bool PipeStruct::LineInput(char *szLineStr) {
   if (GetBuffer(szLineStr)) {
-    return TRUE;
+    return true;
   } else if (CheckInput()) {
     ReadInput();
     if (GetBuffer(szLineStr)) {
-      return TRUE;
+      return true;
     } else if (nReadEnd == LINE_INPUT_MAX_CHAR) {
       memcpy(szLineStr, szBuffer, LINE_INPUT_MAX_CHAR - 1);
       szLineStr[LINE_INPUT_MAX_CHAR - 1] = '\0';
       szBuffer[0] = szBuffer[LINE_INPUT_MAX_CHAR - 1];
       nReadEnd = 1;
-      return TRUE;
+      return true;
     } else {
-      return FALSE;
+      return false;
     }
   } else {
-    return FALSE;
+    return false;
   }
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
-#include "../../utility/base.h"
+#include "../../base/base.h"
+#include "../../base/rc4prng.h"
 #include "bigint32.h"
 #include "complex.h"
 #include "fft.h"
@@ -40,19 +41,19 @@ struct FftBigIntMul {
     cSrc2 = new complex[nLen];
   }
 
-  void Exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2);
+  void Exec(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2);
 };
 
-void FftBigIntMul::Exec(unsigned long *lpDst, const unsigned long *lpSrc1, const unsigned long *lpSrc2) {
+void FftBigIntMul::Exec(uint32_t *lpDst, const uint32_t *lpSrc1, const uint32_t *lpSrc2) {
   int i, dw, nLen, nLen2;
-  unsigned short *lpwDst;
-  const unsigned short *lpcwSrc1, *lpcwSrc2;
+  uint16_t *lpwDst;
+  const uint16_t *lpcwSrc1, *lpcwSrc2;
 
   nLen = rf.nLen;
   nLen2 = nLen / 2;
-  lpwDst = (unsigned short *) lpDst;
-  lpcwSrc1 = (const unsigned short *) lpSrc1;
-  lpcwSrc2 = (const unsigned short *) lpSrc2;
+  lpwDst = (uint16_t *) lpDst;
+  lpcwSrc1 = (const uint16_t *) lpSrc1;
+  lpcwSrc2 = (const uint16_t *) lpSrc2;
   for (i = 0; i < nLen2; i ++) {
     dfSrc1[i] = lpcwSrc1[i];
     dfSrc1[nLen2 + i] = 0.0;
@@ -68,8 +69,8 @@ void FftBigIntMul::Exec(unsigned long *lpDst, const unsigned long *lpSrc1, const
   dw = 0;
   for (i = 0; i < nLen; i ++) {
     dfDst[i] += dw;
-    dw = (unsigned long) ((dfDst[i] + 0.5) / 65536.0);
-    lpwDst[i] = (unsigned short) (dfDst[i] - 65536.0 * dw + 0.5);
+    dw = (uint32_t) ((dfDst[i] + 0.5) / 65536.0);
+    lpwDst[i] = (uint16_t) (dfDst[i] - 65536.0 * dw + 0.5);
   }
 }
 
@@ -77,9 +78,9 @@ const int TEST_TIMES = 256;
 
 int main(void) {
   RC4Struct rc4;
-  TimerStruct tb;
+  int64_t llTime;
   int i, nArrLen;
-  uint32 *lpDst1, *lpDst2, *lpSrc1, *lpSrc2;
+  uint32_t *lpDst1, *lpDst2, *lpSrc1, *lpSrc2;
 
   rc4.InitZero();
   nArrLen = 32;
@@ -88,25 +89,25 @@ int main(void) {
   printf(" Bits Normal   FFT\n");
   printf("==================\n");
   while (nArrLen <= 2048) {
-    lpDst1 = new uint32[nArrLen * 2];
-    lpDst2 = new uint32[nArrLen * 2];
-    lpSrc1 = new uint32[nArrLen];
-    lpSrc2 = new uint32[nArrLen];
+    lpDst1 = new uint32_t[nArrLen * 2];
+    lpDst2 = new uint32_t[nArrLen * 2];
+    lpSrc1 = new uint32_t[nArrLen];
+    lpSrc2 = new uint32_t[nArrLen];
     FftBigIntMul fbim(nArrLen);
     for (i = 0; i < nArrLen; i ++) {
       lpSrc1[i] = rc4.NextLong();
       lpSrc2[i] = rc4.NextLong();
     }
-    tb.Init();
+    llTime = GetTime();
     for (i = 0; i < TEST_TIMES; i ++) {
       BigIntMul(lpDst1, lpSrc1, lpSrc2, nArrLen, nArrLen);
     }
-    printf("%5d  %5d", nArrLen * 32, tb.GetTimer() * 1000 / TEST_TIMES);
-    tb.Init();
+    printf("%5d  %5d", nArrLen * 32, (int) (GetTime() - llTime) * 1000 / TEST_TIMES);
+    llTime = GetTime();
     for (i = 0; i < TEST_TIMES; i ++) {
       fbim.Exec(lpDst2, lpSrc1, lpSrc2);
     }
-    printf(" %5d\n", tb.GetTimer() * 1000 / TEST_TIMES);
+    printf(" %5d\n", (int) (GetTime() - llTime) * 1000 / TEST_TIMES);
     for (i = 0; i < nArrLen * 2; i ++) {
       if (lpDst1[i] != lpDst2[i]) {
         printf("Error at %d: %08X %08X\n", i, lpDst1[i], lpDst2[i]);

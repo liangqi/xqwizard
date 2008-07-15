@@ -40,18 +40,18 @@ inline bool StrEqv(const char *sz1, const char *sz2) {
 inline bool StrEqvSkip(const char *&sz1, const char *sz2) {
   if (strncasecmp(sz1, sz2, strlen(sz2)) == 0) {
     sz1 += strlen(sz2);
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
 inline bool StrEqvSkip(char *&sz1, const char *sz2) {
   if (strncasecmp(sz1, sz2, strlen(sz2)) == 0) {
     sz1 += strlen(sz2);
-    return TRUE;
+    return true;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -63,10 +63,10 @@ inline bool StrScanSkip(const char *&sz1, const char *sz2) {
   const char *lpsz;
   lpsz = strcasestr(sz1, sz2);
   if (lpsz == NULL) {
-    return FALSE;
+    return false;
   } else {
     sz1 = lpsz + strlen(sz2);
-    return TRUE;
+    return true;
   }
 }
 
@@ -74,10 +74,10 @@ inline bool StrScanSkip(char *&sz1, const char *sz2) {
   char *lpsz;
   lpsz = strcasestr(sz1, sz2);
   if (lpsz == NULL) {
-    return FALSE;
+    return false;
   } else {
     sz1 = lpsz + strlen(sz2);
-    return TRUE;
+    return true;
   }
 }
 
@@ -89,14 +89,14 @@ inline bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL)
       strcpy(szDst, szSrc);
     }
     szSrc += strlen(szSrc);
-    return FALSE;
+    return false;
   } else {
     if (szDst != NULL) {
       strncpy(szDst, szSrc, lpsz - szSrc);
       szDst[lpsz - szSrc] = '\0';
     }
     szSrc = lpsz + 1;
-    return TRUE;
+    return true;
   }
 }
 
@@ -108,14 +108,14 @@ inline bool StrSplitSkip(char *&szSrc, int nSeperator, char *szDst = NULL) {
       strcpy(szDst, szSrc);
     }
     szSrc += strlen(szSrc);
-    return FALSE;
+    return false;
   } else {
     if (szDst != NULL) {
       strncpy(szDst, szSrc, lpsz - szSrc);
       szDst[lpsz - szSrc] = '\0';
     }
     szSrc = lpsz + 1;
-    return TRUE;
+    return true;
   }
 }
 

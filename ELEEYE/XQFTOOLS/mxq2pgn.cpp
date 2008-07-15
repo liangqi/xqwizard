@@ -25,16 +25,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #else
   #include <dlfcn.h>
 #endif
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
 #include "../eleeye/position.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
 #include "../cchess/pgnfile.h"
 
 inline void ReadRecord(FILE *fp, char *sz) {
-  uint8 ucLen;
+  uint8_t ucLen;
   fread(&ucLen, 1, 1, fp);
   fread(sz, 1, ucLen, fp);
   sz[ucLen] = '\0';
@@ -52,7 +51,7 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
   PositionStruct pos;
 
   FILE *fp;
-  uint32 dwEccoIndex, dwFileMove[20];
+  uint32_t dwEccoIndex, dwFileMove[20];
 
   fp = fopen(szMxqFile, "rb");
   if (fp == NULL) {
@@ -63,7 +62,7 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
   ReadRecord(fp, pgn.szDate);
   ReadRecord(fp, pgn.szEvent);
   lpEvent = pgn.szEvent;
-  if (FALSE) {
+  if (false) {
   } else if (StrScanSkip(lpEvent, "-Ê¤-")) {
     pgn.nResult = 1;
   } else if (StrScanSkip(lpEvent, "-Ð`-")) {

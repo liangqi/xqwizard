@@ -4,7 +4,7 @@
 #else
   #include <unistd.h>
 #endif
-#include "../../utility/base2.h"
+#include "../../base/base2.h"
 
 int main(void) {
   char *lpJreHome, *lpPath;

@@ -1,5 +1,5 @@
 #include <string.h>
-#include "../../utility/base.h"
+#include "../../base/base.h"
 
 #ifndef MATRIX_H
 #define MATRIX_H

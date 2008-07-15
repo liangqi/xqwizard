@@ -20,10 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <stdio.h>
 #include <string.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
-#include "../utility/parse.h"
-#include "../utility/pipe.h"
+#include "../base/base2.h"
+#include "../base/parse.h"
+#include "../base/pipe.h"
 #include "../eleeye/position.h"
 
 const int MAX_CHAR = 1024; // 配置文件的最大长度
@@ -35,7 +34,7 @@ inline void GetMoveNodes(int &mvTest, int &nNodes, PipeStruct &pipe) {
   if (pipe.LineInput(szLineStr)) {
     lp = szLineStr;
     if (StrEqvSkip(lp, "bestmove ")) {
-      mvTest = COORD_MOVE(*(uint32 *) lp);
+      mvTest = COORD_MOVE(*(uint32_t *) lp);
     } else if (StrScanSkip(lp, " nodes ")) {
       nNodes = Str2Digit(lp, 0, 2000000000);
     }
@@ -46,7 +45,7 @@ inline void GetMoveNodes(int &mvTest, int &nNodes, PipeStruct &pipe) {
 
 int main(void) {
   int nInitNum, nTimeout;
-  Bool bNodes, bReset;
+  bool bNodes, bReset;
   char szIniFile[MAX_CHAR], szPosFile[MAX_CHAR], szEngineFile[MAX_CHAR];
   char szCommand[MAX_CHAR], szOutput[MAX_CHAR];
   char szInit[MAX_INIT][MAX_CHAR];
@@ -57,15 +56,15 @@ int main(void) {
   char *lp;
 
   PipeStruct pipe;
-  Bool bUcciOkay;
+  bool bUcciOkay;
   int i, nHitNum, nNodes, nNodesTotal, mvBase, mvTest;
-  uint32 dwMoveBase, dwMoveTest;
+  uint32_t dwMoveBase, dwMoveTest;
   PositionStruct pos;
-  TimerStruct tb;
+  int64_t llTime;
 
   // 读取配置文件
   nInitNum = nTimeout = 0;
-  bNodes = bReset = FALSE;
+  bNodes = bReset = false;
   szPosFile[0] = szEngineFile[0] = szCommand[0] = szOutput[0] = '\0';
   LocatePath(szIniFile, "UCCITEST.INI");
   fpIniFile = fopen(szIniFile, "rt");
@@ -76,15 +75,15 @@ int main(void) {
   while (fgets(szLineStr, MAX_CHAR, fpIniFile) != NULL) {
     StrCutCrLf(szLineStr);
     lp = szLineStr;
-    if (FALSE) {
+    if (false) {
     } else if (StrEqvSkip(lp, "Positions=")) {
       LocatePath(szPosFile, lp);
     } else if (StrEqvSkip(lp, "Engine=")) {
       LocatePath(szEngineFile, lp);
     } else if (StrEqvSkip(lp, "Nodes=On")) {
-      bNodes = TRUE;
+      bNodes = true;
     } else if (StrEqvSkip(lp, "Nodes=True")) {
-      bNodes = TRUE;
+      bNodes = true;
     } else if (StrEqvSkip(lp, "Init=")) {
       if (nInitNum < MAX_INIT) {
         strcpy(szInit[nInitNum], lp);
@@ -95,9 +94,9 @@ int main(void) {
     } else if (StrEqvSkip(lp, "Output=")) {
       LocatePath(szOutput, lp);
     } else if (StrEqvSkip(lp, "Reset=On")) {
-      bReset = TRUE;
+      bReset = true;
     } else if (StrEqvSkip(lp, "Reset=True")) {
-      bReset = TRUE;
+      bReset = true;
     } else if (StrEqvSkip(lp, "Timeout=")) {
       nTimeout = Str2Digit(lp, 0, 3600);
     }
@@ -108,12 +107,12 @@ int main(void) {
   // 初始化引擎
   pipe.Open(szEngineFile);
   pipe.LineOutput("ucci");
-  tb.Init();
-  bUcciOkay = FALSE;
-  while (!bUcciOkay && tb.GetTimer() < 10000) {
+  llTime = GetTime();
+  bUcciOkay = false;
+  while (!bUcciOkay && (int) (GetTime() - llTime) < 10000) {
     if (pipe.LineInput(szLineStr)) {
       if (StrEqv(szLineStr, "ucciok")) {
-        bUcciOkay = TRUE;
+        bUcciOkay = true;
       }
     } else {
       Idle();
@@ -161,7 +160,7 @@ int main(void) {
     }
     i ++;
     // 读取局面
-    dwMoveBase = *(uint32 *) szLineStr;
+    dwMoveBase = *(uint32_t *) szLineStr;
     mvBase = COORD_MOVE(dwMoveBase);
     pos.FromFen(szLineStr + 5);
     // 向引擎发送指令
@@ -174,15 +173,15 @@ int main(void) {
     pipe.LineOutput(szCommand);
     // 等待引擎返回结果
     mvTest = 0;
-    tb.Init();
-    while (mvTest == 0 && (nTimeout == 0 || tb.GetTimer() < nTimeout)) {
+    llTime = GetTime();
+    while (mvTest == 0 && (nTimeout == 0 || (int) (GetTime() - llTime) < nTimeout)) {
       GetMoveNodes(mvTest, nNodes, pipe);
     }
     // 如果超时仍然没有结果，则强行让引擎给出着法
     if (mvTest == 0) {
       pipe.LineOutput("stop");
-      tb.Init();
-      while (mvTest == 0 && tb.GetTimer() < 1000) {
+      llTime = GetTime();
+      while (mvTest == 0 && (int) (GetTime() - llTime) < 1000) {
         GetMoveNodes(mvTest, nNodes, pipe);
       }
     }
@@ -222,10 +221,10 @@ int main(void) {
 
   // 关闭引擎
   pipe.LineOutput("quit");
-  while (bUcciOkay && tb.GetTimer() < 10000) {
+  while (bUcciOkay && (int) (GetTime() - llTime) < 10000) {
     if (pipe.LineInput(szLineStr)) {
       if (StrEqv(szLineStr, "bye")) {
-        bUcciOkay = FALSE;
+        bUcciOkay = false;
       }
     } else {
       Idle();

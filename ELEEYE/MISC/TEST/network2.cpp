@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "../../utility/base.h"
 #include "matrix.h"
 
 double Network1(int nHeight, int nWidth) {
@@ -97,20 +96,20 @@ const int ADDIT_HEIGHT = 10;
 int main(void) {
   int nHeight, nWidth;
   double dfR1, dfR2, dfR3, dfLastR2, dfLastR3;
-  TimerStruct tb;
+  int64_t llTime;
   nWidth = 1;
   nHeight = nWidth + ADDIT_HEIGHT;
   dfLastR2 = Network2(nHeight, nWidth);
   dfLastR3 = dfLastR2 * 0.5 / Network1(nHeight, nWidth);
   for (nWidth ++; nWidth < 70; nWidth ++) {
     nHeight = nWidth + ADDIT_HEIGHT;
-    tb.Init();
+    llTime = GetTime();
     dfR1 = Network1(nHeight, nWidth);
     dfR2 = Network2(nHeight, nWidth);
     dfR3 = dfR2 * 0.5 / dfR1;
     dfLastR2 -= dfR2;
     dfLastR3 -= dfR3;
-    printf("R=%.15f(%dx%d,%dms)\n", (dfR3 * dfLastR2 - dfR2 * dfLastR3) / (dfLastR2 - dfLastR3), nHeight * 2 + 1, nWidth * 2, tb.GetTimer());
+    printf("R=%.15f(%dx%d,%dms)\n", (dfR3 * dfLastR2 - dfR2 * dfLastR3) / (dfLastR2 - dfLastR3), nHeight * 2 + 1, nWidth * 2, (int) (GetTime() - llTime));
     dfLastR2 = dfR2;
     dfLastR3 = dfR3;
   }

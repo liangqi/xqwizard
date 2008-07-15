@@ -1,7 +1,7 @@
-#include "../../utility/base.h"
+#include "../../base/base.h"
 #include "fraction.h"
 
-Bool bAutoReduce = TRUE;
+bool bAutoReduce = true;
 int nDefaultPrecision = DEFAULT_PRECISION;
 
 void Fraction::Reduce(void) {

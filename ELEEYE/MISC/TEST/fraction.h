@@ -1,12 +1,10 @@
-#include "../../utility/base.h"
-
 #ifndef FRACTION_H
 #define FRACTION_H
 
-const Bool SKIP_REDUCE = TRUE;
+const bool SKIP_REDUCE = true;
 const int DEFAULT_PRECISION = 4;
 
-extern Bool bAutoReduce;
+extern bool bAutoReduce;
 extern int nDefaultPrecision;
 
 struct Fraction {
@@ -16,7 +14,7 @@ struct Fraction {
   Fraction(void) {
     // Do Nothing
   }
-  Fraction(int n1, int n2 = 1, Bool bSkipReduce = FALSE) {
+  Fraction(int n1, int n2 = 1, bool bSkipReduce = false) {
     nNum = n1;
     nDen = n2;
     if (bAutoReduce && !bSkipReduce) {

@@ -21,8 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <string.h>
 #include <windows.h>
 #include <shlobj.h>
-#include "../utility/base.h"
-#include "../utility/base2.h"
+#include "../base/base2.h"
 #include "../eleeye/pregen.h"
 #include "../cchess/cchess.h"
 #include "../cchess/ecco.h"
@@ -41,7 +40,7 @@ static void SearchFile(const char *szFilePath, const WIN32_FIND_DATA &wfd, const
   if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {
     nPathLen = strlen(szFilePath) - 4;
     if (nPathLen > 0) {
-      if (FALSE) {
+      if (false) {
       } else if (strnicmp(szFilePath + nPathLen, ".XQF", 4) == 0) {
         strncpy(szPgnFile, szFilePath, nPathLen);
         strcpy(szPgnFile + nPathLen, ".PGN");
