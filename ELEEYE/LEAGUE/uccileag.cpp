@@ -216,11 +216,13 @@ static void HttpUpload(const char *szFileName) {
     nPostLen = sprintf(szPost, cszPostFormat, Live.szPath, Live.szHost, Live.nPort, nContentLen1 + nFileLen + nContentLen2);
   } else {
     if (Live.szProxyUser[0] == '\0') {
-      nPostLen = sprintf(szPost, cszProxyFormat, Live.szHost, Live.nPort, Live.szPath, Live.szHost, Live.nPort, nContentLen1 + nFileLen + nContentLen2);
+      nPostLen = sprintf(szPost, cszProxyFormat, Live.szHost, Live.nPort,
+          Live.szPath, Live.szHost, Live.nPort, nContentLen1 + nFileLen + nContentLen2);
     } else {
       nPostLen = sprintf(szAuth, "%s:%s", Live.szProxyUser, Live.szProxyPassword);
       B64Enc(szAuthB64, szAuth, nPostLen, 0);
-      nPostLen = sprintf(szPost, cszAuthFormat, Live.szHost, Live.nPort, Live.szPath, Live.szHost, Live.nPort, nContentLen1 + nFileLen + nContentLen2, szAuthB64);
+      nPostLen = sprintf(szPost, cszAuthFormat, Live.szHost, Live.nPort,
+          Live.szPath, Live.szHost, Live.nPort, nContentLen1 + nFileLen + nContentLen2, szAuthB64);
     }
   }
   // 以阻塞方式发送数据，超时为10秒，这里缓冲区最大是16K，所以网速小于1.6KB/s时就容易出错
@@ -388,17 +390,19 @@ static void PublishLeague(void) {
       for (k = 0; k < League.nGameNum; k ++) {
         fprintf(fp, "        <td align=\"center\">\n");
         nResult = Live.cResult[i][j][k];
-        dwHome = TeamList[RobinTable[j][k][0]].dwAbbr;
-        dwAway = TeamList[RobinTable[j][k][1]].dwAbbr;
+        dwHome = TeamList[(int) RobinTable[j][k][0]].dwAbbr;
+        dwAway = TeamList[(int) RobinTable[j][k][1]].dwAbbr;
         if (nResult == -1) {
           fprintf(fp, "          %.3s-%.3s\n", (const char *) &dwHome, (const char *) &dwAway);
         } else {
-          fprintf(fp, "          <a href=\"%.3s-%.3s%c.%s\" target=\"_blank\">\n", (const char *) &dwHome, (const char *) &dwAway, cszRobinChar[i], Live.szExt);
+          fprintf(fp, "          <a href=\"%.3s-%.3s%c.%s\" target=\"_blank\">\n",
+              (const char *) &dwHome, (const char *) &dwAway, cszRobinChar[i], Live.szExt);
           if (nResult == 0) {
             fprintf(fp, "            <font color=\"#FF0000\">\n");
             fprintf(fp, "              <strong>\n");
           }
-          fprintf(fp, "                %.3s%s%.3s\n", (const char *) &dwHome, cszResultDigit[nResult], (const char *) &dwAway);
+          fprintf(fp, "                %.3s%s%.3s\n", (const char *) &dwHome,
+              cszResultDigit[nResult], (const char *) &dwAway);
           if (nResult == 0) {
             fprintf(fp, "              </strong>\n");
             fprintf(fp, "            </font>\n");
@@ -446,7 +450,8 @@ static void PublishLeague(void) {
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
   fprintf(fp, "          <font size=\"2\">\n");
-  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">UCCI引擎联赛在线直播系统</a>”生成\n");
+  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">"
+      "UCCI引擎联赛在线直播系统</a>”生成\n");
   fprintf(fp, "          </font>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
@@ -489,7 +494,7 @@ inline void MOVE_ICCS(char *szIccs, int mv) {
 }
 
 static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForce = false) {
-  int i, mv, nStatus, nCounter;
+  int i, nStatus, nCounter;
   uint64_t dqChinMove;
   char szEmbeddedFile[MAX_CHAR];
   char szUploadFile[16];
@@ -521,7 +526,8 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   if (lppgn->nResult == 0 && Live.nRefresh != 0) {
     fprintf(fp, "    <meta http-equiv=\"Refresh\" content=\"%d;url=%s\">\n", Live.nRefresh, szUploadFile);
   }
-  fprintf(fp, "    <title>%s (%s) %s - %s 在线直播</title>\n", lppgn->szRed, cszResultChin[lppgn->nResult], lppgn->szBlack, League.szEvent);
+  fprintf(fp, "    <title>%s (%s) %s - %s 在线直播</title>\n",
+      lppgn->szRed, cszResultChin[lppgn->nResult], lppgn->szBlack, League.szEvent);
   fprintf(fp, "  </head>\n");
   fprintf(fp, "  <body background=\"background.gif\">\n");
   fprintf(fp, "    <p align=\"center\">\n");
@@ -603,9 +609,9 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   for (i = 1; i <= lppgn->nMaxMove; i ++) {
     dqChinMove = File2Chin(Move2File(lppgn->wmvMoveTable[i], pos), pos.sdPlayer);
     if (pos.sdPlayer == 0) {
-      fprintf(fp, "            <dt>%d. %.8s", nCounter, &dqChinMove);
+      fprintf(fp, "            <dt>%d. %.8s", nCounter, (const char *) &dqChinMove);
     } else {
-      fprintf(fp, " %.8s</dt>\n", &dqChinMove);
+      fprintf(fp, " %.8s</dt>\n", (const char *) &dqChinMove);
       nCounter ++;
     }
     TryMove(pos, nStatus, lppgn->wmvMoveTable[i]);
@@ -634,11 +640,15 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "      <dt>　　如果您已经安装《象棋巫师》软件，那么点击上面链接，《象棋巫师》就会自动打开棋局。</dt>\n");
   fprintf(fp, "      <dt>　　《象棋巫师》是免费软件，您可以访问以下页面，获得速度最快的下载链接：</dt>\n");
   fprintf(fp, "      <dt>　　(1) 《象棋巫师》简体中文版</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/24665.html\" target=\"_blank\">http://www.skycn.net/soft/24665.html</a>(天空软件站)</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/38287.htm\" target=\"_blank\">http://www.onlinedown.net/soft/38287.htm</a>(华军软件园)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/24665.html\" target=\"_blank\">"
+      "http://www.skycn.net/soft/24665.html</a>(天空软件站)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/38287.htm\" target=\"_blank\">"
+      "http://www.onlinedown.net/soft/38287.htm</a>(华军软件园)</dt>\n");
   fprintf(fp, "      <dt>　　(2) 《象棋巫师》繁体中文版</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/35392.html\" target=\"_blank\">http://www.skycn.net/soft/35392.html</a>(天空软件站)</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/47666.htm\" target=\"_blank\">http://www.onlinedown.net/soft/47666.htm</a>(华军软件园)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/35392.html\" target=\"_blank\">"
+      "http://www.skycn.net/soft/35392.html</a>(天空软件站)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/47666.htm\" target=\"_blank\">"
+      "http://www.onlinedown.net/soft/47666.htm</a>(华军软件园)</dt>\n");
   fprintf(fp, "    </dl>\n");
   fprintf(fp, "    <ul>\n");
   fprintf(fp, "      <li>返回　<a href=\"index.%s\">%s 在线直播</a></li>\n", Live.szExt, League.szEvent);
@@ -651,7 +661,8 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
   fprintf(fp, "          <font size=\"2\">\n");
-  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">UCCI引擎联赛在线直播系统</a>”生成\n");
+  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">"
+      "UCCI引擎联赛在线直播系统</a>”生成\n");
   fprintf(fp, "          </font>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
@@ -697,12 +708,14 @@ struct GameStruct {
 
   void Send(const char *szLineStr) {
     pipe[sd].LineOutput(szLineStr);
-    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
+    fprintf(fpLogFile, "Emu->%.3s(%08d):%s\n", (const char *) &lpTeam[sd]->dwAbbr,
+        nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
     fflush(fpLogFile);
   }
   bool Receive(char *szLineStr) {
     if (pipe[sd].LineInput(szLineStr)) {
-      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", &lpTeam[sd]->dwAbbr, nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
+      fprintf(fpLogFile, "%.3s->Emu(%08d):%s\n", (const char *) &lpTeam[sd]->dwAbbr,
+          nTimer[sd] - (int) (GetTime() - llTime), szLineStr);
       fflush(fpLogFile);
       return true;
     } else {
@@ -811,7 +824,7 @@ const char *const cszGoDraw = "go draw time %d increment %d opptime %d oppincrem
 void GameStruct::RunEngine(void) {
   char szLineStr[MAX_CHAR], szFileName[MAX_CHAR];
   char *lpLineChar;
-  int i, nStatus, nMoveNum, nBanMoves;
+  int i, nMoveNum, nBanMoves;
   int mvBanList[MAX_GEN_MOVES];
   MoveStruct mvs[MAX_GEN_MOVES];
   uint32_t dwMoveStr;
@@ -906,7 +919,8 @@ void GameStruct::RunEngine(void) {
         League.nIncrTime * League.nStandardCpuTime, nTimer[1 - sd], League.nIncrTime * League.nStandardCpuTime);
   } else {
     sprintf(szLineStr, bDraw ? cszGoDraw : cszGo, nTimer[sd] / 1000,
-        League.nIncrTime * League.nStandardCpuTime / 1000, nTimer[1 - sd] / 1000, League.nIncrTime * League.nStandardCpuTime / 1000);
+        League.nIncrTime * League.nStandardCpuTime / 1000, nTimer[1 - sd] / 1000,
+        League.nIncrTime * League.nStandardCpuTime / 1000);
   }
   Send(szLineStr);
   bTimeout = false;
@@ -936,7 +950,8 @@ void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   // 合成棋谱文件
   lppgn = new PgnFileStruct();
   lppgn->posStart = posIrrev;
-  sprintf(szGameFile, "%.3s-%.3s%c.PGN", (const char *) &lpTeam[0]->dwAbbr, (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
+  sprintf(szGameFile, "%.3s-%.3s%c.PGN", (const char *) &lpTeam[0]->dwAbbr,
+      (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
   strcpy(lppgn->szEvent, League.szEvent);
   sprintf(lppgn->szRound, "%d", nRobin * League.nRoundNum + nRound + 1);
   sprintf(lppgn->szDate, "%04d.%02d.%02d", lptm->tm_year + 1900, lptm->tm_mon + 1, lptm->tm_mday);
@@ -950,13 +965,15 @@ void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   }
 
   // 打开日志文件和进程文件
-  sprintf(szFileName, "%.3s-%.3s%c.LOG", (const char *) &lpTeam[0]->dwAbbr, (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
+  sprintf(szFileName, "%.3s-%.3s%c.LOG", (const char *) &lpTeam[0]->dwAbbr,
+      (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
   fpLogFile = fopen(szFileName, "at");
   if (fpLogFile == NULL) {
     printf("错误：无法建立日志文件\"%s\"!\n", szFileName);
     exit(EXIT_FAILURE);
   }
-  sprintf(szFileName, "%.3s-%.3s%c.CHK", (const char *) &lpTeam[0]->dwAbbr, (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
+  sprintf(szFileName, "%.3s-%.3s%c.CHK", (const char *) &lpTeam[0]->dwAbbr,
+      (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
   CheckFile.Open(szFileName);
 
   // 如果进程文件有记录，那么先解析进程记录的着法
@@ -1080,7 +1097,6 @@ inline void PrintDup(int nChar, int nDup) {
 
 // 终止一个棋局
 bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
-  char szLineStr[MAX_CHAR];
   double dfWeHome;
   const ResultStruct *lpResult;
 
@@ -1110,7 +1126,8 @@ bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
     PrintDup(' ', League.nNameLen - strlen(lpTeam[0]->szEngineName));
     printf(" %s %s", lpResult->szResultStr, lpTeam[1]->szEngineName);
     PrintDup(' ', League.nNameLen - strlen(lpTeam[1]->szEngineName));
-    printf(" (%.3s-%.3s%c.PGN)\n", (const char *) &lpTeam[0]->dwAbbr, (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
+    printf(" (%.3s-%.3s%c.PGN)\n", (const char *) &lpTeam[0]->dwAbbr,
+        (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
     fflush(stdout);
     // 整理直播
     Live.cResult[nRobin][nRound][nGame] = nResult;
@@ -1123,7 +1140,7 @@ bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
 
 // 输出排名表
 static void PrintRankList(void) {
-  int i, j, k, nLastRank, nLastScore;
+  int i, j, nLastRank, nLastScore;
   int nSortList[MAX_TEAM];
   TeamStruct *lpTeam;
   // 输出表头
@@ -1168,7 +1185,7 @@ static GameStruct GameList[QUEUE_LEN];
 int main(void) {
   // 以下变量牵涉输入报告的读取
   char szLineStr[MAX_CHAR];
-  char *lp, *lpComma;
+  char *lp;
   FILE *fpIniFile;
   TeamStruct *lpTeam;
   int i, j, k, nSocket;
@@ -1362,7 +1379,8 @@ int main(void) {
     for (j = 0; j < League.nRoundNum; j ++) {
       printf("%3d ", i * League.nRoundNum + j + 1);
       for (k = 0; k < League.nGameNum; k ++) {
-        printf(" %.3s-%.3s", (const char *) &TeamList[RobinTable[j][k][0]].dwAbbr, (const char *) &TeamList[RobinTable[j][k][1]].dwAbbr);
+        printf(" %.3s-%.3s", (const char *) &TeamList[(int) RobinTable[j][k][0]].dwAbbr,
+            (const char *) &TeamList[(int) RobinTable[j][k][1]].dwAbbr);
         Live.cResult[i][j][k] = -1;
       }
       printf("\n");

@@ -361,10 +361,10 @@ bool PgnFileStruct::Write(const char *szFileName, bool bNoAdvert) const {
     }
     dqChinMove = File2Chin(Move2File(wmvMoveTable[i], pos), pos.sdPlayer);
     if (pos.sdPlayer == 0) {
-      fprintf(fp, "%.8s", &dqChinMove);
+      fprintf(fp, "%.8s", (const char *) &dqChinMove);
       bReturned = false;
     } else {
-      fprintf(fp, " %.8s\r\n", &dqChinMove);
+      fprintf(fp, " %.8s\r\n", (const char *) &dqChinMove);
       bReturned = true;
     }
     if (szCommentTable[i] != NULL) {

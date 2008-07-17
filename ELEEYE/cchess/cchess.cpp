@@ -242,7 +242,7 @@ static const char ccPos2Byte[12] = {
   'a', 'b', 'c', 'd', 'e', '+', '.', '-', ' ', ' ', ' ', ' '
 };
 
-static const unsigned short cwDigit2WordSimp[2][10] = {
+static const uint16_t cwDigit2WordSimp[2][10] = {
   {
     0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/,
     0xf9c1/*六*/, 0xdfc6/*七*/, 0xcbb0/*八*/, 0xc5be/*九*/, 0xa1a1/*　*/
@@ -252,7 +252,7 @@ static const unsigned short cwDigit2WordSimp[2][10] = {
   }
 };
 
-static const unsigned short cwPiece2WordSimp[2][8] = {
+static const uint16_t cwPiece2WordSimp[2][8] = {
   {
     0xa7cb/*帅*/, 0xcbca/*仕*/, 0xe0cf/*相*/, 0xedc2/*马*/, 0xb5b3/*车*/, 0xdac5/*炮*/, 0xf8b1/*兵*/, 0xa1a1/*　*/
   }, {
@@ -260,16 +260,16 @@ static const unsigned short cwPiece2WordSimp[2][8] = {
   }
 };
 
-static const unsigned short cwDirect2WordSimp[4] = {
+static const uint16_t cwDirect2WordSimp[4] = {
   0xf8bd/*进*/, 0xbdc6/*平*/, 0xcbcd/*退*/, 0xa1a1/*　*/
 };
 
-static const unsigned short cwPos2WordSimp[10] = {
+static const uint16_t cwPos2WordSimp[10] = {
   0xbbd2/*一*/, 0xfeb6/*二*/, 0xfdc8/*三*/, 0xc4cb/*四*/, 0xe5ce/*五*/,
   0xb0c7/*前*/, 0xd0d6/*中*/, 0xf3ba/*后*/, 0xa1a1/*　*/, 0xa1a1/*　*/
 };
 
-static const unsigned short cwDigit2WordTrad[2][10] = {
+static const uint16_t cwDigit2WordTrad[2][10] = {
   {
     0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/,
     0xbba4/*せ[六]*/, 0x43a4/*[七]*/, 0x4ba4/*[八]*/, 0x45a4/*[九]*/, 0x40a1/**/
@@ -279,7 +279,7 @@ static const unsigned short cwDigit2WordTrad[2][10] = {
   }
 };
 
-static const unsigned short cwPiece2WordTrad[2][8] = {
+static const uint16_t cwPiece2WordTrad[2][8] = {
   {
     0xd3ab/*[帥]*/, 0x4ba5/*[仕]*/, 0xdbac/*[相]*/, 0xa8b0/*皑[馬]*/,
     0xaea8/*ó[車]*/, 0xb6ac/*[炮]*/, 0x4ca7/*[兵]*/, 0x40a1/**/
@@ -289,11 +289,11 @@ static const unsigned short cwPiece2WordTrad[2][8] = {
   }
 };
 
-static const unsigned short cwDirect2WordTrad[4] = {
+static const uint16_t cwDirect2WordTrad[4] = {
   0x69b6/*秈[進]*/, 0xada5/*キ[平]*/, 0x68b0/*癶[退]*/, 0x40a1/**/
 };
 
-static const unsigned short cwPos2WordTrad[10] = {
+static const uint16_t cwPos2WordTrad[10] = {
   0x40a4/*[一]*/, 0x47a4/*[二]*/, 0x54a4/*[三]*/, 0x7ca5/*[四]*/, 0xada4/*き[五]*/,
   0x65ab/*玡[前]*/, 0xa4a4/*い[中]*/, 0xe1ab/*[後]*/, 0x40a1/**/, 0x40a1/**/
 };
@@ -408,7 +408,7 @@ static const uint8_t cucFileSq2Square[256] = {
 };
 
 // 汉字符号的指针，即规定了简体还是繁体，由"ChineseInit()"进行赋值
-static const unsigned short (*lpcwDigit2Word)[10], (*lpcwPiece2Word)[8], *lpcwDirect2Word, *lpcwPos2Word;
+static const uint16_t (*lpcwDigit2Word)[10], (*lpcwPiece2Word)[8], *lpcwDirect2Word, *lpcwPos2Word;
 static const char **lpcszBoardStr;
 static uint16_t wPromote;
 
@@ -754,10 +754,10 @@ uint32_t FileMirror(uint32_t dwFileStr) {
 // 将汉字表示转换为符号表示
 uint32_t Chin2File(uint64_t qwChinStr) {
   int nPos;
-  unsigned short *lpwArg;
+  uint16_t *lpwArg;
   C4dwStruct Ret;
 
-  lpwArg = (unsigned short *) &qwChinStr;
+  lpwArg = (uint16_t *) (void *) &qwChinStr;
   nPos = Word2Pos(lpwArg[0]);
   Ret.c[0] = PIECE_BYTE(Word2Piece(nPos == MAX_POS ? lpwArg[0] : lpwArg[1]));
   Ret.c[1] = (nPos == MAX_POS ? Digit2Byte(Word2Digit(lpwArg[1])) : ccPos2Byte[nPos]);

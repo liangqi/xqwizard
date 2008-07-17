@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
       while (fgets(szLineStr, LINE_INPUT_MAX_CHAR, stdin) != NULL) {
         lpLineStr = szLineStr;
         while (*lpLineStr != '\0') {
-          nAsc0 = cszDecTab[*lpLineStr];
+          nAsc0 = cszDecTab[(int) *lpLineStr];
           if (nAsc0 != -1) {
             nAsc[nCounter] = nAsc0;
             nCounter ++;

@@ -40,7 +40,7 @@ struct EccoApiStruct {
 #else
 
 #include <dlfcn.h>
-#include "../utility/base.h"
+#include "../base/base.h"
 
 const char *const cszLibEccoFile = "libecco.so";
 

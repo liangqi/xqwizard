@@ -91,7 +91,7 @@ int B64Dec(void *lpBlock, const char *szAsc) {
   nCounter = 0;
   lpAsc = szAsc;
   while (*lpAsc != '\0') {
-    nAsc0 = cszDecTab[*lpAsc];
+    nAsc0 = cszDecTab[(int) *lpAsc];
     if (nAsc0 != -1) {
       nAsc[nCounter] = nAsc0;
       nCounter ++;
