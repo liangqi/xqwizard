@@ -1956,6 +1956,15 @@ Begin VB.Form frmMainSmall
          Caption         =   "總在最前面(&T)"
       End
    End
+   Begin VB.Menu mnTools 
+      Caption         =   "工具(&T)"
+      Begin VB.Menu mnToolBook 
+         Caption         =   "開局庫管理(&B)"
+      End
+      Begin VB.Menu mnToolConvert 
+         Caption         =   "棋譜批量轉換(&C)"
+      End
+   End
    Begin VB.Menu mnHelp 
       Caption         =   "幫助(&H)"
       Begin VB.Menu mnHelpContents 
@@ -2010,7 +2019,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.74, Last Modified: Jun. 2008
+' Designed by Morning Yellow, Version: 3.76, Last Modified: Jul. 2008
 ' Copyright (C) 2004-2007 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2649,6 +2658,18 @@ Private Sub mnOptionsTopMost_Click()
 Options_bTopMost = Not Options_bTopMost
 mnOptionsTopMost.Checked = Options_bTopMost
 SetWindowPos hwnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+
+End Sub
+
+Private Sub mnToolBook_Click()
+
+ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnToolConvert_Click()
+
+ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
