@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 3.75 (繁體中文版)
+AppVerName=象棋巫師 3.76 (繁體中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -103,12 +103,6 @@ Source: "ENDGAMET\BOOTH_Q.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMET\BOOTH_R.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 嫘豢恅璃
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\dizhen.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\dizhen.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\llj_dizhen.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\llj_dizhen.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xhwenchuan.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xhwenchuan.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\stepbystep.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
