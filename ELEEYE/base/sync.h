@@ -4,20 +4,19 @@
 #ifndef SYNC_H
 #define SYNC_H
 
-inline bool Lock(int &nLock) {
+inline bool Lock(volatile int &nLock) {
   return Exchange(&nLock, 1) == 0;
 }
 
-inline void TryLock(int &nLock) {
+inline void TryLock(volatile int &nLock) {
   while (!Lock(nLock)) {
     Idle();
   }
 }
 
-inline void Unlock(int &nLock) {
+inline void Unlock(volatile int &nLock) {
   nLock = 0;
 }
-
 
 template <class T> class Stack {
   volatile int nLock;
@@ -26,6 +25,7 @@ template <class T> class Stack {
 
 public:
   Stack(int nSize_) {
+    nLock = 0;
     nSize = nSize_;
     nTop = 0;
     Elements = new T[nSize];
@@ -58,11 +58,13 @@ public:
 };
 
 template <class T> class Queue {
+  volatile int nLock;
   int nSize, nHead, nTail;
   T *Elements;
 
 public:
   Queue(int nSize_) {
+    nLock = 0;
     nSize = nSize_;
     nHead = nTail = 0;
     Elements = new T[nSize];
