@@ -26,13 +26,16 @@ Public Const WM_LBUTTONUP       As Long = 514       ' CallWindowProcA
 Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
+Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
+        ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
 Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal pszSound As Long, ByVal hmod As Long, ByVal fdwSound As Long)
 Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
-Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
+Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, _
+        ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
+        ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Public Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
@@ -43,15 +46,6 @@ Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Lo
 Declare Sub GetMem2 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
 Declare Sub GetMem4 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
 Declare Sub GetMem8 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
-
-' For URLs
-Public Type UrlType
-    szProto As String
-    szHost  As String
-    nPort   As Long
-    szFile  As String
-    szLabel As String
-End Type
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
@@ -144,7 +138,7 @@ Private Const NIM_DELETE As Long = 2
 
 Public Const WM_TRAY As Long = &H401
 
-Private Declare Sub Shell_NotifyIcon Lib "SHELL32.DLL" Alias "Shell_NotifyIconA" (ByVal dwMessage As Long, ByRef lpData As NotifyIconData)
+Private Declare Sub Shell_NotifyIconA Lib "SHELL32.DLL" (ByVal dwMessage As Long, ByRef lpData As NotifyIconData)
 
 ' For Stdio
 Private Type StartupInfo
@@ -174,14 +168,22 @@ Private Const STD_OUTPUT_HANDLE As Long = -11
 Private Const STD_ERROR_HANDLE As Long = -12
 Private Const INVALID_HANDLE_VALUE As Long = -1
 Private Const READ_BUFFER_LEN As Long = 65536
+Private Const SC_CLOSE As Long = 61536
 
 Private Declare Sub GetStartupInfoA Lib "KERNEL32.DLL" (ByRef lpStartupInfo As StartupInfo)
 Private Declare Sub AllocConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub FreeConsole Lib "KERNEL32.DLL" ()
-Private Declare Sub SetConsoleMode Lib "KERNEL32.DLL" (ByVal h As Long, ByVal n As Long)
-Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
-Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
+Private Declare Sub SetConsoleCtrlHandler Lib "KERNEL32.DLL" (ByVal lpHandlerRoutine As Long, ByVal bAdd As Long)
+Private Declare Sub SetConsoleTitleA Lib "KERNEL32.DLL" (ByVal szConsoleTitle As String)
+Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
+        ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
+Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
+        ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
 Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
+Private Declare Function FindWindowA Lib "USER32.DLL" (Optional ByVal szClassName As String = vbNullString, _
+        Optional ByVal szWindowName As String = vbNullString) As Long
+Private Declare Function GetSystemMenu Lib "USER32.DLL" (ByVal hWnd As Long, Optional ByVal bRevert As Long = 0) As Long
+Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPosition As Long, Optional ByVal uFlag As Long = 0)
 
 Private Stdio_si As StartupInfo
 
@@ -354,63 +356,12 @@ UrlDecode = szReturn
 
 End Function
 
-Public Sub ParseUrl(ByRef url As UrlType, ByVal szUrl As String)
-
-Dim n As Integer, sz As String, df As Double
-
-n = InStr(szUrl, ":")
-If n = 0 Then
-    url.szProto = "http"
-Else
-    url.szProto = LCase(Left(szUrl, n - 1))
-End If
-Do While Mid(szUrl, n + 1, 1) = "/"
-    n = n + 1
-Loop
-sz = Mid(szUrl, n + 1)
-
-n = InStr(sz, "#")
-If n = 0 Then
-    url.szLabel = ""
-Else
-    url.szLabel = Mid(sz, n + 1)
-    sz = Left(sz, n - 1)
-End If
-
-n = InStr(sz, "/")
-If n = 0 Then
-    url.szFile = ""
-Else
-    url.szFile = Mid(sz, n + 1)
-    If Right(url.szFile, 1) = "/" Then
-        url.szFile = Left(url.szFile, Len(url.szFile) - 1)
-    End If
-    sz = Left(sz, n - 1)
-End If
-
-n = InStr(sz, ":")
-If n = 0 Then
-    url.nPort = 80
-    url.szHost = LCase(sz)
-Else
-    df = Val(Mid(sz, n + 1))
-    url.nPort = IIf(df < 0.5 Or df >= 65535.5, 80, sz)
-    url.szHost = LCase(Left(sz, n - 1))
-End If
-
-End Sub
-
-Public Function UrlString(ByRef url As UrlType) As String
-
-UrlString = url.szProto + "://" + url.szHost + IIf(url.szProto = "http" And url.nPort = 80, "", ":" + LTrim(Str(url.nPort))) + "/" + url.szFile + "#" + url.szLabel
-
-End Function
-
 ' === End URLs ===
 
 ' === Begin MsgBoxWithIcon/MsgBoxMute ===
 
-Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1)
+Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, _
+        Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1)
 
 Dim mbp As MsgBoxParams
 Dim hInstance As Long, hIcon As Long
@@ -593,7 +544,7 @@ nid.uFlags = NIF_MESSAGE + NIF_ICON + NIF_TIP
 nid.uCallbackMessage = WM_TRAY
 nid.hIcon = IIf(hIcon = 0, frm.Icon.Handle, hIcon)
 nid.szTip = IIf(szTip = "", frm.Caption, szTip) + Chr(0)
-Shell_NotifyIcon NIM_ADD, nid
+Shell_NotifyIconA NIM_ADD, nid
 
 End Sub
 
@@ -604,23 +555,42 @@ nid.cbSize = Len(nid)
 nid.hWnd = frm.hWnd
 nid.uID = 0
 nid.uFlags = 0
-Shell_NotifyIcon NIM_DELETE, nid
+Shell_NotifyIconA NIM_DELETE, nid
 
 End Sub
 
 ' === End TrayIcon ===
 
 ' === Begin Stdio ===
-  
+
+Private Function CtrlHandlerRoutine(ByVal dwCtrlType) As Long
+
+CtrlHandlerRoutine = 1
+
+End Function
+
 Public Sub StdioOpen()
 
+Dim hWnd As Long, hMenu As Long, szTitle As String
+
 GetStartupInfoA Stdio_si
-If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) = 0 Then
-    AllocConsole
-    Stdio_si.hStdInput = GetStdHandle(STD_INPUT_HANDLE)
-    Stdio_si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE)
-    Stdio_si.hStdError = GetStdHandle(STD_ERROR_HANDLE)
+If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) <> 0 Then
+    Exit Sub
 End If
+AllocConsole
+SetConsoleCtrlHandler AddressOf CtrlHandlerRoutine, 1
+szTitle = "Console" + Str(App.hInstance) + Str(App.ThreadID)
+SetConsoleTitleA szTitle
+Do While hWnd = 0
+    Sleep 1
+    hWnd = FindWindowA(, szTitle)
+Loop
+SetConsoleTitleA ""
+hMenu = GetSystemMenu(hWnd)
+DeleteMenu hMenu, SC_CLOSE
+Stdio_si.hStdInput = GetStdHandle(STD_INPUT_HANDLE)
+Stdio_si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE)
+Stdio_si.hStdError = GetStdHandle(STD_ERROR_HANDLE)
 
 End Sub
 
@@ -656,4 +626,3 @@ WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
 End Sub
 
 ' === End Stdio ===
-
