@@ -614,14 +614,14 @@ End Function
 Public Sub StdioOut(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdOutput, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdOutput, CvBStr(sz), lstrlenA(CvBStr(sz)), nNumberOfBytesWritten
 
 End Sub
 
 Public Sub StdioErr(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(CvBStr(sz)), nNumberOfBytesWritten
 
 End Sub
 
