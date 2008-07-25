@@ -195,7 +195,7 @@ txtClientPort.Text = Str2Lng(GetSetting("VBChat", "Redirect", "ClientPort", "822
 txtServerHost.Text = GetSetting("VBChat", "Redirect", "ServerHost", "localhost")
 txtServerPort.Text = Str2Lng(GetSetting("VBChat", "Redirect", "ServerPort", "2882"), 1, 65535)
 selDump.ListIndex = Str2Int(GetSetting("VBChat", "Redirect", "Dump", "0"), 0, 2)
-' App_lpPrevWndFunc = SetWindowLongA(hWnd, GWL_WNDPROC, AddressOf NewWndFunc)
+App_lpPrevWndFunc = SetWindowLongA(hWnd, GWL_WNDPROC, AddressOf NewWndFunc)
 
 End Sub
 
@@ -204,7 +204,7 @@ Private Sub Form_UnLoad(nCancel As Integer)
 If WindowState = vbMinimized Then
     DeleteTrayIcon Me
 End If
-' SetWindowLongA hWnd, GWL_WNDPROC, App_lpPrevWndFunc
+SetWindowLongA hWnd, GWL_WNDPROC, App_lpPrevWndFunc
 SaveSetting "VBChat", "Redirect", "ClientPort", txtClientPort.Text
 SaveSetting "VBChat", "Redirect", "ServerHost", txtServerHost.Text
 SaveSetting "VBChat", "Redirect", "ServerPort", txtServerPort.Text

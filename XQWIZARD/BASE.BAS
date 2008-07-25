@@ -581,11 +581,12 @@ AllocConsole
 SetConsoleCtrlHandler AddressOf CtrlHandlerRoutine, 1
 szTitle = "Console" + Str(App.hInstance) + Str(App.ThreadID)
 SetConsoleTitleA szTitle
+hWnd = 0
 Do While hWnd = 0
     Sleep 1
     hWnd = FindWindowA(, szTitle)
 Loop
-SetConsoleTitleA ""
+SetConsoleTitleA App.Title
 hMenu = GetSystemMenu(hWnd)
 DeleteMenu hMenu, SC_CLOSE
 Stdio_si.hStdInput = GetStdHandle(STD_INPUT_HANDLE)
