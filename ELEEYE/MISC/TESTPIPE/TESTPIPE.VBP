@@ -1,9 +1,9 @@
 Type=Exe
 Form=TESTPIPE.FRM
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
-Module=mdlPipe; ..\..\UTILITY\PIPE.BAS
+Module=mdlPipe; ..\..\base\PIPE.BAS
 Module=mdlTestPipe; TESTPIPE.BAS
-Module=mdlBase; ..\..\utility\BASE.BAS
+Module=mdlBase; ..\..\base\BASE.BAS
 IconForm="frmTestPipe"
 Startup="Sub Main"
 HelpFile=""

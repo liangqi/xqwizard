@@ -1,8 +1,8 @@
 Type=Exe
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
 Module=mdlExPipe; EXPIPE.BAS
-Module=mdlPipe; ..\..\utility\PIPE.BAS
-Module=mdlBase; ..\..\utility\BASE.BAS
+Module=mdlPipe; ..\..\base\PIPE.BAS
+Module=mdlBase; ..\..\base\BASE.BAS
 Startup="Sub Main"
 ExeName32="EXPIPE.EXE"
 Path32="..\..\BIN"
