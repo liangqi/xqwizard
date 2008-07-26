@@ -16,6 +16,7 @@ Begin VB.Form frmXQBooth
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
+   Icon            =   "XQBOOTH.frx":0000
    MaxButton       =   0   'False
    ScaleHeight     =   5055
    ScaleWidth      =   3735
@@ -50,7 +51,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.Image imgSquares 
@@ -686,250 +687,10 @@ Begin VB.Form frmXQBooth
    Begin VB.Image imgBoard 
       Height          =   4095
       Left            =   0
-      Picture         =   "XQBOOTH.frx":0000
+      Picture         =   "XQBOOTH.frx":014A
       Stretch         =   -1  'True
       Top             =   0
       Width           =   3735
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   29
-      Left            =   2640
-      Picture         =   "XQBOOTH.frx":123D
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   28
-      Left            =   2280
-      Picture         =   "XQBOOTH.frx":164A
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   27
-      Left            =   1920
-      Picture         =   "XQBOOTH.frx":1A57
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   26
-      Left            =   1560
-      Picture         =   "XQBOOTH.frx":1E59
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   25
-      Left            =   1200
-      Picture         =   "XQBOOTH.frx":2260
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   24
-      Left            =   840
-      Picture         =   "XQBOOTH.frx":266D
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   23
-      Left            =   480
-      Picture         =   "XQBOOTH.frx":2A71
-      Top             =   1200
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   22
-      Left            =   2640
-      Picture         =   "XQBOOTH.frx":2E7F
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   21
-      Left            =   2280
-      Picture         =   "XQBOOTH.frx":3284
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   20
-      Left            =   1920
-      Picture         =   "XQBOOTH.frx":3692
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   19
-      Left            =   1560
-      Picture         =   "XQBOOTH.frx":3A99
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   18
-      Left            =   1200
-      Picture         =   "XQBOOTH.frx":3EA0
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   17
-      Left            =   840
-      Picture         =   "XQBOOTH.frx":42AE
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   16
-      Left            =   480
-      Picture         =   "XQBOOTH.frx":46B4
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   15
-      Left            =   120
-      Picture         =   "XQBOOTH.frx":4AC3
-      Top             =   840
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   14
-      Left            =   2640
-      Picture         =   "XQBOOTH.frx":4E3A
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   13
-      Left            =   2280
-      Picture         =   "XQBOOTH.frx":5228
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   12
-      Left            =   1920
-      Picture         =   "XQBOOTH.frx":561B
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   11
-      Left            =   1560
-      Picture         =   "XQBOOTH.frx":5A06
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   10
-      Left            =   1200
-      Picture         =   "XQBOOTH.frx":5DF7
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   9
-      Left            =   840
-      Picture         =   "XQBOOTH.frx":61EB
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   8
-      Left            =   480
-      Picture         =   "XQBOOTH.frx":65D6
-      Top             =   480
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   7
-      Left            =   2640
-      Picture         =   "XQBOOTH.frx":69CB
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   6
-      Left            =   2280
-      Picture         =   "XQBOOTH.frx":6DB9
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   5
-      Left            =   1920
-      Picture         =   "XQBOOTH.frx":71A8
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   4
-      Left            =   1560
-      Picture         =   "XQBOOTH.frx":7593
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   3
-      Left            =   1200
-      Picture         =   "XQBOOTH.frx":7984
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   2
-      Left            =   840
-      Picture         =   "XQBOOTH.frx":7D77
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   1
-      Left            =   480
-      Picture         =   "XQBOOTH.frx":8165
-      Top             =   120
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   0
-      Left            =   120
-      Picture         =   "XQBOOTH.frx":855C
-      Top             =   120
-      Width           =   360
    End
    Begin VB.Menu mnPrev 
       Caption         =   "…œ“ªπÿ(&P)"
@@ -949,7 +710,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.8, Last Modified: Jul. 2008
+' Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -968,16 +729,8 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private App_szPath As String
+Private Sub Form_Unload(nCancel As Integer)
 
-Private Sub Form_Load()
-
-App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
-web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
-
-Dim i As Integer
-For i = 0 To 89
-    imgSquares(i).Picture = imgPieces(i Mod 30).Picture
-Next
+App_bRunning = False
 
 End Sub
