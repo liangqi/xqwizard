@@ -50,7 +50,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
    End
    Begin VB.Image imgSquares 
@@ -800,6 +800,36 @@ End Function
 
 Private Sub Thinking()
 
+Dim lpStr As Long, mv As Long, nStatus As Long, sz As String
+
+nPhase = PHASE_BUSY
+MousePointer = vbHourglass
+PipeLineOutput Engine_pipe, "position fen " + MkBStr(CchessBoard2Fen(pos))
+PipeLineOutput Engine_pipe, "go infinity"
+mv = 0
+Do While mv = 0
+    lpStr = PipeLineInput(Engine_pipe)
+    If lpStr = 0 Then
+        DoEvents
+        Sleep 1
+    Else
+        sz = MkBStr(lpStr)
+        If Left(sz, 9) = "bestmove " Then
+            mv = Coord2Move(Mid(sz, 10, 4))
+        End If
+    End If
+Loop
+If mvLast > 0 Then
+    DrawSquare Src(mvLast)
+    DrawSquare Dst(mvLast)
+End If
+CchessTryMove pos, nStatus, mv
+DrawSquare Src(mv), DRAW_SELECTED
+DrawSquare Dst(mv), DRAW_SELECTED
+mvLast = mv
+nPhase = IIf(GetResult(nStatus), PHASE_END, PHASE_READY)
+MousePointer = vbDefault
+
 End Sub
 
 Private Sub LoadGame()
@@ -829,27 +859,37 @@ End Sub
 
 Private Sub Form_Unload(nCancel As Integer)
 
-App_bRunning = False
+If nPhase = PHASE_BUSY Then
+    nCancel = 1
+Else
+    App_bRunning = False
+End If
 
 End Sub
 
 Private Sub mnPrev_Click()
 
-Gui_nCurr = Gui_nCurr - 1
-LoadGame
+If nPhase <> PHASE_BUSY Then
+    Gui_nCurr = Gui_nCurr - 1
+    LoadGame
+End If
 
 End Sub
 
 Private Sub mnRestart_Click()
 
-LoadGame
+If nPhase <> PHASE_BUSY Then
+    LoadGame
+End If
 
 End Sub
 
 Private Sub mnNext_Click()
 
-Gui_nCurr = Gui_nCurr + 1
-LoadGame
+If nPhase <> PHASE_BUSY Then
+    Gui_nCurr = Gui_nCurr + 1
+    LoadGame
+End If
 
 End Sub
 
@@ -857,6 +897,9 @@ Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift A
 
 Dim sq As Integer, pc As Integer, mv As Long, nStatus As Long
 
+If nPhase <> PHASE_READY Then
+    Exit Sub
+End If
 sq = (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3
 pc = pos.ucpcSquares(sq)
 If (pc And (16 + pos.sdPlayer * 16)) <> 0 Then

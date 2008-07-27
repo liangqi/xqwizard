@@ -23,7 +23,7 @@ Option Explicit
 
 ' 全局常量
 Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
-Public Const MAX_ENDGAMES       As Integer = 50     ' 残局的最大条目数
+Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 
