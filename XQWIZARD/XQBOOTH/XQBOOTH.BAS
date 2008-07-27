@@ -22,31 +22,25 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const MAX_ADVERTS        As Integer = 100  ' 广告的最大条目数
+Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
+Public Const MAX_ENDGAMES       As Integer = 50     ' 残局的最大条目数
+Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
+Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 
 ' 全局变量
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
+Public App_nEndgames            As Integer  ' 读入的残局数量
+Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Gui_nCurr                As Integer  ' 当前残局的条目序号
+Public Gui_nLast                As Integer  ' 最后残局的条目序号
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
 Public Gui_nAdvertNum           As Integer  ' 广告数量
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每个广告的文件
 Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
-
-' 从注册表加载参数
-Public Sub LoadRegs()
-
-Gui_szAdvertDate = GetSetting("XQBooth", "Gui", "AdvertDate", "")
-
-End Sub
-
-' 保存参数到注册表
-Public Sub SaveRegs()
-
-SaveSetting "XQBooth", "Gui", "AdvertDate", Gui_szAdvertDate
-
-End Sub
+Public Engine_pipe          As PipeStruct   ' 引擎管道
 
 ' 下载广告列表
 Public Sub DownloadAdvertList()
@@ -182,16 +176,97 @@ On Error GoTo 0
 
 End Sub
 
+' 从注册表加载参数
+Public Sub LoadRegs()
+
+Gui_szAdvertDate = GetSetting("XQBooth", "Gui", "AdvertDate", "")
+Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
+Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+
+End Sub
+
+' 保存参数到注册表
+Public Sub SaveRegs()
+
+SaveSetting "XQBooth", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
+SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
+
+End Sub
+
 ' 主函数
 Public Sub Main()
 
-Dim i As Integer
-Dim dfThisTime As Double
+Dim i As Integer, nFileNo As Integer, bLoaded As Boolean
+Dim sz As String, lpStr As Long
+Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
+
+' 加载残局
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + ENDGAME_FILE For Input As #nFileNo
+On Error GoTo 0
+App_nEndgames = 0
+Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
+    Line Input #nFileNo, sz
+    i = InStr(sz, ";")
+    If i > 0 Then
+        App_szEndgames(App_nEndgames) = RTrim(Left(sz, i - 1))
+        App_nEndgames = App_nEndgames + 1
+    Else
+        sz = RTrim(sz)
+        If sz <> "" Then
+            App_szEndgames(App_nEndgames) = sz
+            App_nEndgames = App_nEndgames + 1
+        End If
+    End If
+Loop
+Close #nFileNo
+If App_nEndgames = 0 Then
+    MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
+    Exit Sub
+End If
+If Gui_nLast >= App_nEndgames Then
+    Gui_nLast = App_nEndgames - 1
+End If
+If Gui_nCurr > Gui_nLast Then
+    Gui_nCurr = Gui_nLast
+End If
+
+' 加载引擎
+PipeOpen Engine_pipe, App_szPath + ENGINE_FILE
+PipeLineOutput Engine_pipe, "ucci"
+dfLastTime = Timer
+bLoaded = False
+Do While Not bLoaded
+    lpStr = PipeLineInput(Engine_pipe)
+    If lpStr = 0 Then
+        Sleep 1
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+        If dfThisTime > dfLastTime + 10# Then
+            Exit Do
+        End If
+    Else
+        sz = MkBStr(lpStr)
+        If sz = "ucciok" Then
+            bLoaded = True
+        End If
+    End If
+Loop
+If Not bLoaded Then
+    PipeLineOutput Engine_pipe, "quit"
+    PipeClose Engine_pipe
+    MsgBox "无法加载引擎 " + App_szPath + ENGINE_FILE, vbExclamation
+    Exit Sub
+End If
+PipeLineOutput Engine_pipe, "setoption alwayscheck true"
+
 ' 调整广告框大小
 On Error Resume Next
 frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
@@ -217,11 +292,7 @@ frmXQBooth.frmWeb.Width = frmHide.imgAdvert.Width
 frmXQBooth.frmWeb.Height = frmHide.imgAdvert.Height
 frmXQBooth.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 
-' 测试
-For i = 0 To 89
-    frmXQBooth.imgSquares(i).Picture = frmHide.imgPieces(i Mod 30).Picture
-Next
-
+' 主循环
 App_bRunning = True
 Do While App_bRunning
     ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
@@ -246,8 +317,37 @@ If Gui_szAdvertDate <> Date Then
         Gui_szAdvertDate = Date
     End If
 End If
+' 关闭引擎
+PipeLineOutput Engine_pipe, "quit"
+dfLastTime = Timer
+Do While bLoaded
+    lpStr = PipeLineInput(Engine_pipe)
+    If lpStr = 0 Then
+        Sleep 1
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+        If dfThisTime > dfLastTime + 1# Then
+            Exit Do
+        End If
+    Else
+        sz = MkBStr(lpStr)
+        If sz = "bye" Then
+            bLoaded = False
+        End If
+    End If
+Loop
+PipeClose Engine_pipe
+If bLoaded Then
+    MsgBox "无法正常卸载引擎！", vbExclamation
+End If
+' 退出
 SaveRegs
 PlaySoundA 0, 0, 0
 Unload frmHide
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
 
 End Sub

@@ -2,7 +2,6 @@ VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Begin VB.Form frmXQBooth 
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "象棋路边摊"
    ClientHeight    =   5055
    ClientLeft      =   150
    ClientTop       =   720
@@ -729,8 +728,162 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private Const DRAW_SELECTED As Boolean = True
+
+Private Const PHASE_READY As Integer = 0
+Private Const PHASE_BUSY As Integer = 1
+Private Const PHASE_END As Integer = 2
+
+Private pos As PositionStruct
+Private nPhase As Integer, sqSelected As Integer, mvLast As Long
+
+Private Sub PlayWavSound(ByVal szSoundFile As String)
+
+PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+
+End Sub
+
+Private Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
+
+Dim pc As Integer, nPicId As Integer
+pc = pos.ucpcSquares(sq)
+If pc = 0 Then
+    nPicId = 0
+Else
+    nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
+End If
+nPicId = nPicId + IIf(bSelected, 15, 0)
+imgSquares((sq \ 16 - 3) * 9 + sq Mod 16 - 3).Picture = frmHide.imgPieces(nPicId)
+
+End Sub
+
+Private Function GetResult(ByVal nStatus As Long) As Boolean
+
+If (nStatus And MOVE_MATE) <> 0 Then
+    If pos.sdPlayer = 0 Then
+        PlayWavSound "LOSS"
+        MsgBoxMute "请再接再厉！", vbInformation
+    Else
+        PlayWavSound "WIN"
+        If Gui_nCurr = App_nEndgames - 1 Then
+            MsgBoxMute "恭喜你闯过所有关卡！", vbInformation
+        Else
+            MsgBoxMute "恭喜你过关！", vbInformation
+            mnNext.Enabled = True
+        End If
+        If Gui_nCurr = Gui_nLast Then
+            Gui_nLast = Gui_nLast + 1
+        End If
+    End If
+    GetResult = True
+    Exit Function
+End If
+If (nStatus And MOVE_PERPETUAL) <> 0 Then
+    PlayWavSound "LOSS"
+    MsgBoxMute "请不要气馁！", vbInformation
+    GetResult = True
+    Exit Function
+End If
+If (nStatus And MOVE_CAPTURE) <> 0 Then
+    CchessSetIrrev pos
+End If
+If (nStatus And MOVE_CHECK) <> 0 Then
+    PlayWavSound "CHECK" + IIf(pos.sdPlayer = 0, "2", "")
+ElseIf (nStatus And MOVE_CAPTURE) <> 0 Then
+    PlayWavSound "CAPTURE" + IIf(pos.sdPlayer = 0, "2", "")
+Else
+    PlayWavSound "MOVE" + IIf(pos.sdPlayer = 0, "2", "")
+End If
+GetResult = False
+
+End Function
+
+Private Sub Thinking()
+
+End Sub
+
+Private Sub LoadGame()
+
+Dim i As Integer, j As Integer, pc As Integer, nPicId As Integer
+
+mnPrev.Enabled = Gui_nCurr > 0
+mnNext.Enabled = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
+Caption = "象棋路边摊 - 第" + Str(Gui_nCurr + 1) + " 关"
+CchessFen2Board pos, App_szEndgames(Gui_nCurr)
+For i = 3 To 12
+    For j = 3 To 11
+        DrawSquare i * 16 + j
+    Next
+Next
+sqSelected = 0
+mvLast = 0
+nPhase = PHASE_READY
+
+End Sub
+
+Private Sub Form_Load()
+
+LoadGame
+
+End Sub
+
 Private Sub Form_Unload(nCancel As Integer)
 
 App_bRunning = False
+
+End Sub
+
+Private Sub mnPrev_Click()
+
+Gui_nCurr = Gui_nCurr - 1
+LoadGame
+
+End Sub
+
+Private Sub mnRestart_Click()
+
+LoadGame
+
+End Sub
+
+Private Sub mnNext_Click()
+
+Gui_nCurr = Gui_nCurr + 1
+LoadGame
+
+End Sub
+
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
+
+Dim sq As Integer, pc As Integer, mv As Long, nStatus As Long
+
+sq = (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3
+pc = pos.ucpcSquares(sq)
+If (pc And (16 + pos.sdPlayer * 16)) <> 0 Then
+    If sqSelected > 0 Then
+        DrawSquare sqSelected
+    End If
+    sqSelected = sq
+    DrawSquare sqSelected, DRAW_SELECTED
+    If mvLast > 0 Then
+        DrawSquare Src(mvLast)
+        DrawSquare Dst(mvLast)
+    End If
+    PlayWavSound "CLICK"
+ElseIf sqSelected > 0 Then
+    mv = mdlCChess.Move(sqSelected, sq)
+    If CchessTryMove(pos, nStatus, mv) Then
+        DrawSquare Src(mv), DRAW_SELECTED
+        DrawSquare Dst(mv), DRAW_SELECTED
+        mvLast = mv
+        If GetResult(nStatus) Then
+            nPhase = PHASE_END
+        Else
+            Thinking
+        End If
+    ElseIf (nStatus And MOVE_INCHECK) <> 0 Then
+        PlayWavSound "ILLEGAL"
+    End If
+End If
 
 End Sub

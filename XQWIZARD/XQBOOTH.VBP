@@ -7,6 +7,7 @@ Form=XQBOOTH\HIDE.FRM
 Module=mdlBase; BASE.BAS
 Module=mdlCChess; CCHESS.BAS
 Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
+Module=mdlPipe; PIPE.BAS
 IconForm="frmHide"
 Startup="Sub Main"
 HelpFile=""
