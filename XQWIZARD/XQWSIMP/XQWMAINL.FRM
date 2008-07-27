@@ -1672,93 +1672,6 @@ Begin VB.Form frmMainLarge
          Caption         =   "江湖百局秘谱(&L)"
          Index           =   12
       End
-      Begin VB.Menu mnEndgames 
-         Caption         =   "-"
-         Index           =   13
-      End
-      Begin VB.Menu mnEndgamesBooth_ 
-         Caption         =   "象棋路边摊(&M)"
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&A.健身房教练(初级)"
-            Index           =   0
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&B.红茶店老板(初级)"
-            Index           =   1
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&C.医生(初级)"
-            Index           =   2
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&D.花店老板(初级)"
-            Index           =   3
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&E.面店老板(初级)"
-            Index           =   4
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&F.槟榔摊老板(初级)"
-            Index           =   5
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "-"
-            Index           =   6
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&G.美术社老板(中级)"
-            Index           =   7
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&H.咖啡馆老板(中级)"
-            Index           =   8
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&I.漫画店长(中级)"
-            Index           =   9
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&J.小吃店员(中级)"
-            Index           =   10
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&K.消防队长(中级)"
-            Index           =   11
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "-"
-            Index           =   12
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&L.赌场打手(高级)"
-            Index           =   13
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&M.国术馆长(高级)"
-            Index           =   14
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&N.杂货店老板(高级)"
-            Index           =   15
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&O.水果摊老板(高级)"
-            Index           =   16
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&P.棋摊老板(高级)"
-            Index           =   17
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&Q.和尚(高级)"
-            Index           =   18
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&R.棋社社长(高级)"
-            Index           =   19
-         End
-      End
    End
    Begin VB.Menu mnEngine 
       Caption         =   "引擎(&E)"
@@ -1927,6 +1840,12 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnToolConvert 
          Caption         =   "棋谱批量转换(&C)"
+      End
+      Begin VB.Menu mnToolSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnToolBooth 
+         Caption         =   "象棋路边摊(&T)"
       End
    End
    Begin VB.Menu mnHelp 
@@ -2391,19 +2310,6 @@ ViewPrintBitmap
 
 End Sub
 
-Private Sub mnEndgames_Click(nIndex As Integer)
-
-Dim szEpdName As String, szTitle As String
-If CancelSave Then
-    Exit Sub
-End If
-szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
-szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
-        "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
-LoadEndgames szEpdName, szTitle
-
-End Sub
-
 Private Sub mnEndgamesStart_Click()
 
 If CancelSave Then
@@ -2422,16 +2328,15 @@ LoadEndgames "FUNNY", "趣味象棋"
 
 End Sub
 
-Private Sub mnEndgamesBooth_Click(nIndex As Integer)
+Private Sub mnEndgames_Click(nIndex As Integer)
 
 Dim szEpdName As String, szTitle As String
 If CancelSave Then
     Exit Sub
 End If
-szEpdName = "BOOTH_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "", "G", "H", "I", "J", "K", "", "L", "M", "N", "O", "P", "Q", "R")
-szTitle = "象棋路边摊 - " + Choose(nIndex + 1, "A.健身房教练(初级)", "B.红茶店老板(初级)", "C.医生(初级)", "D.花店老板(初级)", "E.面店老板(初级)", "F.槟榔摊老板(初级)", _
-        "", "G.美术社老板(中级)", "H.咖啡馆老板(中级)", "I.漫画店长(中级)", "J.小吃店员(中级)", "K.消防队长(中级)", _
-        "", "L.赌场打手(高级)", "M.国术馆长(高级)", "N.杂货店老板(高级)", "O.水果摊老板(高级)", "P.棋摊老板(高级)", "Q.和尚(高级)", "R.棋社社长(高级)")
+szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
+szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
+        "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
 LoadEndgames szEpdName, szTitle
 
 End Sub
@@ -2634,6 +2539,13 @@ End Sub
 Private Sub mnToolConvert_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnToolBooth_Click()
+
+WindowState = vbMinimized
+ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

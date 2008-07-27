@@ -1672,93 +1672,6 @@ Begin VB.Form frmMainLarge
          Caption         =   "打κЫ眯(&L)"
          Index           =   12
       End
-      Begin VB.Menu mnEndgames 
-         Caption         =   "-"
-         Index           =   13
-      End
-      Begin VB.Menu mnEndgamesBooth_ 
-         Caption         =   "禜囱隔娩舥(&M)"
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&A.胺ō┬毙絤()"
-            Index           =   0
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&B.┍ρ馏()"
-            Index           =   1
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&C.洛ネ()"
-            Index           =   2
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&D.┍ρ馏()"
-            Index           =   3
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&E.难┍ρ馏()"
-            Index           =   4
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&F.耣穧舥ρ馏()"
-            Index           =   5
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "-"
-            Index           =   6
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&G.砃ρ馏(い)"
-            Index           =   7
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&H.〡柏繻ρ馏(い)"
-            Index           =   8
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&I.憨礶┍(い)"
-            Index           =   9
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&J.┍(い)"
-            Index           =   10
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&K.ň钉(い)"
-            Index           =   11
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "-"
-            Index           =   12
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&L.戒初ゴも(蔼)"
-            Index           =   13
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&M.瓣砃繻(蔼)"
-            Index           =   14
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&N.馒砯┍ρ馏(蔼)"
-            Index           =   15
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&O.狦舥ρ馏(蔼)"
-            Index           =   16
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&P.囱舥ρ馏(蔼)"
-            Index           =   17
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&Q.㎝﹟(蔼)"
-            Index           =   18
-         End
-         Begin VB.Menu mnEndgamesBooth 
-            Caption         =   "&R.囱(蔼)"
-            Index           =   19
-         End
-      End
    End
    Begin VB.Menu mnEngine 
       Caption         =   "ま篮(&E)"
@@ -1927,6 +1840,12 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnToolConvert 
          Caption         =   "囱眯у秖锣传(&C)"
+      End
+      Begin VB.Menu mnToolSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnToolBooth 
+         Caption         =   "禜囱隔娩舥(&T)"
       End
    End
    Begin VB.Menu mnHelp 
@@ -2422,20 +2341,6 @@ LoadEndgames szEpdName, szTitle
 
 End Sub
 
-Private Sub mnEndgamesBooth_Click(nIndex As Integer)
-
-Dim szEpdName As String, szTitle As String
-If CancelSave Then
-    Exit Sub
-End If
-szEpdName = "BOOTH_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "", "G", "H", "I", "J", "K", "", "L", "M", "N", "O", "P", "Q", "R")
-szTitle = "象棋路邊攤 - " + Choose(nIndex + 1, "A.健身房教練(初級)", "B.紅茶店老闆(初級)", "C.醫生(初級)", "D.花店老闆(初級)", "E.麵店老闆(初級)", "F.檳榔攤老闆(初級)", _
-        "", "G.美術社老闆(中級)", "H.咖啡館老闆(中級)", "I.漫畫店長(中級)", "J.小吃店員(中級)", "K.消防隊長(中級)", _
-        "", "L.賭場打手(高級)", "M.國術館長(高級)", "N.雜貨店老闆(高級)", "O.水果攤老闆(高級)", "P.棋攤老闆(高級)", "Q.和尚(高級)", "R.棋社社長(高級)")
-LoadEndgames szEpdName, szTitle
-
-End Sub
-
 Private Sub mnEngineLevel_Click()
 
 If mnEngineLevel.Checked Then
@@ -2634,6 +2539,13 @@ End Sub
 Private Sub mnToolConvert_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnToolBooth_Click()
+
+WindowState = vbMinimized
+ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.76 (简体中文版)
+AppVerName=象棋巫师 3.8 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -45,6 +45,7 @@ Source: "MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruni
 Source: "MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ALPHABLT.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
@@ -83,24 +84,7 @@ Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_M.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_N.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_O.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_P.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_Q.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH_R.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -582,6 +566,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
+Name: "{group}\象棋路边摊"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\象棋棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
