@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqboss;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -49,7 +51,7 @@ public class XQBossMIDlet extends MIDlet {
 
 	String currDir = "";
 
-	void open(String file) {
+	void open(String file, String title) {
 		GBLineInputStream in = new GBLineInputStream(getClass().
 				getResourceAsStream("/PGNS" + currDir + "/" + file));
 		PgnFile pgn = new PgnFile(in);
@@ -58,7 +60,7 @@ public class XQBossMIDlet extends MIDlet {
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		canvas.load(pgn, file);
+		canvas.load(pgn, title);
 		Display.getDisplay(this).setCurrent(canvas);
 	}
 
@@ -67,6 +69,7 @@ public class XQBossMIDlet extends MIDlet {
 		final Command cmdBack = new Command("·µ»Ø", Command.BACK, 1);
 		final Command cmdExit = new Command("ÍË³ö", Command.EXIT, 1);
 		final List lstDir = new List(getAppProperty("MIDlet-Name"), Choice.IMPLICIT);
+		final Vector vctDir = new Vector();
 
 		lstDir.addCommand(cmdOpen);
 		lstDir.addCommand(currDir.length() == 0 ? cmdExit : cmdBack);
@@ -76,7 +79,9 @@ public class XQBossMIDlet extends MIDlet {
 				getResourceAsStream("/PGNS" + currDir + "/FILELIST"));
 		String s = in.readLine();
 		while (s != null) {
-			lstDir.append(s, s.charAt(0) == '/' ? imgFolder : imgPgn);
+			int i = s.indexOf('=');
+			lstDir.append(s.substring(i + 1), s.charAt(0) == '/' ? imgFolder : imgPgn);
+			vctDir.addElement(s.substring(0, i));
 			s = in.readLine();
 		}
 		try {
@@ -90,12 +95,13 @@ public class XQBossMIDlet extends MIDlet {
 				if (false) {
 					// Code Style
 				} else if (c == cmdOpen) {
-					final String selDir = lstDir.getString(lstDir.getSelectedIndex());
+					int i = lstDir.getSelectedIndex();
+					String selDir = (String) vctDir.elementAt(i);
 					if (selDir.charAt(0) == '/') {
 						currDir += selDir;
 						list();
 					} else {
-						open(selDir);
+						open(selDir, lstDir.getString(i));
 					}
 				} else if (c == cmdBack) {
 					currDir = currDir.substring(0, currDir.lastIndexOf('/'));

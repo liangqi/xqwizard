@@ -57,7 +57,7 @@ class XQBossCanvas extends Canvas {
 	XQBossMIDlet midlet;
 
 	private PgnFile pgn;
-	private String file;
+	private String title;
 	private int index;
 	// Assume FullScreenMode = false
 	private int normalWidth = getWidth();
@@ -83,9 +83,9 @@ class XQBossCanvas extends Canvas {
 		});
 	}
 
-	void load(PgnFile pgn_, String file_) {
+	void load(PgnFile pgn_, String title_) {
 		pgn = pgn_;
-		file = file_;
+		title = title_;
 		index = 0;
 		setFullScreenMode(true);
 		loading = true;
@@ -260,7 +260,7 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void info() {
-		Alert alt = new Alert(file, pgn.toString(), imgPgn, AlertType.INFO);
+		Alert alt = new Alert(title, pgn.toString(), imgPgn, AlertType.INFO);
 		alt.setTimeout(Alert.FOREVER);
 		Display.getDisplay(midlet).setCurrent(alt);
 		loading = true;
