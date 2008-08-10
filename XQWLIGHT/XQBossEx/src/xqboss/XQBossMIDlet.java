@@ -1,7 +1,7 @@
 /*
-XQBossMIDlet.java - Source Code for XiangQi Boss, Part V
+XQBossMIDlet.java - Source Code for XiangQi Boss Advanced, Part V
 
-XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+XiangQi Boss Advanced - a Chinese Chess PGN File Reader for Java ME
 Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 

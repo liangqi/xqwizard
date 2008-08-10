@@ -1,8 +1,8 @@
 /*
-XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
+XQBossCanvas.java - Source Code for XiangQi Boss, Part IV
 
-XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.26, Last Modified: May 2008
+XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify

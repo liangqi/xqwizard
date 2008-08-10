@@ -1,8 +1,8 @@
 /*
-XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
+XQBossCanvas.java - Source Code for XiangQi Boss, Part IV
 
-XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.26, Last Modified: May 2008
+XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
+Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@ class XQBossCanvas extends Canvas {
 	XQBossMIDlet midlet;
 
 	private PgnFile pgn;
-	private String file;
+	private String title;
 	private int index;
 	// Assume FullScreenMode = false
 	private int normalWidth = getWidth();
@@ -83,9 +83,9 @@ class XQBossCanvas extends Canvas {
 		});
 	}
 
-	void load(PgnFile pgn_, String file_) {
+	void load(PgnFile pgn_, String title_) {
 		pgn = pgn_;
-		file = file_;
+		title = title_;
 		index = 0;
 		setFullScreenMode(true);
 		loading = true;
@@ -260,7 +260,7 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void info() {
-		Alert alt = new Alert(file, pgn.toString(), imgPgn, AlertType.INFO);
+		Alert alt = new Alert(title, pgn.toString(), imgPgn, AlertType.INFO);
 		alt.setTimeout(Alert.FOREVER);
 		Display.getDisplay(midlet).setCurrent(alt);
 		loading = true;

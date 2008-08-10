@@ -2,7 +2,7 @@
 XQBossMIDlet.java - Source Code for XiangQi Boss, Part V
 
 XiangQi Boss - a Chinese Chess PGN File Reader for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Jun. 2008
+Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -33,9 +33,11 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.Ticker;
 import javax.microedition.midlet.MIDlet;
 
 public class XQBossMIDlet extends MIDlet {
+	private static Ticker ticker = new Ticker("欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师");
 	private static Image imgFolder, imgPgn;
 
 	static {
@@ -101,6 +103,7 @@ public class XQBossMIDlet extends MIDlet {
 		final Command cmdExit = new Command("退出", Command.EXIT, 1);
 		final List lstDir = new List("象棋小博士", Choice.IMPLICIT);
 
+		lstDir.setTicker(ticker);
 		Enumeration enumDir;
 		lstDir.addCommand(cmdOpen);
 		if (currDir == null) {
