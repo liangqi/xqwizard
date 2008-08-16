@@ -687,6 +687,7 @@ Begin VB.Form frmXQBooth
       Height          =   3975
       Left            =   0
       Picture         =   "XQBOOTH.frx":014A
+      Stretch         =   -1  'True
       Top             =   0
       Width           =   3735
    End
