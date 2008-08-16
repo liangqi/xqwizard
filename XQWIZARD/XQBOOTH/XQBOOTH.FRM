@@ -2,7 +2,7 @@ VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Begin VB.Form frmXQBooth 
    BorderStyle     =   1  'Fixed Single
-   ClientHeight    =   5055
+   ClientHeight    =   4935
    ClientLeft      =   150
    ClientTop       =   720
    ClientWidth     =   3735
@@ -17,7 +17,7 @@ Begin VB.Form frmXQBooth
    EndProperty
    Icon            =   "XQBOOTH.frx":0000
    MaxButton       =   0   'False
-   ScaleHeight     =   5055
+   ScaleHeight     =   4935
    ScaleWidth      =   3735
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame frmWeb 
@@ -25,7 +25,7 @@ Begin VB.Form frmXQBooth
       Height          =   975
       Left            =   0
       TabIndex        =   0
-      Top             =   4080
+      Top             =   3960
       Width           =   3735
       Begin SHDocVwCtl.WebBrowser web 
          Height          =   1335
@@ -50,7 +50,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
    End
    Begin VB.Image imgSquares 
@@ -684,10 +684,9 @@ Begin VB.Form frmXQBooth
       Width           =   375
    End
    Begin VB.Image imgBoard 
-      Height          =   4095
+      Height          =   3975
       Left            =   0
       Picture         =   "XQBOOTH.frx":014A
-      Stretch         =   -1  'True
       Top             =   0
       Width           =   3735
    End
@@ -709,7 +708,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
+' Designed by Morning Yellow, Version: 1.01, Last Modified: Aug. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -838,7 +837,7 @@ Dim i As Integer, j As Integer, pc As Integer, nPicId As Integer
 
 mnPrev.Enabled = Gui_nCurr > 0
 mnNext.Enabled = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
-Caption = "象棋路边摊 - 第" + Str(Gui_nCurr + 1) + " 关"
+Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋路边摊"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 For i = 3 To 12
     For j = 3 To 11
