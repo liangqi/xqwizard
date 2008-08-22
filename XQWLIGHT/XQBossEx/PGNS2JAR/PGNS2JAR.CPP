@@ -24,6 +24,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <string.h>
 #include "zip.h"
 
+static int WINAPI PrintFunction(LPSTR, unsigned long) {
+  return 0;
+}
+
+const char *argv[1] = {"."};
+
 int main(void) {
   char szPath[MAX_PATH], szJarFile[MAX_PATH];
   BROWSEINFO bi;
@@ -53,15 +59,25 @@ int main(void) {
   ofn.lpstrFile = szJarFile;
   ofn.nMaxFile = MAX_PATH;
   ofn.lpstrTitle = "请指定要生成的手机棋谱程序";
+  ofn.lpstrDefExt = "jar";
   ofn.Flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT;
   if (!GetSaveFileName(&ofn)) {
     return 0;
   }
 
   memset(&zuf, 0, sizeof(ZIPUSERFUNCTIONS));
+  zuf.print = PrintFunction;
   ZpInit(&zuf);
+
   memset(&zpopt, 0, sizeof(ZPOPT));
+  zpopt.szRootDir = szPath;
+  zpopt.fExtra = TRUE;
+  zpopt.fRecurse = 1;
+
   memset(&zcl, 0, sizeof(ZCL));
+  zcl.argc = 1;
+  zcl.lpszZipFN = szJarFile;
+  zcl.FNV = (char **) argv;
   ZpArchive(zcl, &zpopt);
 
   printf("%s %s\n", szPath, szJarFile);

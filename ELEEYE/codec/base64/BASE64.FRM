@@ -162,7 +162,7 @@ Private Sub btnSave_Click()
 
 Dim i As Long, nLen As Long, nOpenFile As Integer, sz As String
 If chkClipboard.Value = 0 Then
-    sz = SaveFileDialog("Load Binary File", "Binary File (*.*)|*.*", "")
+    sz = SaveFileDialog("Save Binary File", "Binary File (*.*)|*.*", "")
     If sz <> "" Then
         nOpenFile = FreeFile
         On Error GoTo lnErrorOpen

@@ -325,7 +325,7 @@ End Sub
 Private Sub btnBookFile_Click()
 
 Dim sz As String
-sz = SaveFileDialog("开局库文件", "开局库文件 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", txtBookFile.Text)
+sz = SaveFileDialog("开局库文件", "开局库文件 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", txtBookFile.Text, "DAT")
 If sz <> "" Then
     txtBookFile.Text = sz
 End If

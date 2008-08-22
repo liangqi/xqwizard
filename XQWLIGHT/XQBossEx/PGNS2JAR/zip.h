@@ -3,22 +3,15 @@
 #ifndef ZIP_H
 #define ZIP_H
 
-typedef int (WINAPI DLLPRNT) (LPSTR, unsigned long);
-typedef int (WINAPI DLLPASSWORD) (LPSTR, int, LPCSTR, LPCSTR);
-typedef int (WINAPI DLLSERVICE) (LPCSTR, unsigned __int64);
-typedef int (WINAPI DLLSERVICE_NO_INT64) (LPCSTR, unsigned long, unsigned long);
-typedef int (WINAPI DLLSPLIT) (LPSTR);
-typedef int (WINAPI DLLCOMMENT) (LPSTR);
-
 typedef struct {
-  DLLPRNT *print;
-  DLLCOMMENT *comment;
-  DLLPASSWORD *password;
-  DLLSPLIT *split;      /* This MUST be set to NULL unless you want to be queried
-                           for a destination for each split archive. */
-  DLLSERVICE *ServiceApplication64;
-  DLLSERVICE_NO_INT64 *ServiceApplication64_No_Int64;
-} ZIPUSERFUNCTIONS, far * LPZIPUSERFUNCTIONS;
+  int (WINAPI *print) (LPSTR, unsigned long);
+  int (WINAPI *comment) (LPSTR, int, LPCSTR, LPCSTR);
+  int (WINAPI *password) (LPSTR, int, LPCSTR, LPCSTR);
+  int (WINAPI *split) (LPSTR);  /* This MUST be set to NULL unless you want to be queried
+                                   for a destination for each split archive. */
+  int (WINAPI *ServiceApplication64) (LPCSTR, unsigned __int64);
+  int (WINAPI *ServiceApplication64_No_Int64) (LPCSTR, unsigned long, unsigned long);
+} ZIPUSERFUNCTIONS, *LPZIPUSERFUNCTIONS;
 
 typedef struct {
   int  argc;            /* Count of files to zip */

@@ -333,7 +333,7 @@ Else
     szFileName = Replace(szFileName, "<", "£¼")
     szFileName = Replace(szFileName, ">", "£¾")
     szFileName = Replace(szFileName, "|", "£ü")
-    szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt)
+    szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt, szExt)
 End If
 FileDialog = szFileName
 

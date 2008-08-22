@@ -471,7 +471,8 @@ End If
 
 End Function
 
-Public Function SaveFileDialog(ByVal szTitle As String, ByVal szFilter As String, ByVal szFileName As String) As String
+Public Function SaveFileDialog(ByVal szTitle As String, ByVal szFilter As String, _
+        ByVal szFileName As String, Optional ByVal szDefExt As String = vbNullString) As String
 
 Dim ofn As OpenFileName, sz As String
 szFilter = Replace(szFilter, "|", Chr(0))
@@ -490,7 +491,7 @@ ofn.lpstrTitle = szTitle
 ofn.flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT
 ofn.nFileOffset = 0
 ofn.nFileExtension = 0
-ofn.lpstrDefExt = vbNullString
+ofn.lpstrDefExt = szDefExt
 ofn.lCustData = 0
 If GetSaveFileNameA(ofn) <> 0 Then
    SaveFileDialog = TrimNull(ofn.lpstrFile)
