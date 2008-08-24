@@ -21,7 +21,7 @@ End Type
 
 Private Declare Sub AlphaBlt Lib "ALPHABLT.DLL" Alias "_AlphaBlt@44" (ByVal hdcDest As Long, ByVal xDest As Long, ByVal yDest As Long, ByVal nWidth As Long, ByVal nHeight As Long, _
         ByVal hdcSrc As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal hdcAlpha As Long, ByVal xAlpha As Long, ByVal yAlpha As Long)
-Private Declare Function DefWindowProcA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Declare Function DefWindowProcA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Private Declare Sub RegisterClassExA Lib "USER32.DLL" (ByRef wcx As WndClassEx)
 Private Declare Function CreateWindowExA Lib "USER32.DLL" (ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, ByVal dwStyle As Long, _
         ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hWndParent As Long, ByVal hMenu As Long, ByVal hInstance As Long, ByVal lpParam As Long) As Long
@@ -31,9 +31,9 @@ Private Declare Function CreateCompatibleDC Lib "GDI32.DLL" (ByVal hdc As Long) 
 Private Declare Sub SelectObject Lib "GDI32.DLL" (ByVal hdc As Long, ByVal hgdiobj As Long)
 Private Declare Sub DeleteDC Lib "GDI32.DLL" (ByVal hdc As Long)
 
-Private Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Function WndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
-WndProc = DefWindowProcA(hWnd, msg, wParam, lParam)
+WndProc = DefWindowProcA(hWnd, uMsg, wParam, lParam)
 
 End Function
 

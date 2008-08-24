@@ -1330,7 +1330,10 @@ static void LoadBook(void) {
 }
 
 static int CompareBook(const void *lpbk1, const void *lpbk2) {
-  return ((BookItem *) lpbk1)->dwLock - ((BookItem *) lpbk2)->dwLock;
+  DWORD dw1, dw2;
+  dw1 = ((BookItem *) lpbk1)->dwLock;
+  dw2 = ((BookItem *) lpbk2)->dwLock;
+  return dw1 > dw2 ? 1 : dw1 < dw2 ? -1 : 0;
 }
 
 // ËÑË÷¿ª¾Ö¿â

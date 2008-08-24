@@ -21,9 +21,9 @@ App_sServer = INVALID_SOCKET
 
 End Sub
 
-Public Function NewWndFunc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Function NewWndFunc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
-If msg = WM_TRAY Then
+If uMsg = WM_TRAY Then
     If lParam = WM_LBUTTONUP Then
         frmVBChat.WindowState = vbNormal
         frmVBChat.Show
@@ -31,7 +31,7 @@ If msg = WM_TRAY Then
         frmVBChat.PopupMenu frmVBChat.mnTray, , , , frmVBChat.mnTrayOpen
     End If
 End If
-NewWndFunc = CallWindowProcA(App_lpPrevWndFunc, hWnd, msg, wParam, lParam)
+NewWndFunc = CallWindowProcA(App_lpPrevWndFunc, hWnd, uMsg, wParam, lParam)
 
 End Function
 

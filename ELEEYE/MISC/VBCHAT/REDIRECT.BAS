@@ -54,9 +54,9 @@ End If
 
 End Sub
 
-Public Function NewWndFunc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Function NewWndFunc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
-If msg = WM_TRAY Then
+If uMsg = WM_TRAY Then
     If lParam = WM_LBUTTONUP Then
         frmRedirect.WindowState = vbNormal
         frmRedirect.Show
@@ -64,7 +64,7 @@ If msg = WM_TRAY Then
         frmRedirect.PopupMenu frmRedirect.mnTray, , , , frmRedirect.mnTrayOpen
     End If
 End If
-NewWndFunc = CallWindowProcA(App_lpPrevWndFunc, hWnd, msg, wParam, lParam)
+NewWndFunc = CallWindowProcA(App_lpPrevWndFunc, hWnd, uMsg, wParam, lParam)
 
 End Function
 
