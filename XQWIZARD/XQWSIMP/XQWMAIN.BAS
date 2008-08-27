@@ -2761,7 +2761,7 @@ End Sub
 ' 检查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szWhatsNew As String
+Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
 sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
@@ -2778,11 +2778,14 @@ Else
         szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-            If Rnd < 1# Then
-                ShellExecuteA 0, vbNullString, "http://www.skycn.net/soft/24665.html", vbNullString, vbNullString, SW_SHOWNORMAL
-            Else
-                ShellExecuteA 0, vbNullString, "http://www.onlinedown.net/soft/38287.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+            szUrl = ""
+            On Error Resume Next
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            On Error GoTo 0
+            If Left(szUrl, 7) <> "http://" Then
+                szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
             End If
+            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
         Else
             Gui_szUpgradeVer = sz
         End If
