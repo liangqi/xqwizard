@@ -1,6 +1,26 @@
 XQWizard Advert List
 elephantbase,30,281,5618
+advert1,30,352,1000
 stepbystep,30,314,8216
+advert2,30,352,1000
 xqwlight_ad1,30,293,5759
+advert3,30,352,1000
 xqwlight_ad2,30,293,5871
+advert4,30,352,1000
+scores,30,294,9007
+advert5,30,352,1000
+stepbystep,30,314,8216
+advert6,30,352,1000
+xqwlight_ad1,30,293,5759
+advert7,30,352,1000
+xqwlight_ad2,30,293,5871
+advert8,30,352,1000
+scores,30,294,9007
+advert9,30,352,1000
+stepbystep,30,314,8216
+advert10,30,353,1000
+xqwlight_ad1,30,293,5759
+advert11,30,353,1000
+xqwlight_ad2,30,293,5871
+advert12,30,353,1000
 scores,30,294,9007
