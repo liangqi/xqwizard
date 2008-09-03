@@ -2889,16 +2889,7 @@ End Sub
 ' 加载广告列表
 Public Sub LoadAdvertList()
 
-Dim nFileNo As Integer, bOffLine As Boolean, sz As String, szs() As String
-' 检查是否上线
-bOffLine = False
-sz = ""
-On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert_online.txt")
-On Error GoTo 0
-If Left(sz, 15) <> "XQWizard Advert" Then
-    bOffLine = True
-End If
+Dim nFileNo As Integer, sz As String, szs() As String
 ' 检查广告文件是否有内容
 Gui_nAdvertNum = 0
 nFileNo = FreeFile
@@ -2928,9 +2919,6 @@ Do While Not EOF(nFileNo)
             Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
             If UBound(szs) >= 3 Then
                 CheckAdvert szs(0), Str2Lng(szs(2)), Str2Lng(szs(3))
-                If UBound(szs) >= 4 And bOffLine Then
-                    Gui_nAdvertNum = Gui_nAdvertNum - 1
-                End If
             End If
         Else
             Gui_nAdvertTimes(Gui_nAdvertNum) = 10
