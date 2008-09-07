@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 1.01, Last Modified: Aug. 2008
+' Designed by Morning Yellow, Version: 1.02, Last Modified: Sep. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
+Public Const STRING_VERSION     As String = "3.8"
 Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
@@ -32,6 +33,8 @@ Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Gui_szUpgradeVer         As String   ' 检查升级的版本
+Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_nCurr                As Integer  ' 当前残局的条目序号
 Public Gui_nLast                As Integer  ' 最后残局的条目序号
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
@@ -177,6 +180,8 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Gui_szUpgradeVer = GetSetting("XQBooth", "Gui", "UpgradeVer", STRING_VERSION)
+Gui_szUpgradeDate = GetSetting("XQBooth", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQBooth", "Gui", "AdvertDate", "")
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
@@ -186,9 +191,45 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
+SaveSetting "XQBooth", "Gui", "UpgradeVer", Gui_szUpgradeVer
+SaveSetting "XQBooth", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQBooth", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
+
+End Sub
+
+' 检查更新
+Public Sub CheckUpdate()
+
+Dim sz As String, szWhatsNew As String, szUrl As String
+sz = ""
+On Error Resume Next
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+On Error GoTo 0
+If sz = "" Then
+    Exit Sub
+End If
+Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
+If Not (Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
+    Exit Sub
+End If
+szWhatsNew = ""
+On Error Resume Next
+szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+On Error GoTo 0
+If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+    szUrl = ""
+    On Error Resume Next
+    szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+    On Error GoTo 0
+    If Left(szUrl, 7) <> "http://" Then
+        szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+    End If
+    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+Else
+    Gui_szUpgradeVer = sz
+End If
 
 End Sub
 
@@ -263,7 +304,8 @@ If Not bLoaded Then
     MsgBox "无法加载引擎 " + App_szPath + ENGINE_FILE, vbExclamation
     Exit Sub
 End If
-PipeLineOutput Engine_pipe, "setoption alwayscheck true"
+' 电脑执黑，不能只考虑将军走法
+' PipeLineOutput Engine_pipe, "setoption alwayscheck true"
 
 ' 调整广告框大小
 On Error Resume Next
@@ -285,6 +327,11 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
+' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
+If Gui_szUpgradeDate <> Date Then
+    CheckUpdate
+End If
+
 frmXQBooth.Show
 frmXQBooth.frmWeb.Width = frmHide.imgAdvert.Width
 frmXQBooth.frmWeb.Height = frmHide.imgAdvert.Height

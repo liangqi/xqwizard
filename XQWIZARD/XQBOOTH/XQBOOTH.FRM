@@ -686,7 +686,7 @@ Begin VB.Form frmXQBooth
    Begin VB.Image imgBoard 
       Height          =   3975
       Left            =   0
-      Picture         =   "XQBOOTH.frx":014A
+      Picture         =   "XQBOOTH.frx":0ABA
       Stretch         =   -1  'True
       Top             =   0
       Width           =   3735
@@ -709,7 +709,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 1.01, Last Modified: Aug. 2008
+' Designed by Morning Yellow, Version: 1.02, Last Modified: Sep. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -784,9 +784,7 @@ If (nStatus And MOVE_PERPETUAL) <> 0 Then
     GetResult = True
     Exit Function
 End If
-If (nStatus And MOVE_CAPTURE) <> 0 Then
-    CchessSetIrrev pos
-End If
+' 由于"position fen ..."使用EPD文件中的初始局面，所以即便吃子也不能置pos为不可逆
 If (nStatus And MOVE_CHECK) <> 0 Then
     PlayWavSound "CHECK" + IIf(pos.sdPlayer = 0, "2", "")
 ElseIf (nStatus And MOVE_CAPTURE) <> 0 Then
@@ -800,12 +798,20 @@ End Function
 
 Private Sub Thinking()
 
-Dim lpStr As Long, mv As Long, nStatus As Long, sz As String
+Dim lpStr As Long, mv As Long, nStatus As Long
+Dim i As Integer, sz As String
 
 nPhase = PHASE_BUSY
 MousePointer = vbHourglass
-PipeLineOutput Engine_pipe, "position fen " + MkBStr(CchessBoard2Fen(pos))
-PipeLineOutput Engine_pipe, "go infinity"
+sz = "position fen " + App_szEndgames(Gui_nCurr)
+If pos.nMoveNum > 1 Then
+    sz = sz + " moves"
+    For i = 1 To pos.nMoveNum - 1
+        sz = sz + " " + Move2Coord(pos.rbsList(i).mvs And &HFFFF&)
+    Next
+End If
+PipeLineOutput Engine_pipe, sz
+PipeLineOutput Engine_pipe, "go time 60000"
 mv = 0
 Do While mv = 0
     lpStr = PipeLineInput(Engine_pipe)
