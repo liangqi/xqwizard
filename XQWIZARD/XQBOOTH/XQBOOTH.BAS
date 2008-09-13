@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "3.8"
+Public Const STRING_VERSION     As String = "3.83"
 Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
@@ -51,7 +51,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -101,7 +101,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -114,7 +114,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
@@ -180,9 +180,9 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Gui_szUpgradeVer = GetSetting("XQBooth", "Gui", "UpgradeVer", STRING_VERSION)
-Gui_szUpgradeDate = GetSetting("XQBooth", "Gui", "UpgradeDate", "")
-Gui_szAdvertDate = GetSetting("XQBooth", "Gui", "AdvertDate", "")
+Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
+Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
+Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
 
@@ -191,9 +191,9 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
-SaveSetting "XQBooth", "Gui", "UpgradeVer", Gui_szUpgradeVer
-SaveSetting "XQBooth", "Gui", "UpgradeDate", Gui_szUpgradeDate
-SaveSetting "XQBooth", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
+SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
+SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 
@@ -205,7 +205,7 @@ Public Sub CheckUpdate()
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     Exit Sub
@@ -216,12 +216,12 @@ If Not (Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgradeVer
 End If
 szWhatsNew = ""
 On Error Resume Next
-szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
 On Error GoTo 0
 If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
     szUrl = ""
     On Error Resume Next
-    szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+    szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
     On Error GoTo 0
     If Left(szUrl, 7) <> "http://" Then
         szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
