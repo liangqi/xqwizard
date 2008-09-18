@@ -7,7 +7,7 @@ icga2008,30,271,11384
 advert3,30,352,1000
 xqwlight_ad,30,292,17943
 advert4,30,352,1000
-sdo_tg,30,299,44107
+landlord_ad,30,288,11183
 advert5,30,352,1000
 mobilechess,30,287,10963
 advert6,30,352,1000
@@ -19,7 +19,7 @@ icga2008,30,271,11384
 advert9,30,352,1000
 xqwlight_ad,30,292,17943
 advert10,30,353,1000
-sdo_tg,30,299,44107
+landlord_ad,30,288,11183
 advert11,30,353,1000
 mobilechess,30,287,10963
 advert12,30,353,1000
