@@ -86,10 +86,15 @@ class XQWLCanvas extends Canvas {
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
 
-	Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
+	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
+	private Alert altBack = new Alert("象棋小巫", "放弃这局棋？", null, AlertType.CONFIRMATION);
+
 	Command cmdBack = new Command("返回", Command.ITEM, 1);
 	Command cmdRetract = new Command("悔棋", Command.ITEM, 1);
 	Command cmdAbout = new Command("关于", Command.ITEM, 1);
+	Command cmdBackOK = new Command("确定", Command.OK, 1);
+	Command cmdBackCancel = new Command("取消", Command.CANCEL, 1);
+
 	volatile int phase = PHASE_LOADING;
 
 	private boolean init = false;
@@ -107,6 +112,22 @@ class XQWLCanvas extends Canvas {
 				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
 				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
 				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
+		altBack.setTimeout(Alert.FOREVER);
+		altBack.addCommand(cmdBackOK);
+		altBack.addCommand(cmdBackCancel);
+		altBack.setCommandListener(new CommandListener() {
+			public void commandAction(Command c, Displayable d) {
+				if (c == cmdBackOK) {
+					midlet.rsData[0] = 0;
+					midlet.startMusic("form");
+					Display.getDisplay(midlet).setCurrent(midlet.form);
+				} else {
+					Display.getDisplay(midlet).setCurrent(XQWLCanvas.this);
+					phase = PHASE_LOADING;
+					setFullScreenMode(true);
+				}
+			}
+		});
 		addCommand(cmdBack);
 		addCommand(cmdRetract);
 		addCommand(cmdAbout);
@@ -502,9 +523,13 @@ class XQWLCanvas extends Canvas {
 	}
 
 	void back() {
-		midlet.rsData[0] = 0;
-		midlet.startMusic("form");
-		Display.getDisplay(midlet).setCurrent(midlet.form);
+		if (phase == PHASE_WAITING) {
+			Display.getDisplay(midlet).setCurrent(altBack);
+		} else {
+			midlet.rsData[0] = 0;
+			midlet.startMusic("form");
+			Display.getDisplay(midlet).setCurrent(midlet.form);
+		}
 	}
 
 	void retract() {
