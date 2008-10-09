@@ -183,7 +183,7 @@ class XQWLCanvas extends Canvas {
 					while (phase == PHASE_LOADING) {
 						try {
 							sleep(100);
-						} catch (Exception e) {
+						} catch (InterruptedException e) {
 							// Ignored
 						}
 					}
@@ -204,7 +204,7 @@ class XQWLCanvas extends Canvas {
 				}
 				try {
 					Thread.sleep(100);
-				} catch (Exception e) {
+				} catch (InterruptedException e) {
 					// Ignored
 				}
 				width = getWidth();

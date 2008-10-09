@@ -102,7 +102,7 @@ class XQBossCanvas extends Canvas {
 				}
 				try {
 					Thread.sleep(100);
-				} catch (Exception e) {
+				} catch (InterruptedException e) {
 					// Ignored
 				}
 				width = getWidth();
