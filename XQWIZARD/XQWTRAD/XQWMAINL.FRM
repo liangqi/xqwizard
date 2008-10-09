@@ -206,182 +206,164 @@ Begin VB.Form frmMainLarge
       End
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   17
       Left            =   6960
-      Style           =   1  'Graphical
       TabIndex        =   49
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   16
       Left            =   6120
-      Style           =   1  'Graphical
       TabIndex        =   48
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   15
       Left            =   5280
-      Style           =   1  'Graphical
       TabIndex        =   47
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   14
       Left            =   4440
-      Style           =   1  'Graphical
       TabIndex        =   46
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   13
       Left            =   3600
-      Style           =   1  'Graphical
       TabIndex        =   45
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   12
       Left            =   2760
-      Style           =   1  'Graphical
       TabIndex        =   44
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   11
       Left            =   1920
-      Style           =   1  'Graphical
       TabIndex        =   43
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   10
       Left            =   1080
-      Style           =   1  'Graphical
       TabIndex        =   42
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   9
       Left            =   240
-      Style           =   1  'Graphical
       TabIndex        =   41
+      TabStop         =   0   'False
       Top             =   9480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   8
       Left            =   6960
-      Style           =   1  'Graphical
       TabIndex        =   40
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   7
       Left            =   6120
-      Style           =   1  'Graphical
       TabIndex        =   39
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   6
       Left            =   5280
-      Style           =   1  'Graphical
       TabIndex        =   38
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   5
       Left            =   4440
-      Style           =   1  'Graphical
       TabIndex        =   37
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   4
       Left            =   3600
-      Style           =   1  'Graphical
       TabIndex        =   36
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   3
       Left            =   2760
-      Style           =   1  'Graphical
       TabIndex        =   35
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   2
       Left            =   1920
-      Style           =   1  'Graphical
       TabIndex        =   34
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   1
       Left            =   1080
-      Style           =   1  'Graphical
       TabIndex        =   33
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
-      Enabled         =   0   'False
       Height          =   225
       Index           =   0
       Left            =   240
-      Style           =   1  'Graphical
       TabIndex        =   32
+      TabStop         =   0   'False
       Top             =   480
       Width           =   855
    End
@@ -1902,8 +1884,8 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.76, Last Modified: Jul. 2008
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.84, Last Modified: Oct. 2008
+' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -2787,5 +2769,12 @@ Else
         End If
     End If
 End If
+
+End Sub
+
+Private Sub btnCoord_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
+
+btnCoord(nIndex).Enabled = False
+btnCoord(nIndex).Enabled = True
 
 End Sub
