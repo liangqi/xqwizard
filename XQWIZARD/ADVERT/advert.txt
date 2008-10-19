@@ -1,26 +1,5 @@
 XQWizard Advert List
 elephantbase,30,281,5618
-advert1,30,352,1000
 xqwlight_ad,30,292,17943
-advert2,30,352,1000
 landlord_ad,30,288,11183
-advert3,30,352,1000
 mobilechess,30,287,10963
-advert4,30,352,1000
-scores,30,294,9007
-advert5,30,352,1000
-xqwlight_ad,30,292,17943
-advert6,30,352,1000
-landlord_ad,30,288,11183
-advert7,30,352,1000
-mobilechess,30,287,10963
-advert8,30,352,1000
-scores,30,294,9007
-advert9,30,352,1000
-xqwlight_ad,30,292,17943
-advert10,30,353,1000
-landlord_ad,30,288,11183
-advert11,30,353,1000
-mobilechess,30,287,10963
-advert12,30,353,1000
-scores,30,294,9007
