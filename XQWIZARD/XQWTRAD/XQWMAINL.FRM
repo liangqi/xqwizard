@@ -2682,9 +2682,7 @@ If (pc And (16 + Game_sdCurr * 16)) <> 0 Then
         DrawSquare Src(Game_mvMove(Game_nCurrMove))
         DrawSquare Dst(Game_mvMove(Game_nCurrMove))
     End If
-    If Options_bSounds Then
-        PlayWavSound "CLICK"
-    End If
+    PlayWavSound "CLICK"
     bCanPromote = (CchessCanPromote(Game_posIrrev(Game_nCurrIrrev), sq) <> 0)
     App_frmMain.mnMovePromote.Enabled = bCanPromote
     App_frmMain.tlb.Buttons("MovePromote").Enabled = bCanPromote

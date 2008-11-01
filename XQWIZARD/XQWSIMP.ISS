@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.84 (简体中文版)
+AppVerName=象棋巫师 3.85 (简体中文版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -139,6 +139,8 @@ Source: "IMAGES_S\WOOD\BNS.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreve
 Source: "IMAGES_S\WOOD\BRS.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreversion
 Source: "IMAGES_S\WOOD\BCS.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreversion
 Source: "IMAGES_S\WOOD\BPS.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreversion
+Source: "IMAGES_S\WOOD\RKM.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreversion
+Source: "IMAGES_S\WOOD\BKM.GIF"; DestDir: "{app}\IMAGES_S\WOOD"; Flags: ignoreversion
 ; 棋子文件(小)——精致
 Source: "IMAGES_S\DELICATE\OO.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_S\DELICATE\RK.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
@@ -170,6 +172,8 @@ Source: "IMAGES_S\DELICATE\BNS.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: 
 Source: "IMAGES_S\DELICATE\BRS.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_S\DELICATE\BCS.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_S\DELICATE\BPS.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
+Source: "IMAGES_S\DELICATE\RKM.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
+Source: "IMAGES_S\DELICATE\BKM.GIF"; DestDir: "{app}\IMAGES_S\DELICATE"; Flags: ignoreversion
 ; 棋子文件(小)——光亮
 Source: "IMAGES_S\POLISH\OO.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
 Source: "IMAGES_S\POLISH\RK.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
@@ -201,6 +205,8 @@ Source: "IMAGES_S\POLISH\BNS.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: igno
 Source: "IMAGES_S\POLISH\BRS.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
 Source: "IMAGES_S\POLISH\BCS.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
 Source: "IMAGES_S\POLISH\BPS.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
+Source: "IMAGES_S\POLISH\RKM.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
+Source: "IMAGES_S\POLISH\BKM.GIF"; DestDir: "{app}\IMAGES_S\POLISH"; Flags: ignoreversion
 ; 棋子文件(小)——象棋演播室
 Source: "IMAGES_S\XQSTUDIO\OO.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
 Source: "IMAGES_S\XQSTUDIO\RK.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
@@ -232,6 +238,8 @@ Source: "IMAGES_S\XQSTUDIO\BNS.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: 
 Source: "IMAGES_S\XQSTUDIO\BRS.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
 Source: "IMAGES_S\XQSTUDIO\BCS.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
 Source: "IMAGES_S\XQSTUDIO\BPS.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
+Source: "IMAGES_S\XQSTUDIO\RKM.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
+Source: "IMAGES_S\XQSTUDIO\BKM.GIF"; DestDir: "{app}\IMAGES_S\XQSTUDIO"; Flags: ignoreversion
 ; 棋子文件(小)——弈天棋缘
 Source: "IMAGES_S\MOVESKY\OO.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
 Source: "IMAGES_S\MOVESKY\RK.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
@@ -263,6 +271,8 @@ Source: "IMAGES_S\MOVESKY\BNS.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ig
 Source: "IMAGES_S\MOVESKY\BRS.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
 Source: "IMAGES_S\MOVESKY\BCS.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
 Source: "IMAGES_S\MOVESKY\BPS.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
+Source: "IMAGES_S\MOVESKY\RKM.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
+Source: "IMAGES_S\MOVESKY\BKM.GIF"; DestDir: "{app}\IMAGES_S\MOVESKY"; Flags: ignoreversion
 ; 棋子文件(小)——梦入神机
 Source: "IMAGES_S\MRSJ\OO.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
 Source: "IMAGES_S\MRSJ\RK.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
@@ -294,6 +304,8 @@ Source: "IMAGES_S\MRSJ\BNS.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreve
 Source: "IMAGES_S\MRSJ\BRS.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
 Source: "IMAGES_S\MRSJ\BCS.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
 Source: "IMAGES_S\MRSJ\BPS.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
+Source: "IMAGES_S\MRSJ\RKM.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
+Source: "IMAGES_S\MRSJ\BKM.GIF"; DestDir: "{app}\IMAGES_S\MRSJ"; Flags: ignoreversion
 ; 棋子文件(小)——纵马奔流
 Source: "IMAGES_S\ZMBL\OO.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL\RK.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
@@ -325,6 +337,8 @@ Source: "IMAGES_S\ZMBL\BNS.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreve
 Source: "IMAGES_S\ZMBL\BRS.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL\BCS.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
 Source: "IMAGES_S\ZMBL\BPS.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
+Source: "IMAGES_S\ZMBL\RKM.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
+Source: "IMAGES_S\ZMBL\BKM.GIF"; DestDir: "{app}\IMAGES_S\ZMBL"; Flags: ignoreversion
 ; 棋盘文件(大)
 Source: "IMAGES_L\WOOD.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
 Source: "IMAGES_L\GREEN.GIF"; DestDir: "{app}\IMAGES_L"; Flags: ignoreversion
@@ -364,6 +378,8 @@ Source: "IMAGES_L\WOOD\BNS.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreve
 Source: "IMAGES_L\WOOD\BRS.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
 Source: "IMAGES_L\WOOD\BCS.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
 Source: "IMAGES_L\WOOD\BPS.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
+Source: "IMAGES_L\WOOD\RKM.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
+Source: "IMAGES_L\WOOD\BKM.GIF"; DestDir: "{app}\IMAGES_L\WOOD"; Flags: ignoreversion
 ; 棋子文件(大)——光泽
 Source: "IMAGES_L\POLISH\OO.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
 Source: "IMAGES_L\POLISH\RK.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
@@ -395,6 +411,8 @@ Source: "IMAGES_L\POLISH\BNS.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: igno
 Source: "IMAGES_L\POLISH\BRS.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
 Source: "IMAGES_L\POLISH\BCS.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
 Source: "IMAGES_L\POLISH\BPS.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
+Source: "IMAGES_L\POLISH\RKM.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
+Source: "IMAGES_L\POLISH\BKM.GIF"; DestDir: "{app}\IMAGES_L\POLISH"; Flags: ignoreversion
 ; 棋子文件(大)——精致
 Source: "IMAGES_L\DELICATE\OO.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_L\DELICATE\RK.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
@@ -426,6 +444,8 @@ Source: "IMAGES_L\DELICATE\BNS.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: 
 Source: "IMAGES_L\DELICATE\BRS.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_L\DELICATE\BCS.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
 Source: "IMAGES_L\DELICATE\BPS.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
+Source: "IMAGES_L\DELICATE\RKM.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
+Source: "IMAGES_L\DELICATE\BKM.GIF"; DestDir: "{app}\IMAGES_L\DELICATE"; Flags: ignoreversion
 ; 声音文件
 Source: "SOUNDS\CLICK.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\ILLEGAL.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion

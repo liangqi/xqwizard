@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.84, Last Modified: Oct. 2008
+' Designed by Morning Yellow, Version: 3.85, Last Modified: Oct. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.84"
+Public Const STRING_VERSION     As String = "3.85"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
@@ -33,6 +33,7 @@ Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
 Public Const DRAW_SELECTED      As Boolean = True ' Draw...Square
+Public Const DRAW_MATE          As Boolean = True ' Draw...Square
 Public Const RESTART_KEEP_LABEL As Boolean = True ' RestartGame
 Public Const RESTART_DEBUG_UCCI As Boolean = True ' RestartGame
 Public Const MOVE_WITH_ECHO     As Boolean = True ' AddMove
@@ -139,7 +140,7 @@ Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1
 
 ' 全局變量——程序
 Public App_frmMain              As Form     ' 主窗口對象引用
-Public App_picPieces(0 To 29)   As Picture  ' 棋子圖片對象引用
+Public App_picPieces(0 To 31)   As Picture  ' 棋子圖片對象引用
 Public App_picEngineRed         As Picture  ' 引擎執紅的圖片對象引用
 Public App_picEngineBlack       As Picture  ' 引擎執黑的圖片對象引用
 Public App_lpMainPrev           As Long     ' 為主窗口保留的事件触發過程，用在"MainWindowProc"中
@@ -152,6 +153,7 @@ Public App_bAutoEcco            As Boolean  ' 是否啟用自動解析開局的設置
 Public App_bFlipped             As Boolean  ' 是否已經翻轉棋盤
 Public App_mvNewMove            As Long     ' 最新的一個著法，棋盤上有標記
 Public App_sqSelected           As Integer  ' 鼠標選中的棋子
+Public App_sqMate               As Integer  ' 被将死的帅(将)
 Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 紅黑輪流標志
 Public App_bPromotion           As Boolean  ' 是否允许升变
@@ -342,7 +344,9 @@ End Function
 ' 播放聲音
 Public Sub PlayWavSound(ByVal szSoundFile As String)
 
-PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+If Options_bSounds Then
+    PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+End If
 
 End Sub
 
@@ -1045,7 +1049,7 @@ App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
 End Sub
 
 ' 在棋盤上顯示棋子，如果指定"DRAW_SELECTED"參數，則再顯示一個標記框，"frmPosEdit"中還有個相應的"DrawPosSquare/DrawCapSquare"過程
-Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
+Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, Optional ByVal bMate As Boolean = False)
 
 Dim pc As Integer, nPicId As Integer
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
@@ -1055,6 +1059,9 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
+If bMate Then
+    nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
+End If
 App_frmMain.imgSquares(IIf(App_bFlipped, (12 - sq \ 16) * 9 + 11 - sq Mod 16, (sq \ 16 - 3) * 9 + sq Mod 16 - 3)).Picture = App_picPieces(nPicId)
 
 End Sub
@@ -1064,6 +1071,7 @@ Public Sub BoardFlush()
 
 Dim i As Integer, j As Integer
 App_sqSelected = 0
+App_sqMate = 0
 For i = 3 To 12
     For j = 3 To 11
         DrawSquare i * 16 + j
@@ -1095,6 +1103,10 @@ Dim bNotBegin As Boolean, bNotEnd As Boolean
 If App_sqSelected > 0 Then
     DrawSquare App_sqSelected
     App_sqSelected = 0
+End If
+If App_sqMate > 0 Then
+    DrawSquare App_sqMate
+    App_sqMate = 0
 End If
 If App_mvNewMove <> 0 Then
     DrawSquare Src(App_mvNewMove)
@@ -1268,7 +1280,11 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     End If
     AnalyzeEcco
     If (nMoveStatus And MOVE_MATE) <> 0 Then
-        If bEcho And Options_bSounds Then
+        App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
+        If App_sqMate > 0 Then
+            DrawSquare App_sqMate, , DRAW_MATE
+        End If
+        If bEcho Then
             PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
             MsgBoxMute IIf(Game_sdCurr = 1, "紅胜。", "黑胜。"), vbInformation
         End If
@@ -1278,7 +1294,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         App_frmMain.mnEngineLevel.Checked = False
         App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
     Else
-        If bEcho And Options_bSounds Then
+        If bEcho Then
             If (nMoveStatus And MOVE_CHECK) <> 0 Then
                 PlayWavSound "CHECK" + IIf(bEngine, "2", "")
             ElseIf (nMoveStatus And MOVE_CAPTURE) <> 0 Then
@@ -1371,7 +1387,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     End If
     AddMove = True
 Else
-    If bEcho And Options_bSounds And (nMoveStatus And MOVE_INCHECK) <> 0 Then
+    If bEcho And (nMoveStatus And MOVE_INCHECK) <> 0 Then
         PlayWavSound "ILLEGAL"
     End If
     AddMove = False
@@ -2433,7 +2449,11 @@ End Sub
 ' 获得棋子图片的文件名
 Public Function PieceFileName(ByVal nIndex As Integer) As String
 
-If nIndex >= 15 Then
+If nIndex = 30 Then
+    PieceFileName = "RKM"
+ElseIf nIndex = 31 Then
+    PieceFileName = "BKM"
+ElseIf nIndex >= 15 Then
     PieceFileName = PieceFileName(nIndex - 15) + "S"
 Else
     If nIndex = 0 Then
@@ -2455,7 +2475,7 @@ Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
 On Error Resume Next
-For i = 0 To 29
+For i = 0 To 31
     frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
@@ -2467,7 +2487,7 @@ Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
 PiecesSettingSmallHide nPiecesIndex
-For i = 0 To 29
+For i = 0 To 31
     Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
 Next
 For i = 0 To PIECES_S_MAX - 1
@@ -2485,7 +2505,7 @@ Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 Dim i As Integer, sz As String
 sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH") + "\"
 On Error Resume Next
-For i = 0 To 29
+For i = 0 To 31
     frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
 Next
 On Error GoTo 0
@@ -2497,7 +2517,7 @@ Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
 PiecesSettingLargeHide nPiecesIndex
-For i = 0 To 29
+For i = 0 To 31
     Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
 Next
 For i = 0 To PIECES_L_MAX - 1
@@ -2964,7 +2984,7 @@ LoadRegs
 LoadTips
 If Options_bLargeGui Then
     Set App_frmMain = frmMainLarge
-    For i = 0 To 29
+    For i = 0 To 31
         Set App_picPieces(i) = frmHide.imgPiecesLarge(i)
     Next
     Set App_picEngineRed = frmHide.imgEngineRedLarge.Picture
@@ -2976,7 +2996,7 @@ If Options_bLargeGui Then
     PiecesSettingSmallHide Options_nPiecesS
 Else
     Set App_frmMain = frmMainSmall
-    For i = 0 To 29
+    For i = 0 To 31
         Set App_picPieces(i) = frmHide.imgPiecesSmall(i)
     Next
     Set App_picEngineRed = frmHide.imgEngineRed.Picture
@@ -3064,7 +3084,7 @@ App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
-For i = 1 To 30
+For i = 1 To 31
     App_frmMain.tlb.Buttons(i).Image = i
 Next
 If Not App_bPromotion Then
