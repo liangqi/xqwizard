@@ -57,7 +57,7 @@ public class MoveParser {
 		"A4-5", "A4+5", "A5-4", "A5+4", "A5-6", "A5+6", "A6-5", "A6+5",
 		"B1-3", "B1+3", "B3-1", "B3+1", "B3-5", "B3+5", "B5-3", "B5+3",
 		"B5-7", "B5+7", "B7-5", "B7+5", "B7-9", "B7+9", "B9-7", "B9+7",
-		"A4=P", "A6=P", "B3=P", "B7=P" 
+		"A4=P", "A6=P", "B3=P", "B7=P"
 	};
 
 	/** 确定的纵线表示，对应红方走法的起点和终点坐标，黑方需要对这些坐标作翻转 */
@@ -106,7 +106,7 @@ public class MoveParser {
 
 	private static int char2Piece(int c) {
 		if (c >= 'a' && c <= 'z') {
-			return c == 'e' ? 2 : c == 'h' ? 3 : PIECE_TO_CHAR.indexOf(c  - 'a' + 'A');
+			return c == 'e' ? 2 : c == 'h' ? 3 : PIECE_TO_CHAR.indexOf(c - 'a' + 'A');
 		}
 		return c == 'E' ? 2 : c == 'H' ? 3 : PIECE_TO_CHAR.indexOf(c);
 	}
@@ -250,7 +250,7 @@ public class MoveParser {
 				return 0;
 			}
 		} else {
-			
+
 			// 4. 如果棋子是用位置表示的，那么必须按顺序找到棋盘上所有的棋子；
 			if (pos >= DIRECT_TO_POS) {
 				pos -= DIRECT_TO_POS;

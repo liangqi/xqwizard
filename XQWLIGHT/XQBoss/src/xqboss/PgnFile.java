@@ -144,7 +144,7 @@ public class PgnFile {
 											SimplePos.PIECE_PAWN);
 								} else {
 									pos.squares[sqDst] = pos.squares[sqSrc];
-									pos.squares[sqSrc] = 0;									
+									pos.squares[sqSrc] = 0;
 								}
 								pos.changeSide();
 								maxMoves ++;

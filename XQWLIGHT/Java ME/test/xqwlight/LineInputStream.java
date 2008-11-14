@@ -22,7 +22,7 @@ public class LineInputStream {
 			}
 			b = in.read();
 		}
-		return baos.size() == 0 ? null : baos.toString(); 
+		return baos.size() == 0 ? null : baos.toString();
 	}
 
 	public void close() throws IOException {

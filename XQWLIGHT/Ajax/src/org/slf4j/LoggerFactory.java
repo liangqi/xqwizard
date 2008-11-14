@@ -129,6 +129,6 @@ public class LoggerFactory {
 
 	/** @param clazz - Unused */
 	public static Logger getLogger(Class<?> clazz) {
-        return instance;
-    }
+		return instance;
+	}
 }

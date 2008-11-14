@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class GBLineInputStream {
-	private static char[] gbCharTab = new char[32768]; 
+	private static char[] gbCharTab = new char[32768];
 
 	static {
 		try {

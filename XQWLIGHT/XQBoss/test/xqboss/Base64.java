@@ -1,9 +1,9 @@
 package xqboss;
 
 public class Base64 {
-    private static final int PADDING_BYTE = '=';
+	private static final int PADDING_BYTE = '=';
 
-    private static final byte[] ENC_TAB =
+	private static final byte[] ENC_TAB =
 			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
 
 	private static final int[] DEC_TAB = {
@@ -42,7 +42,7 @@ public class Base64 {
 			j ++;
 			result[j] = ENC_TAB[b3 & 0x3f];
 			j ++;
-        }
+		}
 		if (modulus > 0) {
 			int b1 = data[length] & 0xff;
 			result[j] = ENC_TAB[(b1 >>> 2) & 0x3f];
@@ -102,5 +102,5 @@ public class Base64 {
 			}
 		}
 		return result;
-    }
+	}
 }

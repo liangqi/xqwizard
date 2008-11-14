@@ -668,10 +668,10 @@ public class Position {
 					k ++;
 				}
 			}
-		    if (k > 0) {
+			if (k > 0) {
 				fen.append((char) ('0' + k));
-		    }
-		    fen.append('/');
+			}
+			fen.append('/');
 		}
 		fen.setCharAt(fen.length() - 1, ' ');
 		fen.append(sdPlayer == 0 ? 'w' : 'b');
