@@ -54,7 +54,7 @@ public class CookiesPage extends WebPage {
 				newCookieEntries.add(new CookieEntry(cookie));
 			}
 		}
-		Form frm = new Form("frm") {
+		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -80,15 +80,15 @@ public class CookiesPage extends WebPage {
 				skipSubmit = true;
 			}
 		});
-		frm.add(new ListView("lstCookies", newCookieEntries) {
+		frm.add(new ListView<CookieEntry>("lstCookies", newCookieEntries) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem item) {
+			protected void populateItem(ListItem<CookieEntry> item) {
 				final int index = item.getIndex();
-				CookieEntry cookieEntry = (CookieEntry) item.getModelObject();
-				item.add(new TextField("txtName", cookieEntry.getNameModel()));
-				item.add(new TextField("txtValue", cookieEntry.getValueModel()));
+				CookieEntry cookieEntry = item.getModelObject();
+				item.add(new TextField<String>("txtName", cookieEntry.getNameModel()));
+				item.add(new TextField<String>("txtValue", cookieEntry.getValueModel()));
 				item.add(new Button("btnDelete") {
 					private static final long serialVersionUID = 1L;
 

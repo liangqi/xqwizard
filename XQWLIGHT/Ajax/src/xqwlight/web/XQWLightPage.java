@@ -248,7 +248,7 @@ public class XQWLightPage extends WebPage {
 		}
 
 		void setMessage(String msg, int status) {
-			lblTitle.setModelObject(msg);
+			lblTitle.setDefaultModelObject(msg);
 			imgTitle.setImageResourceReference(rrStatus[status]);
 			XQWLightPage.this.status = status;
 			if (status == STATUS_THINKING) {
@@ -382,16 +382,16 @@ public class XQWLightPage extends WebPage {
 		}
 		// 4. Form ...
 		// 4.1. Player Moves ...
-		final RadioChoice selFlipped = new RadioChoice("selFlipped",
-				new Model(flipped ? Choices.FLIPPED_TRUE : Choices.FLIPPED_FALSE),
+		final RadioChoice<String> selFlipped = new RadioChoice<String>("selFlipped",
+				new Model<String>(flipped ? Choices.FLIPPED_TRUE : Choices.FLIPPED_FALSE),
 				Choices.getFlippedTypes()).setSuffix("");
 		// selFlipped.setModelValue(new String[] {Integer.toString(flipped ? 1 : 0)});
 		// 4.2. Handicap ...
-		final DropDownChoice selHandicap = new DropDownChoice("selHandicap",
-				new Model(Choices.getHandicapTypes().get(handicap)), Choices.getHandicapTypes());
+		final DropDownChoice<String> selHandicap = new DropDownChoice<String>("selHandicap",
+				new Model<String>(Choices.getHandicapTypes().get(handicap)), Choices.getHandicapTypes());
 		// selHandicap.setModelValue(new String[] {Integer.toString(handicap)});
 		// 4.3. New Game ...
-		Form frm = new Form("frm") {
+		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -399,7 +399,7 @@ public class XQWLightPage extends WebPage {
 				if (status != STATUS_THINKING) {
 					addCookieValue("fen", null);
 					addCookieValue("flipped", Boolean.toString(selFlipped.
-							getModelObjectAsString().equals(Choices.FLIPPED_TRUE)));
+							getModelObject().equals(Choices.FLIPPED_TRUE)));
 					addCookieValue("handicap", selHandicap.getModelValue());
 					setResponsePage(RefreshPage.class);
 				}
@@ -409,16 +409,16 @@ public class XQWLightPage extends WebPage {
 		frm.add(selHandicap);
 		add(frm);
 		// 4.4. Board ...
-		final DropDownChoice selBoard = new DropDownChoice("selBoard",
-				new Model(Choices.getBoardTypes().get(boardId)), Choices.getBoardTypes());
+		final DropDownChoice<String> selBoard = new DropDownChoice<String>("selBoard",
+				new Model<String>(Choices.getBoardTypes().get(boardId)), Choices.getBoardTypes());
 		// 4.5. Pieces ...
-		final DropDownChoice selPieces = new DropDownChoice("selPieces",
-				new Model(Choices.getPiecesTypes().get(piecesId)), Choices.getPiecesTypes());
+		final DropDownChoice<String> selPieces = new DropDownChoice<String>("selPieces",
+				new Model<String>(Choices.getPiecesTypes().get(piecesId)), Choices.getPiecesTypes());
 		// 4.6. Musics ...
-		final DropDownChoice selMusic = new DropDownChoice("selMusic",
-				new Model(Choices.getMusicTypes().get(musicId)), Choices.getMusicTypes());
+		final DropDownChoice<String> selMusic = new DropDownChoice<String>("selMusic",
+				new Model<String>(Choices.getMusicTypes().get(musicId)), Choices.getMusicTypes());
 		// 4.7. Apply ...
-		Form frmGui = new Form("frmGui") {
+		Form<Void> frmGui = new Form<Void>("frmGui") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -434,7 +434,7 @@ public class XQWLightPage extends WebPage {
 		frmGui.add(selMusic);
 		add(frmGui);
 		// 5. Retract and Cookies ...
-		add(new Link("lnkRetract") {
+		add(new Link<Void>("lnkRetract") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -445,7 +445,7 @@ public class XQWLightPage extends WebPage {
 				}
 			}
 		});
-		add(new Link("lnkCookies") {
+		add(new Link<Void>("lnkCookies") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -469,7 +469,7 @@ public class XQWLightPage extends WebPage {
 						imgLevels[j].setImageResourceReference(j > level ? rrStar0 : rrStar1);
 						target.addComponent(imgLevels[j]);
 					}
-					lblLevel.setModelObject(LEVEL_STRING[level]);
+					lblLevel.setDefaultModelObject(LEVEL_STRING[level]);
 					target.addComponent(lblLevel);
 					addCookieValue("level", Integer.toString(level));
 				}

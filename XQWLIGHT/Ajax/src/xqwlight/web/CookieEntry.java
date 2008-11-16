@@ -5,32 +5,32 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.model.Model;
 
 public class CookieEntry {
-	private Model name;
-	private Model value;
+	private Model<String> name;
+	private Model<String> value;
 
 	public CookieEntry(Cookie cookie) {
 		this(cookie.getName(), cookie.getValue());
 	}
 
 	public CookieEntry(String name, String value) {
-		this.name = new Model(name);
-		this.value = new Model(value);
+		this.name = new Model<String>(name);
+		this.value = new Model<String>(value);
 	}
 
-	public Model getNameModel() {
+	public Model<String> getNameModel() {
 		return name;
 	}
 
-	public Model getValueModel() {
+	public Model<String> getValueModel() {
 		return value;
 	}
 
 	public String getName() {
-		return (String) name.getObject();
+		return name.getObject();
 	}
 
 	public String getValue() {
-		return (String) value.getObject();
+		return value.getObject();
 	}
 
 	public Cookie getCookie() {
