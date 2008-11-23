@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.26, Last Modified: May 2008
+Designed by Morning Yellow, Version: 1.29, Last Modified: Nov. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -87,7 +87,7 @@ class XQWLCanvas extends Canvas {
 	private int normalHeight = getHeight();
 
 	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
-	private Alert altBack = new Alert("象棋小巫", "放弃这局棋？", null, AlertType.CONFIRMATION);
+	private Alert altBack = new Alert("象棋小巫师", "放弃这局棋？", null, AlertType.CONFIRMATION);
 
 	Command cmdBack = new Command("返回", Command.ITEM, 1);
 	Command cmdRetract = new Command("悔棋", Command.ITEM, 1);

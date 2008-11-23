@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.85, Last Modified: Oct. 2008
+' Designed by Morning Yellow, Version: 3.86, Last Modified: Nov. 2008
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.85"
+Public Const STRING_VERSION     As String = "3.86"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
@@ -1051,7 +1051,7 @@ End Sub
 ' 在棋盘上显示棋子，如果指定"DRAW_SELECTED"参数，则再显示一个标记框，"frmPosEdit"中还有个相应的"DrawPosSquare/DrawCapSquare"过程
 Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -1059,10 +1059,25 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - sq \ 16) * 9 + 11 - sq Mod 16, (sq \ 16 - 3) * 9 + sq Mod 16 - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
+    ' 以下是新功能 - 抖一下将死的子
+    img.ZOrder
+    x = img.Left
+    y = img.Top
+    For i = 5 To 1 Step -1
+        img.Move x + i * 20, y
+        img.Refresh
+        Sleep 50
+        img.Move x - i * 20, y
+        img.Refresh
+        Sleep 50
+    Next
+    img.Move x, y
+    ' 以上是新功能 - 抖一下将死的子
 End If
-App_frmMain.imgSquares(IIf(App_bFlipped, (12 - sq \ 16) * 9 + 11 - sq Mod 16, (sq \ 16 - 3) * 9 + sq Mod 16 - 3)).Picture = App_picPieces(nPicId)
+img.Picture = App_picPieces(nPicId)
 
 End Sub
 
@@ -1281,12 +1296,15 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     AnalyzeEcco
     If (nMoveStatus And MOVE_MATE) <> 0 Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
+        If bEcho Then
+            PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
+        End If
         If App_sqMate > 0 Then
             DrawSquare App_sqMate, , DRAW_MATE
         End If
         If bEcho Then
-            PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
             MsgBoxMute IIf(Game_sdCurr = 1, "红胜。", "黑胜。"), vbInformation
+        Else
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
