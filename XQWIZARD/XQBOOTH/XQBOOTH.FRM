@@ -54,6 +54,15 @@ Begin VB.Form frmXQBooth
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
          Location        =   "http:///"
       End
+      Begin VB.CommandButton btnRestart 
+         Caption         =   "再来一次"
+         Default         =   -1  'True
+         Height          =   735
+         Left            =   120
+         TabIndex        =   4
+         Top             =   120
+         Width           =   735
+      End
    End
    Begin VB.CommandButton btnNext 
       Caption         =   "下一关"
@@ -72,25 +81,6 @@ Begin VB.Form frmXQBooth
       TabStop         =   0   'False
       Top             =   6240
       Width           =   975
-   End
-   Begin VB.CommandButton btnRestart 
-      Caption         =   "再来一次"
-      Default         =   -1  'True
-      Height          =   735
-      Left            =   120
-      TabIndex        =   4
-      Top             =   6360
-      Width           =   735
-   End
-   Begin VB.CommandButton btnExit 
-      Cancel          =   -1  'True
-      Caption         =   "离开"
-      Height          =   735
-      Left            =   4800
-      TabIndex        =   5
-      TabStop         =   0   'False
-      Top             =   6360
-      Width           =   735
    End
    Begin VB.Image imgSquares 
       Height          =   615
@@ -1076,12 +1066,6 @@ End Sub
 Private Sub btnRestart_Click()
 
 mnGameRestart_Click
-
-End Sub
-
-Private Sub btnExit_Click()
-
-Unload Me
 
 End Sub
 
