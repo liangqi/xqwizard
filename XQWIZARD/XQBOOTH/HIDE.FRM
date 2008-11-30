@@ -22,244 +22,244 @@ Begin VB.Form frmHide
       RequestTimeout  =   5
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   23
-      Left            =   360
+      Left            =   600
       Picture         =   "HIDE.frx":000C
-      Top             =   1080
-      Width           =   360
+      Top             =   1800
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   24
-      Left            =   720
-      Picture         =   "HIDE.frx":041A
-      Top             =   1080
-      Width           =   360
+      Left            =   1200
+      Picture         =   "HIDE.frx":07FB
+      Top             =   1800
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   25
-      Left            =   1080
-      Picture         =   "HIDE.frx":081E
-      Top             =   1080
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   26
-      Left            =   1440
-      Picture         =   "HIDE.frx":0C2B
-      Top             =   1080
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   27
       Left            =   1800
-      Picture         =   "HIDE.frx":1032
-      Top             =   1080
-      Width           =   360
+      Picture         =   "HIDE.frx":0F58
+      Top             =   1800
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
+      Index           =   26
+      Left            =   2400
+      Picture         =   "HIDE.frx":174E
+      Top             =   1800
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
+      Index           =   27
+      Left            =   3000
+      Picture         =   "HIDE.frx":1F16
+      Top             =   1800
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
       Index           =   28
-      Left            =   2160
-      Picture         =   "HIDE.frx":1434
-      Top             =   1080
-      Width           =   360
+      Left            =   3600
+      Picture         =   "HIDE.frx":26D5
+      Top             =   1800
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   29
-      Left            =   2520
-      Picture         =   "HIDE.frx":1841
-      Top             =   1080
-      Width           =   360
+      Left            =   4200
+      Picture         =   "HIDE.frx":2EA8
+      Top             =   1800
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   15
       Left            =   0
-      Picture         =   "HIDE.frx":1C47
-      Top             =   720
-      Width           =   360
+      Picture         =   "HIDE.frx":363C
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   16
-      Left            =   360
-      Picture         =   "HIDE.frx":1FBE
-      Top             =   720
-      Width           =   360
+      Left            =   600
+      Picture         =   "HIDE.frx":39F1
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   17
-      Left            =   720
-      Picture         =   "HIDE.frx":23CD
-      Top             =   720
-      Width           =   360
+      Left            =   1200
+      Picture         =   "HIDE.frx":419B
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   18
-      Left            =   1080
-      Picture         =   "HIDE.frx":27D3
-      Top             =   720
-      Width           =   360
+      Left            =   1800
+      Picture         =   "HIDE.frx":4921
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   19
-      Left            =   1440
-      Picture         =   "HIDE.frx":2BE1
-      Top             =   720
-      Width           =   360
+      Left            =   2400
+      Picture         =   "HIDE.frx":50C1
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   20
-      Left            =   1800
-      Picture         =   "HIDE.frx":2FE8
-      Top             =   720
-      Width           =   360
+      Left            =   3000
+      Picture         =   "HIDE.frx":5865
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   21
-      Left            =   2160
-      Picture         =   "HIDE.frx":33EF
-      Top             =   720
-      Width           =   360
+      Left            =   3600
+      Picture         =   "HIDE.frx":5FFE
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   22
-      Left            =   2520
-      Picture         =   "HIDE.frx":37FD
-      Top             =   720
-      Width           =   360
+      Left            =   4200
+      Picture         =   "HIDE.frx":67E2
+      Top             =   1200
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   8
-      Left            =   360
-      Picture         =   "HIDE.frx":3C02
-      Top             =   360
-      Width           =   360
+      Left            =   600
+      Picture         =   "HIDE.frx":6F77
+      Top             =   600
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   9
-      Left            =   720
-      Picture         =   "HIDE.frx":3FF7
-      Top             =   360
-      Width           =   360
+      Left            =   1200
+      Picture         =   "HIDE.frx":7722
+      Top             =   600
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   10
-      Left            =   1080
-      Picture         =   "HIDE.frx":43E2
-      Top             =   360
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   11
-      Left            =   1440
-      Picture         =   "HIDE.frx":47D6
-      Top             =   360
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   12
       Left            =   1800
-      Picture         =   "HIDE.frx":4BC7
-      Top             =   360
-      Width           =   360
+      Picture         =   "HIDE.frx":7E3B
+      Top             =   600
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
+      Index           =   11
+      Left            =   2400
+      Picture         =   "HIDE.frx":85EC
+      Top             =   600
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
+      Index           =   12
+      Left            =   3000
+      Picture         =   "HIDE.frx":8D71
+      Top             =   600
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
       Index           =   13
-      Left            =   2160
-      Picture         =   "HIDE.frx":4FB2
-      Top             =   360
-      Width           =   360
+      Left            =   3600
+      Picture         =   "HIDE.frx":94EC
+      Top             =   600
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   14
-      Left            =   2520
-      Picture         =   "HIDE.frx":53A5
-      Top             =   360
-      Width           =   360
+      Left            =   4200
+      Picture         =   "HIDE.frx":9C7A
+      Top             =   600
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   0
       Left            =   0
-      Picture         =   "HIDE.frx":5793
+      Picture         =   "HIDE.frx":A3CD
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   1
-      Left            =   360
-      Picture         =   "HIDE.frx":5AEB
+      Left            =   600
+      Picture         =   "HIDE.frx":A740
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   2
-      Left            =   720
-      Picture         =   "HIDE.frx":5EE2
+      Left            =   1200
+      Picture         =   "HIDE.frx":AEA8
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   3
-      Left            =   1080
-      Picture         =   "HIDE.frx":62D0
-      Top             =   0
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   4
-      Left            =   1440
-      Picture         =   "HIDE.frx":66C3
-      Top             =   0
-      Width           =   360
-   End
-   Begin VB.Image imgPieces 
-      Height          =   360
-      Index           =   5
       Left            =   1800
-      Picture         =   "HIDE.frx":6AB4
+      Picture         =   "HIDE.frx":B5E8
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
+      Index           =   4
+      Left            =   2400
+      Picture         =   "HIDE.frx":BD4A
+      Top             =   0
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
+      Index           =   5
+      Left            =   3000
+      Picture         =   "HIDE.frx":C4A8
+      Top             =   0
+      Width           =   615
+   End
+   Begin VB.Image imgPieces 
+      Height          =   615
       Index           =   6
-      Left            =   2160
-      Picture         =   "HIDE.frx":6E9F
+      Left            =   3600
+      Picture         =   "HIDE.frx":CBFF
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgPieces 
-      Height          =   360
+      Height          =   615
       Index           =   7
-      Left            =   2520
-      Picture         =   "HIDE.frx":728E
+      Left            =   4200
+      Picture         =   "HIDE.frx":D39F
       Top             =   0
-      Width           =   360
+      Width           =   615
    End
    Begin VB.Image imgAdvert 
       Height          =   975
