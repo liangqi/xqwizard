@@ -54,8 +54,8 @@ Begin VB.Form frmXQBooth
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
          Location        =   "http:///"
       End
-      Begin VB.CommandButton btnRestart 
-         Caption         =   "再来一次"
+      Begin VB.CommandButton btnBlur
+         Caption         =   ""
          Default         =   -1  'True
          Height          =   735
          Left            =   120
@@ -1060,12 +1060,6 @@ Private Sub btnNext_MouseDown(nButton As Integer, nShift As Integer, x As Single
 btnNext.Enabled = False
 btnNext.Enabled = True
 mnGameNext_Click
-
-End Sub
-
-Private Sub btnRestart_Click()
-
-mnGameRestart_Click
 
 End Sub
 
