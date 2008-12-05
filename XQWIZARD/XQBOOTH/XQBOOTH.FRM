@@ -54,8 +54,7 @@ Begin VB.Form frmXQBooth
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
          Location        =   "http:///"
       End
-      Begin VB.CommandButton btnBlur
-         Caption         =   ""
+      Begin VB.CommandButton btnBlur 
          Default         =   -1  'True
          Height          =   735
          Left            =   120
@@ -68,6 +67,8 @@ Begin VB.Form frmXQBooth
       Caption         =   "下一关"
       Height          =   975
       Left            =   4680
+      Picture         =   "XQBOOTH.frx":0ABA
+      Style           =   1  'Graphical
       TabIndex        =   1
       TabStop         =   0   'False
       Top             =   6240
@@ -77,6 +78,8 @@ Begin VB.Form frmXQBooth
       Caption         =   "上一关"
       Height          =   975
       Left            =   0
+      Picture         =   "XQBOOTH.frx":0EBF
+      Style           =   1  'Graphical
       TabIndex        =   0
       TabStop         =   0   'False
       Top             =   6240
@@ -805,7 +808,7 @@ Begin VB.Form frmXQBooth
    Begin VB.Image imgBoard 
       Height          =   6255
       Left            =   0
-      Picture         =   "XQBOOTH.frx":0ABA
+      Picture         =   "XQBOOTH.frx":12C4
       Stretch         =   -1  'True
       Top             =   0
       Width           =   5655
