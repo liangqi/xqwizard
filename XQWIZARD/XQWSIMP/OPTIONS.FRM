@@ -48,7 +48,7 @@ Begin VB.Form frmOptions
       End
    End
    Begin VB.Frame frmEngine 
-      Caption         =   "引擎"
+      Caption         =   "电脑"
       Height          =   2415
       Left            =   3480
       TabIndex        =   14
@@ -170,7 +170,7 @@ Begin VB.Form frmOptions
          Width           =   1095
       End
       Begin VB.Label lblEnginePlay 
-         Caption         =   "新局引擎状态"
+         Caption         =   "新局电脑状态"
          Height          =   255
          Left            =   480
          TabIndex        =   25
@@ -352,9 +352,9 @@ Private nPlayIntv As Integer, nMoveDelay As Integer
 Private Sub Form_Load()
 
 cmbEnginePlay.Clear
-cmbEnginePlay.AddItem "不启用引擎", 0
-cmbEnginePlay.AddItem "引擎执红", 1
-cmbEnginePlay.AddItem "引擎执黑", 2
+cmbEnginePlay.AddItem "不启用电脑", 0
+cmbEnginePlay.AddItem "电脑执红", 1
+cmbEnginePlay.AddItem "电脑执黑", 2
 cmbEnginePlay.AddItem "红黑轮流", 3
 cmbEnginePlay.AddItem "红黑随机", 4
 

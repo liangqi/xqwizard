@@ -48,7 +48,7 @@ Begin VB.Form frmOptions
       End
    End
    Begin VB.Frame frmEngine 
-      Caption         =   "ま篮"
+      Caption         =   "筿福"
       Height          =   2415
       Left            =   3480
       TabIndex        =   16
@@ -170,7 +170,7 @@ Begin VB.Form frmOptions
          Width           =   1095
       End
       Begin VB.Label lblEnginePlay 
-         Caption         =   "穝Ыま篮篈"
+         Caption         =   "穝Ы筿福篈"
          Height          =   255
          Left            =   480
          TabIndex        =   27
@@ -352,9 +352,9 @@ Private nPlayIntv As Integer, nMoveDelay As Integer
 Private Sub Form_Load()
 
 cmbEnginePlay.Clear
-cmbEnginePlay.AddItem "不啟用引擎", 0
-cmbEnginePlay.AddItem "引擎執紅", 1
-cmbEnginePlay.AddItem "引擎執黑", 2
+cmbEnginePlay.AddItem "不啟用電腦", 0
+cmbEnginePlay.AddItem "電腦執紅", 1
+cmbEnginePlay.AddItem "電腦執黑", 2
 cmbEnginePlay.AddItem "紅黑輪流", 3
 cmbEnginePlay.AddItem "紅黑隨机", 4
 

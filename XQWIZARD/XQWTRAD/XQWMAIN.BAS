@@ -1388,7 +1388,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 If Options_bAllowResign And Engine_bPonderFinishedDraw Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") + vbCrLf + "如果接受提和，請選擇“引擎”菜單的“提和/接受提和”功能。" + _
+                        MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") + vbCrLf + "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" + _
                                 vbCrLf + "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
                     End If
                 End If
@@ -1956,7 +1956,7 @@ Else
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") + vbCrLf + "如果接受提和，請選擇“引擎”菜單的“提和/接受提和”功能。" + _
+                        MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") + vbCrLf + "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" + _
                                 vbCrLf + "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
                     End If
                 End If
@@ -2577,8 +2577,8 @@ Public Sub LoadTips()
 Gui_szTips(1) = "　　象棋巫師是一款功能強大的電腦對弈和棋譜編輯軟件，具有方便的人机對戰、棋譜記錄、欣賞、管理棋局的功能，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
         "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.elephantbase.net/league.htm ，下載到其他各具特色的引擎。"
-Gui_szTips(3) = "　　點擊“引擎執紅”或“引擎執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶体驗。"
-Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“引擎分析”按鈕，打開思考細節窗口。" + vbCrLf + _
+Gui_szTips(3) = "　　點擊“電腦執紅”或“電腦執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶体驗。"
+Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“電腦分析”按鈕，打開思考細節窗口。" + vbCrLf + _
         "　　您可以把思考細節窗口中的思考路線复制下來，粘貼到主窗口中，對思考線路進行推演。"
 Gui_szTips(5) = "　　象棋巫師強大的棋譜、棋圖導入和導出功能為您在網絡上和棋友交流提供了极大的方便。"
 Gui_szTips(6) = "　　象棋巫師目前主要通過網絡發行，最新的版本可以從《象棋百科全書網》獲得：" + vbCrLf + "　　http://www.elephantbase.net/"

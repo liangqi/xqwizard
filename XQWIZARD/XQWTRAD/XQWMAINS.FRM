@@ -148,12 +148,12 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
-            Object.ToolTipText     =   "引擎執紅"
+            Object.ToolTipText     =   "電腦執紅"
             Style           =   1
          EndProperty
          BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
-            Object.ToolTipText     =   "引擎執黑"
+            Object.ToolTipText     =   "電腦執黑"
             Style           =   1
          EndProperty
          BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -163,7 +163,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
-            Object.ToolTipText     =   "引擎分析"
+            Object.ToolTipText     =   "電腦分析"
             Style           =   1
          EndProperty
          BeginProperty Button31 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -644,7 +644,7 @@ Begin VB.Form frmMainSmall
             ImageVarType    =   2
          EndProperty
          BeginProperty Tab2 {1EFB659A-857C-11D1-B16A-00C0F0283628} 
-            Caption         =   "引擎分析"
+            Caption         =   "電腦分析"
             ImageVarType    =   2
          EndProperty
       EndProperty
@@ -1660,7 +1660,7 @@ Begin VB.Form frmMainSmall
       End
    End
    Begin VB.Menu mnEngine 
-      Caption         =   "ま篮(&E)"
+      Caption         =   "筿福(&E)"
       Begin VB.Menu mnEngineLevel 
          Caption         =   "砞竚(&L)..."
       End
@@ -1680,16 +1680,16 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnEngineRed 
-         Caption         =   "ま篮磅(&R)"
+         Caption         =   "筿福磅(&R)"
       End
       Begin VB.Menu mnEngineBlack 
-         Caption         =   "ま篮磅堵(&B)"
+         Caption         =   "筿福磅堵(&B)"
       End
       Begin VB.Menu mnEnginePonder 
          Caption         =   "σ(&P)"
       End
       Begin VB.Menu mnEngineAnalyze 
-         Caption         =   "ま篮だ猂(&A)"
+         Caption         =   "筿福だ猂(&A)"
       End
       Begin VB.Menu mnEngineSep3 
          Caption         =   "-"
@@ -2507,7 +2507,7 @@ Else
         MsgBox "放棄提和。", vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox "請走一著棋，然後等待引擎接受或拒絕提和。" + vbCrLf + "如果引擎拒絕提和，則不會理睬，而是繼續走棋。", vbInformation
+        MsgBox "請走一著棋，然後等待電腦接受或拒絕提和。" + vbCrLf + "如果電腦拒絕提和，則不會理睬，而是繼續走棋。", vbInformation
         mnEngineDraw.Checked = True
     End If
 End If
