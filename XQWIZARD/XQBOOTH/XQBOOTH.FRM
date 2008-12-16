@@ -949,7 +949,7 @@ If pos.nMoveNum > 1 Then
     Next
 End If
 PipeLineOutput Engine_pipe, sz
-PipeLineOutput Engine_pipe, "go time 60000"
+PipeLineOutput Engine_pipe, "go time 15000"
 mv = 0
 Do While mv = 0
     lpStr = PipeLineInput(Engine_pipe)
