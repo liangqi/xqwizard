@@ -138,6 +138,10 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Declare Function ChildWindowFromPoint Lib "USER32.DLL" (ByVal hWndParent As Long, ByVal y As Long, ByVal x As Long) As Long
+Private Declare Function GetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
+Private Declare Sub SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long)
+
+Private Const GWL_WNDPROC As Long = -4
 
 Private bLoaded As Boolean
 
@@ -159,7 +163,7 @@ End Function
 
 Private Sub Form_Load()
 
-Dim x As Long, y As Long
+Dim x As Long, y As Long, hWndFlash As Long
 
 flash.Movie = App.Path + IIf(Right(App.Path, 1) = "\", "", "\") + "XQWLight.swf"
 bLoaded = False
@@ -171,7 +175,8 @@ bLoaded = True
 x = flash.Left / Screen.TwipsPerPixelX
 y = flash.Top / Screen.TwipsPerPixelY
 hWndFlash = ChildWindowFromPoint(hWnd, x, y)
-TransparentWindow hWnd, AddressOf FlashWndProc, x, y, flash.Width / Screen.TwipsPerPixelX, flash.Height / Screen.TwipsPerPixelY
+PrevWndProc = GetWindowLongA(hWndFlash, GWL_WNDPROC)
+SetWindowLongA hWndFlash, GWL_WNDPROC, AddressOf WndProc
 
 End Sub
 
