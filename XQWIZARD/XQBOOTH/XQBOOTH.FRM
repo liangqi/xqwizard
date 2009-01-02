@@ -52,7 +52,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
       Begin VB.CommandButton btnBlur 
          Default         =   -1  'True
@@ -846,7 +846,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 1.02, Last Modified: Sep. 2008
+' Designed by Morning Yellow, Version: 3.89, Last Modified: Jan. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -866,6 +866,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Const DRAW_SELECTED As Boolean = True
+Private Const DRAW_MATE As Boolean = True
 
 Private Const PHASE_READY As Integer = 0
 Private Const PHASE_BUSY As Integer = 1
@@ -880,9 +881,9 @@ PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC +
 
 End Sub
 
-Private Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False)
+Private Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = pos.ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -890,18 +891,42 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-imgSquares((sq \ 16 - 3) * 9 + sq Mod 16 - 3).Picture = frmHide.imgPieces(nPicId)
+Set img = imgSquares((sq \ 16 - 3) * 9 + sq Mod 16 - 3)
+If bMate Then
+    nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
+    img.ZOrder
+    x = img.Left
+    y = img.Top
+    For i = 5 To 1 Step -1
+        img.Move x + i * 20, y
+        img.Refresh
+        Sleep 50
+        img.Move x - i * 20, y
+        img.Refresh
+        Sleep 50
+    Next
+    img.Move x, y
+End If
+
+img.Picture = frmHide.imgPieces(nPicId)
 
 End Sub
 
 Private Function GetResult(ByVal nStatus As Long) As Boolean
 
+Dim sqMate As Integer
 If (nStatus And MOVE_MATE) <> 0 Then
     If pos.sdPlayer = 0 Then
         PlayWavSound "LOSS"
+        If pos.ucsqPieces(16) > 0 Then
+            DrawSquare pos.ucsqPieces(16), , DRAW_MATE
+        End If
         MsgBoxMute "请再接再厉！", vbInformation
     Else
         PlayWavSound "WIN"
+        If pos.ucsqPieces(32) > 0 Then
+            DrawSquare pos.ucsqPieces(32), , DRAW_MATE
+        End If
         If Gui_nCurr = App_nEndgames - 1 Then
             MsgBoxMute "恭喜你闯过所有关卡！", vbInformation
         Else

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.86, Last Modified: Nov. 2008
+' Designed by Morning Yellow, Version: 3.89, Last Modified: Jan. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,8 +22,8 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.88"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2008 www.elephantbase.net"
+Public Const STRING_VERSION     As String = "3.89"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
@@ -1298,11 +1298,9 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
             PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-        End If
-        If App_sqMate > 0 Then
-            DrawSquare App_sqMate, , DRAW_MATE
-        End If
-        If bEcho Then
+            If App_sqMate > 0 Then
+                DrawSquare App_sqMate, , DRAW_MATE
+            End If
             MsgBoxMute IIf(Game_sdCurr = 1, "红胜。", "黑胜。"), vbInformation
         Else
         End If
