@@ -15,7 +15,7 @@ Begin VB.Form frmXQBooth
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "XQBOOTH.frx":0000
+   Icon            =   "XQBSIMP.frx":0000
    MaxButton       =   0   'False
    ScaleHeight     =   7200
    ScaleMode       =   0  'User
@@ -67,7 +67,7 @@ Begin VB.Form frmXQBooth
       Caption         =   "下一关"
       Height          =   975
       Left            =   4680
-      Picture         =   "XQBOOTH.frx":0ABA
+      Picture         =   "XQBSIMP.frx":0ABA
       Style           =   1  'Graphical
       TabIndex        =   1
       TabStop         =   0   'False
@@ -78,7 +78,7 @@ Begin VB.Form frmXQBooth
       Caption         =   "上一关"
       Height          =   975
       Left            =   0
-      Picture         =   "XQBOOTH.frx":0EBF
+      Picture         =   "XQBSIMP.frx":0EBF
       Style           =   1  'Graphical
       TabIndex        =   0
       TabStop         =   0   'False
@@ -808,7 +808,7 @@ Begin VB.Form frmXQBooth
    Begin VB.Image imgBoard 
       Height          =   6255
       Left            =   0
-      Picture         =   "XQBOOTH.frx":12C4
+      Picture         =   "XQBSIMP.frx":12C4
       Stretch         =   -1  'True
       Top             =   0
       Width           =   5655
@@ -846,7 +846,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.89, Last Modified: Jan. 2009
+' Designed by Morning Yellow, Version: 3.9, Last Modified: Jan. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -917,13 +917,13 @@ Private Function GetResult(ByVal nStatus As Long) As Boolean
 Dim sqMate As Integer
 If (nStatus And MOVE_MATE) <> 0 Then
     If pos.sdPlayer = 0 Then
-        PlayWavSound "LOSS"
+        PlayWavSound "PROMOTE2"
         If pos.ucsqPieces(16) > 0 Then
             DrawSquare pos.ucsqPieces(16), , DRAW_MATE
         End If
         MsgBoxMute "请再接再厉！", vbInformation
     Else
-        PlayWavSound "WIN"
+        PlayWavSound "PROMOTE"
         If pos.ucsqPieces(32) > 0 Then
             DrawSquare pos.ucsqPieces(32), , DRAW_MATE
         End If
@@ -942,7 +942,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
     Exit Function
 End If
 If (nStatus And MOVE_PERPETUAL) <> 0 Then
-    PlayWavSound "LOSS"
+    PlayWavSound "PROMOTE2"
     MsgBoxMute "请不要气馁！", vbInformation
     GetResult = True
     Exit Function

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.89, Last Modified: Jan. 2009
+' Designed by Morning Yellow, Version: 3.9, Last Modified: Jan. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,30 +22,30 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "3.89"
-Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
-Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
-Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
+Public Const STRING_VERSION     As String = "3.9"
+Public Const MAX_ADVERTS        As Integer = 100    ' 廣告的最大條目數
+Public Const MAX_ENDGAMES       As Integer = 4096   ' 殘局的最大條目數
+Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 殘局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 
-' 全局变量
-Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
-Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
-Public App_nEndgames            As Integer  ' 读入的残局数量
-Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
-Public Gui_szUpgradeVer         As String   ' 检查升级的版本
-Public Gui_szUpgradeDate        As String   ' 检查升级的日期
-Public Gui_nCurr                As Integer  ' 当前残局的条目序号
-Public Gui_nLast                As Integer  ' 最后残局的条目序号
-Public Gui_szAdvertDate         As String   ' 检查广告的日期
-Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
-Public Gui_nAdvertNum           As Integer  ' 广告数量
-Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
-Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每个广告的文件
-Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
+' 全局變量
+Public App_szPath               As String   ' 主程序所在的文件夾，以"\"結尾
+Public App_bRunning             As Boolean  ' 程序運行標志，啟動時設成True，如果是False，則跳出事件檢測循環
+Public App_nEndgames            As Integer  ' 讀入的殘局數量
+Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 讀入的殘局
+Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
+Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
+Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
+Public Gui_nLast                As Integer  ' 最后殘局的條目序號
+Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
+Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
+Public Gui_nAdvertNum           As Integer  ' 廣告數量
+Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
+Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每個廣告的文件
+Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每個廣告的時間(秒)
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
-' 下载广告列表
+' 下載廣告列表
 Public Sub DownloadAdvertList()
 
 Dim buffer() As Byte, nFileNo As Integer, sz As String
@@ -70,7 +70,7 @@ On Error GoTo 0
 
 End Sub
 
-' 获取文件长度
+' 獲取文件長度
 Public Function GetFileSize(ByVal szFileName As String) As Long
 
 Dim nFileNo As Integer
@@ -87,11 +87,11 @@ On Error GoTo 0
 
 End Function
 
-' 检查广告(htm和gif文件)
+' 檢查廣告(htm和gif文件)
 Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Long, ByVal nGifSize As Long)
 
 Dim nFileNo As Integer, sz As String, buffer() As Byte
-' 判断文件字节数，如果跟广告列表中的一致，就不需要下载了
+' 判斷文件字節數，如果跟廣告列表中的一致，就不需要下載了
 If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".htm") = nHtmSize Then
     If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".gif") = nGifSize Then
         Exit Sub
@@ -99,7 +99,7 @@ If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".htm") = nHtmSize Then
 End If
 
 nFileNo = FreeFile
-' 下载htm文件，文本方式
+' 下載htm文件，文本方式
 On Error GoTo lnErrorOpen
 sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
@@ -112,7 +112,7 @@ If sz <> "" Then
     Print #nFileNo, sz;
     Close #nFileNo
 End If
-' 下载gif文件，二进制方式
+' 下載gif文件，二進制方式
 On Error GoTo lnErrorOpen
 buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
@@ -131,11 +131,11 @@ On Error GoTo 0
 
 End Sub
 
-' 加载广告列表
+' 加載廣告列表
 Public Sub LoadAdvertList()
 
 Dim nFileNo As Integer, sz As String, szs() As String
-' 检查广告文件是否有内容
+' 檢查廣告文件是否有內容
 Gui_nAdvertNum = 0
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
@@ -145,17 +145,17 @@ If EOF(nFileNo) Then
     Close #nFileNo
     Exit Sub
 End If
-' 检查广告文件是否正确
+' 檢查廣告文件是否正确
 Line Input #nFileNo, sz
 If sz <> "XQWizard Advert List" Then
     Close #nFileNo
     Exit Sub
 End If
-' 逐一读取广告
+' 逐一讀取廣告
 Do While Not EOF(nFileNo)
     Line Input #nFileNo, sz
-    ' 每一行包含的信息有：文件名，播放时间，htm文件大小，gif文件大小
-    ' 四项用逗号隔开，如“elephantbase,10,183,5618”
+    ' 每一行包含的信息有：文件名，播放時間，htm文件大小，gif文件大小
+    ' 四項用逗號隔開，如“elephantbase,10,183,5618”
     szs = Split(sz, ",")
     If UBound(szs) >= 0 Then
         Gui_nAdvertNum = Gui_nAdvertNum + 1
@@ -177,7 +177,7 @@ On Error GoTo 0
 
 End Sub
 
-' 从注册表加载参数
+' 從注冊表加載參數
 Public Sub LoadRegs()
 
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -188,7 +188,7 @@ Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES -
 
 End Sub
 
-' 保存参数到注册表
+' 保存參數到注冊表
 Public Sub SaveRegs()
 
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
@@ -199,7 +199,7 @@ SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 
 End Sub
 
-' 检查更新
+' 檢查更新
 Public Sub CheckUpdate()
 
 Dim sz As String, szWhatsNew As String, szUrl As String
@@ -210,7 +210,7 @@ On Error GoTo 0
 If sz = "" Then
     Exit Sub
 End If
-Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
+Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
 If Not (Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
     Exit Sub
 End If
@@ -218,7 +218,7 @@ szWhatsNew = ""
 On Error Resume Next
 szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
 On Error GoTo 0
-If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
     szUrl = ""
     On Error Resume Next
     szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
@@ -233,7 +233,7 @@ End If
 
 End Sub
 
-' 主函数
+' 主函數
 Public Sub Main()
 
 Dim i As Integer, nFileNo As Integer, bLoaded As Boolean
@@ -245,7 +245,7 @@ App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
 
-' 加载残局
+' 加載殘局
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
 Open App_szPath + ENDGAME_FILE For Input As #nFileNo
@@ -267,7 +267,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
+    MsgBox "無法打開文件 " + App_szPath + ENDGAME_FILE, vbExclamation
     Exit Sub
 End If
 If Gui_nLast >= App_nEndgames Then
@@ -277,7 +277,7 @@ If Gui_nCurr > Gui_nLast Then
     Gui_nCurr = Gui_nLast
 End If
 
-' 加载引擎
+' 加載引擎
 PipeOpen Engine_pipe, App_szPath + ENGINE_FILE
 PipeLineOutput Engine_pipe, "ucci"
 dfLastTime = Timer
@@ -301,20 +301,20 @@ Loop
 If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
-    MsgBox "无法加载引擎 " + App_szPath + ENGINE_FILE, vbExclamation
+    MsgBox "無法加載引擎 " + App_szPath + ENGINE_FILE, vbExclamation
     Exit Sub
 End If
-' 电脑执黑，不能只考虑将军走法
+' 電腦執黑，不能只考慮將軍走法
 ' PipeLineOutput Engine_pipe, "setoption alwayscheck true"
 
-' 调整广告框大小
+' 調整廣告框大小
 On Error Resume Next
 frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
 On Error GoTo 0
-' 加载广告，如果加载失败，则下载广告列表，再次加载失败则放弃
+' 加載廣告，如果加載失敗，則下載廣告列表，再次加載失敗則放棄
 Gui_dfLastTime = 0#
 Gui_nAdvertIndex = 0
-Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
+Gui_nAdvertTimes(0) = 10 ' 10秒鐘后開始播放廣告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
     DownloadAdvertList
@@ -327,7 +327,7 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
-' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
+' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
@@ -337,10 +337,10 @@ frmXQBooth.frmWeb.Width = frmHide.imgAdvert.Width
 frmXQBooth.frmWeb.Height = frmHide.imgAdvert.Height
 frmXQBooth.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
 
-' 主循环
+' 主循環
 App_bRunning = True
 Do While App_bRunning
-    ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
+    ' 播放廣告可以跟引擎和播放棋局同時進行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
     dfThisTime = Timer
     dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
     If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
@@ -354,7 +354,7 @@ Do While App_bRunning
     DoEvents
     Sleep 1
 Loop
-' 退出前下载广告列表
+' 退出前下載廣告列表
 If Gui_szAdvertDate <> Date Then
     DownloadAdvertList
     LoadAdvertList
@@ -362,7 +362,7 @@ If Gui_szAdvertDate <> Date Then
         Gui_szAdvertDate = Date
     End If
 End If
-' 关闭引擎
+' 關閉引擎
 PipeLineOutput Engine_pipe, "quit"
 dfLastTime = Timer
 Do While bLoaded
@@ -383,7 +383,7 @@ Do While bLoaded
 Loop
 PipeClose Engine_pipe
 If bLoaded Then
-    MsgBox "无法正常卸载引擎！", vbExclamation
+    MsgBox "無法正常卸載引擎！", vbExclamation
 End If
 ' 退出
 SaveRegs
@@ -393,6 +393,6 @@ Unload frmHide
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
+MsgBox "無法打開文件 " + App_szPath + ENDGAME_FILE, vbExclamation
 
 End Sub
