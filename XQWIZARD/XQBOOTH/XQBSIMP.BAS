@@ -22,17 +22,22 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "3.9"
+Public Const STRING_VERSION     As String = "3.91"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
+Public Const QUOTE_NUM          As Integer = 6      ' 名言条目数
+Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
 Public Const MAX_ADVERTS        As Integer = 100    ' 广告的最大条目数
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
+Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
 
 ' 全局变量
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Gui_bSounds              As Boolean  ' 音效
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_nCurr                As Integer  ' 当前残局的条目序号
@@ -43,6 +48,7 @@ Public Gui_nAdvertNum           As Integer  ' 广告数量
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每个广告的文件
 Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每个广告的时间(秒)
+Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
 ' 下载广告列表
@@ -51,7 +57,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -101,7 +107,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -114,7 +120,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
@@ -183,6 +189,7 @@ Public Sub LoadRegs()
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
+Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
 
@@ -194,42 +201,67 @@ Public Sub SaveRegs()
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 
 End Sub
 
 ' 检查更新
-Public Sub CheckUpdate()
+Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
-    Exit Sub
-End If
-Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
-If Not (Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
-    Exit Sub
-End If
-szWhatsNew = ""
-On Error Resume Next
-szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
-On Error GoTo 0
-If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-    szUrl = ""
-    On Error Resume Next
-    szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
-    On Error GoTo 0
-    If Left(szUrl, 7) <> "http://" Then
-        szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+    If bManual Then
+        MsgBox "无法访问 www.elephantbase.net，请稍后再试。", vbExclamation
     End If
-    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
 Else
-    Gui_szUpgradeVer = sz
+    Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
+        szWhatsNew = ""
+        On Error Resume Next
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        On Error GoTo 0
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+            szUrl = ""
+            On Error Resume Next
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            On Error GoTo 0
+            If Left(szUrl, 7) <> "http://" Then
+                szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+            End If
+            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+        Else
+            Gui_szUpgradeVer = sz
+        End If
+    Else
+        If bManual Then
+            MsgBox "您的“象棋巫师”已经是最新版本了。", vbInformation
+        End If
+    End If
 End If
+
+End Sub
+
+' 加载名言
+Public Sub LoadTips()
+
+Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
+Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
+Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
 
 End Sub
 
@@ -244,6 +276,7 @@ Dim dfThisTime As Double, dfLastTime As Double
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
+LoadTips
 
 ' 加载残局
 nFileNo = FreeFile
@@ -333,6 +366,7 @@ If Gui_szUpgradeDate <> Date Then
 End If
 
 frmXQBooth.Show
+frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
 frmXQBooth.frmWeb.Width = frmHide.imgAdvert.Width
 frmXQBooth.frmWeb.Height = frmHide.imgAdvert.Height
 frmXQBooth.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"

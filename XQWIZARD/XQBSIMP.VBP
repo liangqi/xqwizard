@@ -1,13 +1,14 @@
 Type=Exe
-Form=XQBOOTH\XQBSIMP.FRM
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
 Object={EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0; shdocvw.dll
+Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
+Form=XQBOOTH\XQBSIMP.FRM
 Module=mdlXQBooth; XQBOOTH\XQBSIMP.BAS
 Form=XQBOOTH\HIDE.FRM
 Module=mdlBase; BASE.BAS
 Module=mdlCChess; CCHESS.BAS
-Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
 Module=mdlPipe; PIPE.BAS
+ResFile32="XQBOOTH.RES"
 IconForm="frmXQBooth"
 Startup="Sub Main"
 HelpFile=""
@@ -43,6 +44,7 @@ Unattended=0
 Retained=0
 ThreadPerObject=0
 MaxNumberOfThreads=1
+DebugStartupOption=0
 
 [MS Transaction Server]
 AutoRefresh=1

@@ -52,7 +52,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
+         Location        =   "http:///"
       End
       Begin VB.CommandButton btnBlur 
          Default         =   -1  'True
@@ -837,6 +837,44 @@ Begin VB.Form frmXQBooth
          Caption         =   "离开(&X)"
       End
    End
+   Begin VB.Menu mnOptions 
+      Caption         =   "选项(&O)"
+      Begin VB.Menu mnOptionsBoard 
+         Caption         =   "棋盘(&B)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnOptionsPieces 
+         Caption         =   "棋子(&P)"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu mnOptionsSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnOptionsSounds 
+         Caption         =   "音效(&S)"
+      End
+   End
+   Begin VB.Menu mnHelp 
+      Caption         =   "帮助(&H)"
+      Begin VB.Menu mnHelpQuote 
+         Caption         =   "名言(&Q)..."
+      End
+      Begin VB.Menu mnHelpSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnHelpHome 
+         Caption         =   "象棋巫师的网站(&H)"
+      End
+      Begin VB.Menu mnHelpUpdate 
+         Caption         =   "检查最新版本(&P)"
+      End
+      Begin VB.Menu mnHelpSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnHelpAbout 
+         Caption         =   "关于象棋巫师(&A)..."
+      End
+   End
 End
 Attribute VB_Name = "frmXQBooth"
 Attribute VB_GlobalNameSpace = False
@@ -846,7 +884,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.9, Last Modified: Jan. 2009
+' Designed by Morning Yellow, Version: 3.91, Last Modified: Feb. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -877,7 +915,9 @@ Private nPhase As Integer, sqSelected As Integer, mvLast As Long
 
 Private Sub PlayWavSound(ByVal szSoundFile As String)
 
-PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+If Gui_bSounds Then
+    PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+End If
 
 End Sub
 
@@ -1075,6 +1115,43 @@ End If
 
 End Sub
 
+Private Sub mnOptionsSounds_Click()
+
+Gui_bSounds = Not Gui_bSounds
+mnOptionsSounds.Checked = Gui_bSounds
+
+End Sub
+
+Private Sub mnHelpQuote_Click()
+
+MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "名言", , ICON_QUOTE
+
+End Sub
+
+Private Sub mnHelpHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnHelpMantis_Click()
+
+ShellExecuteA 0, vbNullString, "http://mantis.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnHelpUpdate_Click()
+
+CheckUpdate MANUAL_UPDATE
+
+End Sub
+
+Private Sub mnHelpAbout_Click()
+
+MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+
+End Sub
+
 Private Sub btnPrev_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 btnPrev.Enabled = False
@@ -1128,3 +1205,4 @@ ElseIf sqSelected > 0 Then
 End If
 
 End Sub
+

@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.9"
+Public Const STRING_VERSION     As String = "3.91"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 6    ' 名言条目数
@@ -2609,17 +2609,17 @@ Gui_szTips(27) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此
         "　　您也可以将本软件的主页链接到自己的站点上。请您使用 http://www.elephantbase.net/ 作为链接的路径。"
 
 Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
 Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
 Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
 Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
 Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
 Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
 
 End Sub
 
