@@ -2608,17 +2608,17 @@ Gui_szTips(27) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此
         "　　您也可以將本軟件的主頁鏈接到自己的站點上。請您使用 http://www.elephantbase.net/ 作為鏈接的路徑。"
 
 Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
 Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公》"
 Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問》"
 Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張》"
 Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
 Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而篇》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而》"
 
 End Sub
 
