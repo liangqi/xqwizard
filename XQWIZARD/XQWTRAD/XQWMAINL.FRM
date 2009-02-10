@@ -158,7 +158,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
-            Object.ToolTipText     =   "··Ã®Àºøº"
+            Object.ToolTipText     =   "··≈_Àºøº"
             Style           =   1
          EndProperty
          BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
