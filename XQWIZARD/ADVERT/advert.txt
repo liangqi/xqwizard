@@ -1,5 +1,5 @@
 XQWizard Advert List
 elephantbase,30,281,5618
-xqwlight_ad,30,288,17943
-landlord_ad,30,288,11183
+xqwlight_ad,30,289,17943
+landlord_ad,30,289,11183
 mobilechess,30,287,10963
