@@ -837,6 +837,118 @@ Begin VB.Form frmXQBooth
          Caption         =   "置秨(&X)"
       End
    End
+   Begin VB.Menu mnOptions 
+      Caption         =   "匡兜(&O)"
+      Begin VB.Menu mnOptionsBoard_ 
+         Caption         =   "囱絃(&B)"
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "騌れ(&A)"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "厚︹瞶ホ(&B)"
+            Index           =   1
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "フ︹瞶ホ(&C)"
+            Index           =   2
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "ネ(&D)"
+            Index           =   3
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "礶ガ(&E)"
+            Index           =   4
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "簑(&F)"
+            Index           =   5
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "屡ぱフお(&G)"
+            Index           =   6
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "禜囱簍冀(&H)"
+            Index           =   7
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "ぱ囱絫(&I)"
+            Index           =   8
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "冠审(&J)"
+            Index           =   9
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "羇皑゜瑈(&K)"
+            Index           =   10
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "睱禜囱(&L)"
+            Index           =   11
+         End
+      End
+      Begin VB.Menu mnOptionsPieces_ 
+         Caption         =   "囱(&P)"
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "れㄨ(&A)"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "弘璓(&B)"
+            Index           =   1
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "緼(&C)"
+            Index           =   2
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "禜囱簍冀(&D)"
+            Index           =   3
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "ぱ囱絫(&E)"
+            Index           =   4
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "冠审(&F)"
+            Index           =   5
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "羇皑゜瑈(&G)"
+            Index           =   6
+         End
+      End
+      Begin VB.Menu mnOptionsSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnOptionsSounds 
+         Caption         =   "(&S)"
+      End
+   End
+   Begin VB.Menu mnHelp 
+      Caption         =   "腊(&H)"
+      Begin VB.Menu mnHelpQuote 
+         Caption         =   "ē(&Q)..."
+      End
+      Begin VB.Menu mnHelpSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnHelpHome 
+         Caption         =   "禜囱畍蔍(&H)"
+      End
+      Begin VB.Menu mnHelpUpdate 
+         Caption         =   "浪琩程穝セ(&P)"
+      End
+      Begin VB.Menu mnHelpSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnHelpAbout 
+         Caption         =   "闽禜囱畍(&A)..."
+      End
+   End
 End
 Attribute VB_Name = "frmXQBooth"
 Attribute VB_GlobalNameSpace = False
@@ -846,7 +958,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.9, Last Modified: Jan. 2009
+' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -875,9 +987,33 @@ Private Const PHASE_END As Integer = 2
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
 
+Private Function PieceFileName(ByVal nIndex As Integer) As String
+
+If nIndex = 30 Then
+    PieceFileName = "RKM"
+ElseIf nIndex = 31 Then
+    PieceFileName = "BKM"
+ElseIf nIndex >= 15 Then
+    PieceFileName = PieceFileName(nIndex - 15) + "S"
+Else
+    If nIndex = 0 Then
+        PieceFileName = "OO"
+    Else
+        If nIndex > 7 Then
+            PieceFileName = "B" + PieceByte(nIndex - 8)
+        Else
+            PieceFileName = "R" + PieceByte(nIndex - 1)
+        End If
+    End If
+End If
+
+End Function
+
 Private Sub PlayWavSound(ByVal szSoundFile As String)
 
-PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+If Gui_bSounds Then
+    PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+End If
 
 End Sub
 
@@ -907,8 +1043,18 @@ If bMate Then
     Next
     img.Move x, y
 End If
-
 img.Picture = frmHide.imgPieces(nPicId)
+
+End Sub
+
+Private Sub BoardFlush()
+
+Dim i As Integer, j As Integer
+For i = 3 To 12
+    For j = 3 To 11
+        DrawSquare i * 16 + j
+    Next
+Next
 
 End Sub
 
@@ -1003,7 +1149,6 @@ End Sub
 
 Private Sub LoadGame()
 
-Dim i As Integer, j As Integer, pc As Integer, nPicId As Integer
 Dim bPrev As Boolean, bNext As Boolean
 
 bPrev = Gui_nCurr > 0
@@ -1014,11 +1159,7 @@ mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
 Caption = "第" + Str(Gui_nCurr + 1) + " 關 - 象棋路邊攤"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
-For i = 3 To 12
-    For j = 3 To 11
-        DrawSquare i * 16 + j
-    Next
-Next
+BoardFlush
 sqSelected = 0
 mvLast = 0
 nPhase = PHASE_READY
@@ -1027,6 +1168,8 @@ End Sub
 
 Private Sub Form_Load()
 
+mnOptionsBoard_Click Gui_nBoard
+mnOptionsPieces_Click Gui_nPieces
 LoadGame
 
 End Sub
@@ -1072,6 +1215,75 @@ Private Sub mnGameExit_Click()
 If nPhase <> PHASE_BUSY Then
     Unload Me
 End If
+
+End Sub
+
+Private Sub mnOptionsBoard_Click(nIndex As Integer)
+
+Dim i As Integer
+On Error Resume Next
+imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
+        Choose(nIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", _
+        "CLOUDS", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "QIANHONG") + ".GIF")
+On Error GoTo 0
+For i = 0 To BOARD_MAX - 1
+    mnOptionsBoard(i).Checked = (nIndex = i)
+Next
+Gui_nBoard = nIndex
+
+End Sub
+
+Private Sub mnOptionsPieces_Click(nIndex As Integer)
+
+Dim i As Integer, sz As String
+sz = App_szPath + "IMAGES_S\" + Choose(nIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
+On Error Resume Next
+For i = 0 To 31
+    frmHide.imgPieces(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
+Next
+On Error GoTo 0
+For i = 0 To PIECES_MAX - 1
+    mnOptionsPieces(i).Checked = (nIndex = i)
+Next
+BoardFlush
+Gui_nPieces = nIndex
+
+End Sub
+
+Private Sub mnOptionsSounds_Click()
+
+Gui_bSounds = Not Gui_bSounds
+mnOptionsSounds.Checked = Gui_bSounds
+
+End Sub
+
+Private Sub mnHelpQuote_Click()
+
+MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "名言", , ICON_QUOTE
+
+End Sub
+
+Private Sub mnHelpHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnHelpMantis_Click()
+
+ShellExecuteA 0, vbNullString, "http://mantis.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnHelpUpdate_Click()
+
+CheckUpdate MANUAL_UPDATE
+
+End Sub
+
+Private Sub mnHelpAbout_Click()
+
+MsgBoxWithIcon "象棋巫師 " + STRING_VERSION + vbCrLf + "象棋百科全書 榮譽出品" + vbCrLf + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本產品符合GNU通用公共許可協議", "關于象棋巫師"
 
 End Sub
 

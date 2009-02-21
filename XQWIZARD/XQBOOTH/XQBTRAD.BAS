@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.9, Last Modified: Jan. 2009
+' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,17 +22,47 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "3.9"
+Public Const STRING_VERSION     As String = "3.92"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
+Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
+Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
 Public Const MAX_ADVERTS        As Integer = 100    ' 廣告的最大條目數
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 殘局的最大條目數
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 殘局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
+Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
+' 全局常量——棋盤(小)設置選項
+Public Const BOARD_WOOD       As Integer = 0
+Public Const BOARD_GREEN      As Integer = 1
+Public Const BOARD_WHITE      As Integer = 2
+Public Const BOARD_SHEET      As Integer = 3
+Public Const BOARD_CANVAS     As Integer = 4
+Public Const BOARD_DROPS      As Integer = 5
+Public Const BOARD_CLOUDS     As Integer = 6
+Public Const BOARD_XQSTUDIO   As Integer = 7
+Public Const BOARD_MOVESKY    As Integer = 8
+Public Const BOARD_MRSJ       As Integer = 9
+Public Const BOARD_ZMBL       As Integer = 10
+Public Const BOARD_QIANHONG   As Integer = 11
+Public Const BOARD_MAX        As Integer = 12
+' 全局常量——棋子(小)設置選項
+Public Const PIECES_WOOD      As Integer = 0
+Public Const PIECES_DELICATE  As Integer = 1
+Public Const PIECES_POLISH    As Integer = 2
+Public Const PIECES_XQSTUDIO  As Integer = 3
+Public Const PIECES_MOVESKY   As Integer = 4
+Public Const PIECES_MRSJ      As Integer = 5
+Public Const PIECES_ZMBL      As Integer = 6
+Public Const PIECES_MAX       As Integer = 7
 
 ' 全局變量
 Public App_szPath               As String   ' 主程序所在的文件夾，以"\"結尾
 Public App_bRunning             As Boolean  ' 程序運行標志，啟動時設成True，如果是False，則跳出事件檢測循環
 Public App_nEndgames            As Integer  ' 讀入的殘局數量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 讀入的殘局
+Public Gui_nBoard               As Integer  ' 棋盤
+Public Gui_nPieces              As Integer  ' 棋子
+Public Gui_bSounds              As Boolean  ' 音效
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
@@ -43,6 +73,7 @@ Public Gui_nAdvertNum           As Integer  ' 廣告數量
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
 Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每個廣告的文件
 Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每個廣告的時間(秒)
+Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
 ' 下載廣告列表
@@ -51,7 +82,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -101,7 +132,7 @@ End If
 nFileNo = FreeFile
 ' 下載htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -114,7 +145,7 @@ If sz <> "" Then
 End If
 ' 下載gif文件，二進制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
@@ -183,6 +214,9 @@ Public Sub LoadRegs()
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
+Gui_nBoard = Str2Int(GetSetting("XQBooth", "Gui", "Board", "0"), 0, BOARD_MAX - 1)
+Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX - 1)
+Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
 
@@ -194,42 +228,81 @@ Public Sub SaveRegs()
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQBooth", "Gui", "Board", LTrim(Str(Gui_nBoard))
+SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
+SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 
 End Sub
 
 ' 檢查更新
-Public Sub CheckUpdate()
+Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php")
 On Error GoTo 0
 If sz = "" Then
-    Exit Sub
-End If
-Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-If Not (Val(sz) > Val(STRING_VERSION) + 0.005 And Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
-    Exit Sub
-End If
-szWhatsNew = ""
-On Error Resume Next
-szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
-On Error GoTo 0
-If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
-    szUrl = ""
-    On Error Resume Next
-    szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_trad.txt")
-    On Error GoTo 0
-    If Left(szUrl, 7) <> "http://" Then
-        szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+    If bManual Then
+        MsgBox "無法訪問 www.elephantbase.net，請稍後再試。", vbExclamation
     End If
-    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
 Else
-    Gui_szUpgradeVer = sz
+    Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
+        szWhatsNew = ""
+        On Error Resume Next
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
+        On Error GoTo 0
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+            szUrl = ""
+            On Error Resume Next
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_trad.txt")
+            On Error GoTo 0
+            If Left(szUrl, 7) <> "http://" Then
+                szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+            End If
+            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+        Else
+            Gui_szUpgradeVer = sz
+        End If
+    Else
+        If bManual Then
+            MsgBox "您的“象棋巫師”已經是最新版本了。", vbInformation
+        End If
+    End If
 End If
+
+End Sub
+
+' 加載名言
+Public Sub LoadTips()
+
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?學而》"
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?衛靈公》"
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?憲問》"
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?子張》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?學而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語?述而》"
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子?第三十六章》"
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫于淵，國之利器不可以示人。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子?第三十六章》"
+Gui_szQuotes(9) = "　　圖難于其易；為大于其細。天下難事，必作于易；天下大事，必作于細。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子?第六十三章》"
+Gui_szQuotes(10) = "　　合抱之木，生于毫末；九層之臺，起于累土；千里之行，始于足下。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子?第六十四章》"
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法?地形》"
+Gui_szQuotes(12) = "　　怒可以复喜，慍可以复說，亡國不可以复存，死者不可以复生。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法?火攻》"
 
 End Sub
 
@@ -244,6 +317,7 @@ Dim dfThisTime As Double, dfLastTime As Double
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
+LoadTips
 
 ' 加載殘局
 nFileNo = FreeFile
@@ -333,6 +407,7 @@ If Gui_szUpgradeDate <> Date Then
 End If
 
 frmXQBooth.Show
+frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
 frmXQBooth.frmWeb.Width = frmHide.imgAdvert.Width
 frmXQBooth.frmWeb.Height = frmHide.imgAdvert.Height
 frmXQBooth.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
