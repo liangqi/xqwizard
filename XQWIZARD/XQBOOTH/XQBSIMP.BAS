@@ -31,12 +31,37 @@ Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
+' 全局常量——棋盘(小)设置选项
+Public Const BOARD_WOOD       As Integer = 0
+Public Const BOARD_GREEN      As Integer = 1
+Public Const BOARD_WHITE      As Integer = 2
+Public Const BOARD_SHEET      As Integer = 3
+Public Const BOARD_CANVAS     As Integer = 4
+Public Const BOARD_DROPS      As Integer = 5
+Public Const BOARD_CLOUDS     As Integer = 6
+Public Const BOARD_XQSTUDIO   As Integer = 7
+Public Const BOARD_MOVESKY    As Integer = 8
+Public Const BOARD_MRSJ       As Integer = 9
+Public Const BOARD_ZMBL       As Integer = 10
+Public Const BOARD_QIANHONG   As Integer = 11
+Public Const BOARD_MAX        As Integer = 12
+' 全局常量——棋子(小)设置选项
+Public Const PIECES_WOOD      As Integer = 0
+Public Const PIECES_DELICATE  As Integer = 1
+Public Const PIECES_POLISH    As Integer = 2
+Public Const PIECES_XQSTUDIO  As Integer = 3
+Public Const PIECES_MOVESKY   As Integer = 4
+Public Const PIECES_MRSJ      As Integer = 5
+Public Const PIECES_ZMBL      As Integer = 6
+Public Const PIECES_MAX       As Integer = 7
 
 ' 全局变量
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Gui_nBoard               As Integer  ' 棋盘
+Public Gui_nPieces              As Integer  ' 棋子
 Public Gui_bSounds              As Boolean  ' 音效
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
@@ -189,6 +214,8 @@ Public Sub LoadRegs()
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
+Gui_nBoard = Str2Int(GetSetting("XQBooth", "Gui", "Board", "0"), 0, BOARD_MAX - 1)
+Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX - 1)
 Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
@@ -201,6 +228,8 @@ Public Sub SaveRegs()
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQBooth", "Gui", "Board", LTrim(Str(Gui_nBoard))
+SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
 SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))

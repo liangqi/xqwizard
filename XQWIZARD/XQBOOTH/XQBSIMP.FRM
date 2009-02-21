@@ -52,7 +52,7 @@ Begin VB.Form frmXQBooth
          NoFolders       =   0   'False
          Transparent     =   0   'False
          ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   "http:///"
+         Location        =   ""
       End
       Begin VB.CommandButton btnBlur 
          Default         =   -1  'True
@@ -839,13 +839,87 @@ Begin VB.Form frmXQBooth
    End
    Begin VB.Menu mnOptions 
       Caption         =   "选项(&O)"
-      Begin VB.Menu mnOptionsBoard 
+      Begin VB.Menu mnOptionsBoard_ 
          Caption         =   "棋盘(&B)"
-         Enabled         =   0   'False
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "栎木(&A)"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "绿色大理石(&B)"
+            Index           =   1
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "白色大理石(&C)"
+            Index           =   2
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "再生纸(&D)"
+            Index           =   3
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "画布(&E)"
+            Index           =   4
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "水滴(&F)"
+            Index           =   5
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "蓝天白云(&G)"
+            Index           =   6
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "象棋演播室(&H)"
+            Index           =   7
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "弈天棋缘(&I)"
+            Index           =   8
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "梦入神机(&J)"
+            Index           =   9
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "纵马奔流(&K)"
+            Index           =   10
+         End
+         Begin VB.Menu mnOptionsBoard 
+            Caption         =   "浅红象棋(&L)"
+            Index           =   11
+         End
       End
-      Begin VB.Menu mnOptionsPieces 
+      Begin VB.Menu mnOptionsPieces_ 
          Caption         =   "棋子(&P)"
-         Enabled         =   0   'False
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "木刻(&A)"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "精致(&B)"
+            Index           =   1
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "光泽(&C)"
+            Index           =   2
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "象棋演播室(&D)"
+            Index           =   3
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "弈天棋缘(&E)"
+            Index           =   4
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "梦入神机(&F)"
+            Index           =   5
+         End
+         Begin VB.Menu mnOptionsPieces 
+            Caption         =   "纵马奔流(&G)"
+            Index           =   6
+         End
       End
       Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
@@ -884,7 +958,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.91, Last Modified: Feb. 2009
+' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -912,6 +986,28 @@ Private Const PHASE_END As Integer = 2
 
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
+
+Private Function PieceFileName(ByVal nIndex As Integer) As String
+
+If nIndex = 30 Then
+    PieceFileName = "RKM"
+ElseIf nIndex = 31 Then
+    PieceFileName = "BKM"
+ElseIf nIndex >= 15 Then
+    PieceFileName = PieceFileName(nIndex - 15) + "S"
+Else
+    If nIndex = 0 Then
+        PieceFileName = "OO"
+    Else
+        If nIndex > 7 Then
+            PieceFileName = "B" + PieceByte(nIndex - 8)
+        Else
+            PieceFileName = "R" + PieceByte(nIndex - 1)
+        End If
+    End If
+End If
+
+End Function
 
 Private Sub PlayWavSound(ByVal szSoundFile As String)
 
@@ -947,8 +1043,18 @@ If bMate Then
     Next
     img.Move x, y
 End If
-
 img.Picture = frmHide.imgPieces(nPicId)
+
+End Sub
+
+Private Sub BoardFlush()
+
+Dim i As Integer, j As Integer
+For i = 3 To 12
+    For j = 3 To 11
+        DrawSquare i * 16 + j
+    Next
+Next
 
 End Sub
 
@@ -1043,7 +1149,6 @@ End Sub
 
 Private Sub LoadGame()
 
-Dim i As Integer, j As Integer, pc As Integer, nPicId As Integer
 Dim bPrev As Boolean, bNext As Boolean
 
 bPrev = Gui_nCurr > 0
@@ -1054,11 +1159,7 @@ mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
 Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋路边摊"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
-For i = 3 To 12
-    For j = 3 To 11
-        DrawSquare i * 16 + j
-    Next
-Next
+BoardFlush
 sqSelected = 0
 mvLast = 0
 nPhase = PHASE_READY
@@ -1067,6 +1168,8 @@ End Sub
 
 Private Sub Form_Load()
 
+mnOptionsBoard_Click Gui_nBoard
+mnOptionsPieces_Click Gui_nPieces
 LoadGame
 
 End Sub
@@ -1112,6 +1215,38 @@ Private Sub mnGameExit_Click()
 If nPhase <> PHASE_BUSY Then
     Unload Me
 End If
+
+End Sub
+
+Private Sub mnOptionsBoard_Click(nIndex As Integer)
+
+Dim i As Integer
+On Error Resume Next
+imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
+        Choose(nIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", _
+        "CLOUDS", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "QIANHONG") + ".GIF")
+On Error GoTo 0
+For i = 0 To BOARD_MAX - 1
+    mnOptionsBoard(i).Checked = (nIndex = i)
+Next
+Gui_nBoard = nIndex
+
+End Sub
+
+Private Sub mnOptionsPieces_Click(nIndex As Integer)
+
+Dim i As Integer, sz As String
+sz = App_szPath + "IMAGES_S\" + Choose(nIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
+On Error Resume Next
+For i = 0 To 31
+    frmHide.imgPieces(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
+Next
+On Error GoTo 0
+For i = 0 To PIECES_MAX - 1
+    mnOptionsPieces(i).Checked = (nIndex = i)
+Next
+BoardFlush
+Gui_nPieces = nIndex
 
 End Sub
 
