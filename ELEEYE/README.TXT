@@ -136,10 +136,10 @@
 
 　　ElephantEye 必须在支持UCCI(如《象棋巫师》)的象棋程序下运行，《象棋巫师》安装程序包含了最近一个版本的 ElephantEye。
 　　《象棋巫师》简体中文版可以到下列站点下载：
-　　　　http://www.skycn.net/soft/24665.html (天空软件站) 
+　　　　http://www.skycn.com/soft/24665.html (天空软件站) 
 　　　　http://www.onlinedown.net/soft/38287.htm (华军软件园) 
 　　《象棋巫师》繁体中文版可以到下列站点下载：
-　　　　http://www.skycn.net/soft/35392.html (天空软件站) 
+　　　　http://www.skycn.com/soft/35392.html (天空软件站) 
 　　　　http://www.onlinedown.net/soft/47666.htm (华军软件园) 
 
 　　ElephantEye 的源程序包除了 ElephantEye 本身的源程序外，还包括以下几个附加模块：

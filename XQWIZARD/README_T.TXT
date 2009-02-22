@@ -17,8 +17,8 @@
 
 《象棋巫師》的安裝包建議到以下站點下載：
 (1) 天空軟件站
-http://www.skycn.net/soft/24665.html (簡体中文版)
-http://www.skycn.net/soft/35392.html (繁体中文版)
+http://www.skycn.com/soft/24665.html (簡体中文版)
+http://www.skycn.com/soft/35392.html (繁体中文版)
 (2) 華軍軟件園
 http://www.onlinedown.net/soft/38287.htm (簡体中文版)
 http://www.onlinedown.net/soft/47666.htm (繁体中文版)

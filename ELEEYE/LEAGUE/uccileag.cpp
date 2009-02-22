@@ -640,13 +640,13 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "      <dt>　　如果您已经安装《象棋巫师》软件，那么点击上面链接，《象棋巫师》就会自动打开棋局。</dt>\n");
   fprintf(fp, "      <dt>　　《象棋巫师》是免费软件，您可以访问以下页面，获得速度最快的下载链接：</dt>\n");
   fprintf(fp, "      <dt>　　(1) 《象棋巫师》简体中文版</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/24665.html\" target=\"_blank\">"
-      "http://www.skycn.net/soft/24665.html</a>(天空软件站)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.com/soft/24665.html\" target=\"_blank\">"
+      "http://www.skycn.com/soft/24665.html</a>(天空软件站)</dt>\n");
   fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/38287.htm\" target=\"_blank\">"
       "http://www.onlinedown.net/soft/38287.htm</a>(华军软件园)</dt>\n");
   fprintf(fp, "      <dt>　　(2) 《象棋巫师》繁体中文版</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.net/soft/35392.html\" target=\"_blank\">"
-      "http://www.skycn.net/soft/35392.html</a>(天空软件站)</dt>\n");
+  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.com/soft/35392.html\" target=\"_blank\">"
+      "http://www.skycn.com/soft/35392.html</a>(天空软件站)</dt>\n");
   fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/47666.htm\" target=\"_blank\">"
       "http://www.onlinedown.net/soft/47666.htm</a>(华军软件园)</dt>\n");
   fprintf(fp, "    </dl>\n");
