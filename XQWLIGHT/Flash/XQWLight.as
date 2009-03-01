@@ -140,13 +140,13 @@ package {
 			drawSquare(Position.DST(mvLast), bSelected);
 		}
 
-		private function playSound(nResponse:int) {
+		private function playSound(nResponse:int):void {
 			if (bSound) {
 				Sound(sndResponse[nResponse]).play();
 			}
 		}
 
-		private function setMessage(s:String) {
+		private function setMessage(s:String):void {
 			lblMessage.htmlText = "<b><i>" + s + "</b></i>";
 			lblMessage.visible = true;
 		}
