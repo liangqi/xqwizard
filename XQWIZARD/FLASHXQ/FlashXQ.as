@@ -22,8 +22,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 package {
 	import flash.display.SimpleButton;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
+	// import flash.net.navigateToURL;
+	// import flash.net.URLRequest;
 	import flash.text.TextField;
 
 	public class FlashXQ extends Sprite {
@@ -92,7 +96,7 @@ package {
 
 		// 绘制一个格子
 		private function drawSquare(sq:int, pc:int):void {
-			mcSquares[sq].gotoAndStop(pc + 1);
+			mcSquares[bFlipped ? 89 - sq : sq].gotoAndStop(pc + 1);
 		}
 
 		// 重绘棋盘上的所有格子
@@ -115,38 +119,19 @@ package {
 			txtStep.text = nCurrStep + "/" + nMaxStep;
 		}
 
-		private function clickFlip(e:MouseEvent):void {
-			bFlipped = !bFlipped;
-			initBoard();
-		}
-
-		private function clickBegin(e:MouseEvent):void {
-			flushBoard(0);
-		}
-
-		private function clickPrev10(e:MouseEvent):void {
-			flushBoard(nCurrStep - 10);
-		}
-
-		private function clickPrev(e:MouseEvent):void {
-			flushBoard(nCurrStep - 1);
-		}
-
-		private function clickNext(e:MouseEvent):void {
-			flushBoard(nCurrStep + 1);
-		}
-
-		private function clickNext10(e:MouseEvent):void {
-			flushBoard(nCurrStep + 10);
-		}
-
-		private function clickEnd(e:MouseEvent):void {
-			flushBoard(nMaxStep);
-		}
-
 		// 主过程从这里开始
 		public function FlashXQ() {
 			var i, j;
+
+			// 隐藏所有的提示
+			mcFlipTip.visible = false;
+			mcBeginTip.visible = false;
+			mcPrev10Tip.visible = false;
+			mcPrevTip.visible = false;
+			mcNextTip.visible = false;
+			mcNext10Tip.visible = false;
+			mcEndTip.visible = false;
+			mcAboutTip.visible = false;
 
 			// 初始化棋盘格子
 			for (i = 0; i < 10; i ++) {
@@ -243,13 +228,88 @@ package {
 			nCurrStep = (nStep < 0 ? 0 : nStep > nMaxStep ? nMaxStep : nStep);
 
 			initBoard();
-			btnFlip.addEventListener(MouseEvent.CLICK, clickFlip);
-			btnBegin.addEventListener(MouseEvent.CLICK, clickBegin);
-			btnPrev10.addEventListener(MouseEvent.CLICK, clickPrev10);
-			btnPrev.addEventListener(MouseEvent.CLICK, clickPrev);
-			btnNext.addEventListener(MouseEvent.CLICK, clickNext);
-			btnNext10.addEventListener(MouseEvent.CLICK, clickNext10);
-			btnEnd.addEventListener(MouseEvent.CLICK, clickEnd);
+			btnFlip.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				bFlipped = !bFlipped;
+				initBoard();
+			});
+			btnFlip.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcFlipTip.visible = true;
+				setChildIndex(mcFlipTip, numChildren - 1);
+			});
+			btnFlip.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcFlipTip.visible = false;
+			});
+			btnBegin.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(0);
+			});
+			btnBegin.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcBeginTip.visible = true;
+				setChildIndex(mcBeginTip, numChildren - 1);
+			});
+			btnBegin.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcBeginTip.visible = false;
+			});
+			btnPrev10.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(nCurrStep - 10);
+			});
+			btnPrev10.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcPrev10Tip.visible = true;
+				setChildIndex(mcPrev10Tip, numChildren - 1);
+			});
+			btnPrev10.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcPrev10Tip.visible = false;
+			});
+			btnPrev.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(nCurrStep - 1);
+			});
+			btnPrev.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcPrevTip.visible = true;
+				setChildIndex(mcPrevTip, numChildren - 1);
+			});
+			btnPrev.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcPrevTip.visible = false;
+			});
+			btnNext.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(nCurrStep + 1);
+			});
+			btnNext.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcNextTip.visible = true;
+				setChildIndex(mcNextTip, numChildren - 1);
+			});
+			btnNext.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcNextTip.visible = false;
+			});
+			btnNext10.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(nCurrStep + 10);
+			});
+			btnNext10.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcNext10Tip.visible = true;
+				setChildIndex(mcNext10Tip, numChildren - 1);
+			});
+			btnNext10.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcNext10Tip.visible = false;
+			});
+			btnEnd.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				flushBoard(nMaxStep);
+			});
+			btnEnd.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcEndTip.visible = true;
+				setChildIndex(mcEndTip, numChildren - 1);
+			});
+			btnEnd.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcEndTip.visible = false;
+			});
+			btnAbout.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				// navigateToURL(new URLRequest("http://www.elephantbase.net/xqwizard/xqwizard.htm"), "_blank");
+				ExternalInterface.call("window.open", "http://www.elephantbase.net/xqwizard/xqwizard.htm", "_blank");
+			});
+			btnAbout.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
+				mcAboutTip.visible = true;
+				setChildIndex(mcAboutTip, numChildren - 1);
+			});
+			btnAbout.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
+				mcAboutTip.visible = false;
+			});
 		}
 	}
 }

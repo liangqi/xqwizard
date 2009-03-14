@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
+' Designed by Morning Yellow, Version: 3.93, Last Modified: Mar. 2009
 ' Copyright (C) 2004-2008 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.92"
+Public Const STRING_VERSION     As String = "3.93"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -73,6 +73,10 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
+' 全局常量——Flash棋盘大小
+Public Const FLASHXQ_SMALL      As Integer = 0
+Public Const FLASHXQ_MEDIUM     As Integer = 1
+Public Const FLASHXQ_LARGE      As Integer = 2
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_WOOD       As Integer = 0
 Public Const BOARD_S_GREEN      As Integer = 1
@@ -168,6 +172,7 @@ Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
 Public Options_bEscapeDouble    As Boolean  ' 用两个Esc输入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盘
 Public Options_bMonoBitmap      As Boolean  ' 图片棋盘的红子用白底红字表示
+Public Options_nFlashXQ         As Integer  ' Flash棋盘尺寸
 Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自动翻转棋盘
 Public Options_bEngineName      As Boolean  ' 显示引擎名称
@@ -1431,9 +1436,21 @@ End Sub
 ' 生成Flash棋盘
 Public Sub CopyFlash()
 
-Dim i As Integer, szPosition As String, szFlash As String
-szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""216"" height=""264""" + _
-        " allowScriptAccess=""sameDomain"" quality=""high"" wmode=""transparent"" flashvars="""
+Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
+Select Case Options_nFlashXQ
+Case FLASHXQ_SMALL
+    szWidth = "216"
+    szHeight = "264"
+Case FLASHXQ_MEDIUM
+    szWidth = "324"
+    szHeight = "396"
+Case FLASHXQ_LARGE
+    szWidth = "432"
+    szHeight = "528"
+End Select
+szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" " + _
+        "width=""" + szWidth + """ height=""" + szHeight + """ " + _
+        "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars="""
 If Not Game_bStartPos Then
     szPosition = Game_szIrrevFen(0)
     szPosition = Replace(szPosition, " ", "+")
@@ -1447,9 +1464,8 @@ For i = 1 To Game_nMaxMove
 Next
 szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" />"
 If Not Game_bStartPos Then
-    szFlash = szFlash + "<p>" + Game_szIrrevFen(0) + "</p>"
+    szFlash = szFlash + "<br>" + Game_szIrrevFen(0)
 End If
-szFlash = szFlash + "<p>欢迎访问<a href=""http://www.elephantbase.net/"" target=""_blank"">www.elephantbase.net</a></p>"
 Clipboard.Clear
 Clipboard.SetText szFlash
 MsgBox "Flash棋盘代码已复制到剪贴板。", vbInformation
@@ -2685,6 +2701,7 @@ Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
+Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "0"), FLASHXQ_SMALL, FLASHXQ_LARGE)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
@@ -2743,6 +2760,7 @@ SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
 SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
 SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
 SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")
+SaveSetting "XQWizard", "Options", "FlashXQ", LTrim(Str(Options_nFlashXQ))
 SaveSetting "XQWizard", "Options", "MoveDelay", LTrim(Str(Options_nMoveDelay))
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
