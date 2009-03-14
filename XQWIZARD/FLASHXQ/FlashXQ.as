@@ -21,8 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 package {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -30,30 +28,6 @@ package {
 
 	public class FlashXQ extends Sprite {
 		private static const SQUARE_SIZE:int = 24;
-		private static const BITMAP_SIZE:int = 24;
-
-		private static const bmpOo:BitmapData = new EmptySquare(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRk:BitmapData = new RedKing(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRa:BitmapData = new RedAdvisor(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRb:BitmapData = new RedBishop(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRn:BitmapData = new RedKnight(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRr:BitmapData = new RedRook(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRc:BitmapData = new RedCannon(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpRp:BitmapData = new RedPawn(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBk:BitmapData = new BlackKing(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBa:BitmapData = new BlackAdvisor(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBb:BitmapData = new BlackBishop(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBn:BitmapData = new BlackKnight(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBr:BitmapData = new BlackRook(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBc:BitmapData = new BlackCannon(BITMAP_SIZE, BITMAP_SIZE);
-		private static const bmpBp:BitmapData = new BlackPawn(BITMAP_SIZE, BITMAP_SIZE);
-
-		// 棋子图片数组
-		private static const bmpPieces:Array = new Array(
-			bmpOo, null, null, null, null, null, null, null,
-			bmpRk, bmpRa, bmpRb, bmpRn, bmpRr, bmpRc, bmpRp, null,
-			bmpBk, bmpBa, bmpBb, bmpBn, bmpBr, bmpBc, bmpBp, null
-		);
 
 		// 把字符转换为数字
 		private static function char2Digit(c:String):int {
@@ -113,14 +87,12 @@ package {
 
 		private var bFlipped:Boolean = false;
 		private var nMaxStep:int, nCurrStep:int;
-		private var bmpSquares:Array = new Array(90);
+		private var mcSquares:Array = new Array(90);
 		private var sqBoardList:Array;
 
 		// 绘制一个格子
 		private function drawSquare(sq:int, pc:int):void {
-			bmpSquares[sq].bitmapData = bmpPieces[
-				pc >= 0 && pc < bmpPieces.length && bmpPieces[pc] != null ? pc : 0
-			];
+			mcSquares[sq].gotoAndStop(pc + 1);
 		}
 
 		// 重绘棋盘上的所有格子
@@ -180,10 +152,10 @@ package {
 			for (i = 0; i < 10; i ++) {
 				for (j = 0; j < 9; j ++) {
 					var sq:int = i * 9 + j;
-					bmpSquares[sq] = new Bitmap();
-					bmpSquares[sq].x = j * SQUARE_SIZE;
-					bmpSquares[sq].y = i * SQUARE_SIZE;
-					addChild(bmpSquares[sq]);
+					mcSquares[sq] = new Square();
+					mcSquares[sq].x = j * SQUARE_SIZE;
+					mcSquares[sq].y = i * SQUARE_SIZE;
+					addChild(mcSquares[sq]);
 				}
 			}
 
