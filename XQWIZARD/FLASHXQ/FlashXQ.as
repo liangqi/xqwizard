@@ -123,16 +123,6 @@ package {
 		public function FlashXQ() {
 			var i, j;
 
-			// 隐藏所有的提示
-			mcFlipTip.visible = false;
-			mcBeginTip.visible = false;
-			mcPrev10Tip.visible = false;
-			mcPrevTip.visible = false;
-			mcNextTip.visible = false;
-			mcNext10Tip.visible = false;
-			mcEndTip.visible = false;
-			mcAboutTip.visible = false;
-
 			// 初始化棋盘格子
 			for (i = 0; i < 10; i ++) {
 				for (j = 0; j < 9; j ++) {
@@ -228,87 +218,111 @@ package {
 			nCurrStep = (nStep < 0 ? 0 : nStep > nMaxStep ? nMaxStep : nStep);
 
 			initBoard();
+
+			// 按钮和提示 - 反转棋盘
+			mcFlipTip.gotoAndStop(0);
+			setChildIndex(mcFlipTip, numChildren - 1);
 			btnFlip.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				bFlipped = !bFlipped;
 				initBoard();
 			});
 			btnFlip.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcFlipTip.visible = true;
-				setChildIndex(mcFlipTip, numChildren - 1);
+				mcFlipTip.gotoAndPlay(0);
 			});
 			btnFlip.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcFlipTip.visible = false;
+				mcFlipTip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 起始局面
+			mcBeginTip.gotoAndStop(0);
+			setChildIndex(mcBeginTip, numChildren - 1);
 			btnBegin.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(0);
 			});
 			btnBegin.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcBeginTip.visible = true;
-				setChildIndex(mcBeginTip, numChildren - 1);
+				mcBeginTip.gotoAndPlay(0);
 			});
 			btnBegin.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcBeginTip.visible = false;
+				mcBeginTip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 后退十步
+			mcPrev10Tip.gotoAndStop(0);
+			setChildIndex(mcPrev10Tip, numChildren - 1);
 			btnPrev10.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(nCurrStep - 10);
 			});
 			btnPrev10.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcPrev10Tip.visible = true;
-				setChildIndex(mcPrev10Tip, numChildren - 1);
+				mcPrev10Tip.gotoAndPlay(0);
 			});
 			btnPrev10.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcPrev10Tip.visible = false;
+				mcPrev10Tip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 后退一步
+			mcPrevTip.gotoAndStop(0);
+			setChildIndex(mcPrevTip, numChildren - 1);
 			btnPrev.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(nCurrStep - 1);
 			});
 			btnPrev.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcPrevTip.visible = true;
-				setChildIndex(mcPrevTip, numChildren - 1);
+				mcPrevTip.gotoAndPlay(0);
 			});
 			btnPrev.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcPrevTip.visible = false;
+				mcPrevTip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 前进一步
+			mcNextTip.gotoAndStop(0);
+			setChildIndex(mcNextTip, numChildren - 1);
 			btnNext.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(nCurrStep + 1);
 			});
 			btnNext.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcNextTip.visible = true;
-				setChildIndex(mcNextTip, numChildren - 1);
+				mcNextTip.gotoAndPlay(0);
 			});
 			btnNext.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcNextTip.visible = false;
+				mcNextTip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 前进十步
+			mcNext10Tip.gotoAndStop(0);
+			setChildIndex(mcNext10Tip, numChildren - 1);
 			btnNext10.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(nCurrStep + 10);
 			});
 			btnNext10.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcNext10Tip.visible = true;
-				setChildIndex(mcNext10Tip, numChildren - 1);
+				mcNext10Tip.gotoAndPlay(0);
 			});
 			btnNext10.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcNext10Tip.visible = false;
+				mcNext10Tip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 结束局面
+			mcEndTip.gotoAndStop(0);
+			setChildIndex(mcEndTip, numChildren - 1);
 			btnEnd.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				flushBoard(nMaxStep);
 			});
 			btnEnd.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcEndTip.visible = true;
-				setChildIndex(mcEndTip, numChildren - 1);
+				mcEndTip.gotoAndPlay(0);
 			});
 			btnEnd.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcEndTip.visible = false;
+				mcEndTip.gotoAndStop(0);
 			});
+
+			// 按钮和提示 - 本Flash棋盘由象棋巫师生成
+			mcAboutTip.gotoAndStop(0);
+			setChildIndex(mcAboutTip, numChildren - 1);
 			btnAbout.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				// navigateToURL(new URLRequest("http://www.elephantbase.net/xqwizard/xqwizard.htm"), "_blank");
 				ExternalInterface.call("window.open", "http://www.elephantbase.net/xqwizard/xqwizard.htm", "_blank");
 			});
 			btnAbout.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent):void {
-				mcAboutTip.visible = true;
-				setChildIndex(mcAboutTip, numChildren - 1);
+				mcAboutTip.gotoAndPlay(0);
 			});
 			btnAbout.addEventListener(MouseEvent.MOUSE_OUT, function(e:MouseEvent):void {
-				mcAboutTip.visible = false;
+				mcAboutTip.gotoAndStop(0);
 			});
 		}
 	}
