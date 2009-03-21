@@ -219,7 +219,7 @@ package {
 
 			initBoard();
 
-			// 按钮和提示 - 反转棋盘
+			// 按钮和提示 - 翻转棋盘
 			mcFlipTip.gotoAndStop(0);
 			setChildIndex(mcFlipTip, numChildren - 1);
 			btnFlip.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
