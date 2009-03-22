@@ -8,7 +8,7 @@ package {
 			return a > b ? a : b;
 		}
 
-		public static function abs(a):int {
+		public static function abs(a:int):int {
 			return a < 0 ? -a : a;
 		}
 
