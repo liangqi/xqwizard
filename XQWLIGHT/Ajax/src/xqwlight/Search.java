@@ -21,13 +21,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqwlight;
 
-class HashItem {
+import java.io.Serializable;
+
+class HashItem implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	byte depth, flag;
 	short vl;
 	int mv, zobristLock;
 }
 
-public class Search {
+public class Search implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private static final int HASH_ALPHA = 1;
 	private static final int HASH_BETA = 2;
 	private static final int HASH_PV = 3;

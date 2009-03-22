@@ -22,9 +22,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package xqwlight;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Position {
+public class Position implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public static final int MATE_VALUE = 10000;
 	public static final int BAN_VALUE = MATE_VALUE - 100;
 	public static final int WIN_VALUE = MATE_VALUE - 200;
