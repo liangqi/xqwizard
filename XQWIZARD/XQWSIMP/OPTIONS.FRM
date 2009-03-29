@@ -27,14 +27,14 @@ Begin VB.Form frmOptions
       Caption         =   "其他"
       Height          =   615
       Left            =   3480
-      TabIndex        =   31
+      TabIndex        =   32
       Top             =   2640
       Width           =   3255
       Begin VB.CheckBox chkPromptSave 
          Caption         =   "提示保存棋局"
          Height          =   255
          Left            =   120
-         TabIndex        =   32
+         TabIndex        =   33
          Top             =   240
          Width           =   1455
       End
@@ -42,7 +42,7 @@ Begin VB.Form frmOptions
          Caption         =   "自动保存棋局"
          Height          =   255
          Left            =   1680
-         TabIndex        =   33
+         TabIndex        =   34
          Top             =   240
          Width           =   1455
       End
@@ -51,20 +51,20 @@ Begin VB.Form frmOptions
       Caption         =   "电脑"
       Height          =   2415
       Left            =   3480
-      TabIndex        =   16
+      TabIndex        =   17
       Top             =   120
       Width           =   3255
       Begin VB.TextBox txtMoveDelay 
          Height          =   285
          Left            =   960
-         TabIndex        =   18
+         TabIndex        =   19
          Top             =   240
          Width           =   360
       End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   30
+         TabIndex        =   31
          Top             =   2040
          Width           =   1215
       End
@@ -72,7 +72,7 @@ Begin VB.Form frmOptions
          Caption         =   "输出到状态栏"
          Height          =   255
          Left            =   1680
-         TabIndex        =   26
+         TabIndex        =   27
          Top             =   1320
          Width           =   1455
       End
@@ -80,7 +80,7 @@ Begin VB.Form frmOptions
          Caption         =   "显示思考时间"
          Height          =   255
          Left            =   120
-         TabIndex        =   25
+         TabIndex        =   26
          Top             =   1320
          Width           =   1455
       End
@@ -88,7 +88,7 @@ Begin VB.Form frmOptions
          Caption         =   "允许提和认输"
          Height          =   255
          Left            =   1680
-         TabIndex        =   24
+         TabIndex        =   25
          Top             =   960
          Width           =   1455
       End
@@ -96,7 +96,7 @@ Begin VB.Form frmOptions
          Caption         =   "启用后台思考"
          Height          =   255
          Left            =   120
-         TabIndex        =   23
+         TabIndex        =   24
          Top             =   960
          Width           =   1455
       End
@@ -104,7 +104,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   28
+         TabIndex        =   29
          Top             =   1680
          Width           =   1215
       End
@@ -112,7 +112,7 @@ Begin VB.Form frmOptions
          Caption         =   "自动翻转棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   21
+         TabIndex        =   22
          Top             =   600
          Width           =   1455
       End
@@ -120,14 +120,14 @@ Begin VB.Form frmOptions
          Caption         =   "显示引擎名称"
          Height          =   255
          Left            =   1680
-         TabIndex        =   22
+         TabIndex        =   23
          Top             =   600
          Width           =   1455
       End
       Begin ComCtl2.UpDown updnMoveDelay 
          Height          =   285
          Left            =   1320
-         TabIndex        =   19
+         TabIndex        =   20
          Top             =   240
          Width           =   195
          _ExtentX        =   344
@@ -135,7 +135,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196612
+         BuddyDispid     =   196613
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -149,7 +149,7 @@ Begin VB.Form frmOptions
          Caption         =   "秒"
          Height          =   255
          Left            =   1560
-         TabIndex        =   20
+         TabIndex        =   21
          Top             =   240
          Width           =   255
       End
@@ -157,7 +157,7 @@ Begin VB.Form frmOptions
          Caption         =   "走子延时"
          Height          =   255
          Left            =   120
-         TabIndex        =   17
+         TabIndex        =   18
          Top             =   240
          Width           =   735
       End
@@ -165,7 +165,7 @@ Begin VB.Form frmOptions
          Caption         =   "人机对弈用户"
          Height          =   255
          Left            =   480
-         TabIndex        =   29
+         TabIndex        =   30
          Top             =   2040
          Width           =   1095
       End
@@ -173,7 +173,7 @@ Begin VB.Form frmOptions
          Caption         =   "新局电脑状态"
          Height          =   255
          Left            =   480
-         TabIndex        =   27
+         TabIndex        =   28
          Top             =   1680
          Width           =   1095
       End
@@ -183,7 +183,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3840
-      TabIndex        =   35
+      TabIndex        =   36
       Top             =   3360
       Width           =   975
    End
@@ -191,7 +191,7 @@ Begin VB.Form frmOptions
       Caption         =   "确定"
       Height          =   375
       Left            =   2040
-      TabIndex        =   34
+      TabIndex        =   35
       Top             =   3360
       Width           =   975
    End
@@ -242,11 +242,19 @@ Begin VB.Form frmOptions
       TabIndex        =   5
       Top             =   840
       Width           =   3255
+      Begin VB.CheckBox chkPrintDigit 
+         Caption         =   "在印刷棋盘上下标注记谱数字"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   14
+         Top             =   1680
+         Width           =   2895
+      End
       Begin VB.ComboBox cmbFlashXQ 
          Height          =   300
          Left            =   1800
          Style           =   2  'Dropdown List
-         TabIndex        =   15
+         TabIndex        =   16
          Top             =   2040
          Width           =   1335
       End
@@ -254,8 +262,8 @@ Begin VB.Form frmOptions
          Caption         =   "用两个Esc输入ANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   11
-         Top             =   600
+         TabIndex        =   12
+         Top             =   960
          Width           =   1935
       End
       Begin VB.CheckBox chkMonoBitmap 
@@ -270,8 +278,8 @@ Begin VB.Form frmOptions
          Caption         =   "使用ANSI文本棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   12
-         Top             =   960
+         TabIndex        =   11
+         Top             =   600
          Width           =   1815
       End
       Begin ComCtl2.UpDown updnPlayIntv 
@@ -285,7 +293,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196637
+         BuddyDispid     =   196639
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -314,7 +322,7 @@ Begin VB.Form frmOptions
          Caption         =   "Flash棋盘大小"
          Height          =   255
          Left            =   480
-         TabIndex        =   14
+         TabIndex        =   15
          Top             =   2040
          Width           =   1215
       End
@@ -387,6 +395,7 @@ txtPlayIntv.Text = nPlayIntv
 chkEscapeDouble.Value = IIf(Options_bEscapeDouble, 1, 0)
 chkAnsiText.Value = IIf(Options_bAnsiText, 1, 0)
 chkMonoBitmap.Value = IIf(Options_bMonoBitmap, 1, 0)
+chkPrintDigit.Value = IIf(Options_bPrintDigit, 1, 0)
 cmbFlashXQ.ListIndex = Options_nFlashXQ
 nMoveDelay = Options_nMoveDelay
 txtMoveDelay.Text = nMoveDelay
@@ -434,6 +443,7 @@ Options_bAutoPlay = (chkAutoPlay.Value = 1)
 Options_bEscapeDouble = (chkEscapeDouble.Value = 1)
 Options_bAnsiText = (chkAnsiText.Value = 1)
 Options_bMonoBitmap = (chkMonoBitmap.Value = 1)
+Options_bPrintDigit = (chkPrintDigit.Value = 1)
 Options_nFlashXQ = cmbFlashXQ.ListIndex
 Options_nMoveDelay = nMoveDelay
 Options_bAutoFlip = (chkAutoFlip.Value = 1)

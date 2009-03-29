@@ -497,6 +497,7 @@ Source: "BMPBOART\BC.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOART\BP.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 ; 圖片棋盤文件
 Source: "PRINTBRT\PRINTBRD.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRT\PRINTBR2.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRT\RK.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRT\RA.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRT\RB.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion

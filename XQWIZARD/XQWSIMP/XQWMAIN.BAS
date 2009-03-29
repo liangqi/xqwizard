@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.93"
+Public Const STRING_VERSION     As String = "3.94"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -172,6 +172,7 @@ Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
 Public Options_bEscapeDouble    As Boolean  ' 用两个Esc输入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盘
 Public Options_bMonoBitmap      As Boolean  ' 图片棋盘的红子用白底红字表示
+Public Options_bPrintDigit      As Boolean  ' 印刷棋盘上下显示数字
 Public Options_nFlashXQ         As Integer  ' Flash棋盘尺寸
 Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自动翻转棋盘
@@ -1536,7 +1537,7 @@ Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
-szBmpFile = App_szPath + "PRINTBRD\PRINTBRD.BMP"
+szBmpFile = App_szPath + IIf(Options_bPrintDigit, "PRINTBRD\PRINTBR2.BMP", "PRINTBRD\PRINTBRD.BMP")
 On Error GoTo lnErrorOpen
 Open szBmpFile For Binary Access Read As #nReadFileNo
 On Error GoTo 0
@@ -1553,6 +1554,12 @@ For i = 1 To 394
         Put #nWriteFileNo, , lpReadBuff
     Next
 Next
+If Options_bPrintDigit Then
+    For i = 1 To 540
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
+End If
 Close #nReadFileNo
 For i = 0 To 9
     For j = 0 To 8
@@ -1566,7 +1573,7 @@ For i = 0 To 9
             Seek #nReadFileNo, 119
             For k = 0 To 33
                 Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + 119
+                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + IIf(Options_bPrintDigit, 5519, 119)
                 For l = 1 To 17
                     lpWriteBuff(l) = lpReadBuff(l)
                 Next
@@ -2701,6 +2708,7 @@ Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
+Options_bPrintDigit = (Str2Int(GetSetting("XQWizard", "Options", "PrintDigit", "1")) <> 0)
 Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "0"), FLASHXQ_SMALL, FLASHXQ_LARGE)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
@@ -2760,6 +2768,7 @@ SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
 SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
 SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
 SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")
+SaveSetting "XQWizard", "Options", "PrintDigit", IIf(Options_bPrintDigit, "1", "0")
 SaveSetting "XQWizard", "Options", "FlashXQ", LTrim(Str(Options_nFlashXQ))
 SaveSetting "XQWizard", "Options", "MoveDelay", LTrim(Str(Options_nMoveDelay))
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
@@ -2830,7 +2839,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2841,12 +2850,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
@@ -2872,7 +2881,7 @@ Public Sub DownloadAdvertList()
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -2922,7 +2931,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
+sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -2935,7 +2944,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next

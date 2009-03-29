@@ -497,6 +497,7 @@ Source: "BMPBOARD\BC.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 Source: "BMPBOARD\BP.BMP"; DestDir: "{app}\BMPBOARD"; Flags: ignoreversion
 ; Í¼Æ¬ÆåÅÌÎÄ¼þ
 Source: "PRINTBRD\PRINTBRD.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
+Source: "PRINTBRD\PRINTBR2.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\RK.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\RA.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
 Source: "PRINTBRD\RB.BMP"; DestDir: "{app}\PRINTBRD"; Flags: ignoreversion
