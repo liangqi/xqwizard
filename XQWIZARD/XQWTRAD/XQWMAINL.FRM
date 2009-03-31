@@ -191,7 +191,7 @@ Begin VB.Form frmMainLarge
          Offline         =   0
          Silent          =   0
          RegisterAsBrowser=   0
-         RegisterAsDropTarget=   1
+         RegisterAsDropTarget=   0
          AutoArrange     =   0   'False
          NoClientEdge    =   0   'False
          AlignLeft       =   0   'False
