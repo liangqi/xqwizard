@@ -7,28 +7,35 @@ function setGlobalText() {
 }
 
 function newWindow() {
-  var newForm = Browser.open(Browser.appPath() + "DEFAULT.HTM", function() {
+  var newForm = Browser.open(Browser.appPath + "DEFAULT.HTM", function() {
     alert("Loaded!");
   });
   newForm.Show();
-  newForm.BorderStyle = 3;
-/*
-  setTimeout(function () {
-    newForm.WebBrowser.Document.parentWindow.onEvent({text:text.value});
-  }, 5000);
-*/
+}
+
+function onClickMenuItem(index) {
+  alert(Form.MenuItem(index).Caption);
+}
+
+function popupMenu() {
+  Form.MenuItem(0).Caption = "Menu Item 1";
+  Form.Load(Form.MenuItem(1));
+  Form.MenuItem(1).Caption = "-";
+  Form.Load(Form.MenuItem(2));
+  Form.MenuItem(2).Caption = "Menu Item 2";
+  Form.Load(Form.MenuItem(3));
+  Form.MenuItem(3).Caption = "Menu Item 3";
+  Form.PopupMenu(Form.Menu, 0, 150, 150);
+}
+
+function callParent() {
+  if (Browser.parent != null) {
+    Browser.getWindow(Browser.parent).onEvent({text:text.value});
+  }
 }
 
 function closeWindow() {
-  Form.MenuItem(0).Caption = "ABC";
-  Form.LoadObject(Form.MenuItem(1));
-  Form.LoadObject(Form.MenuItem(2));
-  Form.LoadObject(Form.MenuItem(3));
-  Form.MenuItem(1).Caption = "-";
-  Form.MenuItem(2).Caption = "GHI";
-  Form.MenuItem(3).Caption = "FFF";
-  Form.PopupMenu(Form.Menu, 0, 150, 150);
-  // Form.UnloadObject(Form);
+  Form.UnloadObject(Form);
 }
 
 function popAllAttr(obj) {

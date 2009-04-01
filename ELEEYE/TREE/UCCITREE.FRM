@@ -276,7 +276,7 @@ End Sub
 
 Private Sub Form_Resize()
 
-If WindowState = 1 Then
+If WindowState = vbMinimized Then
     Exit Sub
 End If
 If Height < 3600 Then

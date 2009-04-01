@@ -1,5 +1,5 @@
 Type=Exe
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\STDOLE2.TLB#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
 Object={EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0; shdocvw.dll
 Form=BROWSER.FRM
 Module=mdlBrowser; BROWSER.BAS
@@ -7,6 +7,7 @@ Module=mdlBase; ..\base\BASE.BAS
 IconForm="frmBrowser"
 Startup="Sub Main"
 HelpFile=""
+ExeName32="BROWSER.EXE"
 Command32=""
 Name="prjBrowser"
 HelpContextID="0"
@@ -32,3 +33,6 @@ Unattended=0
 Retained=0
 ThreadPerObject=0
 MaxNumberOfThreads=1
+
+[MS Transaction Server]
+AutoRefresh=1

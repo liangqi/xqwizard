@@ -32,7 +32,7 @@ Begin VB.Form frmBrowser
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -50,10 +50,13 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Public Param As Object
+Private oParam As Object
 
 Private Sub Form_Resize()
 
+If WindowState = vbMinimized Then
+    Exit Sub
+End If
 WebBrowser.Width = Width - 120
 WebBrowser.Height = Height - 405
 
@@ -75,10 +78,9 @@ CallByName WebBrowser.Document.parentWindow, "onClickMenuItem", VbMethod, nIndex
 
 End Sub
 
-Public Function NewInstance(ByVal obj As Object) As frmBrowser
+Public Function NewInstance() As frmBrowser
 
 Set NewInstance = New frmBrowser
-Set NewInstance.Param = obj
 
 End Function
 
@@ -94,20 +96,20 @@ VB.Unload obj
 
 End Sub
 
+Public Property Get Param() As Object
+
+Set Param = oParam
+
+End Property
+
+Public Property Let Param(ByVal obj As Object)
+
+Set oParam = obj
+
+End Property
+
 Public Property Get App() As Object
 
 Set App = VB.App
-
-End Property
-
-Public Property Get GlobalMap() As Object
-
-Set GlobalMap = App_oGlobal
-
-End Property
-
-Public Property Let GlobalMap(ByVal oGlobal As Object)
-
-Set App_oGlobal = oGlobal
 
 End Property
