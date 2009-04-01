@@ -9,7 +9,7 @@ Begin VB.Form frmBrowser
    ScaleHeight     =   3195
    ScaleWidth      =   4680
    StartUpPosition =   3  'Windows Default
-   Begin SHDocVwCtl.WebBrowser wb 
+   Begin SHDocVwCtl.WebBrowser WebBrowser 
       Height          =   3255
       Left            =   0
       TabIndex        =   0
@@ -34,6 +34,14 @@ Begin VB.Form frmBrowser
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
       Location        =   "http:///"
    End
+   Begin VB.Menu Menu 
+      Caption         =   ""
+      Visible         =   0   'False
+      Begin VB.Menu MenuItem 
+         Caption         =   ""
+         Index           =   0
+      End
+   End
 End
 Attribute VB_Name = "frmBrowser"
 Attribute VB_GlobalNameSpace = False
@@ -42,21 +50,64 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Public Browser As clsBrowser
+Public Param As Object
 
 Private Sub Form_Resize()
 
-wb.Width = Width - 120
-wb.Height = Height - 405
+WebBrowser.Width = Width - 120
+WebBrowser.Height = Height - 405
 
 End Sub
 
-Private Sub wb_DocumentComplete(ByVal pDisp As Object, URL As Variant)
+Private Sub WebBrowser_DocumentComplete(ByVal pDisp As Object, URL As Variant)
 
-CallByName wb.Document.parentWindow, "eval", VbMethod, "var Browser = {}"
-Set wb.Document.parentWindow.Browser = Browser
-CallByName wb.Document.parentWindow, "eval", VbMethod, _
-        "if (Browser.GlobalMap == null) {Browser.GlobalMap = {}}"
-CallByName wb.Document.parentWindow, "main", VbMethod
+CallByName WebBrowser.Document.parentWindow, "eval", VbMethod, "Form = {}"
+Set WebBrowser.Document.parentWindow.Form = Me
+On Error Resume Next
+CallByName WebBrowser.Document.parentWindow, "main", VbMethod
+On Error GoTo 0
 
 End Sub
+
+Private Sub MenuItem_Click(nIndex As Integer)
+
+CallByName WebBrowser.Document.parentWindow, "onClickMenuItem", VbMethod, nIndex
+
+End Sub
+
+Public Function NewInstance(ByVal obj As Object) As frmBrowser
+
+Set NewInstance = New frmBrowser
+Set NewInstance.Param = obj
+
+End Function
+
+Public Sub Load(ByVal obj As Object)
+
+VB.Load obj
+
+End Sub
+
+Public Sub Unload(ByVal obj As Object)
+
+VB.Unload obj
+
+End Sub
+
+Public Property Get App() As Object
+
+Set App = VB.App
+
+End Property
+
+Public Property Get GlobalMap() As Object
+
+Set GlobalMap = App_oGlobal
+
+End Property
+
+Public Property Let GlobalMap(ByVal oGlobal As Object)
+
+Set App_oGlobal = oGlobal
+
+End Property

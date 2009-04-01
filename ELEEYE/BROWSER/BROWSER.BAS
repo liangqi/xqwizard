@@ -1,14 +1,16 @@
 Attribute VB_Name = "mdlBrowser"
 Option Explicit
 
-Public App_szPath As String, App_oGlobal As Object
+Public App_oGlobal As Object
 
 Public Sub Main()
 
-Dim Browser As New clsBrowser
 Set App_oGlobal = Nothing
-App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
-Browser.Load App_szPath + "DEFAULT.HTM"
-Browser.Form.Show
+Dim szPath As String
+szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+
+Dim newForm As New frmBrowser
+newForm.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
+newForm.Show
 
 End Sub
