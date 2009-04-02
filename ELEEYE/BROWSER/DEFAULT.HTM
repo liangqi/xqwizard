@@ -4,10 +4,15 @@
     <script language="javascript" src="browser.js"></script>
     <script language="javascript" src="default.js"></script>
   </head>
-  <body>
+  <body style="border:0px" border="0" onunload="return onClose()">
+    窗口样式
+    <input type="radio" name="style" onclick="Form.SetStyle(0)" />None
+    <input type="radio" name="style" onclick="Form.SetStyle(1)" />Single
+    <input type="radio" name="style" onclick="Form.SetStyle(2)" />Sizable
+    <input type="radio" name="style" onclick="Form.SetStyle(3)" />Dialog<br>
+    <input id="text" type="text" /><br>
     <input type="button" value="获取全局文本" onclick="getGlobalText()" />
-    <input id="text" type="text" />
-    <input type="button" value="设置全局文本" onclick="setGlobalText()" />
+    <input type="button" value="设置全局文本" onclick="setGlobalText()" /><br>
     <input type="button" value="打开新窗口" onclick="newWindow()" />
     <input type="button" value="弹出菜单" onclick="popupMenu()" />
     <input type="button" value="呼叫父窗口" onclick="callParent()" />

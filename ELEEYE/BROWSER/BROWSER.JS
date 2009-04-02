@@ -1,35 +1,97 @@
+var MB_ICONSTOP = 16;
+var MB_ICONQUESTION = 32;
+var MB_ICONEXCLAMATION = 48;
+var MB_ICONINFORMATION = 64;
+var MB_OKCANCEL = 1;
+var MB_ABORTRETRYIGNORE = 2;
+var MB_YESNOCANCEL = 3;
+var MB_YESNO = 4;
+var MB_RETRYCANCEL = 5;
+
+var STYLE_NONE = 0;
+var STYLE_FIXED = 1;
+var STYLE_SIZABLE = 2;
+var STYLE_DIALOG = 3;
+
 var Browser = {
-  global:{},
-  parent:null,
-  appPath:null,
-  open:function(htmlFile, callback) {
+  // Open a new Window
+  open:function(htmlFile, style, callback) {
     var newForm = Form.NewInstance();
+    newForm.SetStyle(style);
     newForm.Param = {global:Browser.global, parent:Form, onLoad:callback};
-    newForm.WebBrowser.Navigate2(htmlFile);
+    newForm.WebBrowser.Navigate2(Browser.appPath + htmlFile);
     return newForm;
   },
-  onLoad:function() {
+
+  // Retrieve "window.document" of another Window
+  getDocument:function(another) {
+    return another.WebBrowser.Document;
+  },
+
+  // Retrieve "window" of another Window
+  getWindow:function(another) {
+    return Browser.getDocument(another).parentWindow;
+  },
+
+  // Popup a Context Menu
+  popupMenu:function(arrMenu, x, y, callback) {
+    Browser.__clickMenu__ = callback;
+    for (var i = 0; i < arrMenu.length; i ++) {
+      var menuDesc = arrMenu[i];
+      var menuItem = Form.MenuItem(i);
+      if (i > 0) {
+        Form.Load(Form.MenuItem(i));
+      }
+      Form.MenuItem(i).Checked = (typeof menuDesc.checked == "boolean" ? menuDesc.checked : false);
+      Form.MenuItem(i).Enabled = (typeof menuDesc.enabled == "boolean" ? menuDesc.enabled : true);
+      Form.MenuItem(i).Caption = menuDesc.caption;
+    }
+    Form.PopupMenu(Form.Menu, 0, x * Browser.twipsPerPixelX, y * Browser.twipsPerPixelY);
+    for (var i = arrMenu.length - 1; i > 0; i --) {
+      Form.Unload(Form.MenuItem(i));
+    }
+  },
+
+  // Popup an Info Dialog
+  info:function(text, caption) {
+    Form.MessageBox(Form.hWnd, text, caption, MB_ICONINFORMATION);
+  },
+
+  // Popup an Exclaim Dialog
+  warn:function(text, caption) {
+    Form.MessageBox(Form.hWnd, text, caption, MB_ICONEXCLAMATION);
+  },
+
+  // Popup an Error Dialog
+  error:function(text, caption) {
+    Form.MessageBox(Form.hWnd, text, caption, MB_ICONSTOP);
+  },
+
+  // Popup a Question Dialog
+  confirm:function(text, caption) {
+    Form.MessageBox(Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL);
+  },
+
+  // Called in "DocumentComplete"
+  __init__:function() {
+    // appPath
     var path = Form.App.Path;
     if (path.substr(path.length - 1, 1) != "\\") {
       path += "\\";
     }
     Browser.appPath = path;
+
+    // twipsPerPixelX & twipsPerPixelY
+    Browser.twipsPerPixelX = Form.Screen.TwipsPerPixelX;
+    Browser.twipsPerPixelY = Form.Screen.TwipsPerPixelY;
+
+    // global, parent
     if (Form.Param != null) {
-      if (typeof Form.Param.global == "object") {
-        Browser.global = Form.Param.global;
-      }
-      if (typeof Form.Param.parent == "object") {
-        Browser.parent = Form.Param.parent;
-      }
+      Browser.global = (typeof Form.Param.global == "object" ? Form.Param.global : null);
+      Browser.parent = (typeof Form.Param.parent == "object" ? Form.Param.parent : null);
       if (typeof Form.Param.onLoad == "function") {
         Form.Param.onLoad();
       }
     }
-  },
-  getDocument:function(another) {
-    return another.WebBrowser.Document;
-  },
-  getWindow:function(another) {
-    return Browser.getDocument(another).parentWindow;
   }
 };

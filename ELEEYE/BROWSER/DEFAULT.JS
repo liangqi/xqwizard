@@ -7,25 +7,25 @@ function setGlobalText() {
 }
 
 function newWindow() {
-  var newForm = Browser.open(Browser.appPath + "DEFAULT.HTM", function() {
-    alert("Loaded!");
+  var newForm = Browser.open("DEFAULT.HTM", STYLE_DIALOG, function() {
+    Browser.info("Loaded!", "Test");
   });
   newForm.Show();
 }
 
-function onClickMenuItem(index) {
-  alert(Form.MenuItem(index).Caption);
-}
+var arrMyMenu = [
+  {caption:"Menu Item 1", checked:true},
+  {caption:"Menu Item 2", enabled:false},
+  {caption:"-"},
+  {caption:"-"},
+  {caption:"Menu Item 3", checked:false, enabled:true},
+  {caption:"Menu Item 4", checked:true, enabled:false}
+];
 
 function popupMenu() {
-  Form.MenuItem(0).Caption = "Menu Item 1";
-  Form.Load(Form.MenuItem(1));
-  Form.MenuItem(1).Caption = "-";
-  Form.Load(Form.MenuItem(2));
-  Form.MenuItem(2).Caption = "Menu Item 2";
-  Form.Load(Form.MenuItem(3));
-  Form.MenuItem(3).Caption = "Menu Item 3";
-  Form.PopupMenu(Form.Menu, 0, 150, 150);
+  Browser.popupMenu(arrMyMenu, 20, 20, function(index) {
+    Browser.info(Form.MenuItem(index).Caption, "Test");
+  });
 }
 
 function callParent() {
@@ -38,6 +38,14 @@ function closeWindow() {
   Form.UnloadObject(Form);
 }
 
+function onClose() {
+  alert("CLOSE!");
+}
+
+function onEvent(obj) {
+  Browser.info(obj.text + "/" + text.value, "Test");
+}
+
 function popAllAttr(obj) {
   var s = "";
   for (var key in obj) {
@@ -46,12 +54,10 @@ function popAllAttr(obj) {
   alert(s);
 }
 
-function onEvent(obj) {
-  alert(obj.text + "/" + text.value);
-}
-
 function main() {
-  Browser.onLoad();
+  if (Browser.global == null) {
+    Browser.global = {};
+  }
   if (typeof Browser.global.text != "string") {
     Browser.global.text = "null";
   }
