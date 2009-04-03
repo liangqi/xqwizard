@@ -7,7 +7,7 @@ Begin VB.Form frmXQBooth
    ClientTop       =   720
    ClientWidth     =   5640
    BeginProperty Font 
-      Name            =   "¼šÃ÷ów"
+      Name            =   "MingLiU"
       Size            =   9
       Charset         =   136
       Weight          =   400
@@ -21,48 +21,6 @@ Begin VB.Form frmXQBooth
    ScaleMode       =   0  'User
    ScaleWidth      =   5640
    StartUpPosition =   3  'Windows Default
-   Begin VB.Frame frmWeb 
-      BorderStyle     =   0  'None
-      Height          =   975
-      Left            =   960
-      TabIndex        =   2
-      Top             =   6240
-      Width           =   3735
-      Begin SHDocVwCtl.WebBrowser web 
-         Height          =   1335
-         Left            =   -120
-         TabIndex        =   3
-         TabStop         =   0   'False
-         Top             =   -120
-         Width           =   4335
-         ExtentX         =   7646
-         ExtentY         =   2143
-         ViewMode        =   0
-         Offline         =   0
-         Silent          =   0
-         RegisterAsBrowser=   0
-         RegisterAsDropTarget=   0
-         AutoArrange     =   0   'False
-         NoClientEdge    =   0   'False
-         AlignLeft       =   0   'False
-         NoWebView       =   0   'False
-         HideFileNames   =   0   'False
-         SingleClick     =   0   'False
-         SingleSelection =   0   'False
-         NoFolders       =   0   'False
-         Transparent     =   0   'False
-         ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
-      End
-      Begin VB.CommandButton btnBlur 
-         Default         =   -1  'True
-         Height          =   735
-         Left            =   120
-         TabIndex        =   4
-         Top             =   120
-         Width           =   735
-      End
-   End
    Begin VB.CommandButton btnNext 
       Caption         =   "¤U¤@Ãö"
       Height          =   975
@@ -84,6 +42,40 @@ Begin VB.Form frmXQBooth
       TabStop         =   0   'False
       Top             =   6240
       Width           =   975
+   End
+   Begin SHDocVwCtl.WebBrowser web 
+      Height          =   975
+      Left            =   960
+      TabIndex        =   3
+      TabStop         =   0   'False
+      Top             =   6240
+      Width           =   3735
+      ExtentX         =   6588
+      ExtentY         =   1720
+      ViewMode        =   0
+      Offline         =   0
+      Silent          =   0
+      RegisterAsBrowser=   0
+      RegisterAsDropTarget=   0
+      AutoArrange     =   0   'False
+      NoClientEdge    =   0   'False
+      AlignLeft       =   0   'False
+      NoWebView       =   0   'False
+      HideFileNames   =   0   'False
+      SingleClick     =   0   'False
+      SingleSelection =   0   'False
+      NoFolders       =   0   'False
+      Transparent     =   0   'False
+      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
+      Location        =   "http:///"
+   End
+   Begin VB.CommandButton btnBlur 
+      Default         =   -1  'True
+      Height          =   735
+      Left            =   1080
+      TabIndex        =   2
+      Top             =   6360
+      Width           =   735
    End
    Begin VB.Image imgSquares 
       Height          =   615

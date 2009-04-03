@@ -1,6 +1,7 @@
 Type=Exe
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\STDOLE2.TLB#OLE Automation
 Object={EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0; shdocvw.dll
+Reference=*\G{D31843C3-C275-11D1-ABEE-602546C11E08}#1.0#0#WBCustomizer.dll#Microsoft WebBrowser Customizer Sample Object
 Form=BROWSER.FRM
 Module=mdlBrowser; BROWSER.BAS
 Module=mdlBase; ..\base\BASE.BAS

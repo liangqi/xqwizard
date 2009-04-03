@@ -1,8 +1,6 @@
 Attribute VB_Name = "mdlBrowser"
 Option Explicit
 
-Public Declare Function MessageBoxA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal szText As String, ByVal szCaption As String, ByVal dwType As Long) As Long
-
 Private App_bRunning As Boolean
 
 Public Sub Main()

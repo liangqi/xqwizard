@@ -1,5 +1,5 @@
-XQWizard Advert List
-elephantbase,30,303,5618
-xqwlight_ad,30,314,17943
-landlord_ad,30,314,11183
-mobilechess,30,309,10963
+www.elephantbase.net Advert List
+elephantbase,30,287,5618
+xqwlight_ad,30,294,17943
+landlord_ad,30,294,11183
+mobilechess,30,293,10963

@@ -27,14 +27,14 @@ Begin VB.Form frmOptions
       Caption         =   "¨ä¥L"
       Height          =   615
       Left            =   3480
-      TabIndex        =   31
+      TabIndex        =   32
       Top             =   2640
       Width           =   3255
       Begin VB.CheckBox chkPromptSave 
          Caption         =   "´£¥Ü«O¦s´Ñ§½"
          Height          =   255
          Left            =   120
-         TabIndex        =   32
+         TabIndex        =   33
          Top             =   240
          Width           =   1455
       End
@@ -42,7 +42,7 @@ Begin VB.Form frmOptions
          Caption         =   "¦Û°Ê«O¦s´Ñ§½"
          Height          =   255
          Left            =   1680
-         TabIndex        =   33
+         TabIndex        =   34
          Top             =   240
          Width           =   1455
       End
@@ -51,20 +51,20 @@ Begin VB.Form frmOptions
       Caption         =   "¹q¸£"
       Height          =   2415
       Left            =   3480
-      TabIndex        =   16
+      TabIndex        =   17
       Top             =   120
       Width           =   3255
       Begin VB.TextBox txtMoveDelay 
          Height          =   285
          Left            =   960
-         TabIndex        =   18
+         TabIndex        =   19
          Top             =   240
          Width           =   360
       End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   30
+         TabIndex        =   31
          Top             =   2040
          Width           =   1215
       End
@@ -72,7 +72,7 @@ Begin VB.Form frmOptions
          Caption         =   "¿é¥X¨ìª¬ºAÄæ"
          Height          =   255
          Left            =   1680
-         TabIndex        =   26
+         TabIndex        =   27
          Top             =   1320
          Width           =   1455
       End
@@ -80,7 +80,7 @@ Begin VB.Form frmOptions
          Caption         =   "Åã¥Ü«ä¦Ò®É¶¡"
          Height          =   255
          Left            =   120
-         TabIndex        =   25
+         TabIndex        =   26
          Top             =   1320
          Width           =   1455
       End
@@ -88,15 +88,15 @@ Begin VB.Form frmOptions
          Caption         =   "¤¹³\´£©M»{¿é"
          Height          =   255
          Left            =   1680
-         TabIndex        =   24
+         TabIndex        =   25
          Top             =   960
          Width           =   1455
       End
       Begin VB.CheckBox chkAlwaysPonder 
-         Caption         =   "±Ò¥Î«á¥x«ä¦Ò"
+         Caption         =   "±Ò¥Î¦Z¥x«ä¦Ò"
          Height          =   255
          Left            =   120
-         TabIndex        =   23
+         TabIndex        =   24
          Top             =   960
          Width           =   1455
       End
@@ -104,7 +104,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   28
+         TabIndex        =   29
          Top             =   1680
          Width           =   1215
       End
@@ -112,7 +112,7 @@ Begin VB.Form frmOptions
          Caption         =   "¦Û°ÊÂ½Âà´Ñ½L"
          Height          =   255
          Left            =   120
-         TabIndex        =   21
+         TabIndex        =   22
          Top             =   600
          Width           =   1455
       End
@@ -120,14 +120,14 @@ Begin VB.Form frmOptions
          Caption         =   "Åã¥Ü¤ÞÀº¦WºÙ"
          Height          =   255
          Left            =   1680
-         TabIndex        =   22
+         TabIndex        =   23
          Top             =   600
          Width           =   1455
       End
       Begin ComCtl2.UpDown updnMoveDelay 
          Height          =   285
          Left            =   1320
-         TabIndex        =   19
+         TabIndex        =   20
          Top             =   240
          Width           =   195
          _ExtentX        =   344
@@ -135,7 +135,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196612
+         BuddyDispid     =   196613
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -149,7 +149,7 @@ Begin VB.Form frmOptions
          Caption         =   "¬í"
          Height          =   255
          Left            =   1560
-         TabIndex        =   20
+         TabIndex        =   21
          Top             =   240
          Width           =   255
       End
@@ -157,7 +157,7 @@ Begin VB.Form frmOptions
          Caption         =   "¨«¤l©µ®É"
          Height          =   255
          Left            =   120
-         TabIndex        =   17
+         TabIndex        =   18
          Top             =   240
          Width           =   735
       End
@@ -165,7 +165,7 @@ Begin VB.Form frmOptions
          Caption         =   "¤HÉó¹ï«Ù¥Î¤á"
          Height          =   255
          Left            =   480
-         TabIndex        =   29
+         TabIndex        =   30
          Top             =   2040
          Width           =   1095
       End
@@ -173,7 +173,7 @@ Begin VB.Form frmOptions
          Caption         =   "·s§½¹q¸£ª¬ºA"
          Height          =   255
          Left            =   480
-         TabIndex        =   27
+         TabIndex        =   28
          Top             =   1680
          Width           =   1095
       End
@@ -183,7 +183,7 @@ Begin VB.Form frmOptions
       Caption         =   "¨ú®ø"
       Height          =   375
       Left            =   3840
-      TabIndex        =   35
+      TabIndex        =   36
       Top             =   3360
       Width           =   975
    End
@@ -191,7 +191,7 @@ Begin VB.Form frmOptions
       Caption         =   "ÚÌ©w"
       Height          =   375
       Left            =   2040
-      TabIndex        =   34
+      TabIndex        =   35
       Top             =   3360
       Width           =   975
    End
@@ -237,33 +237,49 @@ Begin VB.Form frmOptions
    End
    Begin VB.Frame frmWizard 
       Caption         =   "Å]ªk"
-      Height          =   2295
+      Height          =   2415
       Left            =   120
       TabIndex        =   5
-      Top             =   960
+      Top             =   840
       Width           =   3255
+      Begin VB.CheckBox chkPrintDigit 
+         Caption         =   "¦b¦L¨ê´Ñ½L¤W¤U¼Ðª`°OÃÐ¼Æ¦r"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   14
+         Top             =   1680
+         Width           =   2895
+      End
+      Begin VB.ComboBox cmbFlashXQ 
+         Height          =   300
+         Left            =   1800
+         Style           =   2  'Dropdown List
+         TabIndex        =   16
+         Top             =   2040
+         Width           =   1335
+      End
       Begin VB.CheckBox chkEscapeDouble 
          Caption         =   "¥Î¨â­ÓEsc¿é¤JANSI"
          Height          =   255
          Left            =   120
-         TabIndex        =   13
-         Top             =   1200
+         TabIndex        =   12
+         Top             =   960
          Width           =   1935
       End
       Begin VB.CheckBox chkMonoBitmap 
          Caption         =   "¹Ï¤ù´Ñ½Lªº¬õ¤l¥Î¥Õ©³¬õ¦rªí¥Ü"
          Height          =   255
          Left            =   120
-         TabIndex        =   15
-         Top             =   1920
+         TabIndex        =   13
+         Top             =   1320
          Width           =   2895
       End
       Begin VB.CheckBox chkAnsiText 
          Caption         =   "¨Ï¥ÎANSI¤å¥»´Ñ½L"
          Height          =   255
          Left            =   120
-         TabIndex        =   14
-         Top             =   1560
+         TabIndex        =   11
+         Top             =   600
          Width           =   1815
       End
       Begin ComCtl2.UpDown updnPlayIntv 
@@ -277,7 +293,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196637
+         BuddyDispid     =   196639
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -301,6 +317,14 @@ Begin VB.Form frmOptions
          TabIndex        =   6
          Top             =   240
          Width           =   1095
+      End
+      Begin VB.Label lblFlashXQ 
+         Caption         =   "Flash´Ñ½L¤j¤p"
+         Height          =   255
+         Left            =   480
+         TabIndex        =   15
+         Top             =   2040
+         Width           =   1215
       End
       Begin VB.Label lblPlayIntv 
          Caption         =   "¼½©ñ©µ®É"
@@ -328,8 +352,8 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.7, Last Modified: Apr. 2008
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.93, Last Modified: Mar. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -351,12 +375,16 @@ Private nPlayIntv As Integer, nMoveDelay As Integer
 
 Private Sub Form_Load()
 
+cmbFlashXQ.Clear
+cmbFlashXQ.AddItem "Ð¡(216x264)"
+cmbFlashXQ.AddItem "ÖÐ(324x396)"
+cmbFlashXQ.AddItem "´ó(432x528)"
 cmbEnginePlay.Clear
 cmbEnginePlay.AddItem "²»†¢ÓÃëŠÄX", 0
 cmbEnginePlay.AddItem "ëŠÄXˆÌ¼t", 1
 cmbEnginePlay.AddItem "ëŠÄXˆÌºÚ", 2
 cmbEnginePlay.AddItem "¼tºÚÝ†Á÷", 3
-cmbEnginePlay.AddItem "¼tºÚëS»ú", 4
+cmbEnginePlay.AddItem "¼tºÚëS™C", 4
 
 optSmallGui.Value = Not Options_bLargeGui
 optLargeGui.Value = Options_bLargeGui
@@ -367,6 +395,8 @@ txtPlayIntv.Text = nPlayIntv
 chkEscapeDouble.Value = IIf(Options_bEscapeDouble, 1, 0)
 chkAnsiText.Value = IIf(Options_bAnsiText, 1, 0)
 chkMonoBitmap.Value = IIf(Options_bMonoBitmap, 1, 0)
+chkPrintDigit.Value = IIf(Options_bPrintDigit, 1, 0)
+cmbFlashXQ.ListIndex = Options_nFlashXQ
 nMoveDelay = Options_nMoveDelay
 txtMoveDelay.Text = nMoveDelay
 chkAutoFlip.Value = IIf(Options_bAutoFlip, 1, 0)
@@ -413,6 +443,8 @@ Options_bAutoPlay = (chkAutoPlay.Value = 1)
 Options_bEscapeDouble = (chkEscapeDouble.Value = 1)
 Options_bAnsiText = (chkAnsiText.Value = 1)
 Options_bMonoBitmap = (chkMonoBitmap.Value = 1)
+Options_bPrintDigit = (chkPrintDigit.Value = 1)
+Options_nFlashXQ = cmbFlashXQ.ListIndex
 Options_nMoveDelay = nMoveDelay
 Options_bAutoFlip = (chkAutoFlip.Value = 1)
 Options_bEngineName = (chkEngineName.Value = 1)

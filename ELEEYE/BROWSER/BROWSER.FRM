@@ -31,7 +31,7 @@ Begin VB.Form frmBrowser
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -49,6 +49,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Declare Function MessageBoxA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal szText As String, ByVal szCaption As String, ByVal dwType As Long) As Long
+
 Private Const GWL_STYLE As Long = -16
 
 Private Const WS_MAXIMIZEBOX    As Long = &H10000
@@ -61,11 +63,13 @@ Private Const WS_VISIBLE        As Long = &H10000000
 Private Const SWP_FRAMECHANGED  As Long = &H20
 Private Const SWP_NOZORDER      As Long = 4
 
-Private oParam As Object, dwStyle As Long
+Private oParam As Object, wbc As New WBCustomizer
 
 Private Sub Form_Load()
 
-WebBrowser.hWnd
+wbc.EnableAllAccelerators = False
+wbc.EnableContextMenus = False
+Set wbc.WebBrowser = WebBrowser
 
 End Sub
 
@@ -166,7 +170,7 @@ End Sub
 
 Public Function MessageBox(ByVal hWnd As Long, ByVal szText As String, ByVal szCaption As String, ByVal dwType As Long)
 
-MessageBox = mdlBrowser.MessageBoxA(hWnd, szText, szCaption, dwType)
+MessageBox = MessageBoxA(hWnd, szText, szCaption, dwType)
 
 End Function
 

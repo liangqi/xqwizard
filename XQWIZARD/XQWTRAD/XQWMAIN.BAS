@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
-' Copyright (C) 2004-2008 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.94, Last Modified: Apr. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "3.92"
+Public Const STRING_VERSION     As String = "3.94"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -73,6 +73,10 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
+' 全局常量——Flash棋盘大小
+Public Const FLASHXQ_SMALL      As Integer = 0
+Public Const FLASHXQ_MEDIUM     As Integer = 1
+Public Const FLASHXQ_LARGE      As Integer = 2
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_WOOD       As Integer = 0
 Public Const BOARD_S_GREEN      As Integer = 1
@@ -168,6 +172,8 @@ Public Options_nPlayIntv        As Integer  ' 播放間隔(秒)
 Public Options_bEscapeDouble    As Boolean  ' 用兩個Esc輸入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盤
 Public Options_bMonoBitmap      As Boolean  ' 圖片棋盤的紅子用白底紅字表示
+Public Options_bPrintDigit      As Boolean  ' 印刷棋盘上下显示数字
+Public Options_nFlashXQ         As Integer  ' Flash棋盘尺寸
 Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自動翻轉棋盤
 Public Options_bEngineName      As Boolean  ' 顯示引擎名稱
@@ -1367,18 +1373,12 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
-                Timer_bEnabled = False
-                App_frmMain.mnEngineLevel.Checked = False
-                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
-                Timer_bEnabled = False
-                App_frmMain.mnEngineLevel.Checked = False
-                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             Else
                 Engine_nStatus = IDLE_READY
@@ -1436,9 +1436,21 @@ End Sub
 ' 生成Flash棋盘
 Public Sub CopyFlash()
 
-Dim i As Integer, szPosition As String, szFlash As String
-szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""216"" height=""264""" + _
-        " allowScriptAccess=""sameDomain"" quality=""high"" wmode=""transparent"" flashvars="""
+Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
+Select Case Options_nFlashXQ
+Case FLASHXQ_SMALL
+    szWidth = "216"
+    szHeight = "264"
+Case FLASHXQ_MEDIUM
+    szWidth = "324"
+    szHeight = "396"
+Case FLASHXQ_LARGE
+    szWidth = "432"
+    szHeight = "528"
+End Select
+szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" " + _
+        "width=""" + szWidth + """ height=""" + szHeight + """ " + _
+        "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars="""
 If Not Game_bStartPos Then
     szPosition = Game_szIrrevFen(0)
     szPosition = Replace(szPosition, " ", "+")
@@ -1452,9 +1464,8 @@ For i = 1 To Game_nMaxMove
 Next
 szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" />"
 If Not Game_bStartPos Then
-    szFlash = szFlash + "<p>" + Game_szIrrevFen(0) + "</p>"
+    szFlash = szFlash + "<br>" + Game_szIrrevFen(0)
 End If
-szFlash = szFlash + "<p>歡迎訪問<a href=""http://www.elephantbase.net/"" target=""_blank"">www.elephantbase.net</a></p>"
 Clipboard.Clear
 Clipboard.SetText szFlash
 MsgBox "Flash棋盤代碼已复制到剪貼板。", vbInformation
@@ -1525,7 +1536,7 @@ Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To
 Dim i As Integer, j As Integer, k As Integer, l As Integer
 Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
 nReadFileNo = FreeFile
-szBmpFile = App_szPath + "PRINTBRD\PRINTBRD.BMP"
+szBmpFile = App_szPath + IIf(Options_bPrintDigit, "PRINTBRD\PRINTBR2.BMP", "PRINTBRD\PRINTBRD.BMP")
 On Error GoTo lnErrorOpen
 Open szBmpFile For Binary Access Read As #nReadFileNo
 On Error GoTo 0
@@ -1542,6 +1553,12 @@ For i = 1 To 394
         Put #nWriteFileNo, , lpReadBuff
     Next
 Next
+If Options_bPrintDigit Then
+    For i = 1 To 540
+        Get #nReadFileNo, , lpReadBuff
+        Put #nWriteFileNo, , lpReadBuff
+    Next
+End If
 Close #nReadFileNo
 For i = 0 To 9
     For j = 0 To 8
@@ -1555,7 +1572,7 @@ For i = 0 To 9
             Seek #nReadFileNo, 119
             For k = 0 To 33
                 Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + 119
+                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + IIf(Options_bPrintDigit, 5519, 119)
                 For l = 1 To 17
                     lpWriteBuff(l) = lpReadBuff(l)
                 Next
@@ -1942,12 +1959,18 @@ Else
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
+                Timer_bEnabled = False
+                App_frmMain.mnEngineLevel.Checked = False
+                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
@@ -2684,6 +2707,8 @@ Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 
 Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
+Options_bPrintDigit = (Str2Int(GetSetting("XQWizard", "Options", "PrintDigit", "1")) <> 0)
+Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "0"), FLASHXQ_SMALL, FLASHXQ_LARGE)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
@@ -2742,6 +2767,8 @@ SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
 SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
 SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
 SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")
+SaveSetting "XQWizard", "Options", "PrintDigit", IIf(Options_bPrintDigit, "1", "0")
+SaveSetting "XQWizard", "Options", "FlashXQ", LTrim(Str(Options_nFlashXQ))
 SaveSetting "XQWizard", "Options", "MoveDelay", LTrim(Str(Options_nMoveDelay))
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
@@ -2844,142 +2871,6 @@ Else
 End If
 
 End Sub
-
-' 以下是廣告例程
-
-' 下載廣告列表
-Public Sub DownloadAdvertList()
-
-Dim buffer() As Byte, nFileNo As Integer, sz As String
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/advert.txt")
-On Error GoTo 0
-If sz <> "" Then
-    On Error Resume Next
-    MkDir App_szPath + "ADVERT"
-    On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
-    On Error GoTo 0
-    sz = Replace(sz, Chr(10), vbCrLf)
-    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
-    Print #nFileNo, sz;
-    Close #nFileNo
-End If
-
-lnErrorOpen:
-On Error GoTo 0
-
-End Sub
-
-' 獲取文件長度
-Public Function GetFileSize(ByVal szFileName As String) As Long
-
-Dim nFileNo As Integer
-GetFileSize = 0
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open szFileName For Binary Access Read As #nFileNo
-On Error GoTo 0
-GetFileSize = LOF(nFileNo)
-Close #nFileNo
-
-lnErrorOpen:
-On Error GoTo 0
-
-End Function
-
-' 檢查廣告(htm和gif文件)
-Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Long, ByVal nGifSize As Long)
-
-Dim nFileNo As Integer, sz As String, buffer() As Byte
-' 判斷文件字節數，如果跟廣告列表中的一致，就不需要下載了
-If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".htm") = nHtmSize Then
-    If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".gif") = nGifSize Then
-        Exit Sub
-    End If
-End If
-
-nFileNo = FreeFile
-' 下載htm文件，文本方式
-On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".htm")
-On Error GoTo 0
-If sz <> "" Then
-    On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
-    On Error GoTo 0
-    sz = Replace(sz, Chr(10), vbCrLf)
-    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
-    Print #nFileNo, sz;
-    Close #nFileNo
-End If
-' 下載gif文件，二進制方式
-On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/xqwizard/" + szFileName + ".gif", icByteArray)
-On Error GoTo 0
-If UBound(buffer) >= 0 Then
-    On Error Resume Next
-    Kill App_szPath + "ADVERT\" + szFileName + ".gif"
-    On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\" + szFileName + ".gif" For Binary Access Write As #nFileNo
-    On Error GoTo 0
-    Put #nFileNo, , buffer()
-    Close #nFileNo
-End If
-
-lnErrorOpen:
-On Error GoTo 0
-
-End Sub
-
-' 加载广告列表
-Public Sub LoadAdvertList()
-
-Dim nFileNo As Integer, sz As String, szs() As String
-' 检查广告文件是否有内容
-Gui_nAdvertNum = 0
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open App_szPath + "ADVERT\advert.txt" For Input As #nFileNo
-On Error GoTo 0
-If EOF(nFileNo) Then
-    Close #nFileNo
-    Exit Sub
-End If
-' 检查广告文件是否正确
-Line Input #nFileNo, sz
-If sz <> "XQWizard Advert List" Then
-    Close #nFileNo
-    Exit Sub
-End If
-' 逐一读取广告
-Do While Not EOF(nFileNo)
-    Line Input #nFileNo, sz
-    ' 每一行包含的信息有：文件名，播放时间，htm文件大小，gif文件大小
-    ' 四项用逗号隔开，如“elephantbase,10,183,5618”
-    szs = Split(sz, ",")
-    If UBound(szs) >= 0 Then
-        Gui_nAdvertNum = Gui_nAdvertNum + 1
-        Gui_szAdvertFiles(Gui_nAdvertNum) = szs(0)
-        If UBound(szs) >= 1 Then
-            Gui_nAdvertTimes(Gui_nAdvertNum) = Str2Int(szs(1))
-            If UBound(szs) >= 3 Then
-                CheckAdvert szs(0), Str2Lng(szs(2)), Str2Lng(szs(3))
-            End If
-        Else
-            Gui_nAdvertTimes(Gui_nAdvertNum) = 10
-        End If
-    End If
-Loop
-Close #nFileNo
-
-lnErrorOpen:
-On Error GoTo 0
-
-End Sub
-
-' 以上是廣告例程
 
 ' 以下是主函數例程
 
@@ -3106,9 +2997,9 @@ If Not App_bPrevInstance Then
     App_frmMain.Top = Gui_nTop
 End If
 App_frmMain.Show
-App_frmMain.frmWeb.Width = frmHide.imgAdvert.Width
-App_frmMain.frmWeb.Height = frmHide.imgAdvert.Height
-App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\elephantbase.htm"
+App_frmMain.web.Width = frmHide.imgAdvert.Width
+App_frmMain.web.Height = frmHide.imgAdvert.Height
+App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
 For i = 1 To 31
@@ -3120,7 +3011,6 @@ If Not App_bPromotion Then
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
-SetWindowPos App_frmMain.hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 DestroyWindow hWnd
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
@@ -3203,7 +3093,7 @@ Do While App_bRunning
                 If Gui_nAdvertIndex > Gui_nAdvertNum Then
                     Gui_nAdvertIndex = 1
                 End If
-                App_frmMain.web.Navigate "file://" + App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
+                App_frmMain.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
             End If
             nEventIndex = EVENT_GUI
         Case EVENT_GUI ' 界面

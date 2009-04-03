@@ -22,6 +22,31 @@ Begin VB.Form frmMainLarge
    ScaleHeight     =   9960
    ScaleWidth      =   12360
    StartUpPosition =   3  'Windows Default
+   Begin SHDocVwCtl.WebBrowser web 
+      Height          =   975
+      Left            =   8280
+      TabIndex        =   51
+      Top             =   8520
+      Width           =   3735
+      ExtentX         =   6588
+      ExtentY         =   1720
+      ViewMode        =   0
+      Offline         =   0
+      Silent          =   0
+      RegisterAsBrowser=   0
+      RegisterAsDropTarget=   0
+      AutoArrange     =   0   'False
+      NoClientEdge    =   0   'False
+      AlignLeft       =   0   'False
+      NoWebView       =   0   'False
+      HideFileNames   =   0   'False
+      SingleClick     =   0   'False
+      SingleSelection =   0   'False
+      NoFolders       =   0   'False
+      Transparent     =   0   'False
+      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
+      Location        =   "http:///"
+   End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
       Height          =   360
@@ -170,39 +195,6 @@ Begin VB.Form frmMainLarge
             Object.ToolTipText     =   "Í£Ö¹Ë¼¿¼/Á¢¼´×ßÆå"
          EndProperty
       EndProperty
-   End
-   Begin VB.Frame frmWeb 
-      BorderStyle     =   0  'None
-      Height          =   975
-      Left            =   8280
-      TabIndex        =   50
-      Top             =   8520
-      Width           =   3735
-      Begin SHDocVwCtl.WebBrowser web 
-         Height          =   1335
-         Left            =   -120
-         TabIndex        =   51
-         Top             =   -120
-         Width           =   4335
-         ExtentX         =   7646
-         ExtentY         =   2143
-         ViewMode        =   0
-         Offline         =   0
-         Silent          =   0
-         RegisterAsBrowser=   0
-         RegisterAsDropTarget=   0
-         AutoArrange     =   0   'False
-         NoClientEdge    =   0   'False
-         AlignLeft       =   0   'False
-         NoWebView       =   0   'False
-         HideFileNames   =   0   'False
-         SingleClick     =   0   'False
-         SingleSelection =   0   'False
-         NoFolders       =   0   'False
-         Transparent     =   0   'False
-         ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-         Location        =   ""
-      End
    End
    Begin VB.CommandButton btnCoord 
       Height          =   225
@@ -690,7 +682,7 @@ Begin VB.Form frmMainLarge
       Align           =   1  'Align Top
       Height          =   360
       Left            =   0
-      TabIndex        =   52
+      TabIndex        =   50
       Top             =   360
       Width           =   12360
       _ExtentX        =   21802
