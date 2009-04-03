@@ -52,7 +52,7 @@ Option Explicit
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" (ByVal hMod As Long, ByVal szProcName As String) As Long
-Private Declare Sub RtlMoveMemory Lib "KERNEL32" (ByVal lpDst As Long, lpSrc As Long, ByVal dwCount As Long)
+Private Declare Sub CopyMemory Lib "KERNEL32" (ByVal lpDst As Long, lpSrc As Long, ByVal dwCount As Long)
 
 Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal dwParamLen As Long, ByRef lpcParams As Long) As Long
 Private Declare Function StrDupA Lib "CALLPROC.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
@@ -144,7 +144,7 @@ End Property
 
 Public Sub MemCpy(ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 
-RtlMoveMemory lpDst, lpSrc, dwCount
+CopyMemory lpDst, lpSrc, dwCount
 
 End Sub
 
@@ -185,7 +185,7 @@ For i = 0 To nParams - 1
     End Select
 Next
 AllocArray = Alloc(nParams * 4)
-RtlMoveMemory AllocArray, VarPtr(dwParams(0)), nParams * 4
+CopyMemory AllocArray, VarPtr(dwParams(0)), nParams * 4
 Erase dwParams
 Exit Function
 
