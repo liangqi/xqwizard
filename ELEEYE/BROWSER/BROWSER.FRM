@@ -49,7 +49,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Declare Function MessageBoxA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal szText As String, ByVal szCaption As String, ByVal dwType As Long) As Long
+Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
+Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
+Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" (ByVal hMod As Long, ByVal szProcName As String) As Long
+Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal dwParamLen As Long, ByRef lpcParams As Long) As Long
 
 Private Const GWL_STYLE As Long = -16
 
@@ -160,18 +163,53 @@ Set Screen = VB.Screen
 
 End Property
 
-' === Begin of Windows API ===
+' === Begin of DLL Function Call ===
 
-Public Sub Sleep(ByVal dwMillis As Long)
+Public Function LoadLibrary(ByVal szLibFileName As String) As Long
 
-mdlBase.Sleep dwMillis
-
-End Sub
-
-Public Function MessageBox(ByVal hWnd As Long, ByVal szText As String, ByVal szCaption As String, ByVal dwType As Long)
-
-MessageBox = MessageBoxA(hWnd, szText, szCaption, dwType)
+LoadLibrary = LoadLibraryA(szLibFileName)
 
 End Function
 
-' === End of Windows API ===
+Public Sub FreeLibrary(ByVal hMod As Long)
+
+FreeLibraryA hMod
+
+End Sub
+
+Public Function GetProcAddress(ByVal hMod As Long, ByVal szProcName As String) As Long
+
+GetProcAddress = GetProcAddressA(hMod, szProcName)
+
+End Function
+
+Public Function CallProc(ByVal lpProc As Long, ByVal arrParam As Object) As Long
+
+Dim i As Integer, nParams As Integer, item As Variant
+nParams = arrParam.length
+ReDim dwParams(0 To nParams - 1) As Long
+For i = 0 To nParams - 1
+    On Error GoTo lnError
+    item = CallByName(WebBrowser.Document.parentWindow.Browser, "__get__", VbMethod, arrParam, i)
+    Select Case VarType(item)
+    Case vbLong
+        dwParams(i) = item
+    Case vbBoolean
+        dwParams(i) = IIf(item, 1, 0)
+    Case vbString
+        dwParams(i) = CvBStr(item)
+    Case Else
+        dwParams(i) = 0
+    End Select
+Next
+CallProc = CallProcA(lpProc, nParams * 4, dwParams(0))
+Erase dwParams
+Exit Function
+
+lnError:
+MsgBox "Cannot call ""Browser.__get__()"" !", vbExclamation, """CallProc()"" Error"
+On Error GoTo 0
+
+End Function
+
+' === End of DLL Function Call ===

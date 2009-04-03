@@ -28,6 +28,10 @@ function popupMenu() {
   });
 }
 
+function callProc() {
+  alert(Browser.confirm("ABC", "DEF"));
+}
+
 function callParent() {
   if (Browser.parent != null) {
     Browser.getWindow(Browser.parent).onEvent({text:text.value});

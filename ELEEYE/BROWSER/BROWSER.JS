@@ -8,6 +8,9 @@ var MB_YESNOCANCEL = 3;
 var MB_YESNO = 4;
 var MB_RETRYCANCEL = 5;
 
+var IDOK = 1;
+var IDCANCEL = 2;
+
 var STYLE_NONE = 0;
 var STYLE_FIXED = 1;
 var STYLE_SIZABLE = 2;
@@ -54,26 +57,37 @@ var Browser = {
 
   // Popup an Info Dialog
   info:function(text, caption) {
-    Form.MessageBox(Form.hWnd, text, caption, MB_ICONINFORMATION);
+    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONINFORMATION]);
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
-    Form.MessageBox(Form.hWnd, text, caption, MB_ICONEXCLAMATION);
+    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONEXCLAMATION]);
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
-    Form.MessageBox(Form.hWnd, text, caption, MB_ICONSTOP);
+    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONSTOP]);
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    Form.MessageBox(Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL);
+    return Form.CallProc(Browser.fnMessageBox,
+        [Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL]) == IDOK;
+  },
+
+  // Called in ""
+  __get__:function(arr, index) {
+    return arr[index];
   },
 
   // Called in "DocumentComplete"
   __init__:function() {
+    // Windows APIs
+    Browser.modKernel = Form.LoadLibrary("KERNEL32.DLL");
+    Browser.modUser = Form.LoadLibrary("USER32.DLL");
+    Browser.fnMessageBox = Form.GetProcAddress(Browser.modUser, "MessageBoxA");
+
     // appPath
     var path = Form.App.Path;
     if (path.substr(path.length - 1, 1) != "\\") {
