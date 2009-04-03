@@ -43,9 +43,10 @@ Public Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As 
 Public Declare Function VarPtr Lib "MSVBVM60.DLL" (ByRef lp As Any) As Long
 Public Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
-Declare Sub GetMem2 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
-Declare Sub GetMem4 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
-Declare Sub GetMem8 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+
+Private Declare Sub GetMem2 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+Private Declare Sub GetMem4 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+Private Declare Sub GetMem8 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams

@@ -1,6 +1,8 @@
 Attribute VB_Name = "mdlBrowser"
 Option Explicit
 
+Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+
 Private App_bRunning As Boolean
 
 Public Sub Main()

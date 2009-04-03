@@ -52,19 +52,12 @@ Option Explicit
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" (ByVal hMod As Long, ByVal szProcName As String) As Long
+Private Declare Sub RtlMoveMemory Lib "KERNEL32" (ByVal lpDst As Long, lpSrc As Long, ByVal dwCount As Long)
+
 Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal dwParamLen As Long, ByRef lpcParams As Long) As Long
-
-Private Const GWL_STYLE As Long = -16
-
-Private Const WS_MAXIMIZEBOX    As Long = &H10000
-Private Const WS_MINIMIZEBOX    As Long = &H20000
-Private Const WS_THICKFRAME     As Long = &H40000
-Private Const WS_SYSMENU        As Long = &H80000
-Private Const WS_CAPTION        As Long = &HC00000
-Private Const WS_VISIBLE        As Long = &H10000000
-
-Private Const SWP_FRAMECHANGED  As Long = &H20
-Private Const SWP_NOZORDER      As Long = 4
+Private Declare Function StrDupA Lib "CALLPROC.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
+Private Declare Function AllocA Lib "CALLPROC.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
+Private Declare Sub FreeA Lib "CALLPROC.DLL" Alias "_Free@4" (ByVal lp As Long)
 
 Private oParam As Object, wbc As New WBCustomizer
 
@@ -123,22 +116,6 @@ VB.Unload obj
 
 End Sub
 
-Public Sub SetStyle(ByVal dwStyle As Long)
-
-Select Case dwStyle
-Case vbBSNone
-    SetWindowLongA hWnd, GWL_STYLE, WS_THICKFRAME + WS_VISIBLE
-Case vbFixedSingle
-    SetWindowLongA hWnd, GWL_STYLE, WS_MINIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_VISIBLE
-Case vbSizable
-    SetWindowLongA hWnd, GWL_STYLE, WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_THICKFRAME + WS_VISIBLE
-Case vbFixedDialog
-    SetWindowLongA hWnd, GWL_STYLE, WS_SYSMENU + WS_CAPTION + WS_VISIBLE
-End Select
-SetWindowPos hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED
-
-End Sub
-
 Public Property Get Param() As Object
 
 Set Param = oParam
@@ -163,7 +140,64 @@ Set Screen = VB.Screen
 
 End Property
 
-' === Begin of DLL Function Call ===
+' === Begin Buffer Manipulation Routines ===
+
+Public Sub MemCpy(ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
+
+RtlMoveMemory lpDst, lpSrc, dwCount
+
+End Sub
+
+Public Function StrDup(ByVal sz As String) As Long
+
+StrDup = StrDupA(sz)
+
+End Function
+
+Public Function Alloc(ByVal dwSize As Long) As Long
+
+Alloc = AllocA(dwSize)
+
+End Function
+
+Public Sub Free(ByVal lp As Long)
+
+FreeA lp
+
+End Sub
+
+Public Function AllocArray(ByVal arr As Object) As Long
+
+Dim i As Integer, nParams As Integer, item As Variant
+nParams = arr.length
+ReDim dwParams(0 To nParams - 1) As Long
+For i = 0 To nParams - 1
+    On Error GoTo lnError
+    item = CallByName(WebBrowser.Document.parentWindow.Browser, "__get__", VbMethod, arr, i)
+    On Error GoTo 0
+    Select Case VarType(item)
+    Case vbLong
+        dwParams(i) = item
+    Case vbBoolean
+        dwParams(i) = IIf(item, 1, 0)
+    Case Else
+        dwParams(i) = 0
+    End Select
+Next
+AllocArray = Alloc(nParams * 4)
+RtlMoveMemory AllocArray, VarPtr(dwParams(0)), nParams * 4
+Erase dwParams
+Exit Function
+
+lnError:
+MsgBox "Cannot call ""Browser.__get__()"" !", vbExclamation, """CallProc()"" Error"
+On Error GoTo 0
+
+End Function
+
+' === End Buffer Manipulation Routines ===
+
+' === Begin Win32 API Call Routines ===
 
 Public Function LoadLibrary(ByVal szLibFileName As String) As Long
 
@@ -187,23 +221,31 @@ Public Function CallProc(ByVal lpProc As Long, ByVal arrParam As Object) As Long
 
 Dim i As Integer, nParams As Integer, item As Variant
 nParams = arrParam.length
-ReDim dwParams(0 To nParams - 1) As Long
+ReDim dwParams(0 To nParams - 1) As Long, bNeedToFree(0 To nParams - 1) As Boolean
 For i = 0 To nParams - 1
     On Error GoTo lnError
     item = CallByName(WebBrowser.Document.parentWindow.Browser, "__get__", VbMethod, arrParam, i)
+    On Error GoTo 0
+    bNeedToFree(i) = False
     Select Case VarType(item)
     Case vbLong
         dwParams(i) = item
     Case vbBoolean
         dwParams(i) = IIf(item, 1, 0)
     Case vbString
-        dwParams(i) = CvBStr(item)
+        dwParams(i) = StrDup(item)
+        bNeedToFree(i) = True
     Case Else
         dwParams(i) = 0
     End Select
 Next
 CallProc = CallProcA(lpProc, nParams * 4, dwParams(0))
-Erase dwParams
+For i = 0 To nParams - 1
+    If bNeedToFree(i) Then
+        Free dwParams(i)
+    End If
+Next
+Erase dwParams, bNeedToFree
 Exit Function
 
 lnError:
@@ -212,4 +254,4 @@ On Error GoTo 0
 
 End Function
 
-' === End of DLL Function Call ===
+' === End Win32 API Call Routines ===

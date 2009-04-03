@@ -6,10 +6,10 @@
   </head>
   <body style="border:0px" border="0" onunload="return onClose()">
     窗口样式
-    <input type="radio" name="style" onclick="Form.SetStyle(0)" />None
-    <input type="radio" name="style" onclick="Form.SetStyle(1)" />Single
-    <input type="radio" name="style" onclick="Form.SetStyle(2)" />Sizable
-    <input type="radio" name="style" onclick="Form.SetStyle(3)" />Dialog<br>
+    <input type="radio" name="style" onclick="Browser.setStyle(STYLE_NONE)" />None
+    <input type="radio" name="style" onclick="Browser.setStyle(STYLE_FIXED)" />Fixed
+    <input type="radio" name="style" onclick="Browser.setStyle(STYLE_SIZABLE)" />Sizable
+    <input type="radio" name="style" onclick="Browser.setStyle(STYLE_DIALOG)" />Dialog<br>
     <input id="text" type="text" /><br>
     <input type="button" value="获取全局文本" onclick="getGlobalText()" />
     <input type="button" value="设置全局文本" onclick="setGlobalText()" /><br>
