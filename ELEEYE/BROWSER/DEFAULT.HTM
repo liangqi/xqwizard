@@ -4,7 +4,7 @@
     <script language="javascript" src="browser.js"></script>
     <script language="javascript" src="default.js"></script>
   </head>
-  <body style="border:0px" border="0" onunload="return onClose()">
+  <body style="border:0px" border="0" oncontextmenu="return false" onunload="return onClose()">
     窗口样式
     <input type="radio" name="style" onclick="Browser.setStyle(STYLE_NONE)" />None
     <input type="radio" name="style" onclick="Browser.setStyle(STYLE_FIXED)" />Fixed
@@ -16,6 +16,7 @@
     <input type="button" value="打开新窗口" onclick="newWindow()" />
     <input type="button" value="弹出菜单" onclick="popupMenu()" />
     <input type="button" value="调用函数" onclick="callProc()" /><br>
+    <input type="button" value="测试功能" onclick="callTest()" />
     <input type="button" value="呼叫父窗口" onclick="callParent()" />
     <input type="button" value="关闭窗口" onclick="closeWindow()" />
   </body>

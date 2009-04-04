@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0"; "Flash9f.ocx"
+Object = "{D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0"; "Flash10b.ocx"
 Begin VB.Form frmXQWLight 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "ÏóÆåÐ¡Î×Ê¦"
@@ -18,8 +18,9 @@ Begin VB.Form frmXQWLight
    EndProperty
    Icon            =   "XQWLIGHT.frx":0000
    MaxButton       =   0   'False
-   ScaleHeight     =   8880
-   ScaleWidth      =   9240
+   ScaleHeight     =   592
+   ScaleMode       =   3  'Pixel
+   ScaleWidth      =   616
    StartUpPosition =   3  'Windows Default
    Begin VB.ListBox lstLevel 
       Height          =   600
@@ -85,23 +86,23 @@ Begin VB.Form frmXQWLight
       Movie           =   ""
       Src             =   ""
       WMode           =   "Window"
-      Play            =   0   'False
-      Loop            =   -1  'True
+      Play            =   "0"
+      Loop            =   "-1"
       Quality         =   "High"
       SAlign          =   ""
-      Menu            =   0   'False
+      Menu            =   "0"
       Base            =   ""
       AllowScriptAccess=   "always"
       Scale           =   "ShowAll"
-      DeviceFont      =   0   'False
-      EmbedMovie      =   0   'False
+      DeviceFont      =   "0"
+      EmbedMovie      =   "0"
       BGColor         =   ""
       SWRemote        =   ""
       MovieData       =   ""
-      SeamlessTabbing =   -1  'True
-      Profile         =   0   'False
+      SeamlessTabbing =   "1"
+      Profile         =   "0"
       ProfileAddress  =   ""
-      ProfilePort     =   0
+      ProfilePort     =   "0"
       AllowNetworking =   "all"
       AllowFullScreen =   "false"
    End
@@ -172,9 +173,7 @@ lstHandicap.ListIndex = 0
 lstLevel.ListIndex = 0
 bLoaded = True
 
-x = flash.Left / Screen.TwipsPerPixelX
-y = flash.Top / Screen.TwipsPerPixelY
-hWndFlash = ChildWindowFromPoint(hWnd, x, y)
+hWndFlash = ChildWindowFromPoint(hWnd, flash.Left, flash.Top)
 PrevWndProc = GetWindowLongA(hWndFlash, GWL_WNDPROC)
 SetWindowLongA hWndFlash, GWL_WNDPROC, AddressOf WndProc
 

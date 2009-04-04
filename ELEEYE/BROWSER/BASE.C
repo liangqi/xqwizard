@@ -2,14 +2,14 @@
 #include <string.h>
 #include <windows.h>
 
-__declspec(dllexport) VOID WINAPI CallProc(LPVOID lpProc, DWORD dwParamLen, LPCVOID lpcParam) {
+__declspec(dllexport) VOID WINAPI CallProc(LPVOID lpProc, LPCVOID lpcParam, DWORD dwParamLen) {
   __asm {
-    mov   ebx, lpcParam;
+    mov   eax, lpcParam;
     mov   ecx, dwParamLen;
 L_LOOP:
     jcxz  L_EXIT;
     sub   ecx, 4;
-    push  [ebx + ecx];
+    push  [eax + ecx];
     jmp   L_LOOP;
 L_EXIT:
     mov   eax, lpProc;

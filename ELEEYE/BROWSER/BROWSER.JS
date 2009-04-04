@@ -33,10 +33,14 @@ var STYLE_DIALOG = 3;
 var Browser = {
   // Open a new Window
   open:function(htmlFile, style, callback) {
-    var newForm = Form.NewInstance();
+    var newForm = Form.NewInstance({global:Browser.global, parent:Form, onLoad:callback});
     Browser.setStyle(style);
-    newForm.Param = {global:Browser.global, parent:Form, onLoad:callback};
     newForm.WebBrowser.Navigate2(Browser.appPath + htmlFile);
+    if (style == STYLE_DIALOG) {
+      newForm.Show(1, Form);
+    } else {
+      newForm.Show(0);
+    }
     return newForm;
   },
 
@@ -67,9 +71,9 @@ var Browser = {
       dwStyle = WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
       break;
     }
-    Form.CallProc(Browser.fnSetWindowLong, [Form.hWnd, GWL_STYLE, dwStyle]);
-    Form.CallProc(Browser.fnSetWindowPos,
-        [Form.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED]);
+    Browser.callProc(Browser.fnSetWindowLong, Form.hWnd, GWL_STYLE, dwStyle);
+    Browser.callProc(Browser.fnSetWindowPos,
+        Form.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
   },
 
   // Popup a Context Menu
@@ -85,7 +89,7 @@ var Browser = {
       Form.MenuItem(i).Enabled = (typeof menuDesc.enabled == "boolean" ? menuDesc.enabled : true);
       Form.MenuItem(i).Caption = menuDesc.caption;
     }
-    Form.PopupMenu(Form.Menu, 0, x * Browser.twipsPerPixelX, y * Browser.twipsPerPixelY);
+    Form.PopupMenu(Form.Menu, 0, x, y);
     for (var i = arrMenu.length - 1; i > 0; i --) {
       Form.Unload(Form.MenuItem(i));
     }
@@ -93,28 +97,73 @@ var Browser = {
 
   // Popup an Info Dialog
   info:function(text, caption) {
-    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONINFORMATION]);
+    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONINFORMATION);
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
-    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONEXCLAMATION]);
+    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONEXCLAMATION);
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
-    Form.CallProc(Browser.fnMessageBox, [Form.hWnd, text, caption, MB_ICONSTOP]);
+    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONSTOP);
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return Form.CallProc(Browser.fnMessageBox,
-        [Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL]) == IDOK;
+    return Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
   },
 
-  // Called in ""
-  __get__:function(arr, index) {
-    return arr[index];
+  // Allocate memory blocks for an Array
+  allocArray:function(arr) {
+    var lpArray = Form.Alloc(arr.length * 4);
+    for (var i = 0; i < arr.length; i ++) {
+      PutMem4(lpArray + i * 4, arr[i]);
+    }
+    return lpArray;
+  },
+
+  // Call Win32 API
+  callProc:function() {
+    var lpProc = arguments[0];
+    if (lpProc == 0) {
+      throw new Error("Invalid Function Address!");
+    }
+    if (arguments.length == 1) {
+      return Form.CallProc(lpProc, 0, 0);
+    }
+    var paramLen = arguments.length - 1;
+    var lpParams = Form.Alloc(paramLen * 4);
+    var lpData = lpParams;
+    var arrStrings = new Array(paramLen);
+    for (var i = 0; i < paramLen; i ++) {
+      arrStrings[i] = 0;
+      var item = arguments[i + 1];
+      switch (typeof item) {
+      case "number":
+        Form.PutMem4(lpData, item);
+        break;
+      case "boolean":
+        Form.PutMem4(lpData, item ? 1 : 0);
+        Form.StrDup();
+        break;
+      case "string":
+        arrStrings[i] = Form.StrDup(item);
+        Form.PutMem4(lpData, arrStrings[i]);
+        break;
+      default:
+        arrIsString.push(false);
+      }
+      lpData += 4;
+    }
+    var retVal = Form.CallProc(lpProc, lpParams, paramLen * 4);
+    for (var i = 0; i < paramLen; i ++) {
+      if (arrStrings[i] != 0) {
+        Form.Free(arrStrings[i]);
+      }
+    }
+    return retVal;
   },
 
   // Called in "DocumentComplete"
@@ -127,15 +176,11 @@ var Browser = {
     Browser.fnSetWindowPos = Form.GetProcAddress(Browser.modUser, "SetWindowPos");
 
     // appPath
-    var path = Form.App.Path;
-    if (path.substr(path.length - 1, 1) != "\\") {
-      path += "\\";
-    }
-    Browser.appPath = path;
-
-    // twipsPerPixelX & twipsPerPixelY
-    Browser.twipsPerPixelX = Form.Screen.TwipsPerPixelX;
-    Browser.twipsPerPixelY = Form.Screen.TwipsPerPixelY;
+    var lpFileName = Form.Alloc(1024);
+    Browser.callProc(Form.GetProcAddress(Browser.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
+    var appPath = Form.GetStr(lpFileName);
+    Form.Free(lpFileName);
+    Browser.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
 
     // global, parent
     if (Form.Param != null) {

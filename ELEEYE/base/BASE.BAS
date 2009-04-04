@@ -38,15 +38,11 @@ Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Public Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
-
-' For Atom Subs/Functions
-Public Declare Function VarPtr Lib "MSVBVM60.DLL" (ByRef lp As Any) As Long
 Public Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
-Private Declare Sub GetMem2 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
-Private Declare Sub GetMem4 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
-Private Declare Sub GetMem8 Lib "MSVBVM60.DLL" (ByVal lpSrc As Long, ByVal lpDst As Long)
+' For Atom Subs/Functions
+Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
@@ -193,7 +189,7 @@ Private Stdio_si As StartupInfo
 Public Function CvI(ByVal sz As String) As Integer
 
 Dim w As Integer
-GetMem2 CvBStr(sz), VarPtr(w)
+RtlMoveMemory VarPtr(w), CvBStr(sz), 2
 CvI = w
 
 End Function
@@ -201,7 +197,7 @@ End Function
 Public Function CvL(ByVal sz As String) As Long
 
 Dim dw As Long
-GetMem4 CvBStr(sz), VarPtr(dw)
+RtlMoveMemory VarPtr(dw), CvBStr(sz), 4
 CvL = dw
 
 End Function
@@ -209,7 +205,7 @@ End Function
 Public Function CvC(ByVal sz As String) As Currency
 
 Dim qw As Currency
-GetMem8 CvBStr(sz), VarPtr(qw)
+RtlMoveMemory VarPtr(qw), CvBStr(sz), 8
 CvC = qw
 
 End Function
@@ -217,7 +213,7 @@ End Function
 Public Function CvS(ByVal sz As String) As Single
 
 Dim sf As Single
-GetMem4 CvBStr(sz), VarPtr(sf)
+RtlMoveMemory VarPtr(sf), CvBStr(sz), 4
 CvS = sf
 
 End Function
@@ -225,7 +221,7 @@ End Function
 Public Function CvD(ByVal sz As String) As Double
 
 Dim df As Double
-GetMem8 CvBStr(sz), VarPtr(df)
+RtlMoveMemory VarPtr(df), CvBStr(sz), 8
 CvD = df
 
 End Function

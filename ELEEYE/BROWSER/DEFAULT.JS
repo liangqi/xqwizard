@@ -7,10 +7,9 @@ function setGlobalText() {
 }
 
 function newWindow() {
-  var newForm = Browser.open("DEFAULT.HTM", STYLE_DIALOG, function() {
+  var newForm = Browser.open("DEFAULT.HTM", STYLE_FIXED, function() {
     Browser.info("Loaded!", "Test");
   });
-  newForm.Show();
 }
 
 var arrMyMenu = [
@@ -32,6 +31,18 @@ function callProc() {
   alert(Browser.confirm("ABC", "DEF"));
 }
 
+function loadVars() {
+  alert(arguments);
+  var vars = loadVars.arguments;
+  for (var i = 0; i < vars.length; i ++) {
+    alert(vars[i]);   
+  }   
+}   
+
+function callTest() {
+  alert(Browser.appPath);
+}
+
 function callParent() {
   if (Browser.parent != null) {
     Browser.getWindow(Browser.parent).onEvent({text:text.value});
@@ -39,7 +50,7 @@ function callParent() {
 }
 
 function closeWindow() {
-  Form.UnloadObject(Form);
+  Form.Unload(Form);
 }
 
 function onClose() {

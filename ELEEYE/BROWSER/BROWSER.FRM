@@ -5,8 +5,9 @@ Begin VB.Form frmBrowser
    ClientLeft      =   165
    ClientTop       =   450
    ClientWidth     =   4680
-   ScaleHeight     =   3195
-   ScaleWidth      =   4680
+   ScaleHeight     =   213
+   ScaleMode       =   3  'Pixel
+   ScaleWidth      =   312
    StartUpPosition =   3  'Windows Default
    Begin SHDocVwCtl.WebBrowser WebBrowser 
       Height          =   3255
@@ -20,7 +21,7 @@ Begin VB.Form frmBrowser
       Offline         =   0
       Silent          =   0
       RegisterAsBrowser=   0
-      RegisterAsDropTarget=   0
+      RegisterAsDropTarget=   1
       AutoArrange     =   0   'False
       NoClientEdge    =   0   'False
       AlignLeft       =   0   'False
@@ -52,22 +53,16 @@ Option Explicit
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" (ByVal hMod As Long, ByVal szProcName As String) As Long
-Private Declare Sub CopyMemory Lib "KERNEL32" (ByVal lpDst As Long, lpSrc As Long, ByVal dwCount As Long)
+Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
-Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal dwParamLen As Long, ByRef lpcParams As Long) As Long
-Private Declare Function StrDupA Lib "CALLPROC.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
-Private Declare Function AllocA Lib "CALLPROC.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
-Private Declare Sub FreeA Lib "CALLPROC.DLL" Alias "_Free@4" (ByVal lp As Long)
+Private Declare Function StrDupA Lib "BASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
+Private Declare Function AllocA Lib "BASE.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
+Private Declare Sub FreeA Lib "BASE.DLL" Alias "_Free@4" (ByVal lp As Long)
+Private Declare Function CallProcA Lib "BASE.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
-Private oParam As Object, wbc As New WBCustomizer
-
-Private Sub Form_Load()
-
-wbc.EnableAllAccelerators = False
-wbc.EnableContextMenus = False
-Set wbc.WebBrowser = WebBrowser
-
-End Sub
+Public Param As Object
 
 Private Sub Form_Resize()
 
@@ -81,7 +76,7 @@ End Sub
 
 Private Sub WebBrowser_DocumentComplete(ByVal pDisp As Object, URL As Variant)
 
-CallByName WebBrowser.Document.parentWindow, "eval", VbMethod, "Form = {}"
+WebBrowser.Document.parentWindow.eval "Form = {}"
 Set WebBrowser.Document.parentWindow.Form = Me
 On Error Resume Next
 CallByName WebBrowser.Document.parentWindow.Browser, "__init__", VbMethod
@@ -98,11 +93,14 @@ On Error GoTo 0
 
 End Sub
 
-Public Function NewInstance() As frmBrowser
+Public Function NewInstance(Optional ByVal oParam As Object = Nothing) As frmBrowser
 
 Set NewInstance = New frmBrowser
+Set NewInstance.Param = oParam
 
 End Function
+
+' === Begin Visual Basic Routines ===
 
 Public Sub Load(ByVal obj As Object)
 
@@ -116,37 +114,56 @@ VB.Unload obj
 
 End Sub
 
-Public Property Get Param() As Object
+Public Function GetSetting(ByVal szAppName As String, ByVal szSection As String, _
+        ByVal szKey As String, Optional ByVal szDefault As String) As String
 
-Set Param = oParam
+Interaction.GetSetting szAppName, szSection, szKey, szDefault
 
-End Property
+End Function
 
-Public Property Let Param(ByVal obj As Object)
+Public Sub SaveSetting(ByVal szAppName As String, ByVal szSection As String, _
+        ByVal szKey As String, ByVal szSetting As String)
 
-Set oParam = obj
+Interaction.SaveSetting szAppName, szSection, szKey, szSetting
 
-End Property
+End Sub
 
-Public Property Get App() As Object
+Public Sub DeleteSetting(ByVal szAppName As String, _
+        Optional ByVal szSection As String, Optional ByVal szKey As String)
 
-Set App = VB.App
+Interaction.DeleteSetting szAppName, szSection, szKey
 
-End Property
+End Sub
 
-Public Property Get Screen() As Object
-
-Set Screen = VB.Screen
-
-End Property
+' === End Visual Basic Routines ===
 
 ' === Begin Buffer Manipulation Routines ===
 
 Public Sub MemCpy(ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 
-CopyMemory lpDst, lpSrc, dwCount
+RtlMoveMemory lpDst, lpSrc, dwCount
 
 End Sub
+
+Public Function GetMem4(ByVal lpdw As Long) As Long
+
+Dim dw As Long
+RtlMoveMemory VarPtr(dw), lpdw, 4
+GetMem4 = dw
+
+End Function
+
+Public Sub PutMem4(ByVal lpdw As Long, ByVal dw As Long)
+
+RtlMoveMemory lpdw, VarPtr(dw), 4
+
+End Sub
+
+Public Function GetStr(ByVal lpsz As Long) As String
+
+GetStr = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
+
+End Function
 
 Public Function StrDup(ByVal sz As String) As Long
 
@@ -165,35 +182,6 @@ Public Sub Free(ByVal lp As Long)
 FreeA lp
 
 End Sub
-
-Public Function AllocArray(ByVal arr As Object) As Long
-
-Dim i As Integer, nParams As Integer, item As Variant
-nParams = arr.length
-ReDim dwParams(0 To nParams - 1) As Long
-For i = 0 To nParams - 1
-    On Error GoTo lnError
-    item = CallByName(WebBrowser.Document.parentWindow.Browser, "__get__", VbMethod, arr, i)
-    On Error GoTo 0
-    Select Case VarType(item)
-    Case vbLong
-        dwParams(i) = item
-    Case vbBoolean
-        dwParams(i) = IIf(item, 1, 0)
-    Case Else
-        dwParams(i) = 0
-    End Select
-Next
-AllocArray = Alloc(nParams * 4)
-CopyMemory AllocArray, VarPtr(dwParams(0)), nParams * 4
-Erase dwParams
-Exit Function
-
-lnError:
-MsgBox "Cannot call ""Browser.__get__()"" !", vbExclamation, """CallProc()"" Error"
-On Error GoTo 0
-
-End Function
 
 ' === End Buffer Manipulation Routines ===
 
@@ -217,40 +205,9 @@ GetProcAddress = GetProcAddressA(hMod, szProcName)
 
 End Function
 
-Public Function CallProc(ByVal lpProc As Long, ByVal arrParam As Object) As Long
+Public Function CallProc(ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
-Dim i As Integer, nParams As Integer, item As Variant
-nParams = arrParam.length
-ReDim dwParams(0 To nParams - 1) As Long, bNeedToFree(0 To nParams - 1) As Boolean
-For i = 0 To nParams - 1
-    On Error GoTo lnError
-    item = CallByName(WebBrowser.Document.parentWindow.Browser, "__get__", VbMethod, arrParam, i)
-    On Error GoTo 0
-    bNeedToFree(i) = False
-    Select Case VarType(item)
-    Case vbLong
-        dwParams(i) = item
-    Case vbBoolean
-        dwParams(i) = IIf(item, 1, 0)
-    Case vbString
-        dwParams(i) = StrDup(item)
-        bNeedToFree(i) = True
-    Case Else
-        dwParams(i) = 0
-    End Select
-Next
-CallProc = CallProcA(lpProc, nParams * 4, dwParams(0))
-For i = 0 To nParams - 1
-    If bNeedToFree(i) Then
-        Free dwParams(i)
-    End If
-Next
-Erase dwParams, bNeedToFree
-Exit Function
-
-lnError:
-MsgBox "Cannot call ""Browser.__get__()"" !", vbExclamation, """CallProc()"" Error"
-On Error GoTo 0
+CallProc = CallProcA(lpProc, lpcParams, dwParamLen)
 
 End Function
 
