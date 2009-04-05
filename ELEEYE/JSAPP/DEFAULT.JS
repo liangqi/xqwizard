@@ -1,14 +1,14 @@
 function getGlobalText() {
-  text.value = Browser.global.text;
+  text.value = JS.global.text;
 }
 
 function setGlobalText() {
-  Browser.global.text = text.value;
+  JS.global.text = text.value;
 }
 
 function newWindow() {
-  var newForm = Browser.open("DEFAULT.HTM", STYLE_FIXED, function() {
-    Browser.info("Loaded!", "Test");
+  JS.open("DEFAULT.HTM", STYLE_FIXED, function() {
+    JS.info("Loaded!", "Test");
   });
 }
 
@@ -22,35 +22,27 @@ var arrMyMenu = [
 ];
 
 function popupMenu() {
-  Browser.popupMenu(arrMyMenu, 20, 20, function(index) {
-    Browser.info(Form.MenuItem(index).Caption, "Test");
+  JS.popupMenu(arrMyMenu, 20, 20, function(index) {
+    JS.info(VB.MenuItem(index).Caption, "Test");
   });
 }
 
 function callProc() {
-  alert(Browser.confirm("ABC", "DEF"));
+  alert(JS.confirm("Confirm", "Continue?"));
 }
 
-function loadVars() {
-  alert(arguments);
-  var vars = loadVars.arguments;
-  for (var i = 0; i < vars.length; i ++) {
-    alert(vars[i]);   
-  }   
-}   
-
 function callTest() {
-  alert(Browser.appPath);
+  popAll(VB.GetAllSettings("XQWizard", "Gui"));
 }
 
 function callParent() {
-  if (Browser.parent != null) {
-    Browser.getWindow(Browser.parent).onEvent({text:text.value});
+  if (JS.parent != null) {
+    JS.getWindow(JS.parent).onEvent({text:text.value});
   }
 }
 
 function closeWindow() {
-  Form.Unload(Form);
+  VB.Unload(VB);
 }
 
 function onClose() {
@@ -58,7 +50,15 @@ function onClose() {
 }
 
 function onEvent(obj) {
-  Browser.info(obj.text + "/" + text.value, "Test");
+  JS.info(obj.text + "/" + text.value, "Test");
+}
+
+function popAll(obj) {
+  var s = "";
+  for (var key in obj) {
+    s += key + ":" + obj[key] + ", ";
+  }
+  alert(s);
 }
 
 function popAllAttr(obj) {
@@ -70,11 +70,11 @@ function popAllAttr(obj) {
 }
 
 function main() {
-  if (Browser.global == null) {
-    Browser.global = {};
+  if (JS.global == null) {
+    JS.global = {};
   }
-  if (typeof Browser.global.text != "string") {
-    Browser.global.text = "null";
+  if (typeof JS.global.text != "string") {
+    JS.global.text = "null";
   }
-  text.value = Browser.global.text;
+  text.value = JS.global.text;
 }

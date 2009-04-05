@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Begin VB.Form frmBrowser 
+Begin VB.Form frmJsApp 
    ClientHeight    =   3195
    ClientLeft      =   165
    ClientTop       =   450
@@ -32,7 +32,7 @@ Begin VB.Form frmBrowser
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -43,7 +43,7 @@ Begin VB.Form frmBrowser
       End
    End
 End
-Attribute VB_Name = "frmBrowser"
+Attribute VB_Name = "frmJsApp"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -57,10 +57,10 @@ Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
-Private Declare Function StrDupA Lib "BASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
-Private Declare Function AllocA Lib "BASE.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
-Private Declare Sub FreeA Lib "BASE.DLL" Alias "_Free@4" (ByVal lp As Long)
-Private Declare Function CallProcA Lib "BASE.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
+Private Declare Function StrDupA Lib "JSVBBASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
+Private Declare Function AllocA Lib "JSVBBASE.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
+Private Declare Sub FreeA Lib "JSVBBASE.DLL" Alias "_Free@4" (ByVal lp As Long)
+Private Declare Function CallProcA Lib "JSVBBASE.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
 Public Param As Object
 
@@ -76,10 +76,10 @@ End Sub
 
 Private Sub WebBrowser_DocumentComplete(ByVal pDisp As Object, URL As Variant)
 
-WebBrowser.Document.parentWindow.eval "Form = {}"
-Set WebBrowser.Document.parentWindow.Form = Me
+WebBrowser.Document.parentWindow.eval "VB = {}"
+Set WebBrowser.Document.parentWindow.VB = Me
 On Error Resume Next
-CallByName WebBrowser.Document.parentWindow.Browser, "__init__", VbMethod
+CallByName WebBrowser.Document.parentWindow.JS, "__init__", VbMethod
 CallByName WebBrowser.Document.parentWindow, "main", VbMethod
 On Error GoTo 0
 
@@ -88,14 +88,14 @@ End Sub
 Private Sub MenuItem_Click(nIndex As Integer)
 
 On Error Resume Next
-CallByName WebBrowser.Document.parentWindow.Browser, "__clickMenu__", VbMethod, nIndex
+CallByName WebBrowser.Document.parentWindow.JS, "__clickMenu__", VbMethod, nIndex
 On Error GoTo 0
 
 End Sub
 
-Public Function NewInstance(Optional ByVal oParam As Object = Nothing) As frmBrowser
+Public Function NewInstance(Optional ByVal oParam As Object = Nothing) As frmJsApp
 
-Set NewInstance = New frmBrowser
+Set NewInstance = New frmJsApp
 Set NewInstance.Param = oParam
 
 End Function
@@ -128,6 +128,19 @@ Interaction.SaveSetting szAppName, szSection, szKey, szSetting
 
 End Sub
 
+Public Function GetAllSettings(ByVal szAppName As String, ByVal szSection As String) As Object
+
+Dim arrSettings As Variant, i As Integer, sz As String
+arrSettings = Interaction.GetAllSettings(szAppName, szSection)
+sz = "({"
+For i = LBound(arrSettings, 1) To UBound(arrSettings, 1)
+    sz = sz + arrSettings(i, 0) + ":""" + arrSettings(i, 1) + """" + ", "
+Next
+Mid(sz, Len(sz) - 1, 2) = "})"
+Set GetAllSettings = WebBrowser.Document.parentWindow.eval(sz)
+
+End Function
+
 Public Sub DeleteSetting(ByVal szAppName As String, _
         Optional ByVal szSection As String, Optional ByVal szKey As String)
 
@@ -145,6 +158,22 @@ RtlMoveMemory lpDst, lpSrc, dwCount
 
 End Sub
 
+Public Function GetMem1(ByVal lpuc As Long) As Byte
+
+Dim uc As Integer
+RtlMoveMemory VarPtr(uc), lpuc, 1
+GetMem1 = uc
+
+End Function
+
+Public Function GetMem2(ByVal lpw As Long) As Integer
+
+Dim w As Integer
+RtlMoveMemory VarPtr(w), lpw, 2
+GetMem2 = w
+
+End Function
+
 Public Function GetMem4(ByVal lpdw As Long) As Long
 
 Dim dw As Long
@@ -152,6 +181,18 @@ RtlMoveMemory VarPtr(dw), lpdw, 4
 GetMem4 = dw
 
 End Function
+
+Public Sub PutMem1(ByVal lpuc As Long, ByVal uc As Byte)
+
+RtlMoveMemory lpuc, VarPtr(uc), 1
+
+End Sub
+
+Public Sub PutMem2(ByVal lpw As Long, ByVal w As Integer)
+
+RtlMoveMemory lpw, VarPtr(w), 2
+
+End Sub
 
 Public Sub PutMem4(ByVal lpdw As Long, ByVal dw As Long)
 

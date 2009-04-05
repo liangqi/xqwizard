@@ -1,4 +1,4 @@
-Attribute VB_Name = "mdlBrowser"
+Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
@@ -18,10 +18,10 @@ Dim szPath As String
 szPath = App.Path
 szPath = szPath + IIf(Right(szPath, 1) = "\", "", "\")
 
-Dim newForm As New frmBrowser
-Set newForm.Param = Nothing
-newForm.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
-newForm.Show
+Dim newWindow As New frmJsApp
+Set newWindow.Param = Nothing
+newWindow.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
+newWindow.Show
 
 hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
 

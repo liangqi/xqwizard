@@ -33,15 +33,15 @@ var STYLE_DIALOG = 3;
 var JS = {
   // Open a new Window
   open:function(htmlFile, style, callback) {
-    var newForm = Form.NewInstance({global:JS.global, parent:Form, onLoad:callback});
+    var newWindow = VB.NewInstance({global:JS.global, parent:VB, onLoad:callback});
     JS.setStyle(style);
-    newForm.WebBrowser.Navigate2(JS.appPath + htmlFile);
+    newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
     if (style == STYLE_DIALOG) {
-      newForm.Show(1, Form);
+      newWindow.Show(1, VB);
     } else {
-      newForm.Show(0);
+      newWindow.Show(0);
     }
-    return newForm;
+    return newWindow;
   },
 
   // Retrieve "window.document" of another Window
@@ -71,9 +71,9 @@ var JS = {
       dwStyle = WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
       break;
     }
-    JS.callProc(JS.fnSetWindowLong, Form.hWnd, GWL_STYLE, dwStyle);
+    JS.callProc(JS.fnSetWindowLong, VB.hWnd, GWL_STYLE, dwStyle);
     JS.callProc(JS.fnSetWindowPos,
-        Form.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
+        VB.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
   },
 
   // Popup a Context Menu
@@ -81,43 +81,43 @@ var JS = {
     JS.__clickMenu__ = callback;
     for (var i = 0; i < arrMenu.length; i ++) {
       var menuDesc = arrMenu[i];
-      var menuItem = Form.MenuItem(i);
+      var menuItem = VB.MenuItem(i);
       if (i > 0) {
-        Form.Load(Form.MenuItem(i));
+        VB.Load(VB.MenuItem(i));
       }
-      Form.MenuItem(i).Checked = (typeof menuDesc.checked == "boolean" ? menuDesc.checked : false);
-      Form.MenuItem(i).Enabled = (typeof menuDesc.enabled == "boolean" ? menuDesc.enabled : true);
-      Form.MenuItem(i).Caption = menuDesc.caption;
+      VB.MenuItem(i).Checked = (typeof menuDesc.checked == "boolean" ? menuDesc.checked : false);
+      VB.MenuItem(i).Enabled = (typeof menuDesc.enabled == "boolean" ? menuDesc.enabled : true);
+      VB.MenuItem(i).Caption = menuDesc.caption;
     }
-    Form.PopupMenu(Form.Menu, 0, x, y);
+    VB.PopupMenu(VB.Menu, 0, x, y);
     for (var i = arrMenu.length - 1; i > 0; i --) {
-      Form.Unload(Form.MenuItem(i));
+      VB.Unload(VB.MenuItem(i));
     }
   },
 
   // Popup an Info Dialog
   info:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONINFORMATION);
+    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONINFORMATION);
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONEXCLAMATION);
+    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONEXCLAMATION);
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONSTOP);
+    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONSTOP);
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
+    return JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
   },
 
   // Allocate memory blocks for an Array
   allocArray:function(arr) {
-    var lpArray = Form.Alloc(arr.length * 4);
+    var lpArray = VB.Alloc(arr.length * 4);
     for (var i = 0; i < arr.length; i ++) {
       PutMem4(lpArray + i * 4, arr[i]);
     }
@@ -131,10 +131,10 @@ var JS = {
       throw new Error("Invalid Function Address!");
     }
     if (arguments.length == 1) {
-      return Form.CallProc(lpProc, 0, 0);
+      return VB.CallProc(lpProc, 0, 0);
     }
     var paramLen = arguments.length - 1;
-    var lpParams = Form.Alloc(paramLen * 4);
+    var lpParams = VB.Alloc(paramLen * 4);
     var lpData = lpParams;
     var arrStrings = new Array(paramLen);
     for (var i = 0; i < paramLen; i ++) {
@@ -142,25 +142,25 @@ var JS = {
       var item = arguments[i + 1];
       switch (typeof item) {
       case "number":
-        Form.PutMem4(lpData, item);
+        VB.PutMem4(lpData, item);
         break;
       case "boolean":
-        Form.PutMem4(lpData, item ? 1 : 0);
-        Form.StrDup();
+        VB.PutMem4(lpData, item ? 1 : 0);
+        VB.StrDup();
         break;
       case "string":
-        arrStrings[i] = Form.StrDup(item);
-        Form.PutMem4(lpData, arrStrings[i]);
+        arrStrings[i] = VB.StrDup(item);
+        VB.PutMem4(lpData, arrStrings[i]);
         break;
       default:
         arrIsString.push(false);
       }
       lpData += 4;
     }
-    var retVal = Form.CallProc(lpProc, lpParams, paramLen * 4);
+    var retVal = VB.CallProc(lpProc, lpParams, paramLen * 4);
     for (var i = 0; i < paramLen; i ++) {
       if (arrStrings[i] != 0) {
-        Form.Free(arrStrings[i]);
+        VB.Free(arrStrings[i]);
       }
     }
     return retVal;
@@ -169,25 +169,25 @@ var JS = {
   // Called in "DocumentComplete"
   __init__:function() {
     // Windows APIs
-    JS.modKernel = Form.LoadLibrary("KERNEL32.DLL");
-    JS.modUser = Form.LoadLibrary("USER32.DLL");
-    JS.fnMessageBox = Form.GetProcAddress(JS.modUser, "MessageBoxA");
-    JS.fnSetWindowLong = Form.GetProcAddress(JS.modUser, "SetWindowLongA");
-    JS.fnSetWindowPos = Form.GetProcAddress(JS.modUser, "SetWindowPos");
+    JS.modKernel = VB.LoadLibrary("KERNEL32.DLL");
+    JS.modUser = VB.LoadLibrary("USER32.DLL");
+    JS.fnMessageBox = VB.GetProcAddress(JS.modUser, "MessageBoxA");
+    JS.fnSetWindowLong = VB.GetProcAddress(JS.modUser, "SetWindowLongA");
+    JS.fnSetWindowPos = VB.GetProcAddress(JS.modUser, "SetWindowPos");
 
     // appPath
-    var lpFileName = Form.Alloc(1024);
-    JS.callProc(Form.GetProcAddress(JS.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
-    var appPath = Form.GetStr(lpFileName);
-    Form.Free(lpFileName);
+    var lpFileName = VB.Alloc(1024);
+    JS.callProc(VB.GetProcAddress(JS.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
+    var appPath = VB.GetStr(lpFileName);
+    VB.Free(lpFileName);
     JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
 
     // global, parent
-    if (Form.Param != null) {
-      JS.global = (typeof Form.Param.global == "object" ? Form.Param.global : null);
-      JS.parent = (typeof Form.Param.parent == "object" ? Form.Param.parent : null);
-      if (typeof Form.Param.onLoad == "function") {
-        Form.Param.onLoad();
+    if (VB.Param != null) {
+      JS.global = (typeof VB.Param.global == "object" ? VB.Param.global : null);
+      JS.parent = (typeof VB.Param.parent == "object" ? VB.Param.parent : null);
+      if (typeof VB.Param.onLoad == "function") {
+        VB.Param.onLoad();
       }
     }
   }
