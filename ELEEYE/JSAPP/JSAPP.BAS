@@ -2,6 +2,7 @@ Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+
 Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
 Private Declare Function CallNextHookEx Lib "USER32.DLL" (ByVal hhk As Long, ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Private Declare Sub UnhookWindowsHookEx Lib "USER32.DLL" (ByVal hhk As Long)
@@ -10,33 +11,9 @@ Private Declare Function GetKeyState Lib "USER32.DLL" (ByVal nVirtKey As Long) A
 Private Const WH_KEYBOARD As Long = 2
 Private Const VK_CONTROL As Long = &H11
 
-Private App_bRunning As Boolean, hhkPrev As Long
+Public oGlobal As Object
 
-Public Sub Main()
-
-Dim szPath As String
-szPath = App.Path
-szPath = szPath + IIf(Right(szPath, 1) = "\", "", "\")
-
-Dim newWindow As New frmJsApp
-Set newWindow.Param = Nothing
-newWindow.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
-newWindow.Show
-
-hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
-
-App_bRunning = True
-Do While App_bRunning
-    Sleep 1
-    DoEvents
-    If Forms.Count = 0 Then
-        App_bRunning = False
-    End If
-Loop
-
-UnhookWindowsHookEx hhkPrev
-
-End Sub
+Private bRunning As Boolean, hhkPrev As Long
 
 Public Function NewKeyboardProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
@@ -59,3 +36,39 @@ End If
 NewKeyboardProc = CallNextHookEx(hhkPrev, iCode, wParam, lParam)
 
 End Function
+
+Public Function NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+On Error Resume Next
+NewWndProc = CallByName(oGlobal.wndProcs, "new_" & hWnd, VbMethod, hWnd, uMsg, wParam, lParam)
+On Error GoTo 0
+
+End Function
+
+Public Sub Main()
+
+Set oGlobal = Nothing
+
+Dim szPath As String
+szPath = App.Path
+szPath = szPath + IIf(Right(szPath, 1) = "\", "", "\")
+
+Dim newWindow As New frmJsApp
+Set newWindow.Param = Nothing
+newWindow.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
+newWindow.Show
+
+hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
+
+bRunning = True
+Do While bRunning
+    Sleep 1
+    DoEvents
+    If Forms.Count = 0 Then
+        bRunning = False
+    End If
+Loop
+
+UnhookWindowsHookEx hhkPrev
+
+End Sub

@@ -1,9 +1,9 @@
 function getGlobalText() {
-  text.value = JS.global.text;
+  text.value = Global.text;
 }
 
 function setGlobalText() {
-  JS.global.text = text.value;
+  Global.text = text.value;
 }
 
 function newWindow() {
@@ -32,7 +32,7 @@ function callProc() {
 }
 
 function callTest() {
-  popAll(VB.GetAllSettings("XQWizard", "Gui"));
+  VB.CallPrevWndProc(123456, 0, 0, 0);
 }
 
 function callParent() {
@@ -46,6 +46,7 @@ function closeWindow() {
 }
 
 function onClose() {
+  JS.restoreWndProc(VB.hWnd);
   alert("CLOSE!");
 }
 
@@ -70,11 +71,11 @@ function popAllAttr(obj) {
 }
 
 function main() {
-  if (JS.global == null) {
-    JS.global = {};
+  if (typeof Global.text != "string") {
+    Global.text = "null";
   }
-  if (typeof JS.global.text != "string") {
-    JS.global.text = "null";
-  }
-  text.value = JS.global.text;
+  text.value = Global.text;
+  JS.setNewWndProc(VB.hWnd, function(hWnd, uMsg, wParam, lParam) {
+    return JS.callProc(JS.win32.fnCallWindowProc, JS.getPrevWndProc(hWnd), hWnd, uMsg, wParam, lParam);
+  });
 }

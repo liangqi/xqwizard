@@ -32,7 +32,7 @@ Begin VB.Form frmJsApp
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -52,15 +52,18 @@ Option Explicit
 
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
-Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" (ByVal hMod As Long, ByVal szProcName As String) As Long
+Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" _
+        (ByVal hMod As Long, ByVal szProcName As String) As Long
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Declare Function StrDupA Lib "JSVBBASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
 Private Declare Function AllocA Lib "JSVBBASE.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
 Private Declare Sub FreeA Lib "JSVBBASE.DLL" Alias "_Free@4" (ByVal lp As Long)
-Private Declare Function CallProcA Lib "JSVBBASE.DLL" Alias "_CallProc@12" (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
+Private Declare Function CallProcA Lib "JSVBBASE.DLL" Alias "_CallProc@12" _
+        (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
 Public Param As Object
 
@@ -99,6 +102,24 @@ Set NewInstance = New frmJsApp
 Set NewInstance.Param = oParam
 
 End Function
+
+Public Property Get Global_() As Object
+
+Set Global_ = oGlobal
+
+End Property
+
+Public Property Let Global_(ByVal obj As Object)
+
+Set oGlobal = obj
+
+End Property
+
+Public Property Get NewWndProc() As Long
+
+NewWndProc = Assign(AddressOf mdlJsApp.NewWndProc)
+
+End Property
 
 ' === Begin Visual Basic Routines ===
 

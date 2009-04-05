@@ -1,4 +1,5 @@
 var GWL_STYLE = -16;
+var GWL_WNDPROC = -4;
 
 var WS_MAXIMIZEBOX = 0x10000;
 var WS_MINIMIZEBOX = 0x20000;
@@ -30,10 +31,12 @@ var STYLE_FIXED = 1;
 var STYLE_SIZABLE = 2;
 var STYLE_DIALOG = 3;
 
+var Global;
+
 var JS = {
   // Open a new Window
   open:function(htmlFile, style, callback) {
-    var newWindow = VB.NewInstance({global:JS.global, parent:VB, onLoad:callback});
+    var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
     JS.setStyle(style);
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
     if (style == STYLE_DIALOG) {
@@ -71,8 +74,8 @@ var JS = {
       dwStyle = WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
       break;
     }
-    JS.callProc(JS.fnSetWindowLong, VB.hWnd, GWL_STYLE, dwStyle);
-    JS.callProc(JS.fnSetWindowPos,
+    JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_STYLE, dwStyle);
+    JS.callProc(JS.win32.fnSetWindowPos,
         VB.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
   },
 
@@ -97,22 +100,22 @@ var JS = {
 
   // Popup an Info Dialog
   info:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONINFORMATION);
+    JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONINFORMATION);
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONEXCLAMATION);
+    JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONEXCLAMATION);
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
-    JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONSTOP);
+    JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONSTOP);
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return JS.callProc(JS.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
+    return JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
   },
 
   // Allocate memory blocks for an Array
@@ -153,7 +156,7 @@ var JS = {
         VB.PutMem4(lpData, arrStrings[i]);
         break;
       default:
-        arrIsString.push(false);
+        VB.PutMem4(lpData, 0);
       }
       lpData += 4;
     }
@@ -166,25 +169,60 @@ var JS = {
     return retVal;
   },
 
+  // Set New User-Defined WndProc
+  setNewWndProc:function(hWnd, wndProc) {
+    Global.wndProcs["new_" + hWnd] = wndProc;
+    var lpPrev = Global.wndProcs["lpPrev_" + hWnd];
+    if (typeof lpPrev == "number") {
+      JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, VB.NewWndProc);
+    } else {
+      Global.wndProcs["lpPrev_" + hWnd] =
+          JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, VB.NewWndProc);
+    }
+  },
+
+  // Remove User-Defined WndProc
+  restoreWndProc:function(hWnd) {
+    var lpPrev = Global.wndProcs["lpPrev_" + hWnd];
+    if (typeof lpPrev == "number") {
+      JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, lpPrev);
+      delete Global.wndProcs["lpPrev_" + hWnd];
+    }
+  },
+
+  // Get Default WndProc
+  getPrevWndProc:function(hWnd) {
+    return Global.wndProcs["lpPrev_" + hWnd];
+  },
+
   // Called in "DocumentComplete"
   __init__:function() {
     // Windows APIs
-    JS.modKernel = VB.LoadLibrary("KERNEL32.DLL");
-    JS.modUser = VB.LoadLibrary("USER32.DLL");
-    JS.fnMessageBox = VB.GetProcAddress(JS.modUser, "MessageBoxA");
-    JS.fnSetWindowLong = VB.GetProcAddress(JS.modUser, "SetWindowLongA");
-    JS.fnSetWindowPos = VB.GetProcAddress(JS.modUser, "SetWindowPos");
+    JS.win32 = {};
+    JS.win32.modKernel = VB.LoadLibrary("KERNEL32.DLL");
+    var modUser = VB.LoadLibrary("USER32.DLL");
+    JS.win32.modUser = modUser;
+    JS.win32.fnMessageBox = VB.GetProcAddress(modUser, "MessageBoxA");
+    JS.win32.fnSetWindowLong = VB.GetProcAddress(modUser, "SetWindowLongA");
+    JS.win32.fnSetWindowPos = VB.GetProcAddress(modUser, "SetWindowPos");
+    JS.win32.fnCallWindowProc = VB.GetProcAddress(modUser, "CallWindowProcA");
 
     // appPath
     var lpFileName = VB.Alloc(1024);
-    JS.callProc(VB.GetProcAddress(JS.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
+    JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
     var appPath = VB.GetStr(lpFileName);
     VB.Free(lpFileName);
     JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
 
-    // global, parent
+    // Global_, parent, onLoad
+    if (VB.Global_ == null) {
+      VB.Global_ = {};
+    }
+    Global = VB.Global_;
+    if (Global.wndProcs == null) {
+      Global.wndProcs = {};
+    }
     if (VB.Param != null) {
-      JS.global = (typeof VB.Param.global == "object" ? VB.Param.global : null);
       JS.parent = (typeof VB.Param.parent == "object" ? VB.Param.parent : null);
       if (typeof VB.Param.onLoad == "function") {
         VB.Param.onLoad();
