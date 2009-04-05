@@ -30,12 +30,12 @@ var STYLE_FIXED = 1;
 var STYLE_SIZABLE = 2;
 var STYLE_DIALOG = 3;
 
-var Browser = {
+var JS = {
   // Open a new Window
   open:function(htmlFile, style, callback) {
-    var newForm = Form.NewInstance({global:Browser.global, parent:Form, onLoad:callback});
-    Browser.setStyle(style);
-    newForm.WebBrowser.Navigate2(Browser.appPath + htmlFile);
+    var newForm = Form.NewInstance({global:JS.global, parent:Form, onLoad:callback});
+    JS.setStyle(style);
+    newForm.WebBrowser.Navigate2(JS.appPath + htmlFile);
     if (style == STYLE_DIALOG) {
       newForm.Show(1, Form);
     } else {
@@ -51,7 +51,7 @@ var Browser = {
 
   // Retrieve "window" of another Window
   getWindow:function(another) {
-    return Browser.getDocument(another).parentWindow;
+    return JS.getDocument(another).parentWindow;
   },
 
   // Change Style
@@ -71,14 +71,14 @@ var Browser = {
       dwStyle = WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
       break;
     }
-    Browser.callProc(Browser.fnSetWindowLong, Form.hWnd, GWL_STYLE, dwStyle);
-    Browser.callProc(Browser.fnSetWindowPos,
+    JS.callProc(JS.fnSetWindowLong, Form.hWnd, GWL_STYLE, dwStyle);
+    JS.callProc(JS.fnSetWindowPos,
         Form.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
   },
 
   // Popup a Context Menu
   popupMenu:function(arrMenu, x, y, callback) {
-    Browser.__clickMenu__ = callback;
+    JS.__clickMenu__ = callback;
     for (var i = 0; i < arrMenu.length; i ++) {
       var menuDesc = arrMenu[i];
       var menuItem = Form.MenuItem(i);
@@ -97,22 +97,22 @@ var Browser = {
 
   // Popup an Info Dialog
   info:function(text, caption) {
-    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONINFORMATION);
+    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONINFORMATION);
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
-    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONEXCLAMATION);
+    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONEXCLAMATION);
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
-    Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONSTOP);
+    JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONSTOP);
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return Browser.callProc(Browser.fnMessageBox, Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
+    return JS.callProc(JS.fnMessageBox, Form.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
   },
 
   // Allocate memory blocks for an Array
@@ -169,23 +169,23 @@ var Browser = {
   // Called in "DocumentComplete"
   __init__:function() {
     // Windows APIs
-    Browser.modKernel = Form.LoadLibrary("KERNEL32.DLL");
-    Browser.modUser = Form.LoadLibrary("USER32.DLL");
-    Browser.fnMessageBox = Form.GetProcAddress(Browser.modUser, "MessageBoxA");
-    Browser.fnSetWindowLong = Form.GetProcAddress(Browser.modUser, "SetWindowLongA");
-    Browser.fnSetWindowPos = Form.GetProcAddress(Browser.modUser, "SetWindowPos");
+    JS.modKernel = Form.LoadLibrary("KERNEL32.DLL");
+    JS.modUser = Form.LoadLibrary("USER32.DLL");
+    JS.fnMessageBox = Form.GetProcAddress(JS.modUser, "MessageBoxA");
+    JS.fnSetWindowLong = Form.GetProcAddress(JS.modUser, "SetWindowLongA");
+    JS.fnSetWindowPos = Form.GetProcAddress(JS.modUser, "SetWindowPos");
 
     // appPath
     var lpFileName = Form.Alloc(1024);
-    Browser.callProc(Form.GetProcAddress(Browser.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
+    JS.callProc(Form.GetProcAddress(JS.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
     var appPath = Form.GetStr(lpFileName);
     Form.Free(lpFileName);
-    Browser.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
+    JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
 
     // global, parent
     if (Form.Param != null) {
-      Browser.global = (typeof Form.Param.global == "object" ? Form.Param.global : null);
-      Browser.parent = (typeof Form.Param.parent == "object" ? Form.Param.parent : null);
+      JS.global = (typeof Form.Param.global == "object" ? Form.Param.global : null);
+      JS.parent = (typeof Form.Param.parent == "object" ? Form.Param.parent : null);
       if (typeof Form.Param.onLoad == "function") {
         Form.Param.onLoad();
       }
