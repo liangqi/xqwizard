@@ -32,7 +32,7 @@ Begin VB.Form frmJsApp
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -51,12 +51,11 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
-Private Declare Sub FreeLibraryA Lib "KERNEL32.DLL" Alias "FreeLibrary" (ByVal hMod As Long)
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" _
         (ByVal hMod As Long, ByVal szProcName As String) As Long
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
-Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpcsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpcsz As Long, ByVal dwLen As Long) As String
 Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Declare Function StrDupA Lib "JSVBBASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
@@ -67,13 +66,26 @@ Private Declare Function CallProcA Lib "JSVBBASE.DLL" Alias "_CallProc@12" _
 
 Public Param As Object
 
+Private Sub Form_Unload(nCancel As Integer)
+
+Dim bCancel As Boolean
+bCancel = False
+On Error Resume Next
+bCancel = WebBrowser.Document.parentWindow.VB_Unload(0)
+On Error GoTo 0
+nCancel = IIf(bCancel, 1, 0)
+
+End Sub
+
 Private Sub Form_Resize()
 
-If WindowState = vbMinimized Then
-    Exit Sub
+If WindowState <> vbMinimized Then
+    WebBrowser.Width = ScaleWidth
+    WebBrowser.Height = ScaleHeight
 End If
-WebBrowser.Width = ScaleWidth
-WebBrowser.Height = ScaleHeight
+On Error Resume Next
+WebBrowser.Document.parentWindow.VB_Resize
+On Error GoTo 0
 
 End Sub
 
@@ -91,7 +103,7 @@ End Sub
 Private Sub MenuItem_Click(nIndex As Integer)
 
 On Error Resume Next
-CallByName WebBrowser.Document.parentWindow.JS, "__clickMenu__", VbMethod, nIndex
+WebBrowser.Document.parentWindow.MenuItem_Click nIndex
 On Error GoTo 0
 
 End Sub
@@ -134,6 +146,12 @@ Public Sub Unload(ByVal obj As Object)
 VB.Unload obj
 
 End Sub
+
+Public Function LoadPicture(ByVal szFileName As String) As StdPicture
+
+Set LoadPicture = VB.LoadPicture(szFileName)
+
+End Function
 
 Public Function GetSetting(ByVal szAppName As String, ByVal szSection As String, _
         ByVal szKey As String, Optional ByVal szDefault As String) As String
@@ -221,9 +239,18 @@ RtlMoveMemory lpdw, VarPtr(dw), 4
 
 End Sub
 
-Public Function GetStr(ByVal lpsz As Long) As String
+Public Function GetStr(ByVal lpcsz As Long) As String
 
-GetStr = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
+GetStr = SysAllocStringByteLen(lpcsz, lstrlenA(lpcsz))
+
+End Function
+
+Public Function SetStr(ByVal lpsz As Long, ByVal sz As String) As Long
+
+Dim nLen As Long
+nLen = lstrlenA(VarPtr(sz)) + 1
+RtlMoveMemory lpsz, VarPtr(sz), nLen
+SetStr = nLen
 
 End Function
 
@@ -254,12 +281,6 @@ Public Function LoadLibrary(ByVal szLibFileName As String) As Long
 LoadLibrary = LoadLibraryA(szLibFileName)
 
 End Function
-
-Public Sub FreeLibrary(ByVal hMod As Long)
-
-FreeLibraryA hMod
-
-End Sub
 
 Public Function GetProcAddress(ByVal hMod As Long, ByVal szProcName As String) As Long
 

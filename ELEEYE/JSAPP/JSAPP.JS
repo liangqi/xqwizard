@@ -1,35 +1,97 @@
-var GWL_STYLE = -16;
-var GWL_WNDPROC = -4;
+// GetWindowLong
+var GWL_STYLE		= -16;
+var GWL_WNDPROC		= -4;
 
-var WS_MAXIMIZEBOX = 0x10000;
-var WS_MINIMIZEBOX = 0x20000;
-var WS_THICKFRAME = 0x40000;
-var WS_SYSMENU = 0x80000;
-var WS_CAPTION = 0xC00000;
-var WS_VISIBLE = 0x10000000;
+// SetWindowLong - GWL_STYLE
+var WS_MAXIMIZEBOX	= 0x10000;
+var WS_MINIMIZEBOX	= 0x20000;
+var WS_THICKFRAME	= 0x40000;
+var WS_SYSMENU		= 0x80000;
+var WS_CAPTION		= 0xC00000;
+var WS_VISIBLE		= 0x10000000;
 
-var SWP_NOSIZE = 1;
-var SWP_NOMOVE = 2;
-var SWP_NOZORDER = 4;
-var SWP_FRAMECHANGED = 0x20;
+// SetWindowPos
+var SWP_NOSIZE		= 1;
+var SWP_NOMOVE		= 2;
+var SWP_NOZORDER	= 4;
+var SWP_FRAMECHANGED	= 0x20;
 
-var MB_ICONSTOP = 16;
-var MB_ICONQUESTION = 32;
-var MB_ICONEXCLAMATION = 48;
-var MB_ICONINFORMATION = 64;
-var MB_OKCANCEL = 1;
-var MB_ABORTRETRYIGNORE = 2;
-var MB_YESNOCANCEL = 3;
-var MB_YESNO = 4;
-var MB_RETRYCANCEL = 5;
+// DeleteMenu
+var SC_SIZE		= 0xF000;
+var SC_MINIMIZE		= 0xF020;
+var SC_MAXIMIZE		= 0xF030;
+var SC_RESTORE		= 0xF120;
 
-var IDOK = 1;
-var IDCANCEL = 2;
+// GetSysColor
+var COLOR_SCROLLBAR	= 0;
+var COLOR_BACKGROUND	= 1;
+var COLOR_ACTIVECAPTION	= 2;
+var COLOR_INACTIVECAPTION = 3;
+var COLOR_MENU		= 4;
+var COLOR_WINDOW	= 5;
+var COLOR_WINDOWFRAME	= 6;
+var COLOR_MENUTEXT	= 7;
+var COLOR_WINDOWTEXT	= 8;
+var COLOR_CAPTIONTEXT	= 9;
+var COLOR_ACTIVEBORDER	= 10;
+var COLOR_INACTIVEBORDER = 11;
+var COLOR_APPWORKSPACE	= 12;
+var COLOR_HIGHLIGHT	= 13;
+var COLOR_HIGHLIGHTTEXT	= 14;
+var COLOR_BTNFACE	= 15;
+var COLOR_BTNSHADOW	= 16;
+var COLOR_GRAYTEXT	= 17;
+var COLOR_BTNTEXT	= 18;
+var COLOR_INACTIVECAPTIONTEXT = 19;
+var COLOR_BTNHIGHLIGHT	= 20;
+var COLOR_3DDKSHADOW	= 21;
+var COLOR_3DLIGHT	= 22;
+var COLOR_INFOTEXT	= 23;
+var COLOR_INFOBK	= 24;
+var COLOR_HOTLIGHT	= 26;
+var COLOR_GRADIENTACTIVECAPTION = 27;
+var COLOR_GRADIENTINACTIVECAPTION = 28;
+var COLOR_DESKTOP	= COLOR_BACKGROUND;
+var COLOR_3DFACE	= COLOR_BTNFACE;
+var COLOR_3DSHADOW	= COLOR_BTNSHADOW;
+var COLOR_3DHIGHLIGHT	= COLOR_BTNHIGHLIGHT;
+var COLOR_3DHILIGHT	= COLOR_BTNHIGHLIGHT;
+var COLOR_BTNHILIGHT	= COLOR_BTNHIGHLIGHT;
 
-var STYLE_NONE = 0;
-var STYLE_FIXED = 1;
-var STYLE_SIZABLE = 2;
-var STYLE_DIALOG = 3;
+// MessageBox
+var MB_ICONSTOP		= 16;
+var MB_ICONQUESTION	= 32;
+var MB_ICONEXCLAMATION	= 48;
+var MB_ICONINFORMATION	= 64;
+var MB_OKCANCEL		= 1;
+var MB_ABORTRETRYIGNORE	= 2;
+var MB_YESNOCANCEL	= 3;
+var MB_YESNO		= 4;
+var MB_RETRYCANCEL	= 5;
+
+// MessageBox - Return Value
+var IDOK		= 1;
+var IDCANCEL		= 2;
+
+// NotifyIcon
+var NIM_ADD		= 0;
+var NIM_MODIFY		= 1;
+var NIM_DELETE		= 2;
+var NIF_MESSAGE		= 1;
+var NIF_ICON		= 2;
+var NIF_TIP		= 4;
+var NID_SIZE		= 88;
+var WM_TRAY		= 0x401;
+var WM_LBUTTONUP        = 0x202;
+var WM_RBUTTONUP        = 0x205;
+
+// Window Style
+var STYLE_FIXED_NOTITLE	= 0;
+var STYLE_FIXED		= 1;
+var STYLE_SIZABLE_NOTITLE = 2;
+var STYLE_SIZABLE	= 3;
+var STYLE_DIALOG_NOTITLE = 4;
+var STYLE_DIALOG	= 5;
 
 var Global;
 
@@ -37,9 +99,14 @@ var JS = {
   // Open a new Window
   open:function(htmlFile, style, callback) {
     var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
-    JS.setStyle(style);
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
-    if (style == STYLE_DIALOG) {
+    JS.setStyle(newWindow.hWnd, style);
+    if (style >= STYLE_DIALOG) {
+      var hMenu = JS.callProc(JS.win32.fnGetSystemMenu, newWindow.hWnd, false);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_RESTORE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_SIZE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MINIMIZE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MAXIMIZE, 0);
       newWindow.Show(1, VB);
     } else {
       newWindow.Show(0);
@@ -58,30 +125,39 @@ var JS = {
   },
 
   // Change Style
-  setStyle:function(style) {
-    var dwStyle = 0;
+  setStyle:function(hWnd, style) {
+    var dwStyle = JS.callProc(JS.win32.fnGetWindowLong, hWnd, GWL_STYLE) & WS_VISIBLE;
     switch (style) {
-    case STYLE_NONE:
-      dwStyle = WS_THICKFRAME + WS_VISIBLE;
+    case STYLE_FIXED_NOTITLE:
       break;
     case STYLE_FIXED:
-      dwStyle = WS_MINIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
+      dwStyle += WS_MINIMIZEBOX + WS_SYSMENU + WS_CAPTION;
+      break;
+    case STYLE_SIZABLE_NOTITLE:
+      dwStyle += WS_THICKFRAME;
       break;
     case STYLE_SIZABLE:
-      dwStyle = WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_THICKFRAME + WS_VISIBLE;
+      dwStyle += WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_THICKFRAME;
+      break;
+    case STYLE_DIALOG_NOTITLE:
       break;
     case STYLE_DIALOG:
-      dwStyle = WS_SYSMENU + WS_CAPTION + WS_VISIBLE;
+      dwStyle += WS_SYSMENU + WS_CAPTION;
       break;
     }
-    JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_STYLE, dwStyle);
+    JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_STYLE, dwStyle);
     JS.callProc(JS.win32.fnSetWindowPos,
-        VB.hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
+        hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
+  },
+
+  // Sleep
+  sleep:function(millisec) {
+    JS.callProc(JS.win32.fnSleep, millisec);
   },
 
   // Popup a Context Menu
-  popupMenu:function(arrMenu, x, y, callback) {
-    JS.__clickMenu__ = callback;
+  popupMenu:function(arrMenu, x, y) {
+    var bold = -1;
     for (var i = 0; i < arrMenu.length; i ++) {
       var menuDesc = arrMenu[i];
       var menuItem = VB.MenuItem(i);
@@ -91,8 +167,15 @@ var JS = {
       VB.MenuItem(i).Checked = (typeof menuDesc.checked == "boolean" ? menuDesc.checked : false);
       VB.MenuItem(i).Enabled = (typeof menuDesc.enabled == "boolean" ? menuDesc.enabled : true);
       VB.MenuItem(i).Caption = menuDesc.caption;
+      if (typeof menuDesc.bold == "boolean" && menuDesc.bold) {
+        bold = i;
+      }
     }
-    VB.PopupMenu(VB.Menu, 0, x, y);
+    if (bold == -1) {
+      VB.PopupMenu(VB.Menu, 0, x, y);
+    } else {
+      VB.PopupMenu(VB.Menu, 0, x, y, VB.MenuItem(bold));
+    }
     for (var i = arrMenu.length - 1; i > 0; i --) {
       VB.Unload(VB.MenuItem(i));
     }
@@ -149,7 +232,6 @@ var JS = {
         break;
       case "boolean":
         VB.PutMem4(lpData, item ? 1 : 0);
-        VB.StrDup();
         break;
       case "string":
         arrStrings[i] = VB.StrDup(item);
@@ -190,22 +272,68 @@ var JS = {
     }
   },
 
+  // Add Tray Icon
+  addTrayIcon:function(hWnd, hIcon, szTip) {
+    var lpNid = VB.Alloc(NID_SIZE);
+    VB.SetMem4(lpNid, NID_SIZE);
+    VB.SetMem4(lpNid + 4, hWnd);
+    VB.SetMem4(lpNid + 8, 0);
+    VB.SetMem4(lpNid + 12, NIF_MESSAGE + NIF_ICON + NIF_TIP);
+    VB.SetMem4(lpNid + 16, WM_TRAY);
+    VB.SetMem4(lpNid + 20, hIcon);
+    VB.SetStr(lpNid + 24, szTip);
+    JS.callProc(JS.win32.fnNotifyIcon, NID_ADD, lpNid);
+    VB.Free(lpNid);
+  },
+
+  // Delete Tray Icon
+  deleteTrayIcon:function(hWnd) {
+    var lpNid = VB.Alloc(NID_SIZE);
+    VB.SetMem4(lpNid, NID_SIZE);
+    VB.SetMem4(lpNid + 4, hWnd);
+    VB.SetMem4(lpNid + 8, 0);
+    VB.SetMem4(lpNid + 12, 0);
+    JS.callProc(JS.win32.fnNotifyIcon, NID_DELETE, lpNid);
+    VB.Free(lpNid);
+  },
+
   // Get Default WndProc
   getPrevWndProc:function(hWnd) {
     return Global.wndProcs["lpPrev_" + hWnd];
+  },
+
+  // Get HTML Color Format
+  getHtmlColor:function(color) {
+    var colorHex = (16777216 + color).toString(16).substring(1, 7);
+    var colorHexRR = colorHex.substring(4, 6);
+    var colorHexGG = colorHex.substring(2, 4);
+    var colorHexBB = colorHex.substring(0, 2);
+    return "#" + colorHexRR + colorHexGG + colorHexBB;
   },
 
   // Called in "DocumentComplete"
   __init__:function() {
     // Windows APIs
     JS.win32 = {};
-    JS.win32.modKernel = VB.LoadLibrary("KERNEL32.DLL");
+
+    var modKernel = VB.LoadLibrary("KERNEL32.DLL");
+    JS.win32.modKernel = modKernel;
+    JS.win32.fnSleep = VB.GetProcAddress(modKernel, "Sleep");
+
     var modUser = VB.LoadLibrary("USER32.DLL");
     JS.win32.modUser = modUser;
     JS.win32.fnMessageBox = VB.GetProcAddress(modUser, "MessageBoxA");
+    JS.win32.fnGetWindowLong = VB.GetProcAddress(modUser, "GetWindowLongA");
     JS.win32.fnSetWindowLong = VB.GetProcAddress(modUser, "SetWindowLongA");
     JS.win32.fnSetWindowPos = VB.GetProcAddress(modUser, "SetWindowPos");
     JS.win32.fnCallWindowProc = VB.GetProcAddress(modUser, "CallWindowProcA");
+    JS.win32.fnGetSystemMenu = VB.GetProcAddress(modUser, "GetSystemMenu");
+    JS.win32.fnRemoveMenu = VB.GetProcAddress(modUser, "RemoveMenu");
+    JS.win32.fnGetSysColor = VB.GetProcAddress(modUser, "GetSysColor");
+
+    var modShell = VB.LoadLibrary("SHELL32.DLL");
+    JS.win32.modShell = modShell;
+    JS.win32.fnNotifyIcon = VB.GetProcAddress(modShell, "Shell_NotifyIconA");
 
     // appPath
     var lpFileName = VB.Alloc(1024);
@@ -213,6 +341,9 @@ var JS = {
     var appPath = VB.GetStr(lpFileName);
     VB.Free(lpFileName);
     JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
+
+    // commandLine
+    JS.commandLine = VB.GetStr(JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetCommandLineA")));
 
     // Global_, parent, onLoad
     if (VB.Global_ == null) {

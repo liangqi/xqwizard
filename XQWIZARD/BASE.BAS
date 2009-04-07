@@ -532,7 +532,7 @@ End Function
 
 ' === Begin TrayIcon ===
 
-Public Sub AddTrayIcon(ByRef frm As Form, Optional ByVal hIcon As Long = 0, Optional ByVal szTip As String = "")
+Public Sub AddTrayIcon(ByVal frm As Form, Optional ByVal hIcon As Long = 0, Optional ByVal szTip As String = "")
 
 Dim nid As NotifyIconData
 nid.cbSize = Len(nid)
@@ -546,7 +546,7 @@ Shell_NotifyIconA NIM_ADD, nid
 
 End Sub
 
-Public Sub DeleteTrayIcon(ByRef frm As Form)
+Public Sub DeleteTrayIcon(ByVal frm As Form)
 
 Dim nid As NotifyIconData
 nid.cbSize = Len(nid)
