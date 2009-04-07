@@ -56,6 +56,7 @@ Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddres
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpcsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpcsz As Long, ByVal dwLen As Long) As String
+Private Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
 Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Declare Function StrDupA Lib "JSVBBASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
@@ -103,7 +104,7 @@ End Sub
 Private Sub MenuItem_Click(nIndex As Integer)
 
 On Error Resume Next
-WebBrowser.Document.parentWindow.MenuItem_Click nIndex
+WebBrowser.Document.parentWindow.VB_ClickMenu nIndex
 On Error GoTo 0
 
 End Sub
@@ -124,6 +125,12 @@ End Property
 Public Property Let Global_(ByVal obj As Object)
 
 Set oGlobal = obj
+
+End Property
+
+Public Property Get Error(Optional ByVal dummy As Variant) As Variant
+
+Error = dummy
 
 End Property
 
@@ -245,12 +252,12 @@ GetStr = SysAllocStringByteLen(lpcsz, lstrlenA(lpcsz))
 
 End Function
 
-Public Function SetStr(ByVal lpsz As Long, ByVal sz As String) As Long
+Public Function PutStr(ByVal lpsz As Long, ByVal sz As String) As Long
 
 Dim nLen As Long
-nLen = lstrlenA(VarPtr(sz)) + 1
-RtlMoveMemory lpsz, VarPtr(sz), nLen
-SetStr = nLen
+nLen = lstrlenA(CvBStr(sz)) + 1
+RtlMoveMemory lpsz, CvBStr(sz), nLen
+PutStr = nLen
 
 End Function
 

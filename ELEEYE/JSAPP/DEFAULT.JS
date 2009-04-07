@@ -1,91 +1,65 @@
-function getGlobalText() {
-  text.value = Global.text;
-}
-
-function setGlobalText() {
-  Global.text = text.value;
-}
-
-function newWindow() {
-  JS.open("DEFAULT.HTM", STYLE_DIALOG, function() {
-    JS.info("Loaded!", "Test");
-  });
-}
-
 var arrTrayMenu = [
-  {caption:"Open", checked:true},
+  {caption:"Open", bold:true},
   {caption:"-"},
   {caption:"Exit"}
 ];
 
-function VB_ClickMenu(index) {
-  JS.info(VB.MenuItem(index).Caption, "Test");
-}
-
-function popupMenu() {
-  JS.popupMenu(arrTrayMenu, -5, -5);
-}
-
-function callProc() {
-  alert(JS.confirm("Confirm", "Continue?"));
-}
-
-function callTest() {
-  VB.CallPrevWndProc(123456, 0, 0, 0);
-}
-
-function callParent() {
-  if (JS.parent != null) {
-    JS.getWindow(JS.parent).onEvent({text:text.value});
-  }
-}
-
-function onEvent(obj) {
-  JS.info(obj.text + "/" + text.value, "Test");
-}
-
-function popAll(obj) {
-  var s = "";
-  for (var key in obj) {
-    s += key + ":" + obj[key] + ", ";
-  }
-  alert(s);
-}
-
-function popAllAttr(obj) {
-  var s = "";
-  for (var key in obj) {
-    s += key + ", ";
-  }
-  alert(s);
-}
-
 function VB_Resize() {
-  alert("Resize");
+  if (VB.WindowState == 1) {
+    JS.addTrayIcon(VB.hWnd, hIcon, "Test");
+    VB.Hide();
+  } else {
+    JS.deleteTrayIcon(VB.hWnd);
+  }
+}
+
+function VB_ClickMenu(index) {
+  switch (VB.MenuItem(index).Caption) {
+  case "Open":
+    VB.WindowState = 0;
+    VB.Show();
+    break;
+  case "Exit":
+    VB.Unload(VB);
+    break;
+  }
 }
 
 function VB_Unload() {
-  if (!JS.confirm("Close?", "Unload")) {
+  if (!JS.confirm("Exit?", "Test")) {
     return true;
+  }
+  if (VB.WindowState == 1) {
+    JS.deleteTrayIcon(VB.hWnd);
   }
   JS.restoreWndProc(VB.hWnd);
   return false;
 }
 
+function onRightClick() {
+  JS.openDialog(JS.appPath + "DIALOG.HTM");
+  return false;
+}
+
+var IDI_WARNING = 0x7F03;
+var LR_DEFAULTSIZE = 0x40;
+var LR_SHARED = 0x8000;
+var IMAGE_ICON = 1;
+
+var hIcon;
+
 function main() {
+  VB.Caption = "Test";
+  hIcon = JS.callProc(JS.win32.fnLoadImage, 0, IDI_WARNING, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
+  JS.setStyle(STYLE_FIXED);
   document.body.style.backgroundColor =
       JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
-
-  if (typeof Global.text != "string") {
-    Global.text = "null";
-  }
-  text.value = Global.text;
 
   JS.setNewWndProc(VB.hWnd, function(hWnd, uMsg, wParam, lParam) {
     if (uMsg == WM_TRAY) {
       if (lParam == WM_LBUTTONUP) {
         VB.WindowState = 0;
-        VB.Show
+        VB.Show();
         return false;
       } else if (lParam == WM_RBUTTONUP) {
         JS.popupMenu(arrTrayMenu);

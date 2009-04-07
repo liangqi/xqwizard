@@ -4,22 +4,6 @@
     <script language="javascript" src="jsapp.js"></script>
     <script language="javascript" src="default.js"></script>
   </head>
-  <body style="border:0px" border="0" oncontextmenu="return false">
-    窗口样式
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_FIXED_NOTITLE)" />Fixed No-Title
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_FIXED)" />Fixed
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_SIZABLE_NOTITLE)" />Sizable No-Title
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_SIZABLE)" />Sizable<br>
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_DIALOG_NOTITLE)" />Dialog No-Title<br>
-    <input type="radio" name="style" onclick="JS.setStyle(STYLE_DIALOG)" />Dialog<br>
-    <input id="text" type="text" /><br>
-    <input type="button" value="获取全局文本" onclick="getGlobalText()" />
-    <input type="button" value="设置全局文本" onclick="setGlobalText()" /><br>
-    <input type="button" value="打开新窗口" onclick="newWindow()" />
-    <input type="button" value="弹出菜单" onclick="popupMenu()" />
-    <input type="button" value="调用函数" onclick="callProc()" /><br>
-    <input type="button" value="测试功能" onclick="callTest()" />
-    <input type="button" value="呼叫父窗口" onclick="callParent()" />
-    <input type="button" value="关闭窗口" onclick="closeWindow()" />
+  <body style="border:0px;overflow:hidden" border="0" oncontextmenu="return onRightClick()">
   </body>
 </html>

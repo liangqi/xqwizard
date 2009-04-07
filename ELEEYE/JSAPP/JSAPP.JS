@@ -16,7 +16,7 @@ var SWP_NOMOVE		= 2;
 var SWP_NOZORDER	= 4;
 var SWP_FRAMECHANGED	= 0x20;
 
-// DeleteMenu
+// RemoveMenu
 var SC_SIZE		= 0xF000;
 var SC_MINIMIZE		= 0xF020;
 var SC_MAXIMIZE		= 0xF030;
@@ -97,21 +97,18 @@ var Global;
 
 var JS = {
   // Open a new Window
-  open:function(htmlFile, style, callback) {
+  open:function(htmlFile, callback) {
     var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
-    JS.setStyle(newWindow.hWnd, style);
-    if (style >= STYLE_DIALOG) {
-      var hMenu = JS.callProc(JS.win32.fnGetSystemMenu, newWindow.hWnd, false);
-      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_RESTORE, 0);
-      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_SIZE, 0);
-      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MINIMIZE, 0);
-      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MAXIMIZE, 0);
-      newWindow.Show(1, VB);
-    } else {
-      newWindow.Show(0);
-    }
+    newWindow.Show();
     return newWindow;
+  },
+
+  // Open a new Dialog (Modal)
+  openDialog:function(htmlFile, callback) {
+    var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
+    newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
+    newWindow.Show(1, VB);
   },
 
   // Retrieve "window.document" of another Window
@@ -125,29 +122,39 @@ var JS = {
   },
 
   // Change Style
-  setStyle:function(hWnd, style) {
+  setStyle:function(style) {
+    var hWnd = VB.hWnd;
     var dwStyle = JS.callProc(JS.win32.fnGetWindowLong, hWnd, GWL_STYLE) & WS_VISIBLE;
     switch (style) {
     case STYLE_FIXED_NOTITLE:
       break;
     case STYLE_FIXED:
-      dwStyle += WS_MINIMIZEBOX + WS_SYSMENU + WS_CAPTION;
+      dwStyle |= WS_MINIMIZEBOX | WS_SYSMENU | WS_CAPTION;
       break;
     case STYLE_SIZABLE_NOTITLE:
-      dwStyle += WS_THICKFRAME;
+      dwStyle |= WS_THICKFRAME;
       break;
     case STYLE_SIZABLE:
-      dwStyle += WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_SYSMENU + WS_CAPTION + WS_THICKFRAME;
+      dwStyle |= WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_CAPTION | WS_THICKFRAME;
       break;
     case STYLE_DIALOG_NOTITLE:
       break;
     case STYLE_DIALOG:
-      dwStyle += WS_SYSMENU + WS_CAPTION;
+      dwStyle |= WS_SYSMENU | WS_CAPTION;
       break;
     }
     JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_STYLE, dwStyle);
     JS.callProc(JS.win32.fnSetWindowPos,
-        hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_FRAMECHANGED);
+        hWnd, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+    var hMenu = JS.callProc(JS.win32.fnGetSystemMenu, hWnd, false);
+    if (style == STYLE_FIXED_NOTITLE || style == STYLE_FIXED) {
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MAXIMIZE, 0);
+    } else if (style == STYLE_DIALOG_NOTITLE || style == STYLE_DIALOG) {
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_RESTORE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_SIZE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MINIMIZE, 0);
+      JS.callProc(JS.win32.fnRemoveMenu, hMenu, SC_MAXIMIZE, 0);
+    }
   },
 
   // Sleep
@@ -157,6 +164,16 @@ var JS = {
 
   // Popup a Context Menu
   popupMenu:function(arrMenu, x, y) {
+    if (typeof JS.inPopupMenu == "object") {
+      return;
+    }
+    JS.inPopupMenu = {};
+    if (x == null) {
+      x = VB.Error;
+    }
+    if (y == null) {
+      y = VB.Error;
+    }
     var bold = -1;
     for (var i = 0; i < arrMenu.length; i ++) {
       var menuDesc = arrMenu[i];
@@ -171,14 +188,11 @@ var JS = {
         bold = i;
       }
     }
-    if (bold == -1) {
-      VB.PopupMenu(VB.Menu, 0, x, y);
-    } else {
-      VB.PopupMenu(VB.Menu, 0, x, y, VB.MenuItem(bold));
-    }
+    VB.PopupMenu(VB.Menu, 0, x, y, bold == -1 ? VB.Error : VB.MenuItem(bold));
     for (var i = arrMenu.length - 1; i > 0; i --) {
       VB.Unload(VB.MenuItem(i));
     }
+    delete JS.inPopupMenu;
   },
 
   // Popup an Info Dialog
@@ -198,7 +212,7 @@ var JS = {
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION + MB_OKCANCEL) == IDOK;
+    return JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION | MB_OKCANCEL) == IDOK;
   },
 
   // Allocate memory blocks for an Array
@@ -275,25 +289,25 @@ var JS = {
   // Add Tray Icon
   addTrayIcon:function(hWnd, hIcon, szTip) {
     var lpNid = VB.Alloc(NID_SIZE);
-    VB.SetMem4(lpNid, NID_SIZE);
-    VB.SetMem4(lpNid + 4, hWnd);
-    VB.SetMem4(lpNid + 8, 0);
-    VB.SetMem4(lpNid + 12, NIF_MESSAGE + NIF_ICON + NIF_TIP);
-    VB.SetMem4(lpNid + 16, WM_TRAY);
-    VB.SetMem4(lpNid + 20, hIcon);
-    VB.SetStr(lpNid + 24, szTip);
-    JS.callProc(JS.win32.fnNotifyIcon, NID_ADD, lpNid);
+    VB.PutMem4(lpNid, NID_SIZE);
+    VB.PutMem4(lpNid + 4, hWnd);
+    VB.PutMem4(lpNid + 8, 0);
+    VB.PutMem4(lpNid + 12, NIF_MESSAGE | NIF_ICON | NIF_TIP);
+    VB.PutMem4(lpNid + 16, WM_TRAY);
+    VB.PutMem4(lpNid + 20, hIcon);
+    VB.PutStr(lpNid + 24, szTip);
+    JS.callProc(JS.win32.fnNotifyIcon, NIM_ADD, lpNid);
     VB.Free(lpNid);
   },
 
   // Delete Tray Icon
   deleteTrayIcon:function(hWnd) {
     var lpNid = VB.Alloc(NID_SIZE);
-    VB.SetMem4(lpNid, NID_SIZE);
-    VB.SetMem4(lpNid + 4, hWnd);
-    VB.SetMem4(lpNid + 8, 0);
-    VB.SetMem4(lpNid + 12, 0);
-    JS.callProc(JS.win32.fnNotifyIcon, NID_DELETE, lpNid);
+    VB.PutMem4(lpNid, NID_SIZE);
+    VB.PutMem4(lpNid + 4, hWnd);
+    VB.PutMem4(lpNid + 8, 0);
+    VB.PutMem4(lpNid + 12, 0);
+    JS.callProc(JS.win32.fnNotifyIcon, NIM_DELETE, lpNid);
     VB.Free(lpNid);
   },
 
@@ -330,6 +344,7 @@ var JS = {
     JS.win32.fnGetSystemMenu = VB.GetProcAddress(modUser, "GetSystemMenu");
     JS.win32.fnRemoveMenu = VB.GetProcAddress(modUser, "RemoveMenu");
     JS.win32.fnGetSysColor = VB.GetProcAddress(modUser, "GetSysColor");
+    JS.win32.fnLoadImage = VB.GetProcAddress(modUser, "LoadImageA");
 
     var modShell = VB.LoadLibrary("SHELL32.DLL");
     JS.win32.modShell = modShell;
