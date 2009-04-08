@@ -3,16 +3,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=gb_2312-80">
     <script language="javascript" src="jsapp.js"></script>
   </head>
-  <body style="border:0px;overflow:hidden" border="0" oncontextmenu="return false">
+  <body style="border:0px;overflow:hidden" border="0" background="board.gif" oncontextmenu="return false">
     <script language="javascript"><!--
       function main() {
         VB.Caption = "Test";
         document.body.style.backgroundColor =
             JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
-        JS.setStyle(STYLE_DIALOG);
-        VB.Width = 6000;
-        VB.Height = 6000;
-        JS.show();
+        JS.show(STYLE_DIALOG, 336, 336);
       }
     --></script>
   </body>

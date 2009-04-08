@@ -37,8 +37,22 @@ function VB_Unload() {
 }
 
 function onRightClick() {
+  JS.popupMenu([{caption:"No Context Menu", enabled:false}]);
+}
+
+function openDialog() {
   JS.openDialog(JS.appPath + "DIALOG.HTM");
   return false;
+}
+
+function startThread() {
+  JS.warn("Thread not Available.", "Test");
+/*
+  JS.startThread(function(param) {
+    JS.sleep(10000);
+    JS.warn(param, "Test");
+  }, "Timeout!");
+*/
 }
 
 var IDI_WARNING = 0x7F03;
@@ -51,7 +65,6 @@ var hIcon;
 function main() {
   VB.Caption = "Test";
   hIcon = JS.callProc(JS.win32.fnLoadImage, 0, IDI_WARNING, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
-  JS.setStyle(STYLE_FIXED);
   document.body.style.backgroundColor =
       JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
 
@@ -69,7 +82,5 @@ function main() {
     return JS.callProc(JS.win32.fnCallWindowProc, JS.getPrevWndProc(hWnd), hWnd, uMsg, wParam, lParam);
   });
 
-  VB.Width = 6000;
-  VB.Height = 6000;
-  JS.show();
+  JS.show(STYLE_FIXED, 336, 336);
 }

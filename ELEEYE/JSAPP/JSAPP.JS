@@ -1,3 +1,6 @@
+// CreateThread
+var CREATE_SUSPENDED	= 4;
+
 // GetWindowLong
 var GWL_STYLE		= -16;
 var GWL_WNDPROC		= -4;
@@ -96,8 +99,22 @@ var STYLE_DIALOG	= 5;
 var Global;
 
 var JS = {
+  // Retrieve "window.document" of another Window
+  getDocument:function(another) {
+    return another.WebBrowser.Document;
+  },
+
+  // Retrieve "window" of another Window
+  getWindow:function(another) {
+    return JS.getDocument(another).parentWindow;
+  },
+
+  updateWindow:function() {
+    JS.callProc(JS.win32.fnUpdateWindow, VB.hWnd);
+  },
+
   // Open a new Window
-  open:function(htmlFile, param) {
+  openWindow:function(htmlFile, param) {
     var newWindow = VB.NewInstance(param);
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
     return newWindow;
@@ -116,25 +133,7 @@ var JS = {
       VB.Idle();
     }
     newWindow.Show(1, VB);
-  },
-
-  // Show Window (Non-Modal) or Dialog (Modal)
-  show:function() {
-    if (VB.Param != null && typeof VB.Param.ownerWindow == "object") {
-      JS.getWindow(VB.Param.ownerWindow).JS.dialogLoaded = true;
-    } else {
-      VB.Show();
-    }
-  },
-
-  // Retrieve "window.document" of another Window
-  getDocument:function(another) {
-    return another.WebBrowser.Document;
-  },
-
-  // Retrieve "window" of another Window
-  getWindow:function(another) {
-    return JS.getDocument(another).parentWindow;
+    JS.updateWindow();
   },
 
   // Change Style
@@ -173,9 +172,15 @@ var JS = {
     }
   },
 
-  // Sleep
-  sleep:function(millisec) {
-    JS.callProc(JS.win32.fnSleep, millisec);
+  // Show Window (Non-Modal) or Dialog (Modal)
+  show:function(style, clientWidth, clientHeight) {
+    JS.setStyle(style);
+    VB.Resize(clientWidth, clientHeight);
+    if (VB.Param != null && typeof VB.Param.ownerWindow == "object") {
+      JS.getWindow(VB.Param.ownerWindow).JS.dialogLoaded = true;
+    } else {
+      VB.Show();
+    }
   },
 
   // Popup a Context Menu
@@ -214,21 +219,31 @@ var JS = {
   // Popup an Info Dialog
   info:function(text, caption) {
     JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONINFORMATION);
+    JS.updateWindow();
   },
 
   // Popup an Exclaim Dialog
   warn:function(text, caption) {
     JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONEXCLAMATION);
+    JS.updateWindow();
   },
 
   // Popup an Error Dialog
   error:function(text, caption) {
     JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONSTOP);
+    JS.updateWindow();
   },
 
   // Popup a Question Dialog
   confirm:function(text, caption) {
-    return JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION | MB_OKCANCEL) == IDOK;
+    var retVal = JS.callProc(JS.win32.fnMessageBox, VB.hWnd, text, caption, MB_ICONQUESTION | MB_OKCANCEL) == IDOK;
+    JS.updateWindow();
+    return retVal;
+  },
+
+  // Sleep
+  sleep:function(millisec) {
+    JS.callProc(JS.win32.fnSleep, millisec);
   },
 
   // Allocate memory blocks for an Array
@@ -255,7 +270,7 @@ var JS = {
     var arrStrings = new Array(paramLen);
     for (var i = 0; i < paramLen; i ++) {
       arrStrings[i] = 0;
-      var item = arguments[i + 1];
+      var item = arguments[1 + i];
       switch (typeof item) {
       case "number":
         VB.PutMem4(lpData, item);
@@ -279,6 +294,17 @@ var JS = {
       }
     }
     return retVal;
+  },
+
+  // Create a new Thread
+  startThread:function(proc, param) {
+    var lpdwThreadId = VB.Alloc(4);
+    // Free lpdwThreadId in "NewThreadProc"
+    var hThread = JS.callProc(JS.win32.fnCreateThread, 0, 0, VB.NewThreadProc, lpdwThreadId, CREATE_SUSPENDED, lpdwThreadId);
+    var dwThreadId = VB.GetMem4(lpdwThreadId);
+    Global.threads["proc_" + dwThreadId] = proc;
+    Global.threads["param_" + dwThreadId] = param;
+    JS.callProc(JS.win32.fnResumeThread, hThread);
   },
 
   // Set New User-Defined WndProc
@@ -342,13 +368,15 @@ var JS = {
   },
 
   // Called in "WebBrowser_DocumentComplete"
-  __init__:function() {
+  initJS:function() {
     // Windows APIs
     JS.win32 = {};
 
     var modKernel = VB.LoadLibrary("KERNEL32.DLL");
     JS.win32.modKernel = modKernel;
     JS.win32.fnSleep = VB.GetProcAddress(modKernel, "Sleep");
+    JS.win32.fnCreateThread = VB.GetProcAddress(modKernel, "CreateThread");
+    JS.win32.fnResumeThread = VB.GetProcAddress(modKernel, "ResumeThread");
 
     var modUser = VB.LoadLibrary("USER32.DLL");
     JS.win32.modUser = modUser;
@@ -356,6 +384,7 @@ var JS = {
     JS.win32.fnGetWindowLong = VB.GetProcAddress(modUser, "GetWindowLongA");
     JS.win32.fnSetWindowLong = VB.GetProcAddress(modUser, "SetWindowLongA");
     JS.win32.fnSetWindowPos = VB.GetProcAddress(modUser, "SetWindowPos");
+    JS.win32.fnUpdateWindow = VB.GetProcAddress(modUser, "UpdateWindow");
     JS.win32.fnCallWindowProc = VB.GetProcAddress(modUser, "CallWindowProcA");
     JS.win32.fnGetSystemMenu = VB.GetProcAddress(modUser, "GetSystemMenu");
     JS.win32.fnRemoveMenu = VB.GetProcAddress(modUser, "RemoveMenu");
@@ -387,5 +416,11 @@ var JS = {
     if (Global.wndProcs == null) {
       Global.wndProcs = {};
     }
+    if (Global.threads == null) {
+      Global.threads = {};
+    }
+
+    // Call Main Routine
+    main();
   }
 };

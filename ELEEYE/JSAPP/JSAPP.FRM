@@ -96,8 +96,7 @@ Private Sub WebBrowser_DocumentComplete(ByVal pDisp As Object, URL As Variant)
 WebBrowser.Document.parentWindow.eval "VB = {}"
 Set WebBrowser.Document.parentWindow.VB = Me
 On Error Resume Next
-CallByName WebBrowser.Document.parentWindow.JS, "__init__", VbMethod
-CallByName WebBrowser.Document.parentWindow, "main", VbMethod
+WebBrowser.Document.parentWindow.JS.initJS
 On Error GoTo 0
 
 End Sub
@@ -117,6 +116,16 @@ Set NewInstance.Param = oParam
 
 End Function
 
+Public Sub Resize(ByVal nClientWidth As Long, ByVal nClientHeight As Long)
+
+If WindowState = vbMinimized Then
+    Exit Sub
+End If
+Width = Width + (nClientWidth - ScaleWidth) * Screen.TwipsPerPixelX
+Height = Height + (nClientHeight - ScaleHeight) * Screen.TwipsPerPixelY
+
+End Sub
+
 Public Property Get Global_() As Object
 
 Set Global_ = oGlobal
@@ -132,6 +141,12 @@ End Property
 Public Property Get Error(Optional ByVal dummy As Variant) As Variant
 
 Error = dummy
+
+End Property
+
+Public Property Get NewThreadProc() As Long
+
+NewThreadProc = Assign(AddressOf mdlJsApp.NewThreadProc)
 
 End Property
 
