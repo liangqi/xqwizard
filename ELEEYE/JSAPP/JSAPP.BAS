@@ -13,7 +13,7 @@ Private Const VK_CONTROL As Long = &H11
 
 Public oGlobal As Object
 
-Private bRunning As Boolean, hhkPrev As Long
+Private hhkPrev As Long
 
 Public Function NewKeyboardProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
@@ -56,19 +56,12 @@ szPath = szPath + IIf(Right(szPath, 1) = "\", "", "\")
 Dim newWindow As New frmJsApp
 Set newWindow.Param = Nothing
 newWindow.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
-newWindow.Show
 
 hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
-
-bRunning = True
-Do While bRunning
+Do While Forms.Count > 0
     Sleep 1
     DoEvents
-    If Forms.Count = 0 Then
-        bRunning = False
-    End If
 Loop
-
 UnhookWindowsHookEx hhkPrev
 
 End Sub

@@ -20,7 +20,11 @@ Option Explicit
 ' with this program; if not, write to the Free Software Foundation, Inc.,
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-' 以下是广告例程
+Public Const MAX_ADVERTS    As Integer = 100            ' 最大广告数
+
+Public Gui_nAdvertNum As Integer                        ' 广告数量
+Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer    ' 广告时间
+Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String    ' 广告列表
 
 ' 下载广告列表
 Public Sub DownloadAdvertList()
@@ -153,5 +157,3 @@ lnErrorOpen:
 On Error GoTo 0
 
 End Sub
-
-' 以上是广告例程

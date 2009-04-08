@@ -68,4 +68,8 @@ function main() {
     }
     return JS.callProc(JS.win32.fnCallWindowProc, JS.getPrevWndProc(hWnd), hWnd, uMsg, wParam, lParam);
   });
+
+  VB.Width = 6000;
+  VB.Height = 6000;
+  JS.show();
 }

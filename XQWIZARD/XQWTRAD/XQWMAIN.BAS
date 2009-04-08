@@ -27,7 +27,6 @@ Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
-Public Const MAX_ADVERTS        As Integer = 100  ' 廣告的最大條目數
 Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
 ' 全局常量——可選參數
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
@@ -204,11 +203,8 @@ Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
-Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
-Public Gui_nAdvertNum           As Integer  ' 廣告數量
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
-Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每個廣告的文件
-Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每個廣告的時間(秒)
+Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 ' 全局變量——棋局
 Public Game_szEvent             As String   ' 賽事
 Public Game_szRound             As String   ' 輪次

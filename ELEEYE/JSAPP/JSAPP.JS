@@ -97,18 +97,34 @@ var Global;
 
 var JS = {
   // Open a new Window
-  open:function(htmlFile, callback) {
-    var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
+  open:function(htmlFile, param) {
+    var newWindow = VB.NewInstance(param);
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
-    newWindow.Show();
     return newWindow;
   },
 
   // Open a new Dialog (Modal)
-  openDialog:function(htmlFile, callback) {
-    var newWindow = VB.NewInstance({parent:VB, onLoad:callback});
+  openDialog:function(htmlFile, param) {
+    if (param == null) {
+      param = {};
+    }
+    var newWindow = VB.NewInstance(param);
+    newWindow.Param.ownerWindow = VB;
     newWindow.WebBrowser.Navigate2(JS.appPath + htmlFile);
+    JS.dialogLoaded = false;
+    while (!JS.dialogLoaded) {
+      VB.Idle();
+    }
     newWindow.Show(1, VB);
+  },
+
+  // Show Window (Non-Modal) or Dialog (Modal)
+  show:function() {
+    if (VB.Param != null && typeof VB.Param.ownerWindow == "object") {
+      JS.getWindow(VB.Param.ownerWindow).JS.dialogLoaded = true;
+    } else {
+      VB.Show();
+    }
   },
 
   // Retrieve "window.document" of another Window
@@ -164,10 +180,10 @@ var JS = {
 
   // Popup a Context Menu
   popupMenu:function(arrMenu, x, y) {
-    if (typeof JS.inPopupMenu == "object") {
+    if (JS.inPopupMenu) {
       return;
     }
-    JS.inPopupMenu = {};
+    JS.inPopupMenu = true;
     if (x == null) {
       x = VB.Error;
     }
@@ -192,7 +208,7 @@ var JS = {
     for (var i = arrMenu.length - 1; i > 0; i --) {
       VB.Unload(VB.MenuItem(i));
     }
-    delete JS.inPopupMenu;
+    JS.inPopupMenu = false;
   },
 
   // Popup an Info Dialog
@@ -286,6 +302,11 @@ var JS = {
     }
   },
 
+  // Get Default WndProc
+  getPrevWndProc:function(hWnd) {
+    return Global.wndProcs["lpPrev_" + hWnd];
+  },
+
   // Add Tray Icon
   addTrayIcon:function(hWnd, hIcon, szTip) {
     var lpNid = VB.Alloc(NID_SIZE);
@@ -311,11 +332,6 @@ var JS = {
     VB.Free(lpNid);
   },
 
-  // Get Default WndProc
-  getPrevWndProc:function(hWnd) {
-    return Global.wndProcs["lpPrev_" + hWnd];
-  },
-
   // Get HTML Color Format
   getHtmlColor:function(color) {
     var colorHex = (16777216 + color).toString(16).substring(1, 7);
@@ -325,7 +341,7 @@ var JS = {
     return "#" + colorHexRR + colorHexGG + colorHexBB;
   },
 
-  // Called in "DocumentComplete"
+  // Called in "WebBrowser_DocumentComplete"
   __init__:function() {
     // Windows APIs
     JS.win32 = {};
@@ -360,19 +376,16 @@ var JS = {
     // commandLine
     JS.commandLine = VB.GetStr(JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetCommandLineA")));
 
-    // Global_, parent, onLoad
+    // popupMenu Status
+    JS.inPopupMenu = false;
+
+    // Global
     if (VB.Global_ == null) {
       VB.Global_ = {};
     }
     Global = VB.Global_;
     if (Global.wndProcs == null) {
       Global.wndProcs = {};
-    }
-    if (VB.Param != null) {
-      JS.parent = (typeof VB.Param.parent == "object" ? VB.Param.parent : null);
-      if (typeof VB.Param.onLoad == "function") {
-        VB.Param.onLoad();
-      }
     }
   }
 };

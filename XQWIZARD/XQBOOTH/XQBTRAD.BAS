@@ -26,7 +26,6 @@ Public Const STRING_VERSION     As String = "3.94"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
-Public Const MAX_ADVERTS        As Integer = 100    ' 廣告的最大條目數
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 殘局的最大條目數
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 殘局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
@@ -69,10 +68,7 @@ Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
 Public Gui_nLast                As Integer  ' 最后殘局的條目序號
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
-Public Gui_nAdvertNum           As Integer  ' 廣告數量
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
-Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String ' 每個廣告的文件
-Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer ' 每個廣告的時間(秒)
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 

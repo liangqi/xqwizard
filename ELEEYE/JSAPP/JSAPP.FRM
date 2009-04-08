@@ -50,6 +50,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" _
         (ByVal hMod As Long, ByVal szProcName As String) As Long
@@ -151,6 +152,13 @@ End Sub
 Public Sub Unload(ByVal obj As Object)
 
 VB.Unload obj
+
+End Sub
+
+Public Sub Idle()
+
+Sleep 1
+DoEvents
 
 End Sub
 
