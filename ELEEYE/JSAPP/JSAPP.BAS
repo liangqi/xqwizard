@@ -2,7 +2,6 @@ Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Private Declare Sub FreeA Lib "JSVBBASE.DLL" Alias "_Free@4" (ByVal lp As Long)
 
 Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
 Private Declare Function CallNextHookEx Lib "USER32.DLL" (ByVal hhk As Long, ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
@@ -35,17 +34,6 @@ If (lParam And &H80000000) = 0 Then
     End If
 End If
 NewKeyboardProc = CallNextHookEx(hhkPrev, iCode, wParam, lParam)
-
-End Function
-
-Public Function NewThreadProc(ByRef dwThreadId As Long) As Long
-
-On Error Resume Next
-CallByName oGlobal.threads, "proc_" & dwThreadId, VbMethod, _
-        CallByName(oGlobal.threads, "param_" & dwThreadId, VbGet)
-On Error GoTo 0
-FreeA VarPtr(dwThreadId)
-NewThreadProc = 0
 
 End Function
 

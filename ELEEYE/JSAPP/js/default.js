@@ -41,18 +41,8 @@ function onRightClick() {
 }
 
 function openDialog() {
-  JS.openDialog(JS.appPath + "DIALOG.HTM");
+  JS.openDialog(JS.appPath + "dialog_notitle.htm");
   return false;
-}
-
-function startThread() {
-  JS.warn("Thread not Available.", "Test");
-/*
-  JS.startThread(function(param) {
-    JS.sleep(10000);
-    JS.warn(param, "Test");
-  }, "Timeout!");
-*/
 }
 
 var IDI_WARNING = 0x7F03;

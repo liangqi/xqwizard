@@ -1,6 +1,3 @@
-// CreateThread
-var CREATE_SUSPENDED	= 4;
-
 // GetWindowLong
 var GWL_STYLE		= -16;
 var GWL_WNDPROC		= -4;
@@ -296,17 +293,6 @@ var JS = {
     return retVal;
   },
 
-  // Create a new Thread
-  startThread:function(proc, param) {
-    var lpdwThreadId = VB.Alloc(4);
-    // Free lpdwThreadId in "NewThreadProc"
-    var hThread = JS.callProc(JS.win32.fnCreateThread, 0, 0, VB.NewThreadProc, lpdwThreadId, CREATE_SUSPENDED, lpdwThreadId);
-    var dwThreadId = VB.GetMem4(lpdwThreadId);
-    Global.threads["proc_" + dwThreadId] = proc;
-    Global.threads["param_" + dwThreadId] = param;
-    JS.callProc(JS.win32.fnResumeThread, hThread);
-  },
-
   // Set New User-Defined WndProc
   setNewWndProc:function(hWnd, wndProc) {
     Global.wndProcs["new_" + hWnd] = wndProc;
@@ -375,8 +361,6 @@ var JS = {
     var modKernel = VB.LoadLibrary("KERNEL32.DLL");
     JS.win32.modKernel = modKernel;
     JS.win32.fnSleep = VB.GetProcAddress(modKernel, "Sleep");
-    JS.win32.fnCreateThread = VB.GetProcAddress(modKernel, "CreateThread");
-    JS.win32.fnResumeThread = VB.GetProcAddress(modKernel, "ResumeThread");
 
     var modUser = VB.LoadLibrary("USER32.DLL");
     JS.win32.modUser = modUser;
@@ -415,9 +399,6 @@ var JS = {
     Global = VB.Global_;
     if (Global.wndProcs == null) {
       Global.wndProcs = {};
-    }
-    if (Global.threads == null) {
-      Global.threads = {};
     }
 
     // Call Main Routine

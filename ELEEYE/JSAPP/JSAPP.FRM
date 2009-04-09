@@ -144,12 +144,6 @@ Error = dummy
 
 End Property
 
-Public Property Get NewThreadProc() As Long
-
-NewThreadProc = Assign(AddressOf mdlJsApp.NewThreadProc)
-
-End Property
-
 Public Property Get NewWndProc() As Long
 
 NewWndProc = Assign(AddressOf mdlJsApp.NewWndProc)
