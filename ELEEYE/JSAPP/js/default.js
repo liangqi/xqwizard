@@ -41,7 +41,7 @@ function onRightClick() {
 }
 
 function openDialog() {
-  JS.openDialog(JS.appPath + "dialog_notitle.htm");
+  JS.openDialog(JS.appPath + "dialog.htm");
   return false;
 }
 

@@ -1,0 +1,17 @@
+body {
+  border:		0px;
+  margin:		0px;
+  overflow:		hidden;
+}
+
+#lblCaption {
+  font-size:		14px;
+  font-weight:		bold;
+  color:		#FFFFFF;
+  padding-top:		2px;
+  padding-left:		6px;
+}
+
+#imgClose {
+  margin-top:		2px;
+}

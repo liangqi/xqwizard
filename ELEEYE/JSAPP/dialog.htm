@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb_2312-80" />
+    <link rel="stylesheet" type="text/css" href="css/dialog.css"></link>
+    <script language="javascript" src="jsapp.js"></script>
+    <script language="javascript" src="js/button.js"></script>
+    <script language="javascript" src="js/dialog.js"></script>
+  </head>
+  <body oncontextmenu="return false" ondrag="return false" onselectstart="return false">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr height="30">
+        <td width="5" colspan="2" background="images/title_left.gif"></td>
+        <td width="310" background="images/title.gif" onmousedown="clickCaption()">
+          <div id="lblCaption"></div>
+        </td>
+        <td width="24" background="images/title.gif">
+          <div><img id="imgClose" /></div>
+        </td>
+        <td width="5" colspan="2" background="images/title_right.gif"></td>
+      </tr>
+      <tr height="336">
+        <td width="4" background="images/border_left.gif"></td>
+        <td width="336" colspan="4" background="images/board.gif"></td>
+        <td width="4" background="images/border_right.gif"></td>
+      </tr>
+      <tr height="4">
+        <td background="images/border_bottom_left.gif"></td>
+        <td colspan="4" background="images/border_bottom.gif"></td>
+        <td background="images/border_bottom_right.gif"></td>
+<!--
+        <td background="images/border_bottom_right.gif"
+            style="cursor:se-resize" onmousedown="clickBorderRightBottom()"></td>
+-->
+      </tr>
+    </table>
+  </body>
+</html>
