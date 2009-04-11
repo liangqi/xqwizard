@@ -1,4 +1,5 @@
 function setButton(objImage, objButton) {
+  objImage.alt = objButton.alt;
   objImage.src = objButton.img;
   objImage.onmouseover = function() {
     objImage.src = objButton.imgOver;

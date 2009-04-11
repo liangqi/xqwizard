@@ -28,6 +28,7 @@ function main() {
     JS.callProc(fnSetLayeredWindowAttributes, VB.hWnd, 0xFF00FF, 0, LWA_COLORKEY);
   }
   setButton(imgClose, {
+    alt:"Close",
     img:"images/close.gif",
     imgOver:"images/close_over.gif",
     imgPress:"images/close_press.gif",
