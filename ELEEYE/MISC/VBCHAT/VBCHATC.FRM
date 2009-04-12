@@ -140,11 +140,12 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
+Private Declare Function WSBSend2 Lib "WSOCKBAS.DLL" Alias "_WSBSend@12" (ByVal nSocket As Long, ByVal sz As String, ByVal nLen As Long) As Long
 
 Private Sub btnConnect_Click()
 
-Dim lpsz As Long, nPort As Long, df As Double
+Dim sz As String, nPort As Long, df As Double
 If nSocket = INVALID_SOCKET Then
     df = Val(txtPort.Text)
     nPort = IIf(df < 0.5 Or df >= 65535.5, 23, df)
@@ -155,8 +156,8 @@ If nSocket = INVALID_SOCKET Then
             MsgBox "Connection Failed", vbExclamation
         Else
             If chkAnonymous.Value = 0 Then
-                lpsz = CvBStr("[" + txtMyName.Text + " Connected at " + Time$ + "]" + vbCrLf)
-                WSBSend nSocket, lpsz, lstrlenA(lpsz)
+                sz = "[" + txtMyName.Text + " Connected at " + Time$ + "]" + vbCrLf
+                WSBSend2 nSocket, sz, lstrlenA(sz)
             End If
             frmVBChat.btnConnect.Caption = "Disconnect"
             frmVBChat.btnSend.Enabled = True
@@ -164,8 +165,8 @@ If nSocket = INVALID_SOCKET Then
     End If
 Else
     If chkAnonymous.Value = 0 Then
-        lpsz = CvBStr("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
-        WSBSend nSocket, lpsz, lstrlenA(lpsz)
+        sz = "[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf
+        WSBSend2 nSocket, sz, lstrlenA(sz)
     End If
     WSBDisconnect nSocket
     nSocket = INVALID_SOCKET
@@ -201,9 +202,9 @@ End Sub
 
 Private Sub btnSend_Click()
 
-Dim lpsz As Long
-lpsz = CvBStr(IIf(chkAnonymous.Value = 0, "[" + txtMyName.Text + " Sent at " + Time$ + "]" + vbCrLf + txtSend.Text + vbCrLf, txtSend.Text))
-WSBSend nSocket, lpsz, lstrlenA(lpsz)
+Dim sz As String
+sz = IIf(chkAnonymous.Value = 0, "[" + txtMyName.Text + " Sent at " + Time$ + "]" + vbCrLf + txtSend.Text + vbCrLf, txtSend.Text)
+WSBSend2 nSocket, sz, lstrlenA(sz)
 txtSend.Text = ""
 
 End Sub
@@ -235,11 +236,11 @@ End Sub
 
 Private Sub Form_UnLoad(nCancel As Integer)
 
-Dim lpsz As Long
+Dim sz As String
 If nSocket <> INVALID_SOCKET Then
     If chkAnonymous.Value = 0 Then
-        lpsz = CvBStr("[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf)
-        WSBSend nSocket, lpsz, lstrlenA(lpsz)
+        sz = "[" + txtMyName.Text + " Disconnected at " + Time$ + "]" + vbCrLf
+        WSBSend2 nSocket, sz, lstrlenA(sz)
     End If
     WSBDisconnect nSocket
     nSocket = INVALID_SOCKET

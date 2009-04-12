@@ -2,6 +2,7 @@ Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+Private Declare Function GetProcessHeap Lib "KERNEL32.DLL" () As Long
 
 Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
 Private Declare Function CallNextHookEx Lib "USER32.DLL" (ByVal hhk As Long, ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
@@ -11,7 +12,7 @@ Private Declare Function GetKeyState Lib "USER32.DLL" (ByVal nVirtKey As Long) A
 Private Const WH_KEYBOARD As Long = 2
 Private Const VK_CONTROL As Long = &H11
 
-Public oGlobal As Object
+Public hProcessHeap As Long, oGlobal As Object
 
 Private hhkPrev As Long
 
@@ -47,6 +48,7 @@ End Function
 
 Public Sub Main()
 
+hProcessHeap = GetProcessHeap
 Set oGlobal = Nothing
 
 Dim szPath As String

@@ -1,6 +1,8 @@
 Attribute VB_Name = "mdlRedirect"
 Option Explicit
 
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+
 Public Const MAX_CLIENTS As Integer = 256
 Public Const BUFFER_LEN As Long = 65536
 
@@ -105,6 +107,7 @@ Do While App_bRunning
                 App_sServers(App_nNext) = WSBConnect(frmRedirect.txtServerHost.Text, nPort)
                 If App_sServers(App_nNext) = INVALID_SOCKET Then
                     WSBDisconnect App_sClients(App_nNext)
+                    App_sClients(App_nNext) = INVALID_SOCKET
                 Else
                     Prompt App_sClients(App_nNext), "Connected"
                     For App_nNext = 1 To MAX_CLIENTS

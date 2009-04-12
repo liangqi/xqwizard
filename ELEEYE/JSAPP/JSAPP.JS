@@ -276,7 +276,7 @@ var JS = {
         VB.PutMem4(lpData, item ? 1 : 0);
         break;
       case "string":
-        arrStrings[i] = VB.StrDup(item);
+        arrStrings[i] = VB.AllocStr(item);
         VB.PutMem4(lpData, arrStrings[i]);
         break;
       default:

@@ -16,15 +16,3 @@ L_EXIT:
     call  eax;
   }
 }
-
-__declspec(dllexport) LPVOID WINAPI Alloc(DWORD dwSize) {
-  return malloc(dwSize);
-}
-
-__declspec(dllexport) LPSTR WINAPI StrDup(LPCSTR lpcsz) {
-  return _strdup(lpcsz);
-}
-
-__declspec(dllexport) VOID WINAPI Free(LPVOID lp) {
-  free(lp);
-}

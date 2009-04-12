@@ -32,7 +32,7 @@ Begin VB.Form frmJsApp
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -51,19 +51,19 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+Private Declare Function HeapAlloc Lib "KERNEL32.DLL" (ByVal hHeap As Long, dwFlags As Long, dwBytes As Long) As Long
+Private Declare Sub HeapFree Lib "KERNEL32.DLL" (ByVal hHeap As Long, dwFlags As Long, lpMem As Long)
 Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal szLibFileName As String) As Long
 Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddress" _
         (ByVal hMod As Long, ByVal szProcName As String) As Long
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
+Private Declare Sub RtlMoveMemory2 Lib "KERNEL32.DLL" Alias "RtlMoveMemory" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpcsz As Long) As Long
+Private Declare Function lstrlenA2 Lib "KERNEL32.DLL" Alias "lstrlenA" (ByVal sz As String) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpcsz As Long, ByVal dwLen As Long) As String
-Private Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
 Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
-Private Declare Function StrDupA Lib "JSVBBASE.DLL" Alias "_StrDup@4" (ByVal lpcsz As String) As Long
-Private Declare Function AllocA Lib "JSVBBASE.DLL" Alias "_Alloc@4" (ByVal dwSize As Long) As Long
-Private Declare Sub FreeA Lib "JSVBBASE.DLL" Alias "_Free@4" (ByVal lp As Long)
-Private Declare Function CallProcA Lib "JSVBBASE.DLL" Alias "_CallProc@12" _
+Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" _
         (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
 Public Param As Object
@@ -269,30 +269,34 @@ GetStr = SysAllocStringByteLen(lpcsz, lstrlenA(lpcsz))
 
 End Function
 
-Public Function PutStr(ByVal lpsz As Long, ByVal sz As String) As Long
+Public Function PutStr(ByVal lp As Long, ByVal sz As String) As Long
 
 Dim nLen As Long
-nLen = lstrlenA(CvBStr(sz)) + 1
-RtlMoveMemory lpsz, CvBStr(sz), nLen
+nLen = lstrlenA2(sz) + 1
+RtlMoveMemory2 lp, sz, nLen
 PutStr = nLen
-
-End Function
-
-Public Function StrDup(ByVal sz As String) As Long
-
-StrDup = StrDupA(sz)
 
 End Function
 
 Public Function Alloc(ByVal dwSize As Long) As Long
 
-Alloc = AllocA(dwSize)
+Alloc = HeapAlloc(hProcessHeap, 0, dwSize)
+
+End Function
+
+Public Function AllocStr(ByVal sz As String) As Long
+
+Dim lp As Long, nLen As Long
+nLen = lstrlenA2(sz) + 1
+lp = Alloc(nLen)
+RtlMoveMemory2 lp, sz, nLen
+AllocStr = lp
 
 End Function
 
 Public Sub Free(ByVal lp As Long)
 
-FreeA lp
+HeapFree hProcessHeap, 0, lp
 
 End Sub
 

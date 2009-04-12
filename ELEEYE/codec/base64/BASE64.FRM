@@ -79,7 +79,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
+Private Declare Sub Base64Enc2 Lib "BASE64.DLL" Alias "_Base64Enc@16" (ByVal lpText As Long, ByVal sz As String, ByVal nBlockLen As Long, ByVal nLineLen As Long)
+Private Declare Function Base64Dec2 Lib "BASE64.DLL" Alias "_Base64Dec@8" (ByVal lpData As Long, ByVal szText As String) As Long
 
 Private Sub ReadFile(ByVal szFileName As String)
 
@@ -111,9 +113,9 @@ Private Sub ReadClipboard(ByVal sz As String)
 
 Dim i As Long, nFileLen As Long
 
-nFileLen = lstrlenA(StrPtr(sz))
+nFileLen = lstrlenA(sz)
 ReDim ucText(1 To (nFileLen \ 33 + 1) * 46) As Byte
-Base64Enc VarPtr(ucText(1)), StrPtr(sz), nFileLen, chkMultiLine.Value * 11
+Base64Enc2 VarPtr(ucText(1)), sz, nFileLen, chkMultiLine.Value * 11
 txtCode.Text = MkBStr(VarPtr(ucText(1)))
 Erase ucText
 
@@ -169,7 +171,7 @@ If chkClipboard.Value = 0 Then
         Open sz For Binary Access Write As #nOpenFile
         On Error GoTo 0
         ReDim ucData(1 To (Len(txtCode.Text) \ 4 + 1) * 3) As Byte
-        nLen = Base64Dec(VarPtr(ucData(1)), CvBStr("" + txtCode.Text))
+        nLen = Base64Dec2(VarPtr(ucData(1)), txtCode.Text)
         For i = 1 To nLen
             Put #nOpenFile, , ucData(i)
         Next
@@ -178,7 +180,7 @@ If chkClipboard.Value = 0 Then
     End If
 Else
     ReDim ucData(0 To (Len(txtCode.Text) \ 4 + 1) * 3) As Byte
-    nLen = Base64Dec(VarPtr(ucData(0)), CvBStr("" + txtCode.Text))
+    nLen = Base64Dec2(VarPtr(ucData(0)), txtCode.Text)
     ucData(nLen) = 0
     Clipboard.Clear
     Clipboard.SetText MkBStr(VarPtr(ucData(0)))

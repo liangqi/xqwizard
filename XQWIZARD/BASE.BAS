@@ -29,20 +29,19 @@ Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
         ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
-Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal pszSound As Long, ByVal hmod As Long, ByVal fdwSound As Long)
+Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, _
         ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
-Public Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
-Public Declare Function CvBStr Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal sz As String) As Long
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 ' For Atom Subs/Functions
-Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
+Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
@@ -172,9 +171,10 @@ Private Declare Sub AllocConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub FreeConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub SetConsoleCtrlHandler Lib "KERNEL32.DLL" (ByVal lpHandlerRoutine As Long, ByVal bAdd As Long)
 Private Declare Sub SetConsoleTitleA Lib "KERNEL32.DLL" (ByVal szConsoleTitle As String)
+Private Declare Function lstrlenA2 Lib "KERNEL32.DLL" Alias "lstrlenA" (ByVal sz As String) As Long
 Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
         ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
-Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
+Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal sz As String, _
         ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
 Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
 Private Declare Function FindWindowA Lib "USER32.DLL" (Optional ByVal szClassName As String = vbNullString, _
@@ -189,7 +189,7 @@ Private Stdio_si As StartupInfo
 Public Function CvI(ByVal sz As String) As Integer
 
 Dim w As Integer
-RtlMoveMemory VarPtr(w), CvBStr(sz), 2
+RtlMoveMemory VarPtr(w), sz, 2
 CvI = w
 
 End Function
@@ -197,7 +197,7 @@ End Function
 Public Function CvL(ByVal sz As String) As Long
 
 Dim dw As Long
-RtlMoveMemory VarPtr(dw), CvBStr(sz), 4
+RtlMoveMemory VarPtr(dw), sz, 4
 CvL = dw
 
 End Function
@@ -205,7 +205,7 @@ End Function
 Public Function CvC(ByVal sz As String) As Currency
 
 Dim qw As Currency
-RtlMoveMemory VarPtr(qw), CvBStr(sz), 8
+RtlMoveMemory VarPtr(qw), sz, 8
 CvC = qw
 
 End Function
@@ -213,7 +213,7 @@ End Function
 Public Function CvS(ByVal sz As String) As Single
 
 Dim sf As Single
-RtlMoveMemory VarPtr(sf), CvBStr(sz), 4
+RtlMoveMemory VarPtr(sf), sz, 4
 CvS = sf
 
 End Function
@@ -221,7 +221,7 @@ End Function
 Public Function CvD(ByVal sz As String) As Double
 
 Dim df As Double
-RtlMoveMemory VarPtr(df), CvBStr(sz), 8
+RtlMoveMemory VarPtr(df), sz, 8
 CvD = df
 
 End Function
@@ -613,14 +613,14 @@ End Function
 Public Sub StdioOut(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdOutput, CvBStr(sz), lstrlenA(CvBStr(sz)), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdOutput, sz, lstrlenA2(sz), nNumberOfBytesWritten
 
 End Sub
 
 Public Sub StdioErr(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdError, CvBStr(sz), lstrlenA(CvBStr(sz)), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdError, sz, lstrlenA2(sz), nNumberOfBytesWritten
 
 End Sub
 

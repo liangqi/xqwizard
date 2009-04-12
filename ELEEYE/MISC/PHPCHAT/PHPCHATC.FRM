@@ -105,8 +105,6 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpString As Long) As Long
-
 Private Sub Form_UnLoad(nCancel As Integer)
 
 Logoff

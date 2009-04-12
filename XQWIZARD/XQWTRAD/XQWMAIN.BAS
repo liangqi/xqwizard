@@ -347,7 +347,7 @@ End Function
 Public Sub PlayWavSound(ByVal szSoundFile As String)
 
 If Options_bSounds Then
-    PlaySoundA CvBStr(App_szPath + "SOUNDS\" + szSoundFile + ".WAV"), 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+    PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
 End If
 
 End Sub

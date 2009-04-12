@@ -1,6 +1,8 @@
 Attribute VB_Name = "mdlVBChat"
 Option Explicit
 
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+
 Public Const BUFFER_LEN As Long = 65536
 
 Public bRunning As Boolean, bCtrlEnter As Boolean
