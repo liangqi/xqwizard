@@ -7,7 +7,7 @@ Begin VB.Form frmXQBooth
    ClientTop       =   720
    ClientWidth     =   5640
    BeginProperty Font 
-      Name            =   "MingLiU"
+      Name            =   "¼šÃ÷ów"
       Size            =   9
       Charset         =   136
       Weight          =   400
@@ -71,11 +71,11 @@ Begin VB.Form frmXQBooth
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
-      Height          =   735
+      Height          =   255
       Left            =   1080
       TabIndex        =   2
       Top             =   6360
-      Width           =   735
+      Width           =   255
    End
    Begin VB.Image imgSquares 
       Height          =   615

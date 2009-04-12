@@ -38,11 +38,11 @@ function VB_Unload() {
 
 function onRightClick() {
   JS.popupMenu([{caption:"No Context Menu", enabled:false}]);
+  return false;
 }
 
 function openDialog() {
   JS.openDialog(JS.appPath + "dialog.htm");
-  return false;
 }
 
 var IDI_WARNING = 0x7F03;
