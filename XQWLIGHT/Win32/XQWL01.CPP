@@ -202,7 +202,7 @@ static void TransparentBlt2(HDC hdcDest, int nXOriginDest, int nYOriginDest, int
 }
 
 // »æÖÆÍ¸Ã÷Í¼Æ¬
-static void DrawTransBmp(HDC hdc, HDC hdcTmp, int xx, int yy, HBITMAP bmp) {
+inline void DrawTransBmp(HDC hdc, HDC hdcTmp, int xx, int yy, HBITMAP bmp) {
   SelectObject(hdcTmp, bmp);
   TransparentBlt2(hdc, xx, yy, SQUARE_SIZE, SQUARE_SIZE, hdcTmp, 0, 0, SQUARE_SIZE, SQUARE_SIZE, MASK_COLOR);
 }
