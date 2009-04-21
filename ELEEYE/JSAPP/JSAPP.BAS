@@ -41,7 +41,7 @@ End Function
 Public Function NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
 On Error Resume Next
-NewWndProc = CallByName(oGlobal.wndProcs, "new_" & hWnd, VbMethod, hWnd, uMsg, wParam, lParam)
+NewWndProc = CallByName(oGlobal.wndProcs, "new_" + LTrim(Str(hWnd)), VbMethod, hWnd, uMsg, wParam, lParam)
 On Error GoTo 0
 
 End Function
