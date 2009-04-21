@@ -4,7 +4,7 @@ Begin VB.Form frmXQBooth
    BorderStyle     =   1  'Fixed Single
    ClientHeight    =   7200
    ClientLeft      =   150
-   ClientTop       =   720
+   ClientTop       =   840
    ClientWidth     =   5640
    BeginProperty Font 
       Name            =   "宋体"
@@ -67,7 +67,7 @@ Begin VB.Form frmXQBooth
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -825,6 +825,18 @@ Begin VB.Form frmXQBooth
       Begin VB.Menu mnGameSep2 
          Caption         =   "-"
       End
+      Begin VB.Menu mnGameRecord 
+         Caption         =   "闯关记录(&S)"
+         Begin VB.Menu mnGameImport 
+            Caption         =   "导入(&I)..."
+         End
+         Begin VB.Menu mnGameExport 
+            Caption         =   "导出(&E)..."
+         End
+      End
+      Begin VB.Menu mnGameSep3 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnGameExit 
          Caption         =   "离开(&X)"
       End
@@ -1104,6 +1116,7 @@ Dim i As Integer, sz As String
 
 nPhase = PHASE_BUSY
 MousePointer = vbHourglass
+mnGameRecord.Enabled = False
 sz = "position fen " + App_szEndgames(Gui_nCurr)
 If pos.nMoveNum > 1 Then
     sz = sz + " moves"
@@ -1136,6 +1149,7 @@ DrawSquare Dst(mv), DRAW_SELECTED
 mvLast = mv
 nPhase = IIf(GetResult(nStatus), PHASE_END, PHASE_READY)
 MousePointer = vbDefault
+mnGameRecord.Enabled = True
 
 End Sub
 
@@ -1199,6 +1213,64 @@ Private Sub mnGameRestart_Click()
 If nPhase <> PHASE_BUSY Then
     LoadGame
 End If
+
+End Sub
+
+Private Sub mnGameImport_Click()
+
+Dim szFileName As String, nFileNo As Integer, nLast As Integer, dw As Long
+szFileName = OpenFileDialog("导入闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*")
+If szFileName = "" Then
+    Exit Sub
+End If
+
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open szFileName For Binary Access Read As #nFileNo
+On Error GoTo 0
+Get #nFileNo, , dw
+Close #nFileNo
+
+nLast = dw \ &H10000
+If ((nLast * nLast) And &HFFFF&) <> (dw And &HFFFF&) Or nLast < 0 Or nLast > App_nEndgames Then
+    MsgBox szFileName + " 不是有效的闯关记录文件。", vbExclamation
+    Exit Sub
+End If
+If nLast <= Gui_nLast Then
+    MsgBox "闯关记录中的闯关数比当前闯关数少，不予导入。", vbExclamation
+    Exit Sub
+End If
+Gui_nLast = nLast
+Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+LoadGame
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法打开文件 " + szFileName, vbExclamation
+
+End Sub
+
+Private Sub mnGameExport_Click()
+
+Dim szFileName As String, nFileNo As Integer, dw As Long
+szFileName = SaveFileDialog("导出闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", "象棋路边摊闯关记录 - 第" + Str(Gui_nLast + 1) + " 关.DAT", "DAT")
+If szFileName = "" Then
+    Exit Sub
+End If
+dw = ((Gui_nLast * Gui_nLast) And &HFFFF&) + (Gui_nLast * &H10000)
+
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open szFileName For Binary Access Write As #nFileNo
+On Error GoTo 0
+Put #nFileNo, , dw
+Close #nFileNo
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法保存文件 " + szFileName, vbExclamation
 
 End Sub
 
