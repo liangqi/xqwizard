@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.94, Last Modified: Apr. 2009
+' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "3.94"
+Public Const STRING_VERSION     As String = "3.95"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標

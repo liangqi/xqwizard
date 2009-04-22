@@ -950,8 +950,8 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.92, Last Modified: Feb. 2009
-' Copyright (C) 2004-2008 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by

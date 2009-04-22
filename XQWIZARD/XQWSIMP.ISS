@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.93 (简体版)
+AppVerName=象棋巫师 3.95 (简体版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
