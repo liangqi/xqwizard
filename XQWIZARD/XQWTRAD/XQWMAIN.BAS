@@ -3108,7 +3108,7 @@ If Gui_szAdvertDate <> Date Then
     End If
 End If
 SaveRegs
-PlaySoundA 0, 0, 0
+PlaySoundA vbNullString, 0, 0
 frmHide.mci.Command = "Close"
 Unload frmHide
 

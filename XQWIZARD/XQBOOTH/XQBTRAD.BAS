@@ -326,7 +326,7 @@ If bLoaded Then
 End If
 ' ÍË³ö
 SaveRegs
-PlaySoundA 0, 0, 0
+PlaySoundA vbNullString, 0, 0
 Unload frmHide
 
 Exit Sub
