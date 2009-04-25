@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.94, Last Modified: Apr. 2009
+' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2704,7 +2704,7 @@ Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble
 Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
 Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
 Options_bPrintDigit = (Str2Int(GetSetting("XQWizard", "Options", "PrintDigit", "1")) <> 0)
-Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "0"), FLASHXQ_SMALL, FLASHXQ_LARGE)
+Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "1"), FLASHXQ_SMALL, FLASHXQ_LARGE)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
