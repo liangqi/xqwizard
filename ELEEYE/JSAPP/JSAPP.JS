@@ -293,32 +293,6 @@ var JS = {
     return retVal;
   },
 
-  // Set New User-Defined WndProc
-  setNewWndProc:function(hWnd, wndProc) {
-    Global.wndProcs["new_" + hWnd] = wndProc;
-    var lpPrev = Global.wndProcs["lpPrev_" + hWnd];
-    if (typeof lpPrev == "number") {
-      JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, VB.NewWndProc);
-    } else {
-      Global.wndProcs["lpPrev_" + hWnd] =
-          JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, VB.NewWndProc);
-    }
-  },
-
-  // Remove User-Defined WndProc
-  restoreWndProc:function(hWnd) {
-    var lpPrev = Global.wndProcs["lpPrev_" + hWnd];
-    if (typeof lpPrev == "number") {
-      JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, lpPrev);
-      delete Global.wndProcs["lpPrev_" + hWnd];
-    }
-  },
-
-  // Get Default WndProc
-  getPrevWndProc:function(hWnd) {
-    return Global.wndProcs["lpPrev_" + hWnd];
-  },
-
   // Add Tray Icon
   addTrayIcon:function(hWnd, hIcon, szTip) {
     var lpNid = VB.Alloc(NID_SIZE);
@@ -386,6 +360,10 @@ var JS = {
     VB.Free(lpFileName);
     JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
 
+    // Callback API
+    var modCallProc = VB.LoadLibrary(JS.appPath + "CALLPROC.DLL");
+    JS.win32.fnPrepareCallback = VB.GetProcAddress(modCallProc, "_PrepareCallback@16");
+
     // commandLine
     JS.commandLine = VB.GetStr(JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetCommandLineA")));
 
@@ -397,9 +375,6 @@ var JS = {
       VB.Global_ = {};
     }
     Global = VB.Global_;
-    if (Global.wndProcs == null) {
-      Global.wndProcs = {};
-    }
 
     // Call Main Routine
     main();

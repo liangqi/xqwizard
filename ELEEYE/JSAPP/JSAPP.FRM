@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Begin VB.Form frmJsApp 
    ClientHeight    =   3195
    ClientLeft      =   165
@@ -32,7 +32,7 @@ Begin VB.Form frmJsApp
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Menu Menu 
       Caption         =   ""
@@ -70,12 +70,12 @@ Public Param As Object
 
 Private Sub Form_Unload(nCancel As Integer)
 
-Dim bCancel As Boolean
-bCancel = False
+Dim bAllow As Boolean
+bAllow = True
 On Error Resume Next
-bCancel = WebBrowser.Document.parentWindow.VB_Unload(0)
+bAllow = WebBrowser.Document.parentWindow.VB_Unload(0)
 On Error GoTo 0
-nCancel = IIf(bCancel, 1, 0)
+nCancel = IIf(bAllow, 0, 1)
 
 End Sub
 
@@ -128,13 +128,13 @@ End Sub
 
 Public Property Get Global_() As Object
 
-Set Global_ = oGlobal
+Set Global_ = App_oGlobal
 
 End Property
 
 Public Property Let Global_(ByVal obj As Object)
 
-Set oGlobal = obj
+Set App_oGlobal = obj
 
 End Property
 
@@ -144,13 +144,19 @@ Error = dummy
 
 End Property
 
-Public Property Get NewWndProc() As Long
+Public Property Get GenericCallback() As Long
 
-NewWndProc = Assign(AddressOf mdlJsApp.NewWndProc)
+GenericCallback = Assign(AddressOf mdlJsApp.GenericCallback)
 
 End Property
 
 ' === Begin Visual Basic Routines ===
+
+Public Function GetObjAddress(ByVal obj As Object) As Long
+
+GetObjAddress = ObjPtr(obj)
+
+End Function
 
 Public Sub Load(ByVal obj As Object)
 
@@ -280,7 +286,7 @@ End Function
 
 Public Function Alloc(ByVal dwSize As Long) As Long
 
-Alloc = HeapAlloc(hProcessHeap, 0, dwSize)
+Alloc = HeapAlloc(App_hProcessHeap, 0, dwSize)
 
 End Function
 
@@ -296,7 +302,7 @@ End Function
 
 Public Sub Free(ByVal lp As Long)
 
-HeapFree hProcessHeap, 0, lp
+HeapFree App_hProcessHeap, 0, lp
 
 End Sub
 

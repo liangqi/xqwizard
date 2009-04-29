@@ -2,6 +2,7 @@ Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Function GetProcessHeap Lib "KERNEL32.DLL" () As Long
 
 Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
@@ -12,14 +13,18 @@ Private Declare Function GetKeyState Lib "USER32.DLL" (ByVal nVirtKey As Long) A
 Private Const WH_KEYBOARD As Long = 2
 Private Const VK_CONTROL As Long = &H11
 
-Public hProcessHeap As Long, oGlobal As Object
+Public App_hProcessHeap As Long, App_oGlobal As Object
 
-Private hhkPrev As Long
+Private App_hhkPrev As Long
+
+Private Type ObjectStruct
+    obj As Object
+End Type
 
 Public Function NewKeyboardProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
 If iCode < 0 Then
-    NewKeyboardProc = CallNextHookEx(hhkPrev, iCode, wParam, lParam)
+    NewKeyboardProc = CallNextHookEx(App_hhkPrev, iCode, wParam, lParam)
     Exit Function
 End If
 If (lParam And &H80000000) = 0 Then
@@ -34,22 +39,24 @@ If (lParam And &H80000000) = 0 Then
         End If
     End If
 End If
-NewKeyboardProc = CallNextHookEx(hhkPrev, iCode, wParam, lParam)
+NewKeyboardProc = CallNextHookEx(App_hhkPrev, iCode, wParam, lParam)
 
 End Function
 
-Public Function NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Function GenericCallback(ByVal lpContext As Long, ByVal lpParam As Long) As Long
 
+Dim obj As ObjectStruct
+RtlMoveMemory VarPtr(obj), VarPtr(lpContext), 4
 On Error Resume Next
-NewWndProc = CallByName(oGlobal.wndProcs, "new_" + LTrim(Str(hWnd)), VbMethod, hWnd, uMsg, wParam, lParam)
+GenericCallback = CallByName(obj.obj, "callback", VbMethod, lpParam)
 On Error GoTo 0
 
 End Function
 
 Public Sub Main()
 
-hProcessHeap = GetProcessHeap
-Set oGlobal = Nothing
+App_hProcessHeap = GetProcessHeap
+Set App_oGlobal = Nothing
 
 Dim szPath As String
 szPath = App.Path
@@ -59,11 +66,11 @@ Dim newWindow As New frmJsApp
 Set newWindow.Param = Nothing
 newWindow.WebBrowser.Navigate2 szPath + "DEFAULT.HTM"
 
-hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
+App_hhkPrev = SetWindowsHookExA(WH_KEYBOARD, AddressOf NewKeyboardProc, App.hInstance, 0)
 Do While Forms.Count > 0
     Sleep 1
     DoEvents
 Loop
-UnhookWindowsHookEx hhkPrev
+UnhookWindowsHookEx App_hhkPrev
 
 End Sub

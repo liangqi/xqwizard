@@ -25,15 +25,18 @@ function VB_ClickMenu(index) {
   }
 }
 
+var prevWndProc, newWndProc;
+
 function VB_Unload() {
   if (!JS.confirm("Exit?", "Test")) {
-    return true;
+    return false;
   }
   if (VB.WindowState == 1) {
     JS.deleteTrayIcon(VB.hWnd);
   }
-  JS.restoreWndProc(VB.hWnd);
-  return false;
+  JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_WNDPROC, prevWndProc);
+  VB.Free(newWndProc);
+  return true;
 }
 
 function onRightClick() {
@@ -58,7 +61,13 @@ function main() {
   document.body.style.backgroundColor =
       JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
 
-  JS.setNewWndProc(VB.hWnd, function(hWnd, uMsg, wParam, lParam) {
+  prevWndProc = JS.callProc(JS.win32.fnGetWindowLong, VB.hWnd, GWL_WNDPROC);
+  var wndProcContext = {callback:function(lpParam) {
+    var hWnd = VB.GetMem4(lpParam);
+    var uMsg = VB.GetMem4(lpParam + 4);
+    var wParam = VB.GetMem4(lpParam + 8);
+    var lParam = VB.GetMem4(lpParam + 12);
+
     if (uMsg == WM_TRAY) {
       if (lParam == WM_LBUTTONUP) {
         VB.WindowState = 0;
@@ -69,8 +78,11 @@ function main() {
         return false;
       }
     }
-    return JS.callProc(JS.win32.fnCallWindowProc, JS.getPrevWndProc(hWnd), hWnd, uMsg, wParam, lParam);
-  });
+    return JS.callProc(JS.win32.fnCallWindowProc, prevWndProc, hWnd, uMsg, wParam, lParam);
+  }};
+  newWndProc = VB.Alloc(32);
+  JS.callProc(JS.win32.fnPrepareCallback, newWndProc, VB.GenericCallback, VB.GetObjAddress(wndProcContext), 16);
+  JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_WNDPROC, newWndProc);
 
   JS.show(STYLE_FIXED, 336, 336);
 }
