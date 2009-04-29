@@ -1,3 +1,6 @@
+// GenericCallback
+var CALLBACK_SIZE	= 32
+
 // GetWindowLong
 var GWL_STYLE		= -16;
 var GWL_WNDPROC		= -4;
@@ -92,8 +95,6 @@ var STYLE_SIZABLE_NOTITLE = 2;
 var STYLE_SIZABLE	= 3;
 var STYLE_DIALOG_NOTITLE = 4;
 var STYLE_DIALOG	= 5;
-
-var Global;
 
 var JS = {
   // Retrieve "window.document" of another Window
@@ -369,12 +370,6 @@ var JS = {
 
     // popupMenu Status
     JS.inPopupMenu = false;
-
-    // Global
-    if (VB.Global_ == null) {
-      VB.Global_ = {};
-    }
-    Global = VB.Global_;
 
     // Call Main Routine
     main();

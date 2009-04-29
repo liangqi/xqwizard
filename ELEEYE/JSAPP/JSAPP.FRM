@@ -126,18 +126,6 @@ Height = Height + (nClientHeight - ScaleHeight) * Screen.TwipsPerPixelY
 
 End Sub
 
-Public Property Get Global_() As Object
-
-Set Global_ = App_oGlobal
-
-End Property
-
-Public Property Let Global_(ByVal obj As Object)
-
-Set App_oGlobal = obj
-
-End Property
-
 Public Property Get Error(Optional ByVal dummy As Variant) As Variant
 
 Error = dummy
@@ -152,9 +140,9 @@ End Property
 
 ' === Begin Visual Basic Routines ===
 
-Public Function GetObjAddress(ByVal obj As Object) As Long
+Public Function ObjPtr(ByVal obj As Object) As Long
 
-GetObjAddress = ObjPtr(obj)
+ObjPtr = VBA.ObjPtr(obj)
 
 End Function
 

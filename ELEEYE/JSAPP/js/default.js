@@ -4,6 +4,8 @@ var arrTrayMenu = [
   {caption:"Exit"}
 ];
 
+var hIcon;
+
 function VB_Resize() {
   if (VB.WindowState == 1) {
     JS.addTrayIcon(VB.hWnd, hIcon, "Test");
@@ -53,7 +55,7 @@ var LR_DEFAULTSIZE = 0x40;
 var LR_SHARED = 0x8000;
 var IMAGE_ICON = 1;
 
-var hIcon;
+var wndProcContext; // Prevent Release
 
 function main() {
   VB.Caption = "Test";
@@ -62,7 +64,7 @@ function main() {
       JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
 
   prevWndProc = JS.callProc(JS.win32.fnGetWindowLong, VB.hWnd, GWL_WNDPROC);
-  var wndProcContext = {callback:function(lpParam) {
+  wndProcContext = {callback:function(lpParam) {
     var hWnd = VB.GetMem4(lpParam);
     var uMsg = VB.GetMem4(lpParam + 4);
     var wParam = VB.GetMem4(lpParam + 8);
@@ -80,8 +82,8 @@ function main() {
     }
     return JS.callProc(JS.win32.fnCallWindowProc, prevWndProc, hWnd, uMsg, wParam, lParam);
   }};
-  newWndProc = VB.Alloc(32);
-  JS.callProc(JS.win32.fnPrepareCallback, newWndProc, VB.GenericCallback, VB.GetObjAddress(wndProcContext), 16);
+  newWndProc = VB.Alloc(CALLBACK_SIZE);
+  JS.callProc(JS.win32.fnPrepareCallback, newWndProc, VB.GenericCallback, VB.ObjPtr(wndProcContext), 16);
   JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_WNDPROC, newWndProc);
 
   JS.show(STYLE_FIXED, 336, 336);

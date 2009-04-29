@@ -2,7 +2,6 @@ Attribute VB_Name = "mdlJsApp"
 Option Explicit
 
 Private Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Function GetProcessHeap Lib "KERNEL32.DLL" () As Long
 
 Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
@@ -13,13 +12,9 @@ Private Declare Function GetKeyState Lib "USER32.DLL" (ByVal nVirtKey As Long) A
 Private Const WH_KEYBOARD As Long = 2
 Private Const VK_CONTROL As Long = &H11
 
-Public App_hProcessHeap As Long, App_oGlobal As Object
+Public App_hProcessHeap As Long
 
 Private App_hhkPrev As Long
-
-Private Type ObjectStruct
-    obj As Object
-End Type
 
 Public Function NewKeyboardProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
@@ -43,12 +38,10 @@ NewKeyboardProc = CallNextHookEx(App_hhkPrev, iCode, wParam, lParam)
 
 End Function
 
-Public Function GenericCallback(ByVal lpContext As Long, ByVal lpParam As Long) As Long
+Public Function GenericCallback(ByVal objContext As Object, ByVal lpParam As Long) As Long
 
-Dim obj As ObjectStruct
-RtlMoveMemory VarPtr(obj), VarPtr(lpContext), 4
 On Error Resume Next
-GenericCallback = CallByName(obj.obj, "callback", VbMethod, lpParam)
+GenericCallback = CallByName(objContext, "callback", VbMethod, lpParam)
 On Error GoTo 0
 
 End Function
@@ -56,7 +49,6 @@ End Function
 Public Sub Main()
 
 App_hProcessHeap = GetProcessHeap
-Set App_oGlobal = Nothing
 
 Dim szPath As String
 szPath = App.Path
