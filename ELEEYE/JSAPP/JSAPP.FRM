@@ -58,10 +58,9 @@ Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddres
         (ByVal hMod As Long, ByVal szProcName As String) As Long
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Sub RtlMoveMemory2 Lib "KERNEL32.DLL" Alias "RtlMoveMemory" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
-Private Declare Function lstrcpyA Lib "KERNEL32.DLL" (ByVal lpszDst As Long, ByVal szSrc As String) As Long
-Private Declare Function lstrcpyW Lib "KERNEL32.DLL" (ByVal lpszDst As Long, ByVal lpszSrc As Long) As Long
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
-Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpcsz As Long) As Long
+Private Declare Function lstrlenA2 Lib "KERNEL32.DLL" Alias "lstrlenA" (ByVal sz As String) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpcsz As Long, ByVal dwLen As Long) As String
 Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" _
@@ -140,12 +139,6 @@ GenericCallback = Assign(AddressOf mdlJsApp.GenericCallback)
 End Property
 
 ' === Begin Visual Basic Routines ===
-
-Public Function StrPtr(ByVal sz As String) As Long
-
-StrPtr = VBA.StrPtr(sz)
-
-End Function
 
 Public Function ObjPtr(ByVal obj As Object) As Long
 
@@ -264,35 +257,34 @@ RtlMoveMemory lpdw, VarPtr(dw), 4
 
 End Sub
 
-Public Function GetStrA(ByVal lpsz As Long) As String
+Public Function GetStr(ByVal lpcsz As Long) As String
 
-GetStrA = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
-
-End Function
-
-Public Sub PutStrA(ByVal lp As Long, ByVal sz As String)
-
-lstrcpyA lp, sz
-
-End Sub
-
-Public Function GetStrW(ByVal lpsz As Long) As String
-
-Dim sz As String
-RtlMoveMemory VarPtr(sz), VarPtr(lpsz), 4
-GetStrW = sz
+GetStr = SysAllocStringByteLen(lpcsz, lstrlenA(lpcsz))
 
 End Function
 
-Public Sub PutStrW(ByVal lp As Long, ByVal sz As String)
+Public Function PutStr(ByVal lp As Long, ByVal sz As String) As Long
 
-lstrcpyW lp, StrPtr(sz)
+Dim nLen As Long
+nLen = lstrlenA2(sz) + 1
+RtlMoveMemory2 lp, sz, nLen
+PutStr = nLen
 
-End Sub
+End Function
 
 Public Function Alloc(ByVal dwSize As Long) As Long
 
 Alloc = HeapAlloc(App_hProcessHeap, 0, dwSize)
+
+End Function
+
+Public Function AllocStr(ByVal sz As String) As Long
+
+Dim lp As Long, nLen As Long
+nLen = lstrlenA2(sz) + 1
+lp = Alloc(nLen)
+RtlMoveMemory2 lp, sz, nLen
+AllocStr = lp
 
 End Function
 

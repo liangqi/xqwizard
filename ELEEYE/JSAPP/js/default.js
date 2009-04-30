@@ -27,7 +27,7 @@ function VB_ClickMenu(index) {
   }
 }
 
-var prevWndProc, newWndProc;
+var wndProcContext;
 
 function VB_Unload() {
   if (!JS.confirm("Exit?", "Test")) {
@@ -36,8 +36,7 @@ function VB_Unload() {
   if (VB.WindowState == 1) {
     JS.deleteTrayIcon(VB.hWnd);
   }
-  JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_WNDPROC, prevWndProc);
-  VB.Free(newWndProc);
+  JS.restoreWndProc(VB.hWnd, wndProcContext);
   return true;
 }
 
@@ -55,21 +54,13 @@ var LR_DEFAULTSIZE = 0x40;
 var LR_SHARED = 0x8000;
 var IMAGE_ICON = 1;
 
-var wndProcContext; // Prevent Release
-
 function main() {
   VB.Caption = "Test";
   hIcon = JS.callProc(JS.win32.fnLoadImage, 0, IDI_WARNING, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
   document.body.style.backgroundColor =
       JS.getHtmlColor(JS.callProc(JS.win32.fnGetSysColor, COLOR_BTNFACE));
 
-  prevWndProc = JS.callProc(JS.win32.fnGetWindowLong, VB.hWnd, GWL_WNDPROC);
-  wndProcContext = {callback:function(lpParam) {
-    var hWnd = VB.GetMem4(lpParam);
-    var uMsg = VB.GetMem4(lpParam + 4);
-    var wParam = VB.GetMem4(lpParam + 8);
-    var lParam = VB.GetMem4(lpParam + 12);
-
+  wndProcContext = JS.setNewWndProc(VB.hWnd, function(hWnd, uMsg, wParam, lParam) {
     if (uMsg == WM_TRAY) {
       if (lParam == WM_LBUTTONUP) {
         VB.WindowState = 0;
@@ -80,11 +71,8 @@ function main() {
         return false;
       }
     }
-    return JS.callProc(JS.win32.fnCallWindowProc, prevWndProc, hWnd, uMsg, wParam, lParam);
-  }};
-  newWndProc = VB.Alloc(CALLBACK_SIZE);
-  JS.callProc(JS.win32.fnPrepareCallback, newWndProc, VB.GenericCallback, VB.ObjPtr(wndProcContext), 16);
-  JS.callProc(JS.win32.fnSetWindowLong, VB.hWnd, GWL_WNDPROC, newWndProc);
+    return wndProcContext.callPrevWndProc(hWnd, uMsg, wParam, lParam);
+  });
 
   JS.show(STYLE_FIXED, 336, 336);
 }
