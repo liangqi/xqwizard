@@ -823,7 +823,7 @@ Else
     tree.Nodes.Add nIndex + 1, tvwChild, , sz, nPicId
 End If
 CchessTryMove pos, nStatus, mv
-Nodes_szFen(Nodes_nIndex) = MkBStr(CchessBoard2Fen(pos))
+Nodes_szFen(Nodes_nIndex) = SysAllocString(CchessBoard2Fen(pos))
 If nIndex = -1 Then
     Nodes_szFile(Nodes_nIndex) = MkL(dwFile)
 Else
@@ -904,8 +904,8 @@ If Not Nodes_bExpanded(nIndex) Then
 End If
 dwEcco = EccoIndex(Nodes_szFile(nIndex))
 szEcco = Left(MkL(dwEcco), 3)
-szOpen = MkBStr(EccoOpening(dwEcco))
-szVar = MkBStr(EccoVariation(dwEcco))
+szOpen = SysAllocString(EccoOpening(dwEcco))
+szVar = SysAllocString(EccoVariation(dwEcco))
 
 Caption = "ä¯ÀÀ¿ª¾Ö¿â - " + szOpen + IIf(szVar = "", "", "¡ª¡ª") + szVar + "(" + szEcco + ")"
 

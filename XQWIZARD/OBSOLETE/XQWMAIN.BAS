@@ -68,7 +68,7 @@ bReturned = True
 Do While Game_nCurrMove > 0
     MoveBack
 Loop
-szFenStrTable(Game_nCurrMove) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+szFenStrTable(Game_nCurrMove) = SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
 Do While Game_nCurrMove < Game_nMaxMove
     If bReturned Then
         For i = 1 To 4 - Len(Str(Game_cntCurr))
@@ -92,7 +92,7 @@ Do While Game_nCurrMove < Game_nMaxMove
         bReturned = True
     End If
     MoveForward
-    szFenStrTable(Game_nCurrMove) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+    szFenStrTable(Game_nCurrMove) = SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
     If Game_szComment(Game_nCurrMove) <> "" Then
         If Not bReturned Then
             Print #nFileNo, "</dt>"
@@ -182,7 +182,7 @@ Dim szSrc As String, szDst As String
 Do While Game_nCurrMove > 0
     MoveBack
 Loop
-sz = MkBStr(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
+sz = SysAllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
 If Options_bEscapeDouble Then
     sz = Replace(sz, Chr(27) + "[", szEscape)
 End If

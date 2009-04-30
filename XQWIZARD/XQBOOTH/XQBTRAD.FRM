@@ -1133,7 +1133,7 @@ Do While mv = 0
         DoEvents
         Sleep 1
     Else
-        sz = MkBStr(lpStr)
+        sz = SysAllocString(lpStr)
         If Left(sz, 9) = "bestmove " Then
             mv = Coord2Move(Mid(sz, 10, 4))
         End If

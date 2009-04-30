@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlCChess"
 ' CCHESS.BAS - Source Code for ElephantEye, Additional Part
 '
 ' ElephantEye - a Chinese Chess Program (UCCI Engine)
-' Designed by Morning Yellow, Version: 3.1, Last Modified: Dec. 2007
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 3.11, Last Modified: Apr. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This library is free software; you can redistribute it and/or
 ' modify it under the terms of the GNU Lesser General Public
@@ -95,6 +95,9 @@ Public Const CCHESS_ANSI_TEXT       As Long = 1
 
 Public Const CCHESS_START_FEN       As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w"
 
+Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
+Private Declare Function SysAllocString Lib "OLEAUT32.DLL" (ByVal lpcsz As Long) As String
+
 Public Function PieceType(ByVal nArg As Integer) As Integer
 
 PieceType = Choose(nArg - 15, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6)
@@ -181,5 +184,39 @@ End Function
 Public Function Move2Iccs(ByVal mv As Long) As String
 
 Move2Iccs = Chr(Src(mv) Mod 16 + 62) + Chr(60 - Src(mv) \ 16) + "-" + Chr(Dst(mv) Mod 16 + 62) + Chr(60 - Dst(mv) \ 16)
+
+End Function
+
+Public Function CvL(ByVal sz As String) As Long
+
+Dim dw As Long
+RtlMoveMemory VarPtr(dw), sz, 4
+CvL = dw
+
+End Function
+
+Public Function CvC(ByVal sz As String) As Currency
+
+Dim qw As Currency
+RtlMoveMemory VarPtr(qw), sz, 8
+CvC = qw
+
+End Function
+
+Public Function MkL(ByVal dw As Long) As String
+
+Dim lpdw(0 To 1) As Long
+lpdw(0) = dw
+lpdw(1) = 0
+MkL = SysAllocString(VarPtr(lpdw(0)))
+
+End Function
+
+Public Function MkC(ByVal qw As Currency) As String
+
+Dim lpqw(0 To 1) As Currency
+lpqw(0) = qw
+lpqw(1) = 0
+MkC = SysAllocString(VarPtr(lpqw(0)))
 
 End Function

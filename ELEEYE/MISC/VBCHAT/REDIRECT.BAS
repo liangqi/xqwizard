@@ -1,8 +1,6 @@
 Attribute VB_Name = "mdlRedirect"
 Option Explicit
 
-Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
-
 Public Const MAX_CLIENTS As Integer = 256
 Public Const BUFFER_LEN As Long = 65536
 
@@ -48,9 +46,9 @@ If frmRedirect.selDump.ListIndex = 0 Then
 End If
 If frmRedirect.selDump.ListIndex = 1 Then
     DumpHex VarPtr(App_ucDumpText(0)), lpBuffer, 0, nLen
-    StdioOut MkBStr(VarPtr(App_ucDumpText(0)))
+    StdioOut SysAllocString(VarPtr(App_ucDumpText(0)))
 Else
-    StdioOut Replace(SysAllocStringByteLen(lpBuffer, nLen), Chr(7), "")
+    StdioOut Replace(SysAllocString(lpBuffer), Chr(7), "")
     StdioOut vbCrLf
 End If
 
@@ -122,7 +120,7 @@ Do While App_bRunning
         For i = 1 To MAX_CLIENTS
             If App_sClients(i) <> INVALID_SOCKET Then
                 ' Read Data From Client
-                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
+                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
                 If nLen < 0 Then
                     Prompt App_sClients(i), "Disconnected"
                     WSBDisconnect App_sServers(i)
@@ -132,11 +130,12 @@ Do While App_bRunning
                 ElseIf nLen > 0 Then
                     WSBSend App_sServers(i), VarPtr(ucBuffer(0)), nLen
                     Prompt App_sClients(i), "Sent"
+                    ucBuffer(nLen) = 0
                     Dump VarPtr(ucBuffer(0)), nLen
                     bReceived = True
                 Else
                     ' Read Data from Server
-                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
+                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
                     If nLen < 0 Then
                         Prompt App_sClients(i), "Disconnected"
                         WSBDisconnect App_sServers(i)
@@ -146,6 +145,7 @@ Do While App_bRunning
                     ElseIf nLen > 0 Then
                         WSBSend App_sClients(i), VarPtr(ucBuffer(0)), nLen
                         Prompt App_sClients(i), "Received"
+                        ucBuffer(nLen) = 0
                         Dump VarPtr(ucBuffer(0)), nLen
                         bReceived = True
                     End If

@@ -230,7 +230,7 @@ Do While Not bLoaded
             Exit Do
         End If
     Else
-        sz = MkBStr(lpStr)
+        sz = SysAllocString(lpStr)
         If sz = "ucciok" Then
             bLoaded = True
         End If
@@ -314,7 +314,7 @@ Do While bLoaded
             Exit Do
         End If
     Else
-        sz = MkBStr(lpStr)
+        sz = SysAllocString(lpStr)
         If sz = "bye" Then
             bLoaded = False
         End If

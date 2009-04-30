@@ -1262,7 +1262,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         Game_nMaxIrrev = Game_nMaxIrrev + 1
         CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
         CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
-        Game_szIrrevFen(Game_nMaxIrrev) = MkBStr(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + _
+        Game_szIrrevFen(Game_nMaxIrrev) = SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + _
                 Str(IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1))
     End If
     If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
@@ -1418,8 +1418,8 @@ If App_bAutoEcco And Game_bStartPos And Game_nMaxMove <= 20 Then
     Next
     dwEcco = EccoIndex(szMoveStr)
     Game_szEcco = Left(MkL(dwEcco), 3)
-    Game_szOpen = MkBStr(EccoOpening(dwEcco))
-    Game_szVar = MkBStr(EccoVariation(dwEcco))
+    Game_szOpen = SysAllocString(EccoOpening(dwEcco))
+    Game_szVar = SysAllocString(EccoVariation(dwEcco))
     App_frmMain.lblOpen = OpenString
 End If
 
@@ -1922,7 +1922,7 @@ End If
 If lpStr = 0 Then
     ReceiveEngine = False
 Else
-    szReceived = MkBStr(lpStr)
+    szReceived = SysAllocString(lpStr)
     ReceiveEngineLog szReceived, bSlaveEngine
     If Left(szReceived, 9) = "bestmove " Then
         EngineBusy False
@@ -2136,7 +2136,7 @@ Do While Engine_nStatus > IDLE_UNLOAD
             Exit Do
         End If
     Else
-        szReceived = MkBStr(lpStr)
+        szReceived = SysAllocString(lpStr)
         ReceiveEngineLog szReceived
         If szReceived = "bye" Then
             Engine_nStatus = IDLE_UNLOAD
@@ -2168,7 +2168,7 @@ Do While (Engine_bSlaveRed Or Engine_bSlaveBlack)
             Exit Do
         End If
     Else
-        szReceived = MkBStr(lpStr)
+        szReceived = SysAllocString(lpStr)
         ReceiveEngineLog szReceived, SLAVE_ENGINE
         If szReceived = "bye" Then
             Engine_bSlaveRed = False
@@ -2216,7 +2216,7 @@ Else
                 Exit Do
             End If
         Else
-            szReceived = MkBStr(lpStr)
+            szReceived = SysAllocString(lpStr)
             ReceiveEngineLog szReceived
             If Left(szReceived, 8) = "id name " Then
                 Engine_szName = Mid(szReceived, 9)
@@ -2294,7 +2294,7 @@ Else
                 Exit Do
             End If
         Else
-            szReceived = MkBStr(lpStr)
+            szReceived = SysAllocString(lpStr)
             ReceiveEngineLog szReceived, SLAVE_ENGINE
             If Left(szReceived, 8) = "id name " Then
                 Engine_szSlaveName = Mid(szReceived, 9)

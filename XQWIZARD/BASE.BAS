@@ -36,12 +36,10 @@ Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWnd
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function SysAllocString Lib "OLEAUT32.DLL" (ByVal lpcsz As Long) As String
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
-' For Atom Subs/Functions
-Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
-Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+' === End Windows APIs ===
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
@@ -183,86 +181,6 @@ Private Declare Function GetSystemMenu Lib "USER32.DLL" (ByVal hWnd As Long, Opt
 Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPosition As Long, Optional ByVal uFlag As Long = 0)
 
 Private Stdio_si As StartupInfo
-
-' === Begin Atom Subs/Functions ===
-
-Public Function CvI(ByVal sz As String) As Integer
-
-Dim w As Integer
-RtlMoveMemory VarPtr(w), sz, 2
-CvI = w
-
-End Function
-
-Public Function CvL(ByVal sz As String) As Long
-
-Dim dw As Long
-RtlMoveMemory VarPtr(dw), sz, 4
-CvL = dw
-
-End Function
-
-Public Function CvC(ByVal sz As String) As Currency
-
-Dim qw As Currency
-RtlMoveMemory VarPtr(qw), sz, 8
-CvC = qw
-
-End Function
-
-Public Function CvS(ByVal sz As String) As Single
-
-Dim sf As Single
-RtlMoveMemory VarPtr(sf), sz, 4
-CvS = sf
-
-End Function
-
-Public Function CvD(ByVal sz As String) As Double
-
-Dim df As Double
-RtlMoveMemory VarPtr(df), sz, 8
-CvD = df
-
-End Function
-
-Public Function MkI(ByVal w As Integer) As String
-
-MkI = SysAllocStringByteLen(VarPtr(w), 2)
-
-End Function
-
-Public Function MkL(ByVal dw As Long) As String
-
-MkL = SysAllocStringByteLen(VarPtr(dw), 4)
-
-End Function
-
-Public Function MkC(ByVal qw As Currency) As String
-
-MkC = SysAllocStringByteLen(VarPtr(qw), 8)
-
-End Function
-
-Public Function MkS(ByVal sf As Single) As String
-
-MkS = SysAllocStringByteLen(VarPtr(sf), 4)
-
-End Function
-
-Public Function MkD(ByVal df As Double) As String
-
-MkD = SysAllocStringByteLen(VarPtr(df), 8)
-
-End Function
-
-Public Function MkBStr(ByVal lpsz As Long) As String
-
-MkBStr = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
-
-End Function
-
-' === End Atom Subs/Functions ===
 
 ' === Begin Str2Int/Lng ===
 
@@ -523,7 +441,7 @@ pidl = SHBrowseForFolderA(bi)
 If SHGetPathFromIDListA(pidl, VarPtr(szDisplayName(0))) = 0 Then
     BrowseForFolder = ""
 Else
-    BrowseForFolder = MkBStr(VarPtr(szDisplayName(0)))
+    BrowseForFolder = SysAllocString(VarPtr(szDisplayName(0)))
 End If
 
 End Function
@@ -605,8 +523,9 @@ Public Function StdioIn() As String
 
 Dim nNumberOfBytesRead As Long
 Dim lpBuffer(0 To READ_BUFFER_LEN - 1) As Byte
-ReadFile Stdio_si.hStdInput, VarPtr(lpBuffer(0)), READ_BUFFER_LEN, nNumberOfBytesRead
-StdioIn = SysAllocStringByteLen(VarPtr(lpBuffer(0)), nNumberOfBytesRead)
+ReadFile Stdio_si.hStdInput, VarPtr(lpBuffer(0)), READ_BUFFER_LEN - 1, nNumberOfBytesRead
+lpBuffer(nNumberOfBytesRead) = 0
+StdioIn = SysAllocString(VarPtr(lpBuffer(0)))
 
 End Function
 

@@ -97,7 +97,7 @@ For i = 1 To nFileLen
     Get #nOpenFile, , ucData(i)
 Next
 Base64Enc VarPtr(ucText(1)), VarPtr(ucData(1)), nFileLen, chkMultiLine.Value * 11
-txtCode.Text = MkBStr(VarPtr(ucText(1)))
+txtCode.Text = SysAllocString(VarPtr(ucText(1)))
 Erase ucText
 Erase ucData
 Close #nOpenFile
@@ -116,7 +116,7 @@ Dim i As Long, nFileLen As Long
 nFileLen = lstrlenA(sz)
 ReDim ucText(1 To (nFileLen \ 33 + 1) * 46) As Byte
 Base64Enc2 VarPtr(ucText(1)), sz, nFileLen, chkMultiLine.Value * 11
-txtCode.Text = MkBStr(VarPtr(ucText(1)))
+txtCode.Text = SysAllocString(VarPtr(ucText(1)))
 Erase ucText
 
 End Sub
@@ -183,7 +183,7 @@ Else
     nLen = Base64Dec2(VarPtr(ucData(0)), txtCode.Text)
     ucData(nLen) = 0
     Clipboard.Clear
-    Clipboard.SetText MkBStr(VarPtr(ucData(0)))
+    Clipboard.SetText SysAllocString(VarPtr(ucData(0)))
     Erase ucData
 End If
 

@@ -265,9 +265,7 @@ var JS = {
     var paramLen = arguments.length - 1;
     var lpParams = VB.Alloc(paramLen * 4);
     var lpData = lpParams;
-    var arrStrings = new Array(paramLen);
     for (var i = 0; i < paramLen; i ++) {
-      arrStrings[i] = 0;
       var item = arguments[1 + i];
       switch (typeof item) {
       case "number":
@@ -277,8 +275,10 @@ var JS = {
         VB.PutMem4(lpData, item ? 1 : 0);
         break;
       case "string":
-        arrStrings[i] = VB.AllocStr(item);
-        VB.PutMem4(lpData, arrStrings[i]);
+        VB.PutMem4(lpData, VB.StrPtr(item));
+        break;
+      case "object":
+        VB.PutMem4(lpData, VB.ObjPtr(item));
         break;
       default:
         VB.PutMem4(lpData, 0);
@@ -286,11 +286,6 @@ var JS = {
       lpData += 4;
     }
     var retVal = VB.CallProc(lpProc, lpParams, paramLen * 4);
-    for (var i = 0; i < paramLen; i ++) {
-      if (arrStrings[i] != 0) {
-        VB.Free(arrStrings[i]);
-      }
-    }
     return retVal;
   },
 
@@ -303,7 +298,7 @@ var JS = {
     VB.PutMem4(lpNid + 12, NIF_MESSAGE | NIF_ICON | NIF_TIP);
     VB.PutMem4(lpNid + 16, WM_TRAY);
     VB.PutMem4(lpNid + 20, hIcon);
-    VB.PutStr(lpNid + 24, szTip);
+    VB.PutStrW(lpNid + 24, szTip);
     JS.callProc(JS.win32.fnNotifyIcon, NIM_ADD, lpNid);
     VB.Free(lpNid);
   },
@@ -339,34 +334,35 @@ var JS = {
 
     var modUser = VB.LoadLibrary("USER32.DLL");
     JS.win32.modUser = modUser;
-    JS.win32.fnMessageBox = VB.GetProcAddress(modUser, "MessageBoxA");
-    JS.win32.fnGetWindowLong = VB.GetProcAddress(modUser, "GetWindowLongA");
-    JS.win32.fnSetWindowLong = VB.GetProcAddress(modUser, "SetWindowLongA");
+    JS.win32.fnMessageBox = VB.GetProcAddress(modUser, "MessageBoxW");
+    JS.win32.fnGetWindowLong = VB.GetProcAddress(modUser, "GetWindowLongW");
+    JS.win32.fnSetWindowLong = VB.GetProcAddress(modUser, "SetWindowLongW");
     JS.win32.fnSetWindowPos = VB.GetProcAddress(modUser, "SetWindowPos");
     JS.win32.fnUpdateWindow = VB.GetProcAddress(modUser, "UpdateWindow");
-    JS.win32.fnCallWindowProc = VB.GetProcAddress(modUser, "CallWindowProcA");
+    JS.win32.fnCallWindowProc = VB.GetProcAddress(modUser, "CallWindowProcW");
     JS.win32.fnGetSystemMenu = VB.GetProcAddress(modUser, "GetSystemMenu");
     JS.win32.fnRemoveMenu = VB.GetProcAddress(modUser, "RemoveMenu");
     JS.win32.fnGetSysColor = VB.GetProcAddress(modUser, "GetSysColor");
-    JS.win32.fnLoadImage = VB.GetProcAddress(modUser, "LoadImageA");
+    JS.win32.fnLoadImage = VB.GetProcAddress(modUser, "LoadImageW");
 
     var modShell = VB.LoadLibrary("SHELL32.DLL");
     JS.win32.modShell = modShell;
-    JS.win32.fnNotifyIcon = VB.GetProcAddress(modShell, "Shell_NotifyIconA");
+    JS.win32.fnNotifyIcon = VB.GetProcAddress(modShell, "Shell_NotifyIconW");
 
     // appPath
     var lpFileName = VB.Alloc(1024);
-    JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetModuleFileNameA"), 0, lpFileName, 1024);
-    var appPath = VB.GetStr(lpFileName);
+    JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetModuleFileNameW"), 0, lpFileName, 1024);
+    var appPath = VB.GetStrW(lpFileName);
     VB.Free(lpFileName);
     JS.appPath = appPath.substring(0, appPath.lastIndexOf("\\") + 1);
+    alert(JS.appPath);
+
+    // commandLine
+    JS.commandLine = VB.GetStrW(JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetCommandLineW")));
 
     // Callback API
     var modCallProc = VB.LoadLibrary(JS.appPath + "CALLPROC.DLL");
     JS.win32.fnPrepareCallback = VB.GetProcAddress(modCallProc, "_PrepareCallback@16");
-
-    // commandLine
-    JS.commandLine = VB.GetStr(JS.callProc(VB.GetProcAddress(JS.win32.modKernel, "GetCommandLineA")));
 
     // popupMenu Status
     JS.inPopupMenu = false;
