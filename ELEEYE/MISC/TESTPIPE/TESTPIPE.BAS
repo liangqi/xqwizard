@@ -17,7 +17,7 @@ If szFileName <> "" Then
         DoEvents
         lpStr = PipeLineInput(pipe)
         If lpStr <> 0 Then
-            frmTestPipe.lstOutput.AddItem SysAllocString(lpStr)
+            frmTestPipe.lstOutput.AddItem AllocString(lpStr)
             frmTestPipe.lstOutput.ListIndex = frmTestPipe.lstOutput.ListCount - 1
         End If
     Loop

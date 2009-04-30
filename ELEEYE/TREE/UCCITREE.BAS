@@ -77,7 +77,7 @@ lpStr = PipeLineInput(App_pipe)
 If lpStr = 0 Then
     PipeIn = ""
 Else
-    sz = SysAllocString(lpStr)
+    sz = AllocString(lpStr)
     PipeIn = sz
 End If
 
@@ -146,7 +146,7 @@ nTotal = CchessGenMoves(pos, mvs(0))
 nLegal = 0
 ' 首先检查空着裁剪
 If CchessTryNull(pos) <> 0 Then
-    Infos(nLegal).szFen = SysAllocString(CchessBoard2Fen(pos))
+    Infos(nLegal).szFen = AllocString(CchessBoard2Fen(pos))
     CchessUndoNull pos
     ProbeHash Infos(nLegal).mvBest, nAlphaDepth, nBetaDepth, vlAlpha, vlBeta, Infos(nLegal).szFen
     Infos(nLegal).bExp = False
@@ -160,7 +160,7 @@ If CchessTryNull(pos) <> 0 Then
 End If
 For i = 0 To nTotal - 1
     If CchessTryMove(pos, nStatus, mvs(i)) <> 0 Then
-        Infos(nLegal).szFen = SysAllocString(CchessBoard2Fen(pos))
+        Infos(nLegal).szFen = AllocString(CchessBoard2Fen(pos))
         Infos(nLegal).mvBest = 0
         CchessUndoMove pos
         szMoveStr = MkC(CchessFile2Chin(CchessMove2File(mvs(i), pos), pos.sdPlayer))

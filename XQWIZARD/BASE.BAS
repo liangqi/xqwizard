@@ -36,8 +36,16 @@ Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWnd
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function SysAllocString Lib "OLEAUT32.DLL" (ByVal lpcsz As Long) As String
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
+
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+
+Public Function AllocString(ByVal lpsz As Long) As String
+
+AllocString = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
+
+End Function
 
 ' === End Windows APIs ===
 
@@ -441,7 +449,7 @@ pidl = SHBrowseForFolderA(bi)
 If SHGetPathFromIDListA(pidl, VarPtr(szDisplayName(0))) = 0 Then
     BrowseForFolder = ""
 Else
-    BrowseForFolder = SysAllocString(VarPtr(szDisplayName(0)))
+    BrowseForFolder = AllocString(VarPtr(szDisplayName(0)))
 End If
 
 End Function
@@ -525,7 +533,7 @@ Dim nNumberOfBytesRead As Long
 Dim lpBuffer(0 To READ_BUFFER_LEN - 1) As Byte
 ReadFile Stdio_si.hStdInput, VarPtr(lpBuffer(0)), READ_BUFFER_LEN - 1, nNumberOfBytesRead
 lpBuffer(nNumberOfBytesRead) = 0
-StdioIn = SysAllocString(VarPtr(lpBuffer(0)))
+StdioIn = AllocString(VarPtr(lpBuffer(0)))
 
 End Function
 

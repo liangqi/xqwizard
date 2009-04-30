@@ -1357,7 +1357,7 @@ Attribute VB_Exposed = False
 Private Sub btnCopyFen_Click()
 
 Clipboard.Clear
-Clipboard.SetText SysAllocString(CchessBoard2Fen(App_posRoot)) + " - - 0 1"
+Clipboard.SetText AllocString(CchessBoard2Fen(App_posRoot)) + " - - 0 1"
 
 End Sub
 

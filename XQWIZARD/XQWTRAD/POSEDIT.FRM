@@ -1200,7 +1200,7 @@ Edit_pcSelected = 0
 Edit_posBoard = Game_posIrrev(Game_nCurrIrrev)
 imgBoard.Picture = frmHide.imgBoardSmall.Picture
 PosBoardFlush
-Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
 txtFen.Text = Edit_szFen
 optRedMove.Value = (Edit_posBoard.sdPlayer = 0)
 optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
@@ -1237,7 +1237,7 @@ Private Sub optRedMove_Click()
 
 If Edit_posBoard.sdPlayer = 1 Then
     Edit_posBoard.sdPlayer = 0
-    Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
     txtFen.Text = Edit_szFen
 End If
 
@@ -1247,7 +1247,7 @@ Private Sub optBlackMove_Click()
 
 If Edit_posBoard.sdPlayer = 0 Then
     Edit_posBoard.sdPlayer = 1
-    Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
     txtFen.Text = Edit_szFen
 End If
 
@@ -1258,7 +1258,7 @@ Private Sub txtCounter_Change()
 If Edit_cnt <> Str2Int(txtCounter.Text) Then
     Edit_cnt = Str2Int(txtCounter.Text, 1, 999)
     txtCounter.Text = Edit_cnt
-    Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
     txtFen.Text = Edit_szFen
 End If
 
@@ -1289,7 +1289,7 @@ If nButton = vbLeftButton Then
         DrawPosSquare sq
         Edit_sqSelected = 0
         Edit_pcSelected = 0
-        Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
         txtFen.Text = Edit_szFen
     Else
         If Edit_posBoard.ucpcSquares(sq) > 0 Then
@@ -1311,7 +1311,7 @@ ElseIf nButton = vbRightButton Then
         CchessAddPiece Edit_posBoard, sq, pcDst, CCHESS_DELETE_PIECE
         DrawPosSquare sq
         DrawCapSquare pcDst
-        Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
         txtFen.Text = Edit_szFen
     End If
 End If
@@ -1327,7 +1327,7 @@ If Edit_sqSelected > 0 Then
     DrawPosSquare Edit_sqSelected
     DrawCapSquare pc
     Edit_sqSelected = 0
-    Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
     txtFen.Text = Edit_szFen
 Else
     pc = nIndex + 16
@@ -1347,7 +1347,7 @@ Private Sub btnClear_Click()
 CchessClearBoard Edit_posBoard
 Edit_sqSelected = 0
 PosBoardFlush
-Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
 txtFen.Text = Edit_szFen
 
 End Sub
@@ -1359,7 +1359,7 @@ Edit_sqSelected = 0
 PosBoardFlush
 optRedMove.Value = (Edit_posBoard.sdPlayer = 0)
 optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
-Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
 txtFen.Text = Edit_szFen
 
 End Sub
@@ -1374,7 +1374,7 @@ If sqWhiteKing > 0 And sqBlackKing > sqWhiteKing Then
         CchessFlipBoard Edit_posBoard
         ' Edit_sqSelected = 0
         ' PosBoardFlush
-        Edit_szFen = SysAllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
         ' txtFen.Text = Edit_szFen
     End If
 End If

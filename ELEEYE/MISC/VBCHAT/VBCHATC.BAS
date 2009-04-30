@@ -1,6 +1,8 @@
 Attribute VB_Name = "mdlVBChat"
 Option Explicit
 
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+
 Public Const BUFFER_LEN As Long = 65536
 
 Public bRunning As Boolean, bCtrlEnter As Boolean
@@ -20,7 +22,7 @@ Do While bRunning
     If nSocket = INVALID_SOCKET Then
         Sleep 1
     Else
-        nLen = WSBRecv(nSocket, VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
+        nLen = WSBRecv(nSocket, VarPtr(ucBuffer(0)), BUFFER_LEN)
         If nLen < 0 Then
             WSBDisconnect nSocket
             nSocket = INVALID_SOCKET
@@ -31,7 +33,7 @@ Do While bRunning
             Sleep 1
         Else
             ucBuffer(nLen) = 0
-            frmVBChat.txtRecv.Text = frmVBChat.txtRecv.Text + SysAllocString(VarPtr(ucBuffer(0)))
+            frmVBChat.txtRecv.Text = frmVBChat.txtRecv.Text + SysAllocStringByteLen(VarPtr(ucBuffer(0)), nLen)
             frmVBChat.txtRecv.SelStart = Len(frmVBChat.txtRecv.Text)
             If frmVBChat.chkQuiet.Value = 0 Then
                 MessageBeep MB_ICONINFORMATION

@@ -96,7 +96,8 @@ Public Const CCHESS_ANSI_TEXT       As Long = 1
 Public Const CCHESS_START_FEN       As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w"
 
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
-Private Declare Function SysAllocString Lib "OLEAUT32.DLL" (ByVal lpcsz As Long) As String
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
 Public Function PieceType(ByVal nArg As Integer) As Integer
 
@@ -205,18 +206,12 @@ End Function
 
 Public Function MkL(ByVal dw As Long) As String
 
-Dim lpdw(0 To 1) As Long
-lpdw(0) = dw
-lpdw(1) = 0
-MkL = SysAllocString(VarPtr(lpdw(0)))
+MkL = SysAllocStringByteLen(VarPtr(dw), 4)
 
 End Function
 
 Public Function MkC(ByVal qw As Currency) As String
 
-Dim lpqw(0 To 1) As Currency
-lpqw(0) = qw
-lpqw(1) = 0
-MkC = SysAllocString(VarPtr(lpqw(0)))
+MkC = SysAllocStringByteLen(VarPtr(qw), 8)
 
 End Function

@@ -205,18 +205,12 @@ End Function
 
 Public Function MkL(ByVal dw As Long) As String
 
-Dim lpdw(0 To 1) As Long
-lpdw(0) = dw
-lpdw(1) = 0
-MkL = SysAllocString(VarPtr(lpdw(0)))
+MkL = SysAllocStringByteLen(VarPtr(dw), 4)
 
 End Function
 
 Public Function MkC(ByVal qw As Currency) As String
 
-Dim lpqw(0 To 1) As Currency
-lpqw(0) = qw
-lpqw(1) = 0
-MkC = SysAllocString(VarPtr(lpqw(0)))
+MkC = SysAllocStringByteLen(VarPtr(qw), 8)
 
 End Function

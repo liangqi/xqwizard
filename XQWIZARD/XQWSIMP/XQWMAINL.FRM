@@ -2150,7 +2150,7 @@ For i = 1 To Game_nMaxMove
     cnt = cnt + 1 - sd
 Next
 For i = 0 To Game_nMaxIrrev
-    Game_szIrrevFen(i) = SysAllocString(CchessFenMirror(Game_szIrrevFen(i)))
+    Game_szIrrevFen(i) = AllocString(CchessFenMirror(Game_szIrrevFen(i)))
     CchessBoardMirror Game_posIrrev(i)
 Next
 BoardFlush
@@ -2161,7 +2161,7 @@ End Sub
 Private Sub mnPosAnalyze_Click()
 
 Shell App_szPath + App.EXEName + IIf(App_bPromotion, " /P /S ", " /S ") + """" + _
-        SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + """", vbNormalFocus
+        AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + """", vbNormalFocus
 
 End Sub
 
@@ -2177,7 +2177,7 @@ End Sub
 Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
-Clipboard.SetText SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
 MsgBox "FEN串已复制到剪贴板。", vbInformation
 
 End Sub
@@ -2213,7 +2213,7 @@ If szFileName <> "" Then
     On Error GoTo lnErrorOpen
     Open szFileName For Output As #nFileNo
     On Error GoTo 0
-    Print #nFileNo, SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
     Close #nFileNo
 End If
 
@@ -2257,16 +2257,16 @@ End Sub
 Private Sub mnWizardText_Click()
 
 Dim sz As String, szFenStr As String
-szFenStr = SysAllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + vbCrLf + "欢迎访问www.elephantbase.net" + vbCrLf
+szFenStr = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + vbCrLf + "欢迎访问www.elephantbase.net" + vbCrLf
 Clipboard.Clear
 If Options_bAnsiText Then
-    sz = SysAllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
+    sz = AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
     If Options_bEscapeDouble Then
         sz = Replace(sz, Chr(27) + "[", Chr(27) + Chr(27) + "[")
     End If
     Clipboard.SetText sz + szFenStr
 Else
-    Clipboard.SetText SysAllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev))) + szFenStr
+    Clipboard.SetText AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev))) + szFenStr
 End If
 MsgBox "文本棋盘已复制到剪贴板。", vbInformation
 
@@ -2573,13 +2573,13 @@ End Sub
 
 Private Sub mnHelpEcco_Click()
 
-MsgBoxWithIcon "ECCO(中国象棋开局百科)编号识别系统" + vbCrLf + "版本号：" + SysAllocString(EccoVersion()), "关于ECCO", App_szPath + "ECCO.DLL"
+MsgBoxWithIcon "ECCO(中国象棋开局百科)编号识别系统" + vbCrLf + "版本号：" + AllocString(EccoVersion()), "关于ECCO", App_szPath + "ECCO.DLL"
 
 End Sub
 
 Private Sub mnHelpRule_Click()
 
-MsgBoxWithIcon "中国象棋规则判定系统" + vbCrLf + "版本号：" + SysAllocString(CchessVersion()), "关于规则", App_szPath + "CCHESS.DLL"
+MsgBoxWithIcon "中国象棋规则判定系统" + vbCrLf + "版本号：" + AllocString(CchessVersion()), "关于规则", App_szPath + "CCHESS.DLL"
 
 End Sub
 

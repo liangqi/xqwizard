@@ -385,7 +385,7 @@ Do While EngineSet_bRunning
         DoEvents
         Sleep 1
     Else
-        szReceived = SysAllocString(lpStr)
+        szReceived = AllocString(lpStr)
         ReceiveEngineLog szReceived
         frmEngineSet.lstReceived.AddItem szReceived
         frmEngineSet.lstReceived.ListIndex = frmEngineSet.lstReceived.ListCount - 1

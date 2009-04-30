@@ -59,8 +59,9 @@ Private Declare Function GetProcAddressA Lib "KERNEL32.DLL" Alias "GetProcAddres
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal lpSrc As Long, ByVal dwCount As Long)
 Private Declare Sub RtlMoveMemory2 Lib "KERNEL32.DLL" Alias "RtlMoveMemory" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
 Private Declare Function lstrcpyA Lib "KERNEL32.DLL" (ByVal lpszDst As Long, ByVal szSrc As String) As Long
-Private Declare Function lstrcpyW Lib "KERNEL32.DLL" (ByVal lpszDst As Long, ByVal lpcszSrc As Long) As Long
-Private Declare Function SysAllocString Lib "OLEAUT32.DLL" (ByVal lpcsz As Long) As String
+Private Declare Function lstrcpyW Lib "KERNEL32.DLL" (ByVal lpszDst As Long, ByVal lpszSrc As Long) As Long
+Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" _
@@ -263,9 +264,9 @@ RtlMoveMemory lpdw, VarPtr(dw), 4
 
 End Sub
 
-Public Function GetStrA(ByVal lpcsz As Long) As String
+Public Function GetStrA(ByVal lpsz As Long) As String
 
-GetStrA = SysAllocString(lpcsz)
+GetStrA = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
 
 End Function
 
@@ -275,10 +276,10 @@ lstrcpyA lp, sz
 
 End Sub
 
-Public Function GetStrW(ByVal lpcsz As Long) As String
+Public Function GetStrW(ByVal lpsz As Long) As String
 
 Dim sz As String
-RtlMoveMemory VarPtr(sz), VarPtr(lpcsz), 4
+RtlMoveMemory VarPtr(sz), VarPtr(lpsz), 4
 GetStrW = sz
 
 End Function

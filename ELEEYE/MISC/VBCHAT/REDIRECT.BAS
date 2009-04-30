@@ -1,6 +1,8 @@
 Attribute VB_Name = "mdlRedirect"
 Option Explicit
 
+Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
+
 Public Const MAX_CLIENTS As Integer = 256
 Public Const BUFFER_LEN As Long = 65536
 
@@ -46,9 +48,9 @@ If frmRedirect.selDump.ListIndex = 0 Then
 End If
 If frmRedirect.selDump.ListIndex = 1 Then
     DumpHex VarPtr(App_ucDumpText(0)), lpBuffer, 0, nLen
-    StdioOut SysAllocString(VarPtr(App_ucDumpText(0)))
+    StdioOut AllocString(VarPtr(App_ucDumpText(0)))
 Else
-    StdioOut Replace(SysAllocString(lpBuffer), Chr(7), "")
+    StdioOut Replace(SysAllocStringByteLen(lpBuffer, nLen), Chr(7), "")
     StdioOut vbCrLf
 End If
 
@@ -120,7 +122,7 @@ Do While App_bRunning
         For i = 1 To MAX_CLIENTS
             If App_sClients(i) <> INVALID_SOCKET Then
                 ' Read Data From Client
-                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
+                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
                 If nLen < 0 Then
                     Prompt App_sClients(i), "Disconnected"
                     WSBDisconnect App_sServers(i)
@@ -135,7 +137,7 @@ Do While App_bRunning
                     bReceived = True
                 Else
                     ' Read Data from Server
-                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
+                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
                     If nLen < 0 Then
                         Prompt App_sClients(i), "Disconnected"
                         WSBDisconnect App_sServers(i)
