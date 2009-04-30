@@ -38,16 +38,11 @@ Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
+' === End Windows APIs ===
+
+' For AllocString
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
-
-Public Function AllocString(ByVal lpsz As Long) As String
-
-AllocString = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
-
-End Function
-
-' === End Windows APIs ===
 
 ' For MsgBoxWithIcon/MsgBoxMute
 Private Type MsgBoxParams
@@ -189,6 +184,16 @@ Private Declare Function GetSystemMenu Lib "USER32.DLL" (ByVal hWnd As Long, Opt
 Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPosition As Long, Optional ByVal uFlag As Long = 0)
 
 Private Stdio_si As StartupInfo
+
+' === Begin AllocString ===
+
+Public Function AllocString(ByVal lpsz As Long) As String
+
+AllocString = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
+
+End Function
+
+' === End AllocString ===
 
 ' === Begin Str2Int/Lng ===
 

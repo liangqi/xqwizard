@@ -96,7 +96,6 @@ Public Const CCHESS_ANSI_TEXT       As Long = 1
 Public Const CCHESS_START_FEN       As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w"
 
 Private Declare Sub RtlMoveMemory Lib "KERNEL32.DLL" (ByVal lpDst As Long, ByVal szSrc As String, ByVal dwCount As Long)
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
 Public Function PieceType(ByVal nArg As Integer) As Integer
