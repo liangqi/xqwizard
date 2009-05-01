@@ -71,7 +71,7 @@ function main() {
         return false;
       }
     }
-    return wndProcContext.callPrevWndProc(hWnd, uMsg, wParam, lParam);
+    return JS.callProc(JS.win32.fnCallWindowProc, wndProcContext.prevWndProc, hWnd, uMsg, wParam, lParam);
   });
 
   JS.show(STYLE_FIXED, 336, 336);

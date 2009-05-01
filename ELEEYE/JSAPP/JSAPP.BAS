@@ -38,10 +38,10 @@ NewKeyboardProc = CallNextHookEx(App_hhkPrev, iCode, wParam, lParam)
 
 End Function
 
-Public Function GenericCallback(ByVal objContext As Object, ByVal lpParam As Long) As Long
+Public Function GenericCallback(ByVal fnCallback As Object, ByVal lpParam As Long) As Long
 
 On Error Resume Next
-GenericCallback = CallByName(objContext, "callback", VbMethod, lpParam)
+GenericCallback = fnCallback(lpParam)
 On Error GoTo 0
 
 End Function

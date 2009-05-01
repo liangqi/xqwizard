@@ -96,6 +96,8 @@ var STYLE_SIZABLE	= 3;
 var STYLE_DIALOG_NOTITLE = 4;
 var STYLE_DIALOG	= 5;
 
+var VB;
+
 var JS = {
   // Retrieve "window.document" of another Window
   getDocument:function(another) {
@@ -246,17 +248,13 @@ var JS = {
 
   // Set a new WindowProc
   setNewWndProc:function(hWnd, wndProc) {
-    var context = {};
-    context.callback = function(lpParam) {
+    var callback = function(lpParam) {
       return wndProc(VB.GetMem4(lpParam), VB.GetMem4(lpParam + 4), VB.GetMem4(lpParam + 8), VB.GetMem4(lpParam + 12));
     };
-    context.newWndProc = VB.Alloc(CALLBACK_SIZE);
-    JS.callProc(JS.win32.fnPrepareCallback, context.newWndProc, VB.GenericCallback, VB.ObjPtr(context), 16);
-    context.prevWndProc = JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, context.newWndProc);
-    context.callPrevWndProc = function(hWnd, uMsg, wParam, lParam) {
-      return JS.callProc(JS.win32.fnCallWindowProc, wndProcContext.prevWndProc, hWnd, uMsg, wParam, lParam);
-    };
-    return context;
+    var newWndProc = VB.Alloc(CALLBACK_SIZE);
+    JS.callProc(JS.win32.fnPrepareCallback, newWndProc, VB.GenericCallback, VB.ObjPtr(callback), 16);
+    var prevWndProc = JS.callProc(JS.win32.fnSetWindowLong, hWnd, GWL_WNDPROC, newWndProc);
+    return {callback:callback, newWndProc:newWndProc, prevWndProc:prevWndProc};
   },
 
   // Restore to Previous WindowProc
@@ -341,7 +339,9 @@ var JS = {
   },
 
   // Called in "WebBrowser_DocumentComplete"
-  initJS:function() {
+  init:function(VB_Form) {
+    VB = VB_Form;
+
     // Windows APIs
     JS.win32 = {};
 

@@ -93,10 +93,8 @@ End Sub
 
 Private Sub WebBrowser_DocumentComplete(ByVal pDisp As Object, URL As Variant)
 
-pDisp.Document.parentWindow.eval "VB = {}"
-Set pDisp.Document.parentWindow.VB = Me
 On Error Resume Next
-pDisp.Document.parentWindow.JS.initJS
+pDisp.Document.parentWindow.JS.init Me
 On Error GoTo 0
 
 End Sub
