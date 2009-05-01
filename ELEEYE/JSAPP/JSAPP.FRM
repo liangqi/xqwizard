@@ -66,7 +66,20 @@ Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As L
 Private Declare Function CallProcA Lib "CALLPROC.DLL" Alias "_CallProc@12" _
         (ByVal lpProc As Long, ByVal lpcParams As Long, ByVal dwParamLen As Long) As Long
 
-Public Param As Object
+Public Param As Object, Error As Variant, GenericCallback As Long
+
+Private Sub SetError(Optional ByVal Dummy As Variant)
+
+Error = Dummy
+
+End Sub
+
+Private Sub Form_Load()
+
+SetError
+GenericCallback = Assign(AddressOf mdlJsApp.GenericCallback)
+
+End Sub
 
 Private Sub Form_Unload(nCancel As Integer)
 
@@ -123,18 +136,6 @@ Width = Width + (nClientWidth - ScaleWidth) * Screen.TwipsPerPixelX
 Height = Height + (nClientHeight - ScaleHeight) * Screen.TwipsPerPixelY
 
 End Sub
-
-Public Property Get Error(Optional ByVal dummy As Variant) As Variant
-
-Error = dummy
-
-End Property
-
-Public Property Get GenericCallback() As Long
-
-GenericCallback = Assign(AddressOf mdlJsApp.GenericCallback)
-
-End Property
 
 ' === Begin Visual Basic Routines ===
 
