@@ -1232,7 +1232,7 @@ Get #nFileNo, , dw
 Close #nFileNo
 
 nLast = dw \ &H10000
-If ((nLast * nLast) And &HFFFF&) <> (dw And &HFFFF&) Or nLast < 0 Or nLast > App_nEndgames Then
+If ((CLng(nLast) * nLast) And &HFFFF&) <> (dw And &HFFFF&) Or nLast < 0 Or nLast > App_nEndgames Then
     MsgBox szFileName + " 不是有效的闯关记录文件。", vbExclamation
     Exit Sub
 End If
@@ -1258,7 +1258,7 @@ szFileName = SaveFileDialog("导出闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.
 If szFileName = "" Then
     Exit Sub
 End If
-dw = ((Gui_nLast * Gui_nLast) And &HFFFF&) + (Gui_nLast * &H10000)
+dw = ((CLng(Gui_nLast) * Gui_nLast) And &HFFFF&) + (Gui_nLast * &H10000)
 
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
