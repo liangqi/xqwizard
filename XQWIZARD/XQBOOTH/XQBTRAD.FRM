@@ -1266,6 +1266,7 @@ Open szFileName For Binary Access Write As #nFileNo
 On Error GoTo 0
 Put #nFileNo, , dw
 Close #nFileNo
+MsgBox "êJêPÓ›ä›Œ§³ö³É¹¦¡£", vbInformation
 
 Exit Sub
 lnErrorOpen:

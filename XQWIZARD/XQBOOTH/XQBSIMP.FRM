@@ -1266,6 +1266,7 @@ Open szFileName For Binary Access Write As #nFileNo
 On Error GoTo 0
 Put #nFileNo, , dw
 Close #nFileNo
+MsgBox "闯关记录导出成功。", vbInformation
 
 Exit Sub
 lnErrorOpen:
