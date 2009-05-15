@@ -92,46 +92,78 @@ bool ChooseJarFile(void) {
   return GetSaveFileName(&ofn) != 0;
 }
 
-static void SearchFolder(const char *szFolderPath, const EccoApiStruct &EccoApi);
+static void SearchFolder(const char *szSrcFolder, const char *szDstFolder);
 
 // 搜索到指定的文件
-static void SearchFile(const char *szSrcFilePath, const char *szDstFilePath, const WIN32_FIND_DATA &wfd) {
+static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nIndex, const WIN32_FIND_DATA &wfd) {
   int nPathLen;
-  char szPgnFile[MAX_CHAR];
+  FILE *fpFileList;
+  char *lpDstFile, *lpBackSlash;
+  char szPgnFile[MAX_CHAR], szDstFile[MAX_CHAR], szTitle[MAX_CHAR];
+
+  // 把szDstFile定位为szDstFolder，用strcpy(lpDstFile, ...)定位文件
+  strcpy(szDstFile, szDstFolder);
+  lpDstFile = szDstFile + strlen(szDstFolder);
+  if (*(lpDstFile - 1) != '\\') {
+    *lpDstFile = '\\';
+    lpDstFile ++;
+  }
+  // 打开FILELIST
+  strcpy(lpDstFile, "FILELIST");
+  fpFileList = fopen(szDstFile, "at");
+  // 获取文件标题
+  lpBackSlash = strrchr(szSrcFile, '\\');
+  if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
+    strcpy(szTitle, "无标题");
+  } else {
+    strcpy(szTitle, lpBackSlash + 1);
+  }
+
   if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {
-    nPathLen = strlen(szFilePath) - 4;
-    if (nPathLen > 0 && strnicmp(szFilePath + nPathLen, ".PGN", 4) == 0) {
-      // 是PGN文件，写入FILELIST
+    nPathLen = strlen(szSrcFile) - 4;
+    if (nPathLen > 0 && strnicmp(szSrcFile + nPathLen, ".PGN", 4) == 0) {
+      // 是PGN文件，写入上级文件夹的FILELIST，并拷贝之
+      fprintf(fpFileList, "%d.PGN=%s\n", nIndex, szTitle);
+      sprintf(szPgnFile, "%d.PGN", nIndex);
+      strcpy(lpDstFile, szPgnFile);
+      CopyFile(szSrcFile, szDstFile, FALSE);
     }
   } else if (strcmp(wfd.cFileName, ".") != 0 && strcmp(wfd.cFileName, "..") != 0) {
-    SearchFolder(szFilePath);
-    // 是目录，写入FILELIST
+    // 是目录，写入上级文件夹的FILELIST，并建立、搜索之
+    fprintf(fpFileList, "/%d=%s\n", nIndex, szTitle);
+    sprintf(szPgnFile, "%d", nIndex);
+    strcpy(lpDstFile, szPgnFile);
+    CreateDirectory(szDstFile, NULL);
+    SearchFolder(szSrcFile, szDstFile);
   }
+  fclose(fpFileList);
 }
 
 // 搜索指定文件夹
-static void SearchFolder(const char *szSrcFolderPath, const char *szDstFolderPath) {
-  int nIndex;
-  char szFilePath[MAX_CHAR];
-  WIN32_FIND_DATA wfd;
+static void SearchFolder(const char *szSrcFolder, const char *szDstFolder) {
   HANDLE hFind;
-  char *lpFilePath;
+  int nIndex;
+  char *lpSrcFile;
+  char szSrcFile[MAX_CHAR];
+  WIN32_FIND_DATA wfd;
 
-  strcpy(szFilePath, szFolderPath);
-  lpFilePath = szFilePath + strlen(szFolderPath);
-  if (*(lpFilePath - 1) == '\\') {
-    lpFilePath --;
+  // 把szSrcFile定位为szSrcFolder，用strcpy(lpSrcFile, ...)定位文件
+  strcpy(szSrcFile, szSrcFolder);
+  lpSrcFile = szSrcFile + strlen(szSrcFolder);
+  if (*(lpSrcFile - 1) != '\\') {
+    *lpSrcFile = '\\';
+    lpSrcFile ++;
   }
-  strcpy(lpFilePath, "\\*");
-  lpFilePath ++;
-  hFind = FindFirstFile(szFilePath, &wfd);
+  // szSrcFile改为...\*，作为搜索对象
+  strcpy(lpSrcFile, "*");
+  hFind = FindFirstFile(szSrcFile, &wfd);
   if (hFind != INVALID_HANDLE_VALUE) {
-    strcpy(lpFilePath, wfd.cFileName);
-    SearchFile(szFilePath, wfd, 1);
+    strcpy(lpSrcFile, wfd.cFileName);
+    SearchFile(szSrcFile, szDstFolder, 1, wfd);
     nIndex = 2;
     while (FindNextFile(hFind, &wfd)) {
-      strcpy(lpFilePath, wfd.cFileName);
-      SearchFile(szFilePath, wfd, nIndex);
+      strcpy(lpSrcFile, wfd.cFileName);
+      SearchFile(szSrcFile, szDstFolder, nIndex, wfd);
       nIndex ++;
     }
   }
@@ -167,7 +199,8 @@ void CreateJarFile(void) {
 }
 
 // 主程序
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+int main(void) {
   char sz[MAX_CHAR];
 
   // 定位棋谱目标文件夹
@@ -180,7 +213,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   if (!ChooseJarFile()) {
     return 0;
   }
-  CreateJarFile();
+  // 搜索并整理棋谱文件
+  SearchFolder(XqBossEx.szSrcFolder, XqBossEx.szDstFolder);
+  // 用InfoZip生成JAR文件
+  // CreateJarFile();
 
   sprintf(sz, "手机棋谱 %s 制作成功。\n%s", XqBossEx.szJarFile, XqBossEx.szDstFolder);
   MessageBox(NULL, sz, "手机棋谱制作工具", 0);
