@@ -1,6 +1,6 @@
 /*
 PGNS2JAR - a XQBoss Jar Making Program
-Designed by Morning Yellow, Version: 4.0, Last Modified: May 2009
+Designed by Morning Yellow, Version: 1.3, Last Modified: May 2009
 Copyright (C) 2004-2009 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -25,6 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "zip.h"
 
 const int MAX_CHAR = 1024;
+const char *const cszMidletVersion = "1.30";
 
 // 棋谱信息
 static struct {
@@ -77,6 +78,7 @@ bool ChooseSourceFolder(void) {
 
 // 选择要生成的手机棋谱文件
 bool ChooseJarFile(void) {
+  char *lpBackSlash, *lpDot;
   OPENFILENAME ofn;
 
   strcpy(XqBossEx.szJarFile, XqBossEx.szTitle);
@@ -89,14 +91,29 @@ bool ChooseJarFile(void) {
   ofn.lpstrTitle = "请指定要生成的手机棋谱程序";
   ofn.lpstrDefExt = "jar";
   ofn.Flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT;
-  return GetSaveFileName(&ofn) != 0;
+  if (GetSaveFileName(&ofn) == 0) {
+    return false;
+  }
+
+  // 再次获取棋谱标题
+  lpBackSlash = strrchr(XqBossEx.szJarFile, '\\');
+  if (lpBackSlash == NULL) {
+    strcpy(XqBossEx.szTitle, "无标题");
+  } else {
+    strcpy(XqBossEx.szTitle, lpBackSlash + 1);
+    lpDot = strrchr(XqBossEx.szTitle, '.');
+    if (lpDot != NULL) {
+      *lpDot = '\0';
+    }
+  }
+  return true;
 }
 
 static void SearchFolder(const char *szSrcFolder, const char *szDstFolder);
 
 // 搜索到指定的文件
 static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nIndex, const WIN32_FIND_DATA &wfd) {
-  int nPathLen;
+  int nFileLen;
   FILE *fpFileList;
   char *lpDstFile, *lpBackSlash;
   char szPgnFile[MAX_CHAR], szDstFile[MAX_CHAR], szTitle[MAX_CHAR];
@@ -120,8 +137,8 @@ static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nInde
   }
 
   if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {
-    nPathLen = strlen(szSrcFile) - 4;
-    if (nPathLen > 0 && strnicmp(szSrcFile + nPathLen, ".PGN", 4) == 0) {
+    nFileLen = strlen(szSrcFile) - 4;
+    if (nFileLen > 0 && strnicmp(szSrcFile + nFileLen, ".PGN", 4) == 0) {
       // 是PGN文件，写入上级文件夹的FILELIST，并拷贝之
       fprintf(fpFileList, "%d.PGN=%s\n", nIndex, szTitle);
       sprintf(szPgnFile, "%d.PGN", nIndex);
@@ -142,18 +159,15 @@ static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nInde
 // 搜索指定文件夹
 static void SearchFolder(const char *szSrcFolder, const char *szDstFolder) {
   HANDLE hFind;
+  WIN32_FIND_DATA wfd;
   int nIndex;
   char *lpSrcFile;
   char szSrcFile[MAX_CHAR];
-  WIN32_FIND_DATA wfd;
 
   // 把szSrcFile定位为szSrcFolder，用strcpy(lpSrcFile, ...)定位文件
   strcpy(szSrcFile, szSrcFolder);
-  lpSrcFile = szSrcFile + strlen(szSrcFolder);
-  if (*(lpSrcFile - 1) != '\\') {
-    *lpSrcFile = '\\';
-    lpSrcFile ++;
-  }
+  lpSrcFile = szSrcFile + strlen(szSrcFolder) + 1;
+  *(lpSrcFile - 1) = '\\';
   // szSrcFile改为...\*，作为搜索对象
   strcpy(lpSrcFile, "*");
   hFind = FindFirstFile(szSrcFile, &wfd);
@@ -170,11 +184,114 @@ static void SearchFolder(const char *szSrcFolder, const char *szDstFolder) {
   FindClose(hFind);
 }
 
+static void SearchFolderToDelete(const char *szDstFolder);
+
+// 搜索到指定的文件加以删除
+static void SearchFileToDelete(const char *szDstFile, const WIN32_FIND_DATA &wfd) {
+  if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {
+    DeleteFile(szDstFile);
+  } else if (strcmp(wfd.cFileName, ".") != 0 && strcmp(wfd.cFileName, "..") != 0) {
+    SearchFolderToDelete(szDstFile);
+    RemoveDirectory(szDstFile);
+  }
+}
+
+// 搜索指定文件夹加以删除
+static void SearchFolderToDelete(const char *szDstFolder) {
+  HANDLE hFind;
+  WIN32_FIND_DATA wfd;
+  char *lpDstFile;
+  char szDstFile[MAX_CHAR];
+
+  // 把szDstFile定位为szDstFolder，用strcpy(lpDstFile, ...)定位文件
+  strcpy(szDstFile, szDstFolder);
+  lpDstFile = szDstFile + strlen(szDstFolder) + 1;
+  *(lpDstFile - 1) = '\\';
+  // szDstFile改为...\*，作为搜索对象
+  strcpy(lpDstFile, "*");
+  hFind = FindFirstFile(szDstFile, &wfd);
+  if (hFind != INVALID_HANDLE_VALUE) {
+    strcpy(lpDstFile, wfd.cFileName);
+    SearchFileToDelete(szDstFile, wfd);
+    while (FindNextFile(hFind, &wfd)) {
+      strcpy(lpDstFile, wfd.cFileName);
+      SearchFileToDelete(szDstFile, wfd);
+    }
+  }
+  FindClose(hFind);
+}
+
+// 把ANSI转换为UTF8
+static const char *Ansi2Utf8(char *szUtf8, const char *szAnsi) {
+  wchar_t wszUnicode[MAX_CHAR];
+  MultiByteToWideChar(CP_ACP, 0, szAnsi, -1, wszUnicode, MAX_CHAR);
+  WideCharToMultiByte(CP_UTF8, 0, wszUnicode, -1, szUtf8, MAX_CHAR, NULL, NULL);
+  return szUtf8;
+}
+
+// 生成MetaFile文件
+static void CreateManifest(void) {
+  FILE *fpManifest;
+  char szTitle[MAX_CHAR], szDescript[MAX_CHAR], szManifest[MAX_CHAR];
+
+  Ansi2Utf8(szTitle, XqBossEx.szTitle);
+  Ansi2Utf8(szDescript, "象棋小巫师手机棋谱");
+  strcpy(szManifest, XqBossEx.szDstFolder);
+  strcat(szManifest, "\\META-INF\\MANIFEST.MF");
+  fpManifest = fopen(szManifest, "wt");
+
+  fprintf(fpManifest, "Manifest-Version: 1.0\n");
+  fprintf(fpManifest, "MIDlet-1: %s, /images/xqboss.png, xqboss.XQBossMIDlet\n", szTitle);
+  fprintf(fpManifest, "MIDlet-Name: %s\n", szTitle);
+  fprintf(fpManifest, "MIDlet-Description: %s - %s\n", szTitle, szDescript);
+  fprintf(fpManifest, "MIDlet-Vendor: www.elephantbase.net\n");
+  fprintf(fpManifest, "MIDlet-Info-URL: http://www.elephantbase.net/\n");
+  fprintf(fpManifest, "MIDlet-Icon: /images/xqboss.png\n");
+  fprintf(fpManifest, "MIDlet-Version: %s\n", cszMidletVersion);
+  fprintf(fpManifest, "MicroEdition-Configuration: CLDC-1.0\n");
+  fprintf(fpManifest, "MicroEdition-Profile: MIDP-2.0\n");
+
+  fclose(fpManifest);
+}
+
+// 生成JAD文件，同时删除MANIFEST.MF
+static void CreateJadFile(void) {
+  int nFileLen;
+  FILE *fpJarFile, *fpJadFile;
+  char szManifest[MAX_CHAR], szJadFile[MAX_CHAR], szTitle[MAX_CHAR];
+
+  // 如果文件名不以JAR结尾，那么不生成JAD文件
+  nFileLen = strlen(XqBossEx.szJarFile) - 4;
+  if (nFileLen <= 0 || strnicmp(XqBossEx.szJarFile + nFileLen, ".JAR", 4) != 0) {
+    return;
+  }
+
+  // 把MANIFEST.MF改名为JAD文件
+  strcpy(szManifest, XqBossEx.szDstFolder);
+  strcat(szManifest, "\\META-INF\\MANIFEST.MF");
+  strncpy(szJadFile, XqBossEx.szJarFile, nFileLen);
+  strcpy(szJadFile + nFileLen, ".jad");
+  DeleteFile(szJadFile);
+  MoveFile(szManifest, szJadFile);
+
+  // 把JAR文件名和字节数写入JAD中
+  fpJarFile = fopen(XqBossEx.szJarFile, "rb");
+  fseek(fpJarFile, 0, SEEK_END);
+  Ansi2Utf8(szTitle, XqBossEx.szTitle);
+
+  fpJadFile = fopen(szJadFile, "at");
+  fprintf(fpJadFile, "MIDlet-Jar-Size: %d\n", ftell(fpJarFile));
+  fprintf(fpJadFile, "MIDlet-Jar-URL: %s.jar\n", szTitle);
+  fclose(fpJadFile);
+
+  fclose(fpJarFile);
+};
+
 // InfoZip参数
 static int WINAPI PrintFunction(LPSTR, unsigned long) {
   return 0;
 }
-const char *argv[1] = {"."};
+const char *cszCurrDir[1] = {"."};
 
 // 用InfoZip生成JAR文件
 void CreateJarFile(void) {
@@ -194,14 +311,13 @@ void CreateJarFile(void) {
   memset(&zcl, 0, sizeof(ZCL));
   zcl.argc = 1;
   zcl.lpszZipFN = XqBossEx.szJarFile;
-  zcl.FNV = (char **) argv;
+  zcl.FNV = (char **) cszCurrDir;
   ZpArchive(zcl, &zpopt);
 }
 
 // 主程序
-// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-int main(void) {
-  char sz[MAX_CHAR];
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+  char szPgnFolder[MAX_CHAR], szMsg[MAX_CHAR];
 
   // 定位棋谱目标文件夹
   LocateDestFolder();
@@ -214,11 +330,19 @@ int main(void) {
     return 0;
   }
   // 搜索并整理棋谱文件
-  SearchFolder(XqBossEx.szSrcFolder, XqBossEx.szDstFolder);
-  // 用InfoZip生成JAR文件
-  // CreateJarFile();
+  strcpy(szPgnFolder, XqBossEx.szDstFolder);
+  strcat(szPgnFolder, "\\PGNS");
+  CreateDirectory(szPgnFolder, NULL);
+  SearchFolder(XqBossEx.szSrcFolder, szPgnFolder);
+  // 生成MANIFEST.MF、JAR文件和JAD文件
+  CreateManifest();
+  CreateJarFile();
+  CreateJadFile();
+  // 删除目标文件夹
+  SearchFolderToDelete(szPgnFolder);
+  RemoveDirectory(szPgnFolder);
 
-  sprintf(sz, "手机棋谱 %s 制作成功。\n%s", XqBossEx.szJarFile, XqBossEx.szDstFolder);
-  MessageBox(NULL, sz, "手机棋谱制作工具", 0);
+  sprintf(szMsg, "手机棋谱 %s(.jad) 制作成功。", XqBossEx.szJarFile);
+  MessageBox(NULL, szMsg, "手机棋谱制作工具", MB_ICONINFORMATION);
   return 0;
 }
