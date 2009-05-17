@@ -4,7 +4,7 @@ Begin VB.Form frmXQBooth
    BorderStyle     =   1  'Fixed Single
    ClientHeight    =   7200
    ClientLeft      =   150
-   ClientTop       =   840
+   ClientTop       =   720
    ClientWidth     =   5640
    BeginProperty Font 
       Name            =   "宋体"
@@ -811,6 +811,10 @@ Begin VB.Form frmXQBooth
          Caption         =   "上一关(&P)"
          Shortcut        =   ^P
       End
+      Begin VB.Menu mnGameSelect 
+         Caption         =   "选关(&O)"
+         Shortcut        =   ^O
+      End
       Begin VB.Menu mnGameNext 
          Caption         =   "下一关(&N)"
          Shortcut        =   ^N
@@ -962,7 +966,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
+' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1116,7 +1120,6 @@ Dim i As Integer, sz As String
 
 nPhase = PHASE_BUSY
 MousePointer = vbHourglass
-mnGameRecord.Enabled = False
 sz = "position fen " + App_szEndgames(Gui_nCurr)
 If pos.nMoveNum > 1 Then
     sz = sz + " moves"
@@ -1149,11 +1152,10 @@ DrawSquare Dst(mv), DRAW_SELECTED
 mvLast = mv
 nPhase = IIf(GetResult(nStatus), PHASE_END, PHASE_READY)
 MousePointer = vbDefault
-mnGameRecord.Enabled = True
 
 End Sub
 
-Private Sub LoadGame()
+Public Sub LoadGame()
 
 Dim bPrev As Boolean, bNext As Boolean
 
@@ -1199,6 +1201,14 @@ End If
 
 End Sub
 
+Private Sub mnGameSelect_Click()
+
+If nPhase <> PHASE_BUSY Then
+    frmSelect.Show vbModal, Me
+End If
+
+End Sub
+
 Private Sub mnGameNext_Click()
 
 If nPhase <> PHASE_BUSY Then
@@ -1219,6 +1229,10 @@ End Sub
 Private Sub mnGameImport_Click()
 
 Dim szFileName As String, nFileNo As Integer, nLast As Integer, dw As Long
+
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
 szFileName = OpenFileDialog("导入闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*")
 If szFileName = "" Then
     Exit Sub
@@ -1254,6 +1268,10 @@ End Sub
 Private Sub mnGameExport_Click()
 
 Dim szFileName As String, nFileNo As Integer, dw As Long
+
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
 szFileName = SaveFileDialog("导出闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", "象棋路边摊闯关记录 - 第" + Str(Gui_nLast + 1) + " 关.DAT", "DAT")
 If szFileName = "" Then
     Exit Sub
