@@ -60,7 +60,7 @@ static void BuildTestFromFile(const char *szFilePath) {
   uint32_t dwMoveStr;
   char szFen[128];
   char szFileName[MAX_CHAR];
-  char *szResult, *lpSeperator;
+  char *szResult, *lpSeparator;
   PgnFileStruct pgn;
 
   if (!pgn.Read(szFilePath)) {
@@ -96,11 +96,11 @@ static void BuildTestFromFile(const char *szFilePath) {
   if (!bOutput[0] && !bOutput[1]) {
     return;
   }
-  lpSeperator = strrchr(szFilePath, PATH_SEPERATOR);
-  if (lpSeperator == NULL) {
+  lpSeparator = strrchr(szFilePath, PATH_SEPARATOR);
+  if (lpSeparator == NULL) {
     strcpy(szFileName, szFilePath);
   } else {
-    strcpy(szFileName, lpSeperator + 1);
+    strcpy(szFileName, lpSeparator + 1);
   }
   fprintf(MakeTest.fpOutput, "; %s: %s%s %s %s%s\n", szFileName,
       bOutput[0] ? "-> " : "", pgn.szRed, szResult, pgn.szBlack, bOutput[1] ? " <-" : "");

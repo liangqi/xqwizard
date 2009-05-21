@@ -81,9 +81,9 @@ inline bool StrScanSkip(char *&sz1, const char *sz2) {
   }
 }
 
-inline bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL) {
+inline bool StrSplitSkip(const char *&szSrc, int nSeparator, char *szDst = NULL) {
   const char *lpsz;
-  lpsz = strchr(szSrc, nSeperator);
+  lpsz = strchr(szSrc, nSeparator);
   if (lpsz == NULL) {
     if (szDst != NULL) {
       strcpy(szDst, szSrc);
@@ -100,9 +100,9 @@ inline bool StrSplitSkip(const char *&szSrc, int nSeperator, char *szDst = NULL)
   }
 }
 
-inline bool StrSplitSkip(char *&szSrc, int nSeperator, char *szDst = NULL) {
+inline bool StrSplitSkip(char *&szSrc, int nSeparator, char *szDst = NULL) {
   char *lpsz;
-  lpsz = strchr(szSrc, nSeperator);
+  lpsz = strchr(szSrc, nSeparator);
   if (lpsz == NULL) {
     if (szDst != NULL) {
       strcpy(szDst, szSrc);

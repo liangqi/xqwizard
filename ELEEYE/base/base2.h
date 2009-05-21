@@ -19,7 +19,7 @@ inline void Idle(void) {
   Sleep(1);
 }
 
-const int PATH_SEPERATOR = '\\';
+const int PATH_SEPARATOR = '\\';
 
 inline bool AbsolutePath(const char *sz) {
   return sz[0] == '\\' || (((sz[0] >= 'A' && sz[0] <= 'Z') || (sz[0] >= 'a' && sz[0] <= 'z')) && sz[1] == ':');
@@ -40,7 +40,7 @@ inline void Idle(void) {
   usleep(1000);
 }
 
-const int PATH_SEPERATOR = '/';
+const int PATH_SEPARATOR = '/';
 
 inline bool AbsolutePath(const char *sz) {
   return sz[0] == '/' || (sz[0] == '~' && sz[1] == '/');
@@ -61,16 +61,16 @@ inline void StartThread(void *ThreadEntry(void *), void *lpParameter) {
 #endif
 
 inline void LocatePath(char *szDst, const char *szSrc) {
-  char *lpSeperator;
+  char *lpSeparator;
   if (AbsolutePath(szSrc)) {
     strcpy(szDst, szSrc);
   } else {
     GetSelfExe(szDst);
-    lpSeperator = strrchr(szDst, PATH_SEPERATOR);
-    if (lpSeperator == NULL) {
+    lpSeparator = strrchr(szDst, PATH_SEPARATOR);
+    if (lpSeparator == NULL) {
       strcpy(szDst, szSrc);
     } else {
-      strcpy(lpSeperator + 1, szSrc);
+      strcpy(lpSeparator + 1, szSrc);
     }
   }
 }

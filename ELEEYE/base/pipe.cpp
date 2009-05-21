@@ -8,15 +8,15 @@
 #include "pipe.h"
 
 inline void ParsePath(char *szDir, char *szFile, const char *szPath) {
-  char *lpSeperator;
+  char *lpSeparator;
   strcpy(szDir, szPath);
-  lpSeperator = strrchr(szDir, PATH_SEPERATOR);
-  if (lpSeperator == NULL) {
+  lpSeparator = strrchr(szDir, PATH_SEPARATOR);
+  if (lpSeparator == NULL) {
     szDir[0] = '\0';
     strcpy(szFile, szPath);
   } else {
-    *lpSeperator = '\0';
-    strcpy(szFile, lpSeperator + 1);
+    *lpSeparator = '\0';
+    strcpy(szFile, lpSeparator + 1);
   }
 }
 
