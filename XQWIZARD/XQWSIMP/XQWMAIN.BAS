@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
+' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.96"
+Public Const STRING_VERSION     As String = "3.97"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -2963,10 +2963,6 @@ Else
         ReadFile
     End If
 End If
-' 打开日积月累，调整广告框大小，关闭启动画面
-On Error Resume Next
-frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
-On Error GoTo 0
 ' 加载广告，如果加载失败，则下载广告列表，再次加载失败则放弃
 Gui_dfLastTime = 0#
 Gui_nAdvertIndex = 0
@@ -2993,8 +2989,6 @@ If Not App_bPrevInstance Then
     App_frmMain.Top = Gui_nTop
 End If
 App_frmMain.Show
-App_frmMain.web.Width = frmHide.imgAdvert.Width
-App_frmMain.web.Height = frmHide.imgAdvert.Height
 App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst

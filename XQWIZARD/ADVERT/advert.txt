@@ -1,5 +1,5 @@
 www.elephantbase.net Advert List
-elephantbase,30,304,5618
-xqwlight_ad,30,311,17943
-landlord_ad,30,311,11183
-mobilechess,30,310,10963
+elephantbase,30,465,5618
+xqwlight_ad,30,472,17943
+landlord_ad,30,472,11183
+mobilechess,30,471,10963

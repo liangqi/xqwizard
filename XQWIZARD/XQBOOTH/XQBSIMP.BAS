@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.95, Last Modified: Apr. 2009
+' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -245,10 +245,6 @@ End If
 ' 电脑执黑，不能只考虑将军走法
 ' PipeLineOutput Engine_pipe, "setoption alwayscheck true"
 
-' 调整广告框大小
-On Error Resume Next
-frmHide.imgAdvert.Picture = LoadPicture(App_szPath + "ADVERT\elephantbase.gif")
-On Error GoTo 0
 ' 加载广告，如果加载失败，则下载广告列表，再次加载失败则放弃
 Gui_dfLastTime = 0#
 Gui_nAdvertIndex = 0
@@ -272,8 +268,6 @@ End If
 
 frmXQBooth.Show
 frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
-frmXQBooth.web.Width = frmHide.imgAdvert.Width
-frmXQBooth.web.Height = frmHide.imgAdvert.Height
 frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 
 ' 主循环

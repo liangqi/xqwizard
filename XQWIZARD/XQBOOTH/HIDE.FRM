@@ -397,12 +397,6 @@ Begin VB.Form frmHide
       Top             =   0
       Width           =   615
    End
-   Begin VB.Image imgAdvert 
-      Height          =   975
-      Left            =   0
-      Top             =   0
-      Width           =   3735
-   End
    Begin VB.Image imgBoardMini 
       Height          =   2655
       Left            =   0
