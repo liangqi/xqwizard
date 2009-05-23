@@ -1,21 +1,21 @@
 VERSION 5.00
 Begin VB.Form frmSelect 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "选关"
+   Caption         =   "匡闽"
    ClientHeight    =   7200
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10650
    BeginProperty Font 
-      Name            =   "宋体"
+      Name            =   "細明體"
       Size            =   9
-      Charset         =   134
+      Charset         =   136
       Weight          =   400
       Underline       =   0   'False
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "SELSIMP.frx":0000
+   Icon            =   "SELTRAD.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7200
@@ -5225,9 +5225,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5244,9 +5244,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5263,9 +5263,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5282,9 +5282,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5301,9 +5301,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5320,9 +5320,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5339,9 +5339,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5358,9 +5358,9 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
+         Caption         =   "材 ???? 闽"
          BeginProperty Font 
-            Name            =   "宋体"
+            Name            =   "Ш蔨"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5378,7 +5378,7 @@ Begin VB.Form frmSelect
    End
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
-      Caption         =   "取消"
+      Caption         =   ""
       Height          =   375
       Left            =   5520
       TabIndex        =   11
@@ -5386,7 +5386,7 @@ Begin VB.Form frmSelect
       Width           =   1215
    End
    Begin VB.CommandButton btnConfirm 
-      Caption         =   "确定"
+      Caption         =   "谔﹚"
       Height          =   375
       Left            =   3840
       TabIndex        =   10
@@ -5462,7 +5462,7 @@ For i = 0 To 7
     If nCurr < App_nEndgames Then
         imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, frmHide.imgBoardMini.Picture, frmHide.imgUnavailable.Picture)
         DrawBoard i, App_szEndgames(nCurr)
-        lblTag(i).Caption = "第" + Str(nCurr + 1) + " 关"
+        lblTag(i).Caption = "第" + Str(nCurr + 1) + " 關"
     Else
         imgBoard(i).Picture = Nothing
         DrawBoard i
@@ -5533,7 +5533,7 @@ If nCurr <= Gui_nLast Then
     frmXQBooth.LoadGame
     Unload Me
 Else
-    MsgBox "您尚未闯到这一关。", vbExclamation
+    MsgBox "您尚未闖到這一關。", vbExclamation
 End If
 
 End Sub
