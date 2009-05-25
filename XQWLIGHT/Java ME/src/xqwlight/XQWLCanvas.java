@@ -2,8 +2,8 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.29, Last Modified: Nov. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 1.30, Last Modified: May 2009
+Copyright (C) 2004-2009 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ class XQWLCanvas extends Canvas {
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
-	private boolean bCompatible = false;
+	private boolean bNoKeyPad = false;
 
 	XQWLCanvas(XQWLMIDlet midlet_) {
 		midlet = midlet_;
@@ -110,7 +110,7 @@ class XQWLCanvas extends Canvas {
 		altAbout.setTimeout(Alert.FOREVER);
 		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +
 				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
-				"(C) 2004-2008 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
+				"(C) 2004-2009 www.elephantbase.net\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
 				"欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师");
 		altBack.setTimeout(Alert.FOREVER);
 		altBack.addCommand(cmdBackOK);
@@ -132,8 +132,9 @@ class XQWLCanvas extends Canvas {
 		addCommand(cmdRetract);
 		addCommand(cmdAbout);
 
-		if (midlet.getAppProperty("XQWLight-Compatible").toLowerCase().equals("true")) {
-			bCompatible = true;
+		String noKeyPadValue = midlet.getAppProperty("XQWLight-NoKeyPad");
+		if (noKeyPadValue != null && noKeyPadValue.toLowerCase().equals("true")) {
+			bNoKeyPad = true;
 		}
 
 		setCommandListener(new CommandListener() {
@@ -304,7 +305,7 @@ class XQWLCanvas extends Canvas {
 			g.drawString(message, width / 2, height / 2, Graphics.HCENTER + Graphics.BASELINE);
 		}
 
-		if (bCompatible) {
+		if (bNoKeyPad) {
 			g.setFont(fontSmall);
 			g.setColor(0x0000ff);
 			g.drawString("* - 返回", 0, height, Graphics.LEFT + Graphics.BASELINE);
@@ -323,7 +324,7 @@ class XQWLCanvas extends Canvas {
 			return;
 		}
 
-		if (bCompatible) {
+		if (bNoKeyPad) {
 			switch (code) {
 			case KEY_STAR:
 				back();
@@ -403,7 +404,7 @@ class XQWLCanvas extends Canvas {
 		if (phase == PHASE_THINKING) {
 			return;
 		}
-		if (bCompatible && height - y < fontSmall.getHeight()) {
+		if (bNoKeyPad && height - y < fontSmall.getHeight()) {
 			switch (x * 3 / width) {
 			case 0:
 				back();

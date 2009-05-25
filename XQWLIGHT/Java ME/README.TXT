@@ -5,10 +5,8 @@
 　　　　http://sourceforge.net/projects/xqwizard/
 
 　　鉴于象棋小巫师 Windows CE 版已停止维护，象棋巫师开发团队推荐带有 Java 虚拟机的 Windows CE 类操作系统(包括 Pocket PC、Smart Phone、Windows Mobile 等)使用 Java ME 版象棋小巫师。
-　　如果棋局进行中无法弹出菜单(执行退出、悔棋等操作)，请修改 XQWLight.jar 压缩包中的 META-INF\MANIFEST.MF 文件，将 XQWLight-Compatible 的值由 false 改成 true (用 WinRAR 等压缩工具打开 XQWLight.jar，可直接修改 META-INF\MANIFEST.MF 并保存)，然后重新安装 XQWLight.jar，便可用 *、0、# 三个按键操作菜单。
-　　对于某些没有足够存储器播放音效和音乐的手机，可删除 XQWLight.jar 压缩包中的 sounds 和 musics 文件夹，然后重新安装 XQWLight.jar。
-　　如手机安装程序时需要 jad 文件，而 XQWLight.jar 已作修改，则 XQWLight.jad 中的 XQWLight-Compatible 和 MIDlet-Jar-Size 的值均要与 XQWLight.jar 保持一致。
+　　对于大多数支持 Java ME 的手机，安装 XQWLight.jar 即可，部分手机可能还需要 XQWLight.jad。如果您的手机支持触摸屏而没有按键，那么请选用 XQWLight-NoKeyPad.jar 和 XQWLight-NoKeyPad.jad。
 
-　　象棋小博士(XQBoss)是手机上的中国象棋棋谱阅读器，用“象棋巫师”生成的可移植棋谱(*.PGN)复制到手机上，就可以随时随地观赏精彩棋局。
+　　象棋巫师手机棋谱制作工具(PGNS2JAR.EXE)能把大量象棋巫师生成的可移植棋谱(*.PGN)打包制作成 Jar 文件，安装到手机上就可以随时随地观赏精彩棋局了。
 
 　　欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师
