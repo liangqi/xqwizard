@@ -33,22 +33,30 @@ static struct {
   char szSrcFolder[MAX_CHAR]; // 棋谱来源文件夹
   char szDstFolder[MAX_CHAR]; // 棋谱目标文件夹
   char szJarFile[MAX_CHAR];   // 手机棋谱程序文件
-} XqBossEx;
+} Pgns2Jar;
+
+// 打开文件错误时终止程序
+static void ErrorOpen(const char *szFile) {
+  char szMsg[MAX_CHAR];
+  sprintf(szMsg, "无法打开文件 %s", szFile);
+  MessageBox(NULL, szMsg, "手机棋谱制作工具", MB_ICONSTOP);
+  ExitProcess(0);
+}
 
 // 定位棋谱目标文件夹
-void LocateDestFolder(void) {
+static void LocateDestFolder(void) {
   char *lpBackSlash;
-  GetModuleFileName(NULL, XqBossEx.szDstFolder, MAX_PATH);
-  lpBackSlash = strrchr(XqBossEx.szDstFolder, '\\');
+  GetModuleFileName(NULL, Pgns2Jar.szDstFolder, MAX_PATH);
+  lpBackSlash = strrchr(Pgns2Jar.szDstFolder, '\\');
   if (lpBackSlash == NULL) {
-    strcpy(XqBossEx.szDstFolder, "XQBOSSEX");
+    strcpy(Pgns2Jar.szDstFolder, "PGNS2JAR");
   } else {
-    strcpy(lpBackSlash, "\\XQBOSSEX");
+    strcpy(lpBackSlash, "\\PGNS2JAR");
   }
 }
 
 // 选择棋谱来源文件夹
-bool ChooseSourceFolder(void) {
+static bool ChooseSourceFolder(void) {
   char *lpBackSlash;
   BROWSEINFO bi;
   LPITEMIDLIST pidl;
@@ -62,31 +70,31 @@ bool ChooseSourceFolder(void) {
   bi.lParam = NULL;
   bi.iImage = 0;
   pidl = SHBrowseForFolder(&bi);
-  if (!SHGetPathFromIDList(pidl, XqBossEx.szSrcFolder)) {
+  if (!SHGetPathFromIDList(pidl, Pgns2Jar.szSrcFolder)) {
     return false;
   }
 
   // 获取棋谱标题
-  lpBackSlash = strrchr(XqBossEx.szSrcFolder, '\\');
+  lpBackSlash = strrchr(Pgns2Jar.szSrcFolder, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
-    strcpy(XqBossEx.szTitle, "无标题");
+    strcpy(Pgns2Jar.szTitle, "无标题");
   } else {
-    strcpy(XqBossEx.szTitle, lpBackSlash + 1);
+    strcpy(Pgns2Jar.szTitle, lpBackSlash + 1);
   }
   return true;
 }
 
 // 选择要生成的手机棋谱文件
-bool ChooseJarFile(void) {
+static bool ChooseJarFile(void) {
   char *lpBackSlash, *lpDot;
   OPENFILENAME ofn;
 
-  strcpy(XqBossEx.szJarFile, XqBossEx.szTitle);
-  strcat(XqBossEx.szJarFile, ".jar");
+  strcpy(Pgns2Jar.szJarFile, Pgns2Jar.szTitle);
+  strcat(Pgns2Jar.szJarFile, ".jar");
   memset(&ofn, 0, sizeof(OPENFILENAME));
   ofn.lStructSize = sizeof(OPENFILENAME);
   ofn.lpstrFilter = "手机应用程序 (*.jar)\0*.jar\0所有文件 (*.*)\0*.*\0";
-  ofn.lpstrFile = XqBossEx.szJarFile;
+  ofn.lpstrFile = Pgns2Jar.szJarFile;
   ofn.nMaxFile = MAX_PATH;
   ofn.lpstrTitle = "请指定要生成的手机棋谱程序";
   ofn.lpstrDefExt = "jar";
@@ -96,12 +104,12 @@ bool ChooseJarFile(void) {
   }
 
   // 再次获取棋谱标题
-  lpBackSlash = strrchr(XqBossEx.szJarFile, '\\');
+  lpBackSlash = strrchr(Pgns2Jar.szJarFile, '\\');
   if (lpBackSlash == NULL) {
-    strcpy(XqBossEx.szTitle, "无标题");
+    strcpy(Pgns2Jar.szTitle, "无标题");
   } else {
-    strcpy(XqBossEx.szTitle, lpBackSlash + 1);
-    lpDot = strrchr(XqBossEx.szTitle, '.');
+    strcpy(Pgns2Jar.szTitle, lpBackSlash + 1);
+    lpDot = strrchr(Pgns2Jar.szTitle, '.');
     if (lpDot != NULL) {
       *lpDot = '\0';
     }
@@ -128,6 +136,10 @@ static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nInde
   // 打开FILELIST
   strcpy(lpDstFile, "FILELIST");
   fpFileList = fopen(szDstFile, "at");
+  if (fpFileList == NULL) {
+    ErrorOpen(szDstFile);
+  }
+
   // 获取文件标题
   lpBackSlash = strrchr(szSrcFile, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
@@ -234,11 +246,14 @@ static void CreateManifest(void) {
   FILE *fpManifest;
   char szTitle[MAX_CHAR], szDescript[MAX_CHAR], szManifest[MAX_CHAR];
 
-  Ansi2Utf8(szTitle, XqBossEx.szTitle);
+  Ansi2Utf8(szTitle, Pgns2Jar.szTitle);
   Ansi2Utf8(szDescript, "象棋小巫师手机棋谱");
-  strcpy(szManifest, XqBossEx.szDstFolder);
+  strcpy(szManifest, Pgns2Jar.szDstFolder);
   strcat(szManifest, "\\META-INF\\MANIFEST.MF");
   fpManifest = fopen(szManifest, "wt");
+  if (fpManifest == NULL) {
+    ErrorOpen(szManifest);
+  }
 
   fprintf(fpManifest, "Manifest-Version: 1.0\n");
   fprintf(fpManifest, "MIDlet-1: %s, /images/xqboss.png, xqboss.XQBossMIDlet\n", szTitle);
@@ -261,25 +276,31 @@ static void CreateJadFile(void) {
   char szManifest[MAX_CHAR], szJadFile[MAX_CHAR], szTitle[MAX_CHAR];
 
   // 如果文件名不以JAR结尾，那么不生成JAD文件
-  nFileLen = strlen(XqBossEx.szJarFile) - 4;
-  if (nFileLen <= 0 || strnicmp(XqBossEx.szJarFile + nFileLen, ".JAR", 4) != 0) {
+  nFileLen = strlen(Pgns2Jar.szJarFile) - 4;
+  if (nFileLen <= 0 || strnicmp(Pgns2Jar.szJarFile + nFileLen, ".JAR", 4) != 0) {
     return;
   }
 
   // 把MANIFEST.MF改名为JAD文件
-  strcpy(szManifest, XqBossEx.szDstFolder);
+  strcpy(szManifest, Pgns2Jar.szDstFolder);
   strcat(szManifest, "\\META-INF\\MANIFEST.MF");
-  strncpy(szJadFile, XqBossEx.szJarFile, nFileLen);
+  strncpy(szJadFile, Pgns2Jar.szJarFile, nFileLen);
   strcpy(szJadFile + nFileLen, ".jad");
   DeleteFile(szJadFile);
   MoveFile(szManifest, szJadFile);
 
   // 把JAR文件名和字节数写入JAD中
-  fpJarFile = fopen(XqBossEx.szJarFile, "rb");
+  fpJarFile = fopen(Pgns2Jar.szJarFile, "rb");
+  if (fpJarFile == NULL) {
+    ErrorOpen(Pgns2Jar.szJarFile);
+  }
   fseek(fpJarFile, 0, SEEK_END);
-  Ansi2Utf8(szTitle, XqBossEx.szTitle);
+  Ansi2Utf8(szTitle, Pgns2Jar.szTitle);
 
   fpJadFile = fopen(szJadFile, "at");
+  if (fpJadFile == NULL) {
+    ErrorOpen(szJadFile);
+  }
   fprintf(fpJadFile, "MIDlet-Jar-Size: %d\n", ftell(fpJarFile));
   fprintf(fpJadFile, "MIDlet-Jar-URL: %s.jar\n", szTitle);
   fclose(fpJadFile);
@@ -304,13 +325,13 @@ void CreateJarFile(void) {
   ZpInit(&zuf);
 
   memset(&zpopt, 0, sizeof(ZPOPT));
-  zpopt.szRootDir = XqBossEx.szDstFolder;
+  zpopt.szRootDir = Pgns2Jar.szDstFolder;
   zpopt.fExtra = TRUE;
   zpopt.fRecurse = 1;
 
   memset(&zcl, 0, sizeof(ZCL));
   zcl.argc = 1;
-  zcl.lpszZipFN = XqBossEx.szJarFile;
+  zcl.lpszZipFN = Pgns2Jar.szJarFile;
   zcl.FNV = (char **) cszCurrDir;
   ZpArchive(zcl, &zpopt);
 }
@@ -330,10 +351,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 0;
   }
   // 搜索并整理棋谱文件
-  strcpy(szPgnFolder, XqBossEx.szDstFolder);
+  strcpy(szPgnFolder, Pgns2Jar.szDstFolder);
   strcat(szPgnFolder, "\\PGNS");
   CreateDirectory(szPgnFolder, NULL);
-  SearchFolder(XqBossEx.szSrcFolder, szPgnFolder);
+  SearchFolder(Pgns2Jar.szSrcFolder, szPgnFolder);
   // 生成MANIFEST.MF、JAR文件和JAD文件
   CreateManifest();
   CreateJarFile();
@@ -342,7 +363,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   SearchFolderToDelete(szPgnFolder);
   RemoveDirectory(szPgnFolder);
 
-  sprintf(szMsg, "手机棋谱 %s(.jad) 制作成功。", XqBossEx.szJarFile);
+  sprintf(szMsg, "手机棋谱 %s(.jad) 制作成功。", Pgns2Jar.szJarFile);
   MessageBox(NULL, szMsg, "手机棋谱制作工具", MB_ICONINFORMATION);
   return 0;
 }
