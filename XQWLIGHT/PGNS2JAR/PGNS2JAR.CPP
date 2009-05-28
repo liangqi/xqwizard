@@ -84,9 +84,11 @@ static bool ChooseSourceFolder(void) {
   return true;
 }
 
+// 
+
 // 选择要生成的手机棋谱文件
 static bool ChooseJarFile(void) {
-  char *lpBackSlash, *lpDot;
+  char *lpFileName;
   OPENFILENAME ofn;
 
   strcpy(Pgns2Jar.szJarFile, Pgns2Jar.szTitle);
@@ -99,22 +101,22 @@ static bool ChooseJarFile(void) {
   ofn.lpstrTitle = "请指定要生成的手机棋谱程序";
   ofn.lpstrDefExt = "jar";
   ofn.Flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT;
-  if (GetSaveFileName(&ofn) == 0) {
-    return false;
-  }
 
-  // 再次获取棋谱标题
-  lpBackSlash = strrchr(Pgns2Jar.szJarFile, '\\');
-  if (lpBackSlash == NULL) {
-    strcpy(Pgns2Jar.szTitle, "无标题");
-  } else {
-    strcpy(Pgns2Jar.szTitle, lpBackSlash + 1);
-    lpDot = strrchr(Pgns2Jar.szTitle, '.');
-    if (lpDot != NULL) {
-      *lpDot = '\0';
+  while (true) {
+    if (GetSaveFileName(&ofn) == 0) {
+      return false;
     }
+
+    // 检查文件名是否有中文
+    lpFileName = strrchr(Pgns2Jar.szJarFile, '\\');
+    lpFileName = (lpFileName == NULL ? Pgns2Jar.szJarFile : lpFileName + 1);
+    if (MultiByteToWideChar(CP_ACP, 0, lpFileName, -1, NULL, 0) < (int) strlen(lpFileName)) {
+      if (MessageBox(NULL, "含有中文的JAR文件名在某些手机上无法使用，是否继续？", "手机棋谱制作工具", MB_OKCANCEL + MB_ICONWARNING) == IDCANCEL) {
+        continue;
+      }
+    }
+    return true;
   }
-  return true;
 }
 
 static void SearchFolder(const char *szSrcFolder, const char *szDstFolder);
@@ -273,7 +275,8 @@ static void CreateManifest(void) {
 static void CreateJadFile(void) {
   int nFileLen;
   FILE *fpJarFile, *fpJadFile;
-  char szManifest[MAX_CHAR], szJadFile[MAX_CHAR], szTitle[MAX_CHAR];
+  char *lpBackSlash;
+  char szManifest[MAX_CHAR], szJadFile[MAX_CHAR], szJarFile[MAX_CHAR];
 
   // 如果文件名不以JAR结尾，那么不生成JAD文件
   nFileLen = strlen(Pgns2Jar.szJarFile) - 4;
@@ -294,15 +297,16 @@ static void CreateJadFile(void) {
   if (fpJarFile == NULL) {
     ErrorOpen(Pgns2Jar.szJarFile);
   }
-  fseek(fpJarFile, 0, SEEK_END);
-  Ansi2Utf8(szTitle, Pgns2Jar.szTitle);
+  fseek(fpJarFile, 0, SEEK_END);  
+  lpBackSlash = strrchr(Pgns2Jar.szJarFile, '\\');
+  Ansi2Utf8(szJarFile, lpBackSlash == NULL ? Pgns2Jar.szJarFile : lpBackSlash + 1);
 
   fpJadFile = fopen(szJadFile, "at");
   if (fpJadFile == NULL) {
     ErrorOpen(szJadFile);
   }
   fprintf(fpJadFile, "MIDlet-Jar-Size: %d\n", ftell(fpJarFile));
-  fprintf(fpJadFile, "MIDlet-Jar-URL: %s.jar\n", szTitle);
+  fprintf(fpJadFile, "MIDlet-Jar-URL: %s\n", szJarFile);
   fclose(fpJadFile);
 
   fclose(fpJarFile);

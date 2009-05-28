@@ -33,7 +33,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 class XQBossCanvas extends Canvas {
-	private static Image imgBackground, imgPgn;
+	private static Image imgBackground, imgXqBoss;
 	private static final String[] IMAGE_NAME = {
 		null, null, null, null, null, null, null, null,
 		"rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
@@ -46,7 +46,7 @@ class XQBossCanvas extends Canvas {
 	static {
 		try {
 			imgBackground = Image.createImage("/images/background.png");
-			imgPgn = Image.createImage("/images/pgn.png");
+			imgXqBoss = Image.createImage("/images/xqboss.png");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -260,7 +260,9 @@ class XQBossCanvas extends Canvas {
 	}
 
 	private void info() {
-		Alert alt = new Alert(title, pgn.toString(), imgPgn, AlertType.INFO);
+		Alert alt = new Alert(title, pgn.toString() +
+				"\n\r\f\n\r\f欢迎登录 www.elephantbase.net\n\r\f免费下载PC版 象棋巫师\n\r\f" +
+				"推荐用 象棋巫师 制作手机棋谱", imgXqBoss, AlertType.INFO);
 		alt.setTimeout(Alert.FOREVER);
 		Display.getDisplay(midlet).setCurrent(alt);
 		loading = true;

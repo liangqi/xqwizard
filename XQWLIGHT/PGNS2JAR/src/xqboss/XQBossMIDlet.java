@@ -35,12 +35,12 @@ import javax.microedition.midlet.MIDlet;
 
 public class XQBossMIDlet extends MIDlet {
 	private static Ticker ticker = new Ticker("»¶Ó­µÇÂ¼ www.elephantbase.net Ãâ·ÑÏÂÔØPC°æ ÏóÆåÎ×Ê¦");
-	private static Image imgFolder, imgPgn;
+	private static Image imgFolder, imgFile;
 
 	static {
 		try {
 			imgFolder = Image.createImage("/images/folder.png");
-			imgPgn = Image.createImage("/images/pgn_s.png");
+			imgFile = Image.createImage("/images/file.png");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -80,7 +80,7 @@ public class XQBossMIDlet extends MIDlet {
 		String s = in.readLine();
 		while (s != null) {
 			int i = s.indexOf('=');
-			lstDir.append(s.substring(i + 1), s.charAt(0) == '/' ? imgFolder : imgPgn);
+			lstDir.append(s.substring(i + 1), s.charAt(0) == '/' ? imgFolder : imgFile);
 			vctDir.addElement(s.substring(0, i));
 			s = in.readLine();
 		}
