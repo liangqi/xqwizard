@@ -2790,7 +2790,7 @@ SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
+' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
@@ -2842,6 +2842,7 @@ If sz = "" Then
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next

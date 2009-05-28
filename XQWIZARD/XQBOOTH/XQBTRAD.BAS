@@ -90,7 +90,7 @@ End Sub
 Public Sub SaveRegs()
 
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
+' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQBooth", "Gui", "Board", LTrim(Str(Gui_nBoard))
 SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
@@ -114,6 +114,7 @@ If sz = "" Then
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
+    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
