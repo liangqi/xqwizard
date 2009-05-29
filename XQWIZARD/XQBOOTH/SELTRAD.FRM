@@ -5423,7 +5423,7 @@ Option Explicit
 
 Private Const BOARD_NUM As Integer = 8
 
-Private nSelected As Integer
+Private nSelLast, nSelected As Integer
 
 Private Sub DrawBoard(ByVal nIndex As Integer, Optional ByVal szFen As String = "")
 
@@ -5459,7 +5459,7 @@ Private Sub Reset()
 Dim i As Integer, nCurr As Integer
 For i = 0 To 7
     nCurr = hsb.Value * BOARD_NUM + i
-    If nCurr < App_nEndgames Then
+    If nCurr < nSelLast Then
         imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, frmHide.imgBoardMini.Picture, frmHide.imgUnavailable.Picture)
         DrawBoard i, App_szEndgames(nCurr)
         lblTag(i).Caption = "µÚ" + Str(nCurr + 1) + " êP"
@@ -5475,9 +5475,10 @@ End Sub
 
 Private Sub Form_Load()
 
+nSelLast = Gui_nLast + 1 + (App_nEndgames \ 1000 - Gui_nLast \ 1000)
 nSelected = -1
 hsb.Min = 0
-hsb.Max = (App_nEndgames - 1) \ BOARD_NUM
+hsb.Max = (nSelLast - 1) \ BOARD_NUM
 hsb.Value = Gui_nCurr \ BOARD_NUM
 nSelected = Gui_nCurr Mod BOARD_NUM
 Reset

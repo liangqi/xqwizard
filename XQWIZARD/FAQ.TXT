@@ -1,6 +1,6 @@
 《象棋巫师》源程序常见问题解答
 
-《象棋巫师》开发团队(webmaster@elephantbase.net)　2008年5月
+《象棋巫师》开发团队(webmaster@elephantbase.net)　2009年5月
 
 1. 哪里能下载到《象棋巫师》的源程序？
 
@@ -64,3 +64,7 @@
 　　　　(3) 简体版的Web棋盘图片取自"JSBOARD"目录，繁体版取自"JSBOART"目录(安装目标目录仍旧为"JSBOARD")；
 　　　　(4) 简体版的挑战棋谱取自"ENDGAMES"目录，繁体版取自"ENDGAMET"目录(安装目标目录仍旧为"ENDGAMES")。
 　　在制作安装包前，必须先生成执行程序(XQWIZARD.EXE)，即用"XQWSIMP.ISS"制作安装包前，必须用"XQWSIMP.VBP"生成执行程序，用"XQWTRAD.ISS"制作安装包前，必须用"XQWTRAD.VBP"生成执行程序。
+
+11. Visual Basic 提示未找到 ieframe.dll\1：
+
+　　可能是安装高版本IE的缘故，可导入注册表"IEFRAME.REG"解决此问题。
