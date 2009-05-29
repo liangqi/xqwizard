@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫师
-AppVerName=象棋巫师 3.96 (简体版)
+AppVerName=象棋巫师 3.97 (简体版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -21,7 +21,7 @@ OutputDir=.
 Compression=lzma
 SolidCompression=yes
 SetupIconFile=RES\XQWSETUP.ICO
-AppCopyright=(C) 2004-2008 www.elephantbase.net
+AppCopyright=(C) 2004-2009 www.elephantbase.net
 
 [Types]
 Name: "default"; Description: "缺省设置"
