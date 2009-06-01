@@ -1,4 +1,4 @@
-<?
+<?php
   include './counter_conf.php';
   mysql_connect($host, $username, $password);
   mysql_select_db($database);
@@ -15,7 +15,7 @@
   if (!isset($_COOKIE[$cookie_name]) || $_COOKIE[$cookie_name] != $date_str) {
     setcookie($cookie_name, $date_str, time() + 86400);
     $value ++;
-    mysql_query('UPDATE ' . $table . ' SET value = ' . $value . ' WHERE name = "' . $name . '"');
+    mysql_query('UPDATE ' . $table . ' SET value = value + 1 WHERE name = "' . $name . '"');
   }
   mysql_close();
   echo 'document.write(' . $value .')';

@@ -270,7 +270,6 @@ End If
 frmXQBooth.Show
 frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
 frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
-frmHide.web.Navigate "about:blank"
 
 ' Ö÷Ñ­­h
 App_bRunning = True

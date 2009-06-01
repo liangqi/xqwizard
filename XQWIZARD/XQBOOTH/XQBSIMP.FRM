@@ -936,17 +936,6 @@ Begin VB.Form frmXQBooth
          Caption         =   "音效(&S)"
       End
    End
-   Begin VB.Menu mnHome 
-      Caption         =   "交流(&C)"
-      Begin VB.Menu mnHomeHelp 
-         Caption         =   "闯关求助(&Q)..."
-         Shortcut        =   ^Q
-      End
-      Begin VB.Menu mnHomeHome 
-         Caption         =   "象棋之家(&A)..."
-         Shortcut        =   ^H
-      End
-   End
    Begin VB.Menu mnHelp 
       Caption         =   "帮助(&H)"
       Begin VB.Menu mnHelpQuote 
@@ -1348,20 +1337,6 @@ Private Sub mnOptionsSounds_Click()
 
 Gui_bSounds = Not Gui_bSounds
 mnOptionsSounds.Checked = Gui_bSounds
-
-End Sub
-
-Private Sub mnHomeHelp_Click()
-
-frmHide.web.Document.body.innerHTML = "<a href=""http://www.elephantbase.net/"">www.elephantbase.net</a>"
-frmHide.web.Document.execCommand "selectAll"
-frmHide.web.Document.execCommand "copy"
-
-End Sub
-
-Private Sub mnHomeHome_Click()
-
-ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

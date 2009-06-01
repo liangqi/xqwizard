@@ -14,31 +14,6 @@ Begin VB.Form frmHide
    ScaleWidth      =   4710
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
-   Begin SHDocVwCtl.WebBrowser web 
-      Height          =   255
-      Left            =   0
-      TabIndex        =   0
-      Top             =   0
-      Width           =   255
-      ExtentX         =   450
-      ExtentY         =   450
-      ViewMode        =   0
-      Offline         =   0
-      Silent          =   0
-      RegisterAsBrowser=   0
-      RegisterAsDropTarget=   1
-      AutoArrange     =   0   'False
-      NoClientEdge    =   0   'False
-      AlignLeft       =   0   'False
-      NoWebView       =   0   'False
-      HideFileNames   =   0   'False
-      SingleClick     =   0   'False
-      SingleSelection =   0   'False
-      NoFolders       =   0   'False
-      Transparent     =   0   'False
-      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
-   End
    Begin InetCtlsObjects.Inet inet 
       Left            =   0
       Top             =   0

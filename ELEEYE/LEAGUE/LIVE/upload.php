@@ -1,4 +1,4 @@
-<?
+<?php
   include "./upload_conf.php";
   if ($password == $_POST["password"]) {
     $filename = $_POST["filename"];
