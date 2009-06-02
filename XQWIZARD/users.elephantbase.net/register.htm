@@ -65,15 +65,17 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" endspan --></strong></font></td>
             </tr>
             <tr>
-                <td id="whyreg"><dl>
-                    <dt><font size="3">　　注册成为象棋巫师用户，可以更好地享受象棋巫师的强大功能，包括：</font></dt>
-                    <dt><font size="3">　　</font></dt>
-                </dl>
+                <td id="whyreg"><p align="left"><font size="3">　　只要填写以下表单即可成为象棋巫师注册用户，把象棋路边摊的闯关进度保存在象棋巫师用户中心，随时随地享受象棋路边摊的闯关乐趣。</font></p>
                 </td>
             </tr>
             <tr>
                 <td id="exist" style="display:none"><p
                 align="center"><font color="#FF0000" size="2">已经存在同样的名用户</font></p>
+                </td>
+            </tr>
+            <tr>
+                <td id="short" style="display:none"><p
+                align="center"><font color="#FF0000" size="2">用户名和密码都不能少于6个字符</font></p>
                 </td>
             </tr>
             <tr>
@@ -100,11 +102,13 @@ if (false) {
 } else if (location.hash == "#exist") {
   regFail();
   exist.style.display = "block";
+} else if (location.hash == "#short") {
+  regFail();
+  short.style.display = "block";
 } else if (location.hash == "#password") {
   regFail();
   password.style.display = "block";
 } else if (location.hash == "#ejew") {
-  alert("OK");
   regFail();
   ejew.style.display = "block";
 }
@@ -116,33 +120,58 @@ if (false) {
                 action="register.php" method="POST">
                     <table border="0">
                         <tr>
-                            <td align="right"><font size="2">用户名：</font></td>
-                            <td>　</td>
+                            <td align="right"><font size="3">用户名：</font></td>
+                            <td align="right"><font
+                            color="#FF0000"
+                            face="Times New Roman"><sup>*</sup></font></td>
                             <td><input type="text" size="20"
                             name="username"></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="2">密码：</font></td>
+                            <td><font size="4"></font>　</td>
                             <td>　</td>
+                            <td><font size="2">至少6个字符，可以是字母、数字和汉字</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><font size="3">密码：</font></td>
+                            <td align="right"><font
+                            color="#FF0000"
+                            face="Times New Roman"><sup>*</sup></font></td>
                             <td><input type="password" size="21"
                             name="password"></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="2">确认密码：</font></td>
-                            <td>　</td>
+                            <td align="right"><font size="3">确认密码：</font></td>
+                            <td align="right"><font
+                            color="#FF0000"
+                            face="Times New Roman"><sup>*</sup></font></td>
                             <td><input type="password" size="21"
                             name="password2"></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="2">Email：</font></td>
+                            <td><font size="4"></font>　</td>
                             <td>　</td>
+                            <td><font size="2">至少6个字符，建议用字母、数字和符号的组合</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><font size="3">Email：</font></td>
+                            <td align="right">　</td>
                             <td><input type="text" size="20"
                             name="email"></td>
                         </tr>
                         <tr>
-                            <td><p align="right"><font size="2">验证码：</font></p>
+                            <td><font size="4"></font>　</td>
+                            <td align="right"><font
+                            color="#FF0000"
+                            face="Times New Roman"><sup></sup></font>　</td>
+                            <td><font size="2">该邮箱是您找回密码的重要途径，建议填写</font></td>
+                        </tr>
+                        <tr>
+                            <td><p align="right"><font size="3">验证码：</font></p>
                             </td>
-                            <td>　</td>
+                            <td align="right"><font
+                            color="#FF0000"
+                            face="Times New Roman"><sup>*</sup></font></td>
                             <td><input type="text" size="10"
                             name="ejew"> <img
                             src="ejewimage.php?act=ejew"></td>
