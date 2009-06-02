@@ -1,7 +1,7 @@
 <?php
-  require_once './common.php';
-  require_once './mysql_conf.php';
-  require_once './ejewimage.php';
+  require_once "./common.php";
+  require_once "./mysql_conf.php";
+  require_once "./ejewimage.php";
 
   $username = $_POST["username"];
   $password = $_POST["password"];
@@ -20,7 +20,7 @@
     // ¿ªÊ¼×¢²á
     mysql_connect($mysql_host, $mysql_username, $mysql_password);
     mysql_select_db($mysql_database);
-    $sql = sprintf("SELECT * FROM tb_user WHERE username = '%s'", mysql_real_escape_string($username));
+    $sql = sprintf("SELECT username FROM tb_user WHERE username = '%s'", mysql_real_escape_string($username));
     $result = mysql_query($sql);
     if (mysql_fetch_array($result, MYSQL_ASSOC)) {
       header("Location: register.htm#exist");

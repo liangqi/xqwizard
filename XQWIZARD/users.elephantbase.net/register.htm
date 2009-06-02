@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>象棋巫师用户中心</title>
+<title>注册 - 象棋巫师用户中心</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -19,10 +19,8 @@ bottommargin="0" rightmargin="0">
                 <td colspan="3" background="topbg.gif"><table
                 border="0" width="100%">
                     <tr>
-                        <td nowrap><table border="0">
-                            <tr>
-                                <td><font size="1">　　</font></td>
-                            </tr>
+                        <td valign="bottom" nowrap><table
+                        border="0">
                             <tr>
                                 <td><img src="wizard.jpg"
                                 width="64" height="64"><font
@@ -31,12 +29,17 @@ bottommargin="0" rightmargin="0">
                             </tr>
                         </table>
                         </td>
-                        <td align="right"><table border="0">
+                        <td align="right" valign="bottom"><table
+                        border="0">
                             <tr>
-                                <td><p align="right"><a
-                                target="_blank"><img
+                                <td><p align="right"><font
+                                size="5">　　</font></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p align="right"><img
                                 src="elephantbase.gif" width="88"
-                                height="31"></a></p>
+                                height="31"></p>
                                 </td>
                             </tr>
                             <tr>
@@ -65,28 +68,33 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" endspan --></strong></font></td>
             </tr>
             <tr>
-                <td id="whyreg"><p align="left"><font size="3">　　只要填写以下表单即可成为象棋巫师注册用户，把象棋路边摊的闯关进度保存在象棋巫师用户中心，随时随地享受象棋路边摊的闯关乐趣。</font></p>
+                <td align="center" id="whyreg"><p align="left"><font
+                size="3">　　只要填写以下表单，即可成为象棋巫师注册用户，随时随地提交和获取象棋路边摊的闯关进度，享受象棋路边摊的闯关乐趣。</font></p>
                 </td>
             </tr>
             <tr>
-                <td id="exist" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">已经存在同样的名用户</font></p>
-                </td>
+                <td align="center" id="exist"
+                style="display:none"><font color="#FF0000"
+                size="2">已经存在同样的名用户</font></td>
             </tr>
             <tr>
-                <td id="short" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">用户名和密码都不能少于6个字符</font></p>
-                </td>
+                <td align="center" id="short"
+                style="display:none"><font color="#FF0000"
+                size="2">用户名和密码都不能少于6个字符</font></td>
             </tr>
             <tr>
-                <td id="password" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">两遍密码不一致</font></p>
-                </td>
+                <td align="center" id="password"
+                style="display:none"><font color="#FF0000"
+                size="2">两遍密码不一致</font></td>
             </tr>
             <tr>
                 <td align="center" width="50%" id="ejew"
-                style="display:none"><p align="center"><font
-                color="#FF0000" size="2">验证码不正确</font></p>
+                style="display:none"><font color="#FF0000"
+                size="2">验证码不正确</font></td>
+            </tr>
+            <tr>
+                <td><p align="center"><font size="2">如果您已经成为象棋巫师注册用户，请直接</font><a
+                href="login.htm"><font size="2">【登录】</font></a></p>
                 </td>
             </tr>
             <tr>
@@ -120,7 +128,7 @@ if (false) {
                 action="register.php" method="POST">
                     <table border="0">
                         <tr>
-                            <td align="right"><font size="3">用户名：</font></td>
+                            <td align="right"><font size="2">用户名：</font></td>
                             <td align="right"><font
                             color="#FF0000"
                             face="Times New Roman"><sup>*</sup></font></td>
@@ -128,12 +136,12 @@ if (false) {
                             name="username"></td>
                         </tr>
                         <tr>
-                            <td><font size="4"></font>　</td>
+                            <td>　</td>
                             <td>　</td>
                             <td><font size="2">至少6个字符，可以是字母、数字和汉字</font></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="3">密码：</font></td>
+                            <td align="right"><font size="2">密码：</font></td>
                             <td align="right"><font
                             color="#FF0000"
                             face="Times New Roman"><sup>*</sup></font></td>
@@ -141,7 +149,7 @@ if (false) {
                             name="password"></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="3">确认密码：</font></td>
+                            <td align="right"><font size="2">确认密码：</font></td>
                             <td align="right"><font
                             color="#FF0000"
                             face="Times New Roman"><sup>*</sup></font></td>
@@ -149,25 +157,23 @@ if (false) {
                             name="password2"></td>
                         </tr>
                         <tr>
-                            <td><font size="4"></font>　</td>
+                            <td>　</td>
                             <td>　</td>
                             <td><font size="2">至少6个字符，建议用字母、数字和符号的组合</font></td>
                         </tr>
                         <tr>
-                            <td align="right"><font size="3">Email：</font></td>
+                            <td align="right"><font size="2">Email：</font></td>
                             <td align="right">　</td>
                             <td><input type="text" size="20"
                             name="email"></td>
                         </tr>
                         <tr>
-                            <td><font size="4"></font>　</td>
-                            <td align="right"><font
-                            color="#FF0000"
-                            face="Times New Roman"><sup></sup></font>　</td>
+                            <td>　</td>
+                            <td align="right">　</td>
                             <td><font size="2">该邮箱是您找回密码的重要途径，建议填写</font></td>
                         </tr>
                         <tr>
-                            <td><p align="right"><font size="3">验证码：</font></p>
+                            <td><p align="right"><font size="2">验证码：</font></p>
                             </td>
                             <td align="right"><font
                             color="#FF0000"

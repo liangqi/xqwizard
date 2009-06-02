@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>登录 - 象棋巫师用户中心</title>
+<title>用户信息 - 象棋巫师用户中心</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -61,74 +61,81 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="headerbg.gif"><strong><!--webbot
-                bot="HTMLMarkup" startspan --><span id="loginfail"><!--webbot
-                bot="HTMLMarkup" endspan -->　　</strong><font
-                size="3"><strong><!--webbot bot="HTMLMarkup"
-                startspan --></span><!--webbot bot="HTMLMarkup"
-                endspan --></strong></font></td>
+                <td width="50%" background="headerbg.gif"><strong>[<!--webbot
+                bot="HTMLMarkup" startspan --><?php
+  session_start();
+  session_register("userdata");
+  $userdata = $_SESSION["userdata"];
+  if (!isset($userdata["username"])) {
+    header("Location: login.htm#error");
+    exit();
+  }
+  echo $userdata["username"];
+?><!--webbot
+                bot="HTMLMarkup" endspan --></strong><font
+                size="3"><strong>]，</strong></font><strong>您好！</strong></td>
             </tr>
             <tr>
-                <td id="register" style="display:none"><p
-                align="center"><font color="#0000FF" size="2">恭喜你成为象棋巫师注册用户，现在就可以登录象棋巫师用户中心查看您的闯关进度了。</font></p>
+                <td><p align="center">您已经闯到第<!--webbot
+                bot="HTMLMarkup" startspan --><?php
+  echo $userdata["scores"];
+?><!--webbot
+                bot="HTMLMarkup" endspan -->关</p>
                 </td>
             </tr>
             <tr>
-                <td id="error" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">用户名或密码不正确</font></p>
+                <td><p align="center"><!--webbot
+                bot="HTMLMarkup" startspan --><?php
+  echo "<font color=\"red\">……</font>";
+?><!--webbot
+                bot="HTMLMarkup" endspan --></p>
                 </td>
             </tr>
             <tr>
-                <td id="noretry" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">您的密码已经连续5次输入错误，请过5分钟再做尝试</font></p>
-                </td>
+                <td width="50%" background="headerbg.gif"><font
+                size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>
-                <td><p align="center"><font size="2">如果您尚未成为象棋巫师注册用户，请先</font><a
-                href="register.htm"><font size="2">【注册】</font></a></p>
-                </td>
-            </tr>
-            <tr>
-                <td width="50%" background="headerbg.gif"><p
-                align="left"><script language="JavaScript"><!--
-if (false) {
-  //
-} else if (location.hash == "#register") {
-  loginfail.innerHTML = "注册成功";
-  register.style.display = "block";
-} else if (location.hash == "#error") {
-  loginfail.innerHTML = "登录失败";
-  error.style.display = "block";
-} else if (location.hash == "#noretry") {
-  loginfail.innerHTML = "登录失败";
-  noretry.style.display = "block";
-}
-// --></script><strong>登录</strong></p>
-                </td>
-            </tr>
-            <tr>
-                <td align="center" width="50%"><form
-                action="login.php" method="POST">
+                <td align="center"><form method="POST" id="frm">
                     <table border="0">
                         <tr>
-                            <td align="right"><font size="2">用户名：</font></td>
-                            <td align="right"><font
-                            color="#FF0000"
-                            face="Times New Roman"><sup>*</sup></font></td>
-                            <td><input type="text" size="20"
-                            name="username"></td>
-                        </tr>
-                        <tr>
-                            <td align="right"><font size="2">密码：</font></td>
-                            <td align="right"><font
-                            color="#FF0000"
-                            face="Times New Roman"><sup>*</sup></font></td>
+                            <td align="right"><font size="2">新密码：</font></td>
+                            <td align="right">　</td>
                             <td><input type="password" size="21"
                             name="password"></td>
                         </tr>
+                        <tr>
+                            <td>　</td>
+                            <td>　</td>
+                            <td><font size="2">如不需要更改密码，则此处置空</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><font size="2">确认新密码：</font></td>
+                            <td align="right">　</td>
+                            <td><input type="password" size="21"
+                            name="password2"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">　</td>
+                            <td align="right">　</td>
+                            <td><font size="2">至少6个字符，建议用字母、数字和符号的组合</font></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><font size="2">Email：</font></td>
+                            <td align="right">　</td>
+                            <td><input type="text" size="20"
+                            name="email" id="email"></td>
+                        </tr>
+                        <tr>
+                            <td>　</td>
+                            <td align="right">　</td>
+                            <td><font size="2">该邮箱是您找回密码的重要途径，建议填写</font></td>
+                        </tr>
                     </table>
-                    <p align="center"><input type="submit"
-                    value="提交"></p>
+                    <p><input type="submit" name="B1"
+                    value="提交"><script language="JavaScript"><!--
+frm.email.value = "<?php echo $userdata['email']; ?>";
+// --></script></p>
                 </form>
                 </td>
             </tr>
