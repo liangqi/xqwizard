@@ -19,12 +19,9 @@
       session_start();
       session_register("userdata");
       $result["username"] = $username;
+      $result["info"] = "您已经闯到第 " . $result["scores"] . " 关";
       $_SESSION["userdata"] = $result;
-      if ($result["usertype"] == 128) {
-        header("Location: admin.php");
-      } else {
-        header("Location: info.php");
-      }
+      header("Location: info.php");
     }
     mysql_close();
   }

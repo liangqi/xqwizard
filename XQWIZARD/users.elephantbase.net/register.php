@@ -20,17 +20,19 @@
     // ¿ªÊ¼×¢²á
     mysql_connect($mysql_host, $mysql_username, $mysql_password);
     mysql_select_db($mysql_database);
-    $sql = sprintf("SELECT username FROM tb_user WHERE username = '%s'", mysql_real_escape_string($username));
+    $sql = sprintf("SELECT username FROM tb_user WHERE username = '%s'",
+        mysql_real_escape_string($username));
     $result = mysql_query($sql);
-    if (mysql_fetch_array($result, MYSQL_ASSOC)) {
+    if (mysql_fetch_assoc($result)) {
       header("Location: register.htm#exist");
     } else {
-      $sql = sprintf("INSERT INTO tb_user (username, password, email, regip, regtime) VALUES ('%s', '%s', '%s', '%s', %d)",
-          mysql_real_escape_string($username), md5($username . $password), mysql_escape_string($email), getRemoteAddr(), time());
+      $sql = sprintf("INSERT INTO tb_user (username, password, email, regip, regtime) " .
+          "VALUES ('%s', '%s', '%s', '%s', %d)",
+          mysql_real_escape_string($username), md5($username . $password),
+          mysql_real_escape_string($email), getRemoteAddr(), time());
       mysql_query($sql);
-      // header("Location: login.htm#register");
+      header("Location: login.htm#register");
     }
     mysql_close();
-    header("Location: login.htm#register");
   }
 ?>

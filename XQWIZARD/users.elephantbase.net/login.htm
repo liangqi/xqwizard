@@ -74,6 +74,11 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
+                <td id="timeout" style="display:none"><p
+                align="center"><font color="#FF0000" size="2">会话超时，请重新登录</font></p>
+                </td>
+            </tr>
+            <tr>
                 <td id="error" style="display:none"><p
                 align="center"><font color="#FF0000" size="2">用户名或密码不正确</font></p>
                 </td>
@@ -96,6 +101,9 @@ if (false) {
 } else if (location.hash == "#register") {
   loginfail.innerHTML = "注册成功";
   register.style.display = "block";
+} else if (location.hash == "#timeout") {
+  loginfail.innerHTML = "登录失败";
+  timeout.style.display = "block";
 } else if (location.hash == "#error") {
   loginfail.innerHTML = "登录失败";
   error.style.display = "block";
@@ -130,6 +138,21 @@ if (false) {
                     <p align="center"><input type="submit"
                     value="提交"></p>
                 </form>
+                </td>
+            </tr>
+            <tr>
+                <td><p align="right"><a
+                href="http://www.elephantbase.net/"
+                target="_blank"><font color="#000060" size="2">版权所有</font><font
+                color="#000060">&copy;</font><font
+                color="#000060" size="2" face="Times New Roman">2004-2009
+                </font><font color="#000060" size="2">象棋百科全书</font></a><font
+                color="#000060" size="2"> </font><a
+                href="http://www.miibeian.gov.cn/"
+                target="_blank"><font color="#000060" size="2">沪</font><font
+                color="#000060" size="2" face="Times New Roman">ICP</font><font
+                color="#000060" size="2">备</font><font
+                color="#000060" size="2" face="Times New Roman">05047724</font></a></p>
                 </td>
             </tr>
         </table>

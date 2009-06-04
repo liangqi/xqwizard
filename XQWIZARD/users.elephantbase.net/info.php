@@ -61,34 +61,41 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="headerbg.gif"><strong>[<!--webbot
-                bot="HTMLMarkup" startspan --><?php
+                <td width="50%" background="headerbg.gif"><table
+                border="0" cellpadding="0" cellspacing="0"
+                width="100%">
+                    <tr>
+                        <td><strong>[<!--webbot bot="HTMLMarkup"
+                        startspan --><?php
   session_start();
   session_register("userdata");
-  $userdata = $_SESSION["userdata"];
-  if (!isset($userdata["username"])) {
-    header("Location: login.htm#error");
+  if (!isset($_SESSION["userdata"])) {
+    header("Location: login.htm#timeout");
     exit();
   }
   echo $userdata["username"];
 ?><!--webbot
-                bot="HTMLMarkup" endspan --></strong><font
-                size="3"><strong>]，</strong></font><strong>您好！</strong></td>
-            </tr>
-            <tr>
-                <td><p align="center">您已经闯到第<!--webbot
-                bot="HTMLMarkup" startspan --><?php
-  echo $userdata["scores"];
-?><!--webbot
-                bot="HTMLMarkup" endspan -->关</p>
+                        bot="HTMLMarkup" endspan --></strong><font
+                        size="3"><strong>]，</strong></font><strong>您好！</strong></td>
+                        <td><p align="right"><a href="logout.php"><font
+                        size="2">【注销】</font></a></p>
+                        </td>
+                    </tr>
+                </table>
                 </td>
             </tr>
             <tr>
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  echo "<font color=\"red\">……</font>";
+  echo $userdata["info"];
 ?><!--webbot
                 bot="HTMLMarkup" endspan --></p>
+                </td>
+            </tr>
+            <tr>
+                <td id="admin"><p align="center"><font size="2">如果您是管理员，请进入</font><a
+                href="admin.htm" target="_blank"><font size="2">【管理】</font></a><font
+                size="2">页面</font></p>
                 </td>
             </tr>
             <tr>
@@ -96,18 +103,25 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>
-                <td align="center"><form method="POST" id="frm">
+                <td align="center"><form action="updateinfo.php"
+                method="POST" id="frm">
                     <table border="0">
+                        <tr>
+                            <td align="right"><font size="2">原密码：</font></td>
+                            <td align="right">　</td>
+                            <td><input type="password" size="21"
+                            name="password0"></td>
+                        </tr>
+                        <tr>
+                            <td>　</td>
+                            <td>　</td>
+                            <td><font size="2">如需更改密码，必须先输入原密码</font></td>
+                        </tr>
                         <tr>
                             <td align="right"><font size="2">新密码：</font></td>
                             <td align="right">　</td>
                             <td><input type="password" size="21"
                             name="password"></td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td>　</td>
-                            <td><font size="2">如不需要更改密码，则此处置空</font></td>
                         </tr>
                         <tr>
                             <td align="right"><font size="2">确认新密码：</font></td>
@@ -135,8 +149,24 @@ bottommargin="0" rightmargin="0">
                     <p><input type="submit" name="B1"
                     value="提交"><script language="JavaScript"><!--
 frm.email.value = "<?php echo $userdata['email']; ?>";
+admin.style.display = "<?php echo $userdata['usertype'] == 128 ? 'block' : 'none' ; ?>";
 // --></script></p>
                 </form>
+                </td>
+            </tr>
+            <tr>
+                <td><p align="right"><a
+                href="http://www.elephantbase.net/"
+                target="_blank"><font color="#000060" size="2">版权所有</font><font
+                color="#000060">&copy;</font><font
+                color="#000060" size="2" face="Times New Roman">2004-2009
+                </font><font color="#000060" size="2">象棋百科全书</font></a><font
+                color="#000060" size="2"> </font><a
+                href="http://www.miibeian.gov.cn/"
+                target="_blank"><font color="#000060" size="2">沪</font><font
+                color="#000060" size="2" face="Times New Roman">ICP</font><font
+                color="#000060" size="2">备</font><font
+                color="#000060" size="2" face="Times New Roman">05047724</font></a></p>
                 </td>
             </tr>
         </table>

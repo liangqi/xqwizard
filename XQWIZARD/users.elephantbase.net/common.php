@@ -12,9 +12,9 @@
 
   // 登录
   function login($username, $password) {
-    $sql = sprintf("SELECT password, email, retrycount, retrytime, scores, points FROM tb_user WHERE username = '%s'", mysql_real_escape_string($username));
+    $sql = sprintf("SELECT usertype, password, email, retrycount, retrytime, scores, points FROM tb_user WHERE username = '%s'", mysql_real_escape_string($username));
     $result = mysql_query($sql);
-    $line = mysql_fetch_array($result, MYSQL_ASSOC);
+    $line = mysql_fetch_assoc($result);
     // 如果没有查询到用户，则返回“登录失败”
     if (!$line) {
       return "error";
