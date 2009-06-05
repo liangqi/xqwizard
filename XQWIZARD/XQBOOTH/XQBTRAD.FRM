@@ -966,7 +966,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
+' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1165,7 +1165,7 @@ btnPrev.Enabled = bPrev
 bNext = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
 mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
-Caption = "第" + Str(Gui_nCurr + 1) + " 關 - 象棋路邊攤"
+Caption = "第" + Str(Gui_nCurr + 1) + " 關 - 象棋魔法學校"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 BoardFlush
 sqSelected = 0
@@ -1272,7 +1272,7 @@ Dim szFileName As String, nFileNo As Integer, dw As Long
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-szFileName = SaveFileDialog("導出闖關記錄", "闖關記錄 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", "象棋路邊攤闖關記錄 - 第" + Str(Gui_nLast + 1) + " 關.DAT", "DAT")
+szFileName = SaveFileDialog("導出闖關記錄", "闖關記錄 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", "象棋魔法學校闖關記錄 - 第" + Str(Gui_nLast + 1) + " 關.DAT", "DAT")
 If szFileName = "" Then
     Exit Sub
 End If

@@ -1855,7 +1855,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnToolBooth 
-         Caption         =   "象棋路边摊(&T)"
+         Caption         =   "象棋魔法学校(&T)"
       End
    End
    Begin VB.Menu mnHelp 
