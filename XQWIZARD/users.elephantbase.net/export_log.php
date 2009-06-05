@@ -7,7 +7,8 @@
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $result = mysql_query("SELECT * FROM tb_log");
+  $sql = sprintf("SELECT * FROM tb_log WHERE eventtime < %d", floor(time() / 86400) * 86400);
+  $result = mysql_query($sql);
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("INSERT INTO tb_user (username, eventip, eventtime, eventtype, detail) " .
         "VALUES ('%s', '%s', %d, %d, %d)",

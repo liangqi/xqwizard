@@ -65,7 +65,7 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><strong>[<!--webbot bot="HTMLMarkup"
+                        <td><strong><!--webbot bot="HTMLMarkup"
                         startspan --><?php
   session_start();
   session_register("userdata");
@@ -73,10 +73,9 @@ bottommargin="0" rightmargin="0">
     header("Location: login.htm#timeout");
     exit();
   }
-  echo $userdata["username"];
+  echo htmlentities($userdata["username"]);
 ?><!--webbot
-                        bot="HTMLMarkup" endspan --></strong><font
-                        size="3"><strong>]，</strong></font><strong>您好！</strong></td>
+                        bot="HTMLMarkup" endspan -->，您好！</strong></td>
                         <td><p align="right"><a href="logout.php"><font
                         size="2">【注销】</font></a></p>
                         </td>
@@ -109,7 +108,7 @@ bottommargin="0" rightmargin="0">
                         <tr>
                             <td align="right"><font size="2">原密码：</font></td>
                             <td align="right">　</td>
-                            <td><input type="password" size="21"
+                            <td><input type="password" size="20"
                             name="password0"></td>
                         </tr>
                         <tr>
@@ -120,13 +119,13 @@ bottommargin="0" rightmargin="0">
                         <tr>
                             <td align="right"><font size="2">新密码：</font></td>
                             <td align="right">　</td>
-                            <td><input type="password" size="21"
+                            <td><input type="password" size="20"
                             name="password"></td>
                         </tr>
                         <tr>
                             <td align="right"><font size="2">确认新密码：</font></td>
                             <td align="right">　</td>
-                            <td><input type="password" size="21"
+                            <td><input type="password" size="20"
                             name="password2"></td>
                         </tr>
                         <tr>
