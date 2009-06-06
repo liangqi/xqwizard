@@ -1,15 +1,15 @@
 <?php
-  require_once "./admin.php";
   require_once "./mysql_conf.php";
+  require_once "./admin.php";
 
-  header("Content-Disposition: attachment; filename=tb_user.sql");
+  header("Content-Disposition: attachment; filename={$mysql_tablepre}user.sql");
   header("Content-Type: text/plain");
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $result = mysql_query("SELECT * FROM tb_user");
+  $result = mysql_query("SELECT * FROM {$mysql_tablepre}user");
   while($line = mysql_fetch_assoc($result)) {
-    $sql = sprintf("INSERT INTO tb_user (username, usertype, password, email, " .
+    $sql = sprintf("INSERT INTO {$mysql_tablepre}user (username, usertype, password, email, " .
         "regip, regtime, lastip, lasttime, retrycount, retrytime, scores, points) " .
         "VALUES ('%s', %d, '%s', '%s', '%s', %d, '%s', %d, %d, %d, %d, %d)",
         mysql_real_escape_string($line["username"]), $line["usertype"],

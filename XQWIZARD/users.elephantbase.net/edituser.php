@@ -62,10 +62,69 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td width="50%" background="headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "./admin.php";
   require_once "./mysql_conf.php";
+  require_once "./common.php";
+  require_once "./admin.php";
 
-  $username = $_POST["username"];
+  $username = $_GET["username"];
+
+  mysql_connect($mysql_host, $mysql_username, $mysql_password);
+  mysql_select_db($mysql_database);
+  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username = '%s'",
+      mysql_real_escape_string($username));
+  $result = mysql_query($sql);
+  $line = mysql_fetch_assoc($result);
+  if (!$line) {
+    header("Location: close.htm#" . "用户[" . $username . "]不存在");
+    mysql_close();
+    exit();
+  }
+
+  $act = $_GET["act"];
+  if (false) {
+    //
+  } else if ($act == "charge") {
+    // 补充点数
+    $charge = intval($_POST["charge"]);
+    if ($charge > 0) {
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
+          $charge, mysql_real_escape_string($username));
+      mysql_query($sql);
+      $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
+      $line["points"] += $charge;
+    } else {
+      $info = warn("充值点数必须大于0");
+    }
+  } else if ($act == "reset") {
+    // 重置密码
+    $password = $_POST["password"];
+    if (strlen($password) <6) {
+      $info = warn("密码不能少于6个字符");
+    } else {
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s' WHERE username = '%s'",
+          md5($username . $_POST["password"]), mysql_real_escape_string($username));
+      mysql_query($sql);
+      $info = info("密码已更新");
+    }
+  } else if ($act == "delete") {
+    // 删除帐号
+    $sql = sprintf("SELECT password FROM {$mysql_tablepre}user WHERE username = '%s'",
+        mysql_real_escape_string($username));
+    $result = mysql_query($sql);
+    $line2 = mysql_fetch_assoc($result);
+    if ($line2 && $line2["password"] == md5($username . $_POST["password2"])) {
+      $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE username = '%s'",
+          mysql_real_escape_string($username));
+      mysql_query($sql);
+      header("Location: close.htm#" . "用户[" . $username . "]已被删除");
+      mysql_close();
+      exit();
+    } else {
+      $info = warn("密码错误，删除用户失败");
+    }
+  } else {
+    $info = "";
+  }
 ?><!--webbot
                 bot="HTMLMarkup" endspan --><strong>详细信息</strong></td>
             </tr>
@@ -73,66 +132,69 @@ bottommargin="0" rightmargin="0">
                 <td align="center"><table border="0">
                     <tr>
                         <td align="right"><font size="2">用户名：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $username; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo htmlentities($username, ENT_COMPAT, "GB2312"); ?><!--webbot
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">Email：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["email"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo htmlentities($line["email"], ENT_COMPAT, "GB2312"); ?><!--webbot
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">注册时间：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["regtime"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">注册IP：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["regip"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">上次登录时间：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["lasttime"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">上次登录IP：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["lastip"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">成绩：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["scores"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">点数：</font></td>
-                        <td align="right">　</td>
-                        <td align="right"><!--webbot
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["points"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
+                        bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                 </table>
                 </td>
             </tr>
             <tr>
                 <td><p align="center"><!--webbot
-                bot="HTMLMarkup" startspan --><?php echo $info; ?><!--webbot
+                bot="HTMLMarkup" startspan --><?php
+  echo $info;
+  mysql_close();
+?><!--webbot
                 bot="HTMLMarkup" endspan --></p>
                 </td>
             </tr>
@@ -142,11 +204,10 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td align="center" id="whyreg"><form
-                action="userlist.php" method="POST"
-                target="_blank">
+                <td align="center"><form
+                method="POST" id="frmCharge">
                     <p><font size="2">补充点数：<input
-                    type="text" size="20" name="username"></font></p>
+                    type="text" size="20" name="charge"></font></p>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
@@ -157,11 +218,10 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td align="center" id="whyreg"><form
-                action="userlist.php" method="POST"
-                target="_blank">
+                <td align="center"><form
+                method="POST" id="frmReset">
                     <p><font size="2">重置密码：<input
-                    type="text" size="20" name="username"></font></p>
+                    type="text" size="20" name="password"></font></p>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
@@ -170,17 +230,22 @@ bottommargin="0" rightmargin="0">
                 <td width="50%" background="headerbg.gif"><strong>删除帐号</strong></td>
             </tr>
             <tr>
-                <td align="center" id="whyreg"><form
-                action="userlist.php" method="POST"
-                target="_blank">
-                    <p><font size="2">输入密码：<input
-                    type="text" size="20" name="username"></font></p>
+                <td align="center"><form
+                method="POST" id="frmDelete">
+                    <p><font size="2">确认密码：<input
+                    type="password" size="20" name="password2"></font></p>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
             </tr>
             <tr>
-                <td><p align="right"><a
+                <td><p align="right"><script
+                language="JavaScript"><!--
+var action = "edituser.php?username=<?php echo urlencode($username); ?>&act=";
+frmCharge.action = action + "charge";
+frmReset.action = action + "reset";
+frmDelete.action = action + "delete";
+// --></script> <a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font

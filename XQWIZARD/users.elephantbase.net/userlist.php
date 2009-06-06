@@ -66,14 +66,14 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "./admin.php";
   require_once "./mysql_conf.php";
+  require_once "./admin.php";
 
   $username = $_POST["username"];
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sql = sprintf("SELECT * FROM tb_user WHERE username like '%%%s%%'",
+  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%'",
       mysql_real_escape_string($username));
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
@@ -82,13 +82,13 @@ bottommargin="0" rightmargin="0">
     $th0 = "<th><font size=\"2\">";
     $th1 = "</font></th>";
     $th10 = $th1 . $th0;
-    echo "<tr>${th0}用户名${th10}Email${th10}成绩${th10}点数${th10}&nbsp;${th1}</tr>";
+    echo "<tr>{$th0}用户名{$th10}Email{$th10}成绩{$th10}点数{$th10}&nbsp;{$th1}</tr>";
     $td0 = "<td align=\"center\"><font size=\"2\">&nbsp;";
     $td1 = "&nbsp;</font></td>";
     $td10 = $td1 . $td0;
     while ($line) {
-      echo sprintf("<tr>${td0}%s${td10}%s${td10}%s${td10}%s${td10}%s${td10}%s${td10}%d${td10}%d${td10}" .
-          "<a href=\"edituser.php?username=%s\" target=\"_blank\">编辑</a>${td1}</tr>",
+      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%d{$td10}%d{$td10}" .
+          "<a href=\"edituser.php?username=%s\" target=\"_blank\">编辑</a>{$td1}</tr>",
           htmlentities($line["username"], ENT_COMPAT, "GB2312"),
           htmlentities($line["email"], ENT_COMPAT, "GB2312"),
           $line["scores"], $line["points"], urlencode($line["username"]));

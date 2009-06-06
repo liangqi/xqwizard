@@ -593,7 +593,7 @@ Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{userdesktop}\超級象棋巫師"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{userdesktop}\象棋路邊攤"; Filename: "{app}\XQBOOTH.EXE"
+Name: "{userdesktop}\象棋魔法學校"; Filename: "{app}\XQBOOTH.EXE"
 
 [Run]
 Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫師介紹"; Flags: nowait postinstall shellexec skipifsilent

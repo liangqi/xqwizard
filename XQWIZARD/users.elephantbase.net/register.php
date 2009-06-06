@@ -1,6 +1,6 @@
 <?php
-  require_once "./common.php";
   require_once "./mysql_conf.php";
+  require_once "./common.php";
   require_once "./ejewimage.php";
 
   $username = $_POST["username"];
@@ -20,13 +20,13 @@
     // ¿ªÊ¼×¢²á
     mysql_connect($mysql_host, $mysql_username, $mysql_password);
     mysql_select_db($mysql_database);
-    $sql = sprintf("SELECT username FROM tb_user WHERE username = '%s'",
+    $sql = sprintf("SELECT username FROM {$mysql_tablepre}user WHERE username = '%s'",
         mysql_real_escape_string($username));
     $result = mysql_query($sql);
     if (mysql_fetch_assoc($result)) {
       header("Location: register.htm#exist");
     } else {
-      $sql = sprintf("INSERT INTO tb_user (username, password, email, regip, regtime) " .
+      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (username, password, email, regip, regtime) " .
           "VALUES ('%s', '%s', '%s', '%s', %d)",
           mysql_real_escape_string($username), md5($username . $password),
           mysql_real_escape_string($email), getRemoteAddr(), time());
