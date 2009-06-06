@@ -31,6 +31,7 @@
           mysql_real_escape_string($username), md5($username . $password),
           mysql_real_escape_string($email), getRemoteAddr(), time());
       mysql_query($sql);
+      insertLog($username, EVENT_REGISTER);
       header("Location: login.htm#register");
     }
     mysql_close();

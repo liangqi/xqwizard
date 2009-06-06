@@ -1,5 +1,6 @@
 <?php
   require_once "./mysql_conf.php";
+  require_once "./common.php";
 
   $password0 = $_POST["password0"];
   $password = $_POST["password"];
@@ -10,20 +11,23 @@
   session_register("userdata");
   if (!isset($_SESSION["userdata"])) {
     header("Location: login.htm#timeout");
-    exit();
+    exit;
   }
   $username = $_SESSION["userdata"]["username"];
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
   if (strlen($password0) < 6) {
+    // 仅更新Email
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET email = '%s' WHERE username = '%s'",
         mysql_real_escape_string($email), mysql_real_escape_string($username));
     mysql_query($sql);
+    insertLog($username, EVENT_EMAIL);
     $info = info("Email更新成功");
     $_SESSION["userdata"]["info"] = $info;
     header("Location: info.php");
   } else {
+    // 更新Email和密码
     $sql = sprintf("SELECT password FROM {$mysql_tablepre}user WHERE username = '%s'",
         mysql_real_escape_string($username));
     $result = mysql_query($sql);
@@ -37,6 +41,8 @@
           $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s', email = '%s' WHERE username = '%s'",
               md5($username . $password), mysql_real_escape_string($email),
               mysql_real_escape_string($username));
+          mysql_query($sql);
+          insertLog($username, EVENT_EMAIL);
         } else {
           $info = warn("两遍密码不一致");
         }

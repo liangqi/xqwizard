@@ -77,7 +77,7 @@ bottommargin="0" rightmargin="0">
   if (!$line) {
     header("Location: close.htm#" . "用户[" . $username . "]不存在");
     mysql_close();
-    exit();
+    exit;
   }
 
   $act = $_GET["act"];
@@ -118,7 +118,7 @@ bottommargin="0" rightmargin="0">
       mysql_query($sql);
       header("Location: close.htm#" . "用户[" . $username . "]已被删除");
       mysql_close();
-      exit();
+      exit;
     } else {
       $info = warn("密码错误，删除用户失败");
     }
@@ -145,13 +145,6 @@ bottommargin="0" rightmargin="0">
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
-                        <td align="right"><font size="2">注册时间：</font></td>
-                        <td align="right"><font size="2"></font>　</td>
-                        <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["regtime"]; ?><!--webbot
-                        bot="HTMLMarkup" endspan --></font></td>
-                    </tr>
-                    <tr>
                         <td align="right"><font size="2">注册IP：</font></td>
                         <td align="right"><font size="2"></font>　</td>
                         <td><font size="2"><!--webbot
@@ -159,10 +152,10 @@ bottommargin="0" rightmargin="0">
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
-                        <td align="right"><font size="2">上次登录时间：</font></td>
+                        <td align="right"><font size="2">注册时间：</font></td>
                         <td align="right"><font size="2"></font>　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["lasttime"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["regtime"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
@@ -170,6 +163,13 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2"></font>　</td>
                         <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["lastip"]; ?><!--webbot
+                        bot="HTMLMarkup" endspan --></font></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><font size="2">上次登录时间：</font></td>
+                        <td align="right"><font size="2"></font>　</td>
+                        <td><font size="2"><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["lasttime"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>

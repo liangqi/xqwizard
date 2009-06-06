@@ -71,7 +71,7 @@ bottommargin="0" rightmargin="0">
   session_register("userdata");
   if (!isset($_SESSION["userdata"])) {
     header("Location: login.htm#timeout");
-    exit();
+    exit;
   }
   echo htmlentities($userdata["username"]);
 ?><!--webbot

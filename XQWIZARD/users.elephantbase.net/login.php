@@ -16,6 +16,7 @@
     } else if ($result == "noretry") {
       header("Location: login.htm#noretry");
     } else {
+      insertLog($username, EVENT_LOGIN);
       session_start();
       session_register("userdata");
       $result["username"] = $username;
