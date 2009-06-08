@@ -1,6 +1,6 @@
 <?php
-  require_once "./mysql_conf.php";
-  require_once "./common.php";
+  require_once "../mysql_conf.php";
+  require_once "../common.php";
 
   $header = getallheaders();
   $username = $header["Login-UserName"];
@@ -14,7 +14,7 @@
   } else if ($result == "noretry") {
     echo "noretry";
   } else {
-    echo "ok " . $result["scores"];
+    echo "ok " . $result["points"];
   }
   mysql_close();
 ?>

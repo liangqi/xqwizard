@@ -16,13 +16,13 @@ bottommargin="0" rightmargin="0">
         <td width="750" bgcolor="#FFFFFF"><table border="0"
         width="100%">
             <tr>
-                <td colspan="3" background="topbg.gif"><table
+                <td colspan="3" background="../images/topbg.gif"><table
                 border="0" width="100%">
                     <tr>
                         <td valign="bottom" nowrap><table
                         border="0">
                             <tr>
-                                <td nowrap><img src="wizard.jpg"
+                                <td nowrap><img src="../images/wizard.jpg"
                                 width="64" height="64"><font
                                 color="#FFFFFF" size="6"
                                 face="黑体">象棋巫师用户中心</font></td>
@@ -38,7 +38,7 @@ bottommargin="0" rightmargin="0">
                             </tr>
                             <tr>
                                 <td><p align="right"><img
-                                src="elephantbase.gif" width="88"
+                                src="../images/elephantbase.gif" width="88"
                                 height="31"></p>
                                 </td>
                             </tr>
@@ -60,10 +60,10 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="headerbg.gif"><!--webbot
+                <td width="50%" background="../images/headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "./mysql_conf.php";
-  require_once "./common.php";
+  require_once "../mysql_conf.php";
+  require_once "../common.php";
   require_once "./admin.php";
 
   $username = $_GET["username"];
@@ -155,7 +155,7 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">注册时间：</font></td>
                         <td align="right"><font size="2"></font>　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["regtime"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["regtime"]); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
@@ -169,7 +169,7 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">上次登录时间：</font></td>
                         <td align="right"><font size="2"></font>　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["lasttime"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["lasttime"]); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
@@ -199,7 +199,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="headerbg.gif"><p
+                <td width="50%" background="../images/headerbg.gif"><p
                 align="left"><strong>补充点数</strong></p>
                 </td>
             </tr>
@@ -213,7 +213,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="headerbg.gif"><p
+                <td width="50%" background="../images/headerbg.gif"><p
                 align="left"><strong>重置密码</strong></p>
                 </td>
             </tr>
@@ -227,7 +227,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="headerbg.gif"><strong>删除帐号</strong></td>
+                <td width="50%" background="../images/headerbg.gif"><strong>删除帐号</strong></td>
             </tr>
             <tr>
                 <td align="center"><form

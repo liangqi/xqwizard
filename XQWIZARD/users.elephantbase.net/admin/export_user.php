@@ -1,5 +1,5 @@
 <?php
-  require_once "./mysql_conf.php";
+  require_once "../mysql_conf.php";
   require_once "./admin.php";
 
   header("Content-Disposition: attachment; filename={$mysql_tablepre}user.sql");

@@ -2,7 +2,7 @@
   session_start();
   session_register("userdata");
   if (!isset($_SESSION["userdata"])) {
-    header("Location: login.htm#timeout");
+    header("Location: ../login.htm#timeout");
     exit;
   }
   if ($_SESSION["userdata"]["usertype"] != 128) {

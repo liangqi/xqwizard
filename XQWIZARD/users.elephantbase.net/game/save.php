@@ -1,6 +1,6 @@
 <?php
-  require_once "./mysql_conf.php";
-  require_once "./common.php";
+  require_once "../mysql_conf.php";
+  require_once "../common.php";
 
   $header = getallheaders();
   $username = $header["Login-UserName"];

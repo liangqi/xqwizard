@@ -1,6 +1,6 @@
 <?php
-  require_once "./mysql_conf.php";
-  require_once "./common.php";
+  require_once "../mysql_conf.php";
+  require_once "../common.php";
 
   $header = getallheaders();
   $username = $header["Login-UserName"];
@@ -13,14 +13,8 @@
     echo "error";
   } else if ($result == "noretry") {
     echo "noretry";
-  } else if ($result["points"] < 10) {
-    echo "nopoints";
   } else {
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE username = '%s'",
-        mysql_real_escape_string($username));
-    mysql_query($sql);
-    insertLog($username, EVENT_HINT, intval($_GET["stage"]));
-    echo "ok";
+    echo "ok " . $result["scores"];
   }
   mysql_close();
 ?>

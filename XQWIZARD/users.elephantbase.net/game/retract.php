@@ -1,6 +1,6 @@
 <?php
-  require_once "./mysql_conf.php";
-  require_once "./common.php";
+  require_once "../mysql_conf.php";
+  require_once "../common.php";
 
   $header = getallheaders();
   $username = $header["Login-UserName"];
@@ -13,8 +13,14 @@
     echo "error";
   } else if ($result == "noretry") {
     echo "noretry";
+  } else if ($result["points"] < 1) {
+    echo "nopoints";
   } else {
-    echo "ok " . $result["points"];
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 1 WHERE username = '%s'",
+        mysql_real_escape_string($username));
+    mysql_query($sql);
+    insertLog($username, EVENT_RETRACT, intval($_GET["stage"]));
+    echo "ok";
   }
   mysql_close();
 ?>

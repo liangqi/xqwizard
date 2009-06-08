@@ -16,13 +16,13 @@ bottommargin="0" rightmargin="0">
         <td width="750" bgcolor="#FFFFFF"><table border="0"
         width="100%">
             <tr>
-                <td colspan="3" background="topbg.gif"><table
+                <td colspan="3" background="images/topbg.gif"><table
                 border="0" width="100%">
                     <tr>
                         <td valign="bottom" nowrap><table
                         border="0">
                             <tr>
-                                <td nowrap><img src="wizard.jpg"
+                                <td nowrap><img src="images/wizard.jpg"
                                 width="64" height="64"><font
                                 color="#FFFFFF" size="6"
                                 face="黑体">象棋巫师用户中心</font></td>
@@ -39,7 +39,7 @@ bottommargin="0" rightmargin="0">
                             <tr>
                                 <td><p align="right"><a
                                 target="_blank"><img
-                                src="elephantbase.gif" width="88"
+                                src="images/elephantbase.gif" width="88"
                                 height="31"></a></p>
                                 </td>
                             </tr>
@@ -61,7 +61,7 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="headerbg.gif"><table
+                <td width="50%" background="images/headerbg.gif"><table
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
@@ -93,12 +93,12 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td id="admin"><p align="center"><font size="2">如果您是管理员，请进入</font><a
-                href="admin.htm" target="_blank"><font size="2">【管理】</font></a><font
+                href="admin/admin.htm" target="_blank"><font size="2">【管理】</font></a><font
                 size="2">页面</font></p>
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="headerbg.gif"><font
+                <td width="50%" background="images/headerbg.gif"><font
                 size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>用户列表 - 象棋巫师用户中心</title>
+<title>管理 - 象棋巫师用户中心</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -22,7 +22,7 @@ bottommargin="0" rightmargin="0">
                         <td valign="bottom" nowrap><table
                         border="0">
                             <tr>
-                                <td nowrap><img src="wizard.jpg"
+                                <td nowrap><img src="../images/wizard.jpg"
                                 width="64" height="64"><font
                                 color="#FFFFFF" size="6"
                                 face="黑体">象棋巫师用户中心</font></td>
@@ -38,7 +38,7 @@ bottommargin="0" rightmargin="0">
                             </tr>
                             <tr>
                                 <td><p align="right"><img
-                                src="elephantbase.gif" width="88"
+                                src="../images/elephantbase.gif" width="88"
                                 height="31"></p>
                                 </td>
                             </tr>
@@ -60,47 +60,37 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="headerbg.gif"><font
-                size="3"><strong>用户列表</strong></font></td>
+                <td width="50%" background="headerbg.gif"><script
+                language="JavaScript"><!--
+function clearLog() {
+  if (confirm("确认日志已经成功导出了吗？")) {
+    location.href = "clear_log.php";
+  }
+}
+// --></script><font size="3"><strong>查询用户</strong></font></td>
             </tr>
             <tr>
-                <td><p align="center"><!--webbot
-                bot="HTMLMarkup" startspan --><?php
-  require_once "./mysql_conf.php";
-  require_once "./admin.php";
-
-  $username = $_POST["username"];
-
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
-  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%'",
-      mysql_real_escape_string($username));
-  $result = mysql_query($sql);
-  $line = mysql_fetch_assoc($result);
-  if ($line) {
-    echo "<table border=\"1\">";
-    $th0 = "<th><font size=\"2\">";
-    $th1 = "</font></th>";
-    $th10 = $th1 . $th0;
-    echo "<tr>{$th0}用户名{$th10}Email{$th10}成绩{$th10}点数{$th10}&nbsp;{$th1}</tr>";
-    $td0 = "<td align=\"center\"><font size=\"2\">&nbsp;";
-    $td1 = "&nbsp;</font></td>";
-    $td10 = $td1 . $td0;
-    while ($line) {
-      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%d{$td10}%d{$td10}" .
-          "<a href=\"edituser.php?username=%s\" target=\"_blank\">编辑</a>{$td1}</tr>",
-          htmlentities($line["username"], ENT_COMPAT, "GB2312"),
-          htmlentities($line["email"], ENT_COMPAT, "GB2312"),
-          $line["scores"], $line["points"], urlencode($line["username"]));
-      $line = mysql_fetch_assoc($result);
-    }
-    echo "</table>";
-  } else {
-    echo "<font size=\"2\" color=\"red\">没有找到用户</font>";
-  }
-  mysql_close();
-?><!--webbot
-                bot="HTMLMarkup" endspan --></p>
+                <td align="center" id="whyreg"><form
+                action="userlist.php" method="POST"
+                target="_blank">
+                    <p><font size="2">用户名：<input
+                    type="text" size="20" name="username"></font></p>
+                    <p><input type="submit" value="提交"></p>
+                </form>
+                </td>
+            </tr>
+            <tr>
+                <td width="50%" background="headerbg.gif"><p
+                align="left"><strong>导出数据</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td><p align="center"><a href="export_user.php"><font
+                size="2">导出用户数据</font></a><font
+                size="2">　</font><a href="export_log.php"><font
+                size="2">导出日志数据</font></a><font
+                size="2">　</font><a href="#"
+                onclick="clearLog()"><font size="2">清除日志数据</font></a></p>
                 </td>
             </tr>
             <tr>
