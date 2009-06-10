@@ -89,6 +89,7 @@
 
   // 获取任务表中的时间
   function getTaskTime() {
+    global $mysql_tablepre;
     $result = mysql_query("SELECT tasktime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
     $line = mysql_fetch_assoc($result);
     return $line["tasktime"];
@@ -108,11 +109,12 @@
 
   // 检查是否该运行每日任务
   function checkDailyTask() {  
+    global $mysql_tablepre, $mysql_password;
     $currTime = time();
     // 第一次检查
     if (getTaskTime() < $currTime) {
       // 加锁
-      mysql_query("LOCK TABKE {$mysql_tablepre}task WRITE");
+      mysql_query("LOCK TABLE {$mysql_tablepre}task WRITE");
       // 第二次检查，防止在第一次检查和加锁之间，数据被改掉了
       if (getTaskTime() < $currTime) {
         // 下一时刻在GMT-4:00
