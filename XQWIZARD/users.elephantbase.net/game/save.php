@@ -20,6 +20,8 @@
     mysql_query($sql);
     insertLog($username, EVENT_SAVE, $scores);
     header("Login-Result: ok");
+    // 分数提交成功，检查是否该运行每日任务
+    checkDailyTask();
   } else {
     header("Login-Result: nosave");
   }

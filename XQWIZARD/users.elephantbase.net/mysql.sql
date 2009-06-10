@@ -10,7 +10,33 @@ CREATE TABLE tb_user (
 	retrycount INTEGER NOT NULL DEFAULT 0,
 	retrytime INTEGER NOT NULL DEFAULT 0,
 	scores INTEGER NOT NULL DEFAULT 0,
-	points INTEGER NOT NULL DEFAULT 0);
+	points INTEGER NOT NULL DEFAULT 0,
+	rankw INTEGER DEFAULT 0,
+	rankw0 INTEGER DEFAULT 0,
+	rankm INTEGER DEFAULT 0,
+	rankm0 INTEGER DEFAULT 0,
+	rankq INTEGER DEFAULT 0,
+	rankq0 INTEGER DEFAULT 0,
+	KEY (lasttime),
+	KEY (scores),
+	KEY (rankw),
+	KEY (rankm),
+	KEY (rankq));
+
+CREATE TABLE tb_rankw (
+	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	rank INTEGER NOT NULL AUTO_INCREMENT,
+	KEY (rank));
+
+CREATE TABLE tb_rankm (
+	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	rank INTEGER NOT NULL AUTO_INCREMENT,
+	KEY (rank));
+
+CREATE TABLE tb_rankq (
+	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	rank INTEGER NOT NULL AUTO_INCREMENT,
+	KEY (rank));
 
 CREATE TABLE tb_log (
 	username VARCHAR(64) NOT NULL,
@@ -18,3 +44,9 @@ CREATE TABLE tb_log (
 	eventtime INTEGER NOT NULL,
 	eventtype INTEGER NOT NULL,
 	detail INTEGER NOT NULL DEFAULT 0);
+
+CREATE TABLE tb_task (
+	taskname VARCHAR(64) NOT NULL PRIMARY KEY,
+	tasktime INTEGER NOT NULL DEFAULT 0);
+
+INSERT INTO tb_task (taskname) VALUES ("dailytask");

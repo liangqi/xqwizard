@@ -77,4 +77,56 @@
         mysql_real_escape_string($username), getRemoteAddr(), time(), $eventtype, $detail);
     mysql_query($sql);
   }
+
+  // 运行PHP任务
+  function runPhpTask($path) {
+    $fp = fsockopen("127.0.0.1", 80);
+    fwrite($fp, "GET $path HTTP/1.1\r\n" .
+      "Host: users.elephantbase.net\r\n" .
+      "Connection: Close\r\n\r\n");
+    fclose($fp);
+  }
+
+  // 获取任务表中的时间
+  function getTaskTime() {
+    $result = mysql_query("SELECT tasktime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
+    $line = mysql_fetch_assoc($result);
+    return $line["tasktime"];
+  }
+
+  // 下一时刻
+  function nextDailyTime($currTime, $timeOffset) {
+    $nextTime = floor($currTime / 86400) * 86400 + $timeOffset;
+    if ($timeOffset < 0) {
+      $nextTime += 86400;
+    }
+    if ($nextTime < $currTime) {
+      $nextTime += 86400;
+    }
+    return $nextTime;
+  }
+
+  // 检查是否该运行每日任务
+  function checkDailyTask() {  
+    $currTime = time();
+    // 第一次检查
+    if (getTaskTime() < $currTime) {
+      // 加锁
+      mysql_query("LOCK TABKE {$mysql_tablepre}task WRITE");
+      // 第二次检查，防止在第一次检查和加锁之间，数据被改掉了
+      if (getTaskTime() < $currTime) {
+        // 下一时刻在GMT-4:00
+        $nextTime = nextDailyTime($currTime, -14400);
+        $sql = sprintf("UPDATE {$mysql_tablepre}task SET tasktime = %d " .
+            "WHERE taskname = 'dailytask'", $nextTime);
+        mysql_query($sql);
+        $lastTime = $nextTime - 86400;
+        // 备份日志
+        runPhpTask("/task/backuplog.php?password=" . $mysql_password . "&timestamp=" . $lastTime);
+        // 刷新排名
+        runPhpTask("/task/updaterank.php?password=" . $mysql_password . "&timestamp=" . $lastTime);
+      }
+      mysql_query("UNLOCK TABLE");
+    }
+  }
 ?>
