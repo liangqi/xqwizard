@@ -9,23 +9,28 @@
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sqlFormat = "INSERT INTO {$mysql_tablepre}rank%s (username) " .
-      "SELECT username FROM {$mysql_tablepre}user " .
+
+  $sqlTruncate = "TRUNCATE TABLE {$mysql_tablepre}rank%s";
+  $sqlInsert1 = "INSERT INTO {$mysql_tablepre}rank%s " .
+      "SELECT * FROM {$mysql_tablepre}rank%s";
+  $sqlInsert2 = "INSERT INTO {$mysql_tablepre}rank%s " .
+      "SELECT (username) FROM {$mysql_tablepre}user " .
       "WHERE lasttime > %d ORDER BY scores DESC";
-  mysql_query(sprintf($sqlFormat, "w", $lastTime - 86400 * 7));
-  mysql_query(sprintf($sqlFormat, "m", $lastTime - 86400 * 30));
-  mysql_query(sprintf($sqlFormat, "q", $lastTime - 86400 * 90));
 
-  mysql_query("UPDATE {$mysql_tablepre}user " .
-      "LEFT JOIN {$mysql_tablepre}rankw w USING(username) " .
-      "LEFT JOIN {$mysql_tablepre}rankm m USING(username) " .
-      "LEFT JOIN {$mysql_tablepre}rankq q USING(username) " .
-      "SET rankw0 = rankw, rankm0 = rankm, rankq0 = rankq, " .
-      "rankw = w.rank, rankm = m.rank, rankq = q.rank");
+  mysql_query(sprintf($sqlTruncate, "w0"));
+  mysql_query(sprintf($sqlInsert1, "w0", "w"));
+  mysql_query(sprintf($sqlTruncate, "w"));
+  mysql_query(sprintf($sqlInsert2, "w", $lastTime - 86400 * 7));
 
-  mysql_query("TRUNCATE TABLE {$mysql_tablepre}rankw");
-  mysql_query("TRUNCATE TABLE {$mysql_tablepre}rankm");
-  mysql_query("TRUNCATE TABLE {$mysql_tablepre}rankq");
+  mysql_query(sprintf($sqlTruncate, "m0"));
+  mysql_query(sprintf($sqlInsert1, "m0", "w"));
+  mysql_query(sprintf($sqlTruncate, "m"));
+  mysql_query(sprintf($sqlInsert2, "m", $lastTime - 86400 * 30));
+
+  mysql_query(sprintf($sqlTruncate, "q0"));
+  mysql_query(sprintf($sqlInsert1, "q0", "q"));
+  mysql_query(sprintf($sqlTruncate, "q"));
+  mysql_query(sprintf($sqlInsert2, "q", $lastTime - 86400 * 90));
 
   mysql_close();
 ?>

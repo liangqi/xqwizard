@@ -59,9 +59,9 @@
 
   // 事件类型
   define("EVENT_REGISTER", 101);
-  define("EVENT_LOGIN", 101);
-  define("EVENT_EMAIL", 102);
-  define("EVENT_PASSWORD", 103);
+  define("EVENT_LOGIN", 102);
+  define("EVENT_EMAIL", 103);
+  define("EVENT_PASSWORD", 104);
   define("EVENT_SAVE", 111);
   define("EVENT_RETRACT", 121);
   define("EVENT_HINT", 122);
@@ -90,9 +90,8 @@
   // 获取任务表中的时间
   function getTaskTime() {
     global $mysql_tablepre;
-    $result = mysql_query("SELECT tasktime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
-    $line = mysql_fetch_assoc($result);
-    return $line["tasktime"];
+    $result = mysql_query("SELECT nexttime, lasttime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
+    return mysql_fetch_assoc($result);
   }
 
   // 下一时刻
@@ -112,21 +111,28 @@
     global $mysql_tablepre, $mysql_password;
     $currTime = time();
     // 第一次检查
-    if (getTaskTime() < $currTime) {
+    $taskTime = getTaskTime();
+    if ($taskTime["nexttime"] < $currTime) {
       // 加锁
       mysql_query("LOCK TABLE {$mysql_tablepre}task WRITE");
       // 第二次检查，防止在第一次检查和加锁之间，数据被改掉了
-      if (getTaskTime() < $currTime) {
+      $taskTime = getTaskTime();
+      if ($taskTime["nexttime"] < $currTime) {
         // 下一时刻在GMT-4:00
+        $lastTime2 = $taskTime["lasttime"];
         $nextTime = nextDailyTime($currTime, -14400);
-        $sql = sprintf("UPDATE {$mysql_tablepre}task SET tasktime = %d " .
-            "WHERE taskname = 'dailytask'", $nextTime);
-        mysql_query($sql);
         $lastTime = $nextTime - 86400;
-        // 备份日志
-        runPhpTask("/task/backuplog.php?password=" . $mysql_password . "&timestamp=" . $lastTime);
+        $sql = sprintf("UPDATE {$mysql_tablepre}task SET lasttime = %d, nexttime = %d " .
+            "WHERE taskname = 'dailytask'", $lastTime, $nextTime);
+        mysql_query($sql);
+        // 备份数据
+        sleep(1);
+        runPhpTask("/task/backup.php?password=" . $mysql_password .
+            "&timestamp=" . $lastTime . "&timestamp2=" . $lastTime2);
         // 刷新排名
-        runPhpTask("/task/updaterank.php?password=" . $mysql_password . "&timestamp=" . $lastTime);
+        sleep(1);
+        runPhpTask("/task/updaterank.php?password=" . $mysql_password .
+            "&timestamp=" . $lastTime);
       }
       mysql_query("UNLOCK TABLE");
     }

@@ -42,7 +42,7 @@
               md5($username . $password), mysql_real_escape_string($email),
               mysql_real_escape_string($username));
           mysql_query($sql);
-          insertLog($username, EVENT_EMAIL);
+          insertLog($username, EVENT_PASSWORD);
         } else {
           $info = warn("¡Ω±È√‹¬Î≤ª“ª÷¬");
         }
