@@ -90,7 +90,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
           $charge, mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_CHARGE, $charge));
+      insertLog($username, EVENT_CHARGE, $charge);
       $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
       $line["points"] += $charge;
     } else {
@@ -105,7 +105,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s' WHERE username = '%s'",
           md5($username . $_POST["password"]), mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_RESET));
+      insertLog($username, EVENT_RESET);
       $info = info("密码已更新");
     }
   } else if ($act == "delete") {
@@ -118,7 +118,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE username = '%s'",
           mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_DELETE));
+      insertLog($username, EVENT_DELETE);
       header("Location: close.htm#" . "用户[" . $username . "]已被删除");
       mysql_close();
       exit;
