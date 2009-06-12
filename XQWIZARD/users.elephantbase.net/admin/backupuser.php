@@ -2,7 +2,6 @@
   require_once "../mysql_conf.php";
   require_once "./admin.php";
 
-
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
   $tmpfile = "../backup/{$mysql_tablepre}user_" . rand() . ".sql.gz";

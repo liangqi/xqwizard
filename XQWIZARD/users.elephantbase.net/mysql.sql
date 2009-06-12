@@ -44,6 +44,10 @@ CREATE TABLE tb_rankq0 (
 	rank INTEGER NOT NULL DEFAULT 0,
 	KEY (rank));
 
+CREATE TABLE tb_chargecode (
+	chargecode CHAR(32) NOT NULL PRIMARY KEY,
+	points INTEGER NOT NULL DEFAULT 0);
+
 CREATE TABLE tb_log (
 	username VARCHAR(64) NOT NULL,
 	eventip VARCHAR(16) NOT NULL,

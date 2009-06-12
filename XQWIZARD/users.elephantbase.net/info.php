@@ -22,10 +22,12 @@ bottommargin="0" rightmargin="0">
                         <td valign="bottom" nowrap><table
                         border="0">
                             <tr>
-                                <td nowrap><img src="images/wizard.jpg"
+                                <td nowrap><img
+                                src="images/wizard.jpg"
                                 width="64" height="64"><font
                                 color="#FFFFFF" size="6"
-                                face="黑体">象棋巫师用户中心</font></td>
+                                face="黑体">
+                                象棋巫师用户中心</font></td>
                             </tr>
                         </table>
                         </td>
@@ -37,10 +39,9 @@ bottommargin="0" rightmargin="0">
                                 </td>
                             </tr>
                             <tr>
-                                <td><p align="right"><a
-                                target="_blank"><img
-                                src="images/elephantbase.gif" width="88"
-                                height="31"></a></p>
+                                <td><p align="right"><img
+                                src="images/elephantbase.gif"
+                                width="88" height="31"></p>
                                 </td>
                             </tr>
                             <tr>
@@ -93,8 +94,33 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td id="admin"><p align="center"><font size="2">如果您是管理员，请进入</font><a
-                href="admin/admin.htm" target="_blank"><font size="2">【管理】</font></a><font
-                size="2">页面</font></p>
+                href="admin/admin.htm" target="_blank"><font
+                size="2">【管理】</font></a><font size="2">页面</font></p>
+                </td>
+            </tr>
+            <tr>
+                <td width="50%" background="images/headerbg.gif"><font
+                size="3"><strong>补充点数</strong></font></td>
+            </tr>
+            <tr>
+                <td align="center"><form action="charge.php"
+                method="POST" id="frm">
+                    <table border="0">
+                        <tr>
+                            <td align="right"><font size="2">点卡密码：</font></td>
+                            <td>　</td>
+                            <td><input type="text" size="20"
+                            name="chargecode"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">　</td>
+                            <td>　</td>
+                            <td><a href="charge.htm"
+                            target="_blank"><font size="2">如何补充点数？</font></a></td>
+                        </tr>
+                    </table>
+                    <p><input type="submit" value="提交"></p>
+                </form>
                 </td>
             </tr>
             <tr>
@@ -145,8 +171,8 @@ bottommargin="0" rightmargin="0">
                             <td><font size="2">该邮箱是您找回密码的重要途径，建议填写</font></td>
                         </tr>
                     </table>
-                    <p><input type="submit" name="B1"
-                    value="提交"><script language="JavaScript"><!--
+                    <p><input type="submit" value="提交"><script
+                    language="JavaScript"><!--
 frm.email.value = "<?php echo $userdata['email']; ?>";
 admin.style.display = "<?php echo $userdata['usertype'] == 128 ? 'block' : 'none' ; ?>";
 // --></script></p>

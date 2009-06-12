@@ -1,19 +1,12 @@
 <?php
   require_once "./mysql_conf.php";
   require_once "./common.php";
+  require_once "./user.php";
 
   $password0 = $_POST["password0"];
   $password = $_POST["password"];
   $password2 = $_POST["password2"];
   $email = $_POST["email"];
-
-  session_start();
-  session_register("userdata");
-  if (!isset($_SESSION["userdata"])) {
-    header("Location: login.htm#timeout");
-    exit;
-  }
-  $username = $_SESSION["userdata"]["username"];
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
