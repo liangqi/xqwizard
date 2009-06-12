@@ -16,8 +16,9 @@
     mysql_query($sql);
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
         $points, mysql_real_escape_string($username));
+    mysql_query($sql);
     $_SESSION["userdata"]["points"] += $points;
-    $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . "点可用");
+    $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
   } else {
     $info = warn("点卡密码错误");
   }

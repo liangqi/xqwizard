@@ -104,7 +104,7 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td align="center"><form action="charge.php"
-                method="POST" id="frm">
+                method="POST">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">µ„ø®√‹¬Î£∫</font></td>
