@@ -62,8 +62,7 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%"
-                background="../images/headerbg.gif"><font
+                <td background="../images/headerbg.gif"><font
                 size="3"><strong>用户列表</strong></font></td>
             </tr>
             <tr>

@@ -15,7 +15,7 @@ Begin VB.Form frmSelect
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "SELTRAD.frx":0000
+   Icon            =   "SELECTT.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7200

@@ -826,23 +826,29 @@ Begin VB.Form frmXQBooth
          Caption         =   "再来一次(&R)"
          Shortcut        =   ^R
       End
-      Begin VB.Menu mnGameSep2 
-         Caption         =   "-"
-      End
-      Begin VB.Menu mnGameRecord 
-         Caption         =   "闯关记录(&S)"
-         Begin VB.Menu mnGameImport 
-            Caption         =   "导入(&I)..."
-         End
-         Begin VB.Menu mnGameExport 
-            Caption         =   "导出(&E)..."
-         End
-      End
       Begin VB.Menu mnGameSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameExit 
          Caption         =   "离开(&X)"
+      End
+   End
+   Begin VB.Menu mnUsers 
+      Caption         =   "用户中心(&U)"
+      Begin VB.Menu mnUsersSave 
+         Caption         =   "提交成绩(&S)"
+      End
+      Begin VB.Menu mnUsersLoad 
+         Caption         =   "获取成绩(&L)"
+      End
+      Begin VB.Menu mnUsersSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersRankList 
+         Caption         =   "排行榜(&R)"
+      End
+      Begin VB.Menu mnUsersHome 
+         Caption         =   "用户中心首页(&H)"
       End
    End
    Begin VB.Menu mnOptions 
@@ -965,7 +971,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
 '
-' XiangQi Booth - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
@@ -1298,6 +1304,124 @@ Private Sub mnGameExit_Click()
 If nPhase <> PHASE_BUSY Then
     Unload Me
 End If
+
+End Sub
+
+Private Sub mnUsersSave_Click()
+
+Dim bRetryLogin As Boolean, nPhaseSaved As Integer, szResult As Integer
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+lnRetryLogin:
+bRetryLogin = False
+
+Login_szTitle = "提交成绩"
+Login_szPrompt = ""
+frmLogin.Show vbModal, Me
+If Login_bCancel Then
+    Exit Sub
+End If
+nPhaseSaved = nPhase
+nPhase = PHASE_BUSY
+
+szResult = ""
+On Error Resume Next
+frmHide.inet.Execute "http://users.elephantbase.net/game/save.php", _
+        "POST", "scores=" + LTrim(Str(Gui_nLast)), _
+        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
+        "Login-UserName: " + Login_szUserName + vbCrLf + _
+        "Login-Password: " + Login_szPassword + vbCrLf
+szResult = frmHide.inet.GetHeader("Login-Result")
+On Error GoTo 0
+
+Select Case szResult
+Case "ok"
+    MsgBox "成绩提交成功。", vbInformation
+Case "nosave"
+    MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
+Case "error"
+    MsgBox "用户名或密码不正确。", vbExclamation
+    bRetryLogin = True
+Case "noretry"
+    MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+Case Else
+    MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+End If
+nPhase = nPhaseSaved
+
+If bRetryLogin Then
+    GoTo lnRetryLogin
+End If
+
+End Sub
+
+Private Sub mnUsersLoad_Click()
+
+Dim bRetryLogin As Boolean, nPhaseSaved As Integer, szResult As Integer, nLast As Integer
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+lnRetryLogin:
+bRetryLogin = False
+
+Login_szTitle = "获取成绩"
+Login_szPrompt = ""
+frmLogin.Show vbModal, Me
+If Login_bCancel Then
+    Exit Sub
+End If
+nPhaseSaved = nPhase
+nPhase = PHASE_BUSY
+
+szResult = ""
+On Error Resume Next
+frmHide.inet.Execute "http://users.elephantbase.net/game/load.php", "GET", "", _
+        "Login-UserName: " + Login_szUserName + vbCrLf + _
+        "Login-Password: " + Login_szPassword + vbCrLf
+szResult = frmHide.inet.GetHeader("Login-Result")
+On Error GoTo 0
+
+Select Case szResult
+Case "error"
+    MsgBox "用户名或密码不正确。", vbExclamation
+    bRetryLogin = True
+Case "noretry"
+    MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+Case Else
+    If (Left(szResult, 3) = "ok ") Then
+        nLast = Str2Int(Mid(szResult, 3), 0, Gui_nLast)
+        If nLast > Gui_nLast Then
+            Gui_nLast = nLast
+            Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+            LoadGame
+            MsgBox "成绩获取成功。", vbInformation
+        Else
+            MsgBox "您提交的成绩不如当前成绩，该成绩不予获取。", vbInformation
+        End If
+    Else
+        MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+    End If
+End If
+nPhase = nPhaseSaved
+
+If bRetryLogin Then
+    GoTo lnRetryLogin
+End If
+
+End Sub
+
+Private Sub mnUsersRankList_Click()
+
+'
+
+End Sub
+
+Private Sub mnUsersHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

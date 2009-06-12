@@ -62,8 +62,7 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%"
-                background="../images/headerbg.gif"><!--webbot
+                <td background="../images/headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   require_once "../mysql_conf.php";
   require_once "../common.php";
@@ -93,7 +92,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
           $charge, mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_CHARGE, $charge);
+      insertLog($username, EVENT_ADMIN_CHARGE, $charge);
       $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
       $line["points"] += $charge;
     } else {
@@ -108,7 +107,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s' WHERE username = '%s'",
           md5($username . $_POST["password"]), mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_RESET);
+      insertLog($username, EVENT_ADMIN_PASSWORD);
       $info = info("密码已更新");
     }
   } else if ($act == "delete") {
@@ -121,7 +120,7 @@ bottommargin="0" rightmargin="0">
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE username = '%s'",
           mysql_real_escape_string($username));
       mysql_query($sql);
-      insertLog($username, EVENT_DELETE);
+      insertLog($username, EVENT_ADMIN_DELETE);
       header("Location: close.htm#" . "用户[" . $username . "]已被删除");
       mysql_close();
       exit;
@@ -205,8 +204,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%"
-                background="../images/headerbg.gif"><p
+                <td background="../images/headerbg.gif"><p
                 align="left"><strong>补充点数</strong></p>
                 </td>
             </tr>
@@ -220,8 +218,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%"
-                background="../images/headerbg.gif"><p
+                <td background="../images/headerbg.gif"><p
                 align="left"><strong>重置密码</strong></p>
                 </td>
             </tr>
@@ -235,8 +232,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%"
-                background="../images/headerbg.gif"><strong>删除帐号</strong></td>
+                <td background="../images/headerbg.gif"><strong>删除帐号</strong></td>
             </tr>
             <tr>
                 <td align="center"><form method="POST"

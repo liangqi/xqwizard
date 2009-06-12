@@ -15,7 +15,7 @@ Begin VB.Form frmSelect
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "SELSIMP.frx":0000
+   Icon            =   "SELECTS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7200
@@ -5399,9 +5399,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' SELECT.FRM - Source Code for XiangQi Booth, Part III
+' SELECT.FRM - Source Code for XiangQi Witchcraft School, Part III
 '
-' XiangQi Booth - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '

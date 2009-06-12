@@ -10,17 +10,17 @@
   mysql_select_db($mysql_database);
   $result = login($username, $password);
   if ($result == "error") {
-    echo "error";
+    header("Login-Result: error");
   } else if ($result == "noretry") {
-    echo "noretry";
+    header("Login-Result: noretry");
   } else if ($result["points"] < 1) {
-    echo "nopoints";
+    header("Login-Result: nopoints");
   } else {
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 1 WHERE username = '%s'",
         mysql_real_escape_string($username));
     mysql_query($sql);
     insertLog($username, EVENT_RETRACT, intval($_GET["stage"]));
-    echo "ok";
+    header("Login-Result: ok");
   }
   mysql_close();
 ?>

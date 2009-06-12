@@ -1,7 +1,7 @@
 Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
-' XiangQi Booth - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
@@ -70,6 +70,12 @@ Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
+Public Login_szTitle            As String   ' 登录框标题
+Public Login_szPrompt           As String   ' 登录框提示
+Public Login_bCancel            As Boolean  ' 登录是否取消
+Public Login_szUserName         As String   ' 登录用户名
+Public Login_szPassword         As String   ' 登录密码
+Public Login_bRemember          As String   ' 记住密码
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
 ' 从注册表加载参数
@@ -106,7 +112,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -118,12 +124,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"

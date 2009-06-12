@@ -10,11 +10,11 @@
   mysql_select_db($mysql_database);
   $result = login($username, $password);
   if ($result == "error") {
-    echo "error";
+    header("Login-Result: error");
   } else if ($result == "noretry") {
-    echo "noretry";
+    header("Login-Result: noretry");
   } else {
-    echo "ok " . $result["points"];
+    header("Login-Result: ok " . $result["points"]);
   }
   mysql_close();
 ?>

@@ -60,14 +60,16 @@
   // 事件类型
   define("EVENT_REGISTER", 101);
   define("EVENT_LOGIN", 102);
-  define("EVENT_EMAIL", 103);
-  define("EVENT_PASSWORD", 104);
+  define("EVENT_CHARGE", 105);
+  define("EVENT_EMAIL", 106);
+  define("EVENT_PASSWORD", 107);
   define("EVENT_SAVE", 111);
   define("EVENT_RETRACT", 121);
   define("EVENT_HINT", 122);
-  define("EVENT_CHARGE", 201);
-  define("EVENT_RESET", 202);
-  define("EVENT_DELETE", 299);
+  define("EVENT_CHARGECODE", 150);
+  define("EVENT_ADMIN_CHARGE", 201);
+  define("EVENT_ADMIN_PASSWORD", 202);
+  define("EVENT_ADMIN_DELETE", 299);
 
   // 记录日志
   function insertLog($username, $eventtype, $detail = 0) {

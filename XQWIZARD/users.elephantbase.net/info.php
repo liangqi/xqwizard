@@ -62,7 +62,7 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td width="50%" background="images/headerbg.gif"><table
+                <td background="images/headerbg.gif"><table
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
@@ -99,12 +99,12 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="images/headerbg.gif"><font
-                size="3"><strong>补充点数</strong></font></td>
+                <td background="images/headerbg.gif"
+                style="display:none"><font size="3"><strong>补充点数</strong></font></td>
             </tr>
             <tr>
-                <td align="center"><form action="charge.php"
-                method="POST">
+                <td align="center" style="display:none"><form
+                action="charge.php" method="POST">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">点卡密码：</font></td>
@@ -124,7 +124,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td width="50%" background="images/headerbg.gif"><font
+                <td background="images/headerbg.gif"><font
                 size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>
