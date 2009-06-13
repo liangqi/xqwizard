@@ -18,13 +18,13 @@
   $result = mysql_query($sql);
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("REPLACE INTO {$mysql_tablepre}user (username, usertype, password, email, " .
-        "regip, regtime, lastip, lasttime, retrycount, retrytime, scores, points) " .
+        "regip, regtime, lastip, lasttime, retrycount, retrytime, score, points) " .
         "VALUES ('%s', %d, '%s', '%s', '%s', %d, '%s', %d, %d, %d, %d, %d)",
         mysql_real_escape_string($line["username"]), $line["usertype"],
         mysql_real_escape_string($line["password"]), mysql_real_escape_string($line["email"]),
         mysql_real_escape_string($line["regip"]), $line["regtime"],
         mysql_real_escape_string($line["lastip"]), $line["lasttime"],
-        $line["retrycount"], $line["retrytime"], $line["scores"], $line["points"]);
+        $line["retrycount"], $line["retrytime"], $line["score"], $line["points"]);
     gzwrite($gz, $sql . "\r\n");
   }
   gzclose($gz);

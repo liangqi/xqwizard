@@ -963,9 +963,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
+' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
-' XiangQi Booth - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '

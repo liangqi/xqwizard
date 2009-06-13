@@ -181,7 +181,7 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">³É¼¨£º</font></td>
                         <td align="right">¡¡</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["scores"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["score"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>

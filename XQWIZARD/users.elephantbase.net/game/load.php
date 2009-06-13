@@ -14,7 +14,7 @@
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else {
-    header("Login-Result: ok " . $result["scores"]);
+    header("Login-Result: ok " . $result["score"]);
   }
   mysql_close();
 ?>

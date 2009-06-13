@@ -9,10 +9,10 @@ CREATE TABLE tb_user (
 	lasttime INTEGER NOT NULL DEFAULT 0,
 	retrycount INTEGER NOT NULL DEFAULT 0,
 	retrytime INTEGER NOT NULL DEFAULT 0,
-	scores INTEGER NOT NULL DEFAULT 0,
+	score INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
 	KEY (lasttime),
-	KEY (scores));
+	KEY (score));
 
 CREATE TABLE tb_rankw (
 	username VARCHAR(64) NOT NULL PRIMARY KEY,
@@ -58,6 +58,7 @@ CREATE TABLE tb_log (
 CREATE TABLE tb_task (
 	taskname VARCHAR(64) NOT NULL PRIMARY KEY,
 	lasttime INTEGER NOT NULL DEFAULT 0,
-	nexttime INTEGER NOT NULL DEFAULT 0);
+	nexttime INTEGER NOT NULL DEFAULT 0
+	tasklock INTEGER NOT NULL DEFAULT 0);
 
 INSERT INTO tb_task (taskname) VALUES ("dailytask");

@@ -93,7 +93,7 @@ bottommargin="0" rightmargin="0">
           "<a href=\"edituser.php?username=%s\" target=\"_blank\">±à¼­</a>{$td1}</tr>",
           htmlentities($line["username"], ENT_COMPAT, "GB2312"),
           htmlentities($line["email"], ENT_COMPAT, "GB2312"),
-          $line["scores"], $line["points"], urlencode($line["username"]));
+          $line["score"], $line["points"], urlencode($line["username"]));
       $line = mysql_fetch_assoc($result);
     }
     echo "</table>";

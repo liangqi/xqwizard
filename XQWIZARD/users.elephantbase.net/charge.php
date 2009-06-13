@@ -10,18 +10,20 @@
   $sql = sprintf("SELECT points FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'", $chargecode);
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
+  $info = warn("点卡密码错误");
   if ($line) {
     $points = $line["points"];
     $sql = sprintf("DELETE FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'", $chargecode);
     mysql_query($sql);
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
-        $points, mysql_real_escape_string($username));
-    mysql_query($sql);
-    insertLog($username, EVENT_CHARGE, $points);
-    $_SESSION["userdata"]["points"] += $points;
-    $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
-  } else {
-    $info = warn("点卡密码错误");
+    // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
+    if (mysql_affected_rows() > 0) {
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
+          $points, mysql_real_escape_string($username));
+      mysql_query($sql);
+      insertLog($username, EVENT_CHARGE, $points);
+      $_SESSION["userdata"]["points"] += $points;
+      $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
+    }
   }
 
   $_SESSION["userdata"]["info"] = $info;    

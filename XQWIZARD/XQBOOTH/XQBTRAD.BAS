@@ -1,5 +1,5 @@
 Attribute VB_Name = "mdlXQBooth"
-' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
+' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Booth - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009

@@ -181,6 +181,10 @@ End Sub
 
 Private Sub btnOK_Click()
 
+If Len(txtUserName.Text) = 0 Or Len(txtPassword.Text) = 0 Then
+    MsgBox "用户名和密码不能为空", vbExclamation
+    Exit Sub
+End If
 Login_bCancel = False
 Login_szUserName = txtUserName.Text
 Login_szPassword = txtPassword.Text

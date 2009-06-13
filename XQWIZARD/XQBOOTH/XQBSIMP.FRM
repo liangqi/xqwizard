@@ -1,5 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmXQBooth 
    BorderStyle     =   1  'Fixed Single
    ClientHeight    =   7200
@@ -21,6 +22,13 @@ Begin VB.Form frmXQBooth
    ScaleMode       =   0  'User
    ScaleWidth      =   5640
    StartUpPosition =   3  'Windows Default
+   Begin InetCtlsObjects.Inet inet 
+      Left            =   0
+      Top             =   0
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      _Version        =   393216
+   End
    Begin VB.CommandButton btnNext 
       Caption         =   "下一关"
       Height          =   975
@@ -844,8 +852,17 @@ Begin VB.Form frmXQBooth
       Begin VB.Menu mnUsersSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnUsersRankList 
-         Caption         =   "排行榜(&R)"
+      Begin VB.Menu mnUsersRank 
+         Caption         =   "排名(&R)"
+         Begin VB.Menu mnUsersRankWeek 
+            Caption         =   "近一周排名(&W)"
+         End
+         Begin VB.Menu mnUsersRankMonth 
+            Caption         =   "近一月排名(&M)"
+         End
+         Begin VB.Menu mnUsersRankQuarter 
+            Caption         =   "近三月排名(&Q)"
+         End
       End
       Begin VB.Menu mnUsersHome 
          Caption         =   "用户中心首页(&H)"
@@ -969,7 +986,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' XQBOOTH.FRM - Source Code for XiangQi Booth, Part II
+' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
@@ -998,8 +1015,13 @@ Private Const PHASE_READY As Integer = 0
 Private Const PHASE_BUSY As Integer = 1
 Private Const PHASE_END As Integer = 2
 
+Private Const USERS_SAVE As Integer = 0
+Private Const USERS_LOAD As Integer = 1
+Private Const USERS_RANK As Integer = 2
+
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
+Private nPhaseSaved As Integer, nUsersEvent As Integer
 
 Private Function PieceFileName(ByVal nIndex As Integer) As String
 
@@ -1307,15 +1329,81 @@ End If
 
 End Sub
 
+Private Sub inet_StateChanged(ByVal nState As Integer)
+
+Dim szResult As String, nLast As Integer
+
+Select Case nState
+Case icError
+    nPhase = nPhaseSaved
+    Exit Sub
+Case icResponseCompleted
+    ' 执行下一个 Select Case
+Case Else
+    Exit Sub
+End Select
+
+Select Case nUsersEvent
+
+Case USERS_SAVE
+    ' 请求“提交”，处理响应
+    szResult = inet.GetHeader("Login-Result")
+    Select Case szResult
+    Case "ok"
+        MsgBox "成绩提交成功。", vbInformation
+    Case "nosave"
+        MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
+    Case "error"
+        MsgBox "用户名或密码不正确。", vbExclamation
+        nPhase = nPhaseSaved
+        mnUsersSave_Click
+        Exit Sub
+    Case "noretry"
+        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+    Case Else
+        MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+    End Select
+
+Case USERS_LOAD
+    ' 请求“获取”，处理响应
+    szResult = inet.GetHeader("Login-Result")
+    Select Case szResult
+    Case "error"
+        MsgBox "用户名或密码不正确。", vbExclamation
+        nPhase = nPhaseSaved
+        mnUsersLoad_Click
+        Exit Sub
+    Case "noretry"
+        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            nLast = Str2Int(Mid(szResult, 3), 0, App_nEndgames)
+            If nLast > Gui_nLast Then
+                Gui_nLast = nLast
+                Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+                LoadGame
+                MsgBox "成绩获取成功。", vbInformation
+            Else
+                MsgBox "您原先提交的成绩不如当前成绩，原先成绩不予获取。", vbInformation
+            End If
+        Else
+            MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+        End If
+    End Select
+
+Case USERS_RANK
+    ' 请求“排名”，获取响应
+
+End Select
+nPhase = nPhaseSaved
+
+End Sub
+
 Private Sub mnUsersSave_Click()
 
-Dim bRetryLogin As Boolean, nPhaseSaved As Integer, szResult As Integer
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-
-lnRetryLogin:
-bRetryLogin = False
 
 Login_szTitle = "提交成绩"
 Login_szPrompt = ""
@@ -1323,49 +1411,30 @@ frmLogin.Show vbModal, Me
 If Login_bCancel Then
     Exit Sub
 End If
+
 nPhaseSaved = nPhase
 nPhase = PHASE_BUSY
-
-szResult = ""
-On Error Resume Next
-frmHide.inet.Execute "http://users.elephantbase.net/game/save.php", _
-        "POST", "scores=" + LTrim(Str(Gui_nLast)), _
+nUsersEvent = USERS_SAVE
+On Error GoTo lnError
+inet.Execute "http://users.elephantbase.net/game/save.php", _
+        "POST", "score=" + LTrim(Str(Gui_nLast)), _
         "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
         "Login-UserName: " + Login_szUserName + vbCrLf + _
         "Login-Password: " + Login_szPassword + vbCrLf
-szResult = frmHide.inet.GetHeader("Login-Result")
 On Error GoTo 0
 
-Select Case szResult
-Case "ok"
-    MsgBox "成绩提交成功。", vbInformation
-Case "nosave"
-    MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
-Case "error"
-    MsgBox "用户名或密码不正确。", vbExclamation
-    bRetryLogin = True
-Case "noretry"
-    MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
-Case Else
-    MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-End If
+Exit Sub
+lnError:
+MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
 nPhase = nPhaseSaved
-
-If bRetryLogin Then
-    GoTo lnRetryLogin
-End If
 
 End Sub
 
 Private Sub mnUsersLoad_Click()
 
-Dim bRetryLogin As Boolean, nPhaseSaved As Integer, szResult As Integer, nLast As Integer
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-
-lnRetryLogin:
-bRetryLogin = False
 
 Login_szTitle = "获取成绩"
 Login_szPrompt = ""
@@ -1373,47 +1442,37 @@ frmLogin.Show vbModal, Me
 If Login_bCancel Then
     Exit Sub
 End If
+
 nPhaseSaved = nPhase
 nPhase = PHASE_BUSY
-
-szResult = ""
-On Error Resume Next
-frmHide.inet.Execute "http://users.elephantbase.net/game/load.php", "GET", "", _
+nUsersEvent = USERS_LOAD
+On Error GoTo lnError
+inet.Execute "http://users.elephantbase.net/game/load.php", "GET", "", _
         "Login-UserName: " + Login_szUserName + vbCrLf + _
         "Login-Password: " + Login_szPassword + vbCrLf
-szResult = frmHide.inet.GetHeader("Login-Result")
 On Error GoTo 0
 
-Select Case szResult
-Case "error"
-    MsgBox "用户名或密码不正确。", vbExclamation
-    bRetryLogin = True
-Case "noretry"
-    MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
-Case Else
-    If (Left(szResult, 3) = "ok ") Then
-        nLast = Str2Int(Mid(szResult, 3), 0, Gui_nLast)
-        If nLast > Gui_nLast Then
-            Gui_nLast = nLast
-            Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
-            LoadGame
-            MsgBox "成绩获取成功。", vbInformation
-        Else
-            MsgBox "您提交的成绩不如当前成绩，该成绩不予获取。", vbInformation
-        End If
-    Else
-        MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-    End If
-End If
+Exit Sub
+lnError:
+MsgBox Err
+MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
 nPhase = nPhaseSaved
-
-If bRetryLogin Then
-    GoTo lnRetryLogin
-End If
 
 End Sub
 
-Private Sub mnUsersRankList_Click()
+Private Sub mnUsersRankWeek_Click()
+
+'
+
+End Sub
+
+Private Sub mnUsersRankMonth_Click()
+
+'
+
+End Sub
+
+Private Sub mnUsersRankQuarter_Click()
 
 '
 

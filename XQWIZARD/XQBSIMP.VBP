@@ -12,6 +12,7 @@ Module=mdlAdvert; ADVERT.BAS
 Form=XQBOOTH\SELECTS.FRM
 Form=XQBOOTH\LOGINS.FRM
 ResFile32="XQBOOTH.RES"
+Form=XQBOOTH\RANKS.FRM
 IconForm="frmXQBooth"
 Startup="Sub Main"
 HelpFile=""

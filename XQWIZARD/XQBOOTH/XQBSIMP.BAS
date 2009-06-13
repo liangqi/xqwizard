@@ -1,5 +1,5 @@
 Attribute VB_Name = "mdlXQBooth"
-' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
+' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
 ' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
@@ -75,8 +75,48 @@ Public Login_szPrompt           As String   ' 登录框提示
 Public Login_bCancel            As Boolean  ' 登录是否取消
 Public Login_szUserName         As String   ' 登录用户名
 Public Login_szPassword         As String   ' 登录密码
-Public Login_bRemember          As String   ' 记住密码
+Public Login_bRemember          As Boolean  ' 记住密码
 Public Engine_pipe          As PipeStruct   ' 引擎管道
+
+' 简单字符异或函数
+Public Function SimpleXor(ByVal n As Integer, ByVal i As Integer) As Integer
+
+SimpleXor = n Xor Asc(Mid(STRING_COPYRIGHT, (i - 1) Mod Len(STRING_COPYRIGHT) + 1, 1))
+
+End Function
+
+' 简单加密函数
+Public Function SimpleEncrypt(ByVal szPlain As String) As String
+
+Dim nLen As Integer, i As Integer
+
+nLen = Len(szPlain)
+If nLen = 0 Then
+    SimpleEncrypt = ""
+    Exit Function
+End If
+ReDim szCiphers(0 To nLen - 1) As String
+For i = 1 To nLen
+    szCiphers(i - 1) = LTrim(Str(SimpleXor(Asc(Mid(szPlain, i, 1)), i)))
+Next
+SimpleEncrypt = Join(szCiphers, ",")
+
+End Function
+
+' 简单解密函数
+Public Function SimpleDecrypt(ByVal szCipher As String) As String
+
+Dim szCiphers() As String, szPlain As String, nLen As Integer, i As Integer
+
+szCiphers = Split(szCipher, ",")
+nLen = UBound(szCiphers) + 1
+szPlain = Space(nLen)
+For i = 1 To nLen
+    Mid(szPlain, i, 1) = Chr(SimpleXor(Val(szCiphers(i - 1)), i))
+Next
+SimpleDecrypt = szPlain
+
+End Function
 
 ' 从注册表加载参数
 Public Sub LoadRegs()
@@ -89,6 +129,9 @@ Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX
 Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
+Login_szPassword = SimpleDecrypt(GetSetting("XQBooth", "Gui", "Password", ""))
+Login_bRemember = GetSetting("XQBooth", "Gui", "Remember", "0") <> "0"
 
 End Sub
 
@@ -103,6 +146,9 @@ SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
 SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
+SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
+SaveSetting "XQBooth", "Gui", "Password", SimpleEncrypt(Login_szPassword)
+SaveSetting "XQBooth", "Gui", "Remember", IIf(Login_bRemember, "1", "0")
 
 End Sub
 
@@ -326,6 +372,9 @@ If bLoaded Then
     MsgBox "无法正常卸载引擎！", vbExclamation
 End If
 ' 退出
+If Not Login_bRemember Then
+    Login_szPassword = ""
+End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
 Unload frmHide

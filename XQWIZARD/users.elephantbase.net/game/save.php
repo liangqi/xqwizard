@@ -5,7 +5,7 @@
   $header = getallheaders();
   $username = $header["Login-UserName"];
   $password = $header["Login-Password"];
-  $scores = intval($_POST["scores"]);
+  $score = intval($_POST["score"]);
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
@@ -14,11 +14,11 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($scores > $result["scores"]) {
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET scores = %d WHERE username = '%s'",
-        $scores, mysql_real_escape_string($username));
+  } else if ($score > $result["score"]) {
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE username = '%s'",
+        $score, mysql_real_escape_string($username));
     mysql_query($sql);
-    insertLog($username, EVENT_SAVE, $scores);
+    insertLog($username, EVENT_SAVE, $score);
     header("Login-Result: ok");
     // 分数提交成功，检查是否该运行每日任务
     checkDailyTask();
