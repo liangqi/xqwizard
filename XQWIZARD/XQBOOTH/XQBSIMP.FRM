@@ -845,6 +845,7 @@ Begin VB.Form frmXQBooth
       Caption         =   "用户中心(&U)"
       Begin VB.Menu mnUsersSave 
          Caption         =   "提交成绩(&S)"
+         Shortcut        =   ^S
       End
       Begin VB.Menu mnUsersLoad 
          Caption         =   "获取成绩(&L)"
@@ -852,16 +853,19 @@ Begin VB.Form frmXQBooth
       Begin VB.Menu mnUsersSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnUsersRank 
+      Begin VB.Menu mnUsersRank_ 
          Caption         =   "排名(&R)"
-         Begin VB.Menu mnUsersRankWeek 
+         Begin VB.Menu mnUsersRank 
             Caption         =   "近一周排名(&W)"
+            Index           =   0
          End
-         Begin VB.Menu mnUsersRankMonth 
+         Begin VB.Menu mnUsersRank 
             Caption         =   "近一月排名(&M)"
+            Index           =   1
          End
-         Begin VB.Menu mnUsersRankQuarter 
+         Begin VB.Menu mnUsersRank 
             Caption         =   "近三月排名(&Q)"
+            Index           =   2
          End
       End
       Begin VB.Menu mnUsersHome 
@@ -1019,9 +1023,14 @@ Private Const USERS_SAVE As Integer = 0
 Private Const USERS_LOAD As Integer = 1
 Private Const USERS_RANK As Integer = 2
 
+Private Const RANK_WEEK As Integer = 0
+Private Const RANK_MONTH As Integer = 1
+Private Const RANK_QUARTER As Integer = 2
+
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
 Private nPhaseSaved As Integer, nUsersEvent As Integer
+Private nRankType As String, szRankList As String
 
 Private Function PieceFileName(ByVal nIndex As Integer) As String
 
@@ -1048,12 +1057,14 @@ End Function
 Private Sub PlayWavSound(ByVal szSoundFile As String)
 
 If Gui_bSounds Then
-    PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+    PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, _
+            SND_ASYNC + SND_NOWAIT + SND_FILENAME
 End If
 
 End Sub
 
-Private Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, Optional ByVal bMate As Boolean = False)
+Private Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
+        Optional ByVal bMate As Boolean = False)
 
 Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = pos.ucpcSquares(sq)
@@ -1254,73 +1265,6 @@ End If
 
 End Sub
 
-Private Sub mnGameImport_Click()
-
-Dim szFileName As String, nFileNo As Integer, nLast As Integer, dw As Long
-
-If nPhase = PHASE_BUSY Then
-    Exit Sub
-End If
-szFileName = OpenFileDialog("导入闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*")
-If szFileName = "" Then
-    Exit Sub
-End If
-
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open szFileName For Binary Access Read As #nFileNo
-On Error GoTo 0
-Get #nFileNo, , dw
-Close #nFileNo
-
-nLast = dw \ &H10000
-If ((CLng(nLast) * nLast) And &HFFFF&) <> (dw And &HFFFF&) Or nLast < 0 Or nLast > App_nEndgames Then
-    MsgBox szFileName + " 不是有效的闯关记录文件。", vbExclamation
-    Exit Sub
-End If
-If nLast <= Gui_nLast Then
-    MsgBox "闯关记录中的闯关数比当前闯关数少，不予导入。", vbExclamation
-    Exit Sub
-End If
-Gui_nLast = nLast
-Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
-LoadGame
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法打开文件 " + szFileName, vbExclamation
-
-End Sub
-
-Private Sub mnGameExport_Click()
-
-Dim szFileName As String, nFileNo As Integer, dw As Long
-
-If nPhase = PHASE_BUSY Then
-    Exit Sub
-End If
-szFileName = SaveFileDialog("导出闯关记录", "闯关记录 (*.DAT)|*.DAT|所有文件 (*.*)|*.*", "象棋魔法学校闯关记录 - 第" + Str(Gui_nLast + 1) + " 关.DAT", "DAT")
-If szFileName = "" Then
-    Exit Sub
-End If
-dw = ((CLng(Gui_nLast) * Gui_nLast) And &HFFFF&) + (Gui_nLast * &H10000)
-
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open szFileName For Binary Access Write As #nFileNo
-On Error GoTo 0
-Put #nFileNo, , dw
-Close #nFileNo
-MsgBox "闯关记录导出成功。", vbInformation
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法保存文件 " + szFileName, vbExclamation
-
-End Sub
-
 Private Sub mnGameExit_Click()
 
 If nPhase <> PHASE_BUSY Then
@@ -1331,15 +1275,13 @@ End Sub
 
 Private Sub inet_StateChanged(ByVal nState As Integer)
 
-Dim szResult As String, nLast As Integer
+Dim szResult As String, nLast As Integer, szRanks() As String
 
-Select Case nState
-Case icError
+If nStatus = icError Then
     nPhase = nPhaseSaved
     Exit Sub
-Case icResponseCompleted
-    ' 执行下一个 Select Case
-Case Else
+End If
+If nStatus <> icResponseCompleted Then
     Exit Sub
 End Select
 
@@ -1377,6 +1319,31 @@ Case USERS_LOAD
         MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
     Case Else
         If (Left(szResult, 3) = "ok ") Then
+            szRanks = Split(Mid(szResult, 3), "|")
+            If UBound(szRanks) = 1 Then
+                
+            Else
+                MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+            End If
+        Else
+            MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+        End If
+    End Select
+
+Case USERS_RANK
+    ' 请求“排名”，获取响应
+    szResult = inet.GetHeader("Login-Result")
+    Select Case szResult
+    Case "error"
+        MsgBox "用户名或密码不正确。", vbExclamation
+        nPhase = nPhaseSaved
+        mnUsersRank_Click nRankType
+        Exit Sub
+    Case "noretry"
+        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            
             nLast = Str2Int(Mid(szResult, 3), 0, App_nEndgames)
             If nLast > Gui_nLast Then
                 Gui_nLast = nLast
@@ -1390,10 +1357,6 @@ Case USERS_LOAD
             MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
         End If
     End Select
-
-Case USERS_RANK
-    ' 请求“排名”，获取响应
-
 End Select
 nPhase = nPhaseSaved
 
@@ -1460,27 +1423,50 @@ nPhase = nPhaseSaved
 
 End Sub
 
-Private Sub mnUsersRankWeek_Click()
+Private Sub mnUsersRank_Click(nIndex As Integer)
 
-'
+Dim szRankType As String
+nRankType = nIndex
+szRankType = Choose(nRankType + 1, "w", "m", "q")
 
-End Sub
+Login_szTitle = "查询近" + Choose(nRankType + 1, "一周", "一个月", "三个月") + "排名"
+Login_szPrompt = ""
+frmLogin.Show vbModal, Me
+If Login_bCancel Then
+    Exit Sub
+End If
 
-Private Sub mnUsersRankMonth_Click()
+nPhaseSaved = nPhase
+nPhase = PHASE_BUSY
+szRankList = ""
+On Error Resume Next
+szRankList = inet.OpenURL("http://users.elephantbase.net/game/ranklist.php?type=" + szRankType)
+On Error GoTo 0
+If szRankList = "" Then
+    MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+    nPhase = nPhaseSaved
+    Exit Sub
+End If
 
-'
+nUsersEvent = USERS_RANK
+On Error GoTo lnError
+inet.Execute "http://users.elephantbase.net/game/rank.php?type=" + szRankType, "GET", "", _
+        "Login-UserName: " + Login_szUserName + vbCrLf + _
+        "Login-Password: " + Login_szPassword + vbCrLf
+On Error GoTo 0
 
-End Sub
-
-Private Sub mnUsersRankQuarter_Click()
-
-'
+Exit Sub
+lnError:
+MsgBox Err
+MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+nPhase = nPhaseSaved
 
 End Sub
 
 Private Sub mnUsersHome_Click()
 
-ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -1502,7 +1488,8 @@ End Sub
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_S\" + Choose(nIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
+sz = App_szPath + "IMAGES_S\" + Choose(nIndex + 1, _
+        "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
 On Error Resume Next
 For i = 0 To 31
     frmHide.imgPieces(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
@@ -1549,7 +1536,8 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
+        STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
 
 End Sub
 

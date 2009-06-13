@@ -100,6 +100,7 @@ For i = 1 To nLen
     szCiphers(i - 1) = LTrim(Str(SimpleXor(Asc(Mid(szPlain, i, 1)), i)))
 Next
 SimpleEncrypt = Join(szCiphers, ",")
+Erase szCiphers
 
 End Function
 

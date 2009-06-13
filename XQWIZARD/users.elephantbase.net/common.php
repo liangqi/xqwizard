@@ -41,7 +41,7 @@
           "WHERE username = '%s'", getRemoteAddr(), time(), mysql_real_escape_string($username));
       mysql_query($sql);
       return array("usertype"=>$line["usertype"], "email"=>$line["email"],
-          "scores"=>$line["scores"], "points"=>$line["points"]);
+          "score"=>$line["score"], "points"=>$line["points"]);
     }
     // 如果重试次数小于5次，则返回“登录失败”
     if ($line["retrycount"] < 5) {
@@ -126,7 +126,7 @@
           $nextTime = nextDailyTime($currTime, -14400);
           $lastTime = $nextTime - 86400;
           // 更新记录的同时解锁，防止runPhpTask时程序崩溃，也保证了之后加锁的线程得到新的数据
-          $sql = sprintf("UPDATE {$mysql_tablepre}task SET lasttime = %d, nexttime = %d, tasklock = 0" .
+          $sql = sprintf("UPDATE {$mysql_tablepre}task SET lasttime = %d, nexttime = %d, tasklock = 0 " .
               "WHERE taskname = 'dailytask'", $lastTime, $nextTime);
           mysql_query($sql);
           // 备份数据

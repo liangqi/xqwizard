@@ -13,8 +13,7 @@
 
   // 备份用户表(增量)
   $gz = gzopen("../backup/user_" . date("Ymd", $lastTime) . "_" . rand() . ".sql.gz", "w");
-  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE lasttime >= %d AND lasttime < %d",
-      $lastTime2, $lastTime);
+  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE lasttime >= %d", $lastTime2);
   $result = mysql_query($sql);
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("REPLACE INTO {$mysql_tablepre}user (username, usertype, password, email, " .
