@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
+' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,12 +22,13 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "3.97"
+Public Const STRING_VERSION     As String = "4.0"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
+Public Const MAX_ENDGAMES2      As Integer = 4096 ' 残局的最大条目数(象棋魔法学校)
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -162,7 +163,10 @@ Public App_bRedTurn             As Boolean  ' 红黑轮流标志
 Public App_bPromotion           As Boolean  ' 是否允许升变
 Public App_bPrevInstance        As Boolean  ' 是否再一次启动
 Public App_nEndgames            As Integer  ' 读入的残局数量
-Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 读入的残局
+Public App_nEndgames2           As Integer  ' 读入的残局数量(象棋魔法学校)
+Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Currency ' 读入的残局校验码(象棋魔法学校)
+Public App_dwEndgames21(0 To MAX_ENDGAMES2 - 1) As Currency ' 读入的残局校验码(象棋魔法学校)
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -2869,6 +2873,32 @@ End If
 
 End Sub
 
+' 加载象棋魔法学校里的局面
+Public Sub LoadEndgames2()
+
+Dim nFileNo As Integer, i As Integer, sz As String
+Dim posEndgame As PositionStruct
+
+App_nEndgames2 = 0
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + "ENDGAMES\BOOTH.EPD" For Input As #nFileNo
+On Error GoTo 0
+Do While App_nEndgames2 < MAX_ENDGAMES2 And Not EOF(nFileNo)
+    Line Input #nFileNo, sz
+    CchessFen2Board posEndgame, sz
+    App_dwEndgames20(App_nEndgames2) = posEndgame.dwZobristLock0
+    App_dwEndgames21(App_nEndgames2) = posEndgame.dwZobristLock1
+    App_nEndgames2 = App_nEndgames2 + 1
+Loop
+Close #nFileNo
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+
+End Sub
+
 ' 以下是主函数例程
 
 Public Sub Main()
@@ -2984,6 +3014,8 @@ End If
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
+' 加载象棋魔法学校里的局面
+LoadEndgames2
 ' 显示并调整主窗口
 If Not App_bPrevInstance Then
     App_frmMain.Left = Gui_nLeft

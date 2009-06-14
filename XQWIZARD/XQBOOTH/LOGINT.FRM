@@ -6,7 +6,7 @@ Begin VB.Form frmLogin
    ClientTop       =   330
    ClientWidth     =   3240
    BeginProperty Font 
-      Name            =   "宋体"
+      Name            =   "Ш蔨"
       Size            =   9
       Charset         =   0
       Weight          =   400
@@ -14,7 +14,7 @@ Begin VB.Form frmLogin
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "LOGINS.frx":0000
+   Icon            =   "LOGINT.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   1920
@@ -23,7 +23,7 @@ Begin VB.Form frmLogin
    StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
-      Caption         =   "取消"
+      Caption         =   ""
       Height          =   375
       Left            =   1800
       TabIndex        =   9
@@ -31,7 +31,7 @@ Begin VB.Form frmLogin
       Width           =   855
    End
    Begin VB.CommandButton btnOK 
-      Caption         =   "确定"
+      Caption         =   "谔﹚"
       Default         =   -1  'True
       Height          =   375
       Left            =   600
@@ -40,7 +40,7 @@ Begin VB.Form frmLogin
       Width           =   855
    End
    Begin VB.CheckBox chkRemember 
-      Caption         =   "记住密码"
+      Caption         =   "癘盞絏"
       Height          =   255
       Left            =   840
       TabIndex        =   7
@@ -64,9 +64,9 @@ Begin VB.Form frmLogin
       Width           =   1335
    End
    Begin VB.Label lblRegister 
-      Caption         =   "立即注册"
+      Caption         =   "ミ猔"
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "Ш蔨"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -77,14 +77,14 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINS.frx":000C
+      MouseIcon       =   "LOGINT.frx":000C
       MousePointer    =   99  'Custom
       TabIndex        =   3
       Top             =   120
       Width           =   735
    End
    Begin VB.Label lblUserName 
-      Caption         =   "用户名："
+      Caption         =   "ノめ"
       Height          =   255
       Left            =   120
       TabIndex        =   1
@@ -100,9 +100,9 @@ Begin VB.Form frmLogin
       Width           =   3255
    End
    Begin VB.Label lblGetPassword 
-      Caption         =   "找回密码"
+      Caption         =   "т盞絏"
       BeginProperty Font 
-         Name            =   "宋体"
+         Name            =   "Ш蔨"
          Size            =   9
          Charset         =   0
          Weight          =   400
@@ -113,14 +113,14 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINS.frx":015E
+      MouseIcon       =   "LOGINT.frx":015E
       MousePointer    =   99  'Custom
       TabIndex        =   6
       Top             =   480
       Width           =   735
    End
    Begin VB.Label lblPassword 
-      Caption         =   "　密码："
+      Caption         =   "盞絏"
       Height          =   255
       Left            =   120
       TabIndex        =   4
@@ -183,7 +183,7 @@ End Sub
 Private Sub btnOK_Click()
 
 If Len(txtUserName.Text) = 0 Or Len(txtPassword.Text) = 0 Then
-    MsgBox "用户名和密码不能为空", vbExclamation
+    MsgBox "用戶名和密碼不能為空", vbExclamation
     Exit Sub
 End If
 Login_bCancel = False

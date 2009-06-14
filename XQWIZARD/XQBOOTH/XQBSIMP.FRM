@@ -28,6 +28,7 @@ Begin VB.Form frmXQBooth
       _ExtentX        =   1005
       _ExtentY        =   1005
       _Version        =   393216
+      RequestTimeout  =   10
    End
    Begin VB.CommandButton btnNext 
       Caption         =   "обр╩╧ь"
@@ -1418,6 +1419,7 @@ On Error GoTo 0
 
 Exit Sub
 lnError:
+On Error GoTo 0
 ConnError
 LeaveBusy
 
@@ -1446,6 +1448,7 @@ On Error GoTo 0
 
 Exit Sub
 lnError:
+On Error GoTo 0
 MsgBox Err
 ConnError
 LeaveBusy
@@ -1485,6 +1488,7 @@ On Error GoTo 0
 
 Exit Sub
 lnError:
+On Error GoTo 0
 ConnError
 LeaveBusy
 
