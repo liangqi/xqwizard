@@ -53,6 +53,10 @@ Public Const PIECES_MOVESKY     As Integer = 4
 Public Const PIECES_MRSJ        As Integer = 5
 Public Const PIECES_ZMBL        As Integer = 6
 Public Const PIECES_MAX         As Integer = 7
+' 全局常量——排名类型
+Public Const RANK_WEEK          As Integer = 0
+Public Const RANK_MONTH         As Integer = 1
+Public Const RANK_QUARTER       As Integer = 2
 
 ' 全局变量
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
@@ -76,6 +80,11 @@ Public Login_bCancel            As Boolean  ' 登录是否取消
 Public Login_szUserName         As String   ' 登录用户名
 Public Login_szPassword         As String   ' 登录密码
 Public Login_bRemember          As Boolean  ' 记住密码
+Public Rank_nType               As Integer  ' 排名类型
+Public Rank_nScore              As Integer  ' 排名成绩
+Public Rank_nToday              As Long     ' 今日排名
+Public Rank_nYesterday          As Long     ' 昨日排名
+Public Rank_szList              As String   ' 排名列表
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
 ' 简单字符异或函数

@@ -27,7 +27,7 @@
     if ($type == "w" || $type == "m" || $type == "q") {
       $rank = getRank($type, $username);
       $rankYesterday = $rank > 0 ? getRank($type . "0", $username) : 0;
-      header("Login-Result: ok " . $rank . "|" . $rankYesterday);
+      header("Login-Result: ok " . $result["score"] . "|" . $rank . "|" . $rankYesterday);
     }
   }
   mysql_close();

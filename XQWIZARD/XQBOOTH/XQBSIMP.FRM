@@ -1012,6 +1012,8 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private Const BASE_URL As String = "http://users.elephantbase.net/game/"
+
 Private Const DRAW_SELECTED As Boolean = True
 Private Const DRAW_MATE As Boolean = True
 
@@ -1023,14 +1025,9 @@ Private Const USERS_SAVE As Integer = 0
 Private Const USERS_LOAD As Integer = 1
 Private Const USERS_RANK As Integer = 2
 
-Private Const RANK_WEEK As Integer = 0
-Private Const RANK_MONTH As Integer = 1
-Private Const RANK_QUARTER As Integer = 2
-
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
 Private nPhaseSaved As Integer, nUsersEvent As Integer
-Private nRankType As String, szRankList As String
 
 Private Function PieceFileName(ByVal nIndex As Integer) As String
 
@@ -1273,77 +1270,85 @@ End If
 
 End Sub
 
+Private Sub EnterBusy()
+
+nPhaseSaved = nPhase
+nPhase = PHASE_BUSY
+MousePointer = vbHourglass
+
+End Sub
+
+Private Sub LeaveBusy()
+
+nPhase = nPhaseSaved
+MousePointer = vbDefault
+
+End Sub
+
+Private Sub ConnError()
+
+MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+
+End Sub
+
+Private Sub NoRetryError()
+
+MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+
+End Sub
+
+Private Sub LoginError()
+
+MsgBox "用户名或密码不正确。", vbExclamation
+
+End Sub
+
 Private Sub inet_StateChanged(ByVal nState As Integer)
 
 Dim szResult As String, nLast As Integer, szRanks() As String
 
-If nStatus = icError Then
-    nPhase = nPhaseSaved
+If nState = icError Then
+    ConnError
+    LeaveBusy
     Exit Sub
 End If
-If nStatus <> icResponseCompleted Then
+If nState <> icResponseCompleted Then
     Exit Sub
-End Select
+End If
 
+szResult = inet.GetHeader("Login-Result")
 Select Case nUsersEvent
 
 Case USERS_SAVE
     ' 请求“提交”，处理响应
-    szResult = inet.GetHeader("Login-Result")
     Select Case szResult
     Case "ok"
         MsgBox "成绩提交成功。", vbInformation
     Case "nosave"
         MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
     Case "error"
-        MsgBox "用户名或密码不正确。", vbExclamation
-        nPhase = nPhaseSaved
+        LoginError
+        LeaveBusy
         mnUsersSave_Click
         Exit Sub
     Case "noretry"
-        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+        NoRetryError
     Case Else
-        MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+        ConnError
     End Select
 
 Case USERS_LOAD
     ' 请求“获取”，处理响应
-    szResult = inet.GetHeader("Login-Result")
     Select Case szResult
     Case "error"
-        MsgBox "用户名或密码不正确。", vbExclamation
-        nPhase = nPhaseSaved
+        LoginError
+        LeaveBusy
         mnUsersLoad_Click
         Exit Sub
     Case "noretry"
-        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+        NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            szRanks = Split(Mid(szResult, 3), "|")
-            If UBound(szRanks) = 1 Then
-                
-            Else
-                MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-            End If
-        Else
-            MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-        End If
-    End Select
-
-Case USERS_RANK
-    ' 请求“排名”，获取响应
-    szResult = inet.GetHeader("Login-Result")
-    Select Case szResult
-    Case "error"
-        MsgBox "用户名或密码不正确。", vbExclamation
-        nPhase = nPhaseSaved
-        mnUsersRank_Click nRankType
-        Exit Sub
-    Case "noretry"
-        MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
-    Case Else
-        If (Left(szResult, 3) = "ok ") Then
-            
             nLast = Str2Int(Mid(szResult, 3), 0, App_nEndgames)
             If nLast > Gui_nLast Then
                 Gui_nLast = nLast
@@ -1354,11 +1359,37 @@ Case USERS_RANK
                 MsgBox "您原先提交的成绩不如当前成绩，原先成绩不予获取。", vbInformation
             End If
         Else
-            MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+            ConnError
+        End If
+    End Select
+
+Case USERS_RANK
+    ' 请求“排名”，获取响应
+    Select Case szResult
+    Case "error"
+        LoginError
+        LeaveBusy
+        mnUsersRank_Click Rank_nType
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            szRanks = Split(Mid(szResult, 3), "|")
+            If UBound(szRanks) = 2 Then
+                Rank_nScore = Str2Int(szRanks(0), 0, App_nEndgames)
+                Rank_nToday = Str2Lng(szRanks(1))
+                Rank_nYesterday = Str2Lng(szRanks(2))
+                frmRank.Show vbModal, Me
+            Else
+                ConnError
+            End If
+        Else
+            ConnError
         End If
     End Select
 End Select
-nPhase = nPhaseSaved
+LeaveBusy
 
 End Sub
 
@@ -1375,11 +1406,10 @@ If Login_bCancel Then
     Exit Sub
 End If
 
-nPhaseSaved = nPhase
-nPhase = PHASE_BUSY
+EnterBusy
 nUsersEvent = USERS_SAVE
 On Error GoTo lnError
-inet.Execute "http://users.elephantbase.net/game/save.php", _
+inet.Execute BASE_URL + "save.php", _
         "POST", "score=" + LTrim(Str(Gui_nLast)), _
         "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
         "Login-UserName: " + Login_szUserName + vbCrLf + _
@@ -1388,8 +1418,8 @@ On Error GoTo 0
 
 Exit Sub
 lnError:
-MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-nPhase = nPhaseSaved
+ConnError
+LeaveBusy
 
 End Sub
 
@@ -1406,11 +1436,10 @@ If Login_bCancel Then
     Exit Sub
 End If
 
-nPhaseSaved = nPhase
-nPhase = PHASE_BUSY
+EnterBusy
 nUsersEvent = USERS_LOAD
 On Error GoTo lnError
-inet.Execute "http://users.elephantbase.net/game/load.php", "GET", "", _
+inet.Execute BASE_URL + "queryscore.php", "GET", "", _
         "Login-UserName: " + Login_szUserName + vbCrLf + _
         "Login-Password: " + Login_szPassword + vbCrLf
 On Error GoTo 0
@@ -1418,48 +1447,46 @@ On Error GoTo 0
 Exit Sub
 lnError:
 MsgBox Err
-MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-nPhase = nPhaseSaved
+ConnError
+LeaveBusy
 
 End Sub
 
 Private Sub mnUsersRank_Click(nIndex As Integer)
 
 Dim szRankType As String
-nRankType = nIndex
-szRankType = Choose(nRankType + 1, "w", "m", "q")
+Rank_nType = nIndex
+szRankType = Choose(Rank_nType + 1, "w", "m", "q")
 
-Login_szTitle = "查询近" + Choose(nRankType + 1, "一周", "一个月", "三个月") + "排名"
+Login_szTitle = "查询近" + Choose(Rank_nType + 1, "一周", "一个月", "三个月") + "排名"
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
     Exit Sub
 End If
 
-nPhaseSaved = nPhase
-nPhase = PHASE_BUSY
-szRankList = ""
+EnterBusy
+Rank_szList = ""
 On Error Resume Next
-szRankList = inet.OpenURL("http://users.elephantbase.net/game/ranklist.php?type=" + szRankType)
+Rank_szList = inet.OpenURL(BASE_URL + "ranklist.php?type=" + szRankType)
 On Error GoTo 0
-If szRankList = "" Then
-    MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-    nPhase = nPhaseSaved
+If Rank_szList = "" Then
+    ConnError
+    LeaveBusy
     Exit Sub
 End If
 
 nUsersEvent = USERS_RANK
 On Error GoTo lnError
-inet.Execute "http://users.elephantbase.net/game/rank.php?type=" + szRankType, "GET", "", _
+inet.Execute BASE_URL + "queryrank.php?type=" + szRankType, "GET", "", _
         "Login-UserName: " + Login_szUserName + vbCrLf + _
         "Login-Password: " + Login_szPassword + vbCrLf
 On Error GoTo 0
 
 Exit Sub
 lnError:
-MsgBox Err
-MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
-nPhase = nPhaseSaved
+ConnError
+LeaveBusy
 
 End Sub
 
