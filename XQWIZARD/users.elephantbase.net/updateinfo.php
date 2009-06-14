@@ -18,6 +18,7 @@
     insertLog($username, EVENT_EMAIL);
     $info = info("Email更新成功");
     $_SESSION["userdata"]["info"] = $info;
+    $_SESSION["userdata"]["email"] = $email;
     header("Location: info.php");
   } else {
     // 更新Email和密码
@@ -36,6 +37,7 @@
               mysql_real_escape_string($username));
           mysql_query($sql);
           insertLog($username, EVENT_PASSWORD);
+          $_SESSION["userdata"]["email"] = $email;
         } else {
           $info = warn("两遍密码不一致");
         }

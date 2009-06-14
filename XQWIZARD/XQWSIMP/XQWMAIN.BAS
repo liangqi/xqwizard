@@ -27,7 +27,7 @@ Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
-Public Const MAX_ENDGAMES       As Integer = 1000 ' 残局的最大条目数
+Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
 Public Const MAX_ENDGAMES2      As Integer = 4096 ' 残局的最大条目数(象棋魔法学校)
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
@@ -165,8 +165,10 @@ Public App_bPrevInstance        As Boolean  ' 是否再一次启动
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 读入的残局
 Public App_nEndgames2           As Integer  ' 读入的残局数量(象棋魔法学校)
-Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Currency ' 读入的残局校验码(象棋魔法学校)
-Public App_dwEndgames21(0 To MAX_ENDGAMES2 - 1) As Currency ' 读入的残局校验码(象棋魔法学校)
+Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Long ' 读入的残局校验码(象棋魔法学校)
+Public App_dwEndgames21(0 To MAX_ENDGAMES2 - 1) As Long
+Public App_dwEndgames22(0 To MAX_ENDGAMES2 - 1) As Long
+Public App_dwEndgames23(0 To MAX_ENDGAMES2 - 1) As Long
 ' 全局变量——选项
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
@@ -1714,7 +1716,27 @@ Dim i As Integer, nIrrevMove As Integer, bSlaveEngine As Boolean
 Dim nTimeRatio As Long, nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
+
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
+' 如果要计算的局面是象棋魔法学校中的局面，则不予计算
+For i = 0 To App_nEndgames2 - 1
+    If Engine_posBoard.dwZobristLock0 = App_dwEndgames20(i) Then
+        If Engine_posBoard.dwZobristLock1 = App_dwEndgames21(i) Then
+            Exit For
+        End If
+    End If
+    If Engine_posBoard.dwZobristLock0 = App_dwEndgames22(i) Then
+        If Engine_posBoard.dwZobristLock1 = App_dwEndgames23(i) Then
+            Exit For
+        End If
+    End If
+Next
+If i < App_nEndgames2 Then
+    MsgBox "这是象棋魔法学校中的局面，请独立思考，不要依赖象棋巫师。", vbExclamation
+    Engine_nStatus = IDLE_REST
+    Exit Sub
+End If
+
 Engine_dwTime = Timer
 Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
 Engine_nDepth = 0
@@ -2838,7 +2860,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php")
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2850,12 +2872,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
@@ -2889,6 +2911,9 @@ Do While App_nEndgames2 < MAX_ENDGAMES2 And Not EOF(nFileNo)
     CchessFen2Board posEndgame, sz
     App_dwEndgames20(App_nEndgames2) = posEndgame.dwZobristLock0
     App_dwEndgames21(App_nEndgames2) = posEndgame.dwZobristLock1
+    CchessBoardMirror posEndgame
+    App_dwEndgames22(App_nEndgames2) = posEndgame.dwZobristLock0
+    App_dwEndgames23(App_nEndgames2) = posEndgame.dwZobristLock1
     App_nEndgames2 = App_nEndgames2 + 1
 Loop
 Close #nFileNo

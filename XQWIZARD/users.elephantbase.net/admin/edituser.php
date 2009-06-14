@@ -219,14 +219,43 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td background="../images/headerbg.gif"><p
-                align="left"><strong>重置密码</strong></p>
+                align="left"><strong>重置密码<script
+                language="JavaScript"><!--
+function sendmail() {
+  var username = "<?php echo $username; ?>";
+  var email = "<?php echo $email; ?>";
+  var arrBody = [];
+  arrBody.push(username + "，您好！");
+  arrBody.push("");
+  arrBody.push("　　您的密码已被重置为：" + frmReset.password.value);
+  arrBody.push("　　请用此密码登录到象棋巫师用户中心：");
+  arrBody.push("　　　　http://users.elephantbase.net/login.htm");
+  arrBody.push("　　登录成功后请马上把密码改掉。");
+  arrBody.push("");
+  arrBody.push("　　感谢您使用象棋巫师。");
+  arrBody.push("");
+  arrBody.push("象棋巫师用户中心");
+  location.href = "mailto:webmaster@elephantbase.net?subject=重置密码 - 来自象棋巫师用户中心&body=" + arrBody.join("%0D%0A");
+}
+// --></script></strong></p>
                 </td>
             </tr>
             <tr>
                 <td align="center"><form method="POST"
                 id="frmReset">
-                    <p><font size="2">重置密码：<input
-                    type="text" size="20" name="password"></font></p>
+                    <table border="0">
+                        <tr>
+                            <td><font size="2">重置密码：</font></td>
+                            <td><font size="2"><input type="text"
+                            size="20" name="password"
+                            id="password"></font></td>
+                        </tr>
+                        <tr>
+                            <td>　</td>
+                            <td><a href="#" onclick="sendmail()"><font
+                            size="2">给用户发送Email</font></a></td>
+                        </tr>
+                    </table>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
