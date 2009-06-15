@@ -9,6 +9,11 @@
     return "<font size=\"2\" color=\"red\">" . htmlentities($msg, ENT_COMPAT, "GB2312") . "</font>";
   }
 
+  // 用JavaScript输出HTML
+  function jsWrite($html) {
+    echo "document.write(\"{$html}\");\r\n";
+  }
+
   // 获得客户端IP地址
   function getRemoteAddr() {
     if (isset($_SERVER["HTTP_CLIENT_IP"])) {
