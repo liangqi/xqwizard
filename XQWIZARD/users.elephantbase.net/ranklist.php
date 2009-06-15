@@ -13,8 +13,9 @@
     $result = mysql_query("SELECT username, score, rank FROM {$mysql_tablepre}rank{$type} " .
         "ORDER BY rank LIMIT 10");
     while ($line = mysql_fetch_assoc($result)) {
+      $score = $line["score"];
       jsWrite("<tr><td>" . $line["rank"] . "</td><td>" . $line["username"] .
-            "</td><td>" . $line["score"] . "</td></tr>");
+            "</td><td>" . ($score < 1000 ? $score : "δ֪") . "</td></tr>");
     }
     jsWrite("</table>");
   }

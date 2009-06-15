@@ -481,14 +481,20 @@ End Sub
 
 Private Sub vs_Change()
 
-Dim i As Integer, nRank As Integer, nColor As Long
+Dim i As Integer, j As Integer, nScore As Integer, nRank As Integer, nColor As Long
 For i = 0 To 9
     nRank = i + vs.Value
     If nRank < nLastRank Then
         lblRank(i).Caption = i + vs.Value + 1
-        lblUserName(i).Caption = szRankList(nRank)
-        lblScore(i).Caption = IIf(szRankList(nRank) = Login_szUserName, Rank_nScore, "δ֪")
-        nColor = IIf(szRankList(nRank) = Login_szUserName, vbBlue, vbButtonText)
+        j = InStr(szRankList(nRank), "|")
+        lblUserName(i).Caption = Mid(szRankList(nRank), j + 1)
+        nScore = Str2Int(szRankList(nRank), 0, App_nEndgames)
+        If nScore < 1000 Or nScore < Rank_nScore + 100 Then
+            lblScore(i).Caption = nScore
+        Else
+            lblScore(i).Caption = "δ֪"
+        End If
+        nColor = IIf(lblUserName(i).Caption = Login_szUserName, vbBlue, vbButtonText)
         lblRank(i).ForeColor = nColor
         lblUserName(i).ForeColor = nColor
         lblScore(i).ForeColor = nColor
