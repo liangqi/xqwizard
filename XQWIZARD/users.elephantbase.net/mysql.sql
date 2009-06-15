@@ -14,8 +14,15 @@ CREATE TABLE tb_user (
 	KEY (lasttime),
 	KEY (score));
 
+CREATE TABLE tb_recent (
+	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	savetime INTEGER NOT NULL,
+	score VARCHAR(16) NOT NULL,
+	KEY (savetime));
+
 CREATE TABLE tb_rankw (
 	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	score INTEGER NOT NULL DEFAULT 0,
 	rank INTEGER NOT NULL AUTO_INCREMENT,
 	KEY (rank));
 
@@ -26,6 +33,7 @@ CREATE TABLE tb_rankw0 (
 
 CREATE TABLE tb_rankm (
 	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	score INTEGER NOT NULL DEFAULT 0,
 	rank INTEGER NOT NULL AUTO_INCREMENT,
 	KEY (rank));
 
@@ -36,6 +44,7 @@ CREATE TABLE tb_rankm0 (
 
 CREATE TABLE tb_rankq (
 	username VARCHAR(64) NOT NULL PRIMARY KEY,
+	score INTEGER NOT NULL DEFAULT 0,
 	rank INTEGER NOT NULL AUTO_INCREMENT,
 	KEY (rank));
 

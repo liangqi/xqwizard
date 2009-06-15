@@ -13,8 +13,8 @@
   $sqlTruncate = "TRUNCATE TABLE {$mysql_tablepre}rank%s";
   $sqlInsert1 = "INSERT INTO {$mysql_tablepre}rank%s (username, rank)" .
       "SELECT username, rank FROM {$mysql_tablepre}rank%s";
-  $sqlInsert2 = "INSERT INTO {$mysql_tablepre}rank%s (username) " .
-      "SELECT username FROM {$mysql_tablepre}user " .
+  $sqlInsert2 = "INSERT INTO {$mysql_tablepre}rank%s (username, score) " .
+      "SELECT username, score FROM {$mysql_tablepre}user " .
       "WHERE lasttime > %d ORDER BY score DESC";
 
   mysql_query(sprintf($sqlTruncate, "w0"));

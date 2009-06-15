@@ -127,7 +127,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button16 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosAnalyze"
-            Object.ToolTipText     =   "分析局面"
+            Object.ToolTipText     =   "在新窗口中推演"
          EndProperty
          BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "PosEdit"
@@ -160,7 +160,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
-            Object.ToolTipText     =   "立即开始"
+            Object.ToolTipText     =   "挑战 - 立即开始"
          EndProperty
          BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
@@ -1501,7 +1501,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnPosAnalyze 
-         Caption         =   "分析局面(&A)"
+         Caption         =   "在新窗口中推演(&A)"
       End
       Begin VB.Menu mnPosEdit 
          Caption         =   "编辑局面(&E)..."

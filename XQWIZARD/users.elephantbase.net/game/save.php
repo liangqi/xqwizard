@@ -20,7 +20,19 @@
     mysql_query($sql);
     insertLog($username, EVENT_SAVE, $score);
     header("Login-Result: ok");
-    // 分数提交成功，检查是否该运行每日任务
+    // 更新最近提交列表
+    $sql = sprintf("REPLACE INTO {$mysql_tablepre}recent (username, savetime, score) " .
+        "VALUES ('%s', %d, %d)", mysql_real_escape_string($username), time(), $score);
+    mysql_query($sql);
+    $result = mysql_query("SELECT COUNT(*) FROM {$mysql_tablepre}recent");
+    $line = mysql_fetch_assoc($result);
+    $count = $line["COUNT(*)"];
+    if ($count > 100) {
+      $sql = sprintf("DELETE FROM {$mysql_tablepre}recent ORDER BY savetime " .
+          "LIMIT %d", $count - 100);
+      mysql_query($sql);
+    }
+    // 检查是否该运行每日任务
     checkDailyTask();
   } else {
     header("Login-Result: nosave");

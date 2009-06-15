@@ -2,15 +2,6 @@
   require_once "../mysql_conf.php";
   require_once "../common.php";
 
-  function getRank($suffix, $username) {
-    global $mysql_tablepre;
-    $sql = sprintf("SELECT rank FROM {$mysql_tablepre}rank{$suffix} " .
-        "WHERE username = '%s'", mysql_real_escape_string($username));
-    $result = mysql_query($sql);
-    $line = mysql_fetch_assoc($result);
-    return $line ? ($line["rank"] ? $line["rank"] : 0) : 0;
-  }
-
   $header = getallheaders();
   $username = $header["Login-UserName"];
   $password = $header["Login-Password"];
@@ -25,9 +16,22 @@
     header("Login-Result: noretry");
   } else {
     if ($type == "w" || $type == "m" || $type == "q") {
-      $rank = getRank($type, $username);
       $rankYesterday = $rank > 0 ? getRank($type . "0", $username) : 0;
-      header("Login-Result: ok " . $result["score"] . "|" . $rank . "|" . $rankYesterday);
+      $sql = sprintf("SELECT rank, score FROM {$mysql_tablepre}rank{$type} " .
+          "WHERE username = '%s'", mysql_real_escape_string($username));
+      $result = mysql_query($sql);
+      $line = mysql_fetch_assoc($result);
+      $rank = $line["rank"];
+      $score = $line["score"];
+      $rankYesterday = 0;
+      if ($rank > 0) {
+        $sql = sprintf("SELECT rank FROM {$mysql_tablepre}rank{$type}0 " .
+            "WHERE username = '%s'", mysql_real_escape_string($username));
+        $result = mysql_query($sql);
+        $line = mysql_fetch_assoc($result);
+        $rankYesterday = $line["rank"];
+      }
+      header("Login-Result: ok " . $score . "|" . $rank . "|" . $rankYesterday);
     }
   }
   mysql_close();
