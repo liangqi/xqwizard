@@ -24,7 +24,9 @@ bottommargin="0" rightmargin="0">
                             <tr>
                                 <td nowrap><img
                                 src="../images/wizard.jpg"
-                                width="64" height="64"><font
+                                width="64" height="64"><!--webbot
+                                bot="HTMLMarkup" startspan -->&nbsp;<!--webbot
+                                bot="HTMLMarkup" endspan --><font
                                 color="#FFFFFF" size="6"
                                 face="黑体">象棋巫师用户中心</font></td>
                             </tr>
@@ -61,20 +63,29 @@ bottommargin="0" rightmargin="0">
         </table>
         <table border="0" cellpadding="4" width="100%">
             <tr>
-                <td background="../images/headerbg.gif"><script
-                language="JavaScript"><!--
-function clearLog() {
-  if (confirm("确认日志已经成功导出了吗？")) {
-    location.href = "clear_log.php";
-  }
-}
-// --></script><font size="3"><strong>查询用户</strong></font></td>
+                <td background="../images/headerbg.gif"><font
+                size="3"><strong>精确查找</strong></font></td>
+            </tr>
+            <tr>
+                <td align="center"><form action="edituser.php"
+                method="GET" target="_blank">
+                    <p><font size="2">用户名：<input
+                    type="text" size="20" name="username"
+                    id="username"></font></p>
+                    <p><input type="submit" value="提交"></p>
+                </form>
+                </td>
+            </tr>
+            <tr>
+                <td background="../images/headerbg.gif"><font
+                size="3"><strong>模糊查找</strong></font></td>
             </tr>
             <tr>
                 <td align="center"><form action="userlist.php"
                 method="POST" target="_blank">
                     <p><font size="2">用户名：<input
-                    type="text" size="20" name="username"></font></p>
+                    type="text" size="20" name="username"
+                    id="username"></font></p>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
@@ -114,12 +125,12 @@ function clearLog() {
             </tr>
             <tr>
                 <td background="../images/headerbg.gif"><p
-                align="left"><strong>导出数据</strong></p>
+                align="left"><strong>导出用户数据</strong></p>
                 </td>
             </tr>
             <tr>
                 <td><p align="center"><a href="backupuser.php"><font
-                size="2">导出数据</font></a></p>
+                size="2">导出用户数据</font></a></p>
                 </td>
             </tr>
             <tr>

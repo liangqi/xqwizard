@@ -9,13 +9,19 @@
 
   if ($type == "w" || $type == "m" || $type == "q") {
     jsWrite("<table>");
-    jsWrite("<tr><th>排名</th><th>用户名</th><th>成绩</th></tr>");
+    $th0 = "<th nowrap><font size=\\\"2\\\">";
+    $th1 = "</font></th>";
+    $th10 = $th1 . $th0;
+    jsWrite("<tr>{$th0}排名{$th10}用户名{$th10}成绩{$th1}");
+    $td0 = "<td align=\\\"center\\\" nowrap><font size=\\\"2\\\">";
+    $td1 = "</font></td>";
+    $td10 = $td1 . $td0;
     $result = mysql_query("SELECT username, score, rank FROM {$mysql_tablepre}rank{$type} " .
         "ORDER BY rank LIMIT 10");
     while ($line = mysql_fetch_assoc($result)) {
       $score = $line["score"];
-      jsWrite("<tr><td>" . $line["rank"] . "</td><td>" . $line["username"] .
-            "</td><td>" . ($score < 1000 ? $score : "未知") . "</td></tr>");
+      jsWrite(sprintf("<tr>{$td0}%d{$td10}%s{$td10}%s{$td1}</tr>",
+            $line["rank"], $line["username"], $score > 500 ? "500+" : strval($score)));
     }
     jsWrite("</table>");
   }

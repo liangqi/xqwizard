@@ -23,7 +23,7 @@
   mysql_query(sprintf($sqlInsert2, "w", $lastTime - 86400 * 7));
 
   mysql_query(sprintf($sqlTruncate, "m0"));
-  mysql_query(sprintf($sqlInsert1, "m0", "w"));
+  mysql_query(sprintf($sqlInsert1, "m0", "m"));
   mysql_query(sprintf($sqlTruncate, "m"));
   mysql_query(sprintf($sqlInsert2, "m", $lastTime - 86400 * 30));
 

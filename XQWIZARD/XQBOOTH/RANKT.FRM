@@ -489,10 +489,10 @@ For i = 0 To 9
         j = InStr(szRankList(nRank), "|")
         lblUserName(i).Caption = Mid(szRankList(nRank), j + 1)
         nScore = Str2Int(szRankList(nRank), 0, App_nEndgames)
-        If nScore < 1000 Or nScore < Rank_nScore + 100 Then
-            lblScore(i).Caption = nScore
-        Else
+        If nScore > 500 And nScore > Rank_nScore + 100 Then
             lblScore(i).Caption = "δ֪"
+        Else
+            lblScore(i).Caption = nScore
         End If
         nColor = IIf(lblUserName(i).Caption = Login_szUserName, vbBlue, vbButtonText)
         lblRank(i).ForeColor = nColor

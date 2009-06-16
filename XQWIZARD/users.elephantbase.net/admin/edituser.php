@@ -24,10 +24,11 @@ bottommargin="0" rightmargin="0">
                             <tr>
                                 <td nowrap><img
                                 src="../images/wizard.jpg"
-                                width="64" height="64"><font
+                                width="64" height="64"><!--webbot
+                                bot="HTMLMarkup" startspan -->&nbsp;<!--webbot
+                                bot="HTMLMarkup" endspan --><font
                                 color="#FFFFFF" size="6"
-                                face="黑体">
-                                象棋巫师用户中心</font></td>
+                                face="黑体">象棋巫师用户中心</font></td>
                             </tr>
                         </table>
                         </td>

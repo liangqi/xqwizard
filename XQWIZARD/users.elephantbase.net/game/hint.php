@@ -10,17 +10,18 @@
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
   $result = login($username, $password);
+  $points = max(floor($stage / 100), 10);
   if ($result == "error") {
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else if ($stage <= 200) {
     header("Login-Result: ok");
-  } else if ($result["points"] < 10) {
+  } else if ($result["points"] < $points) {
     header("Login-Result: nopoints");
   } else {
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE username = '%s'",
-        mysql_real_escape_string($username));
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - %d WHERE username = '%s'",
+        $points, mysql_real_escape_string($username));
     mysql_query($sql);
     insertLog($username, EVENT_HINT, $stage);
     header("Login-Result: ok");

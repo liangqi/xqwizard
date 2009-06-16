@@ -24,10 +24,11 @@ bottommargin="0" rightmargin="0">
                             <tr>
                                 <td nowrap><img
                                 src="images/wizard.jpg"
-                                width="64" height="64"><font
+                                width="64" height="64"><!--webbot
+                                bot="HTMLMarkup" startspan -->&nbsp;<!--webbot
+                                bot="HTMLMarkup" endspan --><font
                                 color="#FFFFFF" size="6"
-                                face="黑体">
-                                象棋巫师用户中心</font></td>
+                                face="黑体">象棋巫师用户中心</font></td>
                             </tr>
                         </table>
                         </td>
@@ -167,13 +168,28 @@ if (false) {
                 </td>
             </tr>
             <tr>
-                <td background="images/headerbg.gif"><p
-                align="left"><strong>闯关排名</strong></p>
-                </td>
+                <td background="images/headerbg.gif"><strong>闯关排名</strong></td>
             </tr>
             <tr>
-                <td align="center"><script language="JavaScript"
-                src="ranklist.php?type=w"></script></td>
+                <td align="center"><table border="0" width="100%">
+                    <tr>
+                        <td align="center"><font size="2"><strong>近一周排名</strong></font></td>
+                        <td align="center"><font size="2"><strong>近一月排名</strong></font></td>
+                        <td align="center"><font size="2"><strong>近三月排名</strong></font></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><script
+                        language="JavaScript"
+                        src="ranklist.php?type=w"></script></td>
+                        <td align="center"><script
+                        language="JavaScript"
+                        src="ranklist.php?type=m"></script></td>
+                        <td align="center"><script
+                        language="JavaScript"
+                        src="ranklist.php?type=q"></script></td>
+                    </tr>
+                </table>
+                </td>
             </tr>
             <tr>
                 <td><p align="right"><a
