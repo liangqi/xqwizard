@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmRank 
    BorderStyle     =   3  'Fixed Dialog
-   ClientHeight    =   4080
+   ClientHeight    =   4440
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   3090
@@ -17,7 +17,7 @@ Begin VB.Form frmRank
    Icon            =   "RANKS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4080
+   ScaleHeight     =   4440
    ScaleWidth      =   3090
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
@@ -28,7 +28,7 @@ Begin VB.Form frmRank
       Height          =   495
       Left            =   960
       TabIndex        =   38
-      Top             =   3480
+      Top             =   3840
       Width           =   1215
    End
    Begin VB.PictureBox pic 
@@ -357,6 +357,15 @@ Begin VB.Form frmRank
          Top             =   120
          Width           =   375
       End
+   End
+   Begin VB.Label lblMessage 
+      Alignment       =   2  'Center
+      Caption         =   "(今天的成绩将反映在明天的排名中)"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   39
+      Top             =   3480
+      Width           =   2895
    End
    Begin VB.Label lblScoreSelf 
       Alignment       =   1  'Right Justify

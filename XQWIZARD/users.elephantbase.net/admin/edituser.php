@@ -135,7 +135,8 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" endspan --><strong>详细信息</strong></td>
             </tr>
             <tr>
-                <td align="center"><table border="0">
+                <td align="center" bgcolor="#F0F0F0"><table
+                border="0">
                     <tr>
                         <td align="right"><font size="2">用户名：</font></td>
                         <td align="right">　</td>
@@ -196,7 +197,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td><p align="center"><!--webbot
+                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo $info;
   mysql_close();
@@ -210,8 +211,8 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td align="center"><form method="POST"
-                id="frmCharge">
+                <td align="center" bgcolor="#F0F0F0"><form
+                method="POST" id="frmCharge">
                     <p><font size="2">补充点数：<input
                     type="text" size="20" name="charge"></font></p>
                     <p><input type="submit" value="提交"></p>
@@ -242,8 +243,8 @@ function sendmail() {
                 </td>
             </tr>
             <tr>
-                <td align="center"><form method="POST"
-                id="frmReset">
+                <td align="center" bgcolor="#F0F0F0"><form
+                method="POST" id="frmReset">
                     <table border="0">
                         <tr>
                             <td><font size="2">重置密码：</font></td>
@@ -265,8 +266,8 @@ function sendmail() {
                 <td background="../images/headerbg.gif"><strong>删除帐号</strong></td>
             </tr>
             <tr>
-                <td align="center"><form method="POST"
-                id="frmDelete">
+                <td align="center" bgcolor="#F0F0F0"><form
+                method="POST" id="frmDelete">
                     <p><font size="2">确认密码：<input
                     type="password" size="20" name="password2"></font></p>
                     <p><input type="submit" value="提交"></p>
@@ -274,7 +275,7 @@ function sendmail() {
                 </td>
             </tr>
             <tr>
-                <td><p align="right"><script
+                <td bgcolor="#E0E0E0"><p align="right"><script
                 language="JavaScript"><!--
 var action = "edituser.php?username=<?php echo urlencode($username); ?>&act=";
 frmCharge.action = action + "charge";

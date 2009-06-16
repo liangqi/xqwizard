@@ -67,7 +67,7 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>用户列表</strong></font></td>
             </tr>
             <tr>
-                <td><p align="center"><!--webbot
+                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   require_once "../mysql_conf.php";
   require_once "./admin.php";
@@ -107,7 +107,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td><p align="right"><a
+                <td bgcolor="#E0E0E0"><p align="right"><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font

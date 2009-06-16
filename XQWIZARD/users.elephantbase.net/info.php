@@ -86,7 +86,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td><p align="center"><!--webbot
+                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo $userdata["info"];
 ?><!--webbot
@@ -94,7 +94,8 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td id="admin"><p align="center"><font size="2">如果您是管理员，请进入</font><a
+                <td bgcolor="#F0F0F0" id="admin"><p
+                align="center"><font size="2">如果您是管理员，请进入</font><a
                 href="admin/admin.htm" target="_blank"><font
                 size="2">【管理】</font></a><font size="2">页面</font></p>
                 </td>
@@ -104,8 +105,9 @@ bottommargin="0" rightmargin="0">
                 style="display:none"><font size="3"><strong>补充点数</strong></font></td>
             </tr>
             <tr>
-                <td align="center" style="display:none"><form
-                action="charge.php" method="POST">
+                <td align="center" bgcolor="#F0F0F0"
+                style="display:none"><form action="charge.php"
+                method="POST">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">点卡密码：</font></td>
@@ -129,8 +131,8 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>
-                <td align="center"><form action="updateinfo.php"
-                method="POST" id="frm">
+                <td align="center" bgcolor="#F0F0F0"><form
+                action="updateinfo.php" method="POST" id="frm">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">原密码：</font></td>
@@ -181,7 +183,7 @@ admin.style.display = "<?php echo $userdata['usertype'] == 128 ? 'block' : 'none
                 </td>
             </tr>
             <tr>
-                <td><p align="right"><a
+                <td bgcolor="#E0E0E0"><p align="right"><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font
