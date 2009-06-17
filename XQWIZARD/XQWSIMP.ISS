@@ -585,7 +585,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 [Icons]
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{group}\象棋路边摊"; Filename: "{app}\XQBOOTH.EXE"
+Name: "{group}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\象棋棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
