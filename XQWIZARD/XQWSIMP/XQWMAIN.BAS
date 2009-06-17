@@ -2860,7 +2860,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?version=" + STRING_VERSION)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + STRING_VERSION)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
