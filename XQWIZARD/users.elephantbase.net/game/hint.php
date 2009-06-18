@@ -18,6 +18,11 @@
   } else if ($stage <= 200) {
     header("Login-Result: ok");
   } else if ($result["points"] < $points) {
+    if ($result["usertype"] == 0) {
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE username = '%s'",
+          mysql_real_escape_string($username));
+      mysql_query($sql);
+    }
     header("Login-Result: nopoints");
   } else {
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - %d WHERE username = '%s'",

@@ -1306,7 +1306,7 @@ End Sub
 
 Private Sub inet_StateChanged(ByVal nState As Integer)
 
-Dim szResult As String, nLast As Integer, szRanks() As String
+Dim szResult As String, bLoad As Boolean, nLast As Integer, szRanks() As String
 
 If nState = icError Then
     ConnError
@@ -1351,13 +1351,17 @@ Case USERS_LOAD
     Case Else
         If (Left(szResult, 3) = "ok ") Then
             nLast = Str2Int(Mid(szResult, 3), 0, App_nEndgames)
+            bLoad = False
             If nLast > Gui_nLast Then
+                bLoad = True
+            ElseIf MsgBox("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", vbQuestion + vbYesNo) = vbYes Then
+                bLoad = True
+            End If
+            If bLoad Then
                 Gui_nLast = nLast
                 Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
                 LoadGame
                 MsgBox "成绩获取成功。", vbInformation
-            Else
-                MsgBox "您原先提交的成绩不如当前成绩，原先成绩不予获取。", vbInformation
             End If
         Else
             ConnError

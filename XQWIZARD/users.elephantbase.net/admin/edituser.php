@@ -14,7 +14,7 @@ bottommargin="0" rightmargin="0">
     <tr>
         <td>　</td>
         <td width="750" bgcolor="#FFFFFF"><table border="0"
-        width="100%">
+        cellspacing="0" width="100%">
             <tr>
                 <td colspan="3" background="../images/topbg.gif"><table
                 border="0" width="100%">
@@ -61,7 +61,8 @@ bottommargin="0" rightmargin="0">
                 <td colspan="3">　</td>
             </tr>
         </table>
-        <table border="0" cellpadding="4" cellspacing="0" width="100%">
+        <table border="0" cellpadding="4" cellspacing="0"
+        width="100%" bgcolor="#F0F0F0">
             <tr>
                 <td background="../images/headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
@@ -135,8 +136,7 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" endspan --><strong>详细信息</strong></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><table
-                border="0">
+                <td align="center"><table border="0">
                     <tr>
                         <td align="right"><font size="2">用户名：</font></td>
                         <td align="right">　</td>
@@ -197,7 +197,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
+                <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo $info;
   mysql_close();
@@ -211,8 +211,8 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><form
-                method="POST" id="frmCharge">
+                <td align="center"><form method="POST"
+                id="frmCharge">
                     <p><font size="2">补充点数：<input
                     type="text" size="20" name="charge"></font></p>
                     <p><input type="submit" value="提交"></p>
@@ -243,8 +243,8 @@ function sendmail() {
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><form
-                method="POST" id="frmReset">
+                <td align="center"><form method="POST"
+                id="frmReset">
                     <table border="0">
                         <tr>
                             <td><font size="2">重置密码：</font></td>
@@ -266,8 +266,8 @@ function sendmail() {
                 <td background="../images/headerbg.gif"><strong>删除帐号</strong></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><form
-                method="POST" id="frmDelete">
+                <td align="center"><form method="POST"
+                id="frmDelete">
                     <p><font size="2">确认密码：<input
                     type="password" size="20" name="password2"></font></p>
                     <p><input type="submit" value="提交"></p>

@@ -64,7 +64,7 @@ Begin VB.Form frmLogin
       Width           =   1335
    End
    Begin VB.Label lblRegister 
-      Caption         =   "立即注冊"
+      Caption         =   "建立存檔"
       BeginProperty Font 
          Name            =   "宋体"
          Size            =   9

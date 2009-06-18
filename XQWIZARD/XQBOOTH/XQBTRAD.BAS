@@ -271,6 +271,15 @@ frmXQBooth.Show
 frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
 frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 
+' 提示建立存檔
+If Login_szUserName = "" Then
+    If MsgBox("　　建立象棋魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關成績，" + _
+            "并跟眾多玩家一起參与闖關排名，充分享受提高棋藝的樂趣。" + vbCrLf + vbCrLf + _
+            "　　是否現在就建立闖關存檔？", vbQuestion + vbYesNo) = vbYes Then
+        ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/register.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+    End If
+End If
+
 ' 主循環
 App_bRunning = True
 Do While App_bRunning

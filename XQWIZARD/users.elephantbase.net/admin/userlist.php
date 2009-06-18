@@ -14,7 +14,7 @@ bottommargin="0" rightmargin="0">
     <tr>
         <td>　</td>
         <td width="750" bgcolor="#FFFFFF"><table border="0"
-        width="100%">
+        cellspacing="0" width="100%">
             <tr>
                 <td colspan="3" background="../images/topbg.gif"><table
                 border="0" width="100%">
@@ -61,23 +61,29 @@ bottommargin="0" rightmargin="0">
                 <td colspan="3">　</td>
             </tr>
         </table>
-        <table border="0" cellpadding="4" cellspacing="0" width="100%">
+        <table border="0" cellpadding="4" cellspacing="0"
+        width="100%" bgcolor="#F0F0F0">
             <tr>
                 <td background="../images/headerbg.gif"><font
                 size="3"><strong>用户列表</strong></font></td>
             </tr>
             <tr>
-                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
+                <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   require_once "../mysql_conf.php";
   require_once "./admin.php";
 
   $username = $_POST["username"];
+  $orderby = $_POST["orderby"];
+  $orderby = $_POST["orderby"];
+  $direction = $_POST["direction"];
+  $limit = intval($_POST["limit"]);
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%'",
-      mysql_real_escape_string($username));
+  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%' " .
+      "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($username),
+      $orderby, $direction, $limit);
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
   if ($line) {

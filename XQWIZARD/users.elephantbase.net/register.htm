@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>注册 - 象棋巫师用户中心</title>
+<title>建立存档 - 象棋巫师用户中心</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -14,7 +14,7 @@ bottommargin="0" rightmargin="0">
     <tr>
         <td>　</td>
         <td width="750" bgcolor="#FFFFFF"><table border="0"
-        width="100%">
+        cellspacing="0" width="100%">
             <tr>
                 <td colspan="3" background="images/topbg.gif"><table
                 border="0" width="100%">
@@ -61,75 +61,63 @@ bottommargin="0" rightmargin="0">
                 <td colspan="3">　</td>
             </tr>
         </table>
-        <table border="0" cellpadding="4" cellspacing="0" width="100%">
+        <table border="0" cellpadding="4" cellspacing="0"
+        width="100%" bgcolor="#F0F0F0">
             <tr>
-                <td background="images/headerbg.gif"><font
-                size="3"><strong><!--webbot bot="HTMLMarkup"
-                startspan --><span id="regfail"><!--webbot bot="HTMLMarkup"
-                endspan -->为何注册<!--webbot
-                bot="HTMLMarkup" startspan --></span><!--webbot
-                bot="HTMLMarkup" endspan --></strong></font></td>
+                <td background="images/headerbg.gif">　</td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0" id="whyreg"><p
-                align="left"><font size="3">　　只要填写以下表单，即可成为象棋巫师注册用户，随时随地提交和获取象棋魔法学校的闯关成绩，和其他象棋巫师注册用户一起参与闯关排名，充分享受提高棋艺的乐趣。</font></p>
+                <td align="center" id="whyreg"
+                style="display:none"><p align="left"><font
+                size="3">　　只要填写以下表单，即可建立象棋魔法学校的闯关存档，随时随地提交和获取闯关成绩，并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。</font></p>
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0" id="exist"
+                <td align="center" id="exist"
                 style="display:none"><font color="#FF0000"
                 size="2">已经存在同样的名用户</font></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0" id="short"
+                <td align="center" id="short"
                 style="display:none"><font color="#FF0000"
                 size="2">用户名和密码都不能少于6个字符</font></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"
-                id="password" style="display:none"><font
-                color="#FF0000" size="2">两遍密码不一致</font></td>
-            </tr>
-            <tr>
-                <td align="center" bgcolor="#F0F0F0" id="ejew"
+                <td align="center" id="password"
                 style="display:none"><font color="#FF0000"
-                size="2">验证码不正确</font></td>
+                size="2">两遍密码不一致</font></td>
             </tr>
             <tr>
-                <td bgcolor="#F0F0F0"><p align="center"><font
-                size="2">如果您已经成为象棋巫师注册用户，请直接</font><a
+                <td align="center" id="ejew" style="display:none"><font
+                color="#FF0000" size="2">验证码不正确</font></td>
+            </tr>
+            <tr>
+                <td><p align="center"><font size="2">如果您已经建立过闯关存档，请直接</font><a
                 href="login.htm"><font size="2">【登录】</font></a></p>
                 </td>
             </tr>
             <tr>
                 <td background="images/headerbg.gif"><p
                 align="left"><script language="JavaScript"><!--
-function regFail() {
-  regfail.innerHTML = "注册失败";
-  whyreg.style.display = "none";
-}
-
 if (false) {
   //
 } else if (location.hash == "#exist") {
-  regFail();
   exist.style.display = "block";
 } else if (location.hash == "#short") {
-  regFail();
   short.style.display = "block";
 } else if (location.hash == "#password") {
-  regFail();
   password.style.display = "block";
 } else if (location.hash == "#ejew") {
-  regFail();
   ejew.style.display = "block";
+} else {
+  whyreg.style.display = "block";
 }
-// --></script><strong>注册</strong></p>
+// --></script><strong>建立存档</strong></p>
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><form
-                action="register.php" method="POST">
+                <td align="center"><form action="register.php"
+                method="POST">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">用户名：</font></td>
@@ -198,8 +186,8 @@ if (false) {
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><table
-                border="0" cellpadding="0" cellspacing="0">
+                <td align="center"><table border="0"
+                cellpadding="0" cellspacing="0">
                     <tr>
                         <td><!--webbot bot="HTMLMarkup"
                         startspan --><font size="2"><!--webbot
@@ -215,8 +203,7 @@ if (false) {
                 <td background="images/headerbg.gif"><strong>闯关排名</strong></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><table
-                border="0" width="100%">
+                <td align="center"><table border="0" width="100%">
                     <tr>
                         <td align="center"><font size="2"><strong>近一周排名</strong></font></td>
                         <td align="center"><font size="2"><strong>近一月排名</strong></font></td>
