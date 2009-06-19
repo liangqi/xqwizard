@@ -8,7 +8,8 @@
   $result = mysql_query("SELECT username, savetime, score FROM {$mysql_tablepre}recent " .
       "ORDER BY savetime DESC LIMIT 10");
   while ($line = mysql_fetch_assoc($result)) {
-    jsWrite(date("m/d H:i　", $line["savetime"]) . htmlentities($line["username"]) .
+    jsWrite(date("m/d H:i　", $line["savetime"]) .
+        htmlentities($line["username"], ENT_COMPAT, "GB2312") .
         "已闯过了" . $line["score"] . "关<br>");
   }
 

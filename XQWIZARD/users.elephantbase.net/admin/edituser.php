@@ -79,7 +79,7 @@ bottommargin="0" rightmargin="0">
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
   if (!$line) {
-    header("Location: close.htm#" . "用户[" . $username . "]不存在");
+    header("Location: close.htm#用户[" . $username . "]不存在");
     mysql_close();
     exit;
   }

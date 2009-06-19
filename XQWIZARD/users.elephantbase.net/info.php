@@ -76,7 +76,7 @@ bottommargin="0" rightmargin="0">
     header("Location: login.htm#timeout");
     exit;
   }
-  echo htmlentities($userdata["username"]);
+  echo htmlentities($userdata["username"], ENT_COMPAT, "GB2312");
 ?><!--webbot
                         bot="HTMLMarkup" endspan -->ฃฌฤ๚บรฃก</strong></td>
                         <td><p align="right"><a href="logout.php"><font

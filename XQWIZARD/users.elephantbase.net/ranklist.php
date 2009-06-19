@@ -21,7 +21,8 @@
     while ($line = mysql_fetch_assoc($result)) {
       $score = $line["score"];
       jsWrite(sprintf("<tr>{$td0}%d{$td10}%s{$td10}%s{$td1}</tr>",
-            $line["rank"], $line["username"], $score > 500 ? "500+" : strval($score)));
+            $line["rank"], htmlentities($line["username"], ENT_COMPAT, "GB2312"),
+            $score > 500 ? "500+" : strval($score)));
     }
     jsWrite("</table>");
   }
