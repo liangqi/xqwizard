@@ -22,7 +22,7 @@
       $score = $line["score"];
       jsWrite(sprintf("<tr>{$td0}%d{$td10}%s{$td10}%s{$td1}</tr>",
             $line["rank"], htmlentities($line["username"], ENT_COMPAT, "GB2312"),
-            $score > 500 ? "500+" : strval($score)));
+            $score > 900 ? "900+" : strval($score)));
     }
     jsWrite("</table>");
   }

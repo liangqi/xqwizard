@@ -497,7 +497,7 @@ For i = 0 To 9
         j = InStr(szRankList(nRank), "|")
         lblUserName(i).Caption = Mid(szRankList(nRank), j + 1)
         nScore = Str2Int(szRankList(nRank), 0, App_nEndgames)
-        If nScore > 500 And nScore > Rank_nScore + 100 Then
+        If nScore > 900 And nScore > Rank_nScore + 100 Then
             lblScore(i).Caption = "δ֪"
         Else
             lblScore(i).Caption = nScore

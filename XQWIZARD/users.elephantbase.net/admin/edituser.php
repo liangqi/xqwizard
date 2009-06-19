@@ -123,7 +123,7 @@ bottommargin="0" rightmargin="0">
           mysql_real_escape_string($username));
       mysql_query($sql);
       insertLog($username, EVENT_ADMIN_DELETE);
-      header("Location: close.htm#" . "用户[" . $username . "]已被删除");
+      header("Location: close.htm#用户[" . $username . "]已被删除");
       mysql_close();
       exit;
     } else {
