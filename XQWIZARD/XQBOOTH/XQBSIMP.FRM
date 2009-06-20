@@ -22,6 +22,51 @@ Begin VB.Form frmXQBooth
    ScaleMode       =   0  'User
    ScaleWidth      =   5640
    StartUpPosition =   3  'Windows Default
+   Begin VB.CommandButton btnRestart 
+      Caption         =   "再试一次"
+      Height          =   495
+      Left            =   4680
+      TabIndex        =   4
+      TabStop         =   0   'False
+      Top             =   6720
+      Width           =   975
+   End
+   Begin VB.CommandButton btnHint 
+      Caption         =   "提示"
+      Height          =   495
+      Left            =   0
+      TabIndex        =   1
+      TabStop         =   0   'False
+      Top             =   6720
+      Width           =   975
+   End
+   Begin VB.CommandButton btnRetract 
+      Caption         =   "悔棋"
+      Height          =   495
+      Left            =   0
+      TabIndex        =   0
+      TabStop         =   0   'False
+      Top             =   6240
+      Width           =   975
+   End
+   Begin VB.CommandButton btnNext 
+      Caption         =   "下一关"
+      Height          =   495
+      Left            =   4680
+      TabIndex        =   3
+      TabStop         =   0   'False
+      Top             =   6720
+      Width           =   975
+   End
+   Begin VB.CommandButton btnSave 
+      Caption         =   "提交成绩"
+      Height          =   495
+      Left            =   4680
+      TabIndex        =   2
+      TabStop         =   0   'False
+      Top             =   6240
+      Width           =   975
+   End
    Begin InetCtlsObjects.Inet inet 
       Left            =   0
       Top             =   0
@@ -30,32 +75,10 @@ Begin VB.Form frmXQBooth
       _Version        =   393216
       RequestTimeout  =   10
    End
-   Begin VB.CommandButton btnNext 
-      Caption         =   "下一关"
-      Height          =   975
-      Left            =   4680
-      Picture         =   "XQBSIMP.frx":0ABA
-      Style           =   1  'Graphical
-      TabIndex        =   1
-      TabStop         =   0   'False
-      Top             =   6240
-      Width           =   975
-   End
-   Begin VB.CommandButton btnPrev 
-      Caption         =   "上一关"
-      Height          =   975
-      Left            =   0
-      Picture         =   "XQBSIMP.frx":0EBF
-      Style           =   1  'Graphical
-      TabIndex        =   0
-      TabStop         =   0   'False
-      Top             =   6240
-      Width           =   975
-   End
    Begin SHDocVwCtl.WebBrowser web 
       Height          =   975
       Left            =   960
-      TabIndex        =   2
+      TabIndex        =   5
       TabStop         =   0   'False
       Top             =   6240
       Width           =   3735
@@ -76,13 +99,13 @@ Begin VB.Form frmXQBooth
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
       Height          =   255
       Left            =   1080
-      TabIndex        =   3
+      TabIndex        =   6
       Top             =   6360
       Width           =   255
    End
@@ -809,17 +832,13 @@ Begin VB.Form frmXQBooth
    Begin VB.Image imgBoard 
       Height          =   6255
       Left            =   0
-      Picture         =   "XQBSIMP.frx":12C4
+      Picture         =   "XQBSIMP.frx":0ABA
       Stretch         =   -1  'True
       Top             =   0
       Width           =   5655
    End
    Begin VB.Menu mnGame 
       Caption         =   "游戏(&G)"
-      Begin VB.Menu mnGamePrev 
-         Caption         =   "上一关(&P)"
-         Shortcut        =   ^P
-      End
       Begin VB.Menu mnGameSelect 
          Caption         =   "选关(&O)"
          Shortcut        =   ^O
@@ -828,14 +847,22 @@ Begin VB.Form frmXQBooth
          Caption         =   "下一关(&N)"
          Shortcut        =   ^N
       End
+      Begin VB.Menu mnGameRestart 
+         Caption         =   "再试一次(&R)"
+         Shortcut        =   ^R
+      End
       Begin VB.Menu mnGameSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnGameRestart 
-         Caption         =   "再来一次(&R)"
-         Shortcut        =   ^R
+      Begin VB.Menu mnGameHint 
+         Caption         =   "提示(&H)"
+         Shortcut        =   ^H
       End
-      Begin VB.Menu mnGameSep3 
+      Begin VB.Menu mnGameRetract 
+         Caption         =   "悔棋(&T)"
+         Shortcut        =   ^T
+      End
+      Begin VB.Menu mnGameSep2 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameExit 
@@ -853,6 +880,18 @@ Begin VB.Form frmXQBooth
       End
       Begin VB.Menu mnUsersSep1 
          Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersHint 
+         Caption         =   "提示(&H)"
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnUsersRetract 
+         Caption         =   "悔棋(&T)"
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnUsersSep2 
+         Caption         =   "-"
+         Visible         =   0   'False
       End
       Begin VB.Menu mnUsersRank_ 
          Caption         =   "排名(&R)"
@@ -975,6 +1014,9 @@ Begin VB.Form frmXQBooth
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋巫师的网站(&H)"
       End
+      Begin VB.Menu mnHelpMantis 
+         Caption         =   "报告缺陷(&B)"
+      End
       Begin VB.Menu mnHelpUpdate 
          Caption         =   "检查最新版本(&P)"
       End
@@ -994,7 +1036,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
+' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1025,6 +1067,8 @@ Private Const PHASE_END As Integer = 2
 Private Const USERS_SAVE As Integer = 0
 Private Const USERS_LOAD As Integer = 1
 Private Const USERS_RANK As Integer = 2
+Private Const USERS_HINT As Integer = 3
+Private Const USERS_RETRACT As Integer = 4
 
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
@@ -1103,10 +1147,30 @@ Next
 
 End Sub
 
+Private Sub EnableHint(ByVal bEnabled As Boolean)
+
+mnGameHint.Enabled = bEnabled
+mnUsersHint.Enabled = bEnabled
+btnHint.Enabled = bEnabled
+
+End Sub
+
+Private Sub EnableRetract(ByVal bEnabled As Boolean)
+
+mnGameRetract.Enabled = bEnabled
+mnUsersRetract.Enabled = bEnabled
+btnRetract.Enabled = bEnabled
+
+End Sub
+
 Private Function GetResult(ByVal nStatus As Long) As Boolean
 
 Dim sqMate As Integer
+btnNext.Visible = False
+btnRestart.Visible = True
+EnableRetract True
 If (nStatus And MOVE_MATE) <> 0 Then
+    EnableHint False
     If pos.sdPlayer = 0 Then
         PlayWavSound "PROMOTE2"
         If pos.ucsqPieces(16) > 0 Then
@@ -1114,6 +1178,12 @@ If (nStatus And MOVE_MATE) <> 0 Then
         End If
         MsgBoxMute "请再接再厉！", vbInformation
     Else
+        btnRestart.Visible = False
+        btnNext.Visible = True
+        If Gui_nCurr < App_nEndgames - 1 Then
+            mnGameNext.Enabled = True
+            btnNext.Enabled = True
+        End If
         PlayWavSound "PROMOTE"
         If pos.ucsqPieces(32) > 0 Then
             DrawSquare pos.ucsqPieces(32), , DRAW_MATE
@@ -1122,8 +1192,6 @@ If (nStatus And MOVE_MATE) <> 0 Then
             MsgBoxMute "恭喜你闯过所有关卡！", vbInformation
         Else
             MsgBoxMute "恭喜你过关！", vbInformation
-            mnGameNext.Enabled = True
-            btnNext.Enabled = True
         End If
         If Gui_nCurr = Gui_nLast Then
             Gui_nLast = Gui_nLast + 1
@@ -1133,6 +1201,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
     Exit Function
 End If
 If (nStatus And MOVE_PERPETUAL) <> 0 Then
+    EnableHint False
     PlayWavSound "PROMOTE2"
     MsgBoxMute "请不要气馁！", vbInformation
     GetResult = True
@@ -1194,14 +1263,14 @@ End Sub
 
 Public Sub LoadGame()
 
-Dim bPrev As Boolean, bNext As Boolean
-
-bPrev = Gui_nCurr > 0
-mnGamePrev.Enabled = bPrev
-btnPrev.Enabled = bPrev
+Dim bNext As Boolean
+btnNext.Visible = True
+btnRestart.Visible = False
 bNext = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
 mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
+EnableHint True
+EnableRetract False
 Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋魔法学校"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 BoardFlush
@@ -1225,15 +1294,6 @@ If nPhase = PHASE_BUSY Then
     nCancel = 1
 Else
     App_bRunning = False
-End If
-
-End Sub
-
-Private Sub mnGamePrev_Click()
-
-If nPhase <> PHASE_BUSY Then
-    Gui_nCurr = Gui_nCurr - 1
-    LoadGame
 End If
 
 End Sub
@@ -1263,11 +1323,37 @@ End If
 
 End Sub
 
+Private Sub mnGameHint_Click()
+
+mnUsersHint_Click
+
+End Sub
+
+Private Sub mnGameRetract_Click()
+
+mnUsersRetract_Click
+
+End Sub
+
 Private Sub mnGameExit_Click()
 
 If nPhase <> PHASE_BUSY Then
     Unload Me
 End If
+
+End Sub
+
+Private Sub DoHint()
+
+' TODO
+MsgBox "提示", vbInformation
+
+End Sub
+
+Private Sub DoRetract()
+
+' TODO
+MsgBox "悔棋", vbInformation
 
 End Sub
 
@@ -1459,6 +1545,22 @@ LeaveBusy
 
 End Sub
 
+Private Sub mnUsersHint_Click()
+
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+End Sub
+
+Private Sub mnUsersRetract_Click()
+
+If nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+End Sub
+
 Private Sub mnUsersRank_Click(nIndex As Integer)
 
 Dim szRankType As String
@@ -1576,11 +1678,27 @@ MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" +
 
 End Sub
 
-Private Sub btnPrev_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
+Private Sub btnHint_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
 
-btnPrev.Enabled = False
-btnPrev.Enabled = True
-mnGamePrev_Click
+btnHint.Enabled = False
+btnHint.Enabled = True
+mnUsersHint_Click
+
+End Sub
+
+Private Sub btnRetract_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
+
+btnRetract.Enabled = False
+btnRetract.Enabled = True
+mnUsersRetract_Click
+
+End Sub
+
+Private Sub btnSave_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
+
+btnSave.Enabled = False
+btnSave.Enabled = True
+mnUsersSave_Click
 
 End Sub
 
@@ -1589,6 +1707,14 @@ Private Sub btnNext_MouseDown(nButton As Integer, nShift As Integer, x As Single
 btnNext.Enabled = False
 btnNext.Enabled = True
 mnGameNext_Click
+
+End Sub
+
+Private Sub btnRestart_MouseDown(nButton As Integer, nShift As Integer, x As Single, y As Single)
+
+btnRestart.Enabled = False
+btnRestart.Enabled = True
+mnGameRestart_Click
 
 End Sub
 
