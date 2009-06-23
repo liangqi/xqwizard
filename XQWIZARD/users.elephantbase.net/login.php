@@ -20,7 +20,9 @@
       session_start();
       session_register("userdata");
       $result["username"] = $username;
-      $result["info"] = "您已经闯过了 " . $result["score"] . " 关";
+      $points = $result["points"];
+      $result["info"] = "您已经闯过了 " . $result["score"] . " 关" .
+          ($points == 0 ? "" : "<br>您还有 " . $points . " 点可用");
       $_SESSION["userdata"] = $result;
       header("Location: info.php");
     }

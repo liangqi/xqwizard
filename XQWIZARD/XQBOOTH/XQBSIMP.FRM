@@ -99,7 +99,7 @@ Begin VB.Form frmXQBooth
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -1378,15 +1378,23 @@ MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
 
 End Sub
 
+Private Sub LoginError()
+
+MsgBox "用户名或密码不正确。", vbExclamation
+
+End Sub
+
 Private Sub NoRetryError()
 
 MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
 
 End Sub
 
-Private Sub LoginError()
+Private Sub NoPointsError(ByVal nPoints As Integer)
 
-MsgBox "用户名或密码不正确。", vbExclamation
+MsgBox "您的点数不足" + Str(nPoints) + " 点，补充点数后才能使用此功能。", vbExclamation
+ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/charge.htm", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -1479,6 +1487,43 @@ Case USERS_RANK
             ConnError
         End If
     End Select
+
+Case USERS_HINT
+    ' 请求“提示”，获取响应
+    Select Case szResult
+    Case "ok"
+        DoHint
+    Case "error"
+        LoginError
+        LeaveBusy
+        mnUsersHint_Click
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case "nopoints"
+        NoPointsError IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)
+    Case Else
+        ConnError
+    End Select
+
+Case USERS_RETRACT
+    ' 请求“悔棋”，获取响应
+    Select Case szResult
+    Case "ok"
+        DoRetract
+    Case "error"
+        LoginError
+        LeaveBusy
+        mnUsersRetract_Click
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case "nopoints"
+        NoPointsError 1
+    Case Else
+        ConnError
+    End Select
+
 End Select
 LeaveBusy
 
