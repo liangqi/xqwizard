@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 4.0 (繁體版)
+AppVerName=象棋巫師 4.1 (繁體版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -597,4 +597,5 @@ Name: "{userdesktop}\象棋魔法學校"; Filename: "{app}\XQBOOTH.EXE"
 
 [Run]
 Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫師介紹"; Flags: nowait postinstall shellexec skipifsilent
-Filename: "{app}\XQWIZARD.EXE"; Description: "運行象棋巫師"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\XQWIZARD.EXE"; Description: "開始對局"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\XQBOOTH.EXE"; Description: "開始闖關"; Flags: nowait postinstall skipifsilent

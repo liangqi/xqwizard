@@ -1073,6 +1073,7 @@ Private Const USERS_RETRACT As Integer = 4
 Private pos As PositionStruct
 Private nPhase As Integer, sqSelected As Integer, mvLast As Long
 Private nPhaseSaved As Integer, nUsersEvent As Integer
+Private bHint As Boolean, dfHintTime As Double
 
 Private Function PieceFileName(ByVal nIndex As Integer) As String
 
@@ -1261,6 +1262,13 @@ MousePointer = vbDefault
 
 End Sub
 
+Public Sub ClearHint()
+
+bHint = False
+dfHintTime = Timer
+
+End Sub
+
 Public Sub LoadGame()
 
 Dim bNext As Boolean
@@ -1284,6 +1292,7 @@ Private Sub Form_Load()
 
 mnOptionsBoard_Click Gui_nBoard
 mnOptionsPieces_Click Gui_nPieces
+ClearHint
 LoadGame
 
 End Sub
@@ -1309,6 +1318,7 @@ End Sub
 Private Sub mnGameNext_Click()
 
 If nPhase <> PHASE_BUSY Then
+    ClearHint
     Gui_nCurr = Gui_nCurr + 1
     LoadGame
 End If
@@ -1345,6 +1355,7 @@ End Sub
 
 Private Sub DoHint()
 
+bHint = True
 ' TODO
 MsgBox "提示", vbInformation
 
@@ -1453,6 +1464,7 @@ Case USERS_LOAD
             End If
             If bLoad Then
                 Gui_nLast = nLast
+                ClearHint
                 Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
                 LoadGame
                 MsgBox "成绩获取成功。", vbInformation
@@ -1592,11 +1604,19 @@ End Sub
 
 Private Sub mnUsersHint_Click()
 
+Dim dfThinkTime As Double
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-If Gui_nCurr < 100 Then
+dfThinkTime = Timer
+dfThinkTime = dfThinkTime + IIf(dfThinkTime < dfHintTime, 86400#, 0#) - dfHintTime
+If dfThinkTime < 30 + Gui_nCurr \ 100 Then
+    MsgBox "您只思考了" + Str(Int(dfThinkTime)) + " 秒，请再多想想吧。", vbExclamation
+    Exit Sub
+End If
+
+If bHint Or Gui_nCurr < 100 Then
     EnterBusy
     DoHint
     LeaveBusy

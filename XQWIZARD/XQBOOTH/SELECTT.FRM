@@ -5529,6 +5529,9 @@ Private Sub btnConfirm_Click()
 Dim nCurr As Integer
 nCurr = hsb.Value * BOARD_NUM + nSelected
 If nCurr <= Gui_nLast Then
+    If Gui_nCurr <> nCurr Then
+        frmXQBooth.ClearHint
+    End If
     Gui_nCurr = nCurr
     frmXQBooth.LoadGame
     Unload Me
