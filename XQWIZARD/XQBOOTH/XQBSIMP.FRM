@@ -1596,6 +1596,41 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
+If Gui_nCurr < 100 Then
+    EnterBusy
+    DoHint
+    LeaveBusy
+    Exit Sub
+End If
+
+Login_szTitle = "提示"
+If Gui_nCurr < 200 Then
+    Login_szPrompt = "100关以后需要登录用户中心"
+Else
+    Login_szPrompt = "本关提示需要消耗点数" + _
+            Str(IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)) + " 点"
+End If
+frmLogin.Show vbModal, Me
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+nUsersEvent = USERS_HINT
+On Error GoTo lnError
+inet.Execute BASE_URL + "hint.php", _
+        "POST", "stage=" + LTrim(Str(Gui_nCurr)), _
+        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
+        "Login-UserName: " + Login_szUserName + vbCrLf + _
+        "Login-Password: " + Login_szPassword + vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
+
 End Sub
 
 Private Sub mnUsersRetract_Click()
@@ -1604,6 +1639,37 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
+If Gui_nCurr <= 100 Then
+    DoRetract
+    Exit Sub
+End If
+
+Login_szTitle = "悔棋"
+If Gui_nCurr <= 200 Then
+    Login_szPrompt = "100关以后需要登录用户中心"
+Else
+    Login_szPrompt = "悔棋需要消耗点数 1 点"
+End If
+frmLogin.Show vbModal, Me
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+nUsersEvent = USERS_RETRACT
+On Error GoTo lnError
+inet.Execute BASE_URL + "retract.php", _
+        "POST", "stage=" + LTrim(Str(Gui_nCurr)), _
+        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
+        "Login-UserName: " + Login_szUserName + vbCrLf + _
+        "Login-Password: " + Login_szPassword + vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
 End Sub
 
 Private Sub mnUsersRank_Click(nIndex As Integer)

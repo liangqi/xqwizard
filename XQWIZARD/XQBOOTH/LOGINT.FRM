@@ -6,9 +6,9 @@ Begin VB.Form frmLogin
    ClientTop       =   330
    ClientWidth     =   3240
    BeginProperty Font 
-      Name            =   "宋体"
+      Name            =   "��隴闚"
       Size            =   9
-      Charset         =   0
+      Charset         =   136
       Weight          =   400
       Underline       =   0   'False
       Italic          =   0   'False
@@ -26,7 +26,7 @@ Begin VB.Form frmLogin
       Caption         =   "取消"
       Height          =   375
       Left            =   1800
-      TabIndex        =   9
+      TabIndex        =   10
       Top             =   1440
       Width           =   855
    End
@@ -35,7 +35,7 @@ Begin VB.Form frmLogin
       Default         =   -1  'True
       Height          =   375
       Left            =   600
-      TabIndex        =   8
+      TabIndex        =   9
       Top             =   1440
       Width           =   855
    End
@@ -43,7 +43,7 @@ Begin VB.Form frmLogin
       Caption         =   "記住密碼"
       Height          =   255
       Left            =   840
-      TabIndex        =   7
+      TabIndex        =   6
       Top             =   840
       Width           =   1095
    End
@@ -52,16 +52,36 @@ Begin VB.Form frmLogin
       IMEMode         =   3  'DISABLE
       Left            =   840
       PasswordChar    =   "*"
-      TabIndex        =   5
+      TabIndex        =   4
       Top             =   480
       Width           =   1335
    End
    Begin VB.TextBox txtUserName 
       Height          =   270
       Left            =   840
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   120
       Width           =   1335
+   End
+   Begin VB.Label lblCharge 
+      Caption         =   "補充點數"
+      BeginProperty Font 
+         Name            =   "宋体"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   -1  'True
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FF0000&
+      Height          =   255
+      Left            =   2400
+      MouseIcon       =   "LOGINT.frx":000C
+      MousePointer    =   99  'Custom
+      TabIndex        =   7
+      Top             =   840
+      Width           =   735
    End
    Begin VB.Label lblRegister 
       Caption         =   "建立存檔"
@@ -77,9 +97,9 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINT.frx":000C
+      MouseIcon       =   "LOGINT.frx":015E
       MousePointer    =   99  'Custom
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   120
       Width           =   735
    End
@@ -87,7 +107,7 @@ Begin VB.Form frmLogin
       Caption         =   "用戶名："
       Height          =   255
       Left            =   120
-      TabIndex        =   1
+      TabIndex        =   0
       Top             =   120
       Width           =   735
    End
@@ -95,7 +115,7 @@ Begin VB.Form frmLogin
       Alignment       =   2  'Center
       Height          =   255
       Left            =   0
-      TabIndex        =   0
+      TabIndex        =   8
       Top             =   1200
       Width           =   3255
    End
@@ -113,9 +133,9 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINT.frx":015E
+      MouseIcon       =   "LOGINT.frx":02B0
       MousePointer    =   99  'Custom
-      TabIndex        =   6
+      TabIndex        =   5
       Top             =   480
       Width           =   735
    End
@@ -123,7 +143,7 @@ Begin VB.Form frmLogin
       Caption         =   "　密碼："
       Height          =   255
       Left            =   120
-      TabIndex        =   4
+      TabIndex        =   3
       Top             =   480
       Width           =   735
    End
@@ -136,7 +156,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part IV
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
+' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -161,6 +181,9 @@ Login_bCancel = True
 Caption = Login_szTitle
 lblPrompt.Caption = Login_szPrompt
 txtUserName.Text = Login_szUserName
+If Login_szPrompt = "" Or Gui_nCurr < 200 Then
+    lblCharge.Visible = False
+End If
 If Login_bRemember Then
     txtPassword.Text = Login_szPassword
     chkRemember.Value = 1
@@ -177,6 +200,12 @@ End Sub
 Private Sub lblGetPassword_Click()
 
 ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/getpassword.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub lblCharge_Click()
+
+ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/charge.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

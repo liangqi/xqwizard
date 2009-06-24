@@ -32,7 +32,6 @@ Begin VB.Form frmSelect
       Width           =   10635
       Begin VB.HScrollBar hsb 
          Height          =   255
-         LargeChange     =   10
          Left            =   0
          TabIndex        =   9
          TabStop         =   0   'False

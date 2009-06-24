@@ -5,7 +5,7 @@
   $header = getallheaders();
   $username = $header["Login-UserName"];
   $password = $header["Login-Password"];
-  $stage = intval($_GET["stage"])
+  $stage = intval($_POST["stage"]);
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
@@ -15,7 +15,7 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($stage <= 200) {
+  } else if ($stage < 200) {
     header("Login-Result: ok");
   } else if ($result["points"] < $points) {
     if ($result["usertype"] == 0) {
