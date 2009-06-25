@@ -1363,8 +1363,22 @@ End Sub
 
 Private Sub DoRetract()
 
-' TODO
-MsgBox "悔棋", vbInformation
+If pos.nDistance = 0 Then
+    MsgBox "悔棋失败。", vbInformation
+    Exit Sub
+End If
+If pos.nDistance Mod 2 = 0 Then
+    CchessUndoMove pos
+End If
+CchessUndoMove pos
+BoardFlush
+sqSelected = 0
+mvLast = 0
+' DoRetract 都是在 EnterBusy 后调用的，所以要修改 nPhaseSaved 而不是 nPhase
+nPhaseSaved = PHASE_READY
+If pos.nDistance = 0 Then
+    EnableRetract False
+End If
 
 End Sub
 
@@ -1660,7 +1674,9 @@ If nPhase = PHASE_BUSY Then
 End If
 
 If Gui_nCurr <= 100 Then
+    EnterBusy
     DoRetract
+    LeaveBusy
     Exit Sub
 End If
 

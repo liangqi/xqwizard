@@ -583,19 +583,19 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
+Name: "{group}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{group}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\象棋棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"
+Name: "{userdesktop}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{userdesktop}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 
 [Run]
-Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫师介绍"; Flags: nowait postinstall shellexec skipifsilent
-Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked
 Filename: "{app}\XQBOOTH.EXE"; Description: "开始闯关"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫师介绍"; Flags: nowait postinstall shellexec skipifsilent unchecked
