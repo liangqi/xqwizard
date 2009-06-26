@@ -65,7 +65,7 @@ union UcciCommStruct {
    *    例如，position startpos moves h2e2 h9g8，FEN串就是"startpos"代表的FEN串，着法数(MoveNum)就是2
    */
   struct {
-    char *szFenStr;           // FEN串，特殊局面(如"startpos"等)也由解释器最终转换成FEN串
+    const char *szFenStr;     // FEN串，特殊局面(如"startpos"等)也由解释器最终转换成FEN串
     int nMoveNum;             // 后续着法数
     uint32_t *lpdwMovesCoord; // 后续着法，指向程序"IdleLine()"中的一个静态数组，但可以把"CoordList"本身看成数组
   };
