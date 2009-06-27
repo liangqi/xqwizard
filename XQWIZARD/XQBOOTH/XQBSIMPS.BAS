@@ -31,28 +31,42 @@ Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
 ' 全局常量——棋盘(小)设置选项
-Public Const BOARD_WOOD         As Integer = 0
-Public Const BOARD_GREEN        As Integer = 1
-Public Const BOARD_WHITE        As Integer = 2
-Public Const BOARD_SHEET        As Integer = 3
-Public Const BOARD_CANVAS       As Integer = 4
-Public Const BOARD_DROPS        As Integer = 5
-Public Const BOARD_CLOUDS       As Integer = 6
-Public Const BOARD_XQSTUDIO     As Integer = 7
-Public Const BOARD_MOVESKY      As Integer = 8
-Public Const BOARD_MRSJ         As Integer = 9
-Public Const BOARD_ZMBL         As Integer = 10
-Public Const BOARD_QIANHONG     As Integer = 11
-Public Const BOARD_MAX          As Integer = 12
+Public Const BOARD_S_WOOD       As Integer = 0
+Public Const BOARD_S_GREEN      As Integer = 1
+Public Const BOARD_S_WHITE      As Integer = 2
+Public Const BOARD_S_SHEET      As Integer = 3
+Public Const BOARD_S_CANVAS     As Integer = 4
+Public Const BOARD_S_DROPS      As Integer = 5
+Public Const BOARD_S_CLOUDS     As Integer = 6
+Public Const BOARD_S_XQSTUDIO   As Integer = 7
+Public Const BOARD_S_MOVESKY    As Integer = 8
+Public Const BOARD_S_MRSJ       As Integer = 9
+Public Const BOARD_S_ZMBL       As Integer = 10
+Public Const BOARD_S_QIANHONG   As Integer = 11
+Public Const BOARD_S_MAX        As Integer = 12
 ' 全局常量——棋子(小)设置选项
-Public Const PIECES_WOOD        As Integer = 0
-Public Const PIECES_DELICATE    As Integer = 1
-Public Const PIECES_POLISH      As Integer = 2
-Public Const PIECES_XQSTUDIO    As Integer = 3
-Public Const PIECES_MOVESKY     As Integer = 4
-Public Const PIECES_MRSJ        As Integer = 5
-Public Const PIECES_ZMBL        As Integer = 6
-Public Const PIECES_MAX         As Integer = 7
+Public Const PIECES_S_WOOD      As Integer = 0
+Public Const PIECES_S_DELICATE  As Integer = 1
+Public Const PIECES_S_POLISH    As Integer = 2
+Public Const PIECES_S_XQSTUDIO  As Integer = 3
+Public Const PIECES_S_MOVESKY   As Integer = 4
+Public Const PIECES_S_MRSJ      As Integer = 5
+Public Const PIECES_S_ZMBL      As Integer = 6
+Public Const PIECES_S_MAX       As Integer = 7
+' 全局常量——棋盘(大)设置选项
+Public Const BOARD_L_WOOD       As Integer = 0
+Public Const BOARD_L_GREEN      As Integer = 1
+Public Const BOARD_L_WHITE      As Integer = 2
+Public Const BOARD_L_SHEET      As Integer = 3
+Public Const BOARD_L_CANVAS     As Integer = 4
+Public Const BOARD_L_DROPS      As Integer = 5
+Public Const BOARD_L_QIANHONG   As Integer = 6
+Public Const BOARD_L_MAX        As Integer = 7
+' 全局常量——棋子(大)设置选项
+Public Const PIECES_L_WOOD      As Integer = 0
+Public Const PIECES_L_DELICATE  As Integer = 1
+Public Const PIECES_L_POLISH    As Integer = 2
+Public Const PIECES_L_MAX       As Integer = 3
 ' 全局常量——排名类型
 Public Const RANK_WEEK          As Integer = 0
 Public Const RANK_MONTH         As Integer = 1
@@ -63,10 +77,13 @@ Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Options_bLargeGui        As Boolean  ' 大界面
+Public Options_bSounds          As Boolean  ' 声音
+Public Options_nBoardS          As Integer  ' 小界面的棋盘
+Public Options_nPiecesS         As Integer  ' 小界面的棋子
+Public Options_nBoardL          As Integer  ' 大界面的棋盘
+Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Gui_szUserID             As String   ' 用户ID
-Public Gui_nBoard               As Integer  ' 棋盘
-Public Gui_nPieces              As Integer  ' 棋子
-Public Gui_bSounds              As Boolean  ' 音效
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_nCurr                As Integer  ' 当前残局的条目序号
@@ -132,14 +149,17 @@ End Function
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
+Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
+Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
+Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
+Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
+Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
         Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
-Gui_nBoard = Str2Int(GetSetting("XQBooth", "Gui", "Board", "0"), 0, BOARD_MAX - 1)
-Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX - 1)
-Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
 Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
@@ -151,13 +171,16 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
+SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
+SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
+SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
+SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
+SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
+SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQBooth", "Gui", "Board", LTrim(Str(Gui_nBoard))
-SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
-SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
@@ -322,7 +345,7 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList
+    DownloadAdvertList "advert_simp.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -338,7 +361,7 @@ If Gui_szUpgradeDate <> Date Then
 End If
 
 frmXQBooth.Show
-frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
+frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
 frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 
 ' 提示建立存档
@@ -369,7 +392,7 @@ Do While App_bRunning
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList
+    DownloadAdvertList "advert_simp.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date

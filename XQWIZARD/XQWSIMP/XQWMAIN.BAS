@@ -3032,7 +3032,7 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList
+    DownloadAdvertList "advert.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -3160,7 +3160,7 @@ Do While App_bRunning
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList
+    DownloadAdvertList "advert.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date

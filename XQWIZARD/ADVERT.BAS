@@ -27,12 +27,12 @@ Public Gui_nAdvertTimes(0 To MAX_ADVERTS) As Integer    ' 广告时间
 Public Gui_szAdvertFiles(1 To MAX_ADVERTS) As String    ' 广告列表
 
 ' 下载广告列表
-Public Sub DownloadAdvertList()
+Public Sub DownloadAdvertList(ByVal szAdvertFile As String)
 
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/advert/advert.txt")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szAdvertFile)
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -82,7 +82,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.Inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -95,7 +95,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.Inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
