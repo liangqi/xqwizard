@@ -17,7 +17,7 @@ CREATE TABLE tb_user (
 CREATE TABLE tb_recent (
 	username VARCHAR(64) NOT NULL PRIMARY KEY,
 	savetime INTEGER NOT NULL,
-	score VARCHAR(16) NOT NULL,
+	score INTEGER NOT NULL,
 	KEY (savetime));
 
 CREATE TABLE tb_rankw (

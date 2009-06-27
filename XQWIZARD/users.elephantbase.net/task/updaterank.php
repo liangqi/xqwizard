@@ -15,7 +15,7 @@
       "SELECT username, rank FROM {$mysql_tablepre}rank%s";
   $sqlInsert2 = "INSERT INTO {$mysql_tablepre}rank%s (username, score) " .
       "SELECT username, score FROM {$mysql_tablepre}user " .
-      "WHERE lasttime > %d ORDER BY score DESC";
+      "WHERE lasttime > %d ORDER BY score DESC, lasttime DESC";
 
   mysql_query(sprintf($sqlTruncate, "w0"));
   mysql_query(sprintf($sqlInsert1, "w0", "w"));
