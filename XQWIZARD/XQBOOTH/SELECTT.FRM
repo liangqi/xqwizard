@@ -5226,7 +5226,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5245,7 +5245,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5264,7 +5264,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5283,7 +5283,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5302,7 +5302,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5321,7 +5321,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5340,7 +5340,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5359,7 +5359,7 @@ Begin VB.Form frmSelect
          Alignment       =   2  'Center
          Caption         =   "²Ä ???? Ãö"
          BeginProperty Font 
-            Name            =   "§ºÊ^"
+            Name            =   "¼šÃ÷ów"
             Size            =   10.5
             Charset         =   0
             Weight          =   400
@@ -5530,10 +5530,10 @@ Dim nCurr As Integer
 nCurr = hsb.Value * BOARD_NUM + nSelected
 If nCurr <= Gui_nLast Then
     If Gui_nCurr <> nCurr Then
-        frmXQBooth.ClearHint
+        App_frmXQBooth.ClearHint
     End If
     Gui_nCurr = nCurr
-    frmXQBooth.LoadGame
+    App_frmXQBooth.LoadGame
     Unload Me
 Else
     MsgBox "ÄúÉÐÎ´êJµ½ß@Ò»êP¡£", vbExclamation

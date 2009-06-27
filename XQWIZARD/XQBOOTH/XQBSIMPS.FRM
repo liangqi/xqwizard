@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
-Begin VB.Form frmXQBooth 
+Begin VB.Form frmXQBoothSmall 
    BorderStyle     =   1  'Fixed Single
    ClientHeight    =   7200
    ClientLeft      =   150
@@ -1044,7 +1044,7 @@ Begin VB.Form frmXQBooth
       End
    End
 End
-Attribute VB_Name = "frmXQBooth"
+Attribute VB_Name = "frmXQBoothSmall"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -1301,6 +1301,8 @@ End Sub
 
 Private Sub Form_Load()
 
+mnOptionsGuiSmall.Checked = Not Options_bLargeGui
+mnOptionsGuiLarge.Checked = Options_bLargeGui
 mnOptionsBoard_Click Options_nBoardS
 mnOptionsPieces_Click Options_nPiecesS
 ClearHint
@@ -1836,6 +1838,31 @@ Private Sub mnUsersHome_Click()
 
 ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", _
         vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub SwapGui()
+
+mnOptionsGuiSmall.Checked = Options_bLargeGui
+Options_bLargeGui = Not Options_bLargeGui
+mnOptionsGuiLarge.Checked = Options_bLargeGui
+MsgBox "显示模式已经更改，重新启动程序后才能生效。", vbInformation
+
+End Sub
+
+Private Sub mnOptionsGuiSmall_Click()
+
+If Options_bLargeGui Then
+    SwapGui
+End If
+
+End Sub
+
+Private Sub mnOptionsGuiLarge_Click()
+
+If Not Options_bLargeGui Then
+    SwapGui
+End If
 
 End Sub
 

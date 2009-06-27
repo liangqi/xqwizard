@@ -366,7 +366,8 @@ Begin VB.Form frmRank
       TabIndex        =   39
       Top             =   3480
       Width           =   2895
-   End   Begin VB.Label lblScoreSelf 
+   End
+   Begin VB.Label lblScoreSelf 
       Alignment       =   1  'Right Justify
       Caption         =   "9999"
       Height          =   255

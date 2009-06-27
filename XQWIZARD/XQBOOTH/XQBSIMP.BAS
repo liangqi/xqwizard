@@ -77,6 +77,7 @@ Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public App_frmXQBooth           As Form     ' 主窗体
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
@@ -360,9 +361,14 @@ If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
 
-frmXQBooth.Show
-frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
-frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+If Options_bLargeGui Then
+    Set App_frmXQBooth = frmXQBoothSmall
+Else
+    Set App_frmXQBooth = frmXQBoothSmall ' 以后改成Large
+End If
+App_frmXQBooth.Show
+App_frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
+App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 
 ' 提示建立存档
 If Login_szUserName = "" Then
@@ -385,7 +391,7 @@ Do While App_bRunning
         If Gui_nAdvertIndex > Gui_nAdvertNum Then
             Gui_nAdvertIndex = 1
         End If
-        frmXQBooth.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
+        App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
     End If
     DoEvents
     Sleep 1

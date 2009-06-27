@@ -31,28 +31,42 @@ Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 殘局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
 Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
 ' 全局常量——棋盤(小)設置選項
-Public Const BOARD_WOOD         As Integer = 0
-Public Const BOARD_GREEN        As Integer = 1
-Public Const BOARD_WHITE        As Integer = 2
-Public Const BOARD_SHEET        As Integer = 3
-Public Const BOARD_CANVAS       As Integer = 4
-Public Const BOARD_DROPS        As Integer = 5
-Public Const BOARD_CLOUDS       As Integer = 6
-Public Const BOARD_XQSTUDIO     As Integer = 7
-Public Const BOARD_MOVESKY      As Integer = 8
-Public Const BOARD_MRSJ         As Integer = 9
-Public Const BOARD_ZMBL         As Integer = 10
-Public Const BOARD_QIANHONG     As Integer = 11
-Public Const BOARD_MAX          As Integer = 12
+Public Const BOARD_S_WOOD       As Integer = 0
+Public Const BOARD_S_GREEN      As Integer = 1
+Public Const BOARD_S_WHITE      As Integer = 2
+Public Const BOARD_S_SHEET      As Integer = 3
+Public Const BOARD_S_CANVAS     As Integer = 4
+Public Const BOARD_S_DROPS      As Integer = 5
+Public Const BOARD_S_CLOUDS     As Integer = 6
+Public Const BOARD_S_XQSTUDIO   As Integer = 7
+Public Const BOARD_S_MOVESKY    As Integer = 8
+Public Const BOARD_S_MRSJ       As Integer = 9
+Public Const BOARD_S_ZMBL       As Integer = 10
+Public Const BOARD_S_QIANHONG   As Integer = 11
+Public Const BOARD_S_MAX        As Integer = 12
 ' 全局常量——棋子(小)設置選項
-Public Const PIECES_WOOD        As Integer = 0
-Public Const PIECES_DELICATE    As Integer = 1
-Public Const PIECES_POLISH      As Integer = 2
-Public Const PIECES_XQSTUDIO    As Integer = 3
-Public Const PIECES_MOVESKY     As Integer = 4
-Public Const PIECES_MRSJ        As Integer = 5
-Public Const PIECES_ZMBL        As Integer = 6
-Public Const PIECES_MAX         As Integer = 7
+Public Const PIECES_S_WOOD      As Integer = 0
+Public Const PIECES_S_DELICATE  As Integer = 1
+Public Const PIECES_S_POLISH    As Integer = 2
+Public Const PIECES_S_XQSTUDIO  As Integer = 3
+Public Const PIECES_S_MOVESKY   As Integer = 4
+Public Const PIECES_S_MRSJ      As Integer = 5
+Public Const PIECES_S_ZMBL      As Integer = 6
+Public Const PIECES_S_MAX       As Integer = 7
+' 全局常量——棋盤(大)設置選項
+Public Const BOARD_L_WOOD       As Integer = 0
+Public Const BOARD_L_GREEN      As Integer = 1
+Public Const BOARD_L_WHITE      As Integer = 2
+Public Const BOARD_L_SHEET      As Integer = 3
+Public Const BOARD_L_CANVAS     As Integer = 4
+Public Const BOARD_L_DROPS      As Integer = 5
+Public Const BOARD_L_QIANHONG   As Integer = 6
+Public Const BOARD_L_MAX        As Integer = 7
+' 全局常量——棋子(大)設置選項
+Public Const PIECES_L_WOOD      As Integer = 0
+Public Const PIECES_L_DELICATE  As Integer = 1
+Public Const PIECES_L_POLISH    As Integer = 2
+Public Const PIECES_L_MAX       As Integer = 3
 ' 全局常量——排名類型
 Public Const RANK_WEEK          As Integer = 0
 Public Const RANK_MONTH         As Integer = 1
@@ -63,10 +77,14 @@ Public App_szPath               As String   ' 主程序所在的文件夾，以"\"結尾
 Public App_bRunning             As Boolean  ' 程序運行標志，啟動時設成True，如果是False，則跳出事件檢測循環
 Public App_nEndgames            As Integer  ' 讀入的殘局數量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 讀入的殘局
+Public App_frmXQBooth           As Form     ' 主窗体
+Public Options_bLargeGui        As Boolean  ' 大界面
+Public Options_bSounds          As Boolean  ' 聲音
+Public Options_nBoardS          As Integer  ' 小界面的棋盤
+Public Options_nPiecesS         As Integer  ' 小界面的棋子
+Public Options_nBoardL          As Integer  ' 大界面的棋盤
+Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Gui_szUserID             As String   ' 用戶ID
-Public Gui_nBoard               As Integer  ' 棋盤
-Public Gui_nPieces              As Integer  ' 棋子
-Public Gui_bSounds              As Boolean  ' 音效
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
@@ -132,14 +150,17 @@ End Function
 ' 從注冊表加載參數
 Public Sub LoadRegs()
 
+Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
+Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
+Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
+Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
+Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
+Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
         Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
-Gui_nBoard = Str2Int(GetSetting("XQBooth", "Gui", "Board", "0"), 0, BOARD_MAX - 1)
-Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX - 1)
-Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
 Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
@@ -151,13 +172,16 @@ End Sub
 ' 保存參數到注冊表
 Public Sub SaveRegs()
 
+SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
+SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
+SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
+SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
+SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
+SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQBooth", "Gui", "Board", LTrim(Str(Gui_nBoard))
-SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
-SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
@@ -172,7 +196,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php?referer=xqbooth&version=" + _
         STRING_VERSION + "&userid=" + Gui_szUserID)
 On Error GoTo 0
 If sz = "" Then
@@ -185,12 +209,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_trad.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
@@ -322,7 +346,7 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒鐘后開始播放廣告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList "advert.txt"
+    DownloadAdvertList "advert_trad.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -337,9 +361,14 @@ If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
 
-frmXQBooth.Show
-frmXQBooth.mnOptionsSounds.Checked = Gui_bSounds
-frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+If Options_bLargeGui Then
+    Set App_frmXQBooth = frmXQBoothSmall
+Else
+    Set App_frmXQBooth = frmXQBoothSmall ' 以后改成Large
+End If
+App_frmXQBooth.Show
+App_frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
+App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 
 ' 提示建立存檔
 If Login_szUserName = "" Then
@@ -362,14 +391,14 @@ Do While App_bRunning
         If Gui_nAdvertIndex > Gui_nAdvertNum Then
             Gui_nAdvertIndex = 1
         End If
-        frmXQBooth.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
+        App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
     End If
     DoEvents
     Sleep 1
 Loop
 ' 退出前下載廣告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList "advert.txt"
+    DownloadAdvertList "advert_trad.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date
