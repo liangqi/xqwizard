@@ -1,8 +1,8 @@
 Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
-' XiangQi Booth - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
+' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -45,20 +45,25 @@ Public Const BOARD_ZMBL         As Integer = 10
 Public Const BOARD_QIANHONG     As Integer = 11
 Public Const BOARD_MAX          As Integer = 12
 ' 全局常量——棋子(小)設置選項
-Public Const PIECES_WOOD      As Integer = 0
-Public Const PIECES_DELICATE  As Integer = 1
-Public Const PIECES_POLISH    As Integer = 2
-Public Const PIECES_XQSTUDIO  As Integer = 3
-Public Const PIECES_MOVESKY   As Integer = 4
-Public Const PIECES_MRSJ      As Integer = 5
-Public Const PIECES_ZMBL      As Integer = 6
-Public Const PIECES_MAX       As Integer = 7
+Public Const PIECES_WOOD        As Integer = 0
+Public Const PIECES_DELICATE    As Integer = 1
+Public Const PIECES_POLISH      As Integer = 2
+Public Const PIECES_XQSTUDIO    As Integer = 3
+Public Const PIECES_MOVESKY     As Integer = 4
+Public Const PIECES_MRSJ        As Integer = 5
+Public Const PIECES_ZMBL        As Integer = 6
+Public Const PIECES_MAX         As Integer = 7
+' 全局常量——排名類型
+Public Const RANK_WEEK          As Integer = 0
+Public Const RANK_MONTH         As Integer = 1
+Public Const RANK_QUARTER       As Integer = 2
 
 ' 全局變量
 Public App_szPath               As String   ' 主程序所在的文件夾，以"\"結尾
 Public App_bRunning             As Boolean  ' 程序運行標志，啟動時設成True，如果是False，則跳出事件檢測循環
 Public App_nEndgames            As Integer  ' 讀入的殘局數量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 讀入的殘局
+Public Gui_szUserID             As String   ' 用戶ID
 Public Gui_nBoard               As Integer  ' 棋盤
 Public Gui_nPieces              As Integer  ' 棋子
 Public Gui_bSounds              As Boolean  ' 音效
@@ -70,11 +75,65 @@ Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
+Public Login_szTitle            As String   ' 登錄框標題
+Public Login_szPrompt           As String   ' 登錄框提示
+Public Login_bCancel            As Boolean  ' 登錄是否取消
+Public Login_szUserName         As String   ' 登錄用戶名
+Public Login_szPassword         As String   ' 登錄密碼
+Public Login_bRemember          As Boolean  ' 記住密碼
+Public Rank_nType               As Integer  ' 排名類型
+Public Rank_nScore              As Integer  ' 排名成績
+Public Rank_nToday              As Long     ' 今日排名
+Public Rank_nYesterday          As Long     ' 昨日排名
+Public Rank_szList              As String   ' 排名列表
 Public Engine_pipe          As PipeStruct   ' 引擎管道
+
+' 簡單字符异或函數
+Public Function SimpleXor(ByVal n As Integer, ByVal i As Integer) As Integer
+
+SimpleXor = n Xor Asc(Mid(STRING_COPYRIGHT, (i - 1) Mod Len(STRING_COPYRIGHT) + 1, 1))
+
+End Function
+
+' 簡單加密函數
+Public Function SimpleEncrypt(ByVal szPlain As String) As String
+
+Dim nLen As Integer, i As Integer
+
+nLen = Len(szPlain)
+If nLen = 0 Then
+    SimpleEncrypt = ""
+    Exit Function
+End If
+ReDim szCiphers(0 To nLen - 1) As String
+For i = 1 To nLen
+    szCiphers(i - 1) = LTrim(Str(SimpleXor(Asc(Mid(szPlain, i, 1)), i)))
+Next
+SimpleEncrypt = Join(szCiphers, ",")
+Erase szCiphers
+
+End Function
+
+' 簡單解密函數
+Public Function SimpleDecrypt(ByVal szCipher As String) As String
+
+Dim szCiphers() As String, szPlain As String, nLen As Integer, i As Integer
+
+szCiphers = Split(szCipher, ",")
+nLen = UBound(szCiphers) + 1
+szPlain = Space(nLen)
+For i = 1 To nLen
+    Mid(szPlain, i, 1) = Chr(SimpleXor(Val(szCiphers(i - 1)), i))
+Next
+SimpleDecrypt = szPlain
+
+End Function
 
 ' 從注冊表加載參數
 Public Sub LoadRegs()
 
+Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
+        Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -83,12 +142,16 @@ Gui_nPieces = Str2Int(GetSetting("XQBooth", "Gui", "Pieces", "0"), 0, PIECES_MAX
 Gui_bSounds = GetSetting("XQBooth", "Gui", "Sounds", "1") <> "0"
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
+Login_szPassword = SimpleDecrypt(GetSetting("XQBooth", "Gui", "Password", ""))
+Login_bRemember = GetSetting("XQBooth", "Gui", "Remember", "0") <> "0"
 
 End Sub
 
 ' 保存參數到注冊表
 Public Sub SaveRegs()
 
+SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
@@ -97,6 +160,9 @@ SaveSetting "XQBooth", "Gui", "Pieces", LTrim(Str(Gui_nPieces))
 SaveSetting "XQBooth", "Gui", "Sounds", IIf(Gui_bSounds, "1", "0")
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
+SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
+SaveSetting "XQBooth", "Gui", "Password", SimpleEncrypt(Login_szPassword)
+SaveSetting "XQBooth", "Gui", "Remember", IIf(Login_bRemember, "1", "0")
 
 End Sub
 
@@ -106,7 +172,8 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php?referer=xqbooth&version=" + STRING_VERSION)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
+        STRING_VERSION + "&userid=" + Gui_szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -114,16 +181,16 @@ If sz = "" Then
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
+    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即寫注冊表，避免重開窗口導致的重复訪問
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_trad.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫師 " + sz + " 已經發布，需要下載最新版本嗎？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_trad.txt")
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
@@ -179,6 +246,9 @@ Dim sz As String, lpStr As Long
 Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
+Dim qwCounter As Currency
+QueryPerformanceCounter qwCounter
+Randomize qwCounter
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
@@ -329,6 +399,9 @@ If bLoaded Then
     MsgBox "無法正常卸載引擎！", vbExclamation
 End If
 ' 退出
+If Not Login_bRemember Then
+    Login_szPassword = ""
+End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
 Unload frmHide

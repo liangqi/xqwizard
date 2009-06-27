@@ -206,6 +206,7 @@ Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
+Public Gui_szUserID             As String   ' 用户ID
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
@@ -2755,6 +2756,8 @@ Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "趣味象棋")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
+Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
+        Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -2815,6 +2818,7 @@ SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
+SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
@@ -2860,7 +2864,8 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + STRING_VERSION)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
+        STRING_VERSION + "&userid=" + Gui_szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2933,8 +2938,10 @@ Dim hWnd As Long, i As Integer, sz As String
 Dim imgLoading As Picture
 
 ' 弹出启动画面，初始化
+Dim qwCounter As Currency
+QueryPerformanceCounter qwCounter
+Randomize qwCounter
 App_bPrevInstance = App.PrevInstance
-Randomize Timer
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 hWnd = TransparentWindow(App.hInstance, frmHide.imgMickey.Picture.Handle, frmHide.imgMickeyAlpha.Picture.Handle, _
         frmHide.imgMickey.Width, frmHide.imgMickey.Height)

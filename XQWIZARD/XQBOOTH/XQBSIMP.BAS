@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
+' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -63,6 +63,7 @@ Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
+Public Gui_szUserID             As String   ' 用户ID
 Public Gui_nBoard               As Integer  ' 棋盘
 Public Gui_nPieces              As Integer  ' 棋子
 Public Gui_bSounds              As Boolean  ' 音效
@@ -131,6 +132,8 @@ End Function
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
+        Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -148,6 +151,7 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
+SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
@@ -168,7 +172,8 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + STRING_VERSION)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
+        STRING_VERSION + "&userid=" + Gui_szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -241,6 +246,9 @@ Dim sz As String, lpStr As Long
 Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
+Dim qwCounter As Currency
+QueryPerformanceCounter qwCounter
+Randomize qwCounter
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs
