@@ -87,7 +87,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td><p align="center"><!--webbot
+                <td bgcolor="#F0F0F0"><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo $userdata["info"];
 ?><!--webbot
@@ -95,13 +95,15 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td id="admin"><p align="center"><font size="2">如果您是管理员，请进入</font><a
+                <td bgcolor="#F0F0F0" id="admin"><p
+                align="center"><font size="2">如果您是管理员，请进入</font><a
                 href="admin/admin.htm" target="_blank"><font
                 size="2">【管理】</font></a><font size="2">页面</font></p>
                 </td>
             </tr>
             <tr>
-                <td align="center"><font size="2">提示：在象棋魔法学校中使用“提交成绩”功能，您的成绩才会更新</font></td>
+                <td align="center" bgcolor="#F0F0F0"><font
+                size="2">提示：在象棋魔法学校中使用“提交成绩”功能，您的成绩才会更新</font></td>
             </tr>
             <tr>
                 <td background="images/headerbg.gif"
@@ -109,7 +111,7 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>补充点数</strong></font></td>
             </tr>
             <tr>
-                <td align="center" id="charge"
+                <td align="center" bgcolor="#F0F0F0" id="charge"
                 style="display:none"><form action="charge.php"
                 method="POST">
                     <table border="0">
@@ -135,8 +137,8 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>更改用户信息</strong></font></td>
             </tr>
             <tr>
-                <td align="center"><form action="updateinfo.php"
-                method="POST" id="frm">
+                <td align="center" bgcolor="#F0F0F0"><form
+                action="updateinfo.php" method="POST" id="frm">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">原密码：</font></td>
@@ -178,21 +180,31 @@ bottommargin="0" rightmargin="0">
                             <td><font size="2">该邮箱是您找回密码的重要途径，建议填写</font></td>
                         </tr>
                     </table>
-                    <p><input type="submit" value="提交"><script
-                    language="JavaScript"><!--
-var userType = <?php echo $userdata["usertype"]; ?>;
-admin.style.display = (userType == 128 ? "block" : "none");
-if (userType > 0) {
-  chargeTitle.style.display = "block";
-  charge.style.display = "block";
-}
-frm.email.value = "<?php echo $userdata["email"]; ?>";
-// --></script></p>
+                    <p><input type="submit" value="提交"></p>
                 </form>
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#E0E0E0"><p align="right"><a
+                <td id="chargeLink"><p align="center"><a href="#"
+                onclick="showCharge()"><font size="2">【补充点数】</font></a></p>
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#E0E0E0"><p align="right"><script
+                language="JavaScript"><!--
+function showCharge() {
+  chargeTitle.style.display = "block";
+  charge.style.display = "block";
+  chargeLink.style.display = "none";
+}
+
+var userType = <?php echo $userdata["usertype"]; ?>;
+admin.style.display = (userType == 128 ? "block" : "none");
+if (userType > 0) {
+  showCharge();
+}
+frm.email.value = "<?php echo $userdata["email"]; ?>";
+// --></script><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font
