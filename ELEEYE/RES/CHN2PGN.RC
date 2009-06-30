@@ -1,4 +1,4 @@
-#include <afxres.h>
+#include <winver.h>
 1                       ICON    DISCARDABLE     "CHN2PGN.ICO"
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 3, 1, 4, 0

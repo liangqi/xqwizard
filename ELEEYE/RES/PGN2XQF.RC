@@ -1,4 +1,4 @@
-#include <afxres.h>
+#include <winver.h>
 1                       ICON    DISCARDABLE     "PGN2XQF.ICO"
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 2, 0, 2, 0

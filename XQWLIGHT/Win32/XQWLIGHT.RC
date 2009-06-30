@@ -1,4 +1,4 @@
-#include <afxres.h>
+#include <winver.h>
 #include "resource.h"
 
 IDI_APPICON  ICON   DISCARDABLE "RES\\XQWIZARD.ICO"

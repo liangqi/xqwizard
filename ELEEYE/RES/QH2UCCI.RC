@@ -1,4 +1,4 @@
-#include <afxres.h>
+#include <winver.h>
 1                       ICON    DISCARDABLE     "UCCI2QH.ICO"
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1, 6, 0, 0
