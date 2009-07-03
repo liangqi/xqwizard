@@ -1077,22 +1077,32 @@ Private Const DRAW_SELECTED As Boolean = True
 Private Const DRAW_MATE As Boolean = True
 Private Const DRAW_REFRESH As Boolean = True
 
-Private Const PHASE_READY As Integer = 0
-Private Const PHASE_BUSY As Integer = 1
-Private Const PHASE_WIN As Integer = 2
-Private Const PHASE_LOSS As Integer = 3
+Enum PhaseEnum
+    PHASE_READY = 0
+    PHASE_BUSY = 1
+    PHASE_WIN = 2
+    PHASE_LOSS = 3
+End Enum
 
-Private Const USERS_SAVE As Integer = 0
-Private Const USERS_LOAD As Integer = 1
-Private Const USERS_RANK As Integer = 2
-Private Const USERS_HINT As Integer = 3
-Private Const USERS_RETRACT As Integer = 4
-Private Const USERS_POINTS As Integer = 5
+Enum HintEnum
+    HINT_NONE = 0
+    HINT_RESTART = 1
+    HINT_RETRY = 2
+End Enum
+
+Enum EventEnum
+    USERS_SAVE = 0
+    USERS_LOAD = 1
+    USERS_RANK = 2
+    USERS_HINT = 3
+    USERS_RETRACT = 4
+    USERS_POINTS = 5
+End Enum
 
 Private pos As PositionStruct
-Private nPhase As Integer, sqSelected As Integer, mvLast As Long
-Private nPhaseSaved As Integer, nUsersEvent As Integer
-Private bHint As Boolean, dfHintTime As Double
+Private sqSelected As Integer, mvLast As Long
+Private nPhase As PhaseEnum, nPhaseSaved As PhaseEnum
+Private nUsersEvent As EventEnum, nHint As HintEnum, dfHintTime As Double
 
 Private Function PieceFileName(ByVal nIndex As Integer) As String
 
@@ -1275,7 +1285,7 @@ End Function
 
 Public Sub ClearHint()
 
-bHint = False
+nHint = HINT_NONE
 dfHintTime = Timer
 
 End Sub
@@ -1296,6 +1306,9 @@ BoardFlush
 sqSelected = 0
 mvLast = 0
 nPhase = PHASE_READY
+If nHint = HINT_RETRY Then
+    nHint = HINT_RESTART
+End If
 
 End Sub
 
@@ -1370,7 +1383,7 @@ Private Sub DoHint()
 
 Dim mv As Long, i As Integer
 
-bHint = True
+nHint = HINT_RETRY
 mv = GetBestMove
 MousePointer = vbNormal
 If sqSelected > 0 Then
@@ -1517,6 +1530,8 @@ Case USERS_LOAD
                 ClearHint
                 Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
                 LoadGame
+                ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
+                nPhaseSaved = PHASE_READY
                 MsgBox "成绩获取成功。", vbInformation
             End If
         Else
@@ -1685,7 +1700,7 @@ If dfThinkTime < 30 + Gui_nCurr \ 100 Then
     Exit Sub
 End If
 
-If bHint Or Gui_nCurr < 100 Then
+If nHint <> HINT_NONE Or Gui_nCurr < 100 Then
     EnterBusy
     DoHint
     LeaveBusy
@@ -2020,10 +2035,9 @@ ElseIf sqSelected > 0 Then
             nPhase = GetResult(nStatus)
             MousePointer = vbDefault
         End If
-        If nPhase = PHASE_WIN And bHint Then
+        If nPhase = PHASE_WIN And nHint = HINT_RETRY Then
             If MsgBox("您是使用提示功能通过本关的，是否不用提示再试一次？", _
                     vbQuestion + vbYesNo) = vbYes Then
-                ClearHint
                 LoadGame
             End If
         End If
