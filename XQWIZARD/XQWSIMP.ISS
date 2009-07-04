@@ -47,7 +47,6 @@ Source: "MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneverun
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ALPHABLT.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion

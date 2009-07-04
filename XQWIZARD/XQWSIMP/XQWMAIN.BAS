@@ -2943,8 +2943,8 @@ QueryPerformanceCounter qwCounter
 Randomize qwCounter
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
-hWnd = TransparentWindow(App.hInstance, frmHide.imgMickey.Picture.Handle, frmHide.imgMickeyAlpha.Picture.Handle, _
-        frmHide.imgMickey.Width, frmHide.imgMickey.Height)
+frmStartup.Show
+frmStartup.Refresh
 CchessInit
 ' ≈–∂œ «∑Ò‘ –Ì…˝±‰
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3066,7 +3066,7 @@ If Not App_bPromotion Then
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
-DestroyWindow hWnd
+Unload frmStartup
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
