@@ -2038,7 +2038,6 @@ ElseIf sqSelected > 0 Then
         If nPhase = PHASE_WIN And nHint = HINT_RETRY Then
             If MsgBox("您是使用提示功能通過本關的，是否不用提示再試一次？", _
                     vbQuestion + vbYesNo) = vbYes Then
-                ClearHint
                 LoadGame
             End If
         End If
