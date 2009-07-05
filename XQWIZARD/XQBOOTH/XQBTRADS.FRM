@@ -924,7 +924,6 @@ Begin VB.Form frmXQBoothSmall
          End
          Begin VB.Menu mnOptionsGuiLarge 
             Caption         =   "¤j(&L)"
-            Enabled         =   0   'False
          End
       End
       Begin VB.Menu mnOptionsSep1 
@@ -1052,7 +1051,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1077,20 +1076,20 @@ Private Const DRAW_SELECTED As Boolean = True
 Private Const DRAW_MATE As Boolean = True
 Private Const DRAW_REFRESH As Boolean = True
 
-Enum PhaseEnum
+Private Enum PhaseEnum
     PHASE_READY = 0
     PHASE_BUSY = 1
     PHASE_WIN = 2
     PHASE_LOSS = 3
 End Enum
 
-Enum HintEnum
+Private Enum HintEnum
     HINT_NONE = 0
     HINT_RESTART = 1
     HINT_RETRY = 2
 End Enum
 
-Enum EventEnum
+Private Enum EventEnum
     USERS_SAVE = 0
     USERS_LOAD = 1
     USERS_RANK = 2

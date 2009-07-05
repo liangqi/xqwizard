@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.1"
+Public Const STRING_VERSION     As String = "4.11"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
@@ -362,9 +362,9 @@ If Gui_szUpgradeDate <> Date Then
 End If
 
 If Options_bLargeGui Then
-    Set App_frmXQBooth = frmXQBoothSmall
+    Set App_frmXQBooth = frmXQBoothLarge
 Else
-    Set App_frmXQBooth = frmXQBoothSmall ' 以后改成Large
+    Set App_frmXQBooth = frmXQBoothSmall
 End If
 App_frmXQBooth.Show
 App_frmXQBooth.mnOptionsSounds.Checked = Options_bSounds

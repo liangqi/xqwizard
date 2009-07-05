@@ -8,22 +8,22 @@ Begin VB.Form frmXQBoothSmall
    ClientTop       =   720
    ClientWidth     =   5640
    BeginProperty Font 
-      Name            =   "宋体"
+      Name            =   "細明體"
       Size            =   9
-      Charset         =   134
+      Charset         =   136
       Weight          =   400
       Underline       =   0   'False
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "XQBSIMPS.frx":0000
+   Icon            =   "XQBTRADS.frx":0000
    MaxButton       =   0   'False
    ScaleHeight     =   7200
    ScaleMode       =   0  'User
    ScaleWidth      =   5640
    StartUpPosition =   3  'Windows Default
    Begin VB.CommandButton btnRestart 
-      Caption         =   "再试一次"
+      Caption         =   "刚Ω"
       Height          =   495
       Left            =   4680
       TabIndex        =   4
@@ -32,7 +32,7 @@ Begin VB.Form frmXQBoothSmall
       Width           =   975
    End
    Begin VB.CommandButton btnHint 
-      Caption         =   "提示"
+      Caption         =   "矗ボ"
       Height          =   495
       Left            =   0
       TabIndex        =   1
@@ -41,7 +41,7 @@ Begin VB.Form frmXQBoothSmall
       Width           =   975
    End
    Begin VB.CommandButton btnRetract 
-      Caption         =   "悔棋"
+      Caption         =   "囱"
       Height          =   495
       Left            =   0
       TabIndex        =   0
@@ -50,7 +50,7 @@ Begin VB.Form frmXQBoothSmall
       Width           =   975
    End
    Begin VB.CommandButton btnNext 
-      Caption         =   "下一关"
+      Caption         =   "闽"
       Height          =   495
       Left            =   4680
       TabIndex        =   3
@@ -59,7 +59,7 @@ Begin VB.Form frmXQBoothSmall
       Width           =   975
    End
    Begin VB.CommandButton btnSave 
-      Caption         =   "提交成绩"
+      Caption         =   "矗ユΘ罿"
       Height          =   495
       Left            =   4680
       TabIndex        =   2
@@ -832,61 +832,61 @@ Begin VB.Form frmXQBoothSmall
    Begin VB.Image imgBoard 
       Height          =   6255
       Left            =   0
-      Picture         =   "XQBSIMPS.frx":0ABA
+      Picture         =   "XQBTRADS.frx":0ABA
       Stretch         =   -1  'True
       Top             =   0
       Width           =   5655
    End
    Begin VB.Menu mnGame 
-      Caption         =   "游戏(&G)"
+      Caption         =   "村栏(&G)"
       Begin VB.Menu mnGameSelect 
-         Caption         =   "选关(&O)"
+         Caption         =   "匡闽(&O)"
          Shortcut        =   ^O
       End
       Begin VB.Menu mnGameNext 
-         Caption         =   "下一关(&N)"
+         Caption         =   "闽(&N)"
          Shortcut        =   ^N
       End
       Begin VB.Menu mnGameRestart 
-         Caption         =   "再试一次(&R)"
+         Caption         =   "刚Ω(&R)"
          Shortcut        =   ^R
       End
       Begin VB.Menu mnGameSep1 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameHint 
-         Caption         =   "提示(&H)"
+         Caption         =   "矗ボ(&H)"
          Shortcut        =   ^H
       End
       Begin VB.Menu mnGameRetract 
-         Caption         =   "悔棋(&T)"
+         Caption         =   "囱(&T)"
          Shortcut        =   ^T
       End
       Begin VB.Menu mnGameSep2 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameExit 
-         Caption         =   "离开(&X)"
+         Caption         =   "置秨(&X)"
       End
    End
    Begin VB.Menu mnUsers 
-      Caption         =   "用户中心(&U)"
+      Caption         =   "ノめいみ(&U)"
       Begin VB.Menu mnUsersSave 
-         Caption         =   "提交成绩(&S)"
+         Caption         =   "矗ユΘ罿(&S)"
          Shortcut        =   ^S
       End
       Begin VB.Menu mnUsersLoad 
-         Caption         =   "获取成绩(&L)"
+         Caption         =   "莉Θ罿(&L)"
       End
       Begin VB.Menu mnUsersSep1 
          Caption         =   "-"
       End
       Begin VB.Menu mnUsersHint 
-         Caption         =   "提示(&H)"
+         Caption         =   "矗ボ(&H)"
          Visible         =   0   'False
       End
       Begin VB.Menu mnUsersRetract 
-         Caption         =   "悔棋(&T)"
+         Caption         =   "囱(&T)"
          Visible         =   0   'False
       End
       Begin VB.Menu mnUsersSep2 
@@ -894,120 +894,121 @@ Begin VB.Form frmXQBoothSmall
          Visible         =   0   'False
       End
       Begin VB.Menu mnUsersRank_ 
-         Caption         =   "排名(&R)"
+         Caption         =   "逼(&R)"
          Begin VB.Menu mnUsersRank 
-            Caption         =   "近一周排名(&W)"
+            Caption         =   "㏄逼(&W)"
             Index           =   0
          End
          Begin VB.Menu mnUsersRank 
-            Caption         =   "近一月排名(&M)"
+            Caption         =   "る逼(&M)"
             Index           =   1
          End
          Begin VB.Menu mnUsersRank 
-            Caption         =   "近三月排名(&Q)"
+            Caption         =   "る逼(&Q)"
             Index           =   2
          End
       End
       Begin VB.Menu mnUsersPoints 
-         Caption         =   "查询点数(&P)"
+         Caption         =   "琩高翴计(&P)"
       End
       Begin VB.Menu mnUsersHome 
-         Caption         =   "用户中心首页(&H)"
+         Caption         =   "ノめいみ(&H)"
       End
    End
    Begin VB.Menu mnOptions 
-      Caption         =   "选项(&O)"
+      Caption         =   "匡兜(&O)"
       Begin VB.Menu mnOptionsGui 
-         Caption         =   "界面(&G)"
+         Caption         =   "(&G)"
          Begin VB.Menu mnOptionsGuiSmall 
-            Caption         =   "小(&S)"
+            Caption         =   "(&S)"
          End
          Begin VB.Menu mnOptionsGuiLarge 
-            Caption         =   "大(&L)"
+            Caption         =   "(&L)"
+            Enabled         =   0   'False
          End
       End
       Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
       End
       Begin VB.Menu mnOptionsBoard_ 
-         Caption         =   "棋盘(&B)"
+         Caption         =   "囱絃(&B)"
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "栎木(&A)"
+            Caption         =   "騌れ(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "绿色大理石(&B)"
+            Caption         =   "厚︹瞶ホ(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "白色大理石(&C)"
+            Caption         =   "フ︹瞶ホ(&C)"
             Index           =   2
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "再生纸(&D)"
+            Caption         =   "ネ(&D)"
             Index           =   3
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "画布(&E)"
+            Caption         =   "礶ガ(&E)"
             Index           =   4
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "水滴(&F)"
+            Caption         =   "簑(&F)"
             Index           =   5
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "蓝天白云(&G)"
+            Caption         =   "屡ぱフお(&G)"
             Index           =   6
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "象棋演播室(&H)"
+            Caption         =   "禜囱簍冀(&H)"
             Index           =   7
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "弈天棋缘(&I)"
+            Caption         =   "ぱ囱絫(&I)"
             Index           =   8
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "梦入神机(&J)"
+            Caption         =   "冠审(&J)"
             Index           =   9
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "纵马奔流(&K)"
+            Caption         =   "羇皑゜瑈(&K)"
             Index           =   10
          End
          Begin VB.Menu mnOptionsBoard 
-            Caption         =   "浅红象棋(&L)"
+            Caption         =   "睱禜囱(&L)"
             Index           =   11
          End
       End
       Begin VB.Menu mnOptionsPieces_ 
-         Caption         =   "棋子(&P)"
+         Caption         =   "囱(&P)"
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "木刻(&A)"
+            Caption         =   "れㄨ(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "精致(&B)"
+            Caption         =   "弘璓(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "光泽(&C)"
+            Caption         =   "緼(&C)"
             Index           =   2
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "象棋演播室(&D)"
+            Caption         =   "禜囱簍冀(&D)"
             Index           =   3
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "弈天棋缘(&E)"
+            Caption         =   "ぱ囱絫(&E)"
             Index           =   4
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "梦入神机(&F)"
+            Caption         =   "冠审(&F)"
             Index           =   5
          End
          Begin VB.Menu mnOptionsPieces 
-            Caption         =   "纵马奔流(&G)"
+            Caption         =   "羇皑゜瑈(&G)"
             Index           =   6
          End
       End
@@ -1015,31 +1016,31 @@ Begin VB.Form frmXQBoothSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnOptionsSounds 
-         Caption         =   "音效(&S)"
+         Caption         =   "(&S)"
       End
    End
    Begin VB.Menu mnHelp 
-      Caption         =   "帮助(&H)"
+      Caption         =   "腊(&H)"
       Begin VB.Menu mnHelpQuote 
-         Caption         =   "名言(&Q)..."
+         Caption         =   "ē(&Q)..."
       End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpHome 
-         Caption         =   "象棋巫师的网站(&H)"
+         Caption         =   "禜囱畍蔍(&H)"
       End
       Begin VB.Menu mnHelpMantis 
-         Caption         =   "报告缺陷(&B)"
+         Caption         =   "厨炒(&B)"
       End
       Begin VB.Menu mnHelpUpdate 
-         Caption         =   "检查最新版本(&P)"
+         Caption         =   "浪琩程穝セ(&P)"
       End
       Begin VB.Menu mnHelpSep2 
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpAbout 
-         Caption         =   "关于象棋巫师(&A)..."
+         Caption         =   "闽禜囱畍(&A)..."
       End
    End
 End
@@ -1076,20 +1077,20 @@ Private Const DRAW_SELECTED As Boolean = True
 Private Const DRAW_MATE As Boolean = True
 Private Const DRAW_REFRESH As Boolean = True
 
-Private Enum PhaseEnum
+Enum PhaseEnum
     PHASE_READY = 0
     PHASE_BUSY = 1
     PHASE_WIN = 2
     PHASE_LOSS = 3
 End Enum
 
-Private Enum HintEnum
+Enum HintEnum
     HINT_NONE = 0
     HINT_RESTART = 1
     HINT_RETRY = 2
 End Enum
 
-Private Enum EventEnum
+Enum EventEnum
     USERS_SAVE = 0
     USERS_LOAD = 1
     USERS_RANK = 2
@@ -1208,7 +1209,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
         If pos.ucsqPieces(16) > 0 Then
             DrawSquare pos.ucsqPieces(16), , DRAW_MATE
         End If
-        MsgBoxMute "请再接再厉！", vbInformation
+        MsgBoxMute "請再接再厲！", vbInformation
         GetResult = PHASE_LOSS
     Else
         btnRestart.Visible = False
@@ -1222,9 +1223,9 @@ If (nStatus And MOVE_MATE) <> 0 Then
             DrawSquare pos.ucsqPieces(32), , DRAW_MATE
         End If
         If Gui_nCurr = App_nEndgames - 1 Then
-            MsgBoxMute "恭喜你闯过所有关卡！", vbInformation
+            MsgBoxMute "恭喜你闖過所有關卡！", vbInformation
         Else
-            MsgBoxMute "恭喜你过关！", vbInformation
+            MsgBoxMute "恭喜你過關！", vbInformation
         End If
         If Gui_nCurr = Gui_nLast Then
             Gui_nLast = Gui_nLast + 1
@@ -1236,11 +1237,11 @@ End If
 If (nStatus And MOVE_PERPETUAL) <> 0 Then
     EnableHint False
     PlayWavSound "PROMOTE2"
-    MsgBoxMute "请不要气馁！", vbInformation
+    MsgBoxMute "請不要气餒！", vbInformation
     GetResult = PHASE_LOSS
     Exit Function
 End If
-' 由于"position fen ..."使用EPD文件中的初始局面，所以即便吃子也不能置pos为不可逆
+' 由于"position fen ..."使用EPD文件中的初始局面，所以即便吃子也不能置pos為不可逆
 If (nStatus And MOVE_CHECK) <> 0 Then
     PlayWavSound "CHECK" + IIf(pos.sdPlayer = 0, "2", "")
 ElseIf (nStatus And MOVE_CAPTURE) <> 0 Then
@@ -1299,7 +1300,7 @@ mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
 EnableHint True
 EnableRetract False
-Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋魔法学校"
+Caption = "第" + Str(Gui_nCurr + 1) + " 關 - 象棋魔法學校"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 BoardFlush
 sqSelected = 0
@@ -1411,7 +1412,7 @@ End Sub
 Private Sub DoRetract()
 
 If pos.nDistance = 0 Then
-    MsgBox "悔棋失败。", vbInformation
+    MsgBox "悔棋失敗。", vbInformation
     Exit Sub
 End If
 If pos.nDistance Mod 2 = 0 Then
@@ -1421,7 +1422,7 @@ CchessUndoMove pos
 BoardFlush
 sqSelected = 0
 mvLast = 0
-' DoRetract 都是在 EnterBusy 后调用的，所以要修改 nPhaseSaved 而不是 nPhase
+' DoRetract 都是在 EnterBusy 后調用的，所以要修改 nPhaseSaved 而不是 nPhase
 nPhaseSaved = PHASE_READY
 If pos.nDistance = 0 Then
     EnableRetract False
@@ -1447,25 +1448,25 @@ End Sub
 
 Private Sub ConnError()
 
-MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+MsgBox "無法登錄到象棋巫師用戶中心，請稍後再試。", vbExclamation
 
 End Sub
 
 Private Sub LoginError()
 
-MsgBox "用户名或密码不正确。", vbExclamation
+MsgBox "用戶名或密碼不正确。", vbExclamation
 
 End Sub
 
 Private Sub NoRetryError()
 
-MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+MsgBox "您的密碼已經連續5次輸入錯誤，請過5分鐘再做嘗試。", vbExclamation
 
 End Sub
 
 Private Sub NoPointsError(ByVal nPoints As Integer)
 
-MsgBox "您的点数不足" + Str(nPoints) + " 点，补充点数后才能使用此功能。", vbExclamation
+MsgBox "您的點數不足" + Str(nPoints) + " 點，補充點數後才能使用此功能。", vbExclamation
 ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/charge.htm", _
         vbNullString, vbNullString, SW_SHOWNORMAL
 
@@ -1488,12 +1489,12 @@ szResult = inet.GetHeader("Login-Result")
 Select Case nUsersEvent
 
 Case USERS_SAVE
-    ' 请求“提交”，处理响应
+    ' 請求“提交”，處理響應
     Select Case szResult
     Case "ok"
-        MsgBox "成绩提交成功。", vbInformation
+        MsgBox "成績提交成功。", vbInformation
     Case "nosave"
-        MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
+        MsgBox "您以前提交的成績比當前成績好，當前成績不予提交。", vbInformation
     Case "error"
         LoginError
         LeaveBusy
@@ -1506,7 +1507,7 @@ Case USERS_SAVE
     End Select
 
 Case USERS_LOAD
-    ' 请求“获取”，处理响应
+    ' 請求“獲取”，處理響應
     Select Case szResult
     Case "error"
         LoginError
@@ -1521,7 +1522,7 @@ Case USERS_LOAD
             bLoad = False
             If nResult > Gui_nLast Then
                 bLoad = True
-            ElseIf MsgBox("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", vbQuestion + vbYesNo) = vbYes Then
+            ElseIf MsgBox("您將獲取的成績不如當前成績，是否覆蓋當前成績？", vbQuestion + vbYesNo) = vbYes Then
                 bLoad = True
             End If
             If bLoad Then
@@ -1531,7 +1532,7 @@ Case USERS_LOAD
                 LoadGame
                 ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
                 nPhaseSaved = PHASE_READY
-                MsgBox "成绩获取成功。", vbInformation
+                MsgBox "成績獲取成功。", vbInformation
             End If
         Else
             ConnError
@@ -1539,7 +1540,7 @@ Case USERS_LOAD
     End Select
 
 Case USERS_RANK
-    ' 请求“排名”，获取响应
+    ' 請求“排名”，獲取響應
     Select Case szResult
     Case "error"
         LoginError
@@ -1565,7 +1566,7 @@ Case USERS_RANK
     End Select
 
 Case USERS_HINT
-    ' 请求“提示”，获取响应
+    ' 請求“提示”，獲取響應
     Select Case szResult
     Case "ok"
         DoHint
@@ -1583,7 +1584,7 @@ Case USERS_HINT
     End Select
 
 Case USERS_RETRACT
-    ' 请求“悔棋”，获取响应
+    ' 請求“悔棋”，獲取響應
     Select Case szResult
     Case "ok"
         DoRetract
@@ -1601,7 +1602,7 @@ Case USERS_RETRACT
     End Select
 
 Case USERS_POINTS
-    ' 请求“查询点数”，处理响应
+    ' 請求“查詢點數”，處理響應
     Select Case szResult
     Case "error"
         LoginError
@@ -1613,7 +1614,7 @@ Case USERS_POINTS
     Case Else
         If (Left(szResult, 3) = "ok ") Then
             nResult = Str2Int(Mid(szResult, 3))
-            MsgBox "您还有" + Str(nResult) + " 点可用。", vbInformation
+            MsgBox "您還有" + Str(nResult) + " 點可用。", vbInformation
         Else
             ConnError
         End If
@@ -1630,7 +1631,7 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = "提交成绩"
+Login_szTitle = "提交成績"
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1661,7 +1662,7 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = "获取成绩"
+Login_szTitle = "獲取成績"
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1695,7 +1696,7 @@ End If
 dfThinkTime = Timer
 dfThinkTime = dfThinkTime + IIf(dfThinkTime < dfHintTime, 86400#, 0#) - dfHintTime
 If dfThinkTime < 30 + Gui_nCurr \ 100 Then
-    MsgBox "您只思考了" + Str(Int(dfThinkTime)) + " 秒，请再多想想吧。", vbExclamation
+    MsgBox "您只思考了" + Str(Int(dfThinkTime)) + " 秒，請再多想想吧。", vbExclamation
     Exit Sub
 End If
 
@@ -1708,10 +1709,10 @@ End If
 
 Login_szTitle = "提示"
 If Gui_nCurr < 200 Then
-    Login_szPrompt = "100关以后需要登录用户中心"
+    Login_szPrompt = "100關以後需要登錄用戶中心"
 Else
-    Login_szPrompt = "本关提示需要消耗点数" + _
-            Str(IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)) + " 点"
+    Login_szPrompt = "本關提示需要消耗點數" + _
+            Str(IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)) + " 點"
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1751,9 +1752,9 @@ End If
 
 Login_szTitle = "悔棋"
 If Gui_nCurr <= 200 Then
-    Login_szPrompt = "100关以后需要登录用户中心"
+    Login_szPrompt = "100關以後需要登錄用戶中心"
 Else
-    Login_szPrompt = "悔棋需要消耗点数 1 点"
+    Login_szPrompt = "悔棋需要消耗點數 1 點"
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1786,7 +1787,7 @@ End If
 Rank_nType = nIndex
 szRankType = Choose(Rank_nType + 1, "w", "m", "q")
 
-Login_szTitle = "查询近" + Choose(Rank_nType + 1, "一周", "一个月", "三个月") + "排名"
+Login_szTitle = "查詢近" + Choose(Rank_nType + 1, "一周", "一個月", "三個月") + "排名"
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1824,7 +1825,7 @@ Private Sub mnUsersPoints_Click()
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-Login_szTitle = "查询点数"
+Login_szTitle = "查詢點數"
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1860,7 +1861,7 @@ Private Sub SwapGui()
 mnOptionsGuiSmall.Checked = Options_bLargeGui
 Options_bLargeGui = Not Options_bLargeGui
 mnOptionsGuiLarge.Checked = Options_bLargeGui
-MsgBox "显示模式已经更改，重新启动程序后才能生效。", vbInformation
+MsgBox "顯示模式已經更改，重新啟動程序後才能生效。", vbInformation
 
 End Sub
 
@@ -1946,8 +1947,8 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
-        STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+MsgBoxWithIcon "象棋巫師 " + STRING_VERSION + vbCrLf + "象棋百科全書 榮譽出品" + vbCrLf + vbCrLf + _
+        STRING_COPYRIGHT + vbCrLf + "本產品符合GNU通用公共許可協議", "關于象棋巫師"
 
 End Sub
 
@@ -2035,7 +2036,7 @@ ElseIf sqSelected > 0 Then
             MousePointer = vbDefault
         End If
         If nPhase = PHASE_WIN And nHint = HINT_RETRY Then
-            If MsgBox("您是使用提示功能通过本关的，是否不用提示再试一次？", _
+            If MsgBox("您是使用提示功能通過本關的，是否不用提示再試一次？", _
                     vbQuestion + vbYesNo) = vbYes Then
                 LoadGame
             End If
