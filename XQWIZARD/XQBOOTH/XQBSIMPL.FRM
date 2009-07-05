@@ -37,7 +37,7 @@ Begin VB.Form frmXQBoothLarge
       Caption         =   "再试一次"
       Height          =   975
       Left            =   6720
-      Picture         =   "XQBSIMPL.frx":11BC
+      Picture         =   "XQBSIMPL.frx":0F06
       Style           =   1  'Graphical
       TabIndex        =   4
       TabStop         =   0   'False
@@ -48,7 +48,7 @@ Begin VB.Form frmXQBoothLarge
       Caption         =   "提示"
       Height          =   975
       Left            =   0
-      Picture         =   "XQBSIMPL.frx":18BE
+      Picture         =   "XQBSIMPL.frx":13D0
       Style           =   1  'Graphical
       TabIndex        =   1
       TabStop         =   0   'False
@@ -59,7 +59,7 @@ Begin VB.Form frmXQBoothLarge
       Caption         =   "下一关"
       Height          =   975
       Left            =   6720
-      Picture         =   "XQBSIMPL.frx":1D00
+      Picture         =   "XQBSIMPL.frx":1812
       Style           =   1  'Graphical
       TabIndex        =   3
       TabStop         =   0   'False
@@ -70,7 +70,7 @@ Begin VB.Form frmXQBoothLarge
       Caption         =   "提交成绩"
       Height          =   975
       Left            =   5760
-      Picture         =   "XQBSIMPL.frx":2402
+      Picture         =   "XQBSIMPL.frx":1CDF
       Style           =   1  'Graphical
       TabIndex        =   2
       TabStop         =   0   'False
@@ -109,7 +109,7 @@ Begin VB.Form frmXQBoothLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -842,7 +842,7 @@ Begin VB.Form frmXQBoothLarge
    Begin VB.Image imgBoard 
       Height          =   8655
       Left            =   0
-      Picture         =   "XQBSIMPL.frx":2B04
+      Picture         =   "XQBSIMPL.frx":2101
       Top             =   0
       Width           =   7815
    End
@@ -1288,8 +1288,8 @@ Private Sub Form_Load()
 
 mnOptionsGuiSmall.Checked = Options_bLargeGui
 mnOptionsGuiLarge.Checked = Not Options_bLargeGui
-mnOptionsBoard_Click Options_nBoardS
-mnOptionsPieces_Click Options_nPiecesS
+mnOptionsBoard_Click Options_nBoardL
+mnOptionsPieces_Click Options_nPiecesL
 ClearHint
 LoadGame
 
@@ -1863,7 +1863,7 @@ On Error GoTo 0
 For i = 0 To BOARD_L_MAX - 1
     mnOptionsBoard(i).Checked = (nIndex = i)
 Next
-Options_nBoardS = nIndex
+Options_nBoardL = nIndex
 
 End Sub
 
@@ -1880,7 +1880,7 @@ For i = 0 To PIECES_L_MAX - 1
     mnOptionsPieces(i).Checked = (nIndex = i)
 Next
 BoardFlush
-Options_nPiecesS = nIndex
+Options_nPiecesL = nIndex
 
 End Sub
 
