@@ -84,6 +84,7 @@ bottommargin="0" rightmargin="0">
     exit;
   }
 
+  $email = $line["email"];
   $act = $_GET["act"];
   if (false) {
     //
@@ -148,7 +149,7 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">Email：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo htmlentities($line["email"], ENT_COMPAT, "GB2312"); ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo htmlentities($email, ENT_COMPAT, "GB2312"); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
@@ -237,7 +238,7 @@ function sendmail() {
   arrBody.push("　　感谢您使用象棋巫师。");
   arrBody.push("");
   arrBody.push("象棋巫师用户中心");
-  location.href = "mailto:webmaster@elephantbase.net?subject=重置密码 - 来自象棋巫师用户中心&body=" + arrBody.join("%0D%0A");
+  location.href = "mailto:" + email + "?subject=重置密码 - 来自象棋巫师用户中心&body=" + arrBody.join("%0D%0A");
 }
 // --></script></strong></p>
                 </td>

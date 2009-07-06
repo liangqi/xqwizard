@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "4.1"
+Public Const STRING_VERSION     As String = "4.11"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -3032,7 +3032,7 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒鐘後開始播放廣告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList "advert.txt"
+    DownloadAdvertList "advert_trad.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -3160,7 +3160,7 @@ Do While App_bRunning
 Loop
 ' 退出前下載廣告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList "advert.txt"
+    DownloadAdvertList "advert_trad.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date
