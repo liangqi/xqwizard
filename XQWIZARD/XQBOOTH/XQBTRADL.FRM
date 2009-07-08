@@ -1287,8 +1287,8 @@ End Sub
 
 Private Sub Form_Load()
 
-mnOptionsGuiSmall.Checked = Options_bLargeGui
-mnOptionsGuiLarge.Checked = Not Options_bLargeGui
+mnOptionsGuiSmall.Checked = Not Options_bLargeGui
+mnOptionsGuiLarge.Checked = Options_bLargeGui
 mnOptionsBoard_Click Options_nBoardL
 mnOptionsPieces_Click Options_nPiecesL
 ClearHint
