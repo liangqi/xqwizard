@@ -150,14 +150,16 @@ End Function
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Dim dwCounter(0 To 1) As Long
+QueryPerformanceCounter VarPtr(dwCounter(0))
+
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
-Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
-        Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
+Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -178,7 +180,7 @@ SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
 SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
-SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
+' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
@@ -206,6 +208,7 @@ If sz = "" Then
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
     SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
+    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
@@ -270,9 +273,6 @@ Dim sz As String, lpStr As Long
 Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
-Dim qwCounter As Currency
-QueryPerformanceCounter qwCounter
-Randomize qwCounter
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 CchessInit
 LoadRegs

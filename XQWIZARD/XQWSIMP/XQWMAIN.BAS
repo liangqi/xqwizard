@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
+' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2723,6 +2723,9 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Dim dwCounter(0 To 1) As Long
+QueryPerformanceCounter VarPtr(dwCounter(0))
+
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
@@ -2756,8 +2759,7 @@ Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "趣味象棋")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", _
-        Hex((1 + Rnd) * &H10000000) + Hex((1 + Rnd) * &H10000000))
+Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -2818,7 +2820,7 @@ SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
+' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
@@ -2874,6 +2876,7 @@ If sz = "" Then
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
     SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
+    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
@@ -2938,9 +2941,7 @@ Dim hWnd As Long, i As Integer, sz As String
 Dim imgLoading As Picture
 
 ' 弹出启动画面，初始化
-Dim qwCounter As Currency
-QueryPerformanceCounter qwCounter
-Randomize qwCounter
+Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show

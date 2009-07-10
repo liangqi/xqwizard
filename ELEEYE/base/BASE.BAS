@@ -26,7 +26,7 @@ Public Const WM_LBUTTONUP       As Long = 514       ' CallWindowProcA
 Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
-Public Declare Sub QueryPerformanceCounter Lib "KERNEL32.DLL" (ByRef qwPerformanceCounter As Currency)
+Public Declare Sub QueryPerformanceCounter Lib "KERNEL32.DLL" (ByVal lpPerformanceCounter As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
         ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
