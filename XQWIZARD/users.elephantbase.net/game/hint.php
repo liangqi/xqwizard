@@ -15,7 +15,7 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($stage < 200) {
+  } else if ($stage < 200 || $result["points"] > 9999) {
     header("Login-Result: ok");
   } else if ($result["points"] < $points) {
     if ($result["usertype"] == 0) {

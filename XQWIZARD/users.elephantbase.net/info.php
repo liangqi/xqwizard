@@ -97,7 +97,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td bgcolor="#F0F0F0" id="admin"><p
                 align="center"><font size="2">如果您是管理员，请进入</font><a
-                href="admin/admin.htm" target="_blank"><font
+                href="admin/admin.htm"><font
                 size="2">【管理】</font></a><font size="2">页面</font></p>
                 </td>
             </tr>

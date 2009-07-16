@@ -22,7 +22,7 @@
       $result["username"] = $username;
       $points = $result["points"];
       $result["info"] = "您已经闯过了 " . $result["score"] . " 关" .
-          ($points == 0 ? "" : "<br>您还有 " . $points . " 点可用");
+          ($points == 0 ? "" : $points < 10000 ? "<br>您还有 " . $points . " 点可用" : "<br>您现在是：白金会员用户");
       $_SESSION["userdata"] = $result;
       header("Location: info.php");
     }

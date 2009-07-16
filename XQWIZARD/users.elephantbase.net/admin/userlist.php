@@ -74,6 +74,7 @@ bottommargin="0" rightmargin="0">
   require_once "./admin.php";
 
   $username = $_POST["username"];
+  $email = $_POST["email"];
   $orderby = $_POST["orderby"];
   $orderby = $_POST["orderby"];
   $direction = $_POST["direction"];
@@ -81,9 +82,18 @@ bottommargin="0" rightmargin="0">
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%' " .
-      "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($username),
-      $orderby, $direction, $limit);
+  if ($username != "") {
+    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%' " .
+        "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($username),
+        $orderby, $direction, $limit);
+  } else if ($email != "") {
+    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE email like '%%%s%%' " .
+        "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($email),
+        $orderby, $direction, $limit);
+  } else {
+    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user ORDER BY %s %s LIMIT %d",
+        $orderby, $direction, $limit);
+  }
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
   if ($line) {

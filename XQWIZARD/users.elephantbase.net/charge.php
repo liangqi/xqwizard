@@ -22,7 +22,11 @@
       mysql_query($sql);
       insertLog($username, EVENT_CHARGE, $points);
       $_SESSION["userdata"]["points"] += $points;
-      $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
+      if ($_SESSION["userdata"]["points"] < 10000) {
+        $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
+      } else {
+        $info = info("您已经升级为：白金会员用户");
+      }
     }
   }
 

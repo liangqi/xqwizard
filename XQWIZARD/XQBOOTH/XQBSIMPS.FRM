@@ -1613,7 +1613,11 @@ Case USERS_POINTS
     Case Else
         If (Left(szResult, 3) = "ok ") Then
             nResult = Str2Int(Mid(szResult, 3))
-            MsgBox "您还有" + Str(nResult) + " 点可用。", vbInformation
+            If nResult < 10000 Then
+                MsgBox "您还有" + Str(nResult) + " 点可用。", vbInformation
+            Else
+                MsgBox "您是白金会员用户，可以无限次使用提示和悔棋功能。", vbInformation
+            End If
         Else
             ConnError
         End If
