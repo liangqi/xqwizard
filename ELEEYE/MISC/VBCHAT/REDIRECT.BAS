@@ -21,6 +21,20 @@ End Type
 
 Private Declare Sub getpeername Lib "WSOCK32.DLL" (ByVal s As Long, ByRef name As SockAddr, ByRef nNameLen As Long)
 
+Private Sub SendBlock(ByVal s As Long, ByVal lp As Long, ByVal nLen As Long)
+
+Dim nLenSend As Long, nLenSendTotal As Long
+
+nLenSend = WSBSend(s, lp, nLen)
+nLenSendTotal = nLenSend
+Do While nLenSend >= 0 And nLenSendTotal < nLen
+    Sleep 1
+    nLenSend = WSBSend(s, lp + nLenSendTotal, nLen - nLenSendTotal)
+    nLenSendTotal = nLenSendTotal + nLenSend
+Loop
+
+End Sub
+
 Private Sub Prompt(ByVal s As Long, ByVal szAction As String)
 
 Dim nNameLen As Long, name As SockAddr
@@ -87,7 +101,6 @@ End Sub
 Public Sub Main()
 
 Dim i As Integer, bReceived As Boolean, nLen As Long, nPort As Long
-Dim uidTrayIcon As Long
 Dim ucBuffer(0 To BUFFER_LEN - 1) As Byte
 
 WSBStartup
@@ -122,7 +135,7 @@ Do While App_bRunning
         For i = 1 To MAX_CLIENTS
             If App_sClients(i) <> INVALID_SOCKET Then
                 ' Read Data From Client
-                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
+                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
                 If nLen < 0 Then
                     Prompt App_sClients(i), "Disconnected"
                     WSBDisconnect App_sServers(i)
@@ -130,14 +143,14 @@ Do While App_bRunning
                     App_sClients(i) = INVALID_SOCKET
                     App_nNext = i
                 ElseIf nLen > 0 Then
-                    WSBSend App_sServers(i), VarPtr(ucBuffer(0)), nLen
+                    SendBlock App_sServers(i), VarPtr(ucBuffer(0)), nLen
                     Prompt App_sClients(i), "Sent"
                     ucBuffer(nLen) = 0
                     Dump VarPtr(ucBuffer(0)), nLen
                     bReceived = True
                 Else
                     ' Read Data from Server
-                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
+                    nLen = WSBRecv(App_sServers(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
                     If nLen < 0 Then
                         Prompt App_sClients(i), "Disconnected"
                         WSBDisconnect App_sServers(i)
@@ -145,7 +158,7 @@ Do While App_bRunning
                         App_sClients(i) = INVALID_SOCKET
                         App_nNext = i
                     ElseIf nLen > 0 Then
-                        WSBSend App_sClients(i), VarPtr(ucBuffer(0)), nLen
+                        SendBlock App_sClients(i), VarPtr(ucBuffer(0)), nLen
                         Prompt App_sClients(i), "Received"
                         ucBuffer(nLen) = 0
                         Dump VarPtr(ucBuffer(0)), nLen

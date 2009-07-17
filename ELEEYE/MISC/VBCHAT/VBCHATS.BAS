@@ -35,10 +35,23 @@ NewWndFunc = CallWindowProcA(App_lpPrevWndFunc, hWnd, uMsg, wParam, lParam)
 
 End Function
 
+Private Sub SendBlock(ByVal s As Long, ByVal lp As Long, ByVal nLen As Long)
+
+Dim nLenSend As Long, nLenSendTotal As Long
+
+nLenSend = WSBSend(s, lp, nLen)
+nLenSendTotal = nLenSend
+Do While nLenSend >= 0 And nLenSendTotal < nLen
+    Sleep 1
+    nLenSend = WSBSend(s, lp + nLenSendTotal, nLen - nLenSendTotal)
+    nLenSendTotal = nLenSendTotal + nLenSend
+Loop
+
+End Sub
+
 Public Sub Main()
 
 Dim i As Integer, j As Integer, bReceived As Boolean, nLen As Long
-Dim uidTrayIcon As Long
 Dim ucBuffer(0 To BUFFER_LEN - 1) As Byte
 
 WSBStartup
@@ -62,7 +75,7 @@ Do While App_bRunning
         bReceived = False
         For i = 1 To MAX_CLIENTS
             If App_sClients(i) <> INVALID_SOCKET Then
-                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN)
+                nLen = WSBRecv(App_sClients(i), VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
                 If nLen < 0 Then
                     WSBDisconnect App_sClients(i)
                     App_sClients(i) = INVALID_SOCKET
@@ -71,7 +84,7 @@ Do While App_bRunning
                     For j = 1 To MAX_CLIENTS
                         If App_sClients(j) <> INVALID_SOCKET Then
                             If frmVBChat.chkNoEcho.Value = 0 Or j <> i Then
-                                WSBSend App_sClients(j), VarPtr(ucBuffer(0)), nLen
+                                SendBlock App_sClients(j), VarPtr(ucBuffer(0)), nLen
                             End If
                         End If
                     Next

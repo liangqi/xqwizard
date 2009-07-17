@@ -22,7 +22,7 @@ Do While bRunning
     If nSocket = INVALID_SOCKET Then
         Sleep 1
     Else
-        nLen = WSBRecv(nSocket, VarPtr(ucBuffer(0)), BUFFER_LEN)
+        nLen = WSBRecv(nSocket, VarPtr(ucBuffer(0)), BUFFER_LEN - 1)
         If nLen < 0 Then
             WSBDisconnect nSocket
             nSocket = INVALID_SOCKET
