@@ -16,7 +16,7 @@ bottommargin="0" rightmargin="0">
         <td width="750" bgcolor="#FFFFFF"><table border="0"
         cellspacing="0" width="100%">
             <tr>
-                <td colspan="3" background="images/topbg.gif"><table
+                <td background="images/topbg.gif"><table
                 border="0" width="100%">
                     <tr>
                         <td valign="bottom" nowrap><table
@@ -58,7 +58,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td colspan="3">¡¡</td>
+                <td>¡¡</td>
             </tr>
         </table>
         <table border="0" cellpadding="4" cellspacing="0"
