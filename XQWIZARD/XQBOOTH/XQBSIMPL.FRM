@@ -1677,7 +1677,7 @@ If dfThinkTime < 30 + Gui_nCurr \ 100 Then
     Exit Sub
 End If
 
-If nHint <> HINT_NONE Or Gui_nCurr < 100 Then
+If nHint <> HINT_NONE Or Gui_nCurr < 200 Then
     EnterBusy
     DoHint
     LeaveBusy
@@ -1685,11 +1685,10 @@ If nHint <> HINT_NONE Or Gui_nCurr < 100 Then
 End If
 
 Login_szTitle = "提示"
-If Gui_nCurr < 200 Then
-    Login_szPrompt = "100关以后需要登录用户中心"
+If Gui_nCurr < 500 Then
+    Login_szPrompt = "200关以后需要登录用户中心"
 Else
-    Login_szPrompt = "本关提示需要消耗点数" + _
-            Str(IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)) + " 点"
+    Login_szPrompt = "提示需要消耗点数10点"
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1720,7 +1719,7 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-If Gui_nCurr <= 100 Then
+If Gui_nCurr < 200 Then
     EnterBusy
     DoRetract
     LeaveBusy
@@ -1728,10 +1727,10 @@ If Gui_nCurr <= 100 Then
 End If
 
 Login_szTitle = "悔棋"
-If Gui_nCurr <= 200 Then
-    Login_szPrompt = "100关以后需要登录用户中心"
+If Gui_nCurr < 500 Then
+    Login_szPrompt = "200关以后需要登录用户中心"
 Else
-    Login_szPrompt = "悔棋需要消耗点数 1 点"
+    Login_szPrompt = "悔棋需要消耗点数1点"
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then

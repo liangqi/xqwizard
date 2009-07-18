@@ -90,6 +90,7 @@ Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
 Public Gui_nLast                As Integer  ' 最后殘局的條目序號
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
+Public Gui_szPopupDate          As String   ' 退弹的日期
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
@@ -184,6 +185,7 @@ SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Gui", "PopupDate", Gui_szPopupDate
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
@@ -265,6 +267,26 @@ Gui_szQuotes(12) = "　　怒可以复喜，慍可以复說，亡國不可以复存，死者不可以复生。
 
 End Sub
 
+' 退弹
+Public Sub ExitPopup()
+
+Dim szUrl As String
+' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
+Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
+If Gui_szPopupDate = Date Then
+    Exit Sub
+End If
+Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
+szUrl = ""
+On Error Resume Next
+szUrl = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/popup_simp.txt")
+On Error GoTo 0
+If Left(szUrl, 7) = "http://" Then
+    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+End If
+
+End Sub
+
 ' 主函數
 Public Sub Main()
 
@@ -274,6 +296,8 @@ Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+frmStartup.Show
+frmStartup.Refresh
 CchessInit
 LoadRegs
 LoadTips
@@ -300,6 +324,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
+    Unload frmStartup
     MsgBox "無法打開文件 " + App_szPath + ENDGAME_FILE, vbExclamation
     Exit Sub
 End If
@@ -334,6 +359,7 @@ Loop
 If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
+    Unload frmStartup
     MsgBox "無法加載引擎 " + App_szPath + ENGINE_FILE, vbExclamation
     Exit Sub
 End If
@@ -369,6 +395,7 @@ End If
 App_frmXQBooth.Show
 App_frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
 App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+Unload frmStartup
 
 ' 提示建立存檔
 If Login_szUserName = "" Then
@@ -396,6 +423,7 @@ Do While App_bRunning
     DoEvents
     Sleep 1
 Loop
+ExitPopup
 ' 退出前下載廣告列表
 If Gui_szAdvertDate <> Date Then
     DownloadAdvertList "advert_trad.txt"
@@ -438,6 +466,7 @@ Unload frmHide
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
+Unload frmStartup
 MsgBox "無法打開文件 " + App_szPath + ENDGAME_FILE, vbExclamation
 
 End Sub
