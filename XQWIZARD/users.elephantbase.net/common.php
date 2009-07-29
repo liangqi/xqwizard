@@ -46,7 +46,7 @@
           "WHERE username = '%s'", getRemoteAddr(), time(), mysql_real_escape_string($username));
       mysql_query($sql);
       return array("usertype"=>$line["usertype"], "email"=>$line["email"],
-          "score"=>$line["score"], "points"=>$line["points"]);
+          "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
     }
     // 如果重试次数小于5次，则返回“登录失败”
     if ($line["retrycount"] < 5) {
@@ -75,6 +75,10 @@
   define("EVENT_ADMIN_CHARGE", 201);
   define("EVENT_ADMIN_PASSWORD", 202);
   define("EVENT_ADMIN_DELETE", 299);
+
+  // 用户类型
+  define("USER_PLATINUM", 2800);
+  define("USER_DIAMOND", 8800);
 
   // 记录日志
   function insertLog($username, $eventtype, $detail = 0) {

@@ -11,6 +11,7 @@ CREATE TABLE tb_user (
 	retrytime INTEGER NOT NULL DEFAULT 0,
 	score INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
+	charged INTEGER NOT NULL DEFAULT 0,
 	KEY (lasttime),
 	KEY (score));
 

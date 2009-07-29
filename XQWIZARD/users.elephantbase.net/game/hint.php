@@ -16,7 +16,7 @@
     header("Login-Result: noretry");
   } else if ($stage < 200) {
     header("Login-Result: ok");
-  } else if ($result["points"] < 10) {
+  } else if ($result["points"] < 10 && $result["charged"] < USER_PLATINUM) {
     if ($result["usertype"] == 0) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE username = '%s'",
           mysql_real_escape_string($username));
@@ -24,7 +24,7 @@
     }
     header("Login-Result: nopoints");
   } else {
-    if ($result["points"] < 10000) {
+    if ($result["charged"] < USER_PLATINUM) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE username = '%s'",
           mysql_real_escape_string($username));
       mysql_query($sql);

@@ -14,7 +14,7 @@
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else {
-    header("Login-Result: ok " . min($result["points"], 10000));
+    header("Login-Result: ok " . $result["points"] . "|" . $result["charged"]);
   }
   mysql_close();
 ?>

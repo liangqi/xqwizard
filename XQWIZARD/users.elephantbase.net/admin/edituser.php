@@ -92,8 +92,8 @@ bottommargin="0" rightmargin="0">
     // 补充点数
     $charge = intval($_POST["charge"]);
     if ($charge > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
-          $charge, mysql_real_escape_string($username));
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d WHERE username = '%s'",
+          $charge, $charge, mysql_real_escape_string($username));
       mysql_query($sql);
       insertLog($username, EVENT_ADMIN_CHARGE, $charge);
       $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));

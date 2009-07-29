@@ -17,16 +17,16 @@
     mysql_query($sql);
     // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
     if (mysql_affected_rows() > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d WHERE username = '%s'",
-          $points, mysql_real_escape_string($username));
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d WHERE username = '%s'",
+          $points, $points, mysql_real_escape_string($username));
       mysql_query($sql);
       insertLog($username, EVENT_CHARGE, $points);
       $_SESSION["userdata"]["points"] += $points;
-      if ($_SESSION["userdata"]["points"] < 10000) {
-        $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用");
-      } else {
-        $info = info("您已经升级为：白金会员用户");
-      }
+      $_SESSION["userdata"]["charged"] += $points;
+      $charged = $_SESSION["userdata"]["charged"];
+      $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用") .
+          ($charged < USER_PLATINUM ? "" : "<br>" .
+          info($charged < USER_DIAMOND ? "您已经升级为：白金会员用户" : "您已经升级为：钻石会员用户"));
     }
   }
 
