@@ -61,6 +61,8 @@ Source: "CHE2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CHN2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCM2PGN.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PGN2XQF.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "PGNS2JAR.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ZIP32Z64.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
@@ -529,6 +531,83 @@ Source: "HELP\XQWIZARD.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\RBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\BBS.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
 Source: "HELP\BGROUND.GIF"; DestDir: "{app}\HELP"; Flags: ignoreversion
+; 手机棋谱
+Source: "PGNS2JAR\xqboss\GB.DAT"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossMIDlet.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossMIDlet$1.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossCanvas$2.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossCanvas$3.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossCanvas$1.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\XQBossCanvas.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\SimplePos.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\PgnFile.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\MoveParser.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\xqboss\GBLineInputStream.class"; DestDir: "{app}\PGNS2JAR\xqboss"; Flags: ignoreversion
+Source: "PGNS2JAR\images\xqboss.png"; DestDir: "{app}\PGNS2JAR\images"; Flags: ignoreversion
+Source: "PGNS2JAR\images\folder.png"; DestDir: "{app}\PGNS2JAR\images"; Flags: ignoreversion
+Source: "PGNS2JAR\images\file.png"; DestDir: "{app}\PGNS2JAR\images"; Flags: ignoreversion
+Source: "PGNS2JAR\images\background.png"; DestDir: "{app}\PGNS2JAR\images"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rr.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rp.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rn.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rk.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rc.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\rb.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\ra.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\br.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\bp.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\board.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\bn.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\bk.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\bc.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\bb.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\tiny\ba.png"; DestDir: "{app}\PGNS2JAR\images\tiny"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rr.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rp.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rn.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rk.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rc.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\rb.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\ra.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\br.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\bp.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\board.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\bn.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\bk.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\bc.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\bb.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\small\ba.png"; DestDir: "{app}\PGNS2JAR\images\small"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rr.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rp.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rn.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rk.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rc.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\rb.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\ra.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\br.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\bp.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\board.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\bn.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\bk.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\bc.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\bb.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\medium\ba.png"; DestDir: "{app}\PGNS2JAR\images\medium"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rr.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rp.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rn.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rk.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rc.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\rb.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\ra.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\br.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\bp.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\board.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\bn.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\bk.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\bc.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\bb.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\images\large\ba.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
+Source: "PGNS2JAR\META-INF\MANIFEST.MF_"; DestDir: "{app}\PGNS2JAR\META-INF"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
@@ -586,7 +665,8 @@ Name: "{group}\象棋魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
 Name: "{group}\象棋巫师帮助主题"; Filename: "{app}\HELP\CONTENTS.HTM"
-Name: "{group}\象棋棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
+Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"
+Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\ElephantEye 开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\ElephantEye 使用说明"; Filename: "{app}\ELEEYE.TXT"
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"
