@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -66,7 +66,7 @@ Begin VB.Form frmMainLarge
          NumButtons      =   31
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
-            Object.ToolTipText     =   "新建"
+            Object.ToolTipText     =   "新的对局"
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileOpen"
@@ -160,7 +160,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
-            Object.ToolTipText     =   "挑战 - 立即开始"
+            Object.ToolTipText     =   "挑战 - 当前题库"
          EndProperty
          BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
@@ -1423,7 +1423,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnFile 
       Caption         =   "文件(&F)"
       Begin VB.Menu mnFileNew 
-         Caption         =   "新建(&N)"
+         Caption         =   "新的对局(&N)"
       End
       Begin VB.Menu mnFileOpen 
          Caption         =   "打开(&O)..."
@@ -1583,7 +1583,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnEndgames_ 
       Caption         =   "挑战(&C)"
       Begin VB.Menu mnEndgamesStart 
-         Caption         =   "立即开始(&S)"
+         Caption         =   "当前题库(&S)"
       End
       Begin VB.Menu mnEndgamesSep1 
          Caption         =   "-"
@@ -1809,17 +1809,20 @@ Begin VB.Form frmMainLarge
    End
    Begin VB.Menu mnTools 
       Caption         =   "工具(&T)"
-      Begin VB.Menu mnToolBook 
-         Caption         =   "开局库管理(&B)"
-      End
-      Begin VB.Menu mnToolConvert 
-         Caption         =   "棋谱批量转换(&C)"
+      Begin VB.Menu mnToolBooth 
+         Caption         =   "象棋魔法学校(&T)"
       End
       Begin VB.Menu mnToolSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnToolBooth 
-         Caption         =   "象棋魔法学校(&T)"
+      Begin VB.Menu mnToolPgns2Jar 
+         Caption         =   "制作手机棋谱(&J)"
+      End
+      Begin VB.Menu mnToolConvert 
+         Caption         =   "批量转换棋谱(&C)"
+      End
+      Begin VB.Menu mnToolBook 
+         Caption         =   "管理开局库(&B)"
       End
    End
    Begin VB.Menu mnHelp 
@@ -1876,8 +1879,8 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.84, Last Modified: Oct. 2008
-' Copyright (C) 2004-2008 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -1942,12 +1945,7 @@ Private Sub mnFileNew_Click()
 If CancelSave Then
     Exit Sub
 End If
-App_szFileName = ""
-RestartGame
-BoardFlush
-LabelFlush
-MoveFlush
-EngineNewGame
+NewGame
 
 End Sub
 
@@ -2504,9 +2502,16 @@ SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0,
 
 End Sub
 
-Private Sub mnToolBook_Click()
+Private Sub mnToolBooth_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+WindowState = vbMinimized
+ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnToolPgns2Jar_Click()
+
+ShellExecuteA 0, vbNullString, App_szPath + "PGNS2JAR.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2516,10 +2521,9 @@ ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNull
 
 End Sub
 
-Private Sub mnToolBooth_Click()
+Private Sub mnToolBook_Click()
 
-WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

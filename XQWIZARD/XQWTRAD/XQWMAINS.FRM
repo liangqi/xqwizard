@@ -66,7 +66,7 @@ Begin VB.Form frmMainSmall
          NumButtons      =   31
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
-            Object.ToolTipText     =   "ÐÂ½¨"
+            Object.ToolTipText     =   "ÐÂµÄŒ¦¾Ö"
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileOpen"
@@ -160,7 +160,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
-            Object.ToolTipText     =   "Ìô‘ð - Á¢¼´é_Ê¼"
+            Object.ToolTipText     =   "Ìô‘ð - ®”Ç°î}Žì"
          EndProperty
          BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
@@ -1424,7 +1424,7 @@ Begin VB.Form frmMainSmall
    Begin VB.Menu mnFile 
       Caption         =   "¤å¥ó(&F)"
       Begin VB.Menu mnFileNew 
-         Caption         =   "·s«Ø(&N)"
+         Caption         =   "·sªº¹ï§½(&N)"
       End
       Begin VB.Menu mnFileOpen 
          Caption         =   "¥´¶}(&O)..."
@@ -1584,7 +1584,7 @@ Begin VB.Form frmMainSmall
    Begin VB.Menu mnEndgames_ 
       Caption         =   "¬D¾Ô(&C)"
       Begin VB.Menu mnEndgamesStart 
-         Caption         =   "¥ß§Y¶}©l(&S)"
+         Caption         =   "·í«eÃD®w(&S)"
       End
       Begin VB.Menu mnEndgamesSep1 
          Caption         =   "-"
@@ -1850,17 +1850,20 @@ Begin VB.Form frmMainSmall
    End
    Begin VB.Menu mnTools 
       Caption         =   "¤u¨ã(&T)"
-      Begin VB.Menu mnToolBook 
-         Caption         =   "¶}§½®wºÞ²z(&B)"
-      End
-      Begin VB.Menu mnToolConvert 
-         Caption         =   "´ÑÃÐ§å¶qÂà´«(&C)"
+      Begin VB.Menu mnToolBooth 
+         Caption         =   "¶H´ÑÅ]ªk¾Ç®Õ(&T)"
       End
       Begin VB.Menu mnToolSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnToolBooth 
-         Caption         =   "¶H´ÑÅ]ªk¾Ç®Õ(&T)"
+      Begin VB.Menu mnToolPgns2Jar 
+         Caption         =   "¨î§@¤âÉó´ÑÃÐ(&J)"
+      End
+      Begin VB.Menu mnToolConvert 
+         Caption         =   "§å¶qÂà´«´ÑÃÐ(&C)"
+      End
+      Begin VB.Menu mnToolBook 
+         Caption         =   "ºÞ²z¶}§½®w(&B)"
       End
    End
    Begin VB.Menu mnHelp 
@@ -1917,8 +1920,8 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.84, Last Modified: Oct. 2008
-' Copyright (C) 2004-2008 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -1983,12 +1986,7 @@ Private Sub mnFileNew_Click()
 If CancelSave Then
     Exit Sub
 End If
-App_szFileName = ""
-RestartGame
-BoardFlush
-LabelFlush
-MoveFlush
-EngineNewGame
+NewGame
 
 End Sub
 
@@ -2545,9 +2543,16 @@ SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0,
 
 End Sub
 
-Private Sub mnToolBook_Click()
+Private Sub mnToolBooth_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+WindowState = vbMinimized
+ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnToolPgns2Jar_Click()
+
+ShellExecuteA 0, vbNullString, App_szPath + "PGNS2JAR.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2557,10 +2562,9 @@ ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNull
 
 End Sub
 
-Private Sub mnToolBooth_Click()
+Private Sub mnToolBook_Click()
 
-WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 

@@ -1,0 +1,282 @@
+VERSION 5.00
+Begin VB.Form frmNewGame 
+   BorderStyle     =   3  'Fixed Dialog
+   Caption         =   "開始對局"
+   ClientHeight    =   3840
+   ClientLeft      =   5310
+   ClientTop       =   1830
+   ClientWidth     =   3000
+   BeginProperty Font 
+      Name            =   "��隴闚"
+      Size            =   9
+      Charset         =   136
+      Weight          =   400
+      Underline       =   0   'False
+      Italic          =   0   'False
+      Strikethrough   =   0   'False
+   EndProperty
+   Icon            =   "NEWGAME.frx":0000
+   MaxButton       =   0   'False
+   MinButton       =   0   'False
+   ScaleHeight     =   3840
+   ScaleWidth      =   3000
+   ShowInTaskbar   =   0   'False
+   StartUpPosition =   1  'CenterOwner
+   Begin VB.CheckBox chkShowNew 
+      Caption         =   "始終顯示“開始對局”對話框"
+      Height          =   255
+      Left            =   240
+      TabIndex        =   14
+      Top             =   3000
+      Width           =   2655
+   End
+   Begin VB.Frame Frame1 
+      Caption         =   "先走讓子"
+      Height          =   2055
+      Left            =   120
+      TabIndex        =   3
+      Top             =   840
+      Width           =   1335
+      Begin VB.OptionButton optHandicap 
+         Caption         =   "讓雙馬"
+         Height          =   255
+         Index           =   2
+         Left            =   120
+         TabIndex        =   6
+         Top             =   960
+         Width           =   1095
+      End
+      Begin VB.OptionButton optHandicap 
+         Caption         =   "讓九子"
+         Height          =   255
+         Index           =   3
+         Left            =   120
+         TabIndex        =   7
+         Top             =   1320
+         Width           =   1095
+      End
+      Begin VB.OptionButton optHandicap 
+         Caption         =   "不讓子"
+         Height          =   255
+         Index           =   0
+         Left            =   120
+         TabIndex        =   4
+         Top             =   240
+         Width           =   1095
+      End
+      Begin VB.OptionButton optHandicap 
+         Caption         =   "讓單馬"
+         Height          =   255
+         Index           =   1
+         Left            =   120
+         TabIndex        =   5
+         Top             =   600
+         Width           =   1095
+      End
+   End
+   Begin VB.Frame frmFlip 
+      Caption         =   "誰先走"
+      Height          =   615
+      Left            =   120
+      TabIndex        =   0
+      Top             =   120
+      Width           =   2775
+      Begin VB.OptionButton optFlip 
+         Caption         =   "電腦先走"
+         Height          =   255
+         Index           =   1
+         Left            =   1560
+         TabIndex        =   2
+         Top             =   240
+         Width           =   1095
+      End
+      Begin VB.OptionButton optFlip 
+         Caption         =   "我先走"
+         Height          =   255
+         Index           =   0
+         Left            =   120
+         TabIndex        =   1
+         Top             =   240
+         Width           =   1095
+      End
+   End
+   Begin VB.Frame frmLevel 
+      Caption         =   "電腦水平"
+      Height          =   2055
+      Left            =   1560
+      TabIndex        =   8
+      Top             =   840
+      Width           =   1335
+      Begin VB.OptionButton optLevel 
+         Caption         =   "業余"
+         Height          =   255
+         Index           =   1
+         Left            =   120
+         TabIndex        =   10
+         Top             =   600
+         Width           =   735
+      End
+      Begin VB.OptionButton optLevel 
+         Caption         =   "專業"
+         Height          =   255
+         Index           =   2
+         Left            =   120
+         TabIndex        =   11
+         Top             =   960
+         Width           =   735
+      End
+      Begin VB.OptionButton optLevel 
+         Caption         =   "大師"
+         Height          =   255
+         Index           =   3
+         Left            =   120
+         TabIndex        =   12
+         Top             =   1320
+         Width           =   735
+      End
+      Begin VB.OptionButton optLevel 
+         Caption         =   "入門"
+         Height          =   255
+         Index           =   0
+         Left            =   120
+         TabIndex        =   9
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.OptionButton optLevel 
+         Caption         =   "特大"
+         Height          =   255
+         Index           =   4
+         Left            =   120
+         TabIndex        =   13
+         Top             =   1680
+         Width           =   735
+      End
+   End
+   Begin VB.CommandButton btnConfirm 
+      Caption         =   "确定"
+      Default         =   -1  'True
+      Height          =   375
+      Left            =   360
+      TabIndex        =   15
+      Top             =   3360
+      Width           =   975
+   End
+   Begin VB.CommandButton btnCancel 
+      Cancel          =   -1  'True
+      Caption         =   "取消"
+      Height          =   375
+      Left            =   1680
+      TabIndex        =   16
+      Top             =   3360
+      Width           =   975
+   End
+End
+Attribute VB_Name = "frmNewGame"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
+'
+' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation; either version 2 of the License, or
+' (at your option) any later version.
+
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+
+' You should have received a copy of the GNU General Public License along
+' with this program; if not, write to the Free Software Foundation, Inc.,
+' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Option Explicit
+
+Private Sub Form_Load()
+
+Select Case Options_nEnginePlay
+Case ENGINE_PLAY_RED
+    optFlip(0).Value = True
+Case ENGINE_PLAY_BLACK
+    optFlip(0).Value = False
+Case ENGINE_PLAY_TURN
+    App_bRedTurn = Not App_bRedTurn
+    optFlip(0).Value = App_bRedTurn
+Case Else
+    optFlip(0).Value = Rnd < 0.5
+End Select
+optFlip(1).Value = Not optFlip(0).Value
+
+optHandicap(0).Value = True
+
+Select Case Timer_nDepth
+Case LEVEL_GRANDMASTER
+    optLevel(4).Value = True
+Case LEVEL_MASTER
+    optLevel(3).Value = True
+Case LEVEL_EXPERT
+    optLevel(2).Value = True
+Case LEVEL_AMATEUR
+    optLevel(1).Value = True
+Case Else
+    optLevel(0).Value = True
+End Select
+
+chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
+
+End Sub
+
+Private Sub btnConfirm_Click()
+
+If optLevel(4).Value Then
+    Timer_nDepth = LEVEL_GRANDMASTER
+    Timer_nIncMove = 1
+ElseIf optLevel(3).Value Then
+    Timer_nDepth = LEVEL_MASTER
+    Timer_nIncMove = 6
+ElseIf optLevel(2).Value Then
+    Timer_nDepth = LEVEL_EXPERT
+    Timer_nIncMove = 36
+ElseIf optLevel(1).Value Then
+    Timer_nDepth = LEVEL_AMATEUR
+    Timer_nIncMove = 216
+Else
+    Timer_nDepth = LEVEL_BEGINNER
+    Timer_nIncMove = 999
+End If
+Timer_bIncMode = False
+Timer_nInitTime = 1
+Timer_nIncTime = 1
+' 以上難度設置代碼必須在RestartGame前運行才會生效
+
+App_szFileName = ""
+If optHandicap(1).Value Then
+    LoadFenStr HANDICAP_A
+ElseIf optHandicap(2).Value Then
+    LoadFenStr HANDICAP_B
+ElseIf optHandicap(3).Value Then
+    LoadFenStr HANDICAP_C
+Else
+    NewGame0
+End If
+EngineNewGame IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED)
+
+Options_bShowNew = (chkShowNew.Value = 1)
+Unload Me
+
+End Sub
+
+Private Sub btnCancel_Click()
+
+NewGame0
+EngineNewGame
+Unload Me
+
+End Sub

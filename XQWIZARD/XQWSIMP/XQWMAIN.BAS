@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlMain"
 Option Explicit
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.11"
+Public Const STRING_VERSION     As String = "4.2"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -196,6 +196,8 @@ Public Options_bTopMost         As Integer  ' 总在最前面
 Public Options_bPromptSave      As Boolean  ' 提示保存
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机对弈用户
+Public Options_bShowNew         As Boolean  ' 启动时显示“开始对局”对话框
+Public Options_bAutoNew         As Boolean  ' 棋局结束后立即开始新的对局
 ' 全局变量——界面
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
@@ -983,6 +985,39 @@ SetTimer 1
 
 End Sub
 
+' 清空棋盘
+Public Sub NewGame0()
+
+RestartGame
+BoardFlush
+LabelFlush
+MoveFlush
+
+End Sub
+
+' “新的对局”功能
+Public Sub NewGame()
+
+If Options_bShowNew Then
+    frmNewGame.Show vbModal, App_frmMain
+    Exit Sub
+End If
+App_szFileName = ""
+NewGame0
+EngineNewGame
+
+End Sub
+
+' 结束一局对局
+Public Sub EndGame()
+
+Engine_nStatus = IDLE_REST
+If Options_bAutoNew Then
+    NewGame
+End If
+
+End Sub
+
 ' 新开一局，在新建文件、编辑棋局等功能中使用，编辑棋局要加参数"RESTART_KEEP_LABEL"，不清除标签
 Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False, Optional ByVal bDebugUcci As Boolean = False)
 
@@ -1377,13 +1412,13 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
-                Engine_nStatus = IDLE_REST
+                EndGame
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
-                Engine_nStatus = IDLE_REST
+                EndGame
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
@@ -1971,7 +2006,7 @@ Else
         Case BUSY_ANALYZE
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
-            Engine_nStatus = IDLE_REST
+            Engine_nStatus = IDLE_REST ' 为什么这里要 IDLE_REST ？
             If Options_nMoveDelay > 0 Then
                 Sleep Options_nMoveDelay * 1000
             End If
@@ -1986,7 +2021,7 @@ Else
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                Engine_nStatus = IDLE_REST
+                EndGame
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 PlayWavSound "DRAW"
                 MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
@@ -1995,7 +2030,7 @@ Else
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                Engine_nStatus = IDLE_REST
+                EndGame
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
@@ -2029,7 +2064,7 @@ Else
         Case BUSY_ANALYZE
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
-            Engine_nStatus = IDLE_REST
+            EndGame
         Case Else
             ' MsgBox "不该接收到引擎的信息：" + szReceived, vbExclamation
         End Select
@@ -2753,6 +2788,8 @@ Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫师测试团队")
+Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <> 0)
+Options_bAutoNew = (Str2Int(GetSetting("XQWizard", "Options", "AutoNew", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
@@ -2814,6 +2851,8 @@ SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
+SaveSetting "XQWizard", "Options", "ShowNew", IIf(Options_bShowNew, "1", "0")
+SaveSetting "XQWizard", "Options", "AutoNew", IIf(Options_bAutoNew, "1", "0")
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
 SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
@@ -2959,7 +2998,7 @@ End Sub
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim hWnd As Long, i As Integer, sz As String
+Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 Dim imgLoading As Picture
 
 ' 弹出启动画面，初始化
@@ -3017,16 +3056,15 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
 End If
 OpenEngine
 App_bRedTurn = False
+bNewGame = False
 If sz = "" Then
     App_szFileName = ""
     If Options_bAutoSave Then
         ReadFile AUTO_SAVE
     Else
-        RestartGame
-        BoardFlush
-        LabelFlush
-        MoveFlush
-        EngineNewGame
+        NewGame0
+        ' 日积月累窗口关闭后，才能显示“开始对局”窗口
+        bNewGame = True
     End If
 Else
     If UCase(Left(sz, 3)) = "/S " Or UCase(Left(sz, 3)) = "-S " Then
@@ -3092,6 +3130,10 @@ App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 Unload frmStartup
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
+End If
+' 日积月累窗口关闭后，才能显示“开始对局”窗口
+If bNewGame Then
+    NewGame
 End If
 
 ' 进入用户状态，接收事件

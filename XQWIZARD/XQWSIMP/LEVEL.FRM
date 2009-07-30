@@ -37,6 +37,7 @@ Begin VB.Form frmLevelSet
       Height          =   255
       Left            =   120
       TabIndex        =   5
+      ToolTipText     =   "仅供解杀局、残局用"
       Top             =   1920
       Width           =   1455
    End
@@ -313,8 +314,8 @@ Attribute VB_Exposed = False
 ' LEVEL.FRM - Source Code for XiangQi Wizard, Part IV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
