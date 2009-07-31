@@ -207,8 +207,7 @@ Case ENGINE_PLAY_RED
 Case ENGINE_PLAY_BLACK
     optFlip(0).Value = False
 Case ENGINE_PLAY_TURN
-    App_bRedTurn = Not App_bRedTurn
-    optFlip(0).Value = App_bRedTurn
+    optFlip(0).Value = Not App_bRedTurn
 Case Else
     optFlip(0).Value = Rnd < 0.5
 End Select
@@ -267,6 +266,9 @@ Else
     NewGame0
 End If
 EngineNewGame IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED)
+If Options_nEnginePlay = ENGINE_PLAY_TURN Then
+    App_bRedTurn = Not App_bRedTurn
+End If
 
 Options_bShowNew = (chkShowNew.Value = 1)
 Unload Me

@@ -918,7 +918,7 @@ If Game_szRound <> "" Then
         Case 0
             sz = sz + Game_szRound
         Case 1 To 97
-             sz = sz + "第" + Game_szRound + "轮"
+            sz = sz + "第" + Game_szRound + "轮"
         Case 98
             sz = sz + "半决赛"
         Case 99
@@ -1013,7 +1013,9 @@ Public Sub EndGame()
 
 Engine_nStatus = IDLE_REST
 If Options_bAutoNew Then
-    NewGame
+    If Not CancelSave Then
+        NewGame
+    End If
 End If
 
 End Sub
