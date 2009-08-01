@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmNewGame 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "開始對局"
-   ClientHeight    =   3840
+   ClientHeight    =   4200
    ClientLeft      =   5310
    ClientTop       =   1830
    ClientWidth     =   3000
@@ -18,19 +18,27 @@ Begin VB.Form frmNewGame
    Icon            =   "NEWGAME.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3840
+   ScaleHeight     =   4200
    ScaleWidth      =   3000
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
-   Begin VB.CheckBox chkShowNew 
-      Caption         =   "始終顯示“開始對局”對話框"
+   Begin VB.CheckBox chkNoComputer 
+      Caption         =   "不用電腦，只觀看或編輯棋局"
       Height          =   255
-      Left            =   240
+      Left            =   120
       TabIndex        =   14
       Top             =   3000
       Width           =   2655
    End
-   Begin VB.Frame Frame1 
+   Begin VB.CheckBox chkShowNew 
+      Caption         =   "始終顯示“開始對局”對話框"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   15
+      Top             =   3360
+      Width           =   2655
+   End
+   Begin VB.Frame frmHandicap 
       Caption         =   "先走讓子"
       Height          =   2055
       Left            =   120
@@ -144,13 +152,13 @@ Begin VB.Form frmNewGame
          Width           =   735
       End
       Begin VB.OptionButton optLevel 
-         Caption         =   "特大"
+         Caption         =   "特級大師"
          Height          =   255
          Index           =   4
          Left            =   120
          TabIndex        =   13
          Top             =   1680
-         Width           =   735
+         Width           =   1095
       End
    End
    Begin VB.CommandButton btnConfirm 
@@ -158,8 +166,8 @@ Begin VB.Form frmNewGame
       Default         =   -1  'True
       Height          =   375
       Left            =   360
-      TabIndex        =   15
-      Top             =   3360
+      TabIndex        =   16
+      Top             =   3720
       Width           =   975
    End
    Begin VB.CommandButton btnCancel 
@@ -167,8 +175,8 @@ Begin VB.Form frmNewGame
       Caption         =   "取消"
       Height          =   375
       Left            =   1680
-      TabIndex        =   16
-      Top             =   3360
+      TabIndex        =   17
+      Top             =   3720
       Width           =   975
    End
 End
@@ -203,12 +211,11 @@ Private Sub Form_Load()
 
 Select Case Options_nEnginePlay
 Case ENGINE_PLAY_RED
-    optFlip(0).Value = True
+    optFlip(1).Value = True
 Case ENGINE_PLAY_BLACK
-    optFlip(0).Value = False
+    optFlip(0).Value = True
 Case ENGINE_PLAY_TURN
-    App_bRedTurn = Not App_bRedTurn
-    optFlip(0).Value = App_bRedTurn
+    optFlip(0).Value = Not App_bRedTurn
 Case Else
     optFlip(0).Value = Rnd < 0.5
 End Select
@@ -229,7 +236,23 @@ Case Else
     optLevel(0).Value = True
 End Select
 
+chkNoComputer.Value = IIf(Options_nEnginePlay = ENGINE_PLAY_NONE, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
+
+End Sub
+
+Private Sub chkNoComputer_Click()
+
+Dim i As Integer, bEnabled As Boolean
+bEnabled = chkNoComputer.Value = 0
+frmFlip.Enabled = bEnabled
+For i = 0 To 1
+    optFlip(i).Enabled = bEnabled
+Next
+frmLevel.Enabled = bEnabled
+For i = 0 To 4
+    optLevel(i).Enabled = bEnabled
+Next
 
 End Sub
 
@@ -266,7 +289,11 @@ ElseIf optHandicap(3).Value Then
 Else
     NewGame0
 End If
-EngineNewGame IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED)
+EngineNewGame IIf(chkNoComputer.Value = 1, ENGINE_PLAY_NONE, _
+        IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED))
+If Options_nEnginePlay = ENGINE_PLAY_TURN Then
+    App_bRedTurn = Not App_bRedTurn
+End If
 
 Options_bShowNew = (chkShowNew.Value = 1)
 Unload Me
@@ -275,8 +302,6 @@ End Sub
 
 Private Sub btnCancel_Click()
 
-NewGame0
-EngineNewGame
 Unload Me
 
 End Sub

@@ -37,7 +37,7 @@ Begin VB.Form frmLevelSet
       Height          =   255
       Left            =   120
       TabIndex        =   5
-      ToolTipText     =   "度ㄑ秆炳Ы摧Ыノ"
+      ToolTipText     =   "度ㄑ秆炳Ы摧Ыノ筿福盢笲衡衡衊璽ゎ眤¨氨ゎσ〃秙いゎ筿福笲衡"
       Top             =   1920
       Width           =   1455
    End
@@ -104,12 +104,12 @@ Begin VB.Form frmLevelSet
       End
    End
    Begin VB.OptionButton optGrandMaster 
-      Caption         =   "疭"
+      Caption         =   "疭畍"
       Height          =   255
       Left            =   120
       TabIndex        =   4
       Top             =   1560
-      Width           =   735
+      Width           =   1095
    End
    Begin VB.OptionButton optBeginner 
       Caption         =   ""
@@ -544,6 +544,11 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
+If optOverwhelming.Value Then
+    If MsgBox("“無敵”模式不適合一般的人機對弈，是否繼續？", vbExclamation + vbYesNo) = vbNo Then
+        Exit Sub
+    End If
+End If
 Timer_bIncMode = optIncTime.Value
 Timer_nInitTime = Level_nInitTime
 Timer_nIncMove = Level_nIncMove

@@ -145,7 +145,6 @@ End Sub
 Private Sub btnLoad_Click()
 
 Dim sz As String
-Dim i As Long, nFileLen As Long, nOpenFile As Integer
 If chkClipboard.Value = 0 Then
     sz = OpenFileDialog("Load Binary File", "Binary File (*.*)|*.*")
     If sz <> "" Then

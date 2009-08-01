@@ -3,7 +3,7 @@ package xqboss;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GBLineInputStream {
+class GBLineInputStream {
 	private static char[] gbCharTab = new char[32768];
 
 	static {
@@ -25,11 +25,11 @@ public class GBLineInputStream {
 		// Do Nothing
 	}
 
-	public GBLineInputStream(InputStream in) {
+	GBLineInputStream(InputStream in) {
 		this.in = in;
 	}
 
-	public String readLine() {
+	String readLine() {
 		StringBuffer sb = new StringBuffer();
 		int b;
 		try {
@@ -64,7 +64,7 @@ public class GBLineInputStream {
 		return sb.length() == 0 ? null : sb.toString();
 	}
 
-	public void close() throws IOException {
+	void close() throws IOException {
 		in.close();
 	}
 }

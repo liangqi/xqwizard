@@ -21,6 +21,26 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
+' 没有声音的MsgBox
+Private Type MsgBoxParams
+    cbSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpszText As String
+    lpszCaption As String
+    dwStyle As Long
+    lpszIcon As Long
+    dwContextHelpId As Long
+    lpfnMsgBoxCallback As Long
+    dwLanguageId As Long
+End Type
+
+Private Const MB_USERICON       As Long = 128
+Private Const MB_YESNO          As Long = 4
+Private Const IDI_QUESTION      As Long = 32514
+
+Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
+
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "4.2"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
@@ -1009,10 +1029,33 @@ EngineNewGame
 End Sub
 
 ' 结束一局对局
-Public Sub EndGame()
+Public Sub EndGame(ByVal szSound As String, ByVal szPrompt As String)
 
-Engine_nStatus = IDLE_REST
-If Options_bAutoNew Then
+Dim mbp As MsgBoxParams, dwResult As Long
+
+PlayWavSound szSound
+If App_sqMate > 0 Then
+    DrawSquare App_sqMate, , DRAW_MATE
+End If
+mbp.cbSize = Len(mbp)
+mbp.hwndOwner = App_frmMain.hWnd
+mbp.hInstance = 0
+mbp.lpszText = szPrompt + vbCrLf + vbCrLf + "再来一局吗？"
+mbp.lpszCaption = App.Title
+mbp.dwStyle = MB_USERICON + MB_YESNO
+mbp.lpszIcon = IDI_QUESTION
+mbp.dwContextHelpId = 0
+mbp.lpfnMsgBoxCallback = 0
+mbp.dwLanguageId = 0
+' Unsupported under Windows 98
+dwResult = MessageBoxIndirectA(mbp)
+If dwResult = 0 Then
+    mbp.hInstance = App.hInstance
+    mbp.lpszIcon = 1
+    dwResult = MessageBoxIndirectA(mbp)
+End If
+
+If dwResult = vbYes Then
     If Not CancelSave Then
         NewGame
     End If
@@ -1271,8 +1314,9 @@ End Sub
 ' 新增一个着法，可以是从文件中读入的，用户搬的，或引擎走的
 Public Function AddMove(mv As Long, Optional ByVal bEcho = False, Optional ByVal bEngine = False) As Boolean
 
-Dim i As Integer, nMoveStatus As Long
+Dim i As Integer, nMoveStatus As Long, szResult As String
 Dim szMoveChinText As String, szMoveFileText As String, szMoveIccsText As String
+
 If Game_cntCurr = 1000 Or Game_posIrrev(Game_nCurrIrrev).nMoveNum = 256 Then
     AddMove = False
     If bEcho Then
@@ -1344,11 +1388,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If (nMoveStatus And MOVE_MATE) <> 0 Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
-            PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-            If App_sqMate > 0 Then
-                DrawSquare App_sqMate, , DRAW_MATE
-            End If
-            MsgBoxMute IIf(Game_sdCurr = 1, "红胜。", "黑胜。"), vbInformation
+            szResult = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
+            EndGame szResult, IIf(Game_sdCurr = 1, "红胜。", "黑胜。")
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1367,8 +1408,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                PlayWavSound "DRAW"
-                MsgBoxMute "自然作和。", vbInformation
+                EndGame "DRAW", "自然作和。"
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1388,11 +1428,11 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             End If
             If bEcho Then
                 If Game_nResult = 2 Then
-                    PlayWavSound "DRAW"
+                    szResult = "DRAW"
                 Else
-                    PlayWavSound IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
+                    szResult = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
                 End If
-                MsgBoxMute Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！"), vbInformation
+                EndGame szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
             End If
             App_frmMain.lblResult = ResultString
             Timer_bEnabled = False
@@ -1410,17 +1450,15 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If Engine_nStatus = IDLE_PONDER Then
         If mv = Engine_mvPonder Then
             If Options_bAllowResign And Engine_bPonderFinishedResign Then
-                PlayWavSound "WIN"
-                MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
-                EndGame
+                Engine_nStatus = IDLE_REST
+                EndGame "WIN", IIf(Game_sdMax = 0, "红方认输。", "黑方认输。")
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
-                PlayWavSound "DRAW"
-                MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
-                EndGame
+                Engine_nStatus = IDLE_REST
+                EndGame "DRAW", IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。")
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
@@ -2008,7 +2046,6 @@ Else
         Case BUSY_ANALYZE
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
-            Engine_nStatus = IDLE_REST ' 为什么这里要 IDLE_REST ？
             If Options_nMoveDelay > 0 Then
                 Sleep Options_nMoveDelay * 1000
             End If
@@ -2016,23 +2053,21 @@ Else
                 MoveForward
             Loop
             If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
-                PlayWavSound "WIN"
-                MsgBoxMute IIf(Game_sdMax = 0, "红方认输。", "黑方认输。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                EndGame
+                Engine_nStatus = IDLE_REST
+                EndGame "WIN", IIf(Game_sdMax = 0, "红方认输。", "黑方认输。")
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
-                PlayWavSound "DRAW"
-                MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                EndGame
+                Engine_nStatus = IDLE_REST
+                EndGame "DRAW", IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。")
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
@@ -2049,6 +2084,9 @@ Else
                 Else
                     Engine_nStatus = IDLE_READY
                 End If
+            Else
+                ' 走棋没有成功，也停止引擎
+                Engine_nStatus = IDLE_REST
             End If
         Case Else
             MsgBox "不该接收到引擎的信息：" + szReceived, vbExclamation
@@ -2066,7 +2104,7 @@ Else
         Case BUSY_ANALYZE
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
-            EndGame
+            Engine_nStatus = IDLE_REST
         Case Else
             ' MsgBox "不该接收到引擎的信息：" + szReceived, vbExclamation
         End Select

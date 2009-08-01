@@ -32,9 +32,9 @@ public class MoveParser {
 	/** 棋子代号"KABNRCP"分别表示"帅(将)仕(士)相(象)马车炮兵(卒)" */
 	private static final String PIECE_TO_CHAR = "KABNRCP";
 
-	/** 可识别的数字有：中文数字、全角阿拉伯数字，以及它们的BIG5编码 */
+	/** 可识别的数字有：中文数字、全角阿拉伯数字，以及它们的BIG5编码，还有半角阿拉伯数字 */
 	private static final String[] DIGIT_TO_WORD = {
-		"一二三四五六七八九", "１２３４５６７８９", "きせ", "⒈⒉⒊⒋⒌⒍⒎⒏"
+		"123456789", "一二三四五六七八九", "１２３４５６７８９", "きせ", "⒈⒉⒊⒋⒌⒍⒎⒏"
 	};
 
 	/** 可识别的棋子有：红方的"帅仕相马车炮兵"、黑方的"将士象马车炮卒"，以及它们的BIG5编码 */
@@ -190,7 +190,7 @@ public class MoveParser {
 	}
 
 	/** WXF表示转换为内部着法表示 */
-	public static int file2Move(String strFile, SimplePos p) {
+	static int file2Move(String strFile, SimplePos p) {
 		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
 
 		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，
@@ -316,7 +316,7 @@ public class MoveParser {
 	}
 
 	/** ICCS表示转换为内部着法表示 */
-	public static int iccs2Move(String strIccs) {
+	static int iccs2Move(String strIccs) {
 		char[] cIccs = strIccs.toCharArray();
 		if (cIccs[0] < 'A' || cIccs[0] > 'I' || cIccs[1] < '0' || cIccs[1] > '9' ||
 				cIccs[3] < 'A' || cIccs[3] > 'I' || cIccs[4] < '0' || cIccs[4] > '9') {
@@ -330,7 +330,7 @@ public class MoveParser {
 	}
 
 	/** 中文表示转换为WXF表示 */
-	public static String chin2File(String strChin) {
+	static String chin2File(String strChin) {
 		char[] cChin = strChin.toCharArray();
 		char[] cFile = new char[4];
 		int pos = word2Pos(cChin[0]);

@@ -23,7 +23,7 @@ package xqboss;
 
 import java.util.Vector;
 
-public class PgnFile {
+class PgnFile {
 	private static byte[] copySquares(byte[] squares) {
 		byte[] bb = new byte[squares.length];
 		System.arraycopy(squares, 0, bb, 0, squares.length);
@@ -48,7 +48,7 @@ public class PgnFile {
 	private Vector lstSquares = new Vector();
 	private Vector lstComment = new Vector();
 
-	public PgnFile(GBLineInputStream in) {
+	PgnFile(GBLineInputStream in) {
 		SimplePos pos = new SimplePos();
 		pos.fromFen(SimplePos.STARTUP_FEN);
 		boolean returned = false, detail = false;
@@ -271,15 +271,15 @@ public class PgnFile {
 		return sb.toString();
 	}
 
-	public int size() {
+	int size() {
 		return maxMoves;
 	}
 
-	public byte[] squares(int index) {
+	byte[] squares(int index) {
 		return (byte[]) lstSquares.elementAt(index);
 	}
 
-	public String comment(int index) {
+	String comment(int index) {
 		return ((StringBuffer) lstComment.elementAt(index)).toString();
 	}
 }

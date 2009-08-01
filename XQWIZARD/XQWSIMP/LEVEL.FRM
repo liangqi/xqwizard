@@ -37,7 +37,7 @@ Begin VB.Form frmLevelSet
       Height          =   255
       Left            =   120
       TabIndex        =   5
-      ToolTipText     =   "仅供解杀局、残局用"
+      ToolTipText     =   "仅供解杀局、残局用，电脑将一直运算下去直到算出胜负为止。您可以按“停止思考”按钮中止电脑的运算。"
       Top             =   1920
       Width           =   1455
    End
@@ -104,12 +104,12 @@ Begin VB.Form frmLevelSet
       End
    End
    Begin VB.OptionButton optGrandMaster 
-      Caption         =   "特大"
+      Caption         =   "特级大师"
       Height          =   255
       Left            =   120
       TabIndex        =   4
       Top             =   1560
-      Width           =   735
+      Width           =   1095
    End
    Begin VB.OptionButton optBeginner 
       Caption         =   "入门"
@@ -544,6 +544,11 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
+If optOverwhelming.Value Then
+    If MsgBox("“无敌”模式不适合一般的人机对弈，是否继续？", vbExclamation + vbYesNo) = vbNo Then
+        Exit Sub
+    End If
+End If
 Timer_bIncMode = optIncTime.Value
 Timer_nInitTime = Level_nInitTime
 Timer_nIncMove = Level_nIncMove

@@ -2483,11 +2483,10 @@ End Sub
 Private Sub mnEngineDraw_Click()
 
 If Engine_bDraw Then
-    PlayWavSound "DRAW"
-    MsgBoxMute IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。"), vbInformation
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST
+    EndGame "DRAW", IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。")
 Else
     If mnEngineDraw.Checked Then
         MsgBox "放弃提和。", vbInformation

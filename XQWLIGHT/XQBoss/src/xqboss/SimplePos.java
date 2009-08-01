@@ -21,21 +21,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 package xqboss;
 
-public class SimplePos {
-	public static final int PIECE_KING = 0;
-	public static final int PIECE_ADVISOR = 1;
-	public static final int PIECE_BISHOP = 2;
-	public static final int PIECE_KNIGHT = 3;
-	public static final int PIECE_ROOK = 4;
-	public static final int PIECE_CANNON = 5;
-	public static final int PIECE_PAWN = 6;
+class SimplePos {
+	static final int PIECE_KING = 0;
+	static final int PIECE_ADVISOR = 1;
+	static final int PIECE_BISHOP = 2;
+	static final int PIECE_KNIGHT = 3;
+	static final int PIECE_ROOK = 4;
+	static final int PIECE_CANNON = 5;
+	static final int PIECE_PAWN = 6;
 
-	public static final int RANK_TOP = 3;
-	public static final int RANK_BOTTOM = 12;
-	public static final int FILE_LEFT = 3;
-	public static final int FILE_RIGHT = 11;
+	static final int RANK_TOP = 3;
+	static final int RANK_BOTTOM = 12;
+	static final int FILE_LEFT = 3;
+	static final int FILE_RIGHT = 11;
 
-	public static final byte[] IN_BOARD = new byte[] {
+	static final byte[] IN_BOARD = new byte[] {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -54,60 +54,60 @@ public class SimplePos {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	public static final String STARTUP_FEN =
+	static final String STARTUP_FEN =
 			"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1";
 
-	public static boolean IN_BOARD(int sq) {
+	static boolean IN_BOARD(int sq) {
 		return IN_BOARD[sq] != 0;
 	}
 
-	public static int COORD_XY(int x, int y) {
+	static int COORD_XY(int x, int y) {
 		return x + (y << 4);
 	}
 
-	public static int RANK_Y(int sq) {
+	static int RANK_Y(int sq) {
 		return sq >> 4;
 	}
 
-	public static int FILE_X(int sq) {
+	static int FILE_X(int sq) {
 		return sq & 15;
 	}
 
-	public static int SQUARE_FLIP(int sq) {
+	static int SQUARE_FLIP(int sq) {
 		return 254 - sq;
 	}
 
-	public static int SIDE_TAG(int sd) {
+	static int SIDE_TAG(int sd) {
 		return 8 + (sd << 3);
 	}
 
-	public static int SRC(int mv) {
+	static int SRC(int mv) {
 		return mv & 255;
 	}
 
-	public static int DST(int mv) {
+	static int DST(int mv) {
 		return mv >> 8;
 	}
 
-	public static int MOVE(int sqSrc, int sqDst) {
+	static int MOVE(int sqSrc, int sqDst) {
 		return sqSrc + (sqDst << 8);
 	}
 
-	public int sdPlayer;
-	public byte[] squares = new byte[256];
+	int sdPlayer;
+	byte[] squares = new byte[256];
 
-	public void clearBoard() {
+	void clearBoard() {
 		sdPlayer = 0;
 		for (int sq = 0; sq < 256; sq ++) {
 			squares[sq] = 0;
 		}
 	}
 
-	public void changeSide() {
+	void changeSide() {
 		sdPlayer = 1 - sdPlayer;
 	}
 
-	public int fenPiece(char c) {
+	int fenPiece(char c) {
 		switch (c) {
 		case 'K':
 			return PIECE_KING;
@@ -130,7 +130,7 @@ public class SimplePos {
 		}
 	}
 
-	public void fromFen(String fen) {
+	void fromFen(String fen) {
 		clearBoard();
 		int y = RANK_TOP;
 		int x = FILE_LEFT;

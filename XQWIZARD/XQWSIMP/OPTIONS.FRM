@@ -3,7 +3,7 @@ Object = "{FE0065C0-1B7B-11CF-9D53-00AA003C9CB6}#1.1#0"; "COMCT232.OCX"
 Begin VB.Form frmOptions 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "选项设置"
-   ClientHeight    =   4560
+   ClientHeight    =   4200
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6840
@@ -19,25 +19,17 @@ Begin VB.Form frmOptions
    Icon            =   "OPTIONS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4560
+   ScaleHeight     =   4200
    ScaleWidth      =   6840
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame frmOther 
       Caption         =   "其他"
-      Height          =   1335
+      Height          =   975
       Left            =   3480
       TabIndex        =   32
       Top             =   2640
       Width           =   3255
-      Begin VB.CheckBox chkAutoNew 
-         Caption         =   "棋局结束后立即开始新的对局"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   34
-         Top             =   600
-         Width           =   3015
-      End
       Begin VB.CheckBox chkShowNew 
          Caption         =   "启动时显示“开始对局”对话框"
          Height          =   255
@@ -50,16 +42,16 @@ Begin VB.Form frmOptions
          Caption         =   "提示保存棋局"
          Height          =   255
          Left            =   120
-         TabIndex        =   35
-         Top             =   960
+         TabIndex        =   34
+         Top             =   600
          Width           =   1455
       End
       Begin VB.CheckBox chkAutoSave 
          Caption         =   "自动保存棋局"
          Height          =   255
          Left            =   1680
-         TabIndex        =   36
-         Top             =   960
+         TabIndex        =   35
+         Top             =   600
          Width           =   1455
       End
    End
@@ -151,7 +143,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196613
+         BuddyDispid     =   196615
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -199,16 +191,16 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3840
-      TabIndex        =   38
-      Top             =   4080
+      TabIndex        =   37
+      Top             =   3720
       Width           =   975
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
       Height          =   375
       Left            =   2040
-      TabIndex        =   37
-      Top             =   4080
+      TabIndex        =   36
+      Top             =   3720
       Width           =   975
    End
    Begin VB.Frame frmGui 
@@ -253,7 +245,7 @@ Begin VB.Form frmOptions
    End
    Begin VB.Frame frmWizard 
       Caption         =   "魔法"
-      Height          =   3135
+      Height          =   2775
       Left            =   120
       TabIndex        =   5
       Top             =   840
@@ -309,7 +301,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196639
+         BuddyDispid     =   196641
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -426,7 +418,6 @@ txtUser.Text = Options_szUser
 chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
-chkAutoNew.Value = IIf(Options_bAutoNew, 1, 0)
 SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
 
 End Sub
@@ -475,7 +466,6 @@ Options_szUser = txtUser.Text
 Options_bPromptSave = (chkPromptSave.Value = 1)
 Options_bAutoSave = (chkAutoSave.Value = 1)
 Options_bShowNew = (chkShowNew.Value = 1)
-Options_bAutoNew = (chkAutoNew.Value = 1)
 Unload Me
 
 End Sub

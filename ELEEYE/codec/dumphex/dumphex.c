@@ -5,7 +5,7 @@
 #include <windows.h>
 #include "dumphex.h"
 
-extern "C" __declspec(dllexport) VOID WINAPI DumpHexA(LPSTR szHexText, LPCSTR lpBuffer, LONG nOffset, LONG nLength);
+__declspec(dllexport) VOID WINAPI DumpHexA(LPSTR szHexText, LPCSTR lpBuffer, LONG nOffset, LONG nLength);
 
 VOID WINAPI DumpHexA(LPSTR szHexText, LPCSTR lpBuffer, LONG nOffset, LONG nLength) {
   DumpHex(szHexText, lpBuffer, nOffset, nLength);
