@@ -144,11 +144,11 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardFlash"
-            Object.ToolTipText     =   "复制Flash棋盤代碼"
+            Object.ToolTipText     =   "複製Flash棋盤代碼"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardText"
-            Object.ToolTipText     =   "复制文本棋盤"
+            Object.ToolTipText     =   "複製文本棋盤"
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardBitmap"
@@ -2177,7 +2177,7 @@ Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
 Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
-MsgBox "FEN串已复制到剪貼板。", vbInformation
+MsgBox "FEN串已複製到剪貼板。", vbInformation
 
 End Sub
 
@@ -2267,7 +2267,7 @@ If Options_bAnsiText Then
 Else
     Clipboard.SetText AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev))) + szFenStr
 End If
-MsgBox "文本棋盤已复制到剪貼板。", vbInformation
+MsgBox "文本棋盤已複製到剪貼板。", vbInformation
 
 End Sub
 

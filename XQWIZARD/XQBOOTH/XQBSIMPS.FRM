@@ -1473,7 +1473,7 @@ End Sub
 
 Private Sub inet_StateChanged(ByVal nState As Integer)
 
-Dim szResult As String, nResult As Integer, bLoad As Boolean, szRanks() As String
+Dim szResult As String, nResult As Integer, bLoad As Boolean, szResults() As String
 
 If nState = icError Then
     ConnError
@@ -1550,11 +1550,11 @@ Case USERS_RANK
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            szRanks = Split(Mid(szResult, 3), "|")
-            If UBound(szRanks) = 2 Then
-                Rank_nScore = Str2Int(szRanks(0), 0, App_nEndgames)
-                Rank_nToday = Str2Lng(szRanks(1))
-                Rank_nYesterday = Str2Lng(szRanks(2))
+            szResults = Split(Mid(szResult, 3), "|")
+            If UBound(szResults) = 2 Then
+                Rank_nScore = Str2Int(szResults(0), 0, App_nEndgames)
+                Rank_nToday = Str2Lng(szResults(1))
+                Rank_nYesterday = Str2Lng(szResults(2))
                 frmRank.Show vbModal, Me
             Else
                 ConnError
@@ -1612,11 +1612,13 @@ Case USERS_POINTS
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            nResult = Str2Int(Mid(szResult, 3))
-            If nResult < 10000 Then
-                MsgBox "您还有" + Str(nResult) + " 点可用。", vbInformation
+            szResults = Split(Mid(szResult, 3), "|")
+            If UBound(szResults) = 1 Then
+                nResult = Str2Int(szResults(1))
+                MsgBox "您还有 " + szResults(0) + " 点可用。" + IIf(nResult < 2800, "", _
+                        vbCrLf + vbCrLf + "您是白金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
             Else
-                MsgBox "您是白金会员用户，可以无限次使用提示和悔棋功能。", vbInformation
+                ConnError
             End If
         Else
             ConnError

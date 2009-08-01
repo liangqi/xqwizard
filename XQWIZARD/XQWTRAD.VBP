@@ -22,6 +22,7 @@ Form=HIDEFORM.FRM
 Form=STARTUP.FRM
 ResFile32="XQWIZARD.RES"
 Module=mdlAdvert; ADVERT.BAS
+Form=XQWTRAD\NEWGAME.FRM
 IconForm="frmMainSmall"
 Startup="Sub Main"
 HelpFile=""

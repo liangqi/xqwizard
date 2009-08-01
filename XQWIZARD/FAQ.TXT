@@ -33,8 +33,8 @@
 　　简体版的源程序转换为繁体版比较烦琐，窗体设计部分(FRM文件"Attribute"以上的部分)的代码需要转化成BIG5码，而程序部分(FRM文件"Attribute"以下的部分，以及BAS文件)的繁体文字需要用GB/HZ码表示。转换完成后，还需要改动一些地方：
 　　　　(1) 字体属性中，"Charset"设成136(简体版是134)；
 　　　　(2) 窗体设计部分中如果使用OCX控件(如"MSComctlLib.Toolbar"控件)，那么属性中的文字需要用GB/HZ码表示。
-　　　　(3) "XQWMAIN.BAS"中，"CchessInit"和"EccoInitOpenVar"后面都要跟参数"CCHESS_TRADITIONAL"，URL中的"...simp..."替换成"...trad..."；
-　　　　(4) 某些简繁转换程序不一定转换正确，需要手工更正，有："后"->"後"，"网"->"網"，"体"->"體"，"于"->"於"，"台"->"臺"，"复"->"複"。
+　　　　(3) "XQWMAIN.BAS"中，"CchessInit"和"EccoInitOpenVar"后面都要跟参数"CCHESS_TRADITIONAL"，URL中的"...simp..."替换成"...trad..."。
+　　推荐使用"google-api-translate"把简体转换成繁体。
 　　注意：尽量不要在VB6的集成开发环境中编辑"XQWTRAD.VBP"工程文件及其包含的其他文件，因为它会破坏某些设置(如字体属性)。
 
 6. 为什么会找不到DLL文件？

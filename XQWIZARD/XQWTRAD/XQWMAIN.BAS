@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -21,14 +21,34 @@ Attribute VB_Name = "mdlMain"
 
 Option Explicit
 
+' 沒有聲音的MsgBox
+Private Type MsgBoxParams
+    cbSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpszText As String
+    lpszCaption As String
+    dwStyle As Long
+    lpszIcon As Long
+    dwContextHelpId As Long
+    lpfnMsgBoxCallback As Long
+    dwLanguageId As Long
+End Type
+
+Private Const MB_USERICON       As Long = 128
+Private Const MB_YESNO          As Long = 4
+Private Const IDI_QUESTION      As Long = 32514
+
+Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
+
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "4.11"
+Public Const STRING_VERSION     As String = "4.2"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
-Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
-Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
-Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
-Public Const MAX_ENDGAMES2      As Integer = 4096 ' 残局的最大条目数(象棋魔法学校)
+Public Const QUOTE_NUM          As Integer = 12   ' 名言條目數
+Public Const ICON_QUOTE         As Integer = 8    ' 名言圖標
+Public Const MAX_ENDGAMES       As Integer = 1024 ' 殘局的最大條目數
+Public Const MAX_ENDGAMES2      As Integer = 4096 ' 殘局的最大條目數(象棋魔法學校)
 ' 全局常量——可選參數
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -46,11 +66,11 @@ Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
 Public Const IDLE_UNLOAD        As Integer = 0 ' 沒有加載引擎
 Public Const IDLE_READY         As Integer = 1 ' 引擎待命(如果輪到電腦走棋，那么引擎立即工作)
 Public Const IDLE_REST          As Integer = 2 ' 引擎休息(即使輪到電腦走棋，引擎也不工作，除非狀態改變)
-Public Const IDLE_PONDER        As Integer = 3 ' 後台思考結束(等待對手走完一步，再作相應處理)
+Public Const IDLE_PONDER        As Integer = 3 ' 後臺思考結束(等待對手走完一步，再作相應處理)
 Public Const BUSY_WAIT          As Integer = 4 ' 等待引擎停止思考
 Public Const BUSY_ANALYZE       As Integer = 5 ' 引擎以分析方式思考(引擎不執任何一方，打開“引擎分析”功能)
 Public Const BUSY_THINK         As Integer = 6 ' 引擎正常思考
-Public Const BUSY_PONDER        As Integer = 7 ' 引擎後台思考
+Public Const BUSY_PONDER        As Integer = 7 ' 引擎後臺思考
 ' 全局常量——棋局結果
 Public Const RESULT_UNKNOWN     As Integer = 0
 Public Const RESULT_REDWIN      As Integer = 1
@@ -73,11 +93,11 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
-' 全局常量——Flash棋盘大小
+' 全局常量——Flash棋盤大小
 Public Const FLASHXQ_SMALL      As Integer = 0
 Public Const FLASHXQ_MEDIUM     As Integer = 1
 Public Const FLASHXQ_LARGE      As Integer = 2
-' 全局常量——棋盘(小)设置选项
+' 全局常量——棋盤(小)設置選項
 Public Const BOARD_S_WOOD       As Integer = 0
 Public Const BOARD_S_GREEN      As Integer = 1
 Public Const BOARD_S_WHITE      As Integer = 2
@@ -91,7 +111,7 @@ Public Const BOARD_S_MRSJ       As Integer = 9
 Public Const BOARD_S_ZMBL       As Integer = 10
 Public Const BOARD_S_QIANHONG   As Integer = 11
 Public Const BOARD_S_MAX        As Integer = 12
-' 全局常量——棋子(小)设置选项
+' 全局常量——棋子(小)設置選項
 Public Const PIECES_S_WOOD      As Integer = 0
 Public Const PIECES_S_DELICATE  As Integer = 1
 Public Const PIECES_S_POLISH    As Integer = 2
@@ -100,7 +120,7 @@ Public Const PIECES_S_MOVESKY   As Integer = 4
 Public Const PIECES_S_MRSJ      As Integer = 5
 Public Const PIECES_S_ZMBL      As Integer = 6
 Public Const PIECES_S_MAX       As Integer = 7
-' 全局常量——棋盘(大)设置选项
+' 全局常量——棋盤(大)設置選項
 Public Const BOARD_L_WOOD       As Integer = 0
 Public Const BOARD_L_GREEN      As Integer = 1
 Public Const BOARD_L_WHITE      As Integer = 2
@@ -109,7 +129,7 @@ Public Const BOARD_L_CANVAS     As Integer = 4
 Public Const BOARD_L_DROPS      As Integer = 5
 Public Const BOARD_L_QIANHONG   As Integer = 6
 Public Const BOARD_L_MAX        As Integer = 7
-' 全局常量——棋子(大)设置选项
+' 全局常量——棋子(大)設置選項
 Public Const PIECES_L_WOOD      As Integer = 0
 Public Const PIECES_L_DELICATE  As Integer = 1
 Public Const PIECES_L_POLISH    As Integer = 2
@@ -137,7 +157,7 @@ Public Const EVENT_ADVERT       As Integer = 4
 Public Const EVENT_GUI          As Integer = 5
 ' 全局常量——棋盤坐標
 Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
-' 全局常量——让子
+' 全局常量——讓子
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
@@ -157,15 +177,15 @@ Public App_bAutoEcco            As Boolean  ' 是否啟用自動解析開局的設置
 Public App_bFlipped             As Boolean  ' 是否已經翻轉棋盤
 Public App_mvNewMove            As Long     ' 最新的一個著法，棋盤上有標記
 Public App_sqSelected           As Integer  ' 鼠標選中的棋子
-Public App_sqMate               As Integer  ' 被将死的帅(将)
+Public App_sqMate               As Integer  ' 被將死的帥(將)
 Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 紅黑輪流標志
-Public App_bPromotion           As Boolean  ' 是否允许升变
-Public App_bPrevInstance        As Boolean  ' 是否再一次启动
-Public App_nEndgames            As Integer  ' 读入的残局数量
-Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
-Public App_nEndgames2           As Integer  ' 读入的残局数量(象棋魔法学校)
-Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Long ' 读入的残局校验码(象棋魔法学校)
+Public App_bPromotion           As Boolean  ' 是否允許升變
+Public App_bPrevInstance        As Boolean  ' 是否再一次啟動
+Public App_nEndgames            As Integer  ' 讀入的殘局數量
+Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 讀入的殘局
+Public App_nEndgames2           As Integer  ' 讀入的殘局數量(象棋魔法學校)
+Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Long ' 讀入的殘局校驗碼(象棋魔法學校)
 Public App_dwEndgames21(0 To MAX_ENDGAMES2 - 1) As Long
 Public App_dwEndgames22(0 To MAX_ENDGAMES2 - 1) As Long
 Public App_dwEndgames23(0 To MAX_ENDGAMES2 - 1) As Long
@@ -177,13 +197,13 @@ Public Options_nPlayIntv        As Integer  ' 播放間隔(秒)
 Public Options_bEscapeDouble    As Boolean  ' 用兩個Esc輸入ANSI
 Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盤
 Public Options_bMonoBitmap      As Boolean  ' 圖片棋盤的紅子用白底紅字表示
-Public Options_bPrintDigit      As Boolean  ' 印刷棋盘上下显示数字
-Public Options_nFlashXQ         As Integer  ' Flash棋盘尺寸
-Public Options_nMoveDelay       As Integer  ' 走子延时
+Public Options_bPrintDigit      As Boolean  ' 印刷棋盤上下顯示數字
+Public Options_nFlashXQ         As Integer  ' Flash棋盤尺寸
+Public Options_nMoveDelay       As Integer  ' 走子延時
 Public Options_bAutoFlip        As Boolean  ' 自動翻轉棋盤
 Public Options_bEngineName      As Boolean  ' 顯示引擎名稱
 Public Options_bAllowResign     As Boolean  ' 允許引擎認輸
-Public Options_bAlwaysPonder    As Boolean  ' 啟用後台思考
+Public Options_bAlwaysPonder    As Boolean  ' 啟用後臺思考
 Public Options_bEngineTime      As Boolean  ' 顯示引擎速度
 Public Options_bStatusBar       As Boolean  ' 輸出到狀態欄
 Public Options_nEnginePlay      As Integer  ' 新局引擎狀態
@@ -192,25 +212,26 @@ Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
 Public Options_nMusic           As Integer  ' 音樂
-Public Options_bTopMost         As Integer  ' 总在最前面
+Public Options_bTopMost         As Integer  ' 總在最前面
 Public Options_bPromptSave      As Boolean  ' 提示保存
-Public Options_bAutoSave        As Boolean  ' 自动保存
+Public Options_bAutoSave        As Boolean  ' 自動保存
 Public Options_szUser           As String   ' 人机對弈用戶
+Public Options_bShowNew         As Boolean  ' 啟動時顯示“開始對局”對話框
 ' 全局變量——界面
-Public Gui_nLeft                As Long     ' 窗口坐标
-Public Gui_nTop                 As Long     ' 窗口坐标
-Public Gui_nEndgamesIndex       As Integer  ' “趣味象棋”的条目序号
-Public Gui_szEpdName            As String   ' 残局文件名
-Public Gui_szEpdTitle           As String   ' 残局标题
+Public Gui_nLeft                As Long     ' 窗口坐標
+Public Gui_nTop                 As Long     ' 窗口坐標
+Public Gui_nEndgamesIndex       As Integer  ' 殘局的條目序號
+Public Gui_szEpdName            As String   ' 殘局文件名
+Public Gui_szEpdTitle           As String   ' 殘局標題
 Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
-Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
-Public Gui_szUserID             As String   ' 用户ID
+Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
+Public Gui_szUserID             As String   ' 用戶ID
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
-Public Gui_szPopupDate          As String   ' 退弹的日期
+Public Gui_szPopupDate          As String   ' 退彈的日期
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 ' 全局變量——棋局
@@ -226,7 +247,7 @@ Public Game_nResult             As Integer  ' 結果
 Public Game_szEcco              As String   ' 開局編號
 Public Game_szOpen              As String   ' 開局
 Public Game_szVar               As String   ' 變例
-Public Game_bStartPos           As Boolean  ' 是否開始于初始局面
+Public Game_bStartPos           As Boolean  ' 是否開始於初始局面
 Public Game_cntStart            As Integer  ' 起始回合數
 Public Game_sdStart             As Integer  ' 起始走子方
 Public Game_cntCurr             As Integer  ' 當前回合數
@@ -248,11 +269,11 @@ Public Timer_dfLastTime         As Double   ' 當前時間(每天00:00過去的秒數)
 Public Timer_nDepth             As Integer  ' 引擎搜索深度
 Public Timer_bIncMode           As Boolean  ' 是否加時模式
 Public Timer_nInitTime          As Integer  ' 起始時間
-Public Timer_nIncMove           As Integer  ' 時段制的每時段步數
-Public Timer_nIncTime           As Integer  ' 加時制的加時秒數
+Public Timer_nIncMove           As Integer  ' 時段製的每時段步數
+Public Timer_nIncTime           As Integer  ' 加時製的加時秒數
 Public Timer_nTimeLeft(0 To 1)  As Integer  ' 雙方剩余時間
 Public Timer_nTimeElapsed(0 To 1) As Integer ' 雙方已經用去的時間
-Public Timer_nMoveLeft(0 To 1)  As Integer  ' 加時制的該時段剩余要走的步數
+Public Timer_nMoveLeft(0 To 1)  As Integer  ' 加時製的該時段剩余要走的步數
 Public Timer_bOver(0 To 1)      As Boolean  ' 雙方是否超時
 ' 全局變量——引擎
 Public Engine_bEngineLog        As Boolean  ' 是否記錄引擎日志
@@ -270,27 +291,27 @@ Public Engine_nStyle            As Integer  ' 風格
 Public Engine_szFile            As String   ' 引擎文件
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 Public Engine_nStatus           As Integer  ' 引擎狀態
-Public Engine_nTimeRatio        As Long     ' 引擎時間比例(秒制是1，毫秒制是1000)
+Public Engine_nTimeRatio        As Long     ' 引擎時間比例(秒製是1，毫秒製是1000)
 Public Engine_szName            As String   ' 引擎名稱
 Public Engine_szVersion         As String   ' 引擎版本
 Public Engine_szCopyright       As String   ' 引擎版權
 Public Engine_szAuthor          As String   ' 引擎作者
 Public Engine_szUser            As String   ' 引擎用戶
 Public Engine_posBoard  As PositionStruct   ' 引擎思考的局面
-Public Engine_dwTime            As Double   ' 引擎思考的时间
-Public Engine_nMoves            As Integer  ' 引擎思考的局面的总走法数
+Public Engine_dwTime            As Double   ' 引擎思考的時間
+Public Engine_nMoves            As Integer  ' 引擎思考的局面的總走法數
 Public Engine_nDepth            As Integer  ' 引擎思考的深度
-Public Engine_nCurrMove         As Integer  ' 引擎思考的局面的当前走法数
+Public Engine_nCurrMove         As Integer  ' 引擎思考的局面的當前走法數
 Public Engine_bRed              As Boolean  ' 引擎執紅
 Public Engine_bBlack            As Boolean  ' 引擎執黑
-Public Engine_bPonder           As Boolean  ' 後台思考
+Public Engine_bPonder           As Boolean  ' 後臺思考
 Public Engine_bAnalyze          As Boolean  ' 引擎分析
-Public Engine_mvPonder          As Long     ' 後台思考猜測著法
-Public Engine_mvPonderFinished  As Long     ' 後台思考完成的著法
-Public Engine_mvPonderFinishedPonder As Long ' 後台思考完成的猜測著法
-Public Engine_bPonderFinishedResign As Long ' 後台思考完成後認輸
-Public Engine_bPonderFinishedDraw As Long   ' 後台思考完成後提和或接受提和
-Public Engine_szPonderStr       As String   ' 後台思考指令串
+Public Engine_mvPonder          As Long     ' 後臺思考猜測著法
+Public Engine_mvPonderFinished  As Long     ' 後臺思考完成的著法
+Public Engine_mvPonderFinishedPonder As Long ' 後臺思考完成的猜測著法
+Public Engine_bPonderFinishedResign As Long ' 後臺思考完成後認輸
+Public Engine_bPonderFinishedDraw As Long   ' 後臺思考完成後提和或接受提和
+Public Engine_szPonderStr       As String   ' 後臺思考指令串
 Public Engine_bDraw             As Integer  ' 提和
 Public Engine_mvBan             As Long     ' 禁著
 Public Engine_bSlaveRed         As Boolean  ' 副引擎執紅
@@ -335,12 +356,12 @@ If szSave = "" Then
     szFileName = OpenFileDialog(szTitle, szFilter)
 Else
     szFileName = szSave
-    szFileName = Replace(szFileName, "\", "＼")
-    szFileName = Replace(szFileName, "/", "／")
+    szFileName = Replace(szFileName, "\", "﹨")
+    szFileName = Replace(szFileName, "/", "∕")
     szFileName = Replace(szFileName, ":", "：")
     szFileName = Replace(szFileName, "*", "＊")
     szFileName = Replace(szFileName, "?", "？")
-    ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
+    ' 全角雙引號用在某些操作系統上不正常，所以用半角單引號代替
     szFileName = Replace(szFileName, """", "'")
     szFileName = Replace(szFileName, "<", "＜")
     szFileName = Replace(szFileName, ">", "＞")
@@ -637,7 +658,7 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 If Not bAutoSave Then
-    MsgBox "无法打开文件 " + App_szFileName, vbExclamation
+    MsgBox "無法打開文件 " + App_szFileName, vbExclamation
 End If
 BoardFlush
 LabelFlush
@@ -871,7 +892,7 @@ End Sub
 
 ' 以上是文件操作例程
 
-' 以下是界面控制例程
+' 以下是界面控製例程
 
 ' 輸出時間格式："hh:mm:ss"
 Public Function TimeText(ByVal nSeconds As Long) As String
@@ -940,13 +961,13 @@ End If
 
 End Function
 
-' 日期和地点字符串
+' 日期和地點字符串
 Public Function DateSiteString() As String
 
 If Game_szDate = "" Then
-    DateSiteString = IIf(Game_szSite = "", "", "(弈于 " + Game_szSite + ")")
+    DateSiteString = IIf(Game_szSite = "", "", "(弈於 " + Game_szSite + ")")
 Else
-    DateSiteString = "(" + Game_szDate + IIf(Game_szSite = "", ")", " 弈于 " + Game_szSite + ")")
+    DateSiteString = "(" + Game_szDate + IIf(Game_szSite = "", ")", " 弈於 " + Game_szSite + ")")
 End If
 
 End Function
@@ -980,6 +1001,64 @@ App_frmMain.lblDateSite = DateSiteString
 App_frmMain.lblOpen = OpenString
 SetTimer 0
 SetTimer 1
+
+End Sub
+
+' 清空棋盤
+Public Sub NewGame0()
+
+RestartGame
+BoardFlush
+LabelFlush
+MoveFlush
+
+End Sub
+
+' “新的對局”功能
+Public Sub NewGame()
+
+If Options_bShowNew Then
+    frmNewGame.Show vbModal, App_frmMain
+    Exit Sub
+End If
+App_szFileName = ""
+NewGame0
+EngineNewGame
+
+End Sub
+
+' 結束一局對局
+Public Sub EndGame(ByVal szSound As String, ByVal szPrompt As String)
+
+Dim mbp As MsgBoxParams, dwResult As Long
+
+PlayWavSound szSound
+If App_sqMate > 0 Then
+    DrawSquare App_sqMate, , DRAW_MATE
+End If
+mbp.cbSize = Len(mbp)
+mbp.hwndOwner = App_frmMain.hWnd
+mbp.hInstance = 0
+mbp.lpszText = szPrompt + vbCrLf + vbCrLf + "再來一局嗎？"
+mbp.lpszCaption = App.Title
+mbp.dwStyle = MB_USERICON + MB_YESNO
+mbp.lpszIcon = IDI_QUESTION
+mbp.dwContextHelpId = 0
+mbp.lpfnMsgBoxCallback = 0
+mbp.dwLanguageId = 0
+' Unsupported under Windows 98
+dwResult = MessageBoxIndirectA(mbp)
+If dwResult = 0 Then
+    mbp.hInstance = App.hInstance
+    mbp.lpszIcon = 1
+    dwResult = MessageBoxIndirectA(mbp)
+End If
+
+If dwResult = vbYes Then
+    If Not CancelSave Then
+        NewGame
+    End If
+End If
 
 End Sub
 
@@ -1072,7 +1151,7 @@ nPicId = nPicId + IIf(bSelected, 15, 0)
 Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - sq \ 16) * 9 + 11 - sq Mod 16, (sq \ 16 - 3) * 9 + sq Mod 16 - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
-    ' 以下是新功能 - 抖一下将死的子
+    ' 以下是新功能 - 抖一下將死的子
     img.ZOrder
     x = img.Left
     y = img.Top
@@ -1085,7 +1164,7 @@ If bMate Then
         Sleep 50
     Next
     img.Move x, y
-    ' 以上是新功能 - 抖一下将死的子
+    ' 以上是新功能 - 抖一下將死的子
 End If
 img.Picture = App_picPieces(nPicId)
 
@@ -1234,12 +1313,13 @@ End Sub
 ' 新增一個著法，可以是從文件中讀入的，用戶搬的，或引擎走的
 Public Function AddMove(mv As Long, Optional ByVal bEcho = False, Optional ByVal bEngine = False) As Boolean
 
-Dim i As Integer, nMoveStatus As Long
+Dim i As Integer, nMoveStatus As Long, szResult As String
 Dim szMoveChinText As String, szMoveFileText As String, szMoveIccsText As String
+
 If Game_cntCurr = 1000 Or Game_posIrrev(Game_nCurrIrrev).nMoveNum = 256 Then
     AddMove = False
     If bEcho Then
-        MsgBox "超過最大回合數限制！", vbExclamation
+        MsgBox "超過最大回合數限製！", vbExclamation
     End If
     Exit Function
 End If
@@ -1307,11 +1387,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If (nMoveStatus And MOVE_MATE) <> 0 Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
-            PlayWavSound IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-            If App_sqMate > 0 Then
-                DrawSquare App_sqMate, , DRAW_MATE
-            End If
-            MsgBoxMute IIf(Game_sdCurr = 1, "紅胜。", "黑胜。"), vbInformation
+            szResult = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
+            EndGame szResult, IIf(Game_sdCurr = 1, "紅胜。", "黑胜。")
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1330,8 +1407,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                PlayWavSound "DRAW"
-                MsgBoxMute "自然作和！", vbInformation
+                EndGame "DRAW", "自然作和。"
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1351,11 +1427,11 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             End If
             If bEcho Then
                 If Game_nResult = 2 Then
-                    PlayWavSound "DRAW"
+                    szResult = "DRAW"
                 Else
-                    PlayWavSound IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
+                    szResult = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
                 End If
-                MsgBoxMute Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！"), vbInformation
+                EndGame szResult, Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！")
             End If
             App_frmMain.lblResult = ResultString
             Timer_bEnabled = False
@@ -1373,17 +1449,15 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If Engine_nStatus = IDLE_PONDER Then
         If mv = Engine_mvPonder Then
             If Options_bAllowResign And Engine_bPonderFinishedResign Then
-                PlayWavSound "WIN"
-                MsgBoxMute IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
+                EndGame "WIN", IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。")
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
-                PlayWavSound "DRAW"
-                MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
+                EndGame "DRAW", IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。")
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
@@ -1433,11 +1507,11 @@ End If
 
 End Sub
 
-' 以上是界面控制例程
+' 以上是界面控製例程
 
 ' 以下是特色工具例程
 
-' 生成Flash棋盘
+' 生成Flash棋盤
 Public Sub CopyFlash()
 
 Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
@@ -1472,7 +1546,7 @@ If Not Game_bStartPos Then
 End If
 Clipboard.Clear
 Clipboard.SetText szFlash
-MsgBox "Flash棋盤代碼已复制到剪貼板。", vbInformation
+MsgBox "Flash棋盤代碼已複製到剪貼板。", vbInformation
 
 End Sub
 
@@ -1598,7 +1672,7 @@ End Sub
 
 ' 以上是特色工具例程
 
-' 以下是引擎控制例程
+' 以下是引擎控製例程
 
 ' 顯示引擎信息的對話框
 Public Sub AboutEngine()
@@ -1607,7 +1681,7 @@ MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" + Engine_szName + vbCrLf) + 
         IIf(Engine_szVersion = "", "", "版本：" + Engine_szVersion + vbCrLf) + _
         IIf(Engine_szCopyright = "", "", "版權：" + Engine_szCopyright + vbCrLf) + _
         IIf(Engine_szAuthor = "", "", "作者：" + Engine_szAuthor + vbCrLf) + _
-        IIf(Engine_szUser = "", "", "用戶：" + Engine_szUser), "關于UCCI引擎", Engine_szFile
+        IIf(Engine_szUser = "", "", "用戶：" + Engine_szUser), "關於UCCI引擎", Engine_szFile
 
 End Sub
 
@@ -1720,7 +1794,7 @@ Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
 
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
-' 如果要计算的局面是象棋魔法学校中的局面，则不予计算
+' 如果要計算的局面是象棋魔法學校中的局面，則不予計算
 For i = 0 To App_nEndgames2 - 1
     If Engine_posBoard.dwZobristLock0 = App_dwEndgames20(i) Then
         If Engine_posBoard.dwZobristLock1 = App_dwEndgames21(i) Then
@@ -1807,7 +1881,7 @@ EngineBusy True
 
 End Sub
 
-' 在思考细节框中输出信息，并定位光标
+' 在思考細節框中輸出信息，并定位光標
 Public Sub AppendThink(ByVal sz As String)
 
 Dim nTextLen As Long
@@ -1971,7 +2045,6 @@ Else
         Case BUSY_ANALYZE
             Engine_nStatus = IDLE_REST
         Case BUSY_THINK
-            Engine_nStatus = IDLE_REST
             If Options_nMoveDelay > 0 Then
                 Sleep Options_nMoveDelay * 1000
             End If
@@ -1979,23 +2052,21 @@ Else
                 MoveForward
             Loop
             If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
-                PlayWavSound "WIN"
-                MsgBoxMute IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。"), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
+                EndGame "WIN", IIf(Game_sdMax = 0, "紅方認輸。", "黑方認輸。")
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
-                PlayWavSound "DRAW"
-                MsgBoxMute IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。"), vbInformation
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Timer_bEnabled = False
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
+                EndGame "DRAW", IIf(Game_sdMax = 0, "紅方接受提和。", "黑方接受提和。")
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
@@ -2012,6 +2083,9 @@ Else
                 Else
                     Engine_nStatus = IDLE_READY
                 End If
+            Else
+                ' 走棋沒有成功，也停止引擎
+                Engine_nStatus = IDLE_REST
             End If
         Case Else
             MsgBox "不該接收到引擎的信息：" + szReceived, vbExclamation
@@ -2343,7 +2417,7 @@ Else
         MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" + Engine_szSlaveName + vbCrLf) + _
                 IIf(szCopyright = "", "", "版權：" + szCopyright + vbCrLf) + _
                 IIf(szAuthor = "", "", "作者：" + szAuthor + vbCrLf) + _
-                IIf(szUser = "", "", "用戶：" + szUser), "關于UCCI引擎", szEngineFile
+                IIf(szUser = "", "", "用戶：" + szUser), "關於UCCI引擎", szEngineFile
         If Engine_nTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
@@ -2457,11 +2531,11 @@ App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - 
 
 End Sub
 
-' 以上是引擎控制例程
+' 以上是引擎控製例程
 
 ' 以下是圖片和聲音的處理例程
 
-' 设置隐藏棋盘(小)
+' 設置隱藏棋盤(小)
 Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
@@ -2472,7 +2546,7 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋盘(小)
+' 設置棋盤(小)
 Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
 
 Dim i As Integer
@@ -2485,7 +2559,7 @@ Options_nBoardS = nBoardIndex
 
 End Sub
 
-' 设置隐藏棋盘(大)
+' 設置隱藏棋盤(大)
 Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
@@ -2495,7 +2569,7 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋盘(大)
+' 設置棋盤(大)
 Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
 
 Dim i As Integer
@@ -2508,7 +2582,7 @@ Options_nBoardL = nBoardIndex
 
 End Sub
 
-' 获得棋子图片的文件名
+' 獲得棋子圖片的文件名
 Public Function PieceFileName(ByVal nIndex As Integer) As String
 
 If nIndex = 30 Then
@@ -2531,7 +2605,7 @@ End If
 
 End Function
 
-' 设置隐藏棋子(小)
+' 設置隱藏棋子(小)
 Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
@@ -2544,7 +2618,7 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋子(小)
+' 設置棋子(小)
 Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
@@ -2561,7 +2635,7 @@ Options_nPiecesS = nPiecesIndex
 
 End Sub
 
-' 设置隐藏棋子(大)
+' 設置隱藏棋子(大)
 Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
@@ -2574,7 +2648,7 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋子(大)
+' 設置棋子(大)
 Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer
@@ -2622,13 +2696,13 @@ Public Sub LoadTips()
 Gui_szTips(1) = "　　象棋巫師是一款功能強大的電腦對弈和棋譜編輯軟件，具有方便的人机對戰、棋譜記錄、欣賞、管理棋局的功能，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
         "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.elephantbase.net/league.htm ，下載到其他各具特色的引擎。"
-Gui_szTips(3) = "　　點擊“電腦執紅”或“電腦執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶体驗。"
+Gui_szTips(3) = "　　點擊“電腦執紅”或“電腦執黑”按鈕，就可以展開人机大戰，象棋巫師提供了五种不同的難度給用戶體驗。"
 Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“電腦分析”按鈕，打開思考細節窗口。" + vbCrLf + _
-        "　　您可以把思考細節窗口中的思考路線复制下來，粘貼到主窗口中，對思考線路進行推演。"
+        "　　您可以把思考細節窗口中的思考路線複製下來，粘貼到主窗口中，對思考線路進行推演。"
 Gui_szTips(5) = "　　象棋巫師強大的棋譜、棋圖導入和導出功能為您在網絡上和棋友交流提供了极大的方便。"
 Gui_szTips(6) = "　　象棋巫師目前主要通過網絡發行，最新的版本可以從《象棋百科全書網》獲得：" + vbCrLf + "　　http://www.elephantbase.net/"
 Gui_szTips(7) = "　　目前網絡上已經有數以万計通用格式的棋譜文件(後綴.PGN)可供下載。您可以到以下頁面下載近15年內全國頂級象棋比賽的棋譜：http://www.elephantbase.net/resource.htm" + vbCrLf + _
-        "　　同時也歡迎您將自己制作的文件上傳給我們。"
+        "　　同時也歡迎您將自己製作的文件上傳給我們。"
 Gui_szTips(8) = "　　如果您對象棋巫師有什么意見或建議，可以跟象棋巫師開發團隊聯系，郵件地址是：" + vbCrLf + "　　webmaster@elephantbase.net" + vbCrLf + _
         "　　象棋巫師開發團隊非常希望和大家保持聯系。"
 Gui_szTips(9) = "　　您可以雙擊桌面上的象棋巫師圖標(由棋子“象”、棋盤和巫師棒組成)直接啟動象棋巫師。"
@@ -2636,18 +2710,18 @@ Gui_szTips(10) = "　　如果您是一個象棋巫師的初學者，請您仔細閱讀本軟件“幫助”選
 Gui_szTips(11) = "　　象棋巫師支持文件關聯功能，雙擊PGN文件(圖標是棋子“相”)可以打開棋譜，雙擊FEN文件(圖標是棋盤)可以打開局面。"
 Gui_szTips(12) = "　　象棋巫師支持“象棋演播室”的棋譜。只要雙擊XQF文件(圖標是“象”字)，或者點擊“打開”按鈕并選擇一個XQF文件，象棋巫師就會打開這個棋譜。"
 Gui_szTips(13) = "　　象棋巫師最适合800x600和1024x768的顯示分辯率，在“選項設置”對話框(“選項”選單中的“設置”一項)，把“界面”設成“大”，就可在1024x768的顯示分辯率下得到最舒适的顯示效果。"
-Gui_szTips(14) = "　　使用“复制文本棋盤”功能，可以在BBS上貼出靜態的ANSI代碼，各大高校的BBS站都支持ANSI代碼。紅子用紅字表示，黑子用綠字表示，一目了然。" + vbCrLf + _
+Gui_szTips(14) = "　　使用“複製文本棋盤”功能，可以在BBS上貼出靜態的ANSI代碼，各大高校的BBS站都支持ANSI代碼。紅子用紅字表示，黑子用綠字表示，一目了然。" + vbCrLf + _
         "　　如果BBS不支持ANSI代碼，或者只是為了貼到普通文本上，可以在在“選項設置”對話框中把“使用ANSI文本棋盤”的鉤去掉。區別紅子和黑子的方法是：紅子的兩邊帶圓括號，黑子的兩邊帶方括號。"
-Gui_szTips(15) = "　　如果該BBS系統是需要按兩次Escape鍵才能鍵入一個Escape字符(也可能取決于Telnet終端的設置)，那么可以在“選項設置”對話框中把“用兩個Esc輸入ANSI”鉤上。"
+Gui_szTips(15) = "　　如果該BBS系統是需要按兩次Escape鍵才能鍵入一個Escape字符(也可能取決於Telnet終端的設置)，那么可以在“選項設置”對話框中把“用兩個Esc輸入ANSI”鉤上。"
 Gui_szTips(16) = "　　文本棋盤的最後一行諸如 rnbakabnr/... 的字符串是棋盤編碼(稱為FEN串)，如果您在網絡論壇上看到了這樣的FEN串，可以使用“局面”選單的“導入FEN串”功能，把棋盤導入到象棋巫師中，免去了擺放棋子位置的煩惱。"
 Gui_szTips(17) = "　　點擊“查看文本棋譜”按鈕，就可以看到棋譜文本，為粘貼到BBS上或者Word文檔中提供了方便。"
-Gui_szTips(18) = "　　象棋巫師可讀入聯眾、弈天、中國游戲中心等中國象棋的存盤文件和大部分的文本棋譜文件，把這些含有著法的文本复制到剪貼板，點擊“從剪貼板導入”按鈕，這些著法就會錄制到象棋巫師中。"
+Gui_szTips(18) = "　　象棋巫師可讀入聯眾、弈天、中國游戲中心等中國象棋的存盤文件和大部分的文本棋譜文件，把這些含有著法的文本複製到剪貼板，點擊“從剪貼板導入”按鈕，這些著法就會錄製到象棋巫師中。"
 Gui_szTips(19) = "　　象棋巫師可將棋譜導出為支持Flash棋盤的HTML文本，特別适合將棋譜在網上發表。"
 Gui_szTips(20) = "　　象棋巫師提供的棋譜鍵盤輸入法為喜歡鍵盤錄入棋譜的棋友提供了一种高效的棋譜輸入方法，棋友可根据自己的習慣在數字小鍵盤或WXF字母格式中任意選擇。"
 Gui_szTips(21) = "　　在欣賞棋譜的過程中，點擊“播放棋局”按鈕就可從該步自動演示，演示的時間間隔可以自由調整。再次點擊“播放棋局”按鈕可停止自動演示。"
-Gui_szTips(22) = "　　點擊“查看圖片棋盤”按鈕，把圖片棋盤复制并粘貼到Word等文字處理軟件中，可以生成漂亮的象棋稿件。"
-Gui_szTips(23) = "　　在欣賞棋譜的過程中，可以使用棋盤倒置和左右調換功能來從不同的角度欣賞棋局。其中左右調換功能還可以一次將類似于“炮八平五”開局這樣的棋譜自動轉換成大家習慣的“炮二平五”。反之亦然。"
-Gui_szTips(24) = "　　如果在欣賞棋譜時遇到复雜的局面，可以點擊“分析局面”按鈕，將當前棋局新開設一個象棋巫師的窗口，自由推演後續的變化。"
+Gui_szTips(22) = "　　點擊“查看圖片棋盤”按鈕，把圖片棋盤複製并粘貼到Word等文字處理軟件中，可以生成漂亮的象棋稿件。"
+Gui_szTips(23) = "　　在欣賞棋譜的過程中，可以使用棋盤倒置和左右調換功能來從不同的角度欣賞棋局。其中左右調換功能還可以一次將類似於“炮八平五”開局這樣的棋譜自動轉換成大家習慣的“炮二平五”。反之亦然。"
+Gui_szTips(24) = "　　如果在欣賞棋譜時遇到複雜的局面，可以點擊“分析局面”按鈕，將當前棋局新開設一個象棋巫師的窗口，自由推演後續的變化。"
 Gui_szTips(25) = "　　在兩個象棋巫師窗口中，靈活運用“查看文本棋譜”和“從剪貼板導入”功能，可將推演棋盤中的棋譜記錄導入到當前棋局中。"
 Gui_szTips(26) = "　　象棋巫師是個自由軟件，如果您覺得好用，可以自由地將本軟件上載到任一個共享軟件下載站點。" + vbCrLf + _
         "　　象棋巫師的源程序發布在 http://sourceforge.net/projects/xqwizard/ 這個頁面上，您可以根据自己的需要對源程序進行修改，并依照GPL協議發布您修改過的源程序。"
@@ -2666,15 +2740,15 @@ Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
 Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而》"
-Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固與之。是謂微明。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱勝剛強。魚不可脫於淵，國之利器不可以示人。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
 Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
 Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之臺，起於累土；千里之行，始於足下。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，勝乃不殆；知天知地，勝乃可全。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·地形》"
 Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·火攻》"
@@ -2753,6 +2827,7 @@ Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", "象棋巫師測試團隊")
+Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
@@ -2814,6 +2889,7 @@ SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
+SaveSetting "XQWizard", "Options", "ShowNew", IIf(Options_bShowNew, "1", "0")
 SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
 SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
@@ -2877,7 +2953,7 @@ If sz = "" Then
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
+    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即寫注冊表，避免重開窗口導致的重複訪問
     SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
@@ -2905,7 +2981,7 @@ End If
 
 End Sub
 
-' 加载象棋魔法学校里的局面
+' 加載象棋魔法學校里的局面
 Public Sub LoadEndgames2()
 
 Dim nFileNo As Integer, i As Integer, sz As String
@@ -2934,16 +3010,16 @@ On Error GoTo 0
 
 End Sub
 
-' 退弹
+' 退彈
 Public Sub ExitPopup()
 
 Dim szUrl As String
-' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
+' 用到時才讀注冊表，避免重開窗口導致的重複訪問。這里的做法与Gui_szAdvertDate相反，但達到的目的是一樣的。
 Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
 If Gui_szPopupDate = Date Then
     Exit Sub
 End If
-Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
+Gui_szPopupDate = Date ' 如果退彈成功，那么當天就不再退彈了
 szUrl = ""
 On Error Resume Next
 szUrl = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/popup_trad.txt")
@@ -2959,17 +3035,17 @@ End Sub
 Public Sub Main()
 
 Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
-Dim hWnd As Long, i As Integer, sz As String
+Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 Dim imgLoading As Picture
 
-' 弹出启动画面，初始化
+' 彈出啟動畫面，初始化
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show
 frmStartup.Refresh
 CchessInit CCHESS_TRADITIONAL
-' 判断是否允许升变
+' 判斷是否允許升變
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
     CchessPromotion 1
     App_bPromotion = True
@@ -3017,16 +3093,15 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
 End If
 OpenEngine
 App_bRedTurn = False
+bNewGame = False
 If sz = "" Then
     App_szFileName = ""
     If Options_bAutoSave Then
         ReadFile AUTO_SAVE
     Else
-        RestartGame
-        BoardFlush
-        LabelFlush
-        MoveFlush
-        EngineNewGame
+        NewGame0
+        ' 日積月累窗口關閉後，才能顯示“開始對局”窗口
+        bNewGame = True
     End If
 Else
     If UCase(Left(sz, 3)) = "/S " Or UCase(Left(sz, 3)) = "-S " Then
@@ -3069,9 +3144,9 @@ End If
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
-' 加载象棋魔法学校里的局面
+' 加載象棋魔法學校里的局面
 LoadEndgames2
-' 显示并调整主窗口
+' 顯示并調整主窗口
 If Not App_bPrevInstance Then
     App_frmMain.Left = Gui_nLeft
     App_frmMain.Top = Gui_nTop
@@ -3092,6 +3167,10 @@ App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 Unload frmStartup
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
+End If
+' 日積月累窗口關閉後，才能顯示“開始對局”窗口
+If bNewGame Then
+    NewGame
 End If
 
 ' 進入用戶狀態，接收事件
