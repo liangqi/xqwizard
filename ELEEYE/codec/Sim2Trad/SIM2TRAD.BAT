@@ -1,0 +1,1 @@
+start javaw -cp bin;lib\google-api-translate.jar Sim2Trad
