@@ -15,6 +15,23 @@ import com.google.api.translate.Language;
 import com.google.api.translate.Translate;
 
 public class Sim2Trad {
+	static String sim2Trad(String sim) throws Exception {
+		String[] sims = sim.split("\n");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sims.length; i ++) {
+			if (sims[i].length() > 0) {
+				sb.append(Translate.translate(sims[i],
+						Language.CHINESE_SIMPLIFIED, Language.CHINESE_TRADITIONAL));
+			}
+			sb.append('\n');
+		}
+		return sb.toString();
+	}
+
+	static String gb2Big5(String gb) throws Exception {
+		return new String(gb.getBytes("BIG5"));
+	}
+
 	public static void main(String[] args) throws Exception {
 		Translate.setHttpReferrer("http://code.google.com/p/google-api-translate-java/");
 
@@ -58,8 +75,7 @@ public class Sim2Trad {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					txtRight.setText(Translate.translate(txtLeft.getText(),
-							Language.CHINESE_SIMPLIFIED, Language.CHINESE_TRADITIONAL));
+					txtRight.setText(sim2Trad(txtLeft.getText()));
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
 							JOptionPane.WARNING_MESSAGE);
@@ -71,7 +87,7 @@ public class Sim2Trad {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					txtRight.setText(new String(txtLeft.getText().getBytes(), "BIG5"));
+					txtRight.setText(gb2Big5(txtLeft.getText()));
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
 							JOptionPane.WARNING_MESSAGE);
@@ -83,9 +99,7 @@ public class Sim2Trad {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String trad = Translate.translate(txtLeft.getText(),
-							Language.CHINESE_SIMPLIFIED, Language.CHINESE_TRADITIONAL);
-					txtRight.setText(new String(trad.getBytes(), "BIG5"));
+					txtRight.setText(gb2Big5(sim2Trad(txtLeft.getText())));
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
 							JOptionPane.WARNING_MESSAGE);
