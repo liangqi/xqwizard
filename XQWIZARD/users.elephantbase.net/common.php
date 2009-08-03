@@ -25,6 +25,11 @@
     return $_SERVER["REMOTE_ADDR"];
   }
 
+  // 获得salt
+  function getSalt() {
+    return substr(md5(mt_rand()), 0, 6);
+  }
+
   // 登录
   function login($username, $password) {
     global $mysql_tablepre;
@@ -40,8 +45,17 @@
     if (time() < $line["retrytime"]) {
       return "noretry";
     }
-    // 如果用户名和密码匹配，则返回类型、Email、分数、点数等信息
+    // 兼容UCenter，把密码从"md5($username . $password)"改成"md5(md5($password) . $salt)"
+    $salt = $line["salt"];
     if (md5($username . $password) == $line["password"]) {
+      $salt = getSalt();
+      $line["password"] = md5(md5($password) . $salt);
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s', salt = '%s' WHERE username = '%s'",
+          $line["password"], $salt, mysql_real_escape_string($username));
+      mysql_query($sql);
+    }
+    // 如果用户名和密码匹配，则返回类型、Email、分数、点数等信息
+    if (md5(md5($password) . $salt) == $line["password"]) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d, retrycount = 0 " .
           "WHERE username = '%s'", getRemoteAddr(), time(), mysql_real_escape_string($username));
       mysql_query($sql);

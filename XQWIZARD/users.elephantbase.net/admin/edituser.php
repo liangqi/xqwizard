@@ -107,19 +107,20 @@ bottommargin="0" rightmargin="0">
     if (strlen($password) <6) {
       $info = warn("密码不能少于6个字符");
     } else {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s' WHERE username = '%s'",
-          md5($username . $_POST["password"]), mysql_real_escape_string($username));
+      $salt = getSalt();
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s', salt = '%s' WHERE username = '%s'",
+          md5(md5($password) . $salt), $salt, mysql_real_escape_string($username));
       mysql_query($sql);
       insertLog($username, EVENT_ADMIN_PASSWORD);
       $info = info("密码已更新");
     }
   } else if ($act == "delete") {
     // 删除帐号
-    $sql = sprintf("SELECT password FROM {$mysql_tablepre}user WHERE username = '%s'",
+    $sql = sprintf("SELECT password, salt FROM {$mysql_tablepre}user WHERE username = '%s'",
         mysql_real_escape_string($username));
     $result = mysql_query($sql);
     $line2 = mysql_fetch_assoc($result);
-    if ($line2 && $line2["password"] == md5($username . $_POST["password2"])) {
+    if ($line2 && $line2["password"] == md5(md5($_POST["password2"]) . $line2["salt"])) {
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE username = '%s'",
           mysql_real_escape_string($username));
       mysql_query($sql);

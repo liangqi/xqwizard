@@ -16,11 +16,11 @@
   $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE lasttime >= %d", $lastTime2);
   $result = mysql_query($sql);
   while($line = mysql_fetch_assoc($result)) {
-    $sql = sprintf("REPLACE INTO {$mysql_tablepre}user (username, usertype, password, email, " .
+    $sql = sprintf("REPLACE INTO {$mysql_tablepre}user (username, usertype, password, salt, email, " .
         "regip, regtime, lastip, lasttime, retrycount, retrytime, score, points, charged) " .
-        "VALUES ('%s', %d, '%s', '%s', '%s', %d, '%s', %d, %d, %d, %d, %d, %d)",
+        "VALUES ('%s', %d, '%s', '%s', '%s', '%s', %d, '%s', %d, %d, %d, %d, %d, %d)",
         mysql_real_escape_string($line["username"]), $line["usertype"],
-        mysql_real_escape_string($line["password"]), mysql_real_escape_string($line["email"]),
+        mysql_real_escape_string($line["password"]), mysql_real_escape_string($line["salt"]), mysql_real_escape_string($line["email"]),
         mysql_real_escape_string($line["regip"]), $line["regtime"],
         mysql_real_escape_string($line["lastip"]), $line["lasttime"],
         $line["retrycount"], $line["retrytime"], $line["score"], $line["points"], $line["charged"]);

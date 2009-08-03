@@ -26,9 +26,10 @@
     if (mysql_fetch_assoc($result)) {
       header("Location: register.htm#exist");
     } else {
-      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (username, password, email, regip, regtime) " .
-          "VALUES ('%s', '%s', '%s', '%s', %d)",
-          mysql_real_escape_string($username), md5($username . $password),
+      $salt = getSalt();
+      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (username, password, salt, email, regip, regtime) " .
+          "VALUES ('%s', '%s', '%s', '%s', '%s', %d)",
+          mysql_real_escape_string($username), md5(md5($password) . $salt), $salt,
           mysql_real_escape_string($email), getRemoteAddr(), time());
       mysql_query($sql);
       insertLog($username, EVENT_REGISTER);
