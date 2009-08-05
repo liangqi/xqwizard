@@ -420,7 +420,7 @@ Case LEVEL_INFINITE
     frmDepth.Visible = False
 End Select
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

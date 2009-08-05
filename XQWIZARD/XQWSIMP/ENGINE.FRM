@@ -370,7 +370,7 @@ cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
 chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
 chkSlaveRed.Enabled = (Engine_bSlaveRed Or Engine_bSlaveBlack)
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

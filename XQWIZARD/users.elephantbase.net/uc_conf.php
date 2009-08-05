@@ -12,4 +12,6 @@
   define("UC_CHARSET", "gbk");
   define("UC_IP", "");
   define("UC_APPID", 1);
+
+  define("UC_MEMBERS", "uc_members");
 ?>

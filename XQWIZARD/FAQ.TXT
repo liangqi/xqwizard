@@ -68,3 +68,7 @@
 11. Visual Basic 提示未找到 ieframe.dll\1：
 
 　　可能是安装高版本IE的缘故，可导入注册表"IEFRAME.REG"解决此问题。
+
+12. 关于"总在最前面"：
+
+　　特别注意：每个模态对话框的"Form_Load"事件里都必须加上"SetTopMost hWnd"这条语句，否则在开启"总在最前面"功能时会导致程序死锁。

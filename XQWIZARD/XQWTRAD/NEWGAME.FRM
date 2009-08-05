@@ -238,6 +238,7 @@ End Select
 
 chkNoComputer.Value = IIf(Options_nEnginePlay = ENGINE_PLAY_NONE, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
+SetTopMost hWnd
 
 End Sub
 

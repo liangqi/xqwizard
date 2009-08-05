@@ -418,7 +418,7 @@ txtUser.Text = Options_szUser
 chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

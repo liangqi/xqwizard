@@ -1975,9 +1975,7 @@ End Sub
 
 Private Sub Form_Resize()
 
-If Options_bTopMost Then
-    SetWindowPos hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
-End If
+SetTopMost hWnd
 
 End Sub
 

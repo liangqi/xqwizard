@@ -146,7 +146,7 @@ If App_bPromotion Then
         ShellExecuteA 0, vbNullString, App_szPath + "HELP\PROMOTE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
     End If
 End If
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

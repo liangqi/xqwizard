@@ -311,7 +311,7 @@ txtOpen = Game_szOpen
 txtVar = Game_szVar
 chkAutoEcco.Value = IIf(App_bAutoEcco, 1, 0)
 chkAutoEcco.Enabled = Game_bStartPos
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

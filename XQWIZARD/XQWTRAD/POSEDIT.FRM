@@ -1205,7 +1205,7 @@ txtFen.Text = Edit_szFen
 optRedMove.Value = (Edit_posBoard.sdPlayer = 0)
 optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
 txtCounter.Text = Edit_cnt
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

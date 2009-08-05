@@ -737,7 +737,7 @@ Option Explicit
 Private Sub Form_Load()
 
 lstGames.Clear
-SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+SetTopMost hWnd
 
 End Sub
 

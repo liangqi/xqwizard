@@ -33,47 +33,39 @@
   // 登录
   function login($username, $password) {
     global $mysql_tablepre;
-    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username = '%s'",
-        mysql_real_escape_string($username));
-    $result = mysql_query($sql);
-    $line = mysql_fetch_assoc($result);
+    $list($uid, $dummy, $password, $email) = uc_user_login($username, $password);
+
     // 如果没有查询到用户，则返回“登录失败”
-    if (!$line) {
+    if ($uid == -1) {
       return "error";
     }
-    // 如果当前时间没有达到重试时间，则返回“禁止重试”
-    if (time() < $line["retrytime"]) {
+    // 如果密码不对，则检查用户是否在“暴力破解”
+    if ($uid == -2) {
+      $sql = sprintf("SELECT retrycount, retrytime FROM {$mysql_tablepre}retry WHERE username = %s",
+          mysql_real_escape_string($username));
+      // 
+      if (time() < $line["retrytime"]) {
+        return "noretry";
+      }
+      if ($line["retrycount"] < 5) {
+        $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = retrycount + 1 " .
+            "WHERE username = '%s'", mysql_real_escape_string($username));
+        mysql_query($sql);
+        return "error";
+      }
+      // 返回“禁止重试”
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = 0, retrytime = %d " .
+          "WHERE username = '%s'", time() + 300, mysql_real_escape_string($username));
+      mysql_query($sql);
       return "noretry";
     }
-    // 兼容UCenter，把密码从"md5($username . $password)"改成"md5(md5($password) . $salt)"
-    $salt = $line["salt"];
-    if (md5($username . $password) == $line["password"]) {
-      $salt = getSalt();
-      $line["password"] = md5(md5($password) . $salt);
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s', salt = '%s' WHERE username = '%s'",
-          $line["password"], $salt, mysql_real_escape_string($username));
-      mysql_query($sql);
-    }
-    // 如果用户名和密码匹配，则返回类型、Email、分数、点数等信息
-    if (md5(md5($password) . $salt) == $line["password"]) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d, retrycount = 0 " .
-          "WHERE username = '%s'", getRemoteAddr(), time(), mysql_real_escape_string($username));
-      mysql_query($sql);
-      return array("usertype"=>$line["usertype"], "email"=>$line["email"],
-          "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
-    }
-    // 如果重试次数小于5次，则返回“登录失败”
-    if ($line["retrycount"] < 5) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = retrycount + 1 " .
-          "WHERE username = '%s'", mysql_real_escape_string($username));
-      mysql_query($sql);
+    // 其他错误情况
+    if ($uid < 0) {
       return "error";
     }
-    // 返回“禁止重试”
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = 0, retrytime = %d " .
-        "WHERE username = '%s'", time() + 300, mysql_real_escape_string($username));
-    mysql_query($sql);
-    return "noretry";
+
+    return array("usertype"=>$line["usertype"], "email"=>$line["email"],
+        "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
   }
 
   // 事件类型
