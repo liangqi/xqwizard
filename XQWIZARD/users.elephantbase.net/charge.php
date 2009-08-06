@@ -1,5 +1,4 @@
 <?php
-  require_once "./mysql_conf.php";
   require_once "./common.php";
   require_once "./user.php";
 
@@ -18,9 +17,9 @@
     // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
     if (mysql_affected_rows() > 0) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d WHERE username = '%s'",
-          $points, $points, mysql_real_escape_string($username));
+          $points, $points, mysql_real_escape_string($uid));
       mysql_query($sql);
-      insertLog($username, EVENT_CHARGE, $points);
+      insertLog($uid, EVENT_CHARGE, $points);
       $_SESSION["userdata"]["points"] += $points;
       $_SESSION["userdata"]["charged"] += $points;
       $charged = $_SESSION["userdata"]["charged"];

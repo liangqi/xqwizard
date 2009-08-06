@@ -1,4 +1,7 @@
 <?php
+  require_once "./config.php";
+  require_once "./uc_client/client.php";
+
   // 返回提示的HTML(蓝色)
   function info($msg) {
     return "<font size=\"2\" color=\"blue\">" . htmlentities($msg, ENT_COMPAT, "GB2312") . "</font>";
@@ -41,30 +44,57 @@
     }
     // 如果密码不对，则检查用户是否在“暴力破解”
     if ($uid == -2) {
-      $sql = sprintf("SELECT retrycount, retrytime FROM {$mysql_tablepre}retry WHERE username = %s",
-          mysql_real_escape_string($username));
-      // 
+      $sql = sprintf("SELECT retrycount, retrytime FROM {$mysql_tablepre}retry " .
+          "WHERE username = %s", mysql_real_escape_string($username));
+      $result = mysql_query($sql);
+      $line = mysql_fetch_assoc($result);
+      // 如果"retry"表中没有密码重试记录，则添加记录，允许重试
+      if (!$line) {
+        $sql = sprintf("INSERT INTO {$mysql_tablepre}retry (username, retrycount, retrytime) " .
+            "VALUES ('%s', 1, 0)", mysql_real_escape_string($username));
+        mysql_query($sql);
+        return "error";
+      }
+      // 如果未达到允许重试时间，则禁止重试
       if (time() < $line["retrytime"]) {
         return "noretry";
       }
+      // 如果密码重试少于5次，则重试次数加1，允许重试
       if ($line["retrycount"] < 5) {
-        $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = retrycount + 1 " .
+        $sql = sprintf("UPDATE {$mysql_tablepre}retry SET retrycount = retrycount + 1 " .
             "WHERE username = '%s'", mysql_real_escape_string($username));
         mysql_query($sql);
         return "error";
       }
-      // 返回“禁止重试”
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET retrycount = 0, retrytime = %d " .
+      // 重试次数达到5次，设置重试时间，禁止重试
+      $sql = sprintf("UPDATE {$mysql_tablepre}retry SET retrycount = 0, retrytime = %d " .
           "WHERE username = '%s'", time() + 300, mysql_real_escape_string($username));
       mysql_query($sql);
       return "noretry";
     }
     // 其他错误情况
-    if ($uid < 0) {
+    if ($uid <= 0) {
       return "error";
     }
 
-    return array("usertype"=>$line["usertype"], "email"=>$line["email"],
+    // 登录成功，更新"UC_MEMBERS"表
+    $sql = sprintf("UPDATE {UC_DBTABLEPRE}members SET lastloginid = '%s', lastlogintime = %d " .
+        "WHERE uid = %d", getRemoteAddr(), time(), $uid);
+    mysql_query($sql);
+
+    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
+    $result = mysql_query($sql);
+    $line = mysql_fetch_assoc($result);
+    // 如果"user"表中没有记录，则建立记录
+    if (!$line) {
+      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lasttime) VALUES (%d, %d)", $uid, time());
+      mysql_query($sql);
+      return array("uid"=>$uid, "email"=>$email, "usertype"=>0, "score"=>0, "points"=>0, "charged"=>0);
+    }
+    // 更新"user"表
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET lasttime = %d WHERE uid = %d", time(), $uid);
+    mysql_query($sql);
+    return array("uid"=>$uid, "email"=>$email, "usertype"=>$line["usertype"],
         "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
   }
 
@@ -87,11 +117,10 @@
   define("USER_DIAMOND", 8800);
 
   // 记录日志
-  function insertLog($username, $eventtype, $detail = 0) {
+  function insertLog($uid, $eventtype, $detail = 0) {
     global $mysql_tablepre;
-    $sql = sprintf("INSERT INTO {$mysql_tablepre}log (username, eventip, eventtime, eventtype, detail) " .
-        "VALUES ('%s', '%s', %d, %d, %d)",
-        mysql_real_escape_string($username), getRemoteAddr(), time(), $eventtype, $detail);
+    $sql = sprintf("INSERT INTO {$mysql_tablepre}log (uid, eventip, eventtime, eventtype, detail) " .
+        "VALUES (%d, '%s', %d, %d, %d)", $uid, getRemoteAddr(), time(), $eventtype, $detail);
     mysql_query($sql);
   }
 

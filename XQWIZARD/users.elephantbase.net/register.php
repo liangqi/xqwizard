@@ -1,5 +1,4 @@
 <?php
-  require_once "./mysql_conf.php";
   require_once "./common.php";
   require_once "./ejewimage.php";
 
@@ -18,23 +17,13 @@
     header("Location: register.htm#ejew");
   } else {
     // ¿ªÊ¼×¢²á
-    mysql_connect($mysql_host, $mysql_username, $mysql_password);
-    mysql_select_db($mysql_database);
-    $sql = sprintf("SELECT username FROM {$mysql_tablepre}user WHERE username = '%s'",
-        mysql_real_escape_string($username));
-    $result = mysql_query($sql);
-    if (mysql_fetch_assoc($result)) {
+    $uid = uc_user_register($username, $password, $email);
+    if ($uid > 0) {
+      header("Location: login.htm#register");      
+    } else if ($uid == -1) {
       header("Location: register.htm#exist");
     } else {
-      $salt = getSalt();
-      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (username, password, salt, email, regip, regtime) " .
-          "VALUES ('%s', '%s', '%s', '%s', '%s', %d)",
-          mysql_real_escape_string($username), md5(md5($password) . $salt), $salt,
-          mysql_real_escape_string($email), getRemoteAddr(), time());
-      mysql_query($sql);
-      insertLog($username, EVENT_REGISTER);
-      header("Location: login.htm#register");
+      header("Location: register.htm#error" . uid);
     }
-    mysql_close();
   }
 ?>

@@ -70,29 +70,27 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "../mysql_conf.php";
+  require_once "../config.php";
   require_once "./admin.php";
 
   $username = $_POST["username"];
   $email = $_POST["email"];
   $orderby = $_POST["orderby"];
-  $orderby = $_POST["orderby"];
-  $direction = $_POST["direction"];
   $limit = intval($_POST["limit"]);
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
+  $sqlSelect = "SELECT username, email, scores, points, charged " .
+        "FROM {UC_DBTABLEPRE}members LEFT JOIN {$mysql_tablepre}user USING (uid)";
   if ($username != "") {
-    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username like '%%%s%%' " .
-        "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($username),
-        $orderby, $direction, $limit);
+    $sql = sprintf($sqlSelect . " WHERE username like '%%%s%%' AND scores IS NOT NULL " .
+        "ORDER BY %s DESC LIMIT %d", mysql_real_escape_string($username), $orderby, $limit);
   } else if ($email != "") {
-    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE email like '%%%s%%' " .
-        "ORDER BY %s %s LIMIT %d", mysql_real_escape_string($email),
-        $orderby, $direction, $limit);
+    $sql = sprintf($sqlSelect . " WHERE email like '%%%s%%' AND scores IS NOT NULL " .
+        "ORDER BY %s DESC LIMIT %d", mysql_real_escape_string($email), $orderby, $limit);
   } else {
-    $sql = sprintf("SELECT * FROM {$mysql_tablepre}user ORDER BY %s %s LIMIT %d",
-        $orderby, $direction, $limit);
+    $sql = sprintf($sqlSelect . " WHERE scores IS NOT NULL " .
+        "ORDER BY %s DESC LIMIT %d", $orderby, $limit);
   }
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);

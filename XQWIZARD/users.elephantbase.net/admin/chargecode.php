@@ -1,5 +1,4 @@
 <?php
-  require_once "../mysql_conf.php";
   require_once "../common.php";
   require_once "./admin.php";
 
@@ -19,6 +18,6 @@
     mysql_query($sql);
     echo $regname . ";" . $chargecode . "\r\n";
   }
-  insertLog($_SESSION["userdata"]["username"], EVENT_CHARGECODE, $points * $num);
+  insertLog($_SESSION["userdata"]["uid"], EVENT_CHARGECODE, $points * $num);
   mysql_close();
 ?>

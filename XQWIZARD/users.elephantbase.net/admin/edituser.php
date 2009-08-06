@@ -66,7 +66,6 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td background="../images/headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "../mysql_conf.php";
   require_once "../common.php";
   require_once "./admin.php";
 
@@ -74,8 +73,8 @@ bottommargin="0" rightmargin="0">
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE username = '%s'",
-      mysql_real_escape_string($username));
+  $sql = "SELECT uid, username, email, regip, regdate, lastloginip, lastlogintime, scores, points, charged " .
+        "FROM {UC_DBTABLEPRE}members LEFT JOIN {$mysql_tablepre}user USING (uid) WHERE scores IS NOT NULL";
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
   if (!$line) {
@@ -84,6 +83,7 @@ bottommargin="0" rightmargin="0">
     exit;
   }
 
+  $uid = $line["uid"];
   $email = $line["email"];
   $act = $_GET["act"];
   if (false) {
@@ -92,10 +92,10 @@ bottommargin="0" rightmargin="0">
     // 补充点数
     $charge = intval($_POST["charge"]);
     if ($charge > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d WHERE username = '%s'",
-          $charge, $charge, mysql_real_escape_string($username));
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
+          "WHERE uid = '%s'", $charge, $charge, $uid);
       mysql_query($sql);
-      insertLog($username, EVENT_ADMIN_CHARGE, $charge);
+      insertLog($uid, EVENT_ADMIN_CHARGE, $charge);
       $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
       $line["points"] += $charge;
     } else {
@@ -107,22 +107,15 @@ bottommargin="0" rightmargin="0">
     if (strlen($password) <6) {
       $info = warn("密码不能少于6个字符");
     } else {
-      $salt = getSalt();
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET password = '%s', salt = '%s' WHERE username = '%s'",
-          md5(md5($password) . $salt), $salt, mysql_real_escape_string($username));
-      mysql_query($sql);
+      uc_user_edit($username , "", $password, $email, true);
       insertLog($username, EVENT_ADMIN_PASSWORD);
       $info = info("密码已更新");
     }
   } else if ($act == "delete") {
     // 删除帐号
-    $sql = sprintf("SELECT password, salt FROM {$mysql_tablepre}user WHERE username = '%s'",
-        mysql_real_escape_string($username));
-    $result = mysql_query($sql);
-    $line2 = mysql_fetch_assoc($result);
-    if ($line2 && $line2["password"] == md5(md5($_POST["password2"]) . $line2["salt"])) {
-      $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE username = '%s'",
-          mysql_real_escape_string($username));
+    if (uc_user_edit($username, $password) > 0) {
+      uc_user_delete($username);
+      $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
       mysql_query($sql);
       insertLog($username, EVENT_ADMIN_DELETE);
       header("Location: close.htm#用户[" . $username . "]已被删除");
@@ -164,21 +157,21 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">注册时间：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["regtime"]); ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["regdate"]); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">上次登录IP：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["lastip"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["lastloginip"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">上次登录时间：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["lasttime"]); ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["lastlogintime"]); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
@@ -193,6 +186,13 @@ bottommargin="0" rightmargin="0">
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
                         bot="HTMLMarkup" startspan --><?php echo $line["points"]; ?><!--webbot
+                        bot="HTMLMarkup" endspan --></font></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><font size="2">充值：</font></td>
+                        <td align="right">　</td>
+                        <td><font size="2"><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["charged"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                 </table>

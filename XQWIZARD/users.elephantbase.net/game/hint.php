@@ -1,5 +1,4 @@
 <?php
-  require_once "../mysql_conf.php";
   require_once "../common.php";
 
   $header = getallheaders();
@@ -16,21 +15,23 @@
     header("Login-Result: noretry");
   } else if ($stage < 200) {
     header("Login-Result: ok");
-  } else if ($result["points"] < 10 && $result["charged"] < USER_PLATINUM) {
-    if ($result["usertype"] == 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE username = '%s'",
-          mysql_real_escape_string($username));
-      mysql_query($sql);
-    }
-    header("Login-Result: nopoints");
   } else {
-    if ($result["charged"] < USER_PLATINUM) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE username = '%s'",
-          mysql_real_escape_string($username));
-      mysql_query($sql);
+    $uid = result["uid"];
+    if ($result["points"] < 10 && $result["charged"] < USER_PLATINUM) {
+      if ($result["usertype"] == 0) {
+        $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE uid = %d", $uid);
+        mysql_query($sql);
+      }
+      header("Login-Result: nopoints");
+    } else {
+      $uid = result["uid"];
+      if ($result["charged"] < USER_PLATINUM) {
+        $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE uid = %d", $uid);
+        mysql_query($sql);
+      }
+      insertLog($uid, EVENT_HINT, $stage);
+      header("Login-Result: ok");
     }
-    insertLog($username, EVENT_HINT, $stage);
-    header("Login-Result: ok");
   }
   mysql_close();
 ?>

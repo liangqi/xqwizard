@@ -1,5 +1,4 @@
 <?php
-  require_once "../mysql_conf.php";
   require_once "../common.php";
 
   $header = getallheaders();
@@ -15,14 +14,14 @@
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else if ($score > $result["score"]) {
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE username = '%s'",
-        $score, mysql_real_escape_string($username));
+    $uid = result["uid"];
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE uid = %d", $score, $uid);
     mysql_query($sql);
-    insertLog($username, EVENT_SAVE, $score);
+    insertLog($uid, EVENT_SAVE, $score);
     header("Login-Result: ok");
     // 更新最近提交列表
-    $sql = sprintf("REPLACE INTO {$mysql_tablepre}recent (username, savetime, score) " .
-        "VALUES ('%s', %d, %d)", mysql_real_escape_string($username), time(), $score);
+    $sql = sprintf("REPLACE INTO {$mysql_tablepre}recent (uid, savetime, score) " .
+        "VALUES ('%s', %d, %d)", $uid, time(), $score);
     mysql_query($sql);
     $result = mysql_query("SELECT COUNT(*) FROM {$mysql_tablepre}recent");
     $line = mysql_fetch_assoc($result);
