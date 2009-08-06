@@ -11,7 +11,7 @@
   define("UC_DBPW", $mysql_password);
   define("UC_DBNAME", $mysql_database);
   define("UC_DBCHARSET", "gbk");
-  define("UC_DBTABLEPRE", "tb_");
+  define("UC_DBTABLEPRE", UC_DBNAME . ".tb_");
 
   define("UC_KEY", "****");
   define("UC_API", "http://localhost/");

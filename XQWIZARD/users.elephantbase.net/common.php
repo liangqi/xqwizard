@@ -36,7 +36,7 @@
   // 登录
   function login($username, $password) {
     global $mysql_tablepre;
-    $list($uid, $dummy, $password, $email) = uc_user_login($username, $password);
+    list($uid, $dummy, $password, $email) = uc_user_login($username, $password);
 
     // 如果没有查询到用户，则返回“登录失败”
     if ($uid == -1) {

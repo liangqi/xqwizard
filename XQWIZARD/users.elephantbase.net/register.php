@@ -20,8 +20,12 @@
     $uid = uc_user_register($username, $password, $email);
     if ($uid > 0) {
       header("Location: login.htm#register");      
-    } else if ($uid == -1) {
+    } else if ($uid == -1 || $uid == -2) {
+      header("Location: register.htm#username");
+    } else if ($uid == -3) {
       header("Location: register.htm#exist");
+    } else if ($uid == -4 || $uid == -5) {
+      header("Location: register.htm#email");
     } else {
       header("Location: register.htm#error" . uid);
     }
