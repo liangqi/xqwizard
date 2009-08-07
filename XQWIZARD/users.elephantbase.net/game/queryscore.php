@@ -5,8 +5,7 @@
   $username = $header["Login-UserName"];
   $password = $header["Login-Password"];
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $result = login($username, $password);
   if ($result == "error") {
     header("Login-Result: error");
@@ -15,5 +14,5 @@
   } else {
     header("Login-Result: ok " . $result["score"]);
   }
-  mysql_close();
+  $mysql_link->close();
 ?>

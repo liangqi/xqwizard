@@ -7,8 +7,7 @@
   $password2 = $_POST["password2"];
   $email = $_POST["email"];
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $timeout = false;
   if (strlen($password0) < 6 || strlen($password) < 6) {
     // ½ö¸üÐÂEmail
@@ -42,5 +41,5 @@
     $_SESSION["userdata"]["info"] = $info;
     header("Location: info.php");
   }
-  mysql_close();
+  $mysql_link->close();
 ?>

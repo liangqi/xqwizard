@@ -4,21 +4,20 @@
 
   $chargecode = $_POST["chargecode"];
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $sql = sprintf("SELECT points FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'", $chargecode);
-  $result = mysql_query($sql);
+  $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   $info = warn("点卡密码错误");
   if ($line) {
     $points = $line["points"];
     $sql = sprintf("DELETE FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'", $chargecode);
-    mysql_query($sql);
+    $mysql_link->query($sql);
     // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
     if (mysql_affected_rows() > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d WHERE username = '%s'",
-          $points, $points, mysql_real_escape_string($uid));
-      mysql_query($sql);
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
+          "WHERE uid = %d", $points, $points, $uid);
+      $mysql_link->query($sql);
       insertLog($uid, EVENT_CHARGE, $points);
       $_SESSION["userdata"]["points"] += $points;
       $_SESSION["userdata"]["charged"] += $points;
@@ -31,5 +30,5 @@
 
   $_SESSION["userdata"]["info"] = $info;    
   header("Location: info.php");
-  mysql_close();
+  $mysql_link->close();
 ?>

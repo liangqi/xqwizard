@@ -9,15 +9,14 @@
   header("Content-Type: text/plain");
   header("Content-Disposition: attachment; filename=chargecode.txt");
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   for ($i = 0; $i < $num; $i ++) {
     $chargecode = md5(mt_rand() . mt_rand() . mt_rand() . mt_rand());
     $sql = sprintf("INSERT INTO {$mysql_tablepre}chargecode (chargecode, points) " .
         "VALUES ('%s', %d)", $chargecode, $points);
-    mysql_query($sql);
+    $mysql_link->query($sql);
     echo $regname . ";" . $chargecode . "\r\n";
   }
   insertLog($_SESSION["userdata"]["uid"], EVENT_CHARGECODE, $points * $num);
-  mysql_close();
+  $mysql_link->close();
 ?>

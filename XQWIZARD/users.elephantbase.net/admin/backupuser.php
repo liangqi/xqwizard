@@ -2,21 +2,20 @@
   require_once "../mysql_conf.php";
   require_once "./admin.php";
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLinnk;
   $tmpfile = "../backup/{$mysql_tablepre}user_" . rand() . ".sql.gz";
 
   $gz = gzopen($tmpfile, "w");
 
-  $result = mysql_query("SELECT uid, username, password, salt, email FROM " . UC_DBTABLEPRE . "members");
+  $result = $mysql_link->query("SELECT uid, username, password, salt, email FROM " . UC_DBTABLEPRE . "members");
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("INSERT INTO " . UC_DBTABLEPRE . "members (uid, username, password, salt, email) " .
-        "VALUES (%d, '%s', '%s', '%s', '%s')", $line["uid"], mysql_real_escape_string($line["username"]),
-        $line["password"], $line["salt"], mysql_real_escape_string($line["email"]));
+        "VALUES (%d, '%s', '%s', '%s', '%s')", $line["uid"], $mysql_link->escape($line["username"]),
+        $line["password"], $line["salt"], $mysql_link->escape($line["email"]));
     gzwrite($gz, $sql . "\r\n");
   }
 
-  $result = mysql_query("SELECT uid, usertype, score, points, charged FROM {$mysql_tablepre}user");
+  $result = $mysql_link->query("SELECT uid, usertype, score, points, charged FROM {$mysql_tablepre}user");
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, usertype, score, points, charged) " .
         "VALUES (%d, %d, %d, %d, %d, %d)", $line["uid"], $line["usertype"],
@@ -38,5 +37,5 @@
   readfile($tmpfile);
   unlink($tmpfile);
 
-  mysql_close();
+  $mysql_link->close();
 ?>

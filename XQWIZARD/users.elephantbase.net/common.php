@@ -33,77 +33,105 @@
     return substr(md5(mt_rand()), 0, 6);
   }
 
-  // 打开数据库
-  function openDb() {
-    global $mysql_link;
-    $mysql_link = mysql_connect($mysql_host, $mysql_username, $mysql_password);
-    mysql_select_db($mysql_database, $mysql_link);
-  }
+  class MysqlLink {
+    var $link;
 
-  // 关闭数据库
-  function closeDb() {
-    global $mysql_link;
-    mysql_close($mysql_link);
+    function MysqlLink() {
+      global $mysql_host, $mysql_username, $mysql_password, $mysql_database;
+      $this->link = mysql_connect($mysql_host, $mysql_username, $mysql_password);
+      mysql_select_db($mysql_database, $this->link);
+    }
+
+    function query($sql) {
+      return mysql_query($sql, $this->link);
+    }
+
+    function affected_rows() {
+      return mysql_affected_rows($this->link);
+    }
+
+    function escape($str) {
+      return mysql_real_escape_string($str, $this->link);
+    }
+
+    function close() {
+      mysql_close($this->link);
+    }
   }
 
   // 登录
   function login($username, $password) {
-    global $mysql_tablepre;
+    global $mysql_tablepre, $mysql_link;
+
+    // 首先检查"retry"表中是否有密码重试记录
+    $sql = sprintf("SELECT retrycount, retrytime FROM {$mysql_tablepre}retry " .
+        "WHERE username = '%s'", $mysql_link->escape($username));
+    $result = $mysql_link->query($sql);
+    $retry = mysql_fetch_assoc($result);
+    if ($retry) {
+      // 如果未达到允许重试时间，则禁止重试
+      if (time() < $retry["retrytime"]) {
+        return "noretry";
+      }
+    }
+
+    // 登录
     list($uid, $dummy, $password, $email) = uc_user_login($username, $password);
 
     // 如果没有查询到用户，则返回“登录失败”
     if ($uid == -1) {
       return "error";
     }
+
     // 如果密码不对，则检查用户是否在“暴力破解”
     if ($uid == -2) {
-      $sql = sprintf("SELECT retrycount, retrytime FROM {$mysql_tablepre}retry " .
-          "WHERE username = %s", mysql_real_escape_string($username));
-      $result = mysql_query($sql);
-      $line = mysql_fetch_assoc($result);
-      // 如果"retry"表中没有密码重试记录，则添加记录，允许重试
-      if (!$line) {
+      // 如果"retry"表中没有密码重试记录，则增加该记录
+      if (!$retry) {
         $sql = sprintf("INSERT INTO {$mysql_tablepre}retry (username, retrycount, retrytime) " .
-            "VALUES ('%s', 1, 0)", mysql_real_escape_string($username));
-        mysql_query($sql);
+            "VALUES ('%s', 1, 0)", $mysql_link->escape($username));
+        $mysql_link->query($sql);
         return "error";
       }
-      // 如果未达到允许重试时间，则禁止重试
-      if (time() < $line["retrytime"]) {
-        return "noretry";
-      }
       // 如果密码重试少于5次，则重试次数加1，允许重试
-      if ($line["retrycount"] < 5) {
+      if ($retry["retrycount"] < 5) {
         $sql = sprintf("UPDATE {$mysql_tablepre}retry SET retrycount = retrycount + 1 " .
-            "WHERE username = '%s'", mysql_real_escape_string($username));
-        mysql_query($sql);
+            "WHERE username = '%s'", $mysql_link->escape($username));
+        $mysql_link->query($sql);
         return "error";
       }
       // 重试次数达到5次，设置重试时间，禁止重试
       $sql = sprintf("UPDATE {$mysql_tablepre}retry SET retrycount = 0, retrytime = %d " .
-          "WHERE username = '%s'", time() + 300, mysql_real_escape_string($username));
-      mysql_query($sql);
+          "WHERE username = '%s'", time() + 300, $mysql_link->escape($username));
+      $mysql_link->query($sql);
       return "noretry";
     }
+
     // 其他错误情况
     if ($uid <= 0) {
       return "error";
     }
 
+    // 登录成功，删除密码重试记录
+    if ($retry) {
+      $sql = sprintf("DELETE FROM {$mysql_tablepre}retry " .
+          "WHERE username = '%s'", $mysql_link->escape($username));
+      $mysql_link->query($sql);
+    }
+
     $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
-    $result = mysql_query($sql);
+    $result = $mysql_link->query($sql);
     $line = mysql_fetch_assoc($result);
     // 如果"user"表中没有记录，则建立记录
     if (!$line) {
       $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lastip, lasttime) " .
           "VALUES (%d, '%s', %d)", $uid, getRemoteAddr(), time());
-      mysql_query($sql);
+      $mysql_link->query($sql);
       return array("uid"=>$uid, "email"=>$email, "usertype"=>0, "score"=>0, "points"=>0, "charged"=>0);
     }
     // 更新"user"表
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d " .
         "WHERE uid = %d", getRemoteAddr(), time(), $uid);
-    mysql_query($sql);
+    $mysql_link->query($sql);
     return array("uid"=>$uid, "email"=>$email, "usertype"=>$line["usertype"],
         "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
   }
@@ -128,10 +156,10 @@
 
   // 记录日志
   function insertLog($uid, $eventtype, $detail = 0) {
-    global $mysql_tablepre;
+    global $mysql_tablepre, $mysql_link;
     $sql = sprintf("INSERT INTO {$mysql_tablepre}log (uid, eventip, eventtime, eventtype, detail) " .
         "VALUES (%d, '%s', %d, %d, %d)", $uid, getRemoteAddr(), time(), $eventtype, $detail);
-    mysql_query($sql);
+    $mysql_link->query($sql);
   }
 
   // 运行PHP任务
@@ -145,8 +173,8 @@
 
   // 获取任务表中的时间
   function getTaskTime() {
-    global $mysql_tablepre;
-    $result = mysql_query("SELECT nexttime, lasttime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
+    global $mysql_tablepre, $mysql_link;
+    $result = $mysql_link->query("SELECT nexttime, lasttime FROM {$mysql_tablepre}task WHERE taskname = 'dailytask'");
     return mysql_fetch_assoc($result);
   }
 
@@ -164,14 +192,14 @@
 
   // 检查是否该运行每日任务
   function checkDailyTask() {  
-    global $mysql_tablepre, $mysql_password;
+    global $mysql_tablepre, $mysql_link, $mysql_password;
     $currTime = time();
     // 第一次检查
     $taskTime = getTaskTime();
     if ($taskTime["nexttime"] < $currTime) {
       // 加锁
-      mysql_query("UPDATE {$mysql_tablepre}task SET tasklock = 1 WHERE taskname = 'dailytask'");
-      if (mysql_affected_rows() > 0) {
+      $mysql_link->query("UPDATE {$mysql_tablepre}task SET tasklock = 1 WHERE taskname = 'dailytask'", $mysql_link);
+      if ($mysql_link->affected_rows() > 0) {
         // 第二次检查，防止在第一次检查和加锁之间，数据被别的线程改掉了
         $taskTime = getTaskTime();
         if ($taskTime["nexttime"] < $currTime) {
@@ -182,7 +210,7 @@
           // 更新记录的同时解锁，防止runPhpTask时程序崩溃，也保证了之后加锁的线程得到新的数据
           $sql = sprintf("UPDATE {$mysql_tablepre}task SET lasttime = %d, nexttime = %d, tasklock = 0 " .
               "WHERE taskname = 'dailytask'", $lastTime, $nextTime);
-          mysql_query($sql);
+          $mysql_link->query($sql);
           // 备份数据
           sleep(1);
           runPhpTask("/task/backup.php?password=" . $mysql_password .
@@ -193,7 +221,7 @@
               "&timestamp=" . $lastTime);
         } else {
           // 解锁
-          mysql_query("UPDATE {$mysql_tablepre}task SET tasklock = 0 WHERE taskname = 'dailytask'");
+          $mysql_link->query("UPDATE {$mysql_tablepre}task SET tasklock = 0 WHERE taskname = 'dailytask'");
         }
       }
     }

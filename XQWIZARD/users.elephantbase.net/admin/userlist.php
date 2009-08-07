@@ -78,21 +78,20 @@ bottommargin="0" rightmargin="0">
   $orderby = $_POST["orderby"];
   $limit = intval($_POST["limit"]);
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $sqlSelect = "SELECT username, email, scores, points, charged " .
         "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid)";
   if ($username != "") {
     $sql = sprintf($sqlSelect . " WHERE username like '%%%s%%' AND scores IS NOT NULL " .
-        "ORDER BY %s DESC LIMIT %d", mysql_real_escape_string($username), $orderby, $limit);
+        "ORDER BY %s DESC LIMIT %d", $mysql_link->escape($username), $orderby, $limit);
   } else if ($email != "") {
     $sql = sprintf($sqlSelect . " WHERE email like '%%%s%%' AND scores IS NOT NULL " .
-        "ORDER BY %s DESC LIMIT %d", mysql_real_escape_string($email), $orderby, $limit);
+        "ORDER BY %s DESC LIMIT %d", $mysql_link->escape($email), $orderby, $limit);
   } else {
     $sql = sprintf($sqlSelect . " WHERE scores IS NOT NULL " .
         "ORDER BY %s DESC LIMIT %d", $orderby, $limit);
   }
-  $result = mysql_query($sql);
+  $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   if ($line) {
     echo "<table border=\"1\">";
@@ -115,7 +114,7 @@ bottommargin="0" rightmargin="0">
   } else {
     echo "<font size=\"2\" color=\"red\">没有找到用户</font>";
   }
-  mysql_close();
+  $mysql_link->close();
 ?><!--webbot
                 bot="HTMLMarkup" endspan --></p>
                 </td>

@@ -7,8 +7,7 @@
   if (strlen($username) < 6 || strlen($password) < 6) {
     header("Location: login.htm#error");
   } else {
-    mysql_connect($mysql_host, $mysql_username, $mysql_password);
-    mysql_select_db($mysql_database);
+    $mysql_link = new MysqlLink;
     $result = login($username, $password);
     if ($result == "error") {
       header("Location: login.htm#error");
@@ -28,6 +27,6 @@
       $_SESSION["userdata"] = $result;
       header("Location: info.php");
     }
-    mysql_close();
+    $mysql_link->close();
   }
 ?>

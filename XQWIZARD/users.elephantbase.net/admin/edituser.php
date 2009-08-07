@@ -71,15 +71,14 @@ bottommargin="0" rightmargin="0">
 
   $username = $_GET["username"];
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $sql = "SELECT uid, username, email, regip, regdate, lastip, lasttime, scores, points, charged " .
         "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid) WHERE scores IS NOT NULL";
-  $result = mysql_query($sql);
+  $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   if (!$line) {
     header("Location: close.htm#用户[" . $username . "]不存在");
-    mysql_close();
+    $mysql_link->close();
     exit;
   }
 
@@ -94,7 +93,7 @@ bottommargin="0" rightmargin="0">
     if ($charge > 0) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
           "WHERE uid = '%s'", $charge, $charge, $uid);
-      mysql_query($sql);
+      $mysql_link->query($sql);
       insertLog($uid, EVENT_ADMIN_CHARGE, $charge);
       $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
       $line["points"] += $charge;
@@ -116,10 +115,10 @@ bottommargin="0" rightmargin="0">
     if (uc_user_edit($username, $password) > 0) {
       uc_user_delete($username);
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
-      mysql_query($sql);
+      $mysql_link->query($sql);
       insertLog($username, EVENT_ADMIN_DELETE);
       header("Location: close.htm#用户[" . $username . "]已被删除");
-      mysql_close();
+      $mysql_link->close();
       exit;
     } else {
       $info = warn("密码错误，删除用户失败");
@@ -202,7 +201,7 @@ bottommargin="0" rightmargin="0">
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo $info;
-  mysql_close();
+  $mysql_link->close();
 ?><!--webbot
                 bot="HTMLMarkup" endspan --></p>
                 </td>

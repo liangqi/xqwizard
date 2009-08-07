@@ -6,8 +6,7 @@
   $password = $header["Login-Password"];
   $stage = intval($_POST["stage"]);
 
-  mysql_connect($mysql_host, $mysql_username, $mysql_password);
-  mysql_select_db($mysql_database);
+  $mysql_link = new MysqlLink;
   $result = login($username, $password);
   if ($result == "error") {
     header("Login-Result: error");
@@ -20,18 +19,18 @@
     if ($result["points"] < 10 && $result["charged"] < USER_PLATINUM) {
       if ($result["usertype"] == 0) {
         $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE uid = %d", $uid);
-        mysql_query($sql);
+        $mysql_link->query($sql);
       }
       header("Login-Result: nopoints");
     } else {
       $uid = result["uid"];
       if ($result["charged"] < USER_PLATINUM) {
         $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE uid = %d", $uid);
-        mysql_query($sql);
+        $mysql_link->query($sql);
       }
       insertLog($uid, EVENT_HINT, $stage);
       header("Login-Result: ok");
     }
   }
-  mysql_close();
+  $mysql_link->close();
 ?>
