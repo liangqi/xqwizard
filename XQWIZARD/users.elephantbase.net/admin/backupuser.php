@@ -8,19 +8,19 @@
 
   $gz = gzopen($tmpfile, "w");
 
-  $result = mysql_query("SELECT uid, username, password, salt, email FROM {UC_DBTABLEPRE}members");
+  $result = mysql_query("SELECT uid, username, password, salt, email FROM " . UC_DBTABLEPRE . "members");
   while($line = mysql_fetch_assoc($result)) {
-    $sql = sprintf("INSERT INTO {UC_DBTABLEPRE}members (uid, username, password, salt, email) " .
+    $sql = sprintf("INSERT INTO " . UC_DBTABLEPRE . "members (uid, username, password, salt, email) " .
         "VALUES (%d, '%s', '%s', '%s', '%s')", $line["uid"], mysql_real_escape_string($line["username"]),
         $line["password"], $line["salt"], mysql_real_escape_string($line["email"]));
     gzwrite($gz, $sql . "\r\n");
   }
 
-  $result = mysql_query("SELECT uid, usertype, lasttime, score, points, charged FROM {$mysql_tablepre}user");
+  $result = mysql_query("SELECT uid, usertype, score, points, charged FROM {$mysql_tablepre}user");
   while($line = mysql_fetch_assoc($result)) {
-    $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, usertype, lasttime, score, points, charged) " .
+    $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, usertype, score, points, charged) " .
         "VALUES (%d, %d, %d, %d, %d, %d)", $line["uid"], $line["usertype"],
-        $line["lasttime"], $line["score"], $line["points"], $line["charged"]);
+        $line["score"], $line["points"], $line["charged"]);
     gzwrite($gz, $sql . "\r\n");
   }
 

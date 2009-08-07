@@ -81,7 +81,7 @@ bottommargin="0" rightmargin="0">
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
   $sqlSelect = "SELECT username, email, scores, points, charged " .
-        "FROM {UC_DBTABLEPRE}members LEFT JOIN {$mysql_tablepre}user USING (uid)";
+        "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid)";
   if ($username != "") {
     $sql = sprintf($sqlSelect . " WHERE username like '%%%s%%' AND scores IS NOT NULL " .
         "ORDER BY %s DESC LIMIT %d", mysql_real_escape_string($username), $orderby, $limit);

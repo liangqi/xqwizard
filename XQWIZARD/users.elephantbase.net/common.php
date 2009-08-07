@@ -33,6 +33,19 @@
     return substr(md5(mt_rand()), 0, 6);
   }
 
+  // 打开数据库
+  function openDb() {
+    global $mysql_link;
+    $mysql_link = mysql_connect($mysql_host, $mysql_username, $mysql_password);
+    mysql_select_db($mysql_database, $mysql_link);
+  }
+
+  // 关闭数据库
+  function closeDb() {
+    global $mysql_link;
+    mysql_close($mysql_link);
+  }
+
   // 登录
   function login($username, $password) {
     global $mysql_tablepre;
@@ -77,22 +90,19 @@
       return "error";
     }
 
-    // 登录成功，更新"UC_MEMBERS"表
-    $sql = sprintf("UPDATE {UC_DBTABLEPRE}members SET lastloginid = '%s', lastlogintime = %d " .
-        "WHERE uid = %d", getRemoteAddr(), time(), $uid);
-    mysql_query($sql);
-
     $sql = sprintf("SELECT * FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
     $result = mysql_query($sql);
     $line = mysql_fetch_assoc($result);
     // 如果"user"表中没有记录，则建立记录
     if (!$line) {
-      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lasttime) VALUES (%d, %d)", $uid, time());
+      $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lastip, lasttime) " .
+          "VALUES (%d, '%s', %d)", $uid, getRemoteAddr(), time());
       mysql_query($sql);
       return array("uid"=>$uid, "email"=>$email, "usertype"=>0, "score"=>0, "points"=>0, "charged"=>0);
     }
     // 更新"user"表
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET lasttime = %d WHERE uid = %d", time(), $uid);
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d " .
+        "WHERE uid = %d", getRemoteAddr(), time(), $uid);
     mysql_query($sql);
     return array("uid"=>$uid, "email"=>$email, "usertype"=>$line["usertype"],
         "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);

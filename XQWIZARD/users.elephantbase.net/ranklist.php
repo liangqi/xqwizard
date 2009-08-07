@@ -16,7 +16,7 @@
     $td1 = "</font></td>";
     $td10 = $td1 . $td0;
     $result = mysql_query("SELECT username, score, rank FROM {$mysql_tablepre}rank{$type} " .
-        "LEFT JOIN {UC_DBTABLEPRE}members USING (uid) ORDER BY rank LIMIT 10");
+        "LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) ORDER BY rank LIMIT 10");
     while ($line = mysql_fetch_assoc($result)) {
       $score = $line["score"];
       jsWrite(sprintf("<tr>{$td0}%d{$td10}%s{$td10}%s{$td1}</tr>",

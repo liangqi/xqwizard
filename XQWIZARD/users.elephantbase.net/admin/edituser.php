@@ -73,8 +73,8 @@ bottommargin="0" rightmargin="0">
 
   mysql_connect($mysql_host, $mysql_username, $mysql_password);
   mysql_select_db($mysql_database);
-  $sql = "SELECT uid, username, email, regip, regdate, lastloginip, lastlogintime, scores, points, charged " .
-        "FROM {UC_DBTABLEPRE}members LEFT JOIN {$mysql_tablepre}user USING (uid) WHERE scores IS NOT NULL";
+  $sql = "SELECT uid, username, email, regip, regdate, lastip, lasttime, scores, points, charged " .
+        "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid) WHERE scores IS NOT NULL";
   $result = mysql_query($sql);
   $line = mysql_fetch_assoc($result);
   if (!$line) {
@@ -164,14 +164,14 @@ bottommargin="0" rightmargin="0">
                         <td align="right"><font size="2">上次登录IP：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo $line["lastloginip"]; ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo $line["lastip"]; ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>
                         <td align="right"><font size="2">上次登录时间：</font></td>
                         <td align="right">　</td>
                         <td><font size="2"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["lastlogintime"]); ?><!--webbot
+                        bot="HTMLMarkup" startspan --><?php echo date("Y-m-d H:i:s", $line["lasttime"]); ?><!--webbot
                         bot="HTMLMarkup" endspan --></font></td>
                     </tr>
                     <tr>

@@ -5,7 +5,7 @@
   mysql_select_db($mysql_database);
 
   $result = mysql_query("SELECT username, savetime, score FROM {$mysql_tablepre}recent " .
-      "LEFT JOIN {UC_DBTABLEPRE}members USING (uid) ORDER BY savetime DESC LIMIT 10");
+      "LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) ORDER BY savetime DESC LIMIT 10");
   while ($line = mysql_fetch_assoc($result)) {
     $score = $line["score"];
     jsWrite(date("H:i:s ", $line["savetime"]) .

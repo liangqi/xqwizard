@@ -73,6 +73,16 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
+                <td align="center" id="username"
+                style="display:none"><font color="#FF0000"
+                size="2">用户名不符合规格，太长或含有特殊字符</font></td>
+            </tr>
+            <tr>
+                <td align="center" id="email"
+                style="display:none"><font color="#FF0000"
+                size="2">Email不符合规格</font></td>
+            </tr>
+            <tr>
                 <td align="center" id="exist"
                 style="display:none"><font color="#FF0000"
                 size="2">已经存在同样的名用户</font></td>
@@ -92,7 +102,7 @@ bottommargin="0" rightmargin="0">
                 color="#FF0000" size="2">验证码不正确</font></td>
             </tr>
             <tr>
-                <td><p align="center"><font size="2">如果您已经建立过闯关存档，请直接</font><a
+                <td><p align="center"><font size="2">如果您已经建立过闯关存档，或者在象棋家园注册过用户，请直接</font><a
                 href="login.htm"><font size="2">【登录】</font></a></p>
                 </td>
             </tr>
@@ -101,6 +111,10 @@ bottommargin="0" rightmargin="0">
                 align="left"><script language="JavaScript"><!--
 if (false) {
   //
+} else if (location.hash == "#username") {
+  username.style.display = "block";
+} else if (location.hash == "#email") {
+  email.style.display = "block";
 } else if (location.hash == "#exist") {
   exist.style.display = "block";
 } else if (location.hash == "#short") {
@@ -130,7 +144,7 @@ if (false) {
                         <tr>
                             <td>　</td>
                             <td>　</td>
-                            <td><font size="2">至少6个字符，可以是字母、数字和汉字</font></td>
+                            <td><font size="2">6-15个字符(一个汉字算2个字符)，可以是字母、数字和汉字</font></td>
                         </tr>
                         <tr>
                             <td align="right"><font size="2">密码：</font></td>
@@ -156,7 +170,7 @@ if (false) {
                         <tr>
                             <td align="right"><font size="2">Email：</font></td>
                             <td align="right">　</td>
-                            <td><input type="text" size="20"
+                            <td><input type="text" value="@" size="20"
                             name="email"></td>
                         </tr>
                         <tr>
