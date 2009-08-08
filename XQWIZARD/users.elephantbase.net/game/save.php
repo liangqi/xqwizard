@@ -12,18 +12,17 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($score > $result["score"]) {
-    $uid = result["uid"];
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE uid = %d", $score, $uid);
+  } else if ($score > $result->score) {
+    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE uid = %d", $score, $result->uid);
     $mysql_link->query($sql);
-    insertLog($uid, EVENT_SAVE, $score);
+    insertLog($result->uid, EVENT_SAVE, $score);
     header("Login-Result: ok");
     // 更新最近提交列表
     $sql = sprintf("REPLACE INTO {$mysql_tablepre}recent (uid, savetime, score) " .
-        "VALUES ('%s', %d, %d)", $uid, time(), $score);
+        "VALUES ('%s', %d, %d)", $result->uid, time(), $score);
     $mysql_link->query($sql);
-    $result = $mysql_link->query("SELECT COUNT(*) FROM {$mysql_tablepre}recent");
-    $line = mysql_fetch_assoc($result);
+    $result2 = $mysql_link->query("SELECT COUNT(*) FROM {$mysql_tablepre}recent");
+    $line = mysql_fetch_assoc($result2);
     $count = $line["COUNT(*)"];
     if ($count > 100) {
       $sql = sprintf("DELETE FROM {$mysql_tablepre}recent ORDER BY savetime " .

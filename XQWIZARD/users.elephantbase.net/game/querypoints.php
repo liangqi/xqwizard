@@ -12,7 +12,7 @@
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else {
-    header("Login-Result: ok " . $result["points"] . "|" . $result["charged"]);
+    header("Login-Result: ok " . $result->points . "|" . $result->charged);
   }
   $mysql_link->close();
 ?>

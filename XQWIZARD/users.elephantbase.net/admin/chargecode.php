@@ -17,6 +17,6 @@
     $mysql_link->query($sql);
     echo $regname . ";" . $chargecode . "\r\n";
   }
-  insertLog($_SESSION["userdata"]["uid"], EVENT_CHARGECODE, $points * $num);
+  insertLog($userdata->uid, EVENT_CHARGECODE, $points * $num);
   $mysql_link->close();
 ?>

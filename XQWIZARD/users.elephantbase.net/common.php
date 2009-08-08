@@ -59,6 +59,24 @@
     }
   }
 
+  class UserData {
+    var $uid, $username, $email, $usertype, $score, $points, $charged, $info;
+
+    function UserData($uid, $username, $email, $line = null) {
+      $this->uid = $uid;
+      $this->username = $username;
+      $this->email = $email;
+      if ($line) {
+        $this->usertype = $line["usertype"];
+        $this->score = $line["score"];
+        $this->points = $line["points"];
+        $this->charged = $line["charged"];
+      } else {
+        $this->usertype = $this->score = $this->points = $this->charged = 0;
+      }
+    }
+  }
+
   // 登录
   function login($username, $password) {
     global $mysql_tablepre, $mysql_link;
@@ -126,14 +144,13 @@
       $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lastip, lasttime) " .
           "VALUES (%d, '%s', %d)", $uid, getRemoteAddr(), time());
       $mysql_link->query($sql);
-      return array("uid"=>$uid, "email"=>$email, "usertype"=>0, "score"=>0, "points"=>0, "charged"=>0);
+      return array($uid, $username, $email);
     }
     // 更新"user"表
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d " .
         "WHERE uid = %d", getRemoteAddr(), time(), $uid);
     $mysql_link->query($sql);
-    return array("uid"=>$uid, "email"=>$email, "usertype"=>$line["usertype"],
-        "score"=>$line["score"], "points"=>$line["points"], "charged"=>$line["charged"]);
+    return new UserData($uid, $username, $email, $line);
   }
 
   // 事件类型

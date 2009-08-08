@@ -16,19 +16,22 @@
     // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
     if (mysql_affected_rows() > 0) {
       $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
-          "WHERE uid = %d", $points, $points, $uid);
+          "WHERE uid = %d", $points, $points, $userdata->uid);
       $mysql_link->query($sql);
-      insertLog($uid, EVENT_CHARGE, $points);
-      $_SESSION["userdata"]["points"] += $points;
-      $_SESSION["userdata"]["charged"] += $points;
-      $charged = $_SESSION["userdata"]["charged"];
-      $info = info("您刚才补充了 " . $points . " 点，现在共有 " . $_SESSION["userdata"]["points"] . " 点可用") .
-          ($charged < USER_PLATINUM ? "" : "<br>" .
-          info($charged < USER_DIAMOND ? "您已经升级为：白金会员用户" : "您已经升级为：钻石会员用户"));
+      insertLog($userdata->uid, EVENT_CHARGE, $points);
+      $userdata->points += $points;
+      $userdata->charged += $points;
+      $info = "您刚才补充了 " . $points . " 点，现在共有 " . $userdata->points . " 点可用";
+      if ($userdata->charged >= USER_DIAMOND) {
+         $info .= "<br>您已经升级为：钻石会员用户";
+      } else if ($userdata->charged >= USER_PLATINUM);
+         $info .= "<br>您已经升级为：白金会员用户";
+      }
+      $info = info($info);
     }
   }
 
-  $_SESSION["userdata"]["info"] = $info;    
+  $userdata->info = $info;    
   header("Location: info.php");
   $mysql_link->close();
 ?>

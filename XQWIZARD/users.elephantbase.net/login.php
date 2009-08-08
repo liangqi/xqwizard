@@ -14,16 +14,18 @@
     } else if ($result == "noretry") {
       header("Location: login.htm#noretry");
     } else {
-      insertLog($username, EVENT_LOGIN);
+      insertLog($result->uid, EVENT_LOGIN);
       session_start();
       session_register("userdata");
-      $result["username"] = $username;
-      $points = $result["points"];
-      $charged = $result["charged"];
-      $result["info"] = "您已经闯过了 " . $result["score"] . " 关" .
-          ($points == 0 ? "" : "<br>您还有 " . $points . " 点可用") .
-          ($charged < USER_PLATINUM ? "" :
-          ($charged < USER_DIAMOND ? "<br>您现在是：白金会员用户" : "<br>您现在是：钻石会员用户"));
+      $result->info = "您已经闯过了 " . $userdata->score . " 关";
+      if ($userdata->points > 0) {
+          $userdata->info .= "<br>您还有 " . $userdata->points . " 点可用";
+      }
+      if ($userdata->charged >= USER_DIAMOND) {
+          $userdata->info .= "<br>您现在是：钻石会员用户")
+      } else if ($userdata->charged >= USER_PLATINUM) {
+          $userdata->info .= "<br>您现在是：白金会员用户";
+      }
       $_SESSION["userdata"] = $result;
       header("Location: info.php");
     }

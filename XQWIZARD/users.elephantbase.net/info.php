@@ -70,13 +70,9 @@ bottommargin="0" rightmargin="0">
                     <tr>
                         <td><strong><!--webbot bot="HTMLMarkup"
                         startspan --><?php
-  session_start();
-  session_register("userdata");
-  if (!isset($_SESSION["userdata"])) {
-    header("Location: login.htm#timeout");
-    exit;
-  }
-  echo htmlentities($userdata["username"], ENT_COMPAT, "GB2312");
+  require_once "./user.php";
+
+  echo htmlentities($userdata->username, ENT_COMPAT, "GB2312");
 ?><!--webbot
                         bot="HTMLMarkup" endspan -->，您好！</strong></td>
                         <td><p align="right"><a href="logout.php"><font
@@ -89,7 +85,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td bgcolor="#F0F0F0"><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  echo $userdata["info"];
+  echo $userdata->info;
 ?><!--webbot
                 bot="HTMLMarkup" endspan --></p>
                 </td>
@@ -198,12 +194,12 @@ function showCharge() {
   chargeLink.style.display = "none";
 }
 
-var userType = <?php echo $userdata["usertype"]; ?>;
+var userType = <?php echo $userdata->usertype; ?>;
 admin.style.display = (userType == 128 ? "block" : "none");
 if (userType > 0) {
   showCharge();
 }
-frm.email.value = "<?php echo $userdata["email"]; ?>";
+frm.email.value = "<?php echo $userdata->email; ?>";
 // --></script><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
