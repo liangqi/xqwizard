@@ -66,14 +66,15 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td background="../images/headerbg.gif"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "../common.php";
   require_once "./admin.php";
 
   $username = $_GET["username"];
 
   $mysql_link = new MysqlLink;
-  $sql = "SELECT uid, username, email, regip, regdate, lastip, lasttime, scores, points, charged " .
-        "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid) WHERE scores IS NOT NULL";
+  $sql = sprintf("SELECT {$mysql_tablepre}user.uid, username, email, regip, regdate, " .
+        "lastip, lasttime, score, points, charged " .
+        "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid) " .
+        "WHERE username = '%s' AND score IS NOT NULL", $mysql_link->escape($username));
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   if (!$line) {

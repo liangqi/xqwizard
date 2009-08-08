@@ -1,5 +1,4 @@
 <?php
-  require_once "./common.php";
   require_once "./user.php";
 
   $password0 = $_POST["password0"];

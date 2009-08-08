@@ -17,16 +17,17 @@
       insertLog($result->uid, EVENT_LOGIN);
       session_start();
       session_register("userdata");
-      $result->info = "您已经闯过了 " . $userdata->score . " 关";
+      $_SESSION["userdata"] = $result;
+      $userdata = &$_SESSION["userdata"];
+      $userdata->info = "您已经闯过了 " . $userdata->score . " 关";
       if ($userdata->points > 0) {
           $userdata->info .= "<br>您还有 " . $userdata->points . " 点可用";
       }
       if ($userdata->charged >= USER_DIAMOND) {
-          $userdata->info .= "<br>您现在是：钻石会员用户")
+          $userdata->info .= "<br>您现在是：钻石会员用户";
       } else if ($userdata->charged >= USER_PLATINUM) {
           $userdata->info .= "<br>您现在是：白金会员用户";
       }
-      $_SESSION["userdata"] = $result;
       header("Location: info.php");
     }
     $mysql_link->close();

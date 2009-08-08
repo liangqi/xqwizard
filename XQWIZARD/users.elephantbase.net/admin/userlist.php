@@ -70,7 +70,6 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
-  require_once "../config.php";
   require_once "./admin.php";
 
   $username = $_POST["username"];
@@ -79,16 +78,16 @@ bottommargin="0" rightmargin="0">
   $limit = intval($_POST["limit"]);
 
   $mysql_link = new MysqlLink;
-  $sqlSelect = "SELECT username, email, scores, points, charged " .
+  $sqlSelect = "SELECT username, email, score, points, charged " .
         "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid)";
   if ($username != "") {
-    $sql = sprintf($sqlSelect . " WHERE username like '%%%s%%' AND scores IS NOT NULL " .
+    $sql = sprintf($sqlSelect . " WHERE username like '%%%s%%' AND score IS NOT NULL " .
         "ORDER BY %s DESC LIMIT %d", $mysql_link->escape($username), $orderby, $limit);
   } else if ($email != "") {
-    $sql = sprintf($sqlSelect . " WHERE email like '%%%s%%' AND scores IS NOT NULL " .
+    $sql = sprintf($sqlSelect . " WHERE email like '%%%s%%' AND score IS NOT NULL " .
         "ORDER BY %s DESC LIMIT %d", $mysql_link->escape($email), $orderby, $limit);
   } else {
-    $sql = sprintf($sqlSelect . " WHERE scores IS NOT NULL " .
+    $sql = sprintf($sqlSelect . " WHERE score IS NOT NULL " .
         "ORDER BY %s DESC LIMIT %d", $orderby, $limit);
   }
   $result = $mysql_link->query($sql);

@@ -1,4 +1,6 @@
 <?php
+  require_once "./common.php";
+
   session_start();
   session_register("userdata");
   if (!isset($_SESSION["userdata"])) {

@@ -1,6 +1,6 @@
 <?php
-  require_once "./config.php";
-  require_once "./uc_client/client.php";
+  require_once dirname(__FILE__) . "/config.php";
+  require_once dirname(__FILE__) . "/uc_client/client.php";
 
   // 返回提示的HTML(蓝色)
   function info($msg) {

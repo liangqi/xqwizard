@@ -1,5 +1,4 @@
 <?php
-  require_once "../common.php";
   require_once "./admin.php";
 
   $regname = $_POST["regname"];
