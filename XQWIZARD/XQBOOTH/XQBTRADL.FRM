@@ -1491,7 +1491,7 @@ Case USERS_LOAD
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            nResult = Str2Int(Mid(szResult, 3), 0, App_nEndgames)
+            nResult = Str2Int(Mid(szResult, 4), 0, App_nEndgames)
             bLoad = False
             If nResult > Gui_nLast Then
                 bLoad = True
@@ -1524,7 +1524,7 @@ Case USERS_RANK
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            szResults = Split(Mid(szResult, 3), "|")
+            szResults = Split(Mid(szResult, 4), "|")
             If UBound(szResults) = 2 Then
                 Rank_nScore = Str2Int(szResults(0), 0, App_nEndgames)
                 Rank_nToday = Str2Lng(szResults(1))
@@ -1586,7 +1586,7 @@ Case USERS_POINTS
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            szResults = Split(Mid(szResult, 3), "|")
+            szResults = Split(Mid(szResult, 4), "|")
             If UBound(szResults) = 1 Then
                 nResult = Str2Int(szResults(1))
                 MsgBox "Äúß€ÓÐ" + szResults(0) + "üc¿ÉÓÃ¡£" + IIf(nResult < 2800, "", _

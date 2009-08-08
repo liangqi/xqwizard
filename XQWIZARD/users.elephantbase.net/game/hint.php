@@ -12,7 +12,7 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($stage < 200) {
+  } else if ($stage < 500) {
     header("Login-Result: ok");
   } else if ($result->points < 10 && $result->charged < USER_PLATINUM) {
     if ($result->usertype == 0) {

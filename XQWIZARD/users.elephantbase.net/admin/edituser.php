@@ -109,12 +109,27 @@ bottommargin="0" rightmargin="0">
     } else {
       uc_user_edit($username , "", $password, $email, true);
       insertLog($username, EVENT_ADMIN_PASSWORD);
-      $info = info("密码已更新");
+      $info = info("密码已更新，请把以下文本发送给用户：") .
+          "<font size=\"2\"><p align=\"left\">" .
+          htmlentities($username, ENT_COMPAT, "GB2312") . "，您好！<br>" .
+          "<br>" .
+          "　　您的密码已被重置为：" . $password . "<br>" .
+          "　　请用此密码登录到象棋巫师用户中心：<br>" .
+          "　　　　<a href=\"http://users.elephantbase.net/login.htm\" target=\"_blank\">" .
+              "http://users.elephantbase.net/login.htm</a><br>" .
+          "　　登录成功后请马上把密码改掉。<br>" .
+          "<br>" .
+          "　　感谢您使用象棋巫师。<br>" .
+          "<br>" .
+          "象棋巫师用户中心" .
+          "</p></font>";
     }
   } else if ($act == "delete") {
     // 删除帐号
-    if (uc_user_edit($username, $password) > 0) {
-      uc_user_delete($username);
+    $password = $_POST["password2"];
+    list($uid) = uc_user_login($username, $password);
+    if ($uid > 0) {
+      uc_user_delete($uid);
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
       $mysql_link->query($sql);
       insertLog($username, EVENT_ADMIN_DELETE);
@@ -223,43 +238,15 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td background="../images/headerbg.gif"><p
-                align="left"><strong>重置密码<script
-                language="JavaScript"><!--
-function sendmail() {
-  var username = "<?php echo $username; ?>";
-  var email = "<?php echo $email; ?>";
-  var arrBody = [];
-  arrBody.push(username + "，您好！");
-  arrBody.push("");
-  arrBody.push("　　您的密码已被重置为：" + frmReset.password.value);
-  arrBody.push("　　请用此密码登录到象棋巫师用户中心：");
-  arrBody.push("　　　　http://users.elephantbase.net/login.htm");
-  arrBody.push("　　登录成功后请马上把密码改掉。");
-  arrBody.push("");
-  arrBody.push("　　感谢您使用象棋巫师。");
-  arrBody.push("");
-  arrBody.push("象棋巫师用户中心");
-  location.href = "mailto:" + email + "?subject=重置密码 - 来自象棋巫师用户中心&body=" + arrBody.join("%0D%0A");
-}
-// --></script></strong></p>
+                align="left"><strong>重置密码</strong></p>
                 </td>
             </tr>
             <tr>
                 <td align="center"><form method="POST"
                 id="frmReset">
-                    <table border="0">
-                        <tr>
-                            <td><font size="2">重置密码：</font></td>
-                            <td><font size="2"><input type="text"
-                            size="20" name="password"
-                            id="password"></font></td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td><a href="#" onclick="sendmail()"><font
-                            size="2">给用户发送Email</font></a></td>
-                        </tr>
-                    </table>
+                    <p><font size="2">重置密码：<input
+                    type="text" size="20" name="password"
+                    id="password"></font></p>
                     <p><input type="submit" value="提交"></p>
                 </form>
                 </td>

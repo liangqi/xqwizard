@@ -144,7 +144,7 @@
       $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, lastip, lasttime) " .
           "VALUES (%d, '%s', %d)", $uid, getRemoteAddr(), time());
       $mysql_link->query($sql);
-      return array($uid, $username, $email);
+      return new UserData($uid, $username, $email);
     }
     // ¸üĞÂ"user"±í
     $sql = sprintf("UPDATE {$mysql_tablepre}user SET lastip = '%s', lasttime = %d " .

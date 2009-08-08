@@ -1647,10 +1647,6 @@ Begin VB.Form frmMainSmall
          Caption         =   "江湖百局秘譜(&L)"
          Index           =   12
       End
-      Begin VB.Menu mnEndgames 
-         Caption         =   "-"
-         Index           =   13
-      End
    End
    Begin VB.Menu mnEngine 
       Caption         =   "電腦(&E)"

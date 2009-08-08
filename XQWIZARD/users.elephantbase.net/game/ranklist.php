@@ -1,5 +1,5 @@
 <?php
-  require_once "../config.php";
+  require_once "../common.php";
 
   $mysql_link = new MysqlLink;
   $type = $_GET["type"];

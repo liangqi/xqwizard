@@ -164,6 +164,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
+            MixedState      =   -1  'True
          EndProperty
          BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"

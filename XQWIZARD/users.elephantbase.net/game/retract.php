@@ -12,10 +12,10 @@
     header("Login-Result: error");
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
-  } else if ($stage < 200) {
+  } else if ($stage < 500) {
     header("Login-Result: ok");
   } else {
-    if ($result->"points" < 1 && $result->charged < USER_PLATINUM) {
+    if ($result->points < 1 && $result->charged < USER_PLATINUM) {
       if ($result->usertype == 0) {
         $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE uid = %d", $result->uid);
         $mysql_link->query($sql);

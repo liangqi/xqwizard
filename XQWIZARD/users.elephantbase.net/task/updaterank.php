@@ -1,5 +1,5 @@
 <?php
-  require_once "../config.php";
+  require_once "../common.php";
 
   $lastTime = intval($_GET["timestamp"]);
   $password = $_GET["password"];

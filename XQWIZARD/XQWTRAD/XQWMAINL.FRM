@@ -2525,6 +2525,12 @@ ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNull
 
 End Sub
 
+Private Sub mnHelpContents_Click()
+
+ShellExecuteA 0, vbNullString, App_szPath + "HELP\CONTENTS.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
 Private Sub mnHelpSupport_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath + "HELP\SUPPORT.HTM", vbNullString, vbNullString, SW_SHOWNORMAL

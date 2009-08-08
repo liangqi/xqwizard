@@ -1,7 +1,7 @@
 <?php
   require_once "./admin.php";
 
-  $mysql_link = new MysqlLinnk;
+  $mysql_link = new MysqlLink;
   $tmpfile = "../backup/{$mysql_tablepre}user_" . rand() . ".sql.gz";
 
   $gz = gzopen($tmpfile, "w");
@@ -9,7 +9,7 @@
   $result = $mysql_link->query("SELECT uid, username, password, salt, email FROM " . UC_DBTABLEPRE . "members");
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("INSERT INTO " . UC_DBTABLEPRE . "members (uid, username, password, salt, email) " .
-        "VALUES (%d, '%s', '%s', '%s', '%s')", $line["uid"], $mysql_link->escape($line["username"]),
+        "VALUES (%d, '%s', '%s', '%s', '%s');", $line["uid"], $mysql_link->escape($line["username"]),
         $line["password"], $line["salt"], $mysql_link->escape($line["email"]));
     gzwrite($gz, $sql . "\r\n");
   }
@@ -17,7 +17,7 @@
   $result = $mysql_link->query("SELECT uid, usertype, score, points, charged FROM {$mysql_tablepre}user");
   while($line = mysql_fetch_assoc($result)) {
     $sql = sprintf("INSERT INTO {$mysql_tablepre}user (uid, usertype, score, points, charged) " .
-        "VALUES (%d, %d, %d, %d, %d, %d)", $line["uid"], $line["usertype"],
+        "VALUES (%d, %d, %d, %d, %d);", $line["uid"], $line["usertype"],
         $line["score"], $line["points"], $line["charged"]);
     gzwrite($gz, $sql . "\r\n");
   }
