@@ -26,7 +26,7 @@ Begin VB.Form frmNewGame
       Caption         =   "不用电脑，只观看或编辑棋局"
       Height          =   255
       Left            =   120
-      TabIndex        =   14
+      TabIndex        =   15
       Top             =   3000
       Width           =   2655
    End
@@ -34,7 +34,7 @@ Begin VB.Form frmNewGame
       Caption         =   "始终显示“开始对局”对话框"
       Height          =   255
       Left            =   120
-      TabIndex        =   15
+      TabIndex        =   16
       Top             =   3360
       Width           =   2655
    End
@@ -45,6 +45,14 @@ Begin VB.Form frmNewGame
       TabIndex        =   3
       Top             =   840
       Width           =   1335
+      Begin VB.CheckBox chkCustom 
+         Caption         =   "自定义"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   8
+         Top             =   1680
+         Width           =   1095
+      End
       Begin VB.OptionButton optHandicap 
          Caption         =   "让双马"
          Height          =   255
@@ -112,7 +120,7 @@ Begin VB.Form frmNewGame
       Caption         =   "电脑水平"
       Height          =   2055
       Left            =   1560
-      TabIndex        =   8
+      TabIndex        =   9
       Top             =   840
       Width           =   1335
       Begin VB.OptionButton optLevel 
@@ -120,7 +128,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   1
          Left            =   120
-         TabIndex        =   10
+         TabIndex        =   11
          Top             =   600
          Width           =   735
       End
@@ -129,7 +137,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   2
          Left            =   120
-         TabIndex        =   11
+         TabIndex        =   12
          Top             =   960
          Width           =   735
       End
@@ -138,7 +146,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   3
          Left            =   120
-         TabIndex        =   12
+         TabIndex        =   13
          Top             =   1320
          Width           =   735
       End
@@ -147,7 +155,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   0
          Left            =   120
-         TabIndex        =   9
+         TabIndex        =   10
          Top             =   240
          Width           =   735
       End
@@ -156,7 +164,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   4
          Left            =   120
-         TabIndex        =   13
+         TabIndex        =   14
          Top             =   1680
          Width           =   1095
       End
@@ -166,7 +174,7 @@ Begin VB.Form frmNewGame
       Default         =   -1  'True
       Height          =   375
       Left            =   360
-      TabIndex        =   16
+      TabIndex        =   17
       Top             =   3720
       Width           =   975
    End
@@ -175,7 +183,7 @@ Begin VB.Form frmNewGame
       Caption         =   "取消"
       Height          =   375
       Left            =   1680
-      TabIndex        =   17
+      TabIndex        =   18
       Top             =   3720
       Width           =   975
    End
@@ -188,7 +196,7 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -290,6 +298,10 @@ ElseIf optHandicap(3).Value Then
 Else
     NewGame0
 End If
+If chkCustom.Value = 1 Then
+    frmPosEdit.Show vbModal, Me
+End If
+
 EngineNewGame IIf(chkNoComputer.Value = 1, ENGINE_PLAY_NONE, _
         IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED))
 If Options_nEnginePlay = ENGINE_PLAY_TURN Then

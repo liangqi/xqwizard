@@ -2,11 +2,11 @@ package xqwlight.util.server;
 
 import java.io.File;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.deployer.WebAppDeployer;
-import org.mortbay.jetty.handler.HandlerCollection;
-import org.mortbay.jetty.security.SslSocketConnector;
+import org.eclipse.jetty.deploy.WebAppDeployer;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 
 public class JettyServer extends Server {
 	public JettyServer(File home) throws Exception {

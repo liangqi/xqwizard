@@ -6,8 +6,7 @@ import java.util.logging.Level;
 public class LoggerFactory {
 	private static HashMap<String, Logger> loggerMap = new HashMap<String, Logger>();
 
-	public static Logger getLogger(Class<?> clazz) {
-		String name = clazz.getClassLoader().toString();
+	public static Logger getLogger(String name) {
 		Logger logger = loggerMap.get(name);
 		if (logger != null) {
 			return logger;
@@ -171,5 +170,9 @@ public class LoggerFactory {
 		};
 		loggerMap.put(name, logger);
 		return logger;
+	}
+
+	public static Logger getLogger(Class<?> clazz) {
+		return getLogger(clazz.getClassLoader().toString());
 	}
 }

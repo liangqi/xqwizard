@@ -42,7 +42,7 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.21"
+Public Const STRING_VERSION     As String = "4.3"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
