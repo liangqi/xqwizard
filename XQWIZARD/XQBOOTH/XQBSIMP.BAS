@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.21"
+Public Const STRING_VERSION     As String = "4.3"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
@@ -145,6 +145,45 @@ For i = 1 To nLen
     Mid(szPlain, i, 1) = Chr(SimpleXor(Val(szCiphers(i - 1)), i))
 Next
 SimpleDecrypt = szPlain
+
+End Function
+
+' 复制Flash棋盘
+Public Function CopyFlash()
+
+Dim szFlash As String, szPosition As String
+Dim doc As Object
+
+szPosition = App_szEndgames(Gui_nCurr)
+szPosition = Replace(szPosition, " ", "+")
+szPosition = Replace(szPosition, "-", "%2D")
+szPosition = Replace(szPosition, "/", "%2F")
+
+szFlash = "象棋魔法学校第" + LTrim(Str(Gui_nCurr + 1)) + "关怎么过？<br>" + _
+        "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""324"" height=""396"" " + _
+        "allowScriptAccess=""always"" quality=""high"" ""wmode=""transparent"" flashvars=""Position=" + szPosition + """" + _
+        " type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" /><br>" + _
+        App_szEndgames(Gui_nCurr)
+
+Set doc = frmHide.web.Document
+doc.body.innerHtml = szFlash
+doc.execCommand "SelectAll"
+doc.execCommand "Copy"
+doc.body.innerHtml = ""
+
+If bAnswer Then
+Else
+    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
+            vbNullString, vbNullString, SW_SHOWNORMAL
+    MsgBox "求助信息已复制到剪贴板，请在“发表新日志”内容框里请按 Ctrl-V 键粘贴。", vbInformation
+End If
+
+End Function
+
+' 用象棋巫师打开
+Public Function OpenWithXQWizard(ByVal pos As PositionStruct)
+
+' TODO
 
 End Function
 

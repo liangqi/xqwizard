@@ -854,6 +854,12 @@ Begin VB.Form frmXQBoothSmall
       Begin VB.Menu mnGameSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnGameXqwizard 
+         Caption         =   "用象棋巫师打开(&X)"
+      End
+      Begin VB.Menu mnGameSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnGameHint 
          Caption         =   "提示(&H)"
          Shortcut        =   ^H
@@ -862,7 +868,7 @@ Begin VB.Form frmXQBoothSmall
          Caption         =   "悔棋(&T)"
          Shortcut        =   ^T
       End
-      Begin VB.Menu mnGameSep2 
+      Begin VB.Menu mnGameSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameExit 
@@ -911,8 +917,17 @@ Begin VB.Form frmXQBoothSmall
       Begin VB.Menu mnUsersPoints 
          Caption         =   "查询点数(&P)"
       End
+      Begin VB.Menu mnUsersCenter 
+         Caption         =   "用户中心首页(&C)"
+      End
+      Begin VB.Menu mnUsersSep3 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersHelp 
+         Caption         =   "求助(&E)"
+      End
       Begin VB.Menu mnUsersHome 
-         Caption         =   "用户中心首页(&H)"
+         Caption         =   "象棋家园首页(&O)"
       End
    End
    Begin VB.Menu mnOptions 
@@ -1051,7 +1066,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1355,6 +1370,12 @@ Private Sub mnGameRestart_Click()
 If nPhase <> PHASE_BUSY Then
     LoadGame
 End If
+
+End Sub
+
+Private Sub mnGameXqwizard_Click()
+
+OpenWithXQWizard
 
 End Sub
 
@@ -1853,9 +1874,22 @@ LeaveBusy
 
 End Sub
 
-Private Sub mnUsersHome_Click()
+Private Sub mnUsersCenter_Click()
 
 ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnUsersHelp_Click()
+
+CopyFlash pos
+
+End Sub
+
+Private Sub mnUsersHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", _
         vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub

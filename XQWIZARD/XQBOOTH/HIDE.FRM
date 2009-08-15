@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmHide 
    BorderStyle     =   3  'Fixed Dialog
@@ -13,6 +14,31 @@ Begin VB.Form frmHide
    ScaleWidth      =   9510
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
+   Begin SHDocVwCtl.WebBrowser web 
+      Height          =   135
+      Left            =   120
+      TabIndex        =   0
+      Top             =   120
+      Width           =   135
+      ExtentX         =   238
+      ExtentY         =   238
+      ViewMode        =   0
+      Offline         =   0
+      Silent          =   0
+      RegisterAsBrowser=   0
+      RegisterAsDropTarget=   1
+      AutoArrange     =   0   'False
+      NoClientEdge    =   0   'False
+      AlignLeft       =   0   'False
+      NoWebView       =   0   'False
+      HideFileNames   =   0   'False
+      SingleClick     =   0   'False
+      SingleSelection =   0   'False
+      NoFolders       =   0   'False
+      Transparent     =   0   'False
+      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
+      Location        =   ""
+   End
    Begin InetCtlsObjects.Inet inet 
       Left            =   0
       Top             =   0
