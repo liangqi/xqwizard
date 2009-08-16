@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,6 @@ Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 12   ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 8    ' 名言圖標
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 殘局的最大條目數
-Public Const MAX_ENDGAMES2      As Integer = 4096 ' 殘局的最大條目數(象棋魔法學校)
 ' 全局常量——可選參數
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -184,11 +183,6 @@ Public App_bPromotion           As Boolean  ' 是否允許升變
 Public App_bPrevInstance        As Boolean  ' 是否再一次啟動
 Public App_nEndgames            As Integer  ' 讀入的殘局數量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 讀入的殘局
-Public App_nEndgames2           As Integer  ' 讀入的殘局數量(象棋魔法學校)
-Public App_dwEndgames20(0 To MAX_ENDGAMES2 - 1) As Long ' 讀入的殘局校驗碼(象棋魔法學校)
-Public App_dwEndgames21(0 To MAX_ENDGAMES2 - 1) As Long
-Public App_dwEndgames22(0 To MAX_ENDGAMES2 - 1) As Long
-Public App_dwEndgames23(0 To MAX_ENDGAMES2 - 1) As Long
 ' 全局變量——選項
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 聲音
@@ -1803,25 +1797,6 @@ Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
 
 Engine_posBoard = Game_posIrrev(Game_nCurrIrrev)
-' 如果要計算的局面是象棋魔法學校中的局面，則不予計算
-For i = 0 To App_nEndgames2 - 1
-    If Engine_posBoard.dwZobristLock0 = App_dwEndgames20(i) Then
-        If Engine_posBoard.dwZobristLock1 = App_dwEndgames21(i) Then
-            Exit For
-        End If
-    End If
-    If Engine_posBoard.dwZobristLock0 = App_dwEndgames22(i) Then
-        If Engine_posBoard.dwZobristLock1 = App_dwEndgames23(i) Then
-            Exit For
-        End If
-    End If
-Next
-If i < App_nEndgames2 Then
-    MsgBox "這是象棋魔法學校中的局面，請獨立思考，不要依賴象棋巫師。", vbExclamation
-    Engine_nStatus = IDLE_REST
-    Exit Sub
-End If
-
 Engine_dwTime = Timer
 Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
 Engine_nDepth = 0
@@ -2990,35 +2965,6 @@ End If
 
 End Sub
 
-' 加載象棋魔法學校里的局面
-Public Sub LoadEndgames2()
-
-Dim nFileNo As Integer, i As Integer, sz As String
-Dim posEndgame As PositionStruct
-
-App_nEndgames2 = 0
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open App_szPath + "ENDGAMES\BOOTH.EPD" For Input As #nFileNo
-On Error GoTo 0
-Do While App_nEndgames2 < MAX_ENDGAMES2 And Not EOF(nFileNo)
-    Line Input #nFileNo, sz
-    CchessFen2Board posEndgame, sz
-    App_dwEndgames20(App_nEndgames2) = posEndgame.dwZobristLock0
-    App_dwEndgames21(App_nEndgames2) = posEndgame.dwZobristLock1
-    CchessBoardMirror posEndgame
-    App_dwEndgames22(App_nEndgames2) = posEndgame.dwZobristLock0
-    App_dwEndgames23(App_nEndgames2) = posEndgame.dwZobristLock1
-    App_nEndgames2 = App_nEndgames2 + 1
-Loop
-Close #nFileNo
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-
-End Sub
-
 ' 退彈
 Public Sub ExitPopup()
 
@@ -3153,8 +3099,6 @@ End If
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
 End If
-' 加載象棋魔法學校里的局面
-LoadEndgames2
 ' 顯示并調整主窗口
 If Not App_bPrevInstance Then
     App_frmMain.Left = Gui_nLeft

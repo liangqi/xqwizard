@@ -1226,6 +1226,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
         MsgBoxMute "«Î‘ŸΩ”‘Ÿ¿˜£°", vbInformation
         GetResult = PHASE_LOSS
     Else
+        mnGameXQWizard.Enabled = True
         btnRestart.Visible = False
         btnNext.Visible = True
         If Gui_nCurr < App_nEndgames - 1 Then
@@ -1307,6 +1308,7 @@ End Sub
 Public Sub LoadGame()
 
 Dim bNext As Boolean
+mnGameXQWizard.Enabled = False
 btnNext.Visible = True
 btnRestart.Visible = False
 bNext = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
@@ -1375,7 +1377,7 @@ End Sub
 
 Private Sub mnGameXqwizard_Click()
 
-OpenWithXQWizard
+OpenWithXQWizard pos
 
 End Sub
 
@@ -1883,7 +1885,7 @@ End Sub
 
 Private Sub mnUsersHelp_Click()
 
-CopyFlash pos
+CopyFlash
 
 End Sub
 

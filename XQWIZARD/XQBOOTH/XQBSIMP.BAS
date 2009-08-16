@@ -149,11 +149,10 @@ SimpleDecrypt = szPlain
 End Function
 
 ' 复制Flash棋盘
-Public Function CopyFlash()
+Public Sub CopyFlash()
 
 Dim szFlash As String, szPosition As String
-Dim doc As Object
-
+Dim o As Object
 szPosition = App_szEndgames(Gui_nCurr)
 szPosition = Replace(szPosition, " ", "+")
 szPosition = Replace(szPosition, "-", "%2D")
@@ -165,27 +164,62 @@ szFlash = "象棋魔法学校第" + LTrim(Str(Gui_nCurr + 1)) + "关怎么过？<br>" + _
         " type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" /><br>" + _
         App_szEndgames(Gui_nCurr)
 
-Set doc = frmHide.web.Document
-doc.body.innerHtml = szFlash
-doc.execCommand "SelectAll"
-doc.execCommand "Copy"
-doc.body.innerHtml = ""
+With frmHide.web.Document
+    .body.innerHtml = szFlash
+    .execCommand "SelectAll"
+    .execCommand "Copy"
+    .body.innerHtml = ""
+End With
 
-If bAnswer Then
-Else
-    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
-            vbNullString, vbNullString, SW_SHOWNORMAL
-    MsgBox "求助信息已复制到剪贴板，请在“发表新日志”内容框里请按 Ctrl-V 键粘贴。", vbInformation
-End If
+ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
+MsgBox "求助信息已复制到剪贴板，请在“发表新日志”内容框里请按 Ctrl-V 键粘贴。", vbInformation
 
-End Function
+End Sub
 
 ' 用象棋巫师打开
-Public Function OpenWithXQWizard(ByVal pos As PositionStruct)
+Public Sub OpenWithXQWizard(ByRef pos As PositionStruct)
 
-' TODO
+Dim nFileNo As Integer, i As Integer
+Dim nStatus As Long, mv As Long, dwFileStr As Long
+Dim posStart As PositionStruct
 
-End Function
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + "象棋魔法学校.PGN" For Output As #nFileNo
+On Error GoTo 0
+Print #nFileNo, "[Game ""Chinese Chess""]"
+Print #nFileNo, "[Event ""象棋魔法学校""]"
+Print #nFileNo, "[Round """ + LTrim(Str(Gui_nCurr + 1)) + """]"
+Print #nFileNo, "[Result ""1-0""]"
+Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
+
+CchessFen2Board posStart, App_szEndgames(Gui_nCurr)
+For i = 0 To pos.nMoveNum - 2
+    mv = pos.rbsList(i + 1).mvs And &HFFFF&
+    dwFileStr = CchessMove2File(mv, posStart)
+    If i Mod 2 = 0 Then ' 红
+        Print #nFileNo, Str(i \ 2 + 1) + ". " + MkC(CchessFile2Chin(dwFileStr, 0));
+    Else ' 黑
+        Print #nFileNo, " " + MkC(CchessFile2Chin(dwFileStr, 1))
+    End If
+    CchessTryMove posStart, nStatus, mv
+Next
+Print #nFileNo, " 1-0"
+Print #nFileNo, "============================"
+Print #nFileNo, " 欢迎访问《象棋百科全书网》 "
+Print #nFileNo, " 推荐用《象棋巫师》观赏棋谱 "
+Print #nFileNo, "http://www.elephantbase.net/"
+Close #nFileNo
+
+Shell App_szPath + "XQWIZARD.EXE """ + App_szPath + "象棋魔法学校.PGN" + """", vbNormalFocus
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "无法打开文件 " + App_szPath + "象棋魔法学校.PGN", vbExclamation
+
+End Sub
 
 ' 从注册表加载参数
 Public Sub LoadRegs()
@@ -421,6 +455,8 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
+' 初始化 frmHide.web
+frmHide.web.Navigate "about:blank"
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate

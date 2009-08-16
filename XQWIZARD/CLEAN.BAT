@@ -1,6 +1,8 @@
 DEL AUTOSAVE.PGN
 DEL 查看文本棋谱(只读).TXT
 DEL 查看文本棋譜(只讀).TXT
+DEL 象棋魔法学校.PGN
+DEL 象棋魔法學校.PGN
 DEL 查看图片棋盘.BMP
 DEL 查看圖片棋盤.BMP
 DEL XQWSIMP.VBW
