@@ -59,6 +59,9 @@
     }
   }
 
+  // 用户类型
+  define("USERTYPE_ADMIN", 128);
+
   class UserData {
     var $uid, $username, $email, $usertype, $score, $points, $charged, $info;
 
@@ -74,6 +77,10 @@
       } else {
         $this->usertype = $this->score = $this->points = $this->charged = 0;
       }
+    }
+
+    function isAdmin() {
+      return $this->usertype >= USERTYPE_ADMIN;
     }
   }
 

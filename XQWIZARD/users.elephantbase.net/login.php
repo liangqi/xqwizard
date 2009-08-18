@@ -28,7 +28,11 @@
       } else if ($userdata->charged >= USER_PLATINUM) {
           $userdata->info .= "<br>您现在是：白金会员用户";
       }
-      header("Location: info.php");
+      if ($userdata->isAdmin()) {
+        header("Location: admin/admin.htm");
+      } else {
+        header("Location: info.php");
+      }
     }
     $mysql_link->close();
   }

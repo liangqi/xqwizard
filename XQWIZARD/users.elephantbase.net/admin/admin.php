@@ -9,7 +9,7 @@
   }
   $userdata = &$_SESSION["userdata"];
 
-  if ($userdata->usertype != 128) {
+  if (!$userdata->isAdmin()) {
     $userdata->info = warn("您不是管理员，无法查询用户信息");
     header("Location: ../info.php");
     exit;

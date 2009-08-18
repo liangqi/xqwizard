@@ -14,21 +14,15 @@
     header("Login-Result: noretry");
   } else if ($stage < 500) {
     header("Login-Result: ok");
+  } else if ($result->points < 1 && $result->charged < USER_PLATINUM) {
+    header("Login-Result: nopoints");
   } else {
-    if ($result->points < 1 && $result->charged < USER_PLATINUM) {
-      if ($result->usertype == 0) {
-        $sql = sprintf("UPDATE {$mysql_tablepre}user SET usertype = 1 WHERE uid = %d", $result->uid);
-        $mysql_link->query($sql);
-      }
-      header("Login-Result: nopoints");
-    } else {
-      if ($result->charged < USER_PLATINUM) {
-        $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 1 WHERE uid = %d", $result->uid);
-        $mysql_link->query($sql);
-      }
-      insertLog($result->uid, EVENT_RETRACT, $stage);
-      header("Login-Result: ok");
+    if ($result->charged < USER_PLATINUM) {
+      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 1 WHERE uid = %d", $result->uid);
+      $mysql_link->query($sql);
     }
+    insertLog($result->uid, EVENT_RETRACT, $stage);
+    header("Login-Result: ok");
   }
   $mysql_link->close();
 ?>

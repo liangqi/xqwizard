@@ -75,6 +75,9 @@ bottommargin="0" rightmargin="0">
   echo htmlentities($userdata->username, ENT_COMPAT, "GB2312");
 ?><!--webbot
                         bot="HTMLMarkup" endspan -->，您好！</strong></td>
+                        <td id="admin"><p align="right"><a href="admin/admin.htm"><font
+                        size="2">【管理】</font></a></p>
+                        </td>
                         <td><p align="right"><a href="logout.php"><font
                         size="2">【注销】</font></a></p>
                         </td>
@@ -91,24 +94,15 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#F0F0F0" id="admin"><p
-                align="center"><font size="2">如果您是管理员，请进入</font><a
-                href="admin/admin.htm"><font
-                size="2">【管理】</font></a><font size="2">页面</font></p>
-                </td>
-            </tr>
-            <tr>
                 <td align="center" bgcolor="#F0F0F0"><font
                 size="2">提示：在象棋魔法学校中使用“提交成绩”功能，您的成绩才会更新</font></td>
             </tr>
             <tr>
-                <td background="images/headerbg.gif"
-                id="chargeTitle" style="display:none"><font
+                <td background="images/headerbg.gif"><font
                 size="3"><strong>补充点数</strong></font></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0" id="charge"
-                style="display:none"><form action="charge.php"
+                <td align="center" bgcolor="#F0F0F0"><form action="charge.php"
                 method="POST">
                     <table border="0">
                         <tr>
@@ -181,24 +175,9 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td id="chargeLink"><p align="center"><a href="#"
-                onclick="showCharge()"><font size="2">【补充点数】</font></a></p>
-                </td>
-            </tr>
-            <tr>
                 <td bgcolor="#E0E0E0"><p align="right"><script
                 language="JavaScript"><!--
-function showCharge() {
-  chargeTitle.style.display = "block";
-  charge.style.display = "block";
-  chargeLink.style.display = "none";
-}
-
-var userType = <?php echo $userdata->usertype; ?>;
-admin.style.display = (userType == 128 ? "block" : "none");
-if (userType > 0) {
-  showCharge();
-}
+admin.style.display = "<?php echo $userdata->isAdmin() ? "block" : "none"; ?>";
 frm.email.value = "<?php echo $userdata->email; ?>";
 // --></script><a
                 href="http://www.elephantbase.net/"
