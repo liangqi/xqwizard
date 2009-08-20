@@ -109,20 +109,7 @@ bottommargin="0" rightmargin="0">
     } else {
       uc_user_edit($username , "", $password, $email, true);
       insertLog($username, EVENT_ADMIN_PASSWORD);
-      $info = info("密码已更新，请把以下文本发送给用户：") .
-          "<font size=\"2\"><p align=\"left\">" .
-          htmlentities($username, ENT_COMPAT, "GB2312") . "，您好！<br>" .
-          "<br>" .
-          "　　您的密码已被重置为：" . $password . "<br>" .
-          "　　请用此密码登录到象棋巫师用户中心：<br>" .
-          "　　　　<a href=\"http://users.elephantbase.net/login.htm\" target=\"_blank\">" .
-              "http://users.elephantbase.net/login.htm</a><br>" .
-          "　　登录成功后请马上把密码改掉。<br>" .
-          "<br>" .
-          "　　感谢您使用象棋巫师。<br>" .
-          "<br>" .
-          "象棋巫师用户中心" .
-          "</p></font>";
+      $info = info("密码已更新");
     }
   } else if ($act == "delete") {
     // 删除帐号

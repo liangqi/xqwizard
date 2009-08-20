@@ -16,6 +16,7 @@ CREATE TABLE tb_retry (
 
 CREATE TABLE tb_password (
 	username CHAR(15) NOT NULL PRIMARY KEY,
+	email CHAR(32) NOT NULL,
 	password CHAR(6) NOT NULL);
 
 CREATE TABLE tb_rankw (

@@ -67,11 +67,11 @@ bottommargin="0" rightmargin="0">
                 <td background="../images/headerbg.gif"><font
                 size="3"><strong>重置密码申请<script
                 language="JavaScript"><!--
-function sendmail(username, email) {
+function sendmail(username, email, password) {
   var arrBody = [];
   arrBody.push(username + "，您好！");
   arrBody.push("");
-  arrBody.push("　　您的密码已被重置为：" + frmReset.password.value);
+  arrBody.push("　　您的密码已被重置为：" + password);
   arrBody.push("　　请用此密码登录到象棋巫师用户中心：");
   arrBody.push("　　　　http://users.elephantbase.net/login.htm");
   arrBody.push("　　登录成功后请马上把密码改掉。");
@@ -99,24 +99,27 @@ function sendmail(username, email) {
         htmlentities($username, ENT_COMPAT, "GB2312") . " 的重置密码申请已删除</font><br>";
   }
 
-  $result = $mysql_link->query("SELECT username, password FROM {$mysql_tablepre}password");
+  $result = $mysql_link->query("SELECT username, email, password FROM {$mysql_tablepre}password");
   $line = mysql_fetch_assoc($result);
   if ($line) {
     echo "<table border=\"1\">";
     $th0 = "<th><font size=\"2\">";
     $th1 = "</font></th>";
     $th10 = $th1 . $th0;
-    echo "<tr>{$th0}用户名{$th10}密码{$th10}&nbsp;{$th10}&nbsp;{$th1}</tr>";
+    echo "<tr>{$th0}用户名{$th10}Email{$th10}密码{$th10}&nbsp;{$th10}&nbsp;{$th1}</tr>";
     $td0 = "<td align=\"center\"><font size=\"2\">&nbsp;";
     $td1 = "&nbsp;</font></td>";
     $td10 = $td1 . $td0;
     while ($line) {
-      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}" .
-          "<a href=\"#\" onclick=\"sendmail('%s', '%s')\">发送邮件</a>{$td1}</tr>",
-          "<a href=\"getpassword.php?username=%s\" target=\"_blank\">删除申请</a>{$td1}</tr>",
-          $mysql_link->escape($line["username"]), $line["password"],
-          htmlentities($line["username"], ENT_COMPAT, "GB2312"),
-          $line["password"], urlencode($line["username"]));
+      $username = $line["username"];
+      $email = $line["email"];
+      $password = $line["password"];
+      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td10}" .
+          "<a href=\"#\" onclick=\"sendmail('%s', '%s', '%s')\">发送邮件</a>{$td10}" .
+          "<a href=\"getpassword.php?username=%s\">删除申请</a>{$td1}</tr>",
+          $mysql_link->escape($username), $mysql_link->escape($email), $password,
+          htmlentities($username, ENT_COMPAT, "GB2312"), htmlentities($email, ENT_COMPAT, "GB2312"),
+          $password, urlencode($username));
       $line = mysql_fetch_assoc($result);
     }
     echo "</table>";
