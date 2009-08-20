@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="lib/jetty/jetty-security.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-server.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-servlet.jar"/>
-	<classpathentry kind="lib" path="lib/jetty/jetty-util-1.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-util.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-webapp.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-xml.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>

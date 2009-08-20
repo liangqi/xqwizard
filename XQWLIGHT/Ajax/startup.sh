@@ -14,8 +14,16 @@
 #CLASSPATH=$CLASSPATH:lib/tomcat-util.jar
 
 CLASSPATH=webapps/ROOT/WEB-INF/classes
-CLASSPATH=$CLASSPATH:lib/jetty-util.jar
-CLASSPATH=$CLASSPATH:lib/jetty.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-continuation.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-deploy.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-http.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-io.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-security.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-server.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-servlet.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-util.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-webapp.jar
+CLASSPATH=$CLASSPATH:lib/jetty/jetty-xml.jar
 CLASSPATH=$CLASSPATH:lib/servlet-api.jar
 CLASSPATH=$CLASSPATH:webapps/ROOT/WEB-INF/lib/wicket.jar
 
