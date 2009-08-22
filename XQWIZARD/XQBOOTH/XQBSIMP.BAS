@@ -189,8 +189,7 @@ On Error GoTo lnErrorOpen
 Open App_szPath + "象棋魔法学校.PGN" For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, "[Game ""Chinese Chess""]"
-Print #nFileNo, "[Event ""象棋魔法学校""]"
-Print #nFileNo, "[Round """ + LTrim(Str(Gui_nCurr + 1)) + """]"
+Print #nFileNo, "[Event ""第" + Str(Gui_nCurr + 1) + " 关 - 象棋魔法学校""]"
 Print #nFileNo, "[Result ""1-0""]"
 Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
 

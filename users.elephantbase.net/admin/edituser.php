@@ -96,8 +96,15 @@ bottommargin="0" rightmargin="0">
           "WHERE uid = '%s'", $charge, $charge, $uid);
       $mysql_link->query($sql);
       insertLog($uid, EVENT_ADMIN_CHARGE, $charge);
-      $info = info(sprintf("用户 %s 已充值 %d 点", $username, $charge));
       $line["points"] += $charge;
+      $line["charged"] += $charge;
+      $info = info(sprintf("用户 %s 已充值 %d 点，请把以下文本发送给用户：", $username, $charge)) .
+          "<font size=\"2\"><p align=\"left\">" . sprintf("我们已为您的象棋巫师帐号[%s]充值%d点",
+          htmlentities($username, ENT_COMPAT, "GB2312"), $charge) .
+          ($line["charged"] < USER_PLATINUM ? "" : "，并升级为白金会员(提示和悔棋不扣点)") . "。<br>" .
+          sprintf("目前您的帐号共有%d点可用，", $line["points"]) .
+          "请用象棋魔法学校“用户中心/查询点数”功能查收。<br>" .
+          "有任何问题、意见和建议请及时与我们联系，感谢您对象棋巫师的支持。</p></font>";
     } else {
       $info = warn("充值点数必须大于0");
     }
@@ -108,7 +115,7 @@ bottommargin="0" rightmargin="0">
       $info = warn("密码不能少于6个字符");
     } else {
       uc_user_edit($username , "", $password, $email, true);
-      insertLog($username, EVENT_ADMIN_PASSWORD);
+      insertLog($uid, EVENT_ADMIN_PASSWORD);
       $info = info("密码已更新");
     }
   } else if ($act == "delete") {
@@ -119,7 +126,7 @@ bottommargin="0" rightmargin="0">
       uc_user_delete($uid);
       $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
       $mysql_link->query($sql);
-      insertLog($username, EVENT_ADMIN_DELETE);
+      insertLog($uid, EVENT_ADMIN_DELETE);
       header("Location: close.htm#用户[" . $username . "]已被删除");
       $mysql_link->close();
       exit;

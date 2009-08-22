@@ -58,6 +58,7 @@ Public Const RESTART_DEBUG_UCCI As Boolean = True ' RestartGame
 Public Const MOVE_WITH_ECHO     As Boolean = True ' AddMove
 Public Const MOVE_BY_ENGINE     As Boolean = True ' AddMove
 Public Const VIEW_BMP_MONO      As Boolean = True ' ViewBitmap
+Public Const FLASH_HOME         As Boolean = True ' CopyFlash
 Public Const LOAD_WITH_INFO     As Boolean = True ' OpenEngine
 Public Const SLAVE_ENGINE       As Boolean = True ' SetEngine / SendEngine / ReceiveEngineLog
 Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
@@ -1515,7 +1516,7 @@ End Sub
 ' 以下是特色工具例程
 
 ' 生成Flash棋盘
-Public Sub CopyFlash()
+Public Sub CopyFlash(Optional ByVal bHome As Boolean = False)
 
 Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
 Select Case Options_nFlashXQ
@@ -1547,9 +1548,22 @@ szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""htt
 If Not Game_bStartPos Then
     szFlash = szFlash + "<br>" + Game_szIrrevFen(0)
 End If
-Clipboard.Clear
-Clipboard.SetText szFlash
-MsgBox "Flash棋盘代码已复制到剪贴板。", vbInformation
+
+If bHome Then
+    With frmHide.web.Document
+        .body.innerHtml = szFlash
+        .execCommand "SelectAll"
+        .execCommand "Copy"
+        .body.innerHtml = ""
+    End With
+    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
+            vbNullString, vbNullString, SW_SHOWNORMAL
+    MsgBox "棋谱已复制到剪贴板，请在“发表新日志”内容框里请按 Ctrl-V 键粘贴。", vbInformation
+Else
+    Clipboard.Clear
+    Clipboard.SetText szFlash
+    MsgBox "Flash棋盘代码已复制到剪贴板。", vbInformation
+End If
 
 End Sub
 
@@ -3095,6 +3109,8 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
+' 初始化 frmHide.web
+frmHide.web.Navigate "about:blank"
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
