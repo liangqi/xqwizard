@@ -924,7 +924,7 @@ Begin VB.Form frmXQBoothSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnUsersHelp 
-         Caption         =   "求��(&E)"
+         Caption         =   "求助(&E)"
       End
       Begin VB.Menu mnUsersHome 
          Caption         =   "象棋家園首頁(&O)"

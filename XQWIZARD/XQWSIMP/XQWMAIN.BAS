@@ -226,7 +226,6 @@ Public Gui_szUserID             As String   ' 用户ID
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
-Public Gui_szPopupDate          As String   ' 退弹的日期
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
 ' 全局变量——棋局
@@ -2899,7 +2898,6 @@ SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 ' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Gui", "PopupDate", Gui_szPopupDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
@@ -2976,6 +2974,28 @@ Else
         End If
     End If
 End If
+
+End Sub
+
+' 退弹
+Public Sub ExitPopup()
+
+Dim dfThisTime As Double, dfLastTime As Double
+' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
+If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
+    Exit Sub
+End If
+' 如果退弹成功，那么当天就不再退弹了
+SaveSetting "XQWizard", "Gui", "PopupDate", Date
+frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_simp.htm"
+' 退弹调用了frmHide.web，为保证成功，等待1秒钟
+dfLastTime = Timer
+Do
+    DoEvents
+    Sleep 1
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+Loop Until dfThisTime > dfLastTime + 5#
 
 End Sub
 
@@ -3209,13 +3229,6 @@ Do While App_bRunning
         Sleep 1
     End If
 Loop
-' 退弹
-' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
-Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
-If Gui_szPopupDate <> Date Then
-    Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
-    frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_simp.htm"
-End If
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
     DownloadAdvertList "advert_simp.txt"
@@ -3227,14 +3240,7 @@ End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
 frmHide.mci.Command = "Close"
-' 退弹调用了frmHide.web，为保证成功，等待1秒钟
-Timer_dfLastTime = Timer
-Do
-    DoEvents
-    Sleep 1
-    dfThisTime = Timer
-    dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
-Loop Until dfThisTime > Timer_dfLastTime + 1
+ExitPopup
 Unload frmHide
 
 End Sub

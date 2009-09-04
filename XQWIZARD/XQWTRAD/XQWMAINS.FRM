@@ -1568,9 +1568,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardFlash 
          Caption         =   "复制F&lash棋盤代碼"
       End
-      Begin VB.Menu mnWizardSep3 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnWizardText 
          Caption         =   "复制文本棋盤(&T)"
       End
@@ -1579,6 +1576,15 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnWizardPrint 
          Caption         =   "生成印刷棋盤(&R)"
+      End
+      Begin VB.Menu mnWizardSep3 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnWizardPublish 
+         Caption         =   "在象棋家園發布棋譜(&U)"
+      End
+      Begin VB.Menu mnWizardHome 
+         Caption         =   "象棋家園首頁(&O)"
       End
    End
    Begin VB.Menu mnEndgames_ 
@@ -2314,6 +2320,18 @@ End Sub
 Private Sub mnWizardPrint_Click()
 
 ViewPrintBitmap
+
+End Sub
+
+Private Sub mnWizardPublish_Click()
+
+CopyFlash FLASH_HOME
+
+End Sub
+
+Private Sub mnWizardHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
