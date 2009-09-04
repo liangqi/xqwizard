@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.3"
+Public Const STRING_VERSION     As String = "4.31"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
@@ -226,7 +226,7 @@ Public Sub LoadRegs()
 Dim dwCounter(0 To 1) As Long
 QueryPerformanceCounter VarPtr(dwCounter(0))
 
-Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
+Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
@@ -336,26 +336,6 @@ Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbC
         "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
 Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
-
-End Sub
-
-' 退弹
-Public Sub ExitPopup()
-
-Dim szUrl As String
-' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
-Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
-If Gui_szPopupDate = Date Then
-    Exit Sub
-End If
-Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
-szUrl = ""
-On Error Resume Next
-szUrl = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/popup_simp.txt")
-On Error GoTo 0
-If Left(szUrl, 7) = "http://" Then
-    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
-End If
 
 End Sub
 
@@ -497,7 +477,13 @@ Do While App_bRunning
     DoEvents
     Sleep 1
 Loop
-ExitPopup
+' 退弹
+' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
+Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
+If Gui_szPopupDate <> Date Then
+    Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
+    frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_simp.htm"
+End If
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
     DownloadAdvertList "advert_simp.txt"
@@ -535,6 +521,14 @@ If Not Login_bRemember Then
 End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
+' 退弹调用了frmHide.web，为保证成功，等待1秒钟
+dfLastTime = Timer
+Do
+    DoEvents
+    Sleep 1
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+Loop Until dfThisTime > dfLastTime + 1
 Unload frmHide
 
 Exit Sub

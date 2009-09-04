@@ -864,6 +864,12 @@ Begin VB.Form frmXQBoothLarge
       Begin VB.Menu mnGameSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnGameXqwizard 
+         Caption         =   "ノ禜囱畍ゴ秨(&X)"
+      End
+      Begin VB.Menu mnGameSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnGameHint 
          Caption         =   "矗ボ(&H)"
          Shortcut        =   ^H
@@ -872,7 +878,7 @@ Begin VB.Form frmXQBoothLarge
          Caption         =   "囱(&T)"
          Shortcut        =   ^T
       End
-      Begin VB.Menu mnGameSep2 
+      Begin VB.Menu mnGameSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnGameExit 
@@ -921,8 +927,17 @@ Begin VB.Form frmXQBoothLarge
       Begin VB.Menu mnUsersPoints 
          Caption         =   "琩高翴计(&P)"
       End
+      Begin VB.Menu mnUsersCenter 
+         Caption         =   "ノめいみ(&C)"
+      End
+      Begin VB.Menu mnUsersSep3 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersHelp 
+         Caption         =   "―(&E)"
+      End
       Begin VB.Menu mnUsersHome 
-         Caption         =   "ノめいみ(&H)"
+         Caption         =   "禜囱產堕(&O)"
       End
    End
    Begin VB.Menu mnOptions 
@@ -1025,7 +1040,7 @@ Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1185,6 +1200,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
         MsgBoxMute "請再接再厲！", vbInformation
         GetResult = PHASE_LOSS
     Else
+        mnGameXQWizard.Enabled = True
         btnRestart.Visible = False
         btnNext.Visible = True
         If Gui_nCurr < App_nEndgames - 1 Then
@@ -1266,6 +1282,7 @@ End Sub
 Public Sub LoadGame()
 
 Dim bNext As Boolean
+mnGameXQWizard.Enabled = False
 btnNext.Visible = True
 btnRestart.Visible = False
 bNext = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
@@ -1329,6 +1346,12 @@ Private Sub mnGameRestart_Click()
 If nPhase <> PHASE_BUSY Then
     LoadGame
 End If
+
+End Sub
+
+Private Sub mnGameXqwizard_Click()
+
+OpenWithXQWizard pos
 
 End Sub
 
@@ -1827,9 +1850,22 @@ LeaveBusy
 
 End Sub
 
-Private Sub mnUsersHome_Click()
+Private Sub mnUsersCenter_Click()
 
 ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/login.htm", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnUsersHelp_Click()
+
+CopyFlash
+
+End Sub
+
+Private Sub mnUsersHome_Click()
+
+ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", _
         vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub

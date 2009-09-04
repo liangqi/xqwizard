@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.11, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.3, Last Modified: Jul. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.21"
+Public Const STRING_VERSION     As String = "4.31"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
@@ -148,13 +148,85 @@ SimpleDecrypt = szPlain
 
 End Function
 
+' 复制Flash棋盘
+Public Sub CopyFlash()
+
+Dim szFlash As String, szPosition As String
+Dim o As Object
+szPosition = App_szEndgames(Gui_nCurr)
+szPosition = Replace(szPosition, " ", "+")
+szPosition = Replace(szPosition, "-", "%2D")
+szPosition = Replace(szPosition, "/", "%2F")
+
+szFlash = "象棋魔法學校第" + LTrim(Str(Gui_nCurr + 1)) + "關怎麼過？<br>" + _
+        "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""324"" height=""396"" " + _
+        "allowScriptAccess=""always"" quality=""high"" ""wmode=""transparent"" flashvars=""Position=" + szPosition + """" + _
+        " type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" /><br>" + _
+        App_szEndgames(Gui_nCurr)
+
+With frmHide.web.Document
+    .body.innerHtml = szFlash
+    .execCommand "SelectAll"
+    .execCommand "Copy"
+    .body.innerHtml = ""
+End With
+
+ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
+MsgBox "求助信息已復製到剪貼板，請在“發表新日誌”內容框裡請按 Ctrl-V 鍵粘貼。", vbInformation
+
+End Sub
+
+' 用象棋巫师打开
+Public Sub OpenWithXQWizard(ByRef pos As PositionStruct)
+
+Dim nFileNo As Integer, i As Integer
+Dim nStatus As Long, mv As Long, dwFileStr As Long
+Dim posStart As PositionStruct
+
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open App_szPath + "象棋魔法學校.PGN" For Output As #nFileNo
+On Error GoTo 0
+Print #nFileNo, "[Game ""Chinese Chess""]"
+Print #nFileNo, "[Event ""第" + Str(Gui_nCurr + 1) + " 关 - 象棋魔法學校""]"
+Print #nFileNo, "[Result ""1-0""]"
+Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
+
+CchessFen2Board posStart, App_szEndgames(Gui_nCurr)
+For i = 0 To pos.nMoveNum - 2
+    mv = pos.rbsList(i + 1).mvs And &HFFFF&
+    dwFileStr = CchessMove2File(mv, posStart)
+    If i Mod 2 = 0 Then ' 红
+        Print #nFileNo, Str(i \ 2 + 1) + ". " + MkC(CchessFile2Chin(dwFileStr, 0));
+    Else ' 黑
+        Print #nFileNo, " " + MkC(CchessFile2Chin(dwFileStr, 1))
+    End If
+    CchessTryMove posStart, nStatus, mv
+Next
+Print #nFileNo, " 1-0"
+Print #nFileNo, "============================"
+Print #nFileNo, " 歡迎訪問《象棋百科全書網》 "
+Print #nFileNo, " 推薦用《象棋巫師》觀賞棋譜 "
+Print #nFileNo, "http://www.elephantbase.net/"
+Close #nFileNo
+
+Shell App_szPath + "XQWIZARD.EXE """ + App_szPath + "象棋魔法學校.PGN" + """", vbNormalFocus
+
+Exit Sub
+lnErrorOpen:
+On Error GoTo 0
+MsgBox "無法打開文件 " + App_szPath + "象棋魔法學校.PGN", vbExclamation
+
+End Sub
+
 ' 從注冊表加載參數
 Public Sub LoadRegs()
 
 Dim dwCounter(0 To 1) As Long
 QueryPerformanceCounter VarPtr(dwCounter(0))
 
-Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", "1")) <> 0)
+Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
@@ -267,26 +339,6 @@ Gui_szQuotes(12) = "　　怒可以复喜，慍可以复說，亡國不可以复存，死者不可以复生。
 
 End Sub
 
-' 退弹
-Public Sub ExitPopup()
-
-Dim szUrl As String
-' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
-Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
-If Gui_szPopupDate = Date Then
-    Exit Sub
-End If
-Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
-szUrl = ""
-On Error Resume Next
-szUrl = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/popup_simp.txt")
-On Error GoTo 0
-If Left(szUrl, 7) = "http://" Then
-    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
-End If
-
-End Sub
-
 ' 主函數
 Public Sub Main()
 
@@ -382,6 +434,8 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
+' 初始化 frmHide.web
+frmHide.web.Navigate "about:blank"
 ' 檢查更新，如果用戶決定更新，會彈出下載頁面，出現在象棋巫師頁面之前
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate
@@ -423,7 +477,13 @@ Do While App_bRunning
     DoEvents
     Sleep 1
 Loop
-ExitPopup
+' 退弹
+' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
+Gui_szPopupDate = GetSetting("XQWizard", "Gui", "PopupDate", "")
+If Gui_szPopupDate <> Date Then
+    Gui_szPopupDate = Date ' 如果退弹成功，那么当天就不再退弹了
+    frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_trad.htm"
+End If
 ' 退出前下載廣告列表
 If Gui_szAdvertDate <> Date Then
     DownloadAdvertList "advert_trad.txt"
@@ -461,6 +521,14 @@ If Not Login_bRemember Then
 End If
 SaveRegs
 PlaySoundA vbNullString, 0, 0
+' 退弹调用了frmHide.web，为保证成功，等待1秒钟
+dfLastTime = Timer
+Do
+    DoEvents
+    Sleep 1
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+Loop Until dfThisTime > dfLastTime + 1
 Unload frmHide
 
 Exit Sub
