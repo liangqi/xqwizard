@@ -99,14 +99,14 @@ function sendmail(username, email, password) {
         htmlentities($username, ENT_COMPAT, "GB2312") . " 的重置密码申请已删除</font><br>";
   }
 
-  $result = $mysql_link->query("SELECT username, email, password FROM {$mysql_tablepre}password");
+  $result = $mysql_link->query("SELECT username, email, password, eventip, eventtime FROM {$mysql_tablepre}password");
   $line = mysql_fetch_assoc($result);
   if ($line) {
     echo "<table border=\"1\">";
     $th0 = "<th><font size=\"2\">";
     $th1 = "</font></th>";
     $th10 = $th1 . $th0;
-    echo "<tr>{$th0}用户名{$th10}Email{$th10}密码{$th10}&nbsp;{$th10}&nbsp;{$th1}</tr>";
+    echo "<tr>{$th0}用户名{$th10}Email{$th10}密码{$th10}申请IP{$th10}申请时间{$th10}&nbsp;{$th1}</tr>";
     $td0 = "<td align=\"center\"><font size=\"2\">&nbsp;";
     $td1 = "&nbsp;</font></td>";
     $td10 = $td1 . $td0;
@@ -114,10 +114,11 @@ function sendmail(username, email, password) {
       $username = $line["username"];
       $email = $line["email"];
       $password = $line["password"];
-      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td10}" .
-          "<a href=\"#\" onclick=\"sendmail('%s', '%s', '%s')\">发送邮件</a>{$td10}" .
+      echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td10}%s{$td10}%s{$td10}" .
+          "<a href=\"#\" onclick=\"sendmail('%s', '%s', '%s')\">发送邮件</a> " .
           "<a href=\"getpassword.php?username=%s\">删除申请</a>{$td1}</tr>",
           $mysql_link->escape($username), $mysql_link->escape($email), $password,
+          $line["eventip"], date("Y-m-d H:i:s", $line["eventtime"]),
           htmlentities($username, ENT_COMPAT, "GB2312"), htmlentities($email, ENT_COMPAT, "GB2312"),
           $password, urlencode($username));
       $line = mysql_fetch_assoc($result);

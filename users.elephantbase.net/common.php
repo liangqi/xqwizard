@@ -166,6 +166,7 @@
   define("EVENT_CHARGE", 105);
   define("EVENT_EMAIL", 106);
   define("EVENT_PASSWORD", 107);
+  define("EVENT_GETPASSWORD", 109);
   define("EVENT_SAVE", 111);
   define("EVENT_RETRACT", 121);
   define("EVENT_HINT", 122);
