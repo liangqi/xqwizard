@@ -124,6 +124,19 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
+                <td background="../images/headerbg.gif"><font
+                size="3"><strong>清空问卷调查</strong></font></td>
+            </tr>
+            <tr>
+                <td align="center"><form
+                action="questionnaire_clear.php" method="POST">
+                    <p><font size="2">确认密码：<input
+                    type="password" size="20" name="password"></font></p>
+                    <p><input type="submit" value="提交"></p>
+                </form>
+                </td>
+            </tr>
+            <tr>
                 <td bgcolor="#E0E0E0"><p align="right"><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
