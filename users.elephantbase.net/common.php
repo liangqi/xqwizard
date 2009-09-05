@@ -50,6 +50,10 @@
       return mysql_affected_rows($this->link);
     }
 
+    function insert_id() {
+      return mysql_insert_id($this->link);
+    }
+
     function escape($str) {
       return mysql_real_escape_string($str, $this->link);
     }

@@ -82,21 +82,15 @@ bottommargin="0" rightmargin="0">
   $mysql_link = new MysqlLink;
 
   echo "<table border=\"1\">";
-  echo "<tr>{$th0}问题{$th10}统计结果{$th1}</tr>";
-  for ($i = 1; $i <= 20; $i ++) {
-    $sql = sprintf("SELECT a%d, COUNT(*) FROM {$mysql_tablepre}questionnaire " .
-        "WHERE a%d > 0 GROUP BY a%d ORDER BY a%d", $i, $i, $i, $i);
-    $result = $mysql_link->query($sql);
+  echo "<tr>{$th0}问题{$th10}选项{$th10}计数{$th1}</tr>";
+  $sql = "SELECT qid, answer, COUNT(*) FROM {$mysql_tablepre}qn_answer " .
+      "WHERE answer > 0 GROUP BY qid, answer ORDER BY qid, answer";
+  $result = $mysql_link->query($sql);
+  $line = mysql_fetch_assoc($result);
+  while ($line) {
+    echo sprintf("<tr>{$td0}%d{$td10}%d{$td10}%d{$td1}</tr>",
+        $line["qid"], $line["answer"], $line["COUNT(*)"]);
     $line = mysql_fetch_assoc($result);
-    if (!$line) {
-      continue;
-    }
-    echo sprintf("<tr>{$td0}%d{$td10}", $i);
-    while ($line) {
-      echo sprintf("(%d)%d ", $line[sprintf("a%d", $i)], $line["COUNT(*)"]);
-      $line = mysql_fetch_assoc($result);
-    }
-    echo "{$td1}</tr>";
   }
   echo "</table>";
 ?><!--webbot
@@ -112,8 +106,9 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" startspan --><?php
   echo "<table border=\"1\">";
   echo "<tr>{$th0}IP地址{$th10}时间{$th10}评论{$th1}</tr>";
-  $result = $mysql_link->query("SELECT eventip, eventtime, comments " .
-      "FROM {$mysql_tablepre}questionnaire WHERE comments != ''");
+  $sql = "SELECT eventip, eventtime, comments FROM {$mysql_tablepre}qn_comments " .
+      "LEFT JOIN {$mysql_tablepre}qn_user USING (uid)";
+  $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   while ($line) {
     echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td1}</tr>",
