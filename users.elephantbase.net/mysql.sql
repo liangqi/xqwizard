@@ -69,3 +69,20 @@ CREATE TABLE tb_task (
 	tasklock INTEGER NOT NULL DEFAULT 0);
 
 INSERT INTO tb_task (taskname) VALUES ("dailytask");
+
+CREATE TABLE tb_questionnaire (
+	eventip CHAR(15) NOT NULL,
+	eventtime INTEGER NOT NULL,
+	a1 TINYINT,
+	a2 TINYINT,
+	a3 TINYINT,
+	a4 TINYINT,
+	a5 TINYINT,
+	a6 TINYINT,
+	a7 TINYINT,
+	a8 TINYINT,
+	a9 TINYINT,
+	a10 TINYINT,
+	a11 TINYINT,
+	a12 TINYINT,
+	comments VARCHAR(255))
