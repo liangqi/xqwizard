@@ -105,15 +105,16 @@ bottommargin="0" rightmargin="0">
                 <td><p align="center"><!--webbot
                 bot="HTMLMarkup" startspan --><?php
   echo "<table border=\"1\">";
-  echo "<tr>{$th0}IP地址{$th10}时间{$th10}评论{$th1}</tr>";
-  $sql = "SELECT eventip, eventtime, comments FROM {$mysql_tablepre}qn_comments " .
-      "LEFT JOIN {$mysql_tablepre}qn_user USING (uid)";
+  echo "<tr>{$th0}IP地址{$th10}时间{$th10}评论{$th10}&nbsp;{$th1}</tr>";
+  $sql = "SELECT {$mysql_tablepre}qn_comments.uid, eventip, eventtime, comments " .
+      "FROM {$mysql_tablepre}qn_comments LEFT JOIN {$mysql_tablepre}qn_user USING (uid)";
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   while ($line) {
-    echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td1}</tr>",
+    echo sprintf("<tr>{$td0}%s{$td10}%s{$td10}%s{$td10}" .
+        "<a href=\"questionnaire_delete.php?uid=%d\">删除</a>{$td1}</tr>",
         $line["eventip"], date("Y-m-d H:i:s", $line["eventtime"]),
-        htmlentities($line["comments"], ENT_COMPAT, "GB2312"));
+        htmlentities($line["comments"], ENT_COMPAT, "GB2312"), $line["uid"]);
     $line = mysql_fetch_assoc($result);
   }
   echo "</table>";
