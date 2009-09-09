@@ -93,24 +93,12 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td background="images/headerbg.gif"><p
-                align="left"><script language="JavaScript"><!--
-if (false) {
-  //
-} else if (location.hash == "#register") {
-  register.style.display = "block";
-} else if (location.hash == "#timeout") {
-  timeout.style.display = "block";
-} else if (location.hash == "#error") {
-  error.style.display = "block";
-} else if (location.hash == "#noretry") {
-  noretry.style.display = "block";
-}
-// --></script><strong>登录</strong></p>
+                align="left"><strong>登录</strong></p>
                 </td>
             </tr>
             <tr>
                 <td align="center"><form action="login.php"
-                method="POST">
+                method="POST" id="frm">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">用户名：</font></td>
@@ -131,7 +119,10 @@ if (false) {
                         <tr>
                             <td>　</td>
                             <td>　</td>
-                            <td><a href="getpassword.htm"
+                            <td><!--webbot bot="HTMLMarkup"
+                            startspan --><input id="location" name="location" type="hidden" value=""><!--webbot
+                            bot="HTMLMarkup" endspan --><a
+                            href="getpassword.htm"
                             target="_blank"><font size="2">找回密码</font></a></td>
                         </tr>
                     </table>
@@ -141,7 +132,24 @@ if (false) {
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#E0E0E0"><p align="right"><a
+                <td bgcolor="#E0E0E0"><p align="right"><script
+                language="JavaScript"><!--
+if (false) {
+  //
+} else if (location.hash == "#register") {
+  register.style.display = "block";
+} else if (location.hash == "#timeout") {
+  timeout.style.display = "block";
+} else if (location.hash == "#error") {
+  error.style.display = "block";
+} else if (location.hash == "#noretry") {
+  noretry.style.display = "block";
+}
+
+if (location.search.substring(0, 10) == "?location=") {
+  frm.location.value = location.search.substring(10);
+}
+// --></script><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font

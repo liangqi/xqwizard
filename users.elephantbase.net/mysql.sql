@@ -6,8 +6,12 @@ CREATE TABLE tb_user (
 	score INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
 	charged INTEGER NOT NULL DEFAULT 0,
-	KEY (lasttime),
-	KEY (score));
+	upload INTEGER NOT NULL DEFAULT 0,
+	download INTEGER NOT NULL DEFAULT 0,
+	balance INTEGER NOT NULL DEFAULT 0,
+	income INTEGER NOT NULL DEFAULT 0,
+	KEY (upload),
+	KEY (download));
 
 CREATE TABLE tb_retry (
 	username CHAR(15) NOT NULL PRIMARY KEY,
@@ -78,11 +82,43 @@ CREATE TABLE tb_qn_user (
 CREATE TABLE tb_qn_answer (
 	uid INTEGER NOT NULL,
 	qid INTEGER NOT NULL,
-	answer INTEGER NOT NULL,
-	PRIMARY KEY (uid, qid),
-	KEY (qid),
-	KEY (answer));
+	answer INTEGER NOT NULL);
 
 CREATE TABLE tb_qn_comments (
-	uid INTEGER NOT NULL PRIMARY KEY,
+	uid INTEGER NOT NULL,
 	comments VARCHAR(255) NOT NULL);
+
+CREATE TABLE tb_upload (
+	fid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	uid INTEGER NOT NULL,
+	filename CHAR(32) NOT NULL,
+	savename CHAR(32) NOT NULL,
+	title CHAR(32) NOT NULL,
+	catagory INTEGER NOT NULL,
+	size INTEGER NOT NULL,
+	price INTEGER NOT NULL,
+	eventtime INTEGER NOT NULL,
+	download INTEGER NOT NULL DEFAULT 0,
+	positive INTEGER NOT NULL DEFAULT 0,
+	negative INTEGER NOT NULL DEFAULT 0,
+	state INTEGER NOT NULL DEFAULT 0,
+	KEY (uid),
+	KEY (catagory),
+	KEY (eventtime),
+	KEY (downloads),
+	KEY (positive));
+
+CREATE TABLE tb_download (
+	fid INTEGER NOT NULL,
+	uid INTEGER NOT NULL,
+	grade INTEGER NOT NULL,
+	PRIMARY KEY (fid, uid),
+	KEY (uid));
+
+CREATE TABLE tb_download_comments (
+	fid INTEGER NOT NULL,
+	uid INTEGER NOT NULL,
+	comments VARCHAR(255) NOT NULL,
+	eventtime INTEGER NOT NULL,
+	PRIMARY KEY (fid, uid),
+	KEY (eventtime));
