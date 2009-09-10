@@ -120,5 +120,4 @@ CREATE TABLE tb_download_comments (
 	uid INTEGER NOT NULL,
 	comments VARCHAR(255) NOT NULL,
 	eventtime INTEGER NOT NULL,
-	PRIMARY KEY (fid, uid),
-	KEY (eventtime));
+	PRIMARY KEY (fid, uid));

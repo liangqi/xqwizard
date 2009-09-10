@@ -7,14 +7,14 @@
 
   $search = (strlen($location) == 0 ? "" : "?location=" . $location);
   if (strlen($username) < 6 || strlen($password) < 6) {
-    header("Location: login.htm#error" . $search);
+    header("Location: login.htm" . $search . "#error");
   } else {
     $mysql_link = new MysqlLink;
     $result = login($username, $password);
     if ($result == "error") {
-      header("Location: login.htm#error" . $search);
+      header("Location: login.htm" . $search . "#error");
     } else if ($result == "noretry") {
-      header("Location: login.htm#noretry" . $search);
+      header("Location: login.htm" . $search . "#noretry");
     } else {
       insertLog($result->uid, EVENT_LOGIN);
       session_start();
