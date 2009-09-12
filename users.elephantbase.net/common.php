@@ -28,9 +28,27 @@
     return $_SERVER["REMOTE_ADDR"];
   }
 
-  // 获得salt
-  function getSalt() {
-    return substr(md5(mt_rand()), 0, 6);
+  $arrPeriod = array("秒", "分钟", "小时", "天", "星期", "个月", "年");
+  $arrSeconds = array(60, 3600, 86400, 604800, 2592000, 31536000);
+
+  // 几秒钟/分钟/小时/天/周/月/年前
+  function lapseTime($lastTime) {
+    global $arrPeriod, $arrSeconds;
+
+    $lapse = time() - $lastTime;
+    $dir = "前";
+    if ($lapse < 0) {
+      $lapse = -$lapse;
+      $dir = "后";
+    }
+    $seconds = 1;
+    for ($i = 0; $i < count($arrSeconds); $i ++) {
+      if ($lapse < $arrSeconds[$i]) {
+        break;
+      }
+      $seconds = $arrSeconds[$i];
+    }
+    return floor($lapse / $seconds) . $arrPeriod[$i] . $dir;
   }
 
   class MysqlLink {

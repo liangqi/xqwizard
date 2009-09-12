@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>首页 - 手机棋谱交流平台</title>
+<title>棋谱列表 - 手机棋谱交流平台</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -68,10 +68,15 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><font size="3"><strong>最热门棋谱</strong></font></td>
-                        <td><p align="right"><a
-                        href="search.php?catagory=0&amp;order=1"><font
-                        size="2">【更多】</font></a></p>
+                        <td><font size="3"><strong>棋谱列表</strong></font></td>
+                        <td><p align="right"><font size="2">排序：<select
+                        name="order" size="1"
+                        onchange="changeOrder()">
+                            <option selected value="1">最热门</option>
+                            <option value="2">最受好评</option>
+                            <option value="3">最近上传</option>
+                        </select>　</font><a href="index.php"><font
+                        size="2">【首页】</font></a></p>
                         </td>
                     </tr>
                 </table>
@@ -85,104 +90,45 @@ bottommargin="0" rightmargin="0">
                         bot="HTMLMarkup" startspan --><?php
   require_once "../common.php";
 
+  $title = $_GET["title"];
+  $catagory = $_GET["catagory"];
+  $order = $_GET["order"];
+
   $mysql_link = new MysqlLink;
 
   $th0 = "<td align=\"center\" background=\"../images/headerbg.gif\" nowrap><font size=\"2\">";
   $th1 = "</font></td>";
   $th10 = $th1 . $th0;
 
-  function searchTop($order) {
-    global $score_catagory, $mysql_tablepre, $mysql_link;
-    global $th0, $th1, $th10;
+  echo "<table border=\"0\">";
+  echo "<tr>{$th0}上传时间{$th10}类型{$th10}标题{$th10}提供者{$th10}大小{$th10}点数{$th10}下载{$th10}好评{$th1}</tr>";
+  $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, size, price, eventtime, download, positive " .
+      "FROM {$mysql_tablepre}upload LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
+      "WHERE state = 0 ORDER BY " . $order . " DESC LIMIT 10";
+  $result = $mysql_link->query($sql);
+  $gray = false;
+  $line = mysql_fetch_assoc($result);
+  while ($line) {
+    $gray = !$gray;
+    $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">",
+        $gray ? "#F0F0F0" : "#E0E0E0");
+    $td1 = "</font></td>";
+    $td10 = $td1 . $td0;
 
-    echo "<table border=\"0\">";
-    echo "<tr>{$th0}上传时间{$th10}类型{$th10}标题{$th10}提供者{$th10}大小{$th10}点数{$th10}下载{$th10}好评{$th1}</tr>";
-    $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, size, price, eventtime, download, positive " .
-        "FROM {$mysql_tablepre}upload LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
-        "WHERE state = 0 ORDER BY " . $order . " DESC LIMIT 10";
-    $result = $mysql_link->query($sql);
-    $gray = false;
+    $uid = $line["{$mysql_tablepre}upload.uid"];
+    $cat = $line["catagory"];
+    echo sprintf("<tr>{$td0}%s" .
+        "{$td10}<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>" .
+        "{$td10}<a href=\"download.php?fid=%d\" target=\"_blank\"><b>%s</b></a>" .
+        "{$td10}<a href=\"uploaduser.php?uid=%d\" target=\"_blank\">%s</a>" .
+        "{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
+        lapseTime($line["eventtime"]), $cat, $score_catagory[$cat],
+        $line["fid"], htmlentities($line["title"], ENT_COMPAT, "GB2312"),
+        $uid, htmlentities($line["username"], ENT_COMPAT, "GB2312"),
+        $line["size"], $line["price"], $line["download"], $line["positive"]);
     $line = mysql_fetch_assoc($result);
-    while ($line) {
-      $gray = !$gray;
-      $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">",
-          $gray ? "#F0F0F0" : "#E0E0E0");
-      $td1 = "</font></td>";
-      $td10 = $td1 . $td0;
-
-      $uid = $line["{$mysql_tablepre}upload.uid"];
-      $cat = $line["catagory"];
-      echo sprintf("<tr>{$td0}%s" .
-          "{$td10}<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>" .
-          "{$td10}<a href=\"download.php?fid=%d\" target=\"_blank\"><b>%s</b></a>" .
-          "{$td10}<a href=\"uploaduser.php?uid=%d\" target=\"_blank\">%s</a>" .
-          "{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
-          lapseTime($line["eventtime"]), $cat, $score_catagory[$cat],
-          $line["fid"], htmlentities($line["title"], ENT_COMPAT, "GB2312"),
-          $uid, htmlentities($line["username"], ENT_COMPAT, "GB2312"),
-          $line["size"], $line["price"], $line["download"], $line["positive"]);
-      $line = mysql_fetch_assoc($result);
-    }
-    echo "</table>";
   }
-
-  searchTop("download");
-?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
-            <tr>
-                <td background="../images/headerbg.gif"><table
-                border="0" cellpadding="0" cellspacing="0"
-                width="100%">
-                    <tr>
-                        <td><font size="3"><strong>最受好评棋谱</strong></font></td>
-                        <td><p align="right"><a
-                        href="search.php?catagory=0&amp;order=2"><font
-                        size="2">【更多】</font></a></p>
-                        </td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
-            <tr>
-                <td align="center"><table border="0"
-                cellpadding="4" cellspacing="1" bgcolor="#000000">
-                    <tr>
-                        <td bgcolor="#FFFFFF"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php
-  searchTop("positive");
-?><!--webbot
-                        bot="HTMLMarkup" endspan --></td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
-            <tr>
-                <td background="../images/headerbg.gif"><table
-                border="0" cellpadding="0" cellspacing="0"
-                width="100%">
-                    <tr>
-                        <td><font size="3"><strong>最近上传棋谱</strong></font></td>
-                        <td><p align="right"><a
-                        href="search.php?catagory=0&amp;order=3"><font
-                        size="2">【更多】</font></a></p>
-                        </td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
-            <tr>
-                <td align="center"><table border="0"
-                cellpadding="4" cellspacing="1" bgcolor="#000000">
-                    <tr>
-                        <td bgcolor="#FFFFFF"><!--webbot
-                        bot="HTMLMarkup" startspan --><?php
-  searchTop("eventtime");
-
-  $mysql_link->close();
+  echo "</table>";
 ?><!--webbot
                         bot="HTMLMarkup" endspan --></td>
                     </tr>
@@ -195,7 +141,7 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td align="center"><form action="search.php"
-                method="POST">
+                method="GET">
                     <table border="0">
                         <tr>
                             <td><font size="2">标题：</font></td>
@@ -235,7 +181,15 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#E0E0E0"><p align="right"><a
+                <td bgcolor="#E0E0E0"><p align="right"><script
+                language="JavaScript"><!--
+var title = "<?php echo escape($title); ?>";
+var catagory = <?php echo $catagory; ?>;
+
+function changeOrder() {
+  location.href = "search.php?title=" + title + "&catagory=" + catagory + "&order=" + value;
+}
+// --></script><a
                 href="http://www.elephantbase.net/"
                 target="_blank"><font color="#000060" size="2">版权所有</font><font
                 color="#000060">&copy;</font><font
