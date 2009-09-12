@@ -105,7 +105,7 @@ CREATE TABLE tb_upload (
 	KEY (uid),
 	KEY (catagory),
 	KEY (eventtime),
-	KEY (downloads),
+	KEY (download),
 	KEY (positive));
 
 CREATE TABLE tb_download (
