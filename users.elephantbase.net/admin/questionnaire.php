@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>问卷调查报告 - 重置密码申请</title>
+<title>问卷调查报告 - 象棋巫师用户中心</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"

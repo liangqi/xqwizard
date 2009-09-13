@@ -1,6 +1,7 @@
 <?php
   require_once dirname(__FILE__) . "/config.php";
   require_once dirname(__FILE__) . "/uc_client/client.php";
+  require_once dirname(__FILE__) . "/lib/class.phpmailer.php";
 
   // 返回提示的HTML(蓝色)
   function info($msg) {
@@ -272,6 +273,23 @@
         }
       }
     }
+  }
+
+  // 发送邮件
+  function sendMail($to, $subject, $body) {
+    $mail = new PHPMailer;
+    $mail->Mailer = "smtp";
+    $mail->SMTPAuth = true;
+    $mail->Host = SMTP_HOST;
+    $mail->Username = SMTP_USERNAME;
+    $mail->Password = SMTP_PASSWORD;
+    $mail->CharSet = "gbk";
+    $mail->From = SMTP_FROM;
+    $mail->FromName = SMTP_FROMNAME;
+    $mail->AddAddress($to);
+    $mail->Subject = $subject;
+    $mail->Body = $body;
+    return $mail->Send();
   }
 
   // 棋谱类型

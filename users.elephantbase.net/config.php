@@ -18,4 +18,10 @@
   define("UC_CHARSET", "gbk");
   define("UC_IP", "");
   define("UC_APPID", 1);
+
+  define("SMTP_HOST", "smtp.elephantbase.net");
+  define("SMTP_USERNAME", "root");
+  define("SMTP_PASSWORD", "****");
+  define("SMTP_FROM", "webmaster@elephantbase.net");
+  define("SMTP_FROMNAME", "象棋巫师用户中心");
 ?>

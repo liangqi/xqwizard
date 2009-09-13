@@ -70,7 +70,7 @@ bottommargin="0" rightmargin="0">
                     <tr>
                         <td><font size="3"><strong>棋谱列表</strong></font></td>
                         <td><p align="right"><font size="2">排序：<select
-                        name="order" size="1"
+                        name="order" size="1" id="order"
                         onchange="changeOrder()">
                             <option selected value="1">最热门</option>
                             <option value="2">最受好评</option>
@@ -100,35 +100,50 @@ bottommargin="0" rightmargin="0">
   $th1 = "</font></td>";
   $th10 = $th1 . $th0;
 
-  echo "<table border=\"0\">";
-  echo "<tr>{$th0}上传时间{$th10}类型{$th10}标题{$th10}提供者{$th10}大小{$th10}点数{$th10}下载{$th10}好评{$th1}</tr>";
-  $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, size, price, eventtime, download, positive " .
+  $cond = "";
+  if ($title) {
+    $cond .= sprintf("title LIKE '%%%s%%' AND ", $mysql_link->escape($title));
+  }
+  if ($catagory) {
+    $cond .= sprintf("catagory = %d AND ", $catagory);
+  }
+  $orderColumn = ($order == 1 ? "download" : $order == 2 ? "positive" : "eventtime");
+
+  $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, " .
+      "size, price, eventtime, download, positive, negative " .
       "FROM {$mysql_tablepre}upload LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
-      "WHERE state = 0 ORDER BY " . $order . " DESC LIMIT 10";
+      "WHERE " . $cond . "state = 0 ORDER BY " . $orderColumn . " DESC LIMIT 10";
   $result = $mysql_link->query($sql);
   $gray = false;
   $line = mysql_fetch_assoc($result);
-  while ($line) {
-    $gray = !$gray;
-    $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">",
-        $gray ? "#F0F0F0" : "#E0E0E0");
-    $td1 = "</font></td>";
-    $td10 = $td1 . $td0;
+  if ($line) {
+    echo "<table border=\"0\">";
+    echo "<tr>{$th0}上传时间{$th10}类型{$th10}标题{$th10}提供者{$th10}" .
+        "大小{$th10}点数{$th10}下载{$th10}顶{$th10}踩{$th1}</tr>";
+    while ($line) {
+      $gray = !$gray;
+      $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">",
+          $gray ? "#F0F0F0" : "#E0E0E0");
+      $td1 = "</font></td>";
+      $td10 = $td1 . $td0;
 
-    $uid = $line["{$mysql_tablepre}upload.uid"];
-    $cat = $line["catagory"];
-    echo sprintf("<tr>{$td0}%s" .
-        "{$td10}<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>" .
-        "{$td10}<a href=\"download.php?fid=%d\" target=\"_blank\"><b>%s</b></a>" .
-        "{$td10}<a href=\"uploaduser.php?uid=%d\" target=\"_blank\">%s</a>" .
-        "{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
-        lapseTime($line["eventtime"]), $cat, $score_catagory[$cat],
-        $line["fid"], htmlentities($line["title"], ENT_COMPAT, "GB2312"),
-        $uid, htmlentities($line["username"], ENT_COMPAT, "GB2312"),
-        $line["size"], $line["price"], $line["download"], $line["positive"]);
-    $line = mysql_fetch_assoc($result);
+      $uid = $line["{$mysql_tablepre}upload.uid"];
+      $cat = $line["catagory"];
+      echo sprintf("<tr>{$td0}%s{$td10}" .
+          "<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>{$td10}" .
+          "<a href=\"download.php?fid=%d\" target=\"_blank\"><b>%s</b></a>{$td10}" .
+          "<a href=\"uploaduser.php?uid=%d\" target=\"_blank\">%s</a>{$td10}" .
+          "%d{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
+          lapseTime($line["eventtime"]), $cat, $score_catagory[$cat],
+          $line["fid"], htmlentities($line["title"], ENT_COMPAT, "GB2312"),
+          $uid, htmlentities($line["username"], ENT_COMPAT, "GB2312"),
+          $line["size"], $line["price"], $line["download"], $line["positive"], $line["negative"]);
+      $line = mysql_fetch_assoc($result);
+    }
+    echo "</table>";
+  } else {
+    echo warn("没有找到棋谱");
   }
-  echo "</table>";
 ?><!--webbot
                         bot="HTMLMarkup" endspan --></td>
                     </tr>
@@ -183,11 +198,12 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td bgcolor="#E0E0E0"><p align="right"><script
                 language="JavaScript"><!--
-var title = "<?php echo escape($title); ?>";
-var catagory = <?php echo $catagory; ?>;
+var title = "<?php echo urlencode($title); ?>";
+var catagory = <?php echo $catagory ? $catagory : 0; ?>;
+order.value = <?php echo $order ? $order : 0; ?>;
 
 function changeOrder() {
-  location.href = "search.php?title=" + title + "&catagory=" + catagory + "&order=" + value;
+  location.href = "search.php?title=" + title + "&catagory=" + catagory + "&order=" + order.value;
 }
 // --></script><a
                 href="http://www.elephantbase.net/"
