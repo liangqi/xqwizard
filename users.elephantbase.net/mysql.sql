@@ -18,13 +18,6 @@ CREATE TABLE tb_retry (
 	retrycount INTEGER NOT NULL DEFAULT 0,
 	retrytime INTEGER NOT NULL DEFAULT 0);
 
-CREATE TABLE tb_password (
-	username CHAR(15) NOT NULL PRIMARY KEY,
-	email CHAR(32) NOT NULL,
-	password CHAR(6) NOT NULL,
-	eventip CHAR(15) NOT NULL,
-	eventtime INTEGER NOT NULL);
-
 CREATE TABLE tb_rankw (
 	uid INTEGER NOT NULL PRIMARY KEY,
 	score INTEGER NOT NULL DEFAULT 0,
