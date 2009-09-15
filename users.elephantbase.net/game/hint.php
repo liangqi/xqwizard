@@ -18,7 +18,7 @@
     header("Login-Result: nopoints");
   } else {
     if ($result->charged < USER_PLATINUM) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points - 10 WHERE uid = %d", $result->uid);
+      $sql = sprintf("UPDATE " . MYSQL_TABLEPRE . "user SET points = points - 10 WHERE uid = %d", $result->uid);
       $mysql_link->query($sql);
     }
     insertLog($result->uid, EVENT_HINT, $stage);

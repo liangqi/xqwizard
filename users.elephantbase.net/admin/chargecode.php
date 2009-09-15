@@ -11,7 +11,7 @@
   $mysql_link = new MysqlLink;
   for ($i = 0; $i < $num; $i ++) {
     $chargecode = md5(mt_rand() . mt_rand() . mt_rand() . mt_rand());
-    $sql = sprintf("INSERT INTO {$mysql_tablepre}chargecode (chargecode, points) " .
+    $sql = sprintf("INSERT INTO " . MYSQL_TABLEPRE . "chargecode (chargecode, points) " .
         "VALUES ('%s', %d)", $chargecode, $points);
     $mysql_link->query($sql);
     echo $regname . ";" . $chargecode . "\r\n";

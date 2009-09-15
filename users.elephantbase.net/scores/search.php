@@ -109,9 +109,8 @@ bottommargin="0" rightmargin="0">
   }
   $orderColumn = ($order == 1 ? "download" : $order == 2 ? "positive" : "eventtime");
 
-  $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, " .
-      "size, price, eventtime, download, positive, negative " .
-      "FROM {$mysql_tablepre}upload LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
+  $sql = "SELECT fid, u.uid, username, title, catagory, size, price, eventtime, download, positive, negative " .
+      "FROM " . MYSQL_TABLEPRE . "upload u LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
       "WHERE " . $cond . "state = 0 ORDER BY " . $orderColumn . " DESC LIMIT 10";
   $result = $mysql_link->query($sql);
   $gray = false;
@@ -127,7 +126,7 @@ bottommargin="0" rightmargin="0">
       $td1 = "</font></td>";
       $td10 = $td1 . $td0;
 
-      $uid = $line["{$mysql_tablepre}upload.uid"];
+      $uid = $line[MYSQL_TABLEPRE . "upload.uid"];
       $cat = $line["catagory"];
       echo sprintf("<tr>{$td0}%s{$td10}" .
           "<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>{$td10}" .

@@ -92,14 +92,14 @@ function sendmail(username, email, password) {
 
   $username = $_GET["username"];
   if ($username) {
-    $sql = sprintf("DELETE FROM {$mysql_tablepre}password WHERE username = '%s'",
+    $sql = sprintf("DELETE FROM " . MYSQL_TABLEPRE . "password WHERE username = '%s'",
         $mysql_link->escape($username));
     $mysql_link->query($sql);
     echo "<font size=\"2\" color=\"blue\">用户 " .
         htmlentities($username, ENT_COMPAT, "GB2312") . " 的重置密码申请已删除</font><br>";
   }
 
-  $result = $mysql_link->query("SELECT username, email, password, eventip, eventtime FROM {$mysql_tablepre}password");
+  $result = $mysql_link->query("SELECT username, email, password, eventip, eventtime FROM " . MYSQL_TABLEPRE . "password");
   $line = mysql_fetch_assoc($result);
   if ($line) {
     echo "<table border=\"1\">";

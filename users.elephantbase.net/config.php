@@ -1,15 +1,15 @@
 <?php
-  $mysql_host = "localhost";
-  $mysql_database = "test";
-  $mysql_username = "root";
-  $mysql_password = "****";
-  $mysql_tablepre = "tb_";
+  define("MYSQL_HOST", "localhost");
+  define("MYSQL_USERNAME", "root");
+  define("MYSQL_PASSWORD", "****");
+  define("MYSQL_DATABASE", "test");
+  define("MYSQL_TABLEPRE", "tb_");
 
   define("UC_CONNECT", "mysql");
-  define("UC_DBHOST", $mysql_host);
-  define("UC_DBUSER", $mysql_username);
-  define("UC_DBPW", $mysql_password);
-  define("UC_DBNAME", $mysql_database);
+  define("UC_DBHOST", MYSQL_HOST);
+  define("UC_DBUSER", MYSQL_USERNAME);
+  define("UC_DBPW", MYSQL_PASSWORD);
+  define("UC_DBNAME", MYSQL_DATABASE);
   define("UC_DBCHARSET", "gbk");
   define("UC_DBTABLEPRE", UC_DBNAME . ".uc_");
 

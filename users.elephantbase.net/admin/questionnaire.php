@@ -83,7 +83,7 @@ bottommargin="0" rightmargin="0">
 
   echo "<table border=\"1\">";
   echo "<tr>{$th0}问题{$th10}选项{$th10}计数{$th1}</tr>";
-  $sql = "SELECT qid, answer, COUNT(*) FROM {$mysql_tablepre}qn_answer " .
+  $sql = "SELECT qid, answer, COUNT(*) FROM " . MYSQL_TABLEPRE . "qn_answer " .
       "WHERE answer > 0 GROUP BY qid, answer ORDER BY qid, answer";
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
@@ -106,8 +106,9 @@ bottommargin="0" rightmargin="0">
                 bot="HTMLMarkup" startspan --><?php
   echo "<table border=\"1\">";
   echo "<tr>{$th0}IP地址{$th10}时间{$th10}评论{$th10}&nbsp;{$th1}</tr>";
-  $sql = "SELECT {$mysql_tablepre}qn_comments.uid, eventip, eventtime, comments " .
-      "FROM {$mysql_tablepre}qn_comments LEFT JOIN {$mysql_tablepre}qn_user USING (uid)";
+  $sql = "SELECT u.uid, eventip, eventtime, comments " .
+      "FROM " . MYSQL_TABLEPRE . "qn_comments u " .
+      "LEFT JOIN " . MYSQL_TABLEPRE . "qn_user USING (uid)";
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   while ($line) {

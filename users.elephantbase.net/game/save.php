@@ -13,7 +13,7 @@
   } else if ($result == "noretry") {
     header("Login-Result: noretry");
   } else if ($score > $result->score) {
-    $sql = sprintf("UPDATE {$mysql_tablepre}user SET score = %d WHERE uid = %d", $score, $result->uid);
+    $sql = sprintf("UPDATE " . MYSQL_TABLEPRE . "user SET score = %d WHERE uid = %d", $score, $result->uid);
     $mysql_link->query($sql);
     insertLog($result->uid, EVENT_SAVE, $score);
     header("Login-Result: ok");

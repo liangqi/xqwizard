@@ -3,17 +3,17 @@
 
   $lastTime = intval($_GET["timestamp"]);
   $password = $_GET["password"];
-  if ($password != $mysql_password) {
+  if ($password != MYSQL_PASSWORD) {
     exit;
   }
 
   $mysql_link = new MysqlLink;
 
-  $sqlTruncate = "TRUNCATE TABLE {$mysql_tablepre}rank%s";
-  $sqlInsert1 = "INSERT INTO {$mysql_tablepre}rank%s (uid, rank)" .
-      "SELECT uid, rank FROM {$mysql_tablepre}rank%s";
-  $sqlInsert2 = "INSERT INTO {$mysql_tablepre}rank%s (uid, score) " .
-      "SELECT uid, score FROM {$mysql_tablepre}user " .
+  $sqlTruncate = "TRUNCATE TABLE " . MYSQL_TABLEPRE . "rank%s";
+  $sqlInsert1 = "INSERT INTO " . MYSQL_TABLEPRE . "rank%s (uid, rank)" .
+      "SELECT uid, rank FROM " . MYSQL_TABLEPRE . "rank%s";
+  $sqlInsert2 = "INSERT INTO " . MYSQL_TABLEPRE . "rank%s (uid, score) " .
+      "SELECT uid, score FROM " . MYSQL_TABLEPRE . "user " .
       "WHERE lasttime > %d ORDER BY score DESC, lasttime DESC";
 
   $mysql_link->query(sprintf($sqlTruncate, "w0"));

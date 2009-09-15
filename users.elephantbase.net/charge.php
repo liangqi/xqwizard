@@ -4,19 +4,19 @@
   $chargecode = $_POST["chargecode"];
 
   $mysql_link = new MysqlLink;
-  $sql = sprintf("SELECT points FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'",
+  $sql = sprintf("SELECT points FROM " . MYSQL_TABLEPRE . "chargecode WHERE chargecode = '%s'",
       $mysql_link->escape($chargecode));
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
   $info = warn("点卡密码错误");
   if ($line) {
     $points = $line["points"];
-    $sql = sprintf("DELETE FROM {$mysql_tablepre}chargecode WHERE chargecode = '%s'",
+    $sql = sprintf("DELETE FROM " . MYSQL_TABLEPRE . "chargecode WHERE chargecode = '%s'",
         $mysql_link->escape($chargecode));
     $mysql_link->query($sql);
     // 获取点数后，别的线程也可能会把记录删掉，所以要检查是否确实删掉了
     if (mysql_affected_rows() > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
+      $sql = sprintf("UPDATE " . MYSQL_TABLEPRE . "user SET points = points + %d, charged = charged + %d " .
           "WHERE uid = %d", $points, $points, $userdata->uid);
       $mysql_link->query($sql);
       insertLog($userdata->uid, EVENT_CHARGE, $points);

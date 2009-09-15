@@ -92,15 +92,14 @@ bottommargin="0" rightmargin="0">
   $th10 = $th1 . $th0;
 
   function searchTop($order) {
-    global $score_catagory, $mysql_tablepre, $mysql_link;
+    global $score_catagory, $mysql_link;
     global $th0, $th1, $th10;
 
     echo "<table border=\"0\">";
     echo "<tr>{$th0}上传时间{$th10}类型{$th10}标题{$th10}提供者{$th10}" .
         "大小{$th10}点数{$th10}下载{$th10}顶{$th10}踩{$th1}</tr>";
-    $sql = "SELECT fid, {$mysql_tablepre}upload.uid, username, title, catagory, " .
-        "size, price, eventtime, download, positive, negative " .
-        "FROM {$mysql_tablepre}upload LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
+    $sql = "SELECT fid, u.uid, username, title, catagory, size, price, eventtime, download, positive, negative " .
+        "FROM " . MYSQL_TABLEPRE . "upload u LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
         "WHERE state = 0 ORDER BY " . $order . " DESC LIMIT 10";
     $result = $mysql_link->query($sql);
     $gray = false;
@@ -112,7 +111,7 @@ bottommargin="0" rightmargin="0">
       $td1 = "</font></td>";
       $td10 = $td1 . $td0;
 
-      $uid = $line["{$mysql_tablepre}upload.uid"];
+      $uid = $line[MYSQL_TABLEPRE . "upload.uid"];
       $cat = $line["catagory"];
       echo sprintf("<tr>{$td0}%s{$td10}" .
           "<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>{$td10}" .

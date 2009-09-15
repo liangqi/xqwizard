@@ -71,9 +71,8 @@ bottommargin="0" rightmargin="0">
   $username = $_GET["username"];
 
   $mysql_link = new MysqlLink;
-  $sql = sprintf("SELECT {$mysql_tablepre}user.uid, username, email, regip, regdate, " .
-        "lastip, lasttime, score, points, charged " .
-        "FROM " . UC_DBTABLEPRE . "members LEFT JOIN {$mysql_tablepre}user USING (uid) " .
+  $sql = sprintf("SELECT u.uid, username, email, regip, regdate, lastip, lasttime, score, points, charged " .
+        "FROM " . UC_DBTABLEPRE . "members u LEFT JOIN " . MYSQL_TABLEPRE . "user USING (uid) " .
         "WHERE username = '%s' AND score IS NOT NULL", $mysql_link->escape($username));
   $result = $mysql_link->query($sql);
   $line = mysql_fetch_assoc($result);
@@ -92,7 +91,7 @@ bottommargin="0" rightmargin="0">
     // 补充点数
     $charge = intval($_POST["charge"]);
     if ($charge > 0) {
-      $sql = sprintf("UPDATE {$mysql_tablepre}user SET points = points + %d, charged = charged + %d " .
+      $sql = sprintf("UPDATE " . MYSQL_TABLEPRE . "user SET points = points + %d, charged = charged + %d " .
           "WHERE uid = '%s'", $charge, $charge, $uid);
       $mysql_link->query($sql);
       insertLog($uid, EVENT_ADMIN_CHARGE, $charge);
@@ -124,7 +123,7 @@ bottommargin="0" rightmargin="0">
     list($uid) = uc_user_login($username, $password);
     if ($uid > 0) {
       uc_user_delete($uid);
-      $sql = sprintf("DELETE FROM {$mysql_tablepre}user WHERE uid = %d", $uid);
+      $sql = sprintf("DELETE FROM " . MYSQL_TABLEPRE . "user WHERE uid = %d", $uid);
       $mysql_link->query($sql);
       insertLog($uid, EVENT_ADMIN_DELETE);
       header("Location: close.htm#用户[" . $username . "]已被删除");
