@@ -4,7 +4,7 @@
   session_start();
   session_register("userdata");
   if (!isset($_SESSION["userdata"])) {
-    header("Location: ../login.htm#timeout");
+    header("Location: ../login.htm?location=" . urlencode(requestUrl()) . "#timeout");
     exit;
   }
   $userdata = &$_SESSION["userdata"];

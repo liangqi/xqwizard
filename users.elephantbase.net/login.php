@@ -5,7 +5,7 @@
   $password = $_POST["password"];
   $location = $_POST["location"];
 
-  $search = (strlen($location) == 0 ? "" : "?location=" . $location);
+  $search = (strlen($location) == 0 ? "" : "?location=" . urlencode($location));
   if (strlen($username) < 6 || strlen($password) < 6) {
     header("Location: login.htm" . $search . "#error");
   } else {

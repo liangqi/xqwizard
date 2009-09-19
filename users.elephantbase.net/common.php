@@ -29,6 +29,11 @@
     return $_SERVER["REMOTE_ADDR"];
   }
 
+  // 获得当前URL
+  function requestUrl() {
+    return $_SERVER["PHP_SELF"] . "?" . $_SERVER["QUERY_STRING"];
+  }
+
   $arrPeriod = array("秒", "分钟", "小时", "天", "星期", "个月", "年");
   $arrSeconds = array(60, 3600, 86400, 604800, 2592000, 31536000);
 
@@ -293,4 +298,9 @@
 
   // 棋谱类型
   $score_catagory = array("全部", "全局", "开局", "中局", "残局", "排局", "比赛", "古谱", "教材");
+
+  // 排序类型
+  define("SCORE_ORDER_DOWNLOAD", 1);
+  define("SCORE_ORDER_POSITIVE", 2);
+  define("SCORE_ORDER_EVENTTIME", 3);
 ?>

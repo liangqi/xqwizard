@@ -96,8 +96,8 @@ bottommargin="0" rightmargin="0">
 
   $mysql_link = new MysqlLink;
 
-  $th0 = "<td align=\"center\" background=\"../images/headerbg.gif\" nowrap><font size=\"2\">";
-  $th1 = "</font></td>";
+  $th0 = "<td align=\"center\" background=\"../images/headerbg.gif\" nowrap><font size=\"2\">&nbsp;";
+  $th1 = "&nbsp;</font></td>";
   $th10 = $th1 . $th0;
 
   $cond = "";
@@ -107,7 +107,8 @@ bottommargin="0" rightmargin="0">
   if ($catagory) {
     $cond .= sprintf("catagory = %d AND ", $catagory);
   }
-  $orderColumn = ($order == 1 ? "download" : $order == 2 ? "positive" : "eventtime");
+  $orderColumn = ($order == SCORE_ORDER_DOWNLOAD ? "download" :
+      $order == SCORE_ORDER_POSITIVE ? "positive" : "eventtime");
 
   $sql = "SELECT fid, u.uid, username, title, catagory, size, price, eventtime, download, positive, negative " .
       "FROM " . MYSQL_TABLEPRE . "upload u LEFT JOIN " . UC_DBTABLEPRE . "members USING (uid) " .
@@ -121,19 +122,19 @@ bottommargin="0" rightmargin="0">
         "大小{$th10}点数{$th10}下载{$th10}顶{$th10}踩{$th1}</tr>";
     while ($line) {
       $gray = !$gray;
-      $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">",
+      $td0 = sprintf("<td align=\"center\" bgcolor=\"%s\" nowrap><font size=\"2\">&nbsp;",
           $gray ? "#F0F0F0" : "#E0E0E0");
-      $td1 = "</font></td>";
+      $td1 = "&nbsp;</font></td>";
       $td10 = $td1 . $td0;
 
       $uid = $line[MYSQL_TABLEPRE . "upload.uid"];
       $cat = $line["catagory"];
       echo sprintf("<tr>{$td0}%s{$td10}" .
-          "<a href=\"catagory.php?catagory=%d\" target=\"_blank\">%s</a>{$td10}" .
+          "<a href=\"search.php?catagory=%d&order=%d&title=\" target=\"_blank\">%s</a>{$td10}" .
           "<a href=\"download.php?fid=%d\" target=\"_blank\"><b>%s</b></a>{$td10}" .
           "<a href=\"uploaduser.php?uid=%d\" target=\"_blank\">%s</a>{$td10}" .
-          "%d{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
-          lapseTime($line["eventtime"]), $cat, $score_catagory[$cat],
+          "%dK{$td10}%d{$td10}%d{$td10}%d{$td10}%d{$td1}</tr>",
+          lapseTime($line["eventtime"]), $cat, $order, $score_catagory[$cat],
           $line["fid"], htmlentities($line["title"], ENT_COMPAT, "GB2312"),
           $uid, htmlentities($line["username"], ENT_COMPAT, "GB2312"),
           $line["size"], $line["price"], $line["download"], $line["positive"], $line["negative"]);

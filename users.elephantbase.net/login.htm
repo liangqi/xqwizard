@@ -73,7 +73,7 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td id="timeout" style="display:none"><p
-                align="center"><font color="#FF0000" size="2">会话超时，请重新登录</font></p>
+                align="center"><font color="#FF0000" size="2">只有登录用户才能访问本站点的资源</font></p>
                 </td>
             </tr>
             <tr>
@@ -147,7 +147,7 @@ if (false) {
 }
 
 if (location.search.substring(0, 10) == "?location=") {
-  frm.location.value = location.search.substring(10);
+  frm.location.value = unescape(location.search.substring(10));
 }
 // --></script><a
                 href="http://www.elephantbase.net/"
