@@ -217,7 +217,11 @@ arrLinks.push("http://item.taobao.com/auction/item_detail.jhtml?item_id=d83b7e4e
 changeLink();
 
 function changeLink() {
-  lnkTaobao.href = arrLinks[optLink.value];
+  // lnkTaobao.href = arrLinks[optLink.value];
+  lnkTaobao.onclick = function() {
+    alert("由于象棋巫师运营团队客服紧缺，象棋巫师淘宝店暂停营业，敬请谅解。");
+    return false;
+  }
 }
 // --></script></font></p>
                                 </td>
