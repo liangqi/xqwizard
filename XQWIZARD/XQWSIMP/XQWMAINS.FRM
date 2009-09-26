@@ -63,7 +63,7 @@ Begin VB.Form frmMainSmall
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   31
+         NumButtons      =   29
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新的对局"
@@ -143,55 +143,47 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardFlash"
-            Object.ToolTipText     =   "复制Flash棋盘代码"
+            Key             =   "WizardPublish"
+            Object.ToolTipText     =   "发布棋谱"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardText"
-            Object.ToolTipText     =   "复制文本棋盘"
+            Style           =   3
+            MixedState      =   -1  'True
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardBitmap"
-            Object.ToolTipText     =   "查看图片棋盘"
+            Key             =   "EndgamesStart"
+            Object.ToolTipText     =   "挑战 - 当前题库"
          EndProperty
          BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
          BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "EndgamesStart"
-            Object.ToolTipText     =   "挑战 - 当前题库"
-         EndProperty
-         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Style           =   3
-            MixedState      =   -1  'True
-         EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
             Style           =   1
          EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "电脑执红"
             Style           =   1
          EndProperty
-         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "电脑执黑"
             Style           =   1
          EndProperty
-         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "后台思考"
             Style           =   1
          EndProperty
-         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "电脑分析"
             Style           =   1
          EndProperty
-         BeginProperty Button31 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考/立即走棋"
          EndProperty
@@ -1565,26 +1557,8 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
-      Begin VB.Menu mnWizardFlash 
-         Caption         =   "复制F&lash棋盘代码"
-      End
-      Begin VB.Menu mnWizardText 
-         Caption         =   "复制文本棋盘(&T)"
-      End
-      Begin VB.Menu mnWizardBitmap 
-         Caption         =   "生成图片棋盘(&B)"
-      End
-      Begin VB.Menu mnWizardPrint 
-         Caption         =   "生成印刷棋盘(&R)"
-      End
-      Begin VB.Menu mnWizardSep3 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnWizardPublish 
-         Caption         =   "在象棋家园发布棋谱(&U)"
-      End
-      Begin VB.Menu mnWizardHome 
-         Caption         =   "象棋家园首页(&O)"
+         Caption         =   "发布棋谱(&U)"
       End
    End
    Begin VB.Menu mnEndgames_ 
@@ -1667,9 +1641,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnEngineSet 
          Caption         =   "设置参数(&S)..."
-      End
-      Begin VB.Menu mnEngineUnLoad 
-         Caption         =   "卸载引擎(&U)"
       End
       Begin VB.Menu mnEngineSep2 
          Caption         =   "-"
@@ -1853,7 +1824,7 @@ Begin VB.Form frmMainSmall
    Begin VB.Menu mnTools 
       Caption         =   "工具(&T)"
       Begin VB.Menu mnToolBooth 
-         Caption         =   "象棋魔法学校(&T)"
+         Caption         =   "象棋巫师魔法学校(&T)"
       End
       Begin VB.Menu mnToolSep1 
          Caption         =   "-"
@@ -2287,51 +2258,9 @@ EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
-Private Sub mnWizardFlash_Click()
-
-CopyFlash
-
-End Sub
-
-Private Sub mnWizardText_Click()
-
-Dim sz As String, szFenStr As String
-szFenStr = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + vbCrLf + "欢迎访问www.elephantbase.net" + vbCrLf
-Clipboard.Clear
-If Options_bAnsiText Then
-    sz = AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
-    If Options_bEscapeDouble Then
-        sz = Replace(sz, Chr(27) + "[", Chr(27) + Chr(27) + "[")
-    End If
-    Clipboard.SetText sz + szFenStr
-Else
-    Clipboard.SetText AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev))) + szFenStr
-End If
-MsgBox "文本棋盘已复制到剪贴板。", vbInformation
-
-End Sub
-
-Private Sub mnWizardBitmap_Click()
-
-ViewBitmap Options_bMonoBitmap
-
-End Sub
-
-Private Sub mnWizardPrint_Click()
-
-ViewPrintBitmap
-
-End Sub
-
 Private Sub mnWizardPublish_Click()
 
-CopyFlash FLASH_HOME
-
-End Sub
-
-Private Sub mnWizardHome_Click()
-
-ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+' TODO
 
 End Sub
 
@@ -2392,16 +2321,6 @@ End Sub
 Private Sub mnEngineSet_Click()
 
 frmEngineSet.Show vbModal, Me
-
-End Sub
-
-Private Sub mnEngineUnLoad_Click()
-
-EngineLoaded False
-Engine_szFile = ""
-CloseEngine
-Engine_szName = ""
-SetTitle
 
 End Sub
 
@@ -2689,12 +2608,8 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
-Case "WizardFlash"
-    mnWizardFlash_Click
-Case "WizardText"
-    mnWizardText_Click
-Case "WizardBitmap"
-    mnWizardBitmap_Click
+Case "WizardPublish"
+    mnWizardPublish_Click
 ' Separator
 Case "EndgamesStart"
     mnEndgamesStart_Click

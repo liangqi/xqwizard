@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.31"
+Public Const STRING_VERSION     As String = "4.4"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -222,7 +222,6 @@ Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
-Public Gui_szUserID             As String   ' 用户ID
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
 Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
@@ -278,8 +277,6 @@ Public Engine_szBookFiles       As String   ' 开局库文件名
 Public Engine_szEgtbPaths       As String   ' 残局库文件名
 Public Engine_nHash             As Integer  ' 置换表大小
 Public Engine_nThreads          As Integer  ' 引擎使用的线程数
-Public Engine_nPruning          As Integer  ' 裁剪
-Public Engine_nKnowledge        As Integer  ' 知识
 Public Engine_nRandomness       As Integer  ' 随机
 Public Engine_nStyle            As Integer  ' 风格
 Public Engine_szFile            As String   ' 引擎文件
@@ -1512,182 +1509,6 @@ End Sub
 
 ' 以上是界面控制例程
 
-' 以下是特色工具例程
-
-' 生成Flash棋盘
-Public Sub CopyFlash(Optional ByVal bHome As Boolean = False)
-
-Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
-Select Case Options_nFlashXQ
-Case FLASHXQ_SMALL
-    szWidth = "216"
-    szHeight = "264"
-Case FLASHXQ_MEDIUM
-    szWidth = "324"
-    szHeight = "396"
-Case FLASHXQ_LARGE
-    szWidth = "432"
-    szHeight = "528"
-End Select
-szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" " + _
-        "width=""" + szWidth + """ height=""" + szHeight + """ " + _
-        "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars="""
-If Not Game_bStartPos Then
-    szPosition = Game_szIrrevFen(0)
-    szPosition = Replace(szPosition, " ", "+")
-    szPosition = Replace(szPosition, "-", "%2D")
-    szPosition = Replace(szPosition, "/", "%2F")
-    szFlash = szFlash + "Position=" + szPosition + "&"
-End If
-szFlash = szFlash + "MoveList="
-For i = 1 To Game_nMaxMove
-    szFlash = szFlash + Replace(Move2Iccs(Game_mvMove(i)), "-", "%2D") + "+"
-Next
-szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" />"
-If Not Game_bStartPos Then
-    szFlash = szFlash + "<br>" + Game_szIrrevFen(0)
-End If
-
-If bHome Then
-    With frmHide.web.Document
-        .body.innerHtml = szFlash
-        .execCommand "SelectAll"
-        .execCommand "Copy"
-        .body.innerHtml = ""
-    End With
-    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
-            vbNullString, vbNullString, SW_SHOWNORMAL
-    MsgBox "棋谱已复制到剪贴板，请在“发表新日志”内容框里请按 Ctrl-V 键粘贴。", vbInformation
-Else
-    Clipboard.Clear
-    Clipboard.SetText szFlash
-    MsgBox "Flash棋盘代码已复制到剪贴板。", vbInformation
-End If
-
-End Sub
-
-' 生成图片棋盘
-Public Sub ViewBitmap(Optional ByVal bMono As Boolean = False)
-
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte
-Dim i As Integer, j As Integer, k As Integer, l As Integer
-Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
-nReadFileNo = FreeFile
-szBmpFile = App_szPath + "BMPBOARD\BMPBOARD.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Read As #nReadFileNo
-On Error GoTo 0
-nWriteFileNo = FreeFile
-szBmpFile = App_szPath + "查看图片棋盘.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Write As #nWriteFileNo
-On Error GoTo 0
-Get #nReadFileNo, , lpBmpHeader
-Put #nWriteFileNo, , lpBmpHeader
-For i = 1 To 234
-    For j = 1 To 9
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-Next
-Close #nReadFileNo
-For i = 0 To 9
-    For j = 0 To 8
-        k = Game_posIrrev(Game_nCurrIrrev).ucpcSquares((12 - i) * 16 + j + 3)
-        If k <> 0 Then
-            nReadFileNo = FreeFile
-            szBmpFile = App_szPath + "BMPBOARD\" + IIf(k < 32, "R", "B") + PieceByte(PieceType(k)) + IIf(bMono And k < 32, "M", "") + ".BMP"
-            On Error GoTo lnErrorOpen
-            Open szBmpFile For Binary Access Read As #nReadFileNo
-            On Error GoTo 0
-            Seek #nReadFileNo, 119
-            For k = 0 To 17
-                Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 2592& + k * 108 + j * 12 + 119
-                For l = 1 To 9
-                    lpWriteBuff(l) = lpReadBuff(l)
-                Next
-                Put #nWriteFileNo, , lpWriteBuff
-            Next
-            Close #nReadFileNo
-        End If
-    Next
-Next
-Close #nWriteFileNo
-ShellExecuteA 0, vbNullString, App_szPath + "查看图片棋盘.BMP", vbNullString, vbNullString, SW_SHOWNORMAL
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法打开文件 " + szBmpFile, vbExclamation
-
-End Sub
-
-' 生成印刷质量的图片棋盘
-Public Sub ViewPrintBitmap()
-
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To 17) As Byte
-Dim i As Integer, j As Integer, k As Integer, l As Integer
-Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
-nReadFileNo = FreeFile
-szBmpFile = App_szPath + IIf(Options_bPrintDigit, "PRINTBRD\PRINTBR2.BMP", "PRINTBRD\PRINTBRD.BMP")
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Read As #nReadFileNo
-On Error GoTo 0
-nWriteFileNo = FreeFile
-szBmpFile = App_szPath + "查看图片棋盘.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Write As #nWriteFileNo
-On Error GoTo 0
-Get #nReadFileNo, , lpBmpHeader
-Put #nWriteFileNo, , lpBmpHeader
-For i = 1 To 394
-    For j = 1 To 9
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-Next
-If Options_bPrintDigit Then
-    For i = 1 To 540
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-End If
-Close #nReadFileNo
-For i = 0 To 9
-    For j = 0 To 8
-        k = Game_posIrrev(Game_nCurrIrrev).ucpcSquares((12 - i) * 16 + j + 3)
-        If k <> 0 Then
-            nReadFileNo = FreeFile
-            szBmpFile = App_szPath + "PRINTBRD\" + IIf(k < 32, "R", "B") + PieceByte(PieceType(k)) + ".BMP"
-            On Error GoTo lnErrorOpen
-            Open szBmpFile For Binary Access Read As #nReadFileNo
-            On Error GoTo 0
-            Seek #nReadFileNo, 119
-            For k = 0 To 33
-                Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + IIf(Options_bPrintDigit, 5519, 119)
-                For l = 1 To 17
-                    lpWriteBuff(l) = lpReadBuff(l)
-                Next
-                Put #nWriteFileNo, , lpWriteBuff
-            Next
-            Close #nReadFileNo
-        End If
-    Next
-Next
-Close #nWriteFileNo
-ShellExecuteA 0, vbNullString, App_szPath + "查看图片棋盘.BMP", vbNullString, vbNullString, SW_SHOWNORMAL
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法打开文件 " + szBmpFile, vbExclamation
-
-End Sub
-
-' 以上是特色工具例程
-
 ' 以下是引擎控制例程
 
 ' 显示引擎信息的对话框
@@ -2164,8 +1985,6 @@ Else
     SendEngine "setoption threads" + Str(2 ^ (Engine_nThreads - 4)), bSlaveEngine
     SendEngine "setoption idle none"
 End If
-SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine
-SendEngine "setoption knowledge " + Choose(Engine_nKnowledge + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption randomness " + Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption style " + Choose(Engine_nStyle + 1, "solid", "normal", "risky"), bSlaveEngine
 
@@ -2175,7 +1994,6 @@ End Sub
 Public Sub EngineLoaded(ByVal bLoaded As Boolean)
 
 App_frmMain.mnEngineSet.Enabled = bLoaded
-App_frmMain.mnEngineUnLoad.Enabled = bLoaded
 Engine_bRed = False
 App_frmMain.mnEngineRed.Enabled = bLoaded
 App_frmMain.mnEngineRed.Checked = False
@@ -2311,7 +2129,8 @@ Else
             Sleep 1
             dfThisTime = Timer
             dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            If dfThisTime > dfLastTime + 10# Then
+            ' 加载引擎的时间延长到60秒
+            If dfThisTime > dfLastTime + 60# Then
                 Exit Do
             End If
         Else
@@ -2795,9 +2614,6 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Dim dwCounter(0 To 1) As Long
-QueryPerformanceCounter VarPtr(dwCounter(0))
-
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
@@ -2832,7 +2648,6 @@ Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "趣味象棋")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -2849,8 +2664,6 @@ Engine_szBookFiles = GetSetting("XQWizard", "Engine", "BookFiles", "")
 Engine_szEgtbPaths = GetSetting("XQWizard", "Engine", "EgtbPaths", "")
 Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
 Engine_nThreads = Str2Int(GetSetting("XQWizard", "Engine", "Threads", "0"), 0, 9)
-Engine_nPruning = Str2Int(GetSetting("XQWizard", "Engine", "Pruning", "3"), 0, 3)
-Engine_nKnowledge = Str2Int(GetSetting("XQWizard", "Engine", "Knowledge", "3"), 0, 3)
 Engine_nRandomness = Str2Int(GetSetting("XQWizard", "Engine", "Randomness", "1"), 0, 3)
 Engine_nStyle = Str2Int(GetSetting("XQWizard", "Engine", "Style", "1"), 0, 2)
 Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", App_szPath + "ELEEYE.EXE")
@@ -2894,9 +2707,7 @@ SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
@@ -2911,8 +2722,6 @@ SaveSetting "XQWizard", "Engine", "BookFiles", Engine_szBookFiles
 SaveSetting "XQWizard", "Engine", "EgtbPaths", Engine_szEgtbPaths
 SaveSetting "XQWizard", "Engine", "Hash", LTrim(Str(Engine_nHash))
 SaveSetting "XQWizard", "Engine", "Threads", LTrim(Str(Engine_nThreads))
-SaveSetting "XQWizard", "Engine", "Pruning", LTrim(Str(Engine_nPruning))
-SaveSetting "XQWizard", "Engine", "Knowledge", LTrim(Str(Engine_nKnowledge))
 SaveSetting "XQWizard", "Engine", "Randomness", LTrim(Str(Engine_nRandomness))
 SaveSetting "XQWizard", "Engine", "Style", LTrim(Str(Engine_nStyle))
 SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
@@ -2937,11 +2746,15 @@ End Sub
 ' 检查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szWhatsNew As String, szUrl As String
+Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
+Dim dwCounter(0 To 1) As Long
+
 sz = ""
+QueryPerformanceCounter VarPtr(dwCounter(0))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 On Error Resume Next
 sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
-        STRING_VERSION + "&userid=" + Gui_szUserID)
+        STRING_VERSION + "&userid=" + szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2950,7 +2763,7 @@ If sz = "" Then
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
     SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
-    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
+    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
@@ -3124,7 +2937,7 @@ App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
-For i = 1 To 31
+For i = 1 To 29
     App_frmMain.tlb.Buttons(i).Image = i
 Next
 If Not App_bPromotion Then

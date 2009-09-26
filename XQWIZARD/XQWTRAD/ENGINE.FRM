@@ -95,26 +95,6 @@ Begin VB.Form frmEngineSet
          Top             =   600
          Width           =   4335
       End
-      Begin VB.ComboBox cmbPruning 
-         Height          =   300
-         ItemData        =   "ENGINE.FRX":000C
-         Left            =   4200
-         List            =   "ENGINE.FRX":000E
-         Style           =   2  'Dropdown List
-         TabIndex        =   24
-         Top             =   960
-         Width           =   615
-      End
-      Begin VB.ComboBox cmbKnowledge 
-         Height          =   300
-         ItemData        =   "ENGINE.FRX":0010
-         Left            =   4200
-         List            =   "ENGINE.FRX":0012
-         Style           =   2  'Dropdown List
-         TabIndex        =   26
-         Top             =   1320
-         Width           =   615
-      End
       Begin VB.ComboBox cmbThreads 
          Height          =   300
          ItemData        =   "ENGINE.FRX":001C
@@ -154,22 +134,6 @@ Begin VB.Form frmEngineSet
          TabIndex        =   28
          Top             =   960
          Width           =   615
-      End
-      Begin VB.Label lblKnowledge 
-         Caption         =   "醚"
-         Height          =   255
-         Left            =   3720
-         TabIndex        =   25
-         Top             =   1320
-         Width           =   375
-      End
-      Begin VB.Label lblPruning 
-         Caption         =   "掉芭"
-         Height          =   255
-         Left            =   3720
-         TabIndex        =   23
-         Top             =   960
-         Width           =   375
       End
       Begin VB.Label lblHash 
          Caption         =   "竚传"
@@ -293,8 +257,8 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -336,16 +300,6 @@ cmbThreads.AddItem "4線程", 6
 cmbThreads.AddItem "8線程", 7
 cmbThreads.AddItem "16線程", 8
 cmbThreads.AddItem "32線程", 9
-cmbPruning.Clear
-cmbPruning.AddItem "沒有", 0
-cmbPruning.AddItem "少量", 1
-cmbPruning.AddItem "适中", 2
-cmbPruning.AddItem "充分", 3
-cmbKnowledge.Clear
-cmbKnowledge.AddItem "沒有", 0
-cmbKnowledge.AddItem "少量", 1
-cmbKnowledge.AddItem "适中", 2
-cmbKnowledge.AddItem "充分", 3
 cmbRandomness.Clear
 cmbRandomness.AddItem "沒有", 0
 cmbRandomness.AddItem "少量", 1
@@ -364,8 +318,6 @@ txtBookFile.Text = Engine_szBookFiles
 txtEgtbPath.Text = Engine_szEgtbPaths
 cmbHash.ListIndex = Engine_nHash
 cmbThreads.ListIndex = Engine_nThreads
-cmbPruning.ListIndex = Engine_nPruning
-cmbKnowledge.ListIndex = Engine_nKnowledge
 cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
 chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
@@ -534,8 +486,6 @@ Engine_szBookFiles = txtBookFile.Text
 Engine_szEgtbPaths = txtEgtbPath.Text
 Engine_nHash = cmbHash.ListIndex
 Engine_nThreads = cmbThreads.ListIndex
-Engine_nPruning = cmbPruning.ListIndex
-Engine_nKnowledge = cmbKnowledge.ListIndex
 Engine_nRandomness = cmbRandomness.ListIndex
 Engine_nStyle = cmbStyle.ListIndex
 SetEngine

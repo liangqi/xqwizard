@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Aug. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' 全局常量——象棋巫師信息
-Public Const STRING_VERSION     As String = "4.31"
+Public Const STRING_VERSION     As String = "4.4"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const TIP_NUM            As Integer = 27   ' 日積月累條目數
 Public Const QUOTE_NUM          As Integer = 12   ' 名言條目數
@@ -222,7 +222,6 @@ Public Gui_bShowHowTo           As Boolean  ' 啟動時顯示“日積月累”
 Public Gui_nTipIndex            As Integer  ' “日積月累”的條目序號
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日積月累”的條目
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
-Public Gui_szUserID             As String   ' 用戶ID
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
@@ -278,8 +277,6 @@ Public Engine_szBookFiles       As String   ' 開局庫文件名
 Public Engine_szEgtbPaths       As String   ' 殘局庫文件名
 Public Engine_nHash             As Integer  ' 置換表大小
 Public Engine_nThreads          As Integer  ' 引擎使用的線程數
-Public Engine_nPruning          As Integer  ' 裁剪
-Public Engine_nKnowledge        As Integer  ' 知識
 Public Engine_nRandomness       As Integer  ' 隨机
 Public Engine_nStyle            As Integer  ' 風格
 Public Engine_szFile            As String   ' 引擎文件
@@ -2164,8 +2161,6 @@ Else
     SendEngine "setoption threads" + Str(2 ^ (Engine_nThreads - 4)), bSlaveEngine
     SendEngine "setoption idle none"
 End If
-SendEngine "setoption pruning " + Choose(Engine_nPruning + 1, "none", "small", "medium", "large"), bSlaveEngine
-SendEngine "setoption knowledge " + Choose(Engine_nKnowledge + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption randomness " + Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine
 SendEngine "setoption style " + Choose(Engine_nStyle + 1, "solid", "normal", "risky"), bSlaveEngine
 
@@ -2175,7 +2170,6 @@ End Sub
 Public Sub EngineLoaded(ByVal bLoaded As Boolean)
 
 App_frmMain.mnEngineSet.Enabled = bLoaded
-App_frmMain.mnEngineUnLoad.Enabled = bLoaded
 Engine_bRed = False
 App_frmMain.mnEngineRed.Enabled = bLoaded
 App_frmMain.mnEngineRed.Checked = False
@@ -2311,7 +2305,8 @@ Else
             Sleep 1
             dfThisTime = Timer
             dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            If dfThisTime > dfLastTime + 10# Then
+            ' 加载引擎的时间延长到60秒
+            If dfThisTime > dfLastTime + 60# Then
                 Exit Do
             End If
         Else
@@ -2795,9 +2790,6 @@ End Sub
 ' 從注冊表加載參數
 Public Sub LoadRegs()
 
-Dim dwCounter(0 To 1) As Long
-QueryPerformanceCounter VarPtr(dwCounter(0))
-
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
@@ -2832,7 +2824,6 @@ Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "趣味象棋")
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -2849,8 +2840,6 @@ Engine_szBookFiles = GetSetting("XQWizard", "Engine", "BookFiles", "")
 Engine_szEgtbPaths = GetSetting("XQWizard", "Engine", "EgtbPaths", "")
 Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
 Engine_nThreads = Str2Int(GetSetting("XQWizard", "Engine", "Threads", "0"), 0, 9)
-Engine_nPruning = Str2Int(GetSetting("XQWizard", "Engine", "Pruning", "3"), 0, 3)
-Engine_nKnowledge = Str2Int(GetSetting("XQWizard", "Engine", "Knowledge", "3"), 0, 3)
 Engine_nRandomness = Str2Int(GetSetting("XQWizard", "Engine", "Randomness", "1"), 0, 3)
 Engine_nStyle = Str2Int(GetSetting("XQWizard", "Engine", "Style", "1"), 0, 2)
 Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", App_szPath + "ELEEYE.EXE")
@@ -2894,9 +2883,7 @@ SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
-' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
@@ -2911,8 +2898,6 @@ SaveSetting "XQWizard", "Engine", "BookFiles", Engine_szBookFiles
 SaveSetting "XQWizard", "Engine", "EgtbPaths", Engine_szEgtbPaths
 SaveSetting "XQWizard", "Engine", "Hash", LTrim(Str(Engine_nHash))
 SaveSetting "XQWizard", "Engine", "Threads", LTrim(Str(Engine_nThreads))
-SaveSetting "XQWizard", "Engine", "Pruning", LTrim(Str(Engine_nPruning))
-SaveSetting "XQWizard", "Engine", "Knowledge", LTrim(Str(Engine_nKnowledge))
 SaveSetting "XQWizard", "Engine", "Randomness", LTrim(Str(Engine_nRandomness))
 SaveSetting "XQWizard", "Engine", "Style", LTrim(Str(Engine_nStyle))
 SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
@@ -2937,11 +2922,15 @@ End Sub
 ' 檢查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szWhatsNew As String, szUrl As String
+Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
+Dim dwCounter(0 To 1) As Long
+
 sz = ""
+QueryPerformanceCounter VarPtr(dwCounter(0))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 On Error Resume Next
 sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php?referer=xqwizard&version=" + _
-        STRING_VERSION + "&userid=" + Gui_szUserID)
+        STRING_VERSION + "&userid=" + szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -2950,7 +2939,7 @@ If sz = "" Then
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
     SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即寫注冊表，避免重開窗口導致的重複訪問
-    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
+    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
@@ -3124,7 +3113,7 @@ App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
-For i = 1 To 31
+For i = 1 To 29
     App_frmMain.tlb.Buttons(i).Image = i
 Next
 If Not App_bPromotion Then

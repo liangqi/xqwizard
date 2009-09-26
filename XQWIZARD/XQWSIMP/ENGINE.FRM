@@ -26,7 +26,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "加载副引擎"
       Height          =   375
       Left            =   6480
-      TabIndex        =   28
+      TabIndex        =   24
       Top             =   2760
       Width           =   1215
    End
@@ -34,7 +34,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "副引擎执红"
       Height          =   255
       Left            =   6480
-      TabIndex        =   27
+      TabIndex        =   23
       Top             =   2400
       Width           =   1215
    End
@@ -95,31 +95,11 @@ Begin VB.Form frmEngineSet
          Top             =   600
          Width           =   4335
       End
-      Begin VB.ComboBox cmbPruning 
-         Height          =   300
-         ItemData        =   "ENGINE.frx":000C
-         Left            =   4200
-         List            =   "ENGINE.frx":000E
-         Style           =   2  'Dropdown List
-         TabIndex        =   20
-         Top             =   960
-         Width           =   615
-      End
-      Begin VB.ComboBox cmbKnowledge 
-         Height          =   300
-         ItemData        =   "ENGINE.frx":0010
-         Left            =   4200
-         List            =   "ENGINE.frx":0012
-         Style           =   2  'Dropdown List
-         TabIndex        =   22
-         Top             =   1320
-         Width           =   615
-      End
       Begin VB.ComboBox cmbThreads 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0014
-         Left            =   720
-         List            =   "ENGINE.frx":0016
+         ItemData        =   "ENGINE.frx":000C
+         Left            =   600
+         List            =   "ENGINE.frx":000E
          Style           =   2  'Dropdown List
          TabIndex        =   18
          Top             =   1320
@@ -127,9 +107,9 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbHash 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0018
-         Left            =   720
-         List            =   "ENGINE.frx":001A
+         ItemData        =   "ENGINE.frx":0010
+         Left            =   600
+         List            =   "ENGINE.frx":0012
          Style           =   2  'Dropdown List
          TabIndex        =   16
          Top             =   960
@@ -137,42 +117,26 @@ Begin VB.Form frmEngineSet
       End
       Begin VB.ComboBox cmbStyle 
          Height          =   300
-         ItemData        =   "ENGINE.frx":001C
+         ItemData        =   "ENGINE.frx":0014
          Left            =   5520
-         List            =   "ENGINE.frx":001E
+         List            =   "ENGINE.frx":0016
          Style           =   2  'Dropdown List
-         TabIndex        =   26
+         TabIndex        =   22
          Top             =   1320
          Width           =   615
       End
       Begin VB.ComboBox cmbRandomness 
          Height          =   300
-         ItemData        =   "ENGINE.frx":0020
+         ItemData        =   "ENGINE.frx":0018
          Left            =   5520
-         List            =   "ENGINE.frx":0022
+         List            =   "ENGINE.frx":001A
          Style           =   2  'Dropdown List
-         TabIndex        =   24
+         TabIndex        =   20
          Top             =   960
          Width           =   615
       End
-      Begin VB.Label lblKnowledge 
-         Caption         =   "知识"
-         Height          =   255
-         Left            =   3720
-         TabIndex        =   21
-         Top             =   1320
-         Width           =   375
-      End
-      Begin VB.Label lblPruning 
-         Caption         =   "裁剪"
-         Height          =   255
-         Left            =   3720
-         TabIndex        =   19
-         Top             =   960
-         Width           =   375
-      End
       Begin VB.Label lblHash 
-         Caption         =   "置换表"
+         Caption         =   "内存"
          Height          =   255
          Left            =   120
          TabIndex        =   15
@@ -183,7 +147,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "风格"
          Height          =   255
          Left            =   5040
-         TabIndex        =   25
+         TabIndex        =   21
          Top             =   1320
          Width           =   375
       End
@@ -191,7 +155,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "随机"
          Height          =   255
          Left            =   5040
-         TabIndex        =   23
+         TabIndex        =   19
          Top             =   960
          Width           =   375
       End
@@ -272,7 +236,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "取消"
       Height          =   375
       Left            =   6480
-      TabIndex        =   30
+      TabIndex        =   26
       Top             =   3720
       Width           =   1215
    End
@@ -280,7 +244,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "确定"
       Height          =   375
       Left            =   6480
-      TabIndex        =   29
+      TabIndex        =   25
       Top             =   3240
       Width           =   1215
    End
@@ -293,8 +257,8 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
-' Copyright (C) 2004-2006 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
+' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -336,16 +300,6 @@ cmbThreads.AddItem "4线程", 6
 cmbThreads.AddItem "8线程", 7
 cmbThreads.AddItem "16线程", 8
 cmbThreads.AddItem "32线程", 9
-cmbPruning.Clear
-cmbPruning.AddItem "没有", 0
-cmbPruning.AddItem "少量", 1
-cmbPruning.AddItem "适中", 2
-cmbPruning.AddItem "充分", 3
-cmbKnowledge.Clear
-cmbKnowledge.AddItem "没有", 0
-cmbKnowledge.AddItem "少量", 1
-cmbKnowledge.AddItem "适中", 2
-cmbKnowledge.AddItem "充分", 3
 cmbRandomness.Clear
 cmbRandomness.AddItem "没有", 0
 cmbRandomness.AddItem "少量", 1
@@ -364,8 +318,6 @@ txtBookFile.Text = Engine_szBookFiles
 txtEgtbPath.Text = Engine_szEgtbPaths
 cmbHash.ListIndex = Engine_nHash
 cmbThreads.ListIndex = Engine_nThreads
-cmbPruning.ListIndex = Engine_nPruning
-cmbKnowledge.ListIndex = Engine_nKnowledge
 cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
 chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
@@ -534,8 +486,6 @@ Engine_szBookFiles = txtBookFile.Text
 Engine_szEgtbPaths = txtEgtbPath.Text
 Engine_nHash = cmbHash.ListIndex
 Engine_nThreads = cmbThreads.ListIndex
-Engine_nPruning = cmbPruning.ListIndex
-Engine_nKnowledge = cmbKnowledge.ListIndex
 Engine_nRandomness = cmbRandomness.ListIndex
 Engine_nStyle = cmbStyle.ListIndex
 SetEngine

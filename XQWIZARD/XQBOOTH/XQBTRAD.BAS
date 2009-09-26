@@ -147,35 +147,6 @@ SimpleDecrypt = szPlain
 
 End Function
 
-' 复制Flash棋盘
-Public Sub CopyFlash()
-
-Dim szFlash As String, szPosition As String
-Dim o As Object
-szPosition = App_szEndgames(Gui_nCurr)
-szPosition = Replace(szPosition, " ", "+")
-szPosition = Replace(szPosition, "-", "%2D")
-szPosition = Replace(szPosition, "/", "%2F")
-
-szFlash = "象棋魔法學校第" + LTrim(Str(Gui_nCurr + 1)) + "關怎麼過？<br>" + _
-        "<embed src=""http://www.elephantbase.net/flashxq.swf"" width=""324"" height=""396"" " + _
-        "allowScriptAccess=""always"" quality=""high"" ""wmode=""transparent"" flashvars=""Position=" + szPosition + """" + _
-        " type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" /><br>" + _
-        App_szEndgames(Gui_nCurr)
-
-With frmHide.web.Document
-    .body.innerHtml = szFlash
-    .execCommand "SelectAll"
-    .execCommand "Copy"
-    .body.innerHtml = ""
-End With
-
-ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
-        vbNullString, vbNullString, SW_SHOWNORMAL
-MsgBox "求助信息已復製到剪貼板，請在“發表新日誌”內容框裡請按 Ctrl-V 鍵粘貼。", vbInformation
-
-End Sub
-
 ' 用象棋巫师打开
 Public Sub OpenWithXQWizard(ByRef pos As PositionStruct)
 
@@ -185,10 +156,10 @@ Dim posStart As PositionStruct
 
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open App_szPath + "象棋魔法學校.PGN" For Output As #nFileNo
+Open App_szPath + "象棋巫師魔法學校.PGN" For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, "[Game ""Chinese Chess""]"
-Print #nFileNo, "[Event ""第" + Str(Gui_nCurr + 1) + " 關 - 象棋魔法學校""]"
+Print #nFileNo, "[Event ""第" + Str(Gui_nCurr + 1) + " 關 - 象棋巫師魔法學校""]"
 Print #nFileNo, "[Result ""1-0""]"
 Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
 
@@ -210,12 +181,12 @@ Print #nFileNo, " 推薦用《象棋巫師》觀賞棋譜 "
 Print #nFileNo, "http://www.elephantbase.net/"
 Close #nFileNo
 
-Shell App_szPath + "XQWIZARD.EXE """ + App_szPath + "象棋魔法學校.PGN" + """", vbNormalFocus
+Shell App_szPath + "XQWIZARD.EXE """ + App_szPath + "象棋巫師魔法學校.PGN" + """", vbNormalFocus
 
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "無法打開文件 " + App_szPath + "象棋魔法學校.PGN", vbExclamation
+MsgBox "無法打開文件 " + App_szPath + "象棋巫師魔法學校.PGN", vbExclamation
 
 End Sub
 
@@ -473,7 +444,7 @@ Unload frmStartup
 
 ' 提示建立存檔
 If Login_szUserName = "" Then
-    If MsgBox("　　建立象棋魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關成績，" + _
+    If MsgBox("　　建立象棋巫師魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關成績，" + _
             "并跟眾多玩家一起參与闖關排名，充分享受提高棋藝的樂趣。" + vbCrLf + vbCrLf + _
             "　　是否現在就建立闖關存檔？", vbQuestion + vbYesNo) = vbYes Then
         ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/register.htm", vbNullString, vbNullString, SW_SHOWNORMAL

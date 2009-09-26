@@ -63,7 +63,7 @@ Begin VB.Form frmMainSmall
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   31
+         NumButtons      =   29
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "ÐÂµÄŒ¦¾Ö"
@@ -143,55 +143,47 @@ Begin VB.Form frmMainSmall
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardFlash"
-            Object.ToolTipText     =   "Ñ}ÑuFlashÆå±P´ú´a"
+            Key             =   "WizardPublish"
+            Object.ToolTipText     =   "°l²¼Æå×V"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardText"
-            Object.ToolTipText     =   "Ñ}ÑuÎÄ±¾Æå±P"
+            Style           =   3
+            MixedState      =   -1  'True
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "WizardBitmap"
-            Object.ToolTipText     =   "²é¿´ˆDÆ¬Æå±P"
+            Key             =   "EndgamesStart"
+            Object.ToolTipText     =   "Ìô‘ð - ®”Ç°î}Žì"
          EndProperty
          BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
          BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "EndgamesStart"
-            Object.ToolTipText     =   "Ìô‘ð - ®”Ç°î}Žì"
-         EndProperty
-         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Style           =   3
-            MixedState      =   -1  'True
-         EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "ÔOÖÃ¼‰„e"
             Style           =   1
          EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "ëŠÄXˆÌ¼t"
             Style           =   1
          EndProperty
-         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "ëŠÄXˆÌºÚ"
             Style           =   1
          EndProperty
-         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EnginePonder"
             Object.ToolTipText     =   "ááÅ_Ë¼¿¼"
             Style           =   1
          EndProperty
-         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button38 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "ëŠÄX·ÖÎö"
             Style           =   1
          EndProperty
-         BeginProperty Button31 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "Í£Ö¹Ë¼¿¼/Á¢¼´×ßÆå"
          EndProperty
@@ -1565,26 +1557,8 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
-      Begin VB.Menu mnWizardFlash 
-         Caption         =   "Î`¨îF&lash´Ñ½L¥N½X"
-      End
-      Begin VB.Menu mnWizardText 
-         Caption         =   "Î`¨î¤å¥»´Ñ½L(&T)"
-      End
-      Begin VB.Menu mnWizardBitmap 
-         Caption         =   "¥Í¦¨¹Ï¤ù´Ñ½L(&B)"
-      End
-      Begin VB.Menu mnWizardPrint 
-         Caption         =   "¥Í¦¨¦L¨ê´Ñ½L(&R)"
-      End
-      Begin VB.Menu mnWizardSep3 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnWizardPublish 
-         Caption         =   "¦b¶H´Ñ®a¶éµo¥¬´ÑÃÐ(&U)"
-      End
-      Begin VB.Menu mnWizardHome 
-         Caption         =   "¶H´Ñ®a¶é­º­¶(&O)"
+         Caption         =   "µo¥¬´ÑÃÐ(&U)"
       End
    End
    Begin VB.Menu mnEndgames_ 
@@ -1667,9 +1641,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnEngineSet 
          Caption         =   "³]¸m°Ñ¼Æ(&S)..."
-      End
-      Begin VB.Menu mnEngineUnLoad 
-         Caption         =   "¨ø¸ü¤ÞÀº(&U)"
       End
       Begin VB.Menu mnEngineSep2 
          Caption         =   "-"
@@ -1853,7 +1824,7 @@ Begin VB.Form frmMainSmall
    Begin VB.Menu mnTools 
       Caption         =   "¤u¨ã(&T)"
       Begin VB.Menu mnToolBooth 
-         Caption         =   "¶H´ÑÅ]ªk¾Ç®Õ(&T)"
+         Caption         =   "¶H´Ñ§Å®vÅ]ªk¾Ç®Õ(&T)"
       End
       Begin VB.Menu mnToolSep1 
          Caption         =   "-"
@@ -2287,51 +2258,9 @@ EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
-Private Sub mnWizardFlash_Click()
-
-CopyFlash
-
-End Sub
-
-Private Sub mnWizardText_Click()
-
-Dim sz As String, szFenStr As String
-szFenStr = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + vbCrLf + "šgÓ­ÔL†–www.elephantbase.net" + vbCrLf
-Clipboard.Clear
-If Options_bAnsiText Then
-    sz = AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), CCHESS_ANSI_TEXT))
-    If Options_bEscapeDouble Then
-        sz = Replace(sz, Chr(27) + "[", Chr(27) + Chr(27) + "[")
-    End If
-    Clipboard.SetText sz + szFenStr
-Else
-    Clipboard.SetText AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev))) + szFenStr
-End If
-MsgBox "ÎÄ±¾Æå±PÒÑÑ}Ñuµ½¼ôÙN°å¡£", vbInformation
-
-End Sub
-
-Private Sub mnWizardBitmap_Click()
-
-ViewBitmap Options_bMonoBitmap
-
-End Sub
-
-Private Sub mnWizardPrint_Click()
-
-ViewPrintBitmap
-
-End Sub
-
 Private Sub mnWizardPublish_Click()
 
-CopyFlash FLASH_HOME
-
-End Sub
-
-Private Sub mnWizardHome_Click()
-
-ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+' TODO
 
 End Sub
 
@@ -2392,16 +2321,6 @@ End Sub
 Private Sub mnEngineSet_Click()
 
 frmEngineSet.Show vbModal, Me
-
-End Sub
-
-Private Sub mnEngineUnLoad_Click()
-
-EngineLoaded False
-Engine_szFile = ""
-CloseEngine
-Engine_szName = ""
-SetTitle
 
 End Sub
 
@@ -2689,12 +2608,8 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
-Case "WizardFlash"
-    mnWizardFlash_Click
-Case "WizardText"
-    mnWizardText_Click
-Case "WizardBitmap"
-    mnWizardBitmap_Click
+Case "WizardPublish"
+    mnWizardPublish_Click
 ' Separator
 Case "EndgamesStart"
     mnEndgamesStart_Click
