@@ -1525,6 +1525,7 @@ End Sub
 ' 根据引擎走子方翻转棋盘并显示对阵双方
 Public Sub EnginePlayer()
 
+Dim szName As String, szSlaveName As String
 Engine_bPonder = False
 App_frmMain.mnEnginePonder.Checked = False
 App_frmMain.tlb.Buttons("EnginePonder").Value = tbrUnpressed
@@ -1548,8 +1549,10 @@ End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
 App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 If Options_bEngineName Then
-    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), Options_szUser)
-    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), Options_szUser)
+    szName = IIf(Engine_szName = "ElephantEye", "象棋巫师", Engine_szName)
+    szSlaveName = IIf(Engine_szSlaveName = "ElephantEye", "象棋巫师", Engine_szSlaveName)
+    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, szSlaveName, szName), Options_szUser)
+    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, szSlaveName, szName), Options_szUser)
 End If
 LabelFlush
 StartTimer
@@ -2129,8 +2132,8 @@ Else
             Sleep 1
             dfThisTime = Timer
             dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            ' 加载引擎的时间延长到60秒
-            If dfThisTime > dfLastTime + 60# Then
+            ' 加载引擎的时间延长到30秒
+            If dfThisTime > dfLastTime + 30# Then
                 Exit Do
             End If
         Else
@@ -2738,7 +2741,7 @@ sz = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "
 If UCase(Right(sz, 4)) = ".PGN" Then
     sz = Left(sz, Len(sz) - 4)
 End If
-sz = IIf(sz = "", Engine_szName, sz)
+sz = IIf(sz = "", IIf(Engine_szName = "ElephantEye", "", Engine_szName), sz)
 App_frmMain.Caption = IIf(sz = "", "", sz + " - ") + IIf(App_bPromotion, "超级象棋巫师", "象棋巫师")
 
 End Sub

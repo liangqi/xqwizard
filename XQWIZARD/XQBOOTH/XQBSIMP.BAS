@@ -389,7 +389,7 @@ Do While Not bLoaded
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 10# Then
+        If dfThisTime > dfLastTime + 30# Then
             Exit Do
         End If
     Else

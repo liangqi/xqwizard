@@ -1509,182 +1509,6 @@ End Sub
 
 ' 以上是界面控製例程
 
-' 以下是特色工具例程
-
-' 生成Flash棋盤
-Public Sub CopyFlash(Optional ByVal bHome As Boolean = False)
-
-Dim i As Integer, szPosition As String, szFlash As String, szWidth As String, szHeight As String
-Select Case Options_nFlashXQ
-Case FLASHXQ_SMALL
-    szWidth = "216"
-    szHeight = "264"
-Case FLASHXQ_MEDIUM
-    szWidth = "324"
-    szHeight = "396"
-Case FLASHXQ_LARGE
-    szWidth = "432"
-    szHeight = "528"
-End Select
-szFlash = "<embed src=""http://www.elephantbase.net/flashxq.swf"" " + _
-        "width=""" + szWidth + """ height=""" + szHeight + """ " + _
-        "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars="""
-If Not Game_bStartPos Then
-    szPosition = Game_szIrrevFen(0)
-    szPosition = Replace(szPosition, " ", "+")
-    szPosition = Replace(szPosition, "-", "%2D")
-    szPosition = Replace(szPosition, "/", "%2F")
-    szFlash = szFlash + "Position=" + szPosition + "&"
-End If
-szFlash = szFlash + "MoveList="
-For i = 1 To Game_nMaxMove
-    szFlash = szFlash + Replace(Move2Iccs(Game_mvMove(i)), "-", "%2D") + "+"
-Next
-szFlash = szFlash + """ type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" />"
-If Not Game_bStartPos Then
-    szFlash = szFlash + "<br>" + Game_szIrrevFen(0)
-End If
-
-If bHome Then
-    With frmHide.web.Document
-        .body.innerHtml = szFlash
-        .execCommand "SelectAll"
-        .execCommand "Copy"
-        .body.innerHtml = ""
-    End With
-    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", _
-            vbNullString, vbNullString, SW_SHOWNORMAL
-    MsgBox "棋譜已復製到剪貼板，請在“發表新日誌”內容框裡請按 Ctrl-V 鍵粘貼。", vbInformation
-Else
-    Clipboard.Clear
-    Clipboard.SetText szFlash
-    MsgBox "Flash棋盤代碼已複製到剪貼板。", vbInformation
-End If
-
-End Sub
-
-' 生成圖片棋盤
-Public Sub ViewBitmap(Optional ByVal bMono As Boolean = False)
-
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 12) As Byte, lpWriteBuff(1 To 9) As Byte
-Dim i As Integer, j As Integer, k As Integer, l As Integer
-Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
-nReadFileNo = FreeFile
-szBmpFile = App_szPath + "BMPBOARD\BMPBOARD.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Read As #nReadFileNo
-On Error GoTo 0
-nWriteFileNo = FreeFile
-szBmpFile = App_szPath + "查看圖片棋盤.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Write As #nWriteFileNo
-On Error GoTo 0
-Get #nReadFileNo, , lpBmpHeader
-Put #nWriteFileNo, , lpBmpHeader
-For i = 1 To 234
-    For j = 1 To 9
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-Next
-Close #nReadFileNo
-For i = 0 To 9
-    For j = 0 To 8
-        k = Game_posIrrev(Game_nCurrIrrev).ucpcSquares((12 - i) * 16 + j + 3)
-        If k <> 0 Then
-            nReadFileNo = FreeFile
-            szBmpFile = App_szPath + "BMPBOARD\" + IIf(k < 32, "R", "B") + PieceByte(PieceType(k)) + IIf(bMono And k < 32, "M", "") + ".BMP"
-            On Error GoTo lnErrorOpen
-            Open szBmpFile For Binary Access Read As #nReadFileNo
-            On Error GoTo 0
-            Seek #nReadFileNo, 119
-            For k = 0 To 17
-                Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 2592& + k * 108 + j * 12 + 119
-                For l = 1 To 9
-                    lpWriteBuff(l) = lpReadBuff(l)
-                Next
-                Put #nWriteFileNo, , lpWriteBuff
-            Next
-            Close #nReadFileNo
-        End If
-    Next
-Next
-Close #nWriteFileNo
-ShellExecuteA 0, vbNullString, App_szPath + "查看圖片棋盤.BMP", vbNullString, vbNullString, SW_SHOWNORMAL
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "無法打開文件 " + szBmpFile, vbExclamation
-
-End Sub
-
-' 生成印刷質量的圖片棋盤
-Public Sub ViewPrintBitmap()
-
-Dim lpBmpHeader(1 To 118) As Byte, lpReadBuff(1 To 20) As Byte, lpWriteBuff(1 To 17) As Byte
-Dim i As Integer, j As Integer, k As Integer, l As Integer
-Dim nReadFileNo As Integer, nWriteFileNo As Integer, szBmpFile As String
-nReadFileNo = FreeFile
-szBmpFile = App_szPath + IIf(Options_bPrintDigit, "PRINTBRD\PRINTBR2.BMP", "PRINTBRD\PRINTBRD.BMP")
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Read As #nReadFileNo
-On Error GoTo 0
-nWriteFileNo = FreeFile
-szBmpFile = App_szPath + "查看圖片棋盤.BMP"
-On Error GoTo lnErrorOpen
-Open szBmpFile For Binary Access Write As #nWriteFileNo
-On Error GoTo 0
-Get #nReadFileNo, , lpBmpHeader
-Put #nWriteFileNo, , lpBmpHeader
-For i = 1 To 394
-    For j = 1 To 9
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-Next
-If Options_bPrintDigit Then
-    For i = 1 To 540
-        Get #nReadFileNo, , lpReadBuff
-        Put #nWriteFileNo, , lpReadBuff
-    Next
-End If
-Close #nReadFileNo
-For i = 0 To 9
-    For j = 0 To 8
-        k = Game_posIrrev(Game_nCurrIrrev).ucpcSquares((12 - i) * 16 + j + 3)
-        If k <> 0 Then
-            nReadFileNo = FreeFile
-            szBmpFile = App_szPath + "PRINTBRD\" + IIf(k < 32, "R", "B") + PieceByte(PieceType(k)) + ".BMP"
-            On Error GoTo lnErrorOpen
-            Open szBmpFile For Binary Access Read As #nReadFileNo
-            On Error GoTo 0
-            Seek #nReadFileNo, 119
-            For k = 0 To 33
-                Get #nReadFileNo, , lpReadBuff
-                Seek #nWriteFileNo, i * 7200& + k * 180& + j * 20 + IIf(Options_bPrintDigit, 5519, 119)
-                For l = 1 To 17
-                    lpWriteBuff(l) = lpReadBuff(l)
-                Next
-                Put #nWriteFileNo, , lpWriteBuff
-            Next
-            Close #nReadFileNo
-        End If
-    Next
-Next
-Close #nWriteFileNo
-ShellExecuteA 0, vbNullString, App_szPath + "查看圖片棋盤.BMP", vbNullString, vbNullString, SW_SHOWNORMAL
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "無法打開文件 " + szBmpFile, vbExclamation
-
-End Sub
-
-' 以上是特色工具例程
-
 ' 以下是引擎控製例程
 
 ' 顯示引擎信息的對話框
@@ -1701,6 +1525,7 @@ End Sub
 ' 根据引擎走子方翻轉棋盤并顯示對陣雙方
 Public Sub EnginePlayer()
 
+Dim szName As String, szSlaveName As String
 Engine_bPonder = False
 App_frmMain.mnEnginePonder.Checked = False
 App_frmMain.tlb.Buttons("EnginePonder").Value = tbrUnpressed
@@ -1724,6 +1549,8 @@ End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
 App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 If Options_bEngineName Then
+    szName = IIf(Engine_szName = "ElephantEye", "象棋巫師", Engine_szName)
+    szSlaveName = IIf(Engine_szSlaveName = "ElephantEye", "象棋巫師", Engine_szSlaveName)
     Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, Engine_szSlaveName, Engine_szName), Options_szUser)
     Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, Engine_szSlaveName, Engine_szName), Options_szUser)
 End If
@@ -2305,8 +2132,8 @@ Else
             Sleep 1
             dfThisTime = Timer
             dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            ' 加载引擎的时间延长到60秒
-            If dfThisTime > dfLastTime + 60# Then
+            ' 加载引擎的时间延长到30秒
+            If dfThisTime > dfLastTime + 30# Then
                 Exit Do
             End If
         Else
@@ -2914,7 +2741,7 @@ sz = IIf(App_szFileName = "", "", Mid(App_szFileName, InStrRev(App_szFileName, "
 If UCase(Right(sz, 4)) = ".PGN" Then
     sz = Left(sz, Len(sz) - 4)
 End If
-sz = IIf(sz = "", Engine_szName, sz)
+sz = IIf(sz = "", IIf(Engine_szName = "ElephantEye", "", Engine_szName), sz)
 App_frmMain.Caption = IIf(sz = "", "", sz + " - ") + IIf(App_bPromotion, "超級象棋巫師", "象棋巫師")
 
 End Sub

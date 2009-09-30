@@ -713,16 +713,15 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
-Name: "{group}\象棋魔法學校"; Filename: "{app}\XQBOOTH.EXE"
+Name: "{group}\象棋巫師魔法學校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超級象棋巫師"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
 Name: "{group}\象棋巫師幫助主題"; Filename: "{app}\HELP\CONTENTS.HTM"
 Name: "{group}\手机棋譜制作工具"; Filename: "{app}\PGNS2JAR.EXE"
 Name: "{group}\棋譜批量轉換工具"; Filename: "{app}\MXQFCONV.EXE"
-Name: "{group}\ElephantEye 開局庫管理工具"; Filename: "{app}\MAKEBOOK.EXE"
-Name: "{group}\ElephantEye 使用說明"; Filename: "{app}\ELEEYE.TXT"
+Name: "{group}\開局庫管理工具"; Filename: "{app}\MAKEBOOK.EXE"
 Name: "{group}\卸載象棋巫師"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\象棋魔法學校"; Filename: "{app}\XQBOOTH.EXE"
+Name: "{userdesktop}\象棋巫師魔法學校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{userdesktop}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{userdesktop}\超級象棋巫師"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
 
