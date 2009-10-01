@@ -7,16 +7,14 @@
 #include "base2.h"
 #include "pipe.h"
 
-inline void ParsePath(char *szDir, char *szFile, const char *szPath) {
+inline void ParseDir(char *szDir, const char *szPath) {
   char *lpSeparator;
   strcpy(szDir, szPath);
   lpSeparator = strrchr(szDir, PATH_SEPARATOR);
   if (lpSeparator == NULL) {
     szDir[0] = '\0';
-    strcpy(szFile, szPath);
   } else {
     *lpSeparator = '\0';
-    strcpy(szFile, lpSeparator + 1);
   }
 }
 
@@ -58,7 +56,7 @@ void PipeStruct::Open(const char *szProcFile) {
   SECURITY_ATTRIBUTES sa;
   STARTUPINFO si;
   PROCESS_INFORMATION pi;
-  char szFileDir[PATH_MAX_CHAR], szFileName[PATH_MAX_CHAR], szCurDir[PATH_MAX_CHAR];
+  char szDir[PATH_MAX_CHAR], szCurDir[PATH_MAX_CHAR];
 
   if (szProcFile == NULL) {
     hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -66,8 +64,8 @@ void PipeStruct::Open(const char *szProcFile) {
     bConsole = GetConsoleMode(hInput, &dwMode);
   } else {
     GetCurrentDirectory(PATH_MAX_CHAR, szCurDir);
-    ParsePath(szFileDir, szFileName, szProcFile);
-    SetCurrentDirectory(szFileDir);
+    ParseDir(szDir, szProcFile);
+    SetCurrentDirectory(szDir);
 
     sa.nLength = sizeof(SECURITY_ATTRIBUTES);
     sa.bInheritHandle = TRUE;
@@ -82,7 +80,7 @@ void PipeStruct::Open(const char *szProcFile) {
     si.hStdInput = hStdinRead;
     si.hStdOutput = hStdoutWrite;
     si.hStdError = hStdoutWrite;
-    CreateProcess(NULL, (LPSTR) szFileName, NULL, NULL, TRUE, DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | IDLE_PRIORITY_CLASS, NULL, NULL, &si, &pi);
+    CreateProcess(NULL, (LPSTR) szProcFile, NULL, NULL, TRUE, DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | IDLE_PRIORITY_CLASS, NULL, NULL, &si, &pi);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     CloseHandle(hStdinRead);
@@ -151,7 +149,7 @@ void PipeStruct::LineOutput(const char *szLineStr) const {
 
 void PipeStruct::Open(const char *szProcFile) {
   int nStdinPipe[2], nStdoutPipe[2];
-  char szFileDir[PATH_MAX_CHAR], szFileName[PATH_MAX_CHAR];
+  char szDir[PATH_MAX_CHAR];
   if (szProcFile == NULL) {
     nInput = STDIN_FILENO;
     nOutput = STDOUT_FILENO;
@@ -167,11 +165,11 @@ void PipeStruct::Open(const char *szProcFile) {
       dup2(nStdoutPipe[1], STDERR_FILENO);
       close(nStdoutPipe[1]);
 
-      ParsePath(szFileDir, szFileName, szProcFile);
-      chdir(szFileDir);
+      ParseDir(szDir, szProcFile);
+      chdir(szDir);
 
       nice(20);
-      execl(szFileName, szFileName, NULL);
+      execl(szProcFile, szProcFile, NULL);
       exit(EXIT_FAILURE);
     }
     close(nStdinPipe[0]);

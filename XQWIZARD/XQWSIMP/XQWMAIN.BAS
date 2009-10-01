@@ -2116,6 +2116,8 @@ If Engine_nStatus > IDLE_UNLOAD Then
 End If
 If Engine_szFile = "" Then
     bLoaded = False
+ElseIf GetAppType(Engine_szFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+    bLoaded = False
 Else
     PipeOpen Engine_pipe, Engine_szFile
     SendEngine "ucci"
@@ -2174,8 +2176,12 @@ If bInfo Then
     If bLoaded Then
         AboutEngine
     Else
-        Engine_szFile = ""
-        MsgBox "没有加载引擎！", vbExclamation
+        If Engine_szFile = "" Then
+            MsgBox "没有加载引擎！", vbExclamation
+        Else
+            MsgBox Engine_szFile + " 不是中国象棋引擎文件！", vbExclamation
+            Engine_szFile = ""
+        End If
     End If
 End If
 EngineLoaded bLoaded
@@ -2196,6 +2202,8 @@ End If
 szEngineFile = FileDialog("加载副引擎", "引擎文件", "EXE")
 If szEngineFile = "" Then
     MsgBox "没有加载引擎！", vbExclamation
+ElseIf GetAppType(szEngineFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+    MsgBox szEngineFile + " 不是中国象棋引擎文件！", vbExclamation
 Else
     PipeOpen Engine_pipeSlave, szEngineFile
     SendEngine "ucci", SLAVE_ENGINE
@@ -2244,7 +2252,7 @@ Else
     Else
         SendEngine "quit", SLAVE_ENGINE
         PipeClose Engine_pipeSlave
-        MsgBox "没有加载引擎！", vbExclamation
+        MsgBox szEngineFile + " 不是中国象棋引擎文件！", vbExclamation
     End If
 End If
 
