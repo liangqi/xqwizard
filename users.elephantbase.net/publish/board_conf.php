@@ -6,12 +6,10 @@
 
   define("MINI_LEFT", );
   define("MINI_TOP", );
-  define("MINI_SIZE", );
+  define("MINI_SIZE", 24);
   define("MINI_BOARD", 0);
-  define("MINI_PIECES_COLORS", 0);
-  define("MINI_PIECES_COLORT", 1);
-  define("MINI_PIECES_MONOS", 2);
-  define("MINI_PIECES_MONOT", 3);
+  define("MINI_PIECES_SIMP", 0);
+  define("MINI_PIECES_TRAD", 1);
 
   define("PRINT_LEFT", );
   define("PRINT_TOP", );
@@ -22,12 +20,7 @@
 
   define("SMALL_LEFT", );
   define("SMALL_TOP", );
-  define("SMALL_TOP", );
-  define("MINI_COLOR", 0);
-  define("MINI_COLOR_MONO", 0);
-  define("MINI_BOARD", 0);
-  define("MINI_BOARD", 0);
-  define("MINI_BOARD", 0);
+  define("SMALL_SIZE", );
 
   $images_folder = array(
     SIZE_MINI=>"images_m",
