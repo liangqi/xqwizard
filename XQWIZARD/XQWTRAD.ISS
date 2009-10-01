@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 4.31 (繁體版)
+AppVerName=象棋巫師 4.4 (繁體版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -659,7 +659,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 Name: "{group}\象棋巫師魔法學校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫師"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超級象棋巫師"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{group}\象棋巫師幫助主題"; Filename: "{app}\HELP\CONTENTS.HTM"
+Name: "{group}\象棋巫師幫助主題"; Filename: "http://www.elephantbase.net/xqwizard/contents.htm"
 Name: "{group}\手机棋譜制作工具"; Filename: "{app}\PGNS2JAR.EXE"
 Name: "{group}\棋譜批量轉換工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\開局庫管理工具"; Filename: "{app}\MAKEBOOK.EXE"
@@ -671,4 +671,4 @@ Name: "{userdesktop}\超級象棋巫師"; Filename: "{app}\XQWIZARD.EXE"; Parameters: 
 [Run]
 Filename: "{app}\XQBOOTH.EXE"; Description: "開始闖關"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\XQWIZARD.EXE"; Description: "開始對局"; Flags: nowait postinstall skipifsilent unchecked
-Filename: "{app}\HELP\CONTENTS.HTM"; Description: "象棋巫師介紹"; Flags: nowait postinstall shellexec skipifsilent unchecked
+Filename: "http://www.elephantbase.net/xqwizard/contents.htm"; Description: "象棋巫師介紹"; Flags: nowait postinstall shellexec skipifsilent unchecked

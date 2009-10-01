@@ -1,14 +1,12 @@
 <?php
-  define("SIZE_MINI", 0);
-  define("SIZE_PRINT", 1);
-  define("SIZE_SMALL", 2);
-  define("SIZE_LARGE", 3);
+  require_once "./board_conf.php";
 
   $fen = $_GET["fen"];
   $size = $_GET["size"];
   $boardType = $_GET["board"];
   $piecesType = $_GET["pieces"];
 
+  
   $gif = imagecreatetruecolor(521, 577);
   $board = imagecreatefromgif("images_l/wood.gif");
   $piece = imagecreatefromgif("images_l/wood/rk.gif");
