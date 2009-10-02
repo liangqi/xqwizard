@@ -530,26 +530,23 @@ Dim szChineseChess As String, szResult As String, szFormat As String, szFenStr A
 Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As Integer
 
 bNoTitle = False
-On Error GoTo lnErrorOpen
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    Shell App_szPath + "XQF2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
+    Xqf2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
-    Shell App_szPath + "MXQ2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
+    Mxq2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
-    Shell App_szPath + "CHE2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
+    Che2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHN" Then
-    Shell App_szPath + "CHN2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
+    Chn2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CCM" Then
-    Shell App_szPath + "CCM2PGN.EXE """ + App_szFileName + """ """ + App_szPath + "AUTOSAVE.PGN""", vbHide
+    Ccm2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 End If
-On Error GoTo 0
 If bAutoSave Or bNoTitle Then
-    Sleep 1000
     App_szFileName = ""
     RestartGame
     App_szFileName = App_szPath + "AUTOSAVE.PGN"
@@ -830,9 +827,7 @@ Dim sz As String
 sz = FileDialog("輸出為XQF格式", "象棋演播室棋譜", "XQF", DefaultFileName)
 If sz <> "" Then
     WriteFile WRITE_TEMP_FILE
-    On Error Resume Next
-    Shell App_szPath + "PGN2XQF.EXE """ + App_szPath + "查看文本棋譜(只讀).TXT"" """ + sz + """", vbHide
-    On Error GoTo 0
+    Pgn2Xqf App_szPath + "查看文本棋譜(只讀).TXT", sz
 End If
 
 End Sub
@@ -2849,6 +2844,7 @@ Else
     sz = Command
 End If
 EccoInitOpenVar CCHESS_TRADITIONAL
+ConvInit
 LoadRegs
 LoadTips
 If Options_bLargeGui Then

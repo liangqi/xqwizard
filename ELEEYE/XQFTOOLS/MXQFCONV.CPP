@@ -1,6 +1,6 @@
 /* 
 MXQ/XQF/CHE/CHN/CCM->PGN Convertor - a Chinese Chess Score Convertion Program
-Designed by Morning Yellow, Version: 3.14, Last Modified: Jun. 2008
+Designed by Morning Yellow, Version: 3.15, Last Modified: Oct. 2009
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -31,6 +31,50 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
 int Che2Pgn(const char *szCheFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
+
+#ifdef MXQFCONV_DLL
+
+static EccoApiStruct EccoApi;
+
+extern "C" __declspec(dllexport) VOID WINAPI Init(void) {
+  MessageBox(NULL, "DEBUG-0", "", 0);
+  char szLibEccoFile[MAX_PATH];
+  MessageBox(NULL, "DEBUG-1", "", 0);
+  PreGenInit();
+  MessageBox(NULL, "DEBUG-2", "", 0);
+  ChineseInit();
+  MessageBox(NULL, "DEBUG-3", "", 0);
+  LocatePath(szLibEccoFile, cszLibEccoFile);
+  MessageBox(NULL, "DEBUG-4", "", 0);
+  EccoApi.Startup(szLibEccoFile);
+  MessageBox(NULL, "DEBUG-5", "", 0);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Xqf2Pgn(LPCSTR szXqfFile, LPCSTR szPgnFile) {
+  Xqf2Pgn(szXqfFile, szPgnFile, EccoApi);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Mxq2Pgn(LPCSTR szMxqFile, LPCSTR szPgnFile) {
+  Mxq2Pgn(szMxqFile, szPgnFile, EccoApi);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Che2Pgn(LPCSTR szCheFile, LPCSTR szPgnFile) {
+  Che2Pgn(szCheFile, szPgnFile, EccoApi);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Chn2Pgn(LPCSTR szChnFile, LPCSTR szPgnFile) {
+  Chn2Pgn(szChnFile, szPgnFile, EccoApi);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Ccm2Pgn(LPCSTR szCcmFile, LPCSTR szPgnFile) {
+  Ccm2Pgn(szCcmFile, szPgnFile, EccoApi);
+}
+
+extern "C" __declspec(dllexport) VOID WINAPI Pgn2Xqf(LPCSTR szPgnFile, LPCSTR szXqfFile) {
+  Pgn2Xqf(szPgnFile, szXqfFile);
+}
+
+#else
 
 static void SearchFolder(const char *szFolderPath, const EccoApiStruct &EccoApi);
 
@@ -122,3 +166,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   }
   return 0;
 }
+
+#endif

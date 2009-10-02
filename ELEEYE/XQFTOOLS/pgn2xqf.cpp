@@ -64,32 +64,24 @@ inline void SetXqfString(char *sz, const char *szValue, int nMaxLen) {
   strncpy(sz + 1, szValue, nLen);
 }
 
-int main(char argc, char **argv) {
+static const int PGN2XQF_ERROR_OPEN = -2;
+static const int PGN2XQF_ERROR_CREATE = -1;
+static const int PGN2XQF_OK = 0;
+
+int Pgn2Xqf(const char *szPgnFile, const char *szXqfFile) {
   int i, nCommentLen;
   char szRed[MAX_STR_LEN * 2], szBlack[MAX_STR_LEN * 2];
   FILE *fp;
   PgnFileStruct pgn;
   XqfHeaderStruct xqfhd;
   XqfMoveStruct xqfmv;
-  if (argc <= 1) {
-    printf("=== PGN->XQF Convertor ===\n");
-    printf("Usage: PGN2XQF PGN-File [XQF-File]\n");
-    return 0;
+
+  if (!pgn.Read(szPgnFile)) {
+    return PGN2XQF_ERROR_OPEN;
   }
-  PreGenInit();
-  ChineseInit();
-  if (!pgn.Read(argv[1])) {
-    printf("%s: File Not Found or Not a Chinese-Chess-PGN File!\n", argv[1]);
-    return 0;
-  }
-  if (argc == 2) {
-    fp = fopen("PGN2XQF.XQF", "wb");
-  } else {
-    fp = fopen(argv[2], "wb");
-  }
+  fp = fopen(szXqfFile, "wb");
   if (fp == NULL) {
-    printf("File Creation Error!\n");
-    return 0;
+    return PGN2XQF_ERROR_CREATE;
   }
   memset(xqfhd.szTag, 0, sizeof(XqfHeaderStruct));
   xqfhd.szTag[0] = 'X';
@@ -137,10 +129,36 @@ int main(char argc, char **argv) {
     }
   }
   fclose(fp);
-#ifdef _WIN32
-  if (argc == 2) {
-    ShellExecute(NULL, NULL, "PGN2XQF.XQF", NULL, NULL, SW_SHOW);
-  }
-#endif
   return 0;
 }
+
+#ifndef MXQFCONV_EXE
+
+int main(char argc, char **argv) {
+  if (argc <= 1) {
+    printf("=== PGN->XQF Convertor ===\n");
+    printf("Usage: PGN2XQF PGN-File [XQF-File]\n");
+    return 0;
+  }
+  PreGenInit();
+  ChineseInit();
+
+  switch (Pgn2Xqf(argv[1], argc == 2 ? "PGN2XQF.XQF" : argv[2])) {
+  case PGN2XQF_ERROR_OPEN:
+    printf("%s: File Not Found or Not a Chinese-Chess-PGN File!\n", argv[1]);
+    break;
+  case PGN2XQF_ERROR_CREATE:
+    printf("File Creation Error!\n");
+    break;
+  case PGN2XQF_OK:
+#ifdef _WIN32
+    if (argc == 2) {
+      ShellExecute(NULL, NULL, "PGN2XQF.XQF", NULL, NULL, SW_SHOW);
+    }
+#endif
+    break;
+  }
+  return 0;
+}
+
+#endif
