@@ -31,46 +31,41 @@ int Mxq2Pgn(const char *szMxqFile, const char *szPgnFile, const EccoApiStruct &E
 int Che2Pgn(const char *szCheFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Chn2Pgn(const char *szChnFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
 int Ccm2Pgn(const char *szCcmFile, const char *szPgnFile, const EccoApiStruct &EccoApi);
+int Pgn2Xqf(const char *szPgnFile, const char *szXqfFile);
 
 #ifdef MXQFCONV_DLL
 
 static EccoApiStruct EccoApi;
 
-extern "C" __declspec(dllexport) VOID WINAPI Init(void) {
-  MessageBox(NULL, "DEBUG-0", "", 0);
+extern "C" __declspec(dllexport) VOID WINAPI ConvInit(void) {
   char szLibEccoFile[MAX_PATH];
-  MessageBox(NULL, "DEBUG-1", "", 0);
   PreGenInit();
-  MessageBox(NULL, "DEBUG-2", "", 0);
   ChineseInit();
-  MessageBox(NULL, "DEBUG-3", "", 0);
   LocatePath(szLibEccoFile, cszLibEccoFile);
-  MessageBox(NULL, "DEBUG-4", "", 0);
   EccoApi.Startup(szLibEccoFile);
-  MessageBox(NULL, "DEBUG-5", "", 0);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Xqf2Pgn(LPCSTR szXqfFile, LPCSTR szPgnFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvXqf2Pgn(LPCSTR szXqfFile, LPCSTR szPgnFile) {
   Xqf2Pgn(szXqfFile, szPgnFile, EccoApi);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Mxq2Pgn(LPCSTR szMxqFile, LPCSTR szPgnFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvMxq2Pgn(LPCSTR szMxqFile, LPCSTR szPgnFile) {
   Mxq2Pgn(szMxqFile, szPgnFile, EccoApi);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Che2Pgn(LPCSTR szCheFile, LPCSTR szPgnFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvChe2Pgn(LPCSTR szCheFile, LPCSTR szPgnFile) {
   Che2Pgn(szCheFile, szPgnFile, EccoApi);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Chn2Pgn(LPCSTR szChnFile, LPCSTR szPgnFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvChn2Pgn(LPCSTR szChnFile, LPCSTR szPgnFile) {
   Chn2Pgn(szChnFile, szPgnFile, EccoApi);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Ccm2Pgn(LPCSTR szCcmFile, LPCSTR szPgnFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvCcm2Pgn(LPCSTR szCcmFile, LPCSTR szPgnFile) {
   Ccm2Pgn(szCcmFile, szPgnFile, EccoApi);
 }
 
-extern "C" __declspec(dllexport) VOID WINAPI Pgn2Xqf(LPCSTR szPgnFile, LPCSTR szXqfFile) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvPgn2Xqf(LPCSTR szPgnFile, LPCSTR szXqfFile) {
   Pgn2Xqf(szPgnFile, szXqfFile);
 }
 

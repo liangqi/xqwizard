@@ -531,19 +531,19 @@ Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As
 
 bNoTitle = False
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    Xqf2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvXqf2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
-    Mxq2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvMxq2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
-    Che2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvChe2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHN" Then
-    Chn2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvChn2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CCM" Then
-    Ccm2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvCcm2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
     bNoTitle = True
 End If
 If bAutoSave Or bNoTitle Then
@@ -827,7 +827,7 @@ Dim sz As String
 sz = FileDialog("輸出為XQF格式", "象棋演播室棋譜", "XQF", DefaultFileName)
 If sz <> "" Then
     WriteFile WRITE_TEMP_FILE
-    Pgn2Xqf App_szPath + "查看文本棋譜(只讀).TXT", sz
+    ConvPgn2Xqf App_szPath + "查看文本棋譜(只讀).TXT", sz
 End If
 
 End Sub
