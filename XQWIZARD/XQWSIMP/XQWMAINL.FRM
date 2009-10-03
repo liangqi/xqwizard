@@ -1807,9 +1807,6 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpContents 
          Caption         =   "帮助主题(&C)"
       End
-      Begin VB.Menu mnHelpSupport 
-         Caption         =   "技术支持(&T)"
-      End
       Begin VB.Menu mnHelpHowTo 
          Caption         =   "日积月累(&W)..."
       End
@@ -1833,12 +1830,6 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnHelpSep2 
          Caption         =   "-"
-      End
-      Begin VB.Menu mnHelpEcco 
-         Caption         =   "关于&ECCO..."
-      End
-      Begin VB.Menu mnHelpRule 
-         Caption         =   "关于规则(&R)..."
       End
       Begin VB.Menu mnHelpEngine 
          Caption         =   "关于&UCCI引擎..."
@@ -2463,13 +2454,7 @@ End Sub
 
 Private Sub mnHelpContents_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "HELP\CONTENTS.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
-
-End Sub
-
-Private Sub mnHelpSupport_Click()
-
-ShellExecuteA 0, vbNullString, App_szPath + "HELP\SUPPORT.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqwizard/contents.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2506,18 +2491,6 @@ End Sub
 Private Sub mnHelpUpdate_Click()
 
 CheckUpdate MANUAL_UPDATE
-
-End Sub
-
-Private Sub mnHelpEcco_Click()
-
-MsgBoxWithIcon "ECCO(中国象棋开局百科)编号识别系统" + vbCrLf + "版本号：" + AllocString(EccoVersion()), "关于ECCO", App_szPath + "ECCO.DLL"
-
-End Sub
-
-Private Sub mnHelpRule_Click()
-
-MsgBoxWithIcon "中国象棋规则判定系统" + vbCrLf + "版本号：" + AllocString(CchessVersion()), "关于规则", App_szPath + "CCHESS.DLL"
 
 End Sub
 
