@@ -14,26 +14,14 @@
   define("SIZE_SMALL", 2);
   define("SIZE_LARGE", 3);
 
-  define("MINI_LEFT", 0);
-  define("MINI_TOP", 0);
-  define("MINI_SPAN", 24);
-  define("MINI_SIZE", 24);
   define("MINI_BOARD", 0);
   define("MINI_PIECES_SIMP", 0);
   define("MINI_PIECES_TRAD", 1);
 
-  define("PRINT_LEFT", 0);
-  define("PRINT_TOP", 20);
-  define("PRINT_SPAN", 36);
-  define("PRINT_SIZE", 36);
   define("PRINT_BOARD", 0);
   define("PRINT_PIECES_SIMP", 0);
   define("PRINT_PIECES_TRAD", 1);
 
-  define("SMALL_LEFT", 12);
-  define("SMALL_TOP", 12);
-  define("SMALL_SPAN", 40);
-  define("SMALL_SIZE", 40);
   define("SMALL_BOARD_WOOD", 0);
   define("SMALL_BOARD_GREEN", 1);
   define("SMALL_BOARD_WHITE", 2);
@@ -54,10 +42,6 @@
   define("SMALL_PIECES_MRSJ", 5);
   define("SMALL_PIECES_ZMBL", 6);
 
-  define("LARGE_LEFT", 12);
-  define("LARGE_TOP", 12);
-  define("LARGE_SPAN", 56);
-  define("LARGE_SIZE", 56);
   define("LARGE_BOARD_WOOD", 0);
   define("LARGE_BOARD_GREEN", 1);
   define("LARGE_BOARD_WHITE", 2);
@@ -79,7 +63,7 @@
   );
 
   $print_board = array(
-    MINI_BOARD=>"board",
+    PRINT_BOARD=>"board",
   );
 
   $print_pieces = array(
@@ -129,12 +113,25 @@
   );
 
   $piece_name = array(
-    null, null, null, null, null, null, null, null,
-    "rk", "ra", "rb", "rn", "rr", "rc", "rp", null,
-    "ba", "ba", "bb", "bn", "br", "bc", "bp", null,
+    (PIECE_RED + PIECE_KING)=>"rk",
+    (PIECE_RED + PIECE_ADVISOR)=>"ra",
+    (PIECE_RED + PIECE_BISHOP)=>"rb",
+    (PIECE_RED + PIECE_KNIGHT)=>"rn",
+    (PIECE_RED + PIECE_ROOK)=>"rr",
+    (PIECE_RED + PIECE_CANNON)=>"rc",
+    (PIECE_RED + PIECE_PAWN)=>"rp",
+    (PIECE_BLACK + PIECE_KING)=>"bk",
+    (PIECE_BLACK + PIECE_ADVISOR)=>"ba",
+    (PIECE_BLACK + PIECE_BISHOP)=>"bb",
+    (PIECE_BLACK + PIECE_KNIGHT)=>"bn",
+    (PIECE_BLACK + PIECE_ROOK)=>"br",
+    (PIECE_BLACK + PIECE_CANNON)=>"bc",
+    (PIECE_BLACK + PIECE_PAWN)=>"bp",
   );
 
   class BoardStyle {
+    var $width;
+    var $height;
     var $left;
     var $top;
     var $span;
@@ -143,7 +140,9 @@
     var $board_array;
     var $pieces_array;
 
-    function BoardStyle($left, $top, $span, $size, $folder, $board, $pieces) {
+    function BoardStyle($width, $height, $left, $top, $span, $size, $folder, $board, $pieces) {
+      $this->width = $width;
+      $this->height = $height;
       $this->left = $left;
       $this->top = $top;
       $this->span = $span;
@@ -154,25 +153,20 @@
     }
 
     function getBoardImage($board) {
-      $file = $this->board[$board];
-      if (!$file) {
-        $file = $this->board[0];
-      }
+      $file = $this->board[isset($this->board[$board]) ? $board : 0];
       return imagecreatefromgif(sprintf("./images_%s/%s.gif", $this->folder, $file));
     }
 
     function getPieceImages($pieces) {
-      $piecesFolder = $this->pieces[$pieces];
-      if (!$piecesFolder) {
-        $piecesFolder = $this->pieces[0];
-      }
+      global $piece_name;
+
+      $piecesFolder = $this->pieces[isset($this->pieces[$pieces]) ? $pieces : 0];
       $piecesFolder = sprintf("./images_%s/%s/", $this->folder, $piecesFolder);
       $pieceImages = array();
-      for ($i = 8; $i < 24; $i ++) {
-        if ($piece_name[$i]) {
-          
-        }
+      foreach ($piece_name as $key=>$value) {
+        $pieceImages[$key] = imagecreatefromgif($piecesFolder . $value . ".gif");
       }
+      return $pieceImages;
     }
 
     function getPieceImage($piecesFolder, $index) {
@@ -181,12 +175,16 @@
     }
   }
 
-  $board_style = array(
-    SIZE_MINI=>new BoardStyle(MINI_LEFT, MINI_TOP, MINI_SPAN, MINI_SIZE, "m", $mini_board, $mini_pieces),
-    SIZE_PRINT=>new BoardStyle(PRINT_LEFT, PRINT_TOP, PRINT_SPAN, PRINT_SIZE, "p", $small_board, $small_pieces),
-    SIZE_SMALL=>new BoardStyle(SMALL_LEFT, SMALL_TOP, SMALL_SPAN, SMALL_SIZE, "s", $print_board, $print_pieces),
-    SIZE_LARGE=>new BoardStyle(LARGE_LEFT, LARGE_TOP, LARGE_SPAN, LARGE_SIZE, "l", $large_board, $large_pieces),
-  );
+  function destroyPieceImages($pieceImages) {
+    foreach ($pieceImages as $value) {
+      imagedestroy($value);
+    }
+  }
 
-  var_dump($board_style);
+  $board_styles = array(
+    SIZE_MINI=>new BoardStyle(216, 240, 0, 0, 24, 24, "m", $mini_board, $mini_pieces),
+    SIZE_PRINT=>new BoardStyle(354, 454, 0, 32, 36, 34, "p", $print_board, $print_pieces),
+    SIZE_SMALL=>new BoardStyle(377, 417, 8, 8, 40, 41, "s", $small_board, $small_pieces),
+    SIZE_LARGE=>new BoardStyle(521, 577, 8, 8, 56, 57, "l", $large_board, $large_pieces),
+  );
 ?>

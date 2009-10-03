@@ -137,7 +137,7 @@ package {
 			// 从HTML中读取"Position", "MoveList", "Step"变量
 			var strFen:String = loaderInfo.parameters.Position;
 			if (strFen == null) {
-				strFen = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1'"
+				strFen = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1"
 			}
 			var strMoveList:String = loaderInfo.parameters.MoveList;
 			if (strMoveList == null) {
