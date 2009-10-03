@@ -152,6 +152,12 @@
       $this->pieces = $pieces;
     }
 
+    function getCoord($i, $j) {
+      $x = $this->left + $j * $this->span;
+      $y = $this->top + $i * $this->span;
+      return array($x, $y);
+    }
+
     function getBoardImage($board) {
       $file = $this->board[isset($this->board[$board]) ? $board : 0];
       return imagecreatefromgif(sprintf("./images_%s/%s.gif", $this->folder, $file));
@@ -183,7 +189,7 @@
 
   $board_styles = array(
     SIZE_MINI=>new BoardStyle(216, 240, 0, 0, 24, 24, "m", $mini_board, $mini_pieces),
-    SIZE_PRINT=>new BoardStyle(354, 454, 0, 32, 36, 34, "p", $print_board, $print_pieces),
+    SIZE_PRINT=>new BoardStyle(354, 454, 0, 31, 40, 34, "p", $print_board, $print_pieces),
     SIZE_SMALL=>new BoardStyle(377, 417, 8, 8, 40, 41, "s", $small_board, $small_pieces),
     SIZE_LARGE=>new BoardStyle(521, 577, 8, 8, 56, 57, "l", $large_board, $large_pieces),
   );
