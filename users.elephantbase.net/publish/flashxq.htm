@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb_2312-80">
+  </head>
+  <body style="margin:0px" onresize="onResize()">
+    <script language="JavaScript"><!--
+      function onResize() {
+        if (typeof Flash == "object") {
+          Flash.width = document.body.clientWidth;
+          Flash.height = document.body.clientHeight;
+        }
+      }
+
+      function getParameter(key) {
+        var s = location.search;
+        var i = s.indexOf(key + "=");
+        if (i < 0) {
+          return null;
+        }
+        var j = s.indexOf("&", i + key.length + 1);
+        if (j < 0) {
+          return s.substring(i + key.length + 1);
+        }
+        return s.substring(i + key.length + 1, j);
+      }
+
+      var width = document.body.clientWidth;
+      var height = document.body.clientHeight;
+      var position = getParameter("position");
+      var movelist = getParameter("movelist");
+      var flashvars = (position == null ? "" : "Position=" + position + "&") + "movelist=" + movelist;
+      document.write("<object name=\"Flash\" id=\"Flash\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\"" + width + "\" height=\"" + height + "\">");
+      document.write("<param name=\"allowScriptAccess\" value=\"always\" />");
+      document.write("<param name=\"movie\" value=\"flashxq.swf\" />");
+      document.write("<param name=\"quality\" value=\"high\" />");
+      document.write("<param name=\"mode\" value=\"transparent\" />");
+      document.write("<param name=\"flashvars\" value=\"" + flashvars + "\" />");
+      document.write("<embed name=\"Flash\" id=\"Flash\" width=\"" + width + "\" height=\"" + height + "\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" flashvars=\"" + flashvars + "\" allowScriptAccess=\"always\" quality=\"high\" src=\"flashxq.swf\" type=\"application/x-shockwave-flash\" wmode=\"transparent\" />");
+      document.write("</object>");
+      var title = getParameter("title");
+      if (title != null) {
+        document.title = unescape(title);
+      }
+    --></script>
+  </body>
+</html>

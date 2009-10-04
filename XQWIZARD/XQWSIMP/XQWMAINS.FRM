@@ -2251,7 +2251,7 @@ End Sub
 
 Private Sub mnWizardPublish_Click()
 
-' TODO
+frmPublish.Show Me
 
 End Sub
 

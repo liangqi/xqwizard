@@ -2214,7 +2214,7 @@ End Sub
 
 Private Sub mnWizardPublish_Click()
 
-' TODO
+frmPublish.Show vbModal, Me
 
 End Sub
 
