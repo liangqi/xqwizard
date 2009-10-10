@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.3, Last Modified: Jul. 2009
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.31"
+Public Const STRING_VERSION     As String = "4.4"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
@@ -371,12 +371,11 @@ If App_nEndgames = 0 Then
     MsgBox "無法打開文件 " + App_szPath + ENDGAME_FILE, vbExclamation
     Exit Sub
 End If
-If Gui_nLast >= App_nEndgames Then
-    Gui_nLast = App_nEndgames - 1
-End If
-If Gui_nCurr > Gui_nLast Then
-    Gui_nCurr = Gui_nLast
-End If
+' Last的范围是[0, Endgames]
+Gui_nLast = IIf(Gui_nLast > App_nEndgames, App_nEndgames, Gui_nLast)
+' Curr的范围是[0, Max(Curr, Endgames - 1)]
+Gui_nCurr = IIf(Gui_nCurr > Gui_nLast, Gui_nLast, Gui_nCurr)
+Gui_nCurr = IIf(Gui_nCurr > App_nEndgames - 1, App_nEndgames - 1, Gui_nCurr)
 
 ' 加載引擎
 PipeOpen Engine_pipe, App_szPath + ENGINE_FILE

@@ -5401,7 +5401,7 @@ Attribute VB_Exposed = False
 ' SELECT.FRM - Source Code for XiangQi Witchcraft School, Part III
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 3.97, Last Modified: May 2009
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -5474,7 +5474,7 @@ End Sub
 
 Private Sub Form_Load()
 
-nSelLast = Gui_nLast + 1 + (App_nEndgames \ 1000 - Gui_nLast \ 1000)
+nSelLast = Gui_nLast + IIf(Gui_nLast = App_nEndgames, 0, 1) + (App_nEndgames \ 1000 - Gui_nLast \ 1000)
 nSelected = -1
 hsb.Min = 0
 hsb.Max = (nSelLast - 1) \ BOARD_NUM
@@ -5528,7 +5528,7 @@ Private Sub btnConfirm_Click()
 
 Dim nCurr As Integer
 nCurr = hsb.Value * BOARD_NUM + nSelected
-If nCurr <= Gui_nLast Then
+If nCurr <= Gui_nLast And nCurr < App_nEndgames Then
     If Gui_nCurr <> nCurr Then
         App_frmXQBooth.ClearHint
     End If

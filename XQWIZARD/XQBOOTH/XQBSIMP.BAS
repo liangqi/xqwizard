@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.31"
+Public Const STRING_VERSION     As String = "4.4"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
@@ -241,7 +241,7 @@ Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 Dim sz As String, szWhatsNew As String, szUrl As String
 sz = ""
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
         STRING_VERSION + "&userid=" + Gui_szUserID)
 On Error GoTo 0
 If sz = "" Then
@@ -255,12 +255,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
@@ -371,12 +371,11 @@ If App_nEndgames = 0 Then
     MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
     Exit Sub
 End If
-If Gui_nLast >= App_nEndgames Then
-    Gui_nLast = App_nEndgames - 1
-End If
-If Gui_nCurr > Gui_nLast Then
-    Gui_nCurr = Gui_nLast
-End If
+' Last的范围是[0, Endgames]
+Gui_nLast = IIf(Gui_nLast > App_nEndgames, App_nEndgames, Gui_nLast)
+' Curr的范围是[0, Max(Curr, Endgames - 1)]
+Gui_nCurr = IIf(Gui_nCurr > Gui_nLast, Gui_nLast, Gui_nCurr)
+Gui_nCurr = IIf(Gui_nCurr > App_nEndgames - 1, App_nEndgames - 1, Gui_nCurr)
 
 ' 加载引擎
 PipeOpen Engine_pipe, App_szPath + ENGINE_FILE

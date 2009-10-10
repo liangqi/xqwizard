@@ -926,9 +926,6 @@ Begin VB.Form frmXQBoothSmall
       Begin VB.Menu mnUsersHelp 
          Caption         =   "求助(&E)"
       End
-      Begin VB.Menu mnUsersHome 
-         Caption         =   "象棋家園首頁(&O)"
-      End
    End
    Begin VB.Menu mnOptions 
       Caption         =   "選項(&O)"
@@ -1885,14 +1882,7 @@ End Sub
 
 Private Sub mnUsersHelp_Click()
 
-CopyFlash
-
-End Sub
-
-Private Sub mnUsersHome_Click()
-
-ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/", _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+' TODO
 
 End Sub
 
