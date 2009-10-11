@@ -161,6 +161,27 @@ Public Const COORD_CHAR         As String = "£±£²£³£´£µ£¶£·£¸£¹¾Å°ËÆßÁùÎåËÄÈý¶þÒ
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Í¼Æ¬´óÐ¡
+Public Const PUB_SIZE_MINI      As Integer = 0
+Public Const PUB_SIZE_PRINT     As Integer = 1
+Public Const PUB_SIZE_SMALL     As Integer = 2
+Public Const PUB_SIZE_LARGE     As Integer = 3
+Public Const PUB_SIZE_MAX       As Integer = 4
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Õ¾µã
+Public Const PUB_LOCATION_TIEBA As Integer = 0
+Public Const PUB_LOCATION_ZGXQDS As Integer = 1
+Public Const PUB_LOCATION_ZHIDAO As Integer = 2
+Public Const PUB_LOCATION_SINA  As Integer = 3
+Public Const PUB_LOCATION_QZONE As Integer = 4
+Public Const PUB_LOCATION_OTHER As Integer = 5
+Public Const PUB_LOCATION_MAX   As Integer = 6
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼¸ñÊ½
+Public Const PUB_FORMAT_TEXT    As Integer = 0
+Public Const PUB_FORMAT_ANSI    As Integer = 1
+Public Const PUB_FORMAT_UBB     As Integer = 2
+Public Const PUB_FORMAT_HTML    As Integer = 3
+Public Const PUB_FORMAT_WEB     As Integer = 4
+Public Const PUB_FORMAT_MAX     As Integer = 5
 
 ' È«¾Ö±äÁ¿¡ª¡ª³ÌÐò
 Public App_frmMain              As Form     ' Ö÷´°¿Ú¶ÔÏóÒýÓÃ
@@ -227,6 +248,16 @@ Public Gui_szUpgradeDate        As String   ' ¼ì²éÉý¼¶µÄÈÕÆÚ
 Public Gui_szAdvertDate         As String   ' ¼ì²é¹ã¸æµÄÈÕÆÚ
 Public Gui_nAdvertIndex         As Integer  ' µ±Ç°¹ã¸æÐòºÅ
 Public Gui_dfLastTime           As Double   ' µ±Ç°Ê±¼ä(Ã¿Ìì00:00¹ýÈ¥µÄÃëÊý)
+' È«¾Ö±äÁ¿¡ª¡ª·¢²¼ÉèÖÃ
+Public Publish_nSize            As Integer  ' Í¼Æ¬ÀàÐÍ
+Public Publish_bTrad            As Boolean  ' ÊÇ·ñ·±Ìå(¼òµ¥/Ó¡Ë¢)
+Public Publish_nBoardS          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
+Public Publish_nPiecesS         As Integer  ' Æå×ÓÀàÐÍ(Ð¡)
+Public Publish_nBoardL          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
+Public Publish_nPiecesL         As Integer  ' Æå×ÓÀàÐÍ(´ó)
+Public Publish_bContent         As Boolean  ' ÊÇ·ñÖ»·¢²¼µ±Ç°¾ÖÃæ
+Public Publish_nLocation        As Integer  ' ·¢²¼Õ¾µã
+Public Publish_nFormat          As Integer  ' ·¢²¼¸ñÊ½
 ' È«¾Ö±äÁ¿¡ª¡ªÆå¾Ö
 Public Game_szEvent             As String   ' ÈüÊÂ
 Public Game_szRound             As String   ' ÂÖ´Î
@@ -2657,6 +2688,15 @@ Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_N
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
+Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
+Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
+Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
+Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
+Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
+Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
+Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
+Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
+Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
@@ -2715,6 +2755,15 @@ SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), I
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
+SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
+SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
+SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
+SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
+SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
+SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))

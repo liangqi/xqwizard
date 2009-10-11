@@ -69,7 +69,7 @@ Begin VB.Form frmPublish
          Left            =   960
          TabIndex        =   10
          Top             =   240
-         Width           =   735
+         Width           =   855
       End
       Begin VB.TextBox txtBoardUrl 
          BackColor       =   &H8000000F&
@@ -81,7 +81,7 @@ Begin VB.Form frmPublish
          Width           =   2895
       End
       Begin VB.OptionButton optSize 
-         Caption         =   "大棋盘"
+         Caption         =   "最大"
          Height          =   255
          Index           =   3
          Left            =   3480
@@ -90,7 +90,7 @@ Begin VB.Form frmPublish
          Width           =   855
       End
       Begin VB.OptionButton optSize 
-         Caption         =   "小棋盘"
+         Caption         =   "适中"
          Height          =   255
          Index           =   2
          Left            =   2640
@@ -99,7 +99,7 @@ Begin VB.Form frmPublish
          Width           =   855
       End
       Begin VB.OptionButton optSize 
-         Caption         =   "印刷用"
+         Caption         =   "印刷"
          Height          =   255
          Index           =   1
          Left            =   1800
@@ -217,7 +217,7 @@ Begin VB.Form frmPublish
          Width           =   735
       End
       Begin VB.Label lblLocation 
-         Caption         =   "发布网站"
+         Caption         =   "发布站点"
          Height          =   255
          Left            =   120
          TabIndex        =   17
@@ -264,8 +264,8 @@ Option Explicit
 Private Sub Form_Load()
 
 cmbLocation.Clear
-cmbLocation.AddItem "中国象棋大师网", 0
-cmbLocation.AddItem "百度贴吧象棋吧", 1
+cmbLocation.AddItem "百度贴吧象棋吧", 0
+cmbLocation.AddItem "中国象棋大师网", 1
 cmbLocation.AddItem "百度知道", 2
 cmbLocation.AddItem "新浪博客", 3
 cmbLocation.AddItem "QQ空间", 4
