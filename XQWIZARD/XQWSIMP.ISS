@@ -48,6 +48,8 @@ Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "APPTYPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "BASE64.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ZLIB.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion

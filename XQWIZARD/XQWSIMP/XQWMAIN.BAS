@@ -48,6 +48,7 @@ Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
+Public Const TEMP_FILE_NAME     As String = "查看文本棋谱(只读).TXT"
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -716,7 +717,7 @@ Dim sd As Integer, cnt As Integer
 Dim i As Integer, bReturned As Boolean, nFileNo As Integer
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open IIf(bTempFile, App_szPath + "查看文本棋谱(只读).TXT", App_szFileName) For Output As #nFileNo
+Open IIf(bTempFile, App_szPath + TEMP_FILE_NAME, App_szFileName) For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, PutLabel("Game", "Chinese Chess")
 Print #nFileNo, PutLabel("Event", Game_szEvent)
@@ -782,7 +783,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + IIf(bTempFile, App_szPath + "查看文本棋谱(只读).TXT", App_szFileName), vbExclamation
+MsgBox "无法打开文件 " + IIf(bTempFile, App_szPath + TEMP_FILE_NAME, App_szFileName), vbExclamation
 
 End Sub
 
@@ -858,7 +859,7 @@ Dim sz As String
 sz = FileDialog("输出为XQF格式", "象棋演播室棋谱", "XQF", DefaultFileName)
 If sz <> "" Then
     WriteFile WRITE_TEMP_FILE
-    ConvPgn2Xqf App_szPath + "查看文本棋谱(只读).TXT", sz
+    ConvPgn2Xqf App_szPath + TEMP_FILE_NAME, sz
 End If
 
 End Sub
