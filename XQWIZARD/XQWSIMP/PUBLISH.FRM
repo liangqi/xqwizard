@@ -288,9 +288,6 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Declare Sub compress Lib "ZLIB.DLL" (ByVal lpDst As Long, _
-        ByRef dwDstLen As Long, ByVal lpSrc As Long, ByVal dwSrcLen As Long)
-
 Private Sub Form_Load()
 
 ' 图片类型
@@ -434,46 +431,69 @@ End Sub
 
 Private Sub btnPublish_Click()
 
-Dim szFen As String, szB64 As String, nFileNo As Integer, nSrcLen As Long, nDstLen As Long
-Dim ucSrc(0 To 65536) As Byte, ucDst(0 To 65536) As Byte, ucB64(0 To 131071) As Byte
+Dim szCopy As String, szFen As String
+Dim bReturned As Boolean, cnt As Integer, sd As Integer, i As Integer
 
-szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
 If Publish_bContent Then
-    Clipboard.Clear
-    Clipboard.SetText "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(szFen)
-    MsgBox "局面下载链接已复制到剪贴板。", vbInformation
+    szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+    szCopy = szCopy + txtBoardUrl.Text
 Else
-    ' 生成PGN文件下载链接，步骤是：
-    ' 1. 生成PGN文件
-    WriteFile WRITE_TEMP_FILE
-    ' 2. 将文件读入内存
-    nFileNo = FreeFile
-    On Error GoTo lnErrorOpen
-    Open App_szPath + TEMP_FILE_NAME For Binary Access Read As #nFileNo
-    On Error GoTo 0
-    nSrcLen = LOF(nFileNo)
-    If nSrcLen > 65536 Then
-        Close #nFileNo
-        MsgBox "文件太大，无法生成下载链接。", vbExclamation
-        Exit Sub
+    szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+    szCopy = szCopy + "http://users.elephantbase.net/publish/board.php?&fen=" + _
+            UrlEncode(szFen) + "&size=" + LTrim(Str(Publish_nSize)) + "&board=" + _
+            LTrim(Str(cmbBoard.ListIndex)) + "&pieces=" + LTrim(Str(cmbPieces.ListIndex)) + vbCrLf
+    ' 以下是供复制粘贴的文本棋谱
+    szCopy = szCopy + "=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里里了 ===" + vbCrLf
+    szCopy = szCopy + "{$fen " + Game_szIrrevFen(0) + "}" + vbCrLf
+    If Game_szComment(0) <> "" Then
+        szCopy = scCopy + "{" + Game_szComment(0) + "}" + vbCrLf
     End If
-    Get #nFileNo, , ucSrc()
-    Close #nFileNo
-    ' 3. 用ZLib压缩，用Base64编码
-    nDstLen = 65536
-    compress VarPtr(ucDst(0)), nDstLen, VarPtr(ucSrc(0)), nSrcLen
-    Base64Enc VarPtr(ucB64(0)), VarPtr(ucDst(0)), nDstLen, 0
-    szB64 = AllocString(VarPtr(ucB64(0)))
-    ' 4. 复制到剪贴板
-    Clipboard.Clear
-    Clipboard.SetText "http://users.elephantbase.net/publish/pgn.htm?content=" + UrlEncode(szB64)
-    MsgBox "棋局下载链接已复制到剪贴板。", vbInformation
+    bReturned = True
+    cnt = Game_cntStart
+    sd = Game_sdStart
+    For i = 1 To Game_nMaxMove
+        If bReturned Then
+            szCopy = scCopy + Space(4 - Len(Str(cnt))) + LTrim(Str(cnt)) + ". "
+            If sd = 1 Then
+                szCopy = scCopy + Space(Choose(Game_nFormat + 1, 8, 4, 5))
+            End If
+        End If
+        If sd = 0 Then
+            szCopy = scCopy + Game_szMoveText(Game_nFormat, i)
+            bReturned = False
+        Else
+            szCopy = scCopy + " " + Game_szMoveText(Game_nFormat, i) + vbCrLf
+            bReturned = True
+        End If
+        If Game_szComment(i) <> "" Then
+            If Not bReturned Then
+                szCopy = scCopy + vbCrLf
+            End If
+            szCopy = scCopy + "{" + Game_szComment(i) + "}" + vbCrLf
+            bReturned = True
+        End If
+        sd = 1 - sd
+        cnt = cnt + 1 - sd
+    Next
+    szCopy = scCopy + Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1") + vbCrLf
+    szCopy = szCopy + "=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里里了 ===" + vbCrLf
+    ' 以上是供复制粘贴的文本棋谱
 End If
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + TEMP_FILE_NAME, vbExclamation
+Clipboard.Clear
+Clipboard.SetText szCopy
+Select Case Publish_nLocation
+Case PUB_LOCATION_TIEBA
+    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_ZGXQDS
+    ShellExecuteA 0, vbNullString, "http://www.zgxqds.com/bbs/titlepost.asp", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_ZHIDAO
+    ShellExecuteA 0, vbNullString, "http://zhidao.baidu.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_SINA
+    ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_QZONE
+    ShellExecuteA 0, vbNullString, "http://user.qzone.qq.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+End Select
+MsgBox "棋谱已复制到剪贴板，请找到发表帖子的内容框，按 Ctrl-V 键粘贴。", vbInformation
 
 End Sub
 

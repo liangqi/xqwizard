@@ -2067,27 +2067,40 @@ Private Sub mnMoveImport_Click()
 Dim nFileNo As Integer, szFileName As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
 szFileName = FileDialog("从文本文件导入", "文本文件", "TXT")
-If szFileName <> "" Then
-    nFileNo = FreeFile
-    On Error GoTo lnErrorOpen
-    Open szFileName For Input As #nFileNo
-    On Error GoTo 0
-    Do While Game_nCurrMove < Game_nMaxMove
-        MoveForward
-    Loop
-    szLineStr = ""
-    szRemStr = ""
-    nRemLevel = 0
-    Do While Not (EOF(nFileNo) And szRemStr = "")
-        If szLineStr = "" Then
-            Line Input #nFileNo, szLineStr
-        End If
-        ImportLine szLineStr, szRemStr, nRemLevel
-    Loop
-    Close #nFileNo
-    MoveFlush
-    FileUpdated
+If szFileName = "" Then
+    Exit Sub
 End If
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open szFileName For Input As #nFileNo
+On Error GoTo 0
+Do While Game_nCurrMove < Game_nMaxMove
+    MoveForward
+Loop
+szLineStr = ""
+szRemStr = ""
+nRemLevel = 0
+' 第一行，检测{$fen ... }标志
+Line Input #nFileNo, szLineStr
+If Left(szLineStr, 6) = "{$fen " Then
+    i = InStr(szClipStr, "}")
+    If i > 0 Then
+        If CancelSave Then
+            Exit Sub
+        End If
+        LoadFenStr Mid(szLineStr, 7, i - 7)
+    End If
+End If
+' 读下面的行
+Do While Not (EOF(nFileNo) And szRemStr = "")
+    If szLineStr = "" Then
+        Line Input #nFileNo, szLineStr
+    End If
+    ImportLine szLineStr, szRemStr, nRemLevel
+Loop
+Close #nFileNo
+MoveFlush
+FileUpdated
 
 Exit Sub
 lnErrorOpen:
@@ -2107,6 +2120,18 @@ szClipStr = Clipboard.GetText
 szLineStr = ""
 szRemStr = ""
 nRemLevel = 0
+' 检测{$fen ... }标志
+If Left(szClipStr, 6) = "{$fen " Then
+    i = InStr(szClipStr, "}")
+    If i > 0 Then
+        If CancelSave Then
+            Exit Sub
+        End If
+        LoadFenStr Mid(szClipStr, 7, i - 7)
+        szClipStr = Mid(szClipStr, 8)
+    End If
+End If
+' 读下面的行
 Do While Not (szClipStr = "" And szLineStr = "")
     If szLineStr = "" Then
         i = InStr(szClipStr, vbCrLf)
