@@ -2027,7 +2027,7 @@ End Sub
 
 Private Sub mnMoveImport_Click()
 
-Dim nFileNo As Integer, szFileName As String
+Dim nFileNo As Integer, i As Integer, szFileName As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
 szFileName = FileDialog("从文本文件导入", "文本文件", "TXT")
 If szFileName = "" Then
@@ -2046,7 +2046,7 @@ nRemLevel = 0
 ' 第一行，检测{$fen ... }标志
 Line Input #nFileNo, szLineStr
 If Left(szLineStr, 6) = "{$fen " Then
-    i = InStr(szClipStr, "}")
+    i = InStr(szLineStr, "}")
     If i > 0 Then
         If CancelSave Then
             Exit Sub

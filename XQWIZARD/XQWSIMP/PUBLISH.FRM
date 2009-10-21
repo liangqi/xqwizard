@@ -296,6 +296,16 @@ optSize(Publish_nSize).Value = True
 ' 发布内容
 optContent(IIf(Publish_bContent, 1, 0)).Value = True
 
+' 发布格式
+cmbFormat.Clear
+cmbFormat.AddItem "纯文本", 0
+cmbFormat.AddItem "ANSI文本", 1
+cmbFormat.AddItem "UBB文本", 2
+cmbFormat.AddItem "HTML文本", 3
+cmbFormat.AddItem "HTML内容", 4
+cmbFormat.ListIndex = Publish_nFormat
+
+' 注意：先有发布格式，再有发布站点！
 ' 发布站点
 cmbLocation.Clear
 cmbLocation.AddItem "百度贴吧象棋吧", 0
@@ -305,15 +315,6 @@ cmbLocation.AddItem "新浪博客", 3
 cmbLocation.AddItem "QQ空间", 4
 cmbLocation.AddItem "(其他)", 5
 cmbLocation.ListIndex = Publish_nLocation
-
-' 发布格式
-cmbFormat.Clear
-cmbFormat.AddItem "纯文本", 0
-cmbFormat.AddItem "ANSI文本", 1
-cmbFormat.AddItem "UBB文本", 2
-cmbFormat.AddItem "HTML文本", 3
-cmbFormat.AddItem "HTML内容", 4
-cmbFormat.ListIndex = Publish_nFormat
 
 SetTopMost hWnd
 
@@ -398,7 +399,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nBoardL = cmbBoard.ListIndex
 End Select
-SetBoardUrl
+txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
 
 End Sub
 
@@ -412,7 +413,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nPiecesL = cmbPieces.ListIndex
 End Select
-SetBoardUrl
+txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
 
 End Sub
 
@@ -431,56 +432,130 @@ End Sub
 
 Private Sub btnPublish_Click()
 
-Dim szCopy As String, szFen As String
+Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
 Dim bReturned As Boolean, cnt As Integer, sd As Integer, i As Integer
+Dim pos As PositionStruct
 
+' 输出标题(赛事、结果、日起地点、开局)
+szCopy = ""
+szBr = IIf(Publish_nFormat = PUB_FORMAT_HTML Or Publish_nFormat = PUB_FORMAT_WEB, "<br>", "")
+If EventString <> "" Then
+    szCopy = szCopy + EventString + szBr + vbCrLf
+End If
+If ResultString <> "" Then
+    szCopy = szCopy + ResultString + szBr + vbCrLf
+End If
+If DateSiteString <> "" Then
+    szCopy = szCopy + DateSiteString + szBr + vbCrLf
+End If
+If OpenString <> "" Then
+    szCopy = szCopy + OpenString + szBr + vbCrLf
+End If
 If Publish_bContent Then
+    ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
     szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-    szCopy = szCopy + txtBoardUrl.Text
+    Select Case Publish_nFormat
+    Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
+        szCopy = szCopy + AllocString(CchessBoardText(Game_posIrrev(Game_nCurrIrrev), _
+                IIf(Publish_nFormat = PUB_FORMAT_ANSI, CCHESS_ANSI_TEXT, 0)))
+        szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + vbCrLf
+        szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(szFen) + vbCrLf
+    Case PUB_FORMAT_UBB
+        szCopy = szCopy + "[img]" + GetBoardUrl(szFen) + "[/img]" + vbCrLf
+        szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
+                UrlEncode(szFen) + "]用象棋巫师打开盘面[/url]" + vbCrLf
+    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
+        szCopy = szCopy + "<img src=""" + GetBoardUrl(szFen) + """><br>" + vbCrLf
+        szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
+                UrlEncode(szFen) + ">用象棋巫师打开盘面</a><br>" + vbCrLf
+    End Select
 Else
-    szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-    szCopy = szCopy + "http://users.elephantbase.net/publish/board.php?&fen=" + _
-            UrlEncode(szFen) + "&size=" + LTrim(Str(Publish_nSize)) + "&board=" + _
-            LTrim(Str(cmbBoard.ListIndex)) + "&pieces=" + LTrim(Str(cmbPieces.ListIndex)) + vbCrLf
+    ' 发布整个棋局，如果不是从起始局面开始的，那么依次显示文本棋盘/图片棋盘，外加FEN链接
+    If Not Game_bStartPos Then
+        Select Case Publish_nFormat
+        Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
+            CchessFen2Board pos, Game_szIrrevFen(0)
+            szCopy = szCopy + AllocString(CchessBoardText(pos, _
+                    IIf(Publish_nFormat = PUB_FORMAT_ANSI, CCHESS_ANSI_TEXT, 0)))
+            szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + vbCrLf
+            szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(Game_szIrrevFen(0)) + vbCrLf
+        Case PUB_FORMAT_UBB
+            szCopy = szCopy + "[img]" + GetBoardUrl(Game_szIrrevFen(0)) + "[/img]" + vbCrLf
+            szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
+                    UrlEncode(Game_szIrrevFen(0)) + "]用象棋巫师打开盘面[/url]" + vbCrLf
+        Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
+            szCopy = szCopy + "<img src=""" + GetBoardUrl(Game_szIrrevFen(0)) + """><br>" + vbCrLf
+            szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
+                    UrlEncode(Game_szIrrevFen(0)) + ">用象棋巫师打开盘面</a><br>" + vbCrLf
+        End Select
+    End If
+    ' 如果发布模式是UBB或者HTML，那么显示Flash棋盘
+    szFlashVars = IIf(Game_bStartPos, "Position=" + UrlEncode(Game_szIrrevFen(0)) + "&", "") + "MoveList="
+    For i = 1 To Game_nMaxMove
+        szFlashVars = UrlEncode(Move2Iccs(Game_mvMove(i)) + " ")
+    Next
+    Select Case Publish_nFormat
+    Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
+        szCopy = szCopy + "# 在浏览器中打开下面的链接，就能看到Flash动态棋盘" + vbCrLf
+        szCopy = szCopy + "http://users.elephantbase.net/publish/flashxq.htm?" + szFlashVars + vbCrLf
+    Case PUB_FORMAT_UBB
+        szCopy = szCopy + "[swf]http://www.elephantbase.net/flashxq.swf?" + szFlashVars + "[/swf]" + vbCrLf
+    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
+        szCopy = szCopy + "<embed src=""http://www.elephantbase.net/flashxq.swf"" " + _
+                "type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" " + _
+                "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars=""" + szFlashVars + """><br>"
+    End Select
+    ' 显示文本棋谱
     ' 以下是供复制粘贴的文本棋谱
     szCopy = szCopy + "=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里里了 ===" + vbCrLf
     szCopy = szCopy + "{$fen " + Game_szIrrevFen(0) + "}" + vbCrLf
     If Game_szComment(0) <> "" Then
-        szCopy = scCopy + "{" + Game_szComment(0) + "}" + vbCrLf
+        szCopy = szCopy + "{" + Game_szComment(0) + "}" + vbCrLf
     End If
     bReturned = True
     cnt = Game_cntStart
     sd = Game_sdStart
     For i = 1 To Game_nMaxMove
         If bReturned Then
-            szCopy = scCopy + Space(4 - Len(Str(cnt))) + LTrim(Str(cnt)) + ". "
+            szCopy = szCopy + Space(4 - Len(Str(cnt))) + LTrim(Str(cnt)) + ". "
             If sd = 1 Then
-                szCopy = scCopy + Space(Choose(Game_nFormat + 1, 8, 4, 5))
+                szCopy = szCopy + Space(Choose(Game_nFormat + 1, 8, 4, 5))
             End If
         End If
         If sd = 0 Then
-            szCopy = scCopy + Game_szMoveText(Game_nFormat, i)
+            szCopy = szCopy + Game_szMoveText(Game_nFormat, i)
             bReturned = False
         Else
-            szCopy = scCopy + " " + Game_szMoveText(Game_nFormat, i) + vbCrLf
+            szCopy = szCopy + " " + Game_szMoveText(Game_nFormat, i) + vbCrLf
             bReturned = True
         End If
         If Game_szComment(i) <> "" Then
             If Not bReturned Then
-                szCopy = scCopy + vbCrLf
+                szCopy = szCopy + vbCrLf
             End If
-            szCopy = scCopy + "{" + Game_szComment(i) + "}" + vbCrLf
+            szCopy = szCopy + "{" + Game_szComment(i) + "}" + vbCrLf
             bReturned = True
         End If
         sd = 1 - sd
         cnt = cnt + 1 - sd
     Next
-    szCopy = scCopy + Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1") + vbCrLf
+    szCopy = szCopy + Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1") + vbCrLf
     szCopy = szCopy + "=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里里了 ===" + vbCrLf
     ' 以上是供复制粘贴的文本棋谱
 End If
-Clipboard.Clear
-Clipboard.SetText szCopy
+' 把szCopy的内容复制到剪贴板
+If Publish_nFormat = PUB_FORMAT_WEB Then
+    With frmHide.web.Document
+        .body.innerHtml = szCopy
+        .execCommand "SelectAll"
+        .execCommand "Copy"
+        .body.innerHtml = ""
+    End With
+Else
+    Clipboard.Clear
+    Clipboard.SetText szCopy
+End If
+' 打开要发布的网页
 Select Case Publish_nLocation
 Case PUB_LOCATION_TIEBA
     ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
@@ -510,6 +585,31 @@ txtBoardUrl.SelLength = Len(txtBoardUrl)
 
 End Sub
 
+Private Sub cmbFormat_Click()
+
+Publish_nFormat = cmbFormat.ListIndex
+
+End Sub
+
+Private Sub cmbLocation_Click()
+
+Publish_nLocation = cmbLocation.ListIndex
+Select Case Publish_nLocation
+Case PUB_LOCATION_TIEBA
+    Publish_nFormat = PUB_FORMAT_TEXT
+Case PUB_LOCATION_ZGXQDS
+    Publish_nFormat = PUB_FORMAT_UBB
+Case PUB_LOCATION_ZHIDAO
+    Publish_nFormat = PUB_FORMAT_TEXT
+Case PUB_LOCATION_SINA
+    Publish_nFormat = PUB_FORMAT_WEB
+Case PUB_LOCATION_QZONE
+    Publish_nFormat = PUB_FORMAT_WEB
+End Select
+cmbFormat.ListIndex = Publish_nFormat
+
+End Sub
+
 Private Sub lblViewBoard_Click()
 
 ShellExecuteA 0, vbNullString, txtBoardUrl.Text, vbNullString, vbNullString, SW_SHOWNORMAL
@@ -530,12 +630,10 @@ ShellExecuteA 0, vbNullString, _
 
 End Sub
 
-Private Sub SetBoardUrl()
+Private Function GetBoardUrl(ByVal szFen As String) As String
 
-Dim szFen As String
-szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-txtBoardUrl.Text = "http://users.elephantbase.net/publish/board.php?&fen=" + _
+GetBoardUrl = "http://users.elephantbase.net/publish/board.php?&fen=" + _
         UrlEncode(szFen) + "&size=" + LTrim(Str(Publish_nSize)) + "&board=" + _
         LTrim(Str(cmbBoard.ListIndex)) + "&pieces=" + LTrim(Str(cmbPieces.ListIndex))
 
-End Sub
+End Function
