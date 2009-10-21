@@ -492,7 +492,7 @@ Else
     ' 如果发布模式是UBB或者HTML，那么显示Flash棋盘
     szFlashVars = IIf(Game_bStartPos, "Position=" + UrlEncode(Game_szIrrevFen(0)) + "&", "") + "MoveList="
     For i = 1 To Game_nMaxMove
-        szFlashVars = UrlEncode(Move2Iccs(Game_mvMove(i)) + " ")
+        szFlashVars = szFlashVars + UrlEncode(Move2Iccs(Game_mvMove(i)) + " ")
     Next
     Select Case Publish_nFormat
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
@@ -543,6 +543,16 @@ Else
     szCopy = szCopy + "=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里里了 ===" + vbCrLf
     ' 以上是供复制粘贴的文本棋谱
 End If
+' 给象棋巫师做个广告
+' TODO
+Select Case Publish_nFormat
+Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
+    szCopy = szCopy + "# 欢迎使用象棋巫师浏览棋谱" + vbCrLf
+Case PUB_FORMAT_UBB
+    szCopy = szCopy + "# 欢迎使用象棋巫师浏览棋谱" + vbCrLf
+Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
+    szCopy = szCopy + "# 欢迎使用象棋巫师浏览棋谱" + vbCrLf
+End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then
     With frmHide.web.Document

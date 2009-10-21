@@ -26,7 +26,6 @@ ResFile32="XQWIZARD.RES"
 Module=mdlAdvert; COMMON\ADVERT.BAS
 Form=XQWTRAD\NEWGAME.FRM
 Form=XQWSIMP\PUBLISH.FRM
-Module=mdlBase64; COMMON\BASE64.BAS
 IconForm="frmMainSmall"
 Startup="Sub Main"
 HelpFile=""
