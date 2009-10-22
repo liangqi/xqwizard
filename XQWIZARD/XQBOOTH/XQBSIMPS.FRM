@@ -854,7 +854,7 @@ Begin VB.Form frmXQBoothSmall
       Begin VB.Menu mnGameSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnGameXqwizard 
+      Begin VB.Menu mnGameXQWizard 
          Caption         =   "用象棋巫师打开(&X)"
       End
       Begin VB.Menu mnGameSep2 
@@ -1372,7 +1372,7 @@ End If
 
 End Sub
 
-Private Sub mnGameXqwizard_Click()
+Private Sub mnGameXQWizard_Click()
 
 OpenWithXQWizard pos
 
@@ -1882,7 +1882,7 @@ End Sub
 
 Private Sub mnUsersHelp_Click()
 
-' TODO
+frmPublish.Show vbModal, Me
 
 End Sub
 

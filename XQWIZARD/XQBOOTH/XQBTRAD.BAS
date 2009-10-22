@@ -84,7 +84,6 @@ Public Options_nBoardS          As Integer  ' 小界面的棋盤
 Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盤
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
-Public Gui_szUserID             As String   ' 用戶ID
 Public Gui_szUpgradeVer         As String   ' 檢查升級的版本
 Public Gui_szUpgradeDate        As String   ' 檢查升級的日期
 Public Gui_nCurr                As Integer  ' 當前殘局的條目序號
@@ -202,7 +201,6 @@ Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
-Gui_szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -223,9 +221,7 @@ SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
 SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
-' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
@@ -238,11 +234,15 @@ End Sub
 ' 檢查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szWhatsNew As String, szUrl As String
+Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
+Dim dwCounter(0 To 1) As Long
+
 sz = ""
+QueryPerformanceCounter VarPtr(dwCounter(0))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php?referer=xqbooth&version=" + _
-        STRING_VERSION + "&userid=" + Gui_szUserID)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_trad.php?referer=xqwizard&version=" + _
+        STRING_VERSION + "&userid=" + szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -250,8 +250,8 @@ If sz = "" Then
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果訪問升級信息成功，那么當天就不再訪問升級信息
-    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即寫注冊表，避免重開窗口導致的重复訪問
-    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
+    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即寫注冊表，避免重開窗口導致的重複訪問
+    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next

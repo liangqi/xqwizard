@@ -26,9 +26,9 @@
 
       var width = document.body.clientWidth;
       var height = document.body.clientHeight;
-      var position = getParameter("position");
-      var movelist = getParameter("movelist");
-      var flashvars = (position == null ? "" : "Position=" + position + "&") + "movelist=" + movelist;
+      var position = getParameter("Position");
+      var movelist = getParameter("MoveList");
+      var flashvars = (position == null ? "" : "Position=" + position + "&") + "MoveList=" + movelist;
       document.write("<object name=\"Flash\" id=\"Flash\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0\" width=\"" + width + "\" height=\"" + height + "\">");
       document.write("<param name=\"allowScriptAccess\" value=\"always\" />");
       document.write("<param name=\"movie\" value=\"flashxq.swf\" />");

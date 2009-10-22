@@ -67,6 +67,27 @@ Public Const PIECES_L_WOOD      As Integer = 0
 Public Const PIECES_L_DELICATE  As Integer = 1
 Public Const PIECES_L_POLISH    As Integer = 2
 Public Const PIECES_L_MAX       As Integer = 3
+' 全局常量——发布图片大小
+Public Const PUB_SIZE_MINI      As Integer = 0
+Public Const PUB_SIZE_PRINT     As Integer = 1
+Public Const PUB_SIZE_SMALL     As Integer = 2
+Public Const PUB_SIZE_LARGE     As Integer = 3
+Public Const PUB_SIZE_MAX       As Integer = 4
+' 全局常量——发布站点
+Public Const PUB_LOCATION_ZGXQDS As Integer = 0
+Public Const PUB_LOCATION_TIEBA As Integer = 1
+Public Const PUB_LOCATION_ZHIDAO As Integer = 2
+Public Const PUB_LOCATION_SINA  As Integer = 3
+Public Const PUB_LOCATION_QZONE As Integer = 4
+Public Const PUB_LOCATION_OTHER As Integer = 5
+Public Const PUB_LOCATION_MAX   As Integer = 6
+' 全局常量——发布格式
+Public Const PUB_FORMAT_TEXT    As Integer = 0
+Public Const PUB_FORMAT_ANSI    As Integer = 1
+Public Const PUB_FORMAT_UBB     As Integer = 2
+Public Const PUB_FORMAT_HTML    As Integer = 3
+Public Const PUB_FORMAT_WEB     As Integer = 4
+Public Const PUB_FORMAT_MAX     As Integer = 5
 ' 全局常量——排名类型
 Public Const RANK_WEEK          As Integer = 0
 Public Const RANK_MONTH         As Integer = 1
@@ -93,6 +114,15 @@ Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
+Public Publish_nSize            As Integer  ' 图片类型
+Public Publish_bTrad            As Boolean  ' 是否繁体(简单/印刷)
+Public Publish_nBoardS          As Integer  ' 棋盘类型(小)
+Public Publish_nPiecesS         As Integer  ' 棋子类型(小)
+Public Publish_nBoardL          As Integer  ' 棋盘类型(小)
+Public Publish_nPiecesL         As Integer  ' 棋子类型(大)
+Public Publish_bContent         As Boolean  ' 是否只发布当前局面
+Public Publish_nLocation        As Integer  ' 发布站点
+Public Publish_nFormat          As Integer  ' 发布格式
 Public Login_szTitle            As String   ' 登录框标题
 Public Login_szPrompt           As String   ' 登录框提示
 Public Login_bCancel            As Boolean  ' 登录是否取消
@@ -208,6 +238,15 @@ Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
+Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
+Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
+Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
+Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
+Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
+Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
+Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
+Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
 Login_szPassword = SimpleDecrypt(GetSetting("XQBooth", "Gui", "Password", ""))
 Login_bRemember = GetSetting("XQBooth", "Gui", "Remember", "0") <> "0"
@@ -223,10 +262,17 @@ SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
 SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
 SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
-' SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-' SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
+SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
+SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
+SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
+SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
+SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
+SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
@@ -238,11 +284,15 @@ End Sub
 ' 检查更新
 Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szWhatsNew As String, szUrl As String
+Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
+Dim dwCounter(0 To 1) As Long
+
 sz = ""
+QueryPerformanceCounter VarPtr(dwCounter(0))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqbooth&version=" + _
-        STRING_VERSION + "&userid=" + Gui_szUserID)
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
+        STRING_VERSION + "&userid=" + szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
@@ -251,7 +301,7 @@ If sz = "" Then
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
     SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
-    SaveSetting "XQWizard", "Gui", "UserID", Gui_szUserID           ' 同上
+    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' 同上
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next

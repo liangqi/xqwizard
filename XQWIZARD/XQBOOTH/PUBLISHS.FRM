@@ -15,7 +15,7 @@ Begin VB.Form frmPublish
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "PUBLISH.frx":0000
+   Icon            =   "PUBLISHS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   3195
@@ -26,7 +26,7 @@ Begin VB.Form frmPublish
       Caption         =   "帮助"
       Height          =   375
       Left            =   360
-      TabIndex        =   21
+      TabIndex        =   18
       Top             =   2760
       Width           =   1095
    End
@@ -35,7 +35,7 @@ Begin VB.Form frmPublish
       Default         =   -1  'True
       Height          =   375
       Left            =   1800
-      TabIndex        =   22
+      TabIndex        =   19
       Top             =   2760
       Width           =   1095
    End
@@ -130,7 +130,7 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   3960
-         MouseIcon       =   "PUBLISH.frx":000C
+         MouseIcon       =   "PUBLISHS.frx":000C
          MousePointer    =   99  'Custom
          TabIndex        =   12
          Top             =   960
@@ -166,7 +166,7 @@ Begin VB.Form frmPublish
       Caption         =   "关闭"
       Height          =   375
       Left            =   3240
-      TabIndex        =   23
+      TabIndex        =   20
       Top             =   2760
       Width           =   1095
    End
@@ -177,29 +177,11 @@ Begin VB.Form frmPublish
       TabIndex        =   13
       Top             =   1560
       Width           =   4455
-      Begin VB.OptionButton optContent 
-         Caption         =   "当前局面"
-         Height          =   255
-         Index           =   1
-         Left            =   2040
-         TabIndex        =   16
-         Top             =   240
-         Width           =   1095
-      End
-      Begin VB.OptionButton optContent 
-         Caption         =   "整个棋局"
-         Height          =   255
-         Index           =   0
-         Left            =   960
-         TabIndex        =   15
-         Top             =   240
-         Width           =   1095
-      End
       Begin VB.ComboBox cmbLocation 
          Height          =   300
          Left            =   960
          Style           =   2  'Dropdown List
-         TabIndex        =   18
+         TabIndex        =   15
          Top             =   600
          Width           =   1215
       End
@@ -207,7 +189,7 @@ Begin VB.Form frmPublish
          Height          =   300
          Left            =   3120
          Style           =   2  'Dropdown List
-         TabIndex        =   20
+         TabIndex        =   17
          Top             =   600
          Width           =   1215
       End
@@ -225,9 +207,9 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   2280
-         MouseIcon       =   "PUBLISH.frx":015E
+         MouseIcon       =   "PUBLISHS.frx":015E
          MousePointer    =   99  'Custom
-         TabIndex        =   19
+         TabIndex        =   16
          Top             =   600
          Width           =   735
       End
@@ -245,18 +227,10 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   120
-         MouseIcon       =   "PUBLISH.frx":02B0
+         MouseIcon       =   "PUBLISHS.frx":02B0
          MousePointer    =   99  'Custom
-         TabIndex        =   17
-         Top             =   600
-         Width           =   735
-      End
-      Begin VB.Label lblContent 
-         Caption         =   "发布内容"
-         Height          =   255
-         Left            =   120
          TabIndex        =   14
-         Top             =   240
+         Top             =   600
          Width           =   735
       End
    End
@@ -293,9 +267,6 @@ Private Sub Form_Load()
 ' 图片类型
 optSize(Publish_nSize).Value = True
 
-' 发布内容
-optContent(IIf(Publish_bContent, 1, 0)).Value = True
-
 ' 发布格式
 cmbFormat.Clear
 cmbFormat.AddItem "纯文本", 0
@@ -316,8 +287,6 @@ cmbLocation.AddItem "QQ空间", 4
 cmbLocation.AddItem "(其他)", 5
 cmbLocation.ListIndex = Publish_nLocation
 
-SetTopMost hWnd
-
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -334,7 +303,6 @@ Case PUB_SIZE_LARGE
     Publish_nPiecesL = cmbPieces.ListIndex
 End Select
 ' 发布
-Publish_bContent = optContent(1).Value
 Publish_nLocation = cmbLocation.ListIndex
 Publish_nFormat = cmbFormat.ListIndex
 
@@ -399,7 +367,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nBoardL = cmbBoard.ListIndex
 End Select
-txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
+txtBoardUrl.Text = GetBoardUrl(App_szEndgames(Gui_nCurr))
 
 End Sub
 
@@ -413,13 +381,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nPiecesL = cmbPieces.ListIndex
 End Select
-txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
-
-End Sub
-
-Private Sub optContent_Click(Index As Integer)
-
-Publish_bContent = optContent(1).Value
+txtBoardUrl.Text = GetBoardUrl(App_szEndgames(Gui_nCurr))
 
 End Sub
 
@@ -432,137 +394,29 @@ End Sub
 
 Private Sub btnPublish_Click()
 
-Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
+Dim szCopy As String, szBr As String, szFlashVars As String
 Dim bReturned As Boolean, cnt As Integer, sd As Integer, i As Integer
 Dim pos As PositionStruct
 
-' 输出标题(赛事、结果、日起地点、开局)
-szCopy = ""
 szBr = IIf(Publish_nFormat >= PUB_FORMAT_HTML, "<br>" + vbCrLf, vbCrLf)
-If EventString <> "" Then
-    szCopy = szCopy + EventString + szBr
-End If
-If ResultString <> "" Then
-    szCopy = szCopy + ResultString + szBr
-End If
-If DateSiteString <> "" Then
-    szCopy = szCopy + DateSiteString + szBr
-End If
-If OpenString <> "" Then
-    szCopy = szCopy + OpenString + szBr
-End If
-If Publish_bContent Then
-    ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
-    szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-    Select Case Publish_nFormat
-    Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-        szCopy = szCopy + GetBoardText(Game_posIrrev(Game_nCurrIrrev))
-        szCopy = szCopy + szFen + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
-        szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
-        szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(szFen) + szBr
-    Case PUB_FORMAT_UBB
-        szCopy = szCopy + "[img]" + GetBoardUrl(szFen) + "[/img]" + szBr
-        szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
-                UrlEncode(szFen) + "]用象棋巫师打开盘面[/url]" + szBr
-    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy + "<img src=""" + GetBoardUrl(szFen) + """>" + szBr
-        szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
-                UrlEncode(szFen) + """>用象棋巫师打开盘面</a>" + szBr
-    End Select
-Else
-    ' 发布整个棋局，如果不是从起始局面开始的，那么依次显示文本棋盘/图片棋盘，外加FEN链接
-    If Not Game_bStartPos Then
-        Select Case Publish_nFormat
-        Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-            CchessFen2Board pos, Game_szIrrevFen(0)
-            szCopy = szCopy + GetBoardText(pos)
-            szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
-            szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(Game_szIrrevFen(0)) + szBr
-        Case PUB_FORMAT_UBB
-            szCopy = szCopy + "[img]" + GetBoardUrl(Game_szIrrevFen(0)) + "[/img]" + szBr
-            szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
-                    UrlEncode(Game_szIrrevFen(0)) + "]用象棋巫师打开盘面[/url]" + szBr
-        Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-            ' 后面有Flash棋盘，这里就不再显示图片棋盘了
-            ' szCopy = szCopy + "<img src=""" + GetBoardUrl(Game_szIrrevFen(0)) + """>" + szBr
-            szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
-                    UrlEncode(Game_szIrrevFen(0)) + """>用象棋巫师打开盘面</a>" + szBr
-        End Select
-    End If
-    ' 如果发布模式是UBB或者HTML，那么显示Flash棋盘
-    szFlashVars = IIf(Game_bStartPos, "", "Position=" + UrlEncode(Game_szIrrevFen(0)) + "&") + "MoveList="
-    For i = 1 To Game_nMaxMove
-        szFlashVars = szFlashVars + UrlEncode(Move2Iccs(Game_mvMove(i)) + " ")
-    Next
-    Select Case Publish_nFormat
-    Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-        ' 文本方式给出的链接太长了，不便于发表和显示
-        ' szCopy = szCopy + "# 在浏览器中打开下面的链接，就能播放棋谱" + szBr
-        ' szCopy = szCopy + "http://users.elephantbase.net/publish/flashxq.htm?" + szFlashVars + szBr
-    Case PUB_FORMAT_UBB
-        szCopy = szCopy + "[url=http://users.elephantbase.net/publish/flashxq.htm?" + szFlashVars + "]播放棋谱[/url]" + szBr
-    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy + "<embed src=""http://users.elephantbase.net/publish/flashxq.swf"" width=""324"" height=""396"" " + _
-                "type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" " + _
-                "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars=""" + szFlashVars + """>" + szBr
-    End Select
-    ' 显示文本棋谱
-    ' 以下是供复制粘贴的文本棋谱
-    szCopy = szCopy + "=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===" + szBr
-    ' 润色字体
-    Select Case Publish_nFormat
-    Case PUB_FORMAT_ANSI
-        szCopy = szCopy + Chr(27) + "[1;33m"
-    Case PUB_FORMAT_UBB
-        szCopy = szCopy + "[color=#003333]"
-    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy + "<font color=""#003333"">"
-    End Select
-    ' 输出棋谱
-    szCopy = szCopy + "{$fen " + Game_szIrrevFen(0) + "}" + szBr
-    If Game_szComment(0) <> "" Then
-        szCopy = szCopy + "{" + Replace(Game_szComment(0), vbCrLf, szBr) + "}" + szBr
-    End If
-    bReturned = True
-    cnt = Game_cntStart
-    sd = Game_sdStart
-    For i = 1 To Game_nMaxMove
-        If bReturned Then
-            szCopy = szCopy + Space(4 - Len(Str(cnt))) + LTrim(Str(cnt)) + ". "
-            If sd = 1 Then
-                szCopy = szCopy + Space(Choose(Game_nFormat + 1, 8, 4, 5))
-            End If
-        End If
-        If sd = 0 Then
-            szCopy = szCopy + Game_szMoveText(Game_nFormat, i)
-            bReturned = False
-        Else
-            szCopy = szCopy + " " + Game_szMoveText(Game_nFormat, i) + szBr
-            bReturned = True
-        End If
-        If Game_szComment(i) <> "" Then
-            If Not bReturned Then
-                szCopy = szCopy + szBr
-            End If
-            szCopy = szCopy + "{" + Replace(Game_szComment(i), vbCrLf, szBr) + "}" + szBr
-            bReturned = True
-        End If
-        sd = 1 - sd
-        cnt = cnt + 1 - sd
-    Next
-    szCopy = szCopy + Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1") + szBr
-    ' 取消润色
-    Select Case Publish_nFormat
-    Case PUB_FORMAT_ANSI
-        szCopy = szCopy + Chr(27) + "[1;0m"
-    Case PUB_FORMAT_UBB
-        szCopy = szCopy + "[/color]"
-    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy + "</font>"
-    End Select
-    szCopy = szCopy + "=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===" + szBr
-    ' 以上是供复制粘贴的文本棋谱
-End If
+szCopy = "象棋巫师魔法学校第" + Str(Gui_nCurr + 1) + " 关怎么过？" + szBr
+' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
+Select Case Publish_nFormat
+Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
+    CchessFen2Board pos, App_szEndgames(Gui_nCurr)
+    szCopy = szCopy + GetBoardText(pos)
+    szCopy = szCopy + App_szEndgames(Gui_nCurr) + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
+    szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
+    szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(App_szEndgames(Gui_nCurr)) + szBr
+Case PUB_FORMAT_UBB
+    szCopy = szCopy + "[img]" + GetBoardUrl(App_szEndgames(Gui_nCurr)) + "[/img]" + szBr
+    szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
+            UrlEncode(App_szEndgames(Gui_nCurr)) + "]用象棋巫师打开盘面[/url]" + szBr
+Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
+    szCopy = szCopy + "<img src=""" + GetBoardUrl(App_szEndgames(Gui_nCurr)) + """>" + szBr
+    szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
+            UrlEncode(App_szEndgames(Gui_nCurr)) + """>用象棋巫师打开盘面</a>" + szBr
+End Select
 ' 给象棋巫师做个广告
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI

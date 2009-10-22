@@ -1856,7 +1856,7 @@ End Sub
 
 Private Sub mnUsersHelp_Click()
 
-' TODO
+frmPublish.Show vbModal, Me
 
 End Sub
 
