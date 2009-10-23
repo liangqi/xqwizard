@@ -457,16 +457,16 @@ If Publish_bContent Then
     Select Case Publish_nFormat
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
         szCopy = szCopy + GetBoardText(Game_posIrrev(Game_nCurrIrrev))
-        szCopy = szCopy + szFen + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
+        szCopy = szCopy + "# " + szFen + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
         szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
-        szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(szFen) + szBr
+        szCopy = szCopy + "# http://pub.elephantbase.net/fen.php?fen=" + UrlEncode(szFen) + szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy + "[img]" + GetBoardUrl(szFen) + "[/img]" + szBr
-        szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
+        szCopy = szCopy + "[url=http://pub.elephantbase.net/fen.php?fen=" + _
                 UrlEncode(szFen) + "]用象棋巫师打开盘面[/url]" + szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy + "<img src=""" + GetBoardUrl(szFen) + """>" + szBr
-        szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
+        szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/fen.php?fen=" + _
                 UrlEncode(szFen) + """>用象棋巫师打开盘面</a>" + szBr
     End Select
 Else
@@ -477,15 +477,15 @@ Else
             CchessFen2Board pos, Game_szIrrevFen(0)
             szCopy = szCopy + GetBoardText(pos)
             szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
-            szCopy = szCopy + "http://users.elephantbase.net/publish/fen.php?fen=" + UrlEncode(Game_szIrrevFen(0)) + szBr
+            szCopy = szCopy + "# http://pub.elephantbase.net/fen.php?fen=" + UrlEncode(Game_szIrrevFen(0)) + szBr
         Case PUB_FORMAT_UBB
             szCopy = szCopy + "[img]" + GetBoardUrl(Game_szIrrevFen(0)) + "[/img]" + szBr
-            szCopy = szCopy + "[url=http://users.elephantbase.net/publish/fen.php?fen=" + _
+            szCopy = szCopy + "# [url=http://pub.elephantbase.net/fen.php?fen=" + _
                     UrlEncode(Game_szIrrevFen(0)) + "]用象棋巫师打开盘面[/url]" + szBr
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
             ' 后面有Flash棋盘，这里就不再显示图片棋盘了
             ' szCopy = szCopy + "<img src=""" + GetBoardUrl(Game_szIrrevFen(0)) + """>" + szBr
-            szCopy = szCopy + "<a href=""http://users.elephantbase.net/publish/fen.php?fen=" + _
+            szCopy = szCopy + "<a href=""http://pub.elephantbase.net/fen.php?fen=" + _
                     UrlEncode(Game_szIrrevFen(0)) + """>用象棋巫师打开盘面</a>" + szBr
         End Select
     End If
@@ -498,11 +498,11 @@ Else
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
         ' 文本方式给出的链接太长了，不便于发表和显示
         ' szCopy = szCopy + "# 在浏览器中打开下面的链接，就能播放棋谱" + szBr
-        ' szCopy = szCopy + "http://users.elephantbase.net/publish/flashxq.htm?" + szFlashVars + szBr
+        ' szCopy = szCopy + "# http://pub.elephantbase.net/flashxq.htm?" + szFlashVars + szBr
     Case PUB_FORMAT_UBB
-        szCopy = szCopy + "[url=http://users.elephantbase.net/publish/flashxq.htm?" + szFlashVars + "]播放棋谱[/url]" + szBr
+        szCopy = szCopy + "# [url=http://pub.elephantbase.net/flashxq.htm?" + szFlashVars + "]播放棋谱[/url]" + szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy + "<embed src=""http://users.elephantbase.net/publish/flashxq.swf"" width=""324"" height=""396"" " + _
+        szCopy = szCopy + "<embed src=""http://pub.elephantbase.net/flashxq.swf"" width=""324"" height=""396"" " + _
                 "type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" " + _
                 "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars=""" + szFlashVars + """>" + szBr
     End Select
@@ -567,13 +567,14 @@ End If
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
     szCopy = szCopy + "# 象棋巫师是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "http://users.elephantbase.net/xqwizard.php"
+    szCopy = szCopy + "# http://pub.elephantbase.net/xqwizard.php" + szBr
+    szCopy = szCopy + "# 欢迎访问象棋百科全书网 http://www.elephantbase.net/"
 Case PUB_FORMAT_UBB
-    szCopy = szCopy + "# [url=http://users.elephantbase.net/xqwizard.php]象棋巫师[/url]是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "[url=http://www.elephantbase.net/][img]http://www.elephantbase.net/advert/elephantbase.gif[/img][/url]"
+    szCopy = szCopy + "# [url=http://pub.elephantbase.net/xqwizard.php]象棋巫师[/url]是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
+    szCopy = szCopy + "[url=http://pub.elephantbase.net/][img]http://pub.elephantbase.net/index.gif[/img][/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy + "# <a href=""http://users.elephantbase.net/xqwizard.php"" target=""_blank"">象棋巫师</a>是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "<a href=""http://www.elephantbase.net/"" target=""_blank""><img src=""http://www.elephantbase.net/advert/elephantbase.gif""></a>"
+    szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/xqwizard.php"" target=""_blank"">象棋巫师</a>是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
+    szCopy = szCopy + "<a href=""http://pub.elephantbase.net/"" target=""_blank""><img src=""http://pub.elephantbase.net/index.gif"" border=""0""></a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then
@@ -664,7 +665,7 @@ End Sub
 
 Private Function GetBoardUrl(ByVal szFen As String) As String
 
-GetBoardUrl = "http://users.elephantbase.net/publish/board.php?&fen=" + _
+GetBoardUrl = "http://pub.elephantbase.net/board.php?&fen=" + _
         UrlEncode(szFen) + "&size=" + LTrim(Str(Publish_nSize)) + "&board=" + _
         LTrim(Str(cmbBoard.ListIndex)) + "&pieces=" + LTrim(Str(cmbPieces.ListIndex))
 
