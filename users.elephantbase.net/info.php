@@ -95,7 +95,7 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td align="center" bgcolor="#F0F0F0"><font
-                size="2">提示：在象棋魔法学校中使用“提交成绩”功能，您的成绩才会更新</font></td>
+                size="2">提示：在象棋巫师魔法学校中使用“提交成绩”功能，您的成绩才会更新</font></td>
             </tr>
             <tr>
                 <td background="images/headerbg.gif"><font

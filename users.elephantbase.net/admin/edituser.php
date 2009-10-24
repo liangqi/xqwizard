@@ -102,7 +102,7 @@ bottommargin="0" rightmargin="0">
           htmlentities($username, ENT_COMPAT, "GB2312"), $charge) .
           ($line["charged"] < USER_PLATINUM ? "" : "，并升级为白金会员(提示和悔棋不扣点)") . "。<br>" .
           sprintf("目前您的帐号共有%d点可用，", $line["points"]) .
-          "请用象棋魔法学校“用户中心/查询点数”功能查收。<br>" .
+          "请用象棋巫师魔法学校“用户中心/查询点数”功能查收。<br>" .
           "有任何问题、意见和建议请及时与我们联系，感谢您对象棋巫师的支持。</p></font>";
     } else {
       $info = warn("充值点数必须大于0");

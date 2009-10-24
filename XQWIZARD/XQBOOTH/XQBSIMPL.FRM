@@ -1287,7 +1287,7 @@ mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
 EnableHint True
 EnableRetract False
-Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋魔法学校"
+Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋巫师魔法学校"
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 BoardFlush
 sqSelected = 0
