@@ -6,8 +6,16 @@ import java.util.Stack;
 public abstract class Pool<T> {
 	protected abstract T makeObject();
 	protected abstract void destroyObject(T obj);
-	protected abstract boolean activateObject(T obj);
-	protected abstract boolean passivateObject(T obj);
+
+	/** @param obj */
+	protected boolean activateObject(T obj) {
+		return true;
+	}
+
+	/** @param obj */
+	protected boolean passivateObject(T obj) {
+		return true;
+	}
 
 	private Stack<T> pool = new Stack<T>();
 

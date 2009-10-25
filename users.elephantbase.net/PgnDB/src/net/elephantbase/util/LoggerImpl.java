@@ -14,9 +14,9 @@ public class LoggerImpl implements Logger {
 				getLogger(LoggerImpl.class.getClassLoader().toString());
 
 		try {
-			Properties p = new Properties();
 			FileInputStream in = new FileInputStream(ClassPath.
 					getInstance().append("../etc/Logging.properties"));
+			Properties p = new Properties();
 			p.load(in);
 			in.close();
 

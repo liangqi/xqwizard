@@ -15,17 +15,18 @@ import net.elephantbase.util.Closables;
 import net.elephantbase.util.Pool;
 
 public class ConnectionPool extends Pool<Connection> {
-	private static Logger log = LoggerFactory.getLogger(ConnectionPool.class);
+	private static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
 	private static String url, username, password;
 	private static int retryInterval, retryCount;
 
 	static {
 		try {
-			Properties p = new Properties();
 			FileInputStream in = new FileInputStream(ClassPath.
 					getInstance().append("../etc/Database.properties"));
-			p.load(in);			
+			Properties p = new Properties();
+			p.load(in);
+			in.close();
 
 			url = p.getProperty("url");
 			username = p.getProperty("username");
@@ -34,7 +35,7 @@ public class ConnectionPool extends Pool<Connection> {
 			retryCount = Integer.parseInt(p.getProperty("retry_count"));
 			Class.forName(p.getProperty("driver"));
 		} catch (Exception e) {
-			log.error("", e);
+			logger.error("", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -45,7 +46,7 @@ public class ConnectionPool extends Pool<Connection> {
 			try {
 				return DriverManager.getConnection(url, username, password);
 			} catch (Exception e) {
-				log.error("", e);
+				logger.error("", e);
 				try {
 					Thread.sleep(retryInterval);
 				} catch (InterruptedException ie) {
@@ -53,8 +54,18 @@ public class ConnectionPool extends Pool<Connection> {
 				}
 			}
 		}
-		log.error("", "Exceed Max Retry Times: " + retryCount);
+		logger.error("", "Exceed retry count: " + retryCount);
 		return null;
+	}
+
+	private static ConnectionPool instance = new ConnectionPool();
+
+	private ConnectionPool() {
+		// Singleton
+	}
+
+	public static ConnectionPool getInstance() {
+		return instance;
 	}
 
 	@Override
@@ -64,24 +75,17 @@ public class ConnectionPool extends Pool<Connection> {
 		try {
 			st = conn.createStatement();
 			rs = st.executeQuery("SELECT 0");
-			rs.next();
-			return rs.getInt(0) == 0;
+			return rs.next() && rs.getInt(1) == 0;
 		} catch (Exception e) {
 			return false;
 		} finally {
-			Closables.close(st);
 			Closables.close(rs);
+			Closables.close(st);
 		}
 	}
 
 	@Override
 	protected void destroyObject(Connection conn) {
 		Closables.close(conn);
-	}
-
-	@Override
-	protected boolean passivateObject(Connection obj) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
