@@ -23,4 +23,8 @@
     <filter-name>PgnDBApp</filter-name>
     <url-pattern>/pgndb/*</url-pattern>
   </filter-mapping>
+
+  <listener>
+    <listener-class>net.elephantbase.users.DailyTask</listener-class>
+  </listener>
 </web-app>

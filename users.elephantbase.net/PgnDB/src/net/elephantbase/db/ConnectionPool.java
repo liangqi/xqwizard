@@ -6,12 +6,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.elephantbase.util.ClassPath;
-import net.elephantbase.util.Closables;
+import net.elephantbase.util.Closeables;
+import net.elephantbase.util.LoggerFactory;
 import net.elephantbase.util.Pool;
 
 public class ConnectionPool extends Pool<Connection> {
@@ -19,6 +19,8 @@ public class ConnectionPool extends Pool<Connection> {
 
 	private static String url, username, password;
 	private static int retryInterval, retryCount;
+
+	public static String MYSQL_TABLEPRE, UC_DBTABLEPRE;
 
 	static {
 		try {
@@ -34,8 +36,11 @@ public class ConnectionPool extends Pool<Connection> {
 			retryInterval = Integer.parseInt(p.getProperty("retry_interval")) * 1000;
 			retryCount = Integer.parseInt(p.getProperty("retry_count"));
 			Class.forName(p.getProperty("driver"));
+
+			MYSQL_TABLEPRE = p.getProperty("mysql_tablepre");
+			UC_DBTABLEPRE = p.getProperty("uc_dbtablepre");
 		} catch (Exception e) {
-			logger.error("", e);
+			logger.log(Level.SEVERE, "", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -46,7 +51,7 @@ public class ConnectionPool extends Pool<Connection> {
 			try {
 				return DriverManager.getConnection(url, username, password);
 			} catch (Exception e) {
-				logger.error("", e);
+				logger.log(Level.SEVERE, "", e);
 				try {
 					Thread.sleep(retryInterval);
 				} catch (InterruptedException ie) {
@@ -54,7 +59,7 @@ public class ConnectionPool extends Pool<Connection> {
 				}
 			}
 		}
-		logger.error("", "Exceed retry count: " + retryCount);
+		logger.severe("Exceed retry count: " + retryCount);
 		return null;
 	}
 
@@ -79,13 +84,13 @@ public class ConnectionPool extends Pool<Connection> {
 		} catch (Exception e) {
 			return false;
 		} finally {
-			Closables.close(rs);
-			Closables.close(st);
+			Closeables.close(rs);
+			Closeables.close(st);
 		}
 	}
 
 	@Override
 	protected void destroyObject(Connection conn) {
-		Closables.close(conn);
+		Closeables.close(conn);
 	}
 }

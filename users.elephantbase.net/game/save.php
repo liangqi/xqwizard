@@ -17,8 +17,6 @@
     $mysql_link->query($sql);
     insertLog($result->uid, EVENT_SAVE, $score);
     header("Login-Result: ok");
-    // 检查是否该运行每日任务
-    checkDailyTask();
   } else {
     header("Login-Result: nosave");
   }

@@ -2,7 +2,7 @@ package net.elephantbase.util;
 
 import java.io.Closeable;
 
-public class Closables {
+public class Closeables {
 	public static void close(Object o) {
 		if (o == null) {
 			return;
