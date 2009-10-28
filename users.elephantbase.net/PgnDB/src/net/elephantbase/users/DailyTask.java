@@ -16,7 +16,7 @@ import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.LoggerFactory;
 
 public class DailyTask implements ServletContextListener {
-	private static Logger logger = LoggerFactory.getLogger(DailyTask.class);
+	private static Logger logger = LoggerFactory.getLogger();
 	private static String MYSQL_TABLEPRE = ConnectionPool.MYSQL_TABLEPRE;
 
 	private Timer timer;

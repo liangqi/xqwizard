@@ -15,7 +15,7 @@ import net.elephantbase.util.LoggerFactory;
 public class TestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(TestServlet.class);
+	private static Logger logger = LoggerFactory.getLogger();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

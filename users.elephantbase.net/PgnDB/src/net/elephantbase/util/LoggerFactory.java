@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class LoggerFactory {
-	static {
-		Logger logger = getLogger(LoggerFactory.class);
+	private static Logger logger = getLogger(LoggerFactory.class);
 
+	static {
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.
 					getInstance().append("../etc/Logging.properties"));
@@ -34,5 +34,9 @@ public class LoggerFactory {
 
 	public static Logger getLogger(Class<?> clazz) {
 		return Logger.getLogger(clazz.getClassLoader().toString());		
+	}
+
+	public static Logger getLogger() {
+		return logger;
 	}
 }

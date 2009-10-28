@@ -1,7 +1,9 @@
 package net.elephantbase.pgndb.web;
 
-import org.apache.wicket.markup.html.WebPage;
+import net.elephantbase.ucenter.web.LoginPage;
 
-public class PgnDBPage extends WebPage {
-	//
+public class PgnDBPage extends LoginPage {
+	public PgnDBPage() {
+		//
+	}
 }

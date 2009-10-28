@@ -8,8 +8,8 @@ import net.elephantbase.util.EasyDate;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
-		// String url = "http://mirror.elephantbase.net/xqwizard/counter.php";
-		String url = "http://mirror.elephantbase.net:8080/pgndb/test/";
+		String url = "http://mirror.elephantbase.net/xqwizard/counter.php";
+		// String url = "http://mirror.elephantbase.net:8080/pgndb/test/";
 		Random random = new Random();
 		System.out.println(url);
 		while (true) {

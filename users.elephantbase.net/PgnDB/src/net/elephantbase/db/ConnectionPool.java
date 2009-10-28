@@ -15,7 +15,7 @@ import net.elephantbase.util.LoggerFactory;
 import net.elephantbase.util.Pool;
 
 public class ConnectionPool extends Pool<Connection> {
-	private static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
+	private static Logger logger = LoggerFactory.getLogger();
 
 	private static String url, username, password;
 	private static int retryInterval, retryCount;
