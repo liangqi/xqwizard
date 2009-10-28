@@ -6,17 +6,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.elephantbase.util.ClassPath;
 import net.elephantbase.util.Closeables;
-import net.elephantbase.util.LoggerFactory;
+import net.elephantbase.util.Logger;
 import net.elephantbase.util.Pool;
 
 public class ConnectionPool extends Pool<Connection> {
-	private static Logger logger = LoggerFactory.getLogger();
-
 	private static String url, username, password;
 	private static int retryInterval, retryCount;
 
@@ -40,7 +36,7 @@ public class ConnectionPool extends Pool<Connection> {
 			MYSQL_TABLEPRE = p.getProperty("mysql_tablepre");
 			UC_DBTABLEPRE = p.getProperty("uc_dbtablepre");
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "", e);
+			Logger.severe(e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -51,7 +47,7 @@ public class ConnectionPool extends Pool<Connection> {
 			try {
 				return DriverManager.getConnection(url, username, password);
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, "", e);
+				Logger.severe(e);
 				try {
 					Thread.sleep(retryInterval);
 				} catch (InterruptedException ie) {
@@ -59,7 +55,7 @@ public class ConnectionPool extends Pool<Connection> {
 				}
 			}
 		}
-		logger.severe("Exceed retry count: " + retryCount);
+		Logger.severe("Exceed retry count: " + retryCount);
 		return null;
 	}
 

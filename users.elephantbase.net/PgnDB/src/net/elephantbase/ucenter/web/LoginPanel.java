@@ -1,10 +1,7 @@
 package net.elephantbase.ucenter.web;
 
-import java.util.logging.Logger;
-
 import net.elephantbase.ucenter.Login;
 import net.elephantbase.util.Bytes;
-import net.elephantbase.util.LoggerFactory;
 import net.elephantbase.util.wicket.CaptchaImageResource;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -16,8 +13,6 @@ import org.apache.wicket.model.Model;
 
 public class LoginPanel extends Panel {
 	private static final long serialVersionUID = 1L;
-
-	static Logger logger = LoggerFactory.getLogger();
 
 	public LoginPanel(String id) {
 		super(id);

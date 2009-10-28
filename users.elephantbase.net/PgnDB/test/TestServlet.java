@@ -1,8 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.util.Closeables;
-import net.elephantbase.util.LoggerFactory;
+import net.elephantbase.util.Logger;
 
 public class TestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private static Logger logger = LoggerFactory.getLogger();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -28,7 +24,7 @@ public class TestServlet extends HttpServlet {
 			rs = ps.executeQuery();
 			resp.getWriter().print(rs.next() ? rs.getInt(1) : 0);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "", e);
+			Logger.severe(e);
 		} finally {
 			Closeables.close(rs);
 			Closeables.close(ps);

@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -13,10 +11,9 @@ import javax.servlet.ServletContextListener;
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.util.Closeables;
 import net.elephantbase.util.EasyDate;
-import net.elephantbase.util.LoggerFactory;
+import net.elephantbase.util.Logger;
 
 public class DailyTask implements ServletContextListener {
-	private static Logger logger = LoggerFactory.getLogger();
 	private static String MYSQL_TABLEPRE = ConnectionPool.MYSQL_TABLEPRE;
 
 	private Timer timer;
@@ -38,7 +35,7 @@ public class DailyTask implements ServletContextListener {
 	static void updateRank() {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
-			logger.severe("Connection refused");
+			Logger.severe("Connection refused");
 			return;
 		}
 		try {
@@ -67,7 +64,7 @@ public class DailyTask implements ServletContextListener {
 			execute(conn, String.format(sqlInsert2, "q"), now.substract(EasyDate.DAY * 90));
 
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "", e);
+			Logger.severe(e);
 		} finally {
 			ConnectionPool.getInstance().returnObject(conn);
 		}

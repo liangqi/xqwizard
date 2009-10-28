@@ -16,6 +16,5 @@
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="webapps/ROOT/WEB-INF/lib/mysql-connector-java.jar"/>
 	<classpathentry kind="lib" path="webapps/ROOT/WEB-INF/lib/wicket.jar"/>
-	<classpathentry kind="lib" path="webapps/ROOT/WEB-INF/lib/wicket-extensions.jar"/>
 	<classpathentry kind="output" path="webapps/ROOT/WEB-INF/classes"/>
 </classpath>
