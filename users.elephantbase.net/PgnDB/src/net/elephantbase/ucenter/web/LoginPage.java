@@ -1,22 +1,67 @@
 package net.elephantbase.ucenter.web;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import net.elephantbase.ucenter.Login;
+import net.elephantbase.util.Bytes;
+import net.elephantbase.util.wicket.CaptchaImageResource;
+
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 public class LoginPage extends BasePage {
-	private Label lblInfo = new Label("lblInfo", "");
+	public class LoginPanel extends Panel {
+		private static final long serialVersionUID = 1L;
 
-	public LoginPage() {
-		setTitle("登录");
-		LoginPanel panel = new LoginPanel(MAIN_PANEL_ID);
-		lblInfo.setVisible(false);
-		panel.add(lblInfo);
-		setPanel(panel);
+		public LoginPanel() {
+			super(MAIN_PANEL_ID);
+			final Model<String> mdlUsername = new Model<String>();
+			final Model<String> mdlPassword = new Model<String>();
+			final Model<String> mdlCaptcha = new Model<String>();
+			final String captcha = Bytes.toHexUpper(Bytes.random(2));
+			
+			Form<Void> frm = new Form<Void>("frm") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onSubmit() {
+					lblInfo.setVisible(true);
+					if (!captcha.equals(mdlCaptcha.getObject())) {
+						lblInfo.setDefaultModelObject("验证码错误");
+					} else {
+						int uid = Login.login(mdlUsername.getObject(), mdlPassword.getObject());
+						if (uid > 0) {
+							((BaseSession) getSession()).setUid(uid);
+							BasePage.setResponsePage(redirectPage);
+						} else if (uid < 0) {
+							lblInfo.setDefaultModelObject("无法连接到象棋巫师用户中心，请稍候再试");
+						} else {
+							lblInfo.setDefaultModelObject("用户名或密码不正确");
+						}
+					}
+				}
+			};
+			frm.add(new TextField<String>("txtUsername", mdlUsername));
+			frm.add(new PasswordTextField("txtPassword", mdlPassword));
+			frm.add(new TextField<String>("txtCaptcha", mdlCaptcha));
+			frm.add(new Image("imgCaptcha", new CaptchaImageResource(captcha)));
+			add(frm);
+		}
 	}
 
-	public void setInfo(String strInfo, String color) {
-		lblInfo.setDefaultModelObject(strInfo);
-		lblInfo.setVisible(true);
-		lblInfo.add(new SimpleAttributeModifier("style", "color:" + color));
+	Label lblInfo = new Label("lblInfo", "");
+
+	BasePage redirectPage;
+
+	public LoginPage(BasePage redirectPage) {
+		super("登录", NO_AUTH);
+		this.redirectPage = redirectPage;
+		lblInfo.setVisible(false);
+		LoginPanel panel = new LoginPanel();
+		panel.add(lblInfo);
+		add(panel);
 	}
 }

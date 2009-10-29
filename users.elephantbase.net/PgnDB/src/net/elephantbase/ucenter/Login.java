@@ -57,4 +57,34 @@ public class Login {
 			ConnectionPool.getInstance().returnObject(conn);
 		}
 	}
+
+	public static String getUsername(int uid) {
+		Connection conn = ConnectionPool.getInstance().borrowObject();
+		if (conn == null) {
+			Logger.severe("Connection refused");
+			return null;
+		}
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+
+			String sql = "SELECT username FROM " +
+					ConnectionPool.UC_DBTABLEPRE + "members WHERE uid = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, uid);
+			rs = ps.executeQuery();
+			if (!rs.next()) {
+				return null;
+			}
+			return rs.getString(1);
+
+		} catch (Exception e) {
+			Logger.severe(e);
+			return null;
+		} finally {
+			Closeables.close(rs);
+			Closeables.close(ps);
+			ConnectionPool.getInstance().returnObject(conn);
+		}
+	}
 }
