@@ -32,14 +32,18 @@ public class Logger {
 		}
 	}
 
-	private static void log(Level level, String s) {
-		StackTraceElement ste = new Throwable().getStackTrace()[2];
-		logger.logp(level, ste.getClassName(), ste.getMethodName(), s);
+	private static StackTraceElement getStackTraceElement() {
+		return new Throwable().getStackTrace()[3];
 	}
 
-	private static void log(Level level, String s, Throwable t) {
-		StackTraceElement ste = new Throwable().getStackTrace()[2];
-		logger.logp(level, ste.getClassName(), ste.getMethodName(), s, t);
+	private static void log(Level l, String s) {
+		StackTraceElement ste = getStackTraceElement();
+		logger.logp(l, ste.getClassName(), ste.getMethodName(), s);
+	}
+
+	private static void log(Level l, String s, Throwable t) {
+		StackTraceElement ste = getStackTraceElement();
+		logger.logp(l, ste.getClassName(), ste.getMethodName(), s, t);
 	}
 
 	public static void info(String s) {
