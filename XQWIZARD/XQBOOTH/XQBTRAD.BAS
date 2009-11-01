@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
+' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.4"
+Public Const STRING_VERSION     As String = "4.41"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言條目數
 Public Const ICON_QUOTE         As Integer = 2      ' 名言圖標
@@ -92,6 +92,15 @@ Public Gui_szAdvertDate         As String   ' 檢查廣告的日期
 Public Gui_dfLastTime           As Double   ' 當前時間(每天00:00過去的秒數)
 Public Gui_nAdvertIndex         As Integer  ' 當前廣告序號
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的條目
+Public Publish_nSize            As Integer  ' 图片类型
+Public Publish_bTrad            As Boolean  ' 是否繁体(简单/印刷)
+Public Publish_nBoardS          As Integer  ' 棋盘类型(小)
+Public Publish_nPiecesS         As Integer  ' 棋子类型(小)
+Public Publish_nBoardL          As Integer  ' 棋盘类型(小)
+Public Publish_nPiecesL         As Integer  ' 棋子类型(大)
+Public Publish_bContent         As Boolean  ' 是否只发布当前局面
+Public Publish_nLocation        As Integer  ' 发布站点
+Public Publish_nFormat          As Integer  ' 发布格式
 Public Login_szTitle            As String   ' 登錄框標題
 Public Login_szPrompt           As String   ' 登錄框提示
 Public Login_bCancel            As Boolean  ' 登錄是否取消
@@ -192,9 +201,6 @@ End Sub
 ' 從注冊表加載參數
 Public Sub LoadRegs()
 
-Dim dwCounter(0 To 1) As Long
-QueryPerformanceCounter VarPtr(dwCounter(0))
-
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
@@ -206,6 +212,15 @@ Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
+Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
+Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
+Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
+Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
+Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
+Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
+Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
+Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
 Login_szPassword = SimpleDecrypt(GetSetting("XQBooth", "Gui", "Password", ""))
 Login_bRemember = GetSetting("XQBooth", "Gui", "Remember", "0") <> "0"
@@ -223,6 +238,15 @@ SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
 SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
+SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
+SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
+SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
+SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
+SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
+SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
 SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
 SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName

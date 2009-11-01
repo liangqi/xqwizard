@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
+' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -42,9 +42,9 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.4"
+Public Const STRING_VERSION     As String = "4.41"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 27   ' 日积月累条目数
+Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
@@ -2547,15 +2547,16 @@ End Sub
 ' 加载“日积月累”
 Public Sub LoadTips()
 
-Gui_szTips(1) = "　　象棋巫师是一款功能强大的电脑对弈和棋谱编辑软件，具有方便的人机对战、棋谱记录、欣赏、管理棋局的功能，完全可以满足各层次象棋爱好者、棋手、裁判员及象棋文字工作者的各种需要。"
+Gui_szTips(1) = "　　象棋巫师是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，具有方便的人机对战、棋谱记录、欣赏、发布、管理棋局的功能，还内置大量象棋习题，完全可以满足各层次象棋爱好者、棋手、裁判员及象棋文字工作者的各种需要。"
 Gui_szTips(2) = "　　象棋巫师支持多个通用象棋引擎，他们大都具有专业棋手的水平，是象棋爱好者和专业棋手提高棋艺的良师益友。" + vbCrLf + _
         "　　如果您对象棋巫师自带的引擎 ElephantEye 的表现不满意，可以登录 http://www.elephantbase.net/league.htm ，下载到其他各具特色的引擎。"
-Gui_szTips(3) = "　　点击“电脑执红”或“电脑执黑”按钮，就可以展开人机大战，象棋巫师提供了五种不同的难度给用户体验。"
+Gui_szTips(3) = "　　点击“新的棋局”按钮，就可以展开人机对弈，象棋巫师提供了五种的难度和四种的让子模式给用户体验。"
 Gui_szTips(4) = "　　如果您不希望让电脑走棋，而仅仅是想知道电脑在想些什么，或者让电脑给你一些启发，可以点击“电脑分析”按钮，打开思考细节窗口。" + vbCrLf + _
         "　　您可以把思考细节窗口中的思考路线复制下来，粘贴到主窗口中，对思考线路进行推演。"
-Gui_szTips(5) = "　　象棋巫师强大的棋谱、棋图导入和导出功能为您在网络上和棋友交流提供了极大的方便。"
+Gui_szTips(5) = "　　点击“发布棋谱”按钮，就可以在网上和棋友交流棋谱，或者向高手求助。" + vbCrLf + _
+        "　　象棋巫师推荐了几个著名的象棋论坛，并给用户提供快捷的发帖引导，很方便地让用户在这些象棋论坛上发布棋谱或发起求助。"
 Gui_szTips(6) = "　　象棋巫师目前主要通过网络发行，最新的版本可以从《象棋百科全书网》获得：" + vbCrLf + "　　http://www.elephantbase.net/"
-Gui_szTips(7) = "　　目前网络上已经有数以万计通用格式的棋谱文件(后缀.PGN)可供下载。您可以到以下页面下载近15年内全国顶级象棋比赛的棋谱：http://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(7) = "　　目前网络上已经有数以万计通用格式的棋谱文件(后缀.PGN)可供下载。您可以到以下页面下载近20年内全国顶级象棋比赛的棋谱：http://www.elephantbase.net/resource.htm" + vbCrLf + _
         "　　同时也欢迎您将自己制作的文件上传给我们。"
 Gui_szTips(8) = "　　如果您对象棋巫师有什么意见或建议，可以跟象棋巫师开发团队联系，邮件地址是：" + vbCrLf + "　　webmaster@elephantbase.net" + vbCrLf + _
         "　　象棋巫师开发团队非常希望和大家保持联系。"
@@ -2564,22 +2565,16 @@ Gui_szTips(10) = "　　如果您是一个象棋巫师的初学者，请您仔细阅读本软件“帮助”选
 Gui_szTips(11) = "　　象棋巫师支持文件关联功能，双击PGN文件(图标是棋子“相”)可以打开棋谱，双击FEN文件(图标是棋盘)可以打开局面。"
 Gui_szTips(12) = "　　象棋巫师支持“象棋演播室”的棋谱。只要双击XQF文件(图标是“象”字)，或者点击“打开”按钮并选择一个XQF文件，象棋巫师就会打开这个棋谱。"
 Gui_szTips(13) = "　　象棋巫师最适合800x600和1024x768的显示分辩率，在“选项设置”对话框(“选项”选单中的“设置”一项)，把“界面”设成“大”，就可在1024x768的显示分辩率下得到最舒适的显示效果。"
-Gui_szTips(14) = "　　使用“复制文本棋盘”功能，可以在BBS上贴出静态的ANSI代码，各大高校的BBS站都支持ANSI代码。红子用红字表示，黑子用绿字表示，一目了然。" + vbCrLf + _
-        "　　如果BBS不支持ANSI代码，或者只是为了贴到普通文本上，可以在在“选项设置”对话框中把“使用ANSI文本棋盘”的钩去掉。区别红子和黑子的方法是：红子的两边带圆括号，黑子的两边带方括号。"
-Gui_szTips(15) = "　　如果该BBS系统是需要按两次Escape键才能键入一个Escape字符(也可能取决于Telnet终端的设置)，那么可以在“选项设置”对话框中把“用两个Esc输入ANSI”钩上。"
-Gui_szTips(16) = "　　文本棋盘的最后一行诸如 rnbakabnr/... 的字符串是棋盘编码(称为FEN串)，如果您在网络论坛上看到了这样的FEN串，可以使用“局面”选单的“导入FEN串”功能，把棋盘导入到象棋巫师中，免去了摆放棋子位置的烦恼。"
-Gui_szTips(17) = "　　点击“查看文本棋谱”按钮，就可以看到棋谱文本，为粘贴到BBS上或者Word文档中提供了方便。"
-Gui_szTips(18) = "　　象棋巫师可读入联众、弈天、中国游戏中心等中国象棋的存盘文件和大部分的文本棋谱文件，把这些含有着法的文本复制到剪贴板，点击“从剪贴板导入”按钮，这些着法就会录制到象棋巫师中。"
-Gui_szTips(19) = "　　象棋巫师可将棋谱导出为支持Flash棋盘的HTML文本，特别适合将棋谱在网上发表。"
-Gui_szTips(20) = "　　象棋巫师提供的棋谱键盘输入法为喜欢键盘录入棋谱的棋友提供了一种高效的棋谱输入方法，棋友可根据自己的习惯在数字小键盘或WXF字母格式中任意选择。"
-Gui_szTips(21) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示，演示的时间间隔可以自由调整。再次点击“播放棋局”按钮可停止自动演示。"
-Gui_szTips(22) = "　　点击“查看图片棋盘”按钮，把图片棋盘复制并粘贴到Word等文字处理软件中，可以生成漂亮的象棋稿件。"
-Gui_szTips(23) = "　　在欣赏棋谱的过程中，可以使用棋盘倒置和左右调换功能来从不同的角度欣赏棋局。其中左右调换功能还可以一次将类似于“炮八平五”开局这样的棋谱自动转换成大家习惯的“炮二平五”。反之亦然。"
-Gui_szTips(24) = "　　如果在欣赏棋谱时遇到复杂的局面，可以点击“分析局面”按钮，将当前棋局新开设一个象棋巫师的窗口，自由推演后续的变化。"
-Gui_szTips(25) = "　　在两个象棋巫师窗口中，灵活运用“查看文本棋谱”和“从剪贴板导入”功能，可将推演棋盘中的棋谱记录导入到当前棋局中。"
-Gui_szTips(26) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" + vbCrLf + _
+Gui_szTips(14) = "　　点击“查看文本棋谱”按钮，就可以看到棋谱文本，为粘贴到BBS上或者Word文档中提供了方便。"
+Gui_szTips(15) = "　　象棋巫师可读入联众、弈天、中国游戏中心等中国象棋的存盘文件和大部分的文本棋谱文件，把这些含有着法的文本复制到剪贴板，点击“从剪贴板导入”按钮，这些着法就会录制到象棋巫师中。"
+Gui_szTips(16) = "　　象棋巫师提供的棋谱键盘输入法为喜欢键盘录入棋谱的棋友提供了一种高效的棋谱输入方法，棋友可根据自己的习惯在数字小键盘或WXF字母格式中任意选择。"
+Gui_szTips(17) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示，演示的时间间隔可以自由调整。再次点击“播放棋局”按钮可停止自动演示。"
+Gui_szTips(18) = "　　在欣赏棋谱的过程中，可以使用棋盘倒置和左右调换功能来从不同的角度欣赏棋局。其中左右调换功能还可以一次将类似于“炮八平五”开局这样的棋谱自动转换成大家习惯的“炮二平五”。反之亦然。"
+Gui_szTips(19) = "　　如果在欣赏棋谱时遇到复杂的局面，可以点击“分析局面”按钮，将当前棋局新开设一个象棋巫师的窗口，自由推演后续的变化。"
+Gui_szTips(20) = "　　在两个象棋巫师窗口中，灵活运用“查看文本棋谱”和“从剪贴板导入”功能，可将推演棋盘中的棋谱记录导入到当前棋局中。"
+Gui_szTips(21) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" + vbCrLf + _
         "　　象棋巫师的源程序发布在 http://sourceforge.net/projects/xqwizard/ 这个页面上，您可以根据自己的需要对源程序进行修改，并依照GPL协议发布您修改过的源程序。"
-Gui_szTips(27) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.elephantbase.net/ 。" + vbCrLf + _
+Gui_szTips(22) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.elephantbase.net/ 。" + vbCrLf + _
         "　　您也可以将本软件的主页链接到自己的站点上。请您使用 http://www.elephantbase.net/ 作为链接的路径。"
 
 Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _

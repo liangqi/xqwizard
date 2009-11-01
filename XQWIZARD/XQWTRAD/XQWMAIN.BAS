@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -42,9 +42,9 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' È«¾Ö³£Á¿¡ª¡ªÏóÆåÎ×ŸĞÅÏ¢
-Public Const STRING_VERSION     As String = "4.4"
+Public Const STRING_VERSION     As String = "4.41"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
-Public Const TIP_NUM            As Integer = 27   ' ÈÕ·eÔÂÀÛ—lÄ¿”µ
+Public Const TIP_NUM            As Integer = 21   ' ÈÕ·eÔÂÀÛ—lÄ¿”µ
 Public Const QUOTE_NUM          As Integer = 12   ' ÃûÑÔ—lÄ¿”µ
 Public Const ICON_QUOTE         As Integer = 8    ' ÃûÑÔˆD˜Ë
 Public Const MAX_ENDGAMES       As Integer = 1024 ' šˆ¾ÖµÄ×î´ó—lÄ¿”µ
@@ -162,6 +162,27 @@ Public Const COORD_CHAR         As String = "£±£²£³£´£µ£¶£·£¸£¹¾Å°ËÆßÁùÎåËÄÈı¶şÒ
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Í¼Æ¬´óĞ¡
+Public Const PUB_SIZE_MINI      As Integer = 0
+Public Const PUB_SIZE_PRINT     As Integer = 1
+Public Const PUB_SIZE_SMALL     As Integer = 2
+Public Const PUB_SIZE_LARGE     As Integer = 3
+Public Const PUB_SIZE_MAX       As Integer = 4
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Õ¾µã
+Public Const PUB_LOCATION_ZGXQDS As Integer = 0
+Public Const PUB_LOCATION_TIEBA As Integer = 1
+Public Const PUB_LOCATION_ZHIDAO As Integer = 2
+Public Const PUB_LOCATION_SINA  As Integer = 3
+Public Const PUB_LOCATION_QZONE As Integer = 4
+Public Const PUB_LOCATION_OTHER As Integer = 5
+Public Const PUB_LOCATION_MAX   As Integer = 6
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼¸ñÊ½
+Public Const PUB_FORMAT_TEXT    As Integer = 0
+Public Const PUB_FORMAT_ANSI    As Integer = 1
+Public Const PUB_FORMAT_UBB     As Integer = 2
+Public Const PUB_FORMAT_HTML    As Integer = 3
+Public Const PUB_FORMAT_WEB     As Integer = 4
+Public Const PUB_FORMAT_MAX     As Integer = 5
 
 ' È«¾Ö×ƒÁ¿¡ª¡ª³ÌĞò
 Public App_frmMain              As Form     ' Ö÷´°¿ÚŒ¦ÏóÒıÓÃ
@@ -228,6 +249,16 @@ Public Gui_szUpgradeDate        As String   ' ™z²éÉı¼‰µÄÈÕÆÚ
 Public Gui_szAdvertDate         As String   ' ™z²éV¸æµÄÈÕÆÚ
 Public Gui_nAdvertIndex         As Integer  ' ®”Ç°V¸æĞòÌ–
 Public Gui_dfLastTime           As Double   ' ®”Ç°•rég(Ã¿Ìì00:00ß^È¥µÄÃë”µ)
+' È«¾Ö±äÁ¿¡ª¡ª·¢²¼ÉèÖÃ
+Public Publish_nSize            As Integer  ' Í¼Æ¬ÀàĞÍ
+Public Publish_bTrad            As Boolean  ' ÊÇ·ñ·±Ìå(¼òµ¥/Ó¡Ë¢)
+Public Publish_nBoardS          As Integer  ' ÆåÅÌÀàĞÍ(Ğ¡)
+Public Publish_nPiecesS         As Integer  ' Æå×ÓÀàĞÍ(Ğ¡)
+Public Publish_nBoardL          As Integer  ' ÆåÅÌÀàĞÍ(Ğ¡)
+Public Publish_nPiecesL         As Integer  ' Æå×ÓÀàĞÍ(´ó)
+Public Publish_bContent         As Boolean  ' ÊÇ·ñÖ»·¢²¼µ±Ç°¾ÖÃæ
+Public Publish_nLocation        As Integer  ' ·¢²¼Õ¾µã
+Public Publish_nFormat          As Integer  ' ·¢²¼¸ñÊ½
 ' È«¾Ö×ƒÁ¿¡ª¡ªÆå¾Ö
 Public Game_szEvent             As String   ' ÙÊÂ
 Public Game_szRound             As String   ' İ†´Î
@@ -2516,15 +2547,16 @@ End Sub
 ' ¼Óİd¡°ÈÕ·eÔÂÀÛ¡±
 Public Sub LoadTips()
 
-Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×ŸÊÇÒ»¿î¹¦ÄÜŠ´óµÄëŠÄXŒ¦ŞÄºÍÆå×V¾İ‹Ü›¼ş£¬¾ßÓĞ·½±ãµÄÈË»úŒ¦‘ğ¡¢Æå×VÓ›ä›¡¢ĞÀÙp¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ÍêÈ«¿ÉÒÔM×ã¸÷ŒÓ´ÎÏóÆåÛºÃÕß¡¢ÆåÊÖ¡¢²ÃÅĞ†T¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷ÖÖĞèÒª¡£"
+Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×ŸÊÇÒ»¿î¹¦ÄÜ³¬ŠµÄÏóÆå½ÌŒW¡¢ëŠÄXŒ¦ŞÄºÍÆå×V¾İ‹Ü›¼ş£¬¾ßÓĞ·½±ãµÄÈË™CŒ¦‘ğ¡¢Æå×VÓ›ä›¡¢ĞÀÙp¡¢°l²¼¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ß€ƒÈÖÃ´óÁ¿ÏóÆåÁ•î}£¬ÍêÈ«¿ÉÒÔM×ã¸÷ŒÓ´ÎÏóÆåÛºÃÕß¡¢ÆåÊÖ¡¢²ÃÅĞ†T¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷·NĞèÒª¡£"
 Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³Ö¶à‚€Í¨ÓÃÏóÆåÒıÇæ£¬Ëû‚ƒ´ó¶¼¾ßÓĞŒ£˜IÆåÊÖµÄË®Æ½£¬ÊÇÏóÆåÛºÃÕßºÍŒ£˜IÆåÊÖÌá¸ßÆåË‡µÄÁ¼ŸÒæÓÑ¡£" + vbCrLf + _
         "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×Ÿ×Ô§µÄÒıÇæ ElephantEye µÄ±í¬F²»MÒâ£¬¿ÉÒÔµÇä› http://www.elephantbase.net/league.htm £¬ÏÂİdµ½ÆäËû¸÷¾ßÌØÉ«µÄÒıÇæ¡£"
-Gui_szTips(3) = "¡¡¡¡üc“ô¡°ëŠÄXˆÌ¼t¡±»ò¡°ëŠÄXˆÌºÚ¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË»ú´ó‘ğ£¬ÏóÆåÎ×ŸÌá¹©ÁËÎåÖÖ²»Í¬µÄëy¶È½oÓÃ‘ôówò¡£"
+Gui_szTips(3) = "¡¡¡¡üc“ô¡°ĞÂµÄÆå¾Ö¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË™CŒ¦ŞÄ£¬ÏóÆåÎ×ŸÌá¹©ÁËÎå·NµÄëy¶ÈºÍËÄ·NµÄ×Œ×ÓÄ£Ê½½oÓÃ‘ôówò¡£"
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£Íû×ŒëŠÄX×ßÆå£¬¶øƒHƒHÊÇÏëÖªµÀëŠÄXÔÚÏëĞ©Ê²Ã´£¬»òÕß×ŒëŠÄX½oÄãÒ»Ğ©†¢°l£¬¿ÉÒÔüc“ô¡°ëŠÄX·ÖÎö¡±°´âo£¬´òé_Ë¼¿¼¼š¹´°¿Ú¡£" + vbCrLf + _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼¼š¹´°¿ÚÖĞµÄË¼¿¼Â·¾€Ñ}ÑuÏÂí£¬Õ³ÙNµ½Ö÷´°¿ÚÖĞ£¬Œ¦Ë¼¿¼¾€Â·ßMĞĞÍÆÑİ¡£"
-Gui_szTips(5) = "¡¡¡¡ÏóÆåÎ×ŸŠ´óµÄÆå×V¡¢ÆåˆDŒ§ÈëºÍŒ§³ö¹¦ÄÜéÄúÔÚ¾W½jÉÏºÍÆåÓÑ½»Á÷Ìá¹©ÁË¼«´óµÄ·½±ã¡£"
+Gui_szTips(5) = "¡¡¡¡üc“ô¡°°l²¼Æå×V¡±°´âo£¬¾Í¿ÉÒÔÔÚ¾WÉÏºÍÆåÓÑ½»Á÷Æå×V£¬»òÕßÏò¸ßÊÖÇóÖú¡£" + vbCrLf + _
+        "¡¡¡¡ÏóÆåÎ×ŸÍÆË]ÁË×‚€ÖøÃûµÄÏóÆåÕ“‰¯£¬K½oÓÃ‘ôÌá¹©¿ì½İµÄ°lÌûÒıŒ§£¬ºÜ·½±ãµØ×ŒÓÃ‘ôÔÚß@Ğ©ÏóÆåÕ“‰¯ÉÏ°l²¼Æå×V»ò°lÆğÇóÖú¡£"
 Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŸÄ¿Ç°Ö÷ÒªÍ¨ß^¾W½j°lĞĞ£¬×îĞÂµÄ°æ±¾¿ÉÒÔÄ¡¶ÏóÆå°Ù¿ÆÈ«•ø¾W¡·«@µÃ£º" + vbCrLf + "¡¡¡¡http://www.elephantbase.net/"
-Gui_szTips(7) = "¡¡¡¡Ä¿Ç°¾W½jÉÏÒÑ½›ÓĞ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼ş(áá¾Y.PGN)¿É¹©ÏÂİd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂİd½ü15ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(7) = "¡¡¡¡Ä¿Ç°¾W½jÉÏÒÑ½›ÓĞ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼ş(áá¾Y.PGN)¿É¹©ÏÂİd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂİd½ü20ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.elephantbase.net/resource.htm" + vbCrLf + _
         "¡¡¡¡Í¬•rÒ²šgÓ­ÄúŒ¢×Ô¼ºÑu×÷µÄÎÄ¼şÉÏ‚÷½oÎÒ‚ƒ¡£"
 Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŸÓĞÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×Ÿé_°lˆFê Â“Ïµ£¬à]¼şµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ÿé_°lˆFê ·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÂ“Ïµ¡£"
@@ -2533,22 +2565,16 @@ Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»‚€ÏóÆåÎ×ŸµÄ³õŒWÕß£¬ÕˆÄú×Ğ¼šé†×x±¾Ü›¼ş¡°ÍÖú¡±ßx
 Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³ÖÎÄ¼şêPÂ“¹¦ÄÜ£¬ëp“ôPGNÎÄ¼ş(ˆD˜ËÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ôFENÎÄ¼ş(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
 Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³Ö¡°ÏóÆåÑİ²¥ÊÒ¡±µÄÆå×V¡£Ö»Òªëp“ôXQFÎÄ¼ş(ˆD˜ËÊÇ¡°Ïó¡±×Ö)£¬»òÕßüc“ô¡°´òé_¡±°´âo²¢ßx“ñÒ»‚€XQFÎÄ¼ş£¬ÏóÆåÎ×Ÿ¾Í•ş´òé_ß@‚€Æå×V¡£"
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ÿ×îÊÊºÏ800x600ºÍ1024x768µÄï@Ê¾·ÖŞqÂÊ£¬ÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿ò(¡°ßxí—¡±ßx†ÎÖĞµÄ¡°ÔOÖÃ¡±Ò»í—)£¬°Ñ¡°½çÃæ¡±ÔO³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄï@Ê¾·ÖŞqÂÊÏÂµÃµ½×îÊæÊÊµÄï@Ê¾Ğ§¹û¡£"
-Gui_szTips(14) = "¡¡¡¡Ê¹ÓÃ¡°Ñ}ÑuÎÄ±¾Æå±P¡±¹¦ÄÜ£¬¿ÉÒÔÔÚBBSÉÏÙN³öìo‘BµÄANSI´ú´a£¬¸÷´ó¸ßĞ£µÄBBSÕ¾¶¼Ö§³ÖANSI´ú´a¡£¼t×ÓÓÃ¼t×Ö±íÊ¾£¬ºÚ×ÓÓÃ¾G×Ö±íÊ¾£¬Ò»Ä¿ÁËÈ»¡£" + vbCrLf + _
-        "¡¡¡¡Èç¹ûBBS²»Ö§³ÖANSI´ú´a£¬»òÕßÖ»ÊÇéÁËÙNµ½ÆÕÍ¨ÎÄ±¾ÉÏ£¬¿ÉÒÔÔÚÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿òÖĞ°Ñ¡°Ê¹ÓÃANSIÎÄ±¾Æå±P¡±µÄã^È¥µô¡£…^„e¼t×ÓºÍºÚ×ÓµÄ·½·¨ÊÇ£º¼t×ÓµÄƒÉß…§ˆAÀ¨Ì–£¬ºÚ×ÓµÄƒÉß…§·½À¨Ì–¡£"
-Gui_szTips(15) = "¡¡¡¡Èç¹ûÔ“BBSÏµ½yÊÇĞèÒª°´ƒÉ´ÎEscapeæI²ÅÄÜæIÈëÒ»‚€Escape×Ö·û(Ò²¿ÉÄÜÈ¡›Qì¶Telnet½K¶ËµÄÔOÖÃ)£¬ÄÇÃ´¿ÉÒÔÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿òÖĞ°Ñ¡°ÓÃƒÉ‚€Escİ”ÈëANSI¡±ã^ÉÏ¡£"
-Gui_szTips(16) = "¡¡¡¡ÎÄ±¾Æå±PµÄ×îááÒ»ĞĞÖTÈç rnbakabnr/... µÄ×Ö·û´®ÊÇÆå±P¾´a(·QéFEN´®)£¬Èç¹ûÄúÔÚ¾W½jÕ“‰¯ÉÏ¿´µ½ÁËß@˜ÓµÄFEN´®£¬¿ÉÒÔÊ¹ÓÃ¡°¾ÖÃæ¡±ßx†ÎµÄ¡°Œ§ÈëFEN´®¡±¹¦ÄÜ£¬°ÑÆå±PŒ§Èëµ½ÏóÆåÎ×ŸÖĞ£¬ÃâÈ¥ÁË”[·ÅÆå×ÓÎ»ÖÃµÄŸ©À¡£"
-Gui_szTips(17) = "¡¡¡¡üc“ô¡°²é¿´ÎÄ±¾Æå×V¡±°´âo£¬¾Í¿ÉÒÔ¿´µ½Æå×VÎÄ±¾£¬éÕ³ÙNµ½BBSÉÏ»òÕßWordÎÄ™nÖĞÌá¹©ÁË·½±ã¡£"
-Gui_szTips(18) = "¡¡¡¡ÏóÆåÎ×Ÿ¿É×xÈëÂ“±Š¡¢ŞÄÌì¡¢ÖĞ‡øÓÎ‘òÖĞĞÄµÈÖĞ‡øÏóÆåµÄ´æ±PÎÄ¼şºÍ´ó²¿·ÖµÄÎÄ±¾Æå×VÎÄ¼ş£¬°Ñß@Ğ©º¬ÓĞÖø·¨µÄÎÄ±¾Ñ}Ñuµ½¼ôÙN°å£¬üc“ô¡°Ä¼ôÙN°åŒ§Èë¡±°´âo£¬ß@Ğ©Öø·¨¾Í•şä›Ñuµ½ÏóÆåÎ×ŸÖĞ¡£"
-Gui_szTips(19) = "¡¡¡¡ÏóÆåÎ×Ÿ¿ÉŒ¢Æå×VŒ§³öéÖ§³ÖFlashÆå±PµÄHTMLÎÄ±¾£¬ÌØ„eÊÊºÏŒ¢Æå×VÔÚ¾WÉÏ°l±í¡£"
-Gui_szTips(20) = "¡¡¡¡ÏóÆåÎ×ŸÌá¹©µÄÆå×VæI±Pİ”Èë·¨éÏ²šgæI±Pä›ÈëÆå×VµÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßĞ§µÄÆå×Vİ”Èë·½·¨£¬ÆåÓÑ¿É¸ù¾İ×Ô¼ºµÄÁ•‘TÔÚ”µ×ÖĞ¡æI±P»òWXF×ÖÄ¸¸ñÊ½ÖĞÈÎÒâßx“ñ¡£"
-Gui_szTips(21) = "¡¡¡¡ÔÚĞÀÙpÆå×VµÄß^³ÌÖĞ£¬üc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¾Í¿ÉÄÔ“²½×Ô„ÓÑİÊ¾£¬ÑİÊ¾µÄ•régég¸ô¿ÉÒÔ×ÔÓÉÕ{Õû¡£ÔÙ´Îüc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¿ÉÍ£Ö¹×Ô„ÓÑİÊ¾¡£"
-Gui_szTips(22) = "¡¡¡¡üc“ô¡°²é¿´ˆDÆ¬Æå±P¡±°´âo£¬°ÑˆDÆ¬Æå±PÑ}Ñu²¢Õ³ÙNµ½WordµÈÎÄ×ÖÌÀíÜ›¼şÖĞ£¬¿ÉÒÔÉú³ÉÆ¯ÁÁµÄÏóÆå¸å¼ş¡£"
-Gui_szTips(23) = "¡¡¡¡ÔÚĞÀÙpÆå×VµÄß^³ÌÖĞ£¬¿ÉÒÔÊ¹ÓÃÆå±Pµ¹ÖÃºÍ×óÓÒÕ{“Q¹¦ÄÜíÄ²»Í¬µÄ½Ç¶ÈĞÀÙpÆå¾Ö¡£ÆäÖĞ×óÓÒÕ{“Q¹¦ÄÜß€¿ÉÒÔÒ»´ÎŒ¢îËÆì¶¡°ÅÚ°ËÆ½Îå¡±é_¾Öß@˜ÓµÄÆå×V×Ô„ÓŞD“Q³É´ó¼ÒÁ•‘TµÄ¡°ÅÚ¶şÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
-Gui_szTips(24) = "¡¡¡¡Èç¹ûÔÚĞÀÙpÆå×V•rÓöµ½Ñ}ësµÄ¾ÖÃæ£¬¿ÉÒÔüc“ô¡°·ÖÎö¾ÖÃæ¡±°´âo£¬Œ¢®”Ç°Æå¾ÖĞÂé_ÔOÒ»‚€ÏóÆåÎ×ŸµÄ´°¿Ú£¬×ÔÓÉÍÆÑİááÀmµÄ×ƒ»¯¡£"
-Gui_szTips(25) = "¡¡¡¡ÔÚƒÉ‚€ÏóÆåÎ×Ÿ´°¿ÚÖĞ£¬ì`»îß\ÓÃ¡°²é¿´ÎÄ±¾Æå×V¡±ºÍ¡°Ä¼ôÙN°åŒ§Èë¡±¹¦ÄÜ£¬¿ÉŒ¢ÍÆÑİÆå±PÖĞµÄÆå×VÓ›ä›Œ§Èëµ½®”Ç°Æå¾ÖÖĞ¡£"
-Gui_szTips(26) = "¡¡¡¡ÏóÆåÎ×ŸÊÇ‚€×ÔÓÉÜ›¼ş£¬Èç¹ûÄúÓXµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØŒ¢±¾Ü›¼şÉÏİdµ½ÈÎÒ»‚€¹²ÏíÜ›¼şÏÂİdÕ¾üc¡£" + vbCrLf + _
+Gui_szTips(14) = "¡¡¡¡üc“ô¡°²é¿´ÎÄ±¾Æå×V¡±°´âo£¬¾Í¿ÉÒÔ¿´µ½Æå×VÎÄ±¾£¬éÕ³ÙNµ½BBSÉÏ»òÕßWordÎÄ™nÖĞÌá¹©ÁË·½±ã¡£"
+Gui_szTips(15) = "¡¡¡¡ÏóÆåÎ×Ÿ¿É×xÈëÂ“±Š¡¢ŞÄÌì¡¢ÖĞ‡øÓÎ‘òÖĞĞÄµÈÖĞ‡øÏóÆåµÄ´æ±PÎÄ¼şºÍ´ó²¿·ÖµÄÎÄ±¾Æå×VÎÄ¼ş£¬°Ñß@Ğ©º¬ÓĞÖø·¨µÄÎÄ±¾Ñ}Ñuµ½¼ôÙN°å£¬üc“ô¡°Ä¼ôÙN°åŒ§Èë¡±°´âo£¬ß@Ğ©Öø·¨¾Í•şä›Ñuµ½ÏóÆåÎ×ŸÖĞ¡£"
+Gui_szTips(16) = "¡¡¡¡ÏóÆåÎ×ŸÌá¹©µÄÆå×VæI±Pİ”Èë·¨éÏ²šgæI±Pä›ÈëÆå×VµÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßĞ§µÄÆå×Vİ”Èë·½·¨£¬ÆåÓÑ¿É¸ù¾İ×Ô¼ºµÄÁ•‘TÔÚ”µ×ÖĞ¡æI±P»òWXF×ÖÄ¸¸ñÊ½ÖĞÈÎÒâßx“ñ¡£"
+Gui_szTips(17) = "¡¡¡¡ÔÚĞÀÙpÆå×VµÄß^³ÌÖĞ£¬üc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¾Í¿ÉÄÔ“²½×Ô„ÓÑİÊ¾£¬ÑİÊ¾µÄ•régég¸ô¿ÉÒÔ×ÔÓÉÕ{Õû¡£ÔÙ´Îüc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¿ÉÍ£Ö¹×Ô„ÓÑİÊ¾¡£"
+Gui_szTips(18) = "¡¡¡¡ÔÚĞÀÙpÆå×VµÄß^³ÌÖĞ£¬¿ÉÒÔÊ¹ÓÃÆå±Pµ¹ÖÃºÍ×óÓÒÕ{“Q¹¦ÄÜíÄ²»Í¬µÄ½Ç¶ÈĞÀÙpÆå¾Ö¡£ÆäÖĞ×óÓÒÕ{“Q¹¦ÄÜß€¿ÉÒÔÒ»´ÎŒ¢îËÆì¶¡°ÅÚ°ËÆ½Îå¡±é_¾Öß@˜ÓµÄÆå×V×Ô„ÓŞD“Q³É´ó¼ÒÁ•‘TµÄ¡°ÅÚ¶şÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
+Gui_szTips(19) = "¡¡¡¡Èç¹ûÔÚĞÀÙpÆå×V•rÓöµ½Ñ}ësµÄ¾ÖÃæ£¬¿ÉÒÔüc“ô¡°·ÖÎö¾ÖÃæ¡±°´âo£¬Œ¢®”Ç°Æå¾ÖĞÂé_ÔOÒ»‚€ÏóÆåÎ×ŸµÄ´°¿Ú£¬×ÔÓÉÍÆÑİááÀmµÄ×ƒ»¯¡£"
+Gui_szTips(20) = "¡¡¡¡ÔÚƒÉ‚€ÏóÆåÎ×Ÿ´°¿ÚÖĞ£¬ì`»îß\ÓÃ¡°²é¿´ÎÄ±¾Æå×V¡±ºÍ¡°Ä¼ôÙN°åŒ§Èë¡±¹¦ÄÜ£¬¿ÉŒ¢ÍÆÑİÆå±PÖĞµÄÆå×VÓ›ä›Œ§Èëµ½®”Ç°Æå¾ÖÖĞ¡£"
+Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×ŸÊÇ‚€×ÔÓÉÜ›¼ş£¬Èç¹ûÄúÓXµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØŒ¢±¾Ü›¼şÉÏİdµ½ÈÎÒ»‚€¹²ÏíÜ›¼şÏÂİdÕ¾üc¡£" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×ŸµÄÔ´³ÌĞò°l²¼ÔÚ http://sourceforge.net/projects/xqwizard/ ß@‚€í“ÃæÉÏ£¬Äú¿ÉÒÔ¸ù¾İ×Ô¼ºµÄĞèÒªŒ¦Ô´³ÌĞòßMĞĞĞŞ¸Ä£¬²¢ÒÀÕÕGPL…f×h°l²¼ÄúĞŞ¸Äß^µÄÔ´³ÌĞò¡£"
-Gui_szTips(27) = "¡¡¡¡ÏóÆåÎ×ŸÔÚé_°lß^³ÌÖĞµÃµ½ÁËV´óÆåÃÔÅóÓÑµÄŸáÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔĞÄµÄ¸ĞÖx£¬Í¬•rÒ²Ï£ÍûÄúÀ^ÀmÖ§³ÖÏóÆåÎ×Ÿ£¬êP×¢ http://www.elephantbase.net/ ¡£" + vbCrLf + _
+Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×ŸÔÚé_°lß^³ÌÖĞµÃµ½ÁËV´óÆåÃÔÅóÓÑµÄŸáÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔĞÄµÄ¸ĞÖx£¬Í¬•rÒ²Ï£ÍûÄúÀ^ÀmÖ§³ÖÏóÆåÎ×Ÿ£¬êP×¢ http://www.elephantbase.net/ ¡£" + vbCrLf + _
         "¡¡¡¡ÄúÒ²¿ÉÒÔŒ¢±¾Ü›¼şµÄÖ÷í“æœ½Óµ½×Ô¼ºµÄÕ¾ücÉÏ¡£ÕˆÄúÊ¹ÓÃ http://www.elephantbase.net/ ×÷éæœ½ÓµÄÂ·½¡£"
 
 Gui_szQuotes(1) = "¡¡¡¡×ÓÔ»£º¡°ŒW¶ø•rÁ•Ö®£¬²»ÒàÕfºõ£¿ÓĞÅó×Ôßh·½í£¬²»Òà˜·ºõ£¿ÈË²»Öª¶ø²»‘C£¬²»Òà¾ı×Óºõ£¿¡±" + vbCrLf + vbCrLf + _
@@ -2658,6 +2684,15 @@ Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_N
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
+Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
+Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "1")) <> 0)
+Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
+Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
+Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
+Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
+Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
+Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
+Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
@@ -2716,6 +2751,15 @@ SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), I
 SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
+SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
+SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
+SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
+SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
+SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
+SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
+SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
 SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
