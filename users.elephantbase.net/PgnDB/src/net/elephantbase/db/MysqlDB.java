@@ -13,7 +13,7 @@ import net.elephantbase.util.Streams;
 public class MysqlDB {
 	public static void main(String[] args) throws Exception {
 		FileInputStream inSql = new FileInputStream(ClassPath.
-				getInstance().append("../etc/embedded.sql"));
+				getInstance().append("../etc/MysqlDB.sql"));
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Streams.copy(inSql, baos);
 		inSql.close();

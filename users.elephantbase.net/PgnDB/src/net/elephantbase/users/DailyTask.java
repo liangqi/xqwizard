@@ -24,7 +24,7 @@ public class DailyTask implements ServletContextListener {
 		try {
 			ps = conn.prepareStatement(sql);
 			for (int i = 0; i < params.length; i ++) {
-				ps.setInt(i + 1, (int) (params[i].getTime() / 1000));
+				ps.setInt(i + 1, params[i].getTimeSec());
 			}
 			ps.execute();
 		} finally {
@@ -38,6 +38,7 @@ public class DailyTask implements ServletContextListener {
 			Logger.severe("Connection refused");
 			return;
 		}
+		PreparedStatement ps = null;
 		try {
 			EasyDate now = new EasyDate();
 
@@ -48,21 +49,29 @@ public class DailyTask implements ServletContextListener {
 					"SELECT uid, score FROM " + MYSQL_TABLEPRE + "user " +
 					"WHERE lasttime > ? ORDER BY score DESC, lasttime DESC";
 
+			// Calculate Weekly Ranks
 			execute(conn, String.format(sqlTruncate, "w0"));
 			execute(conn, String.format(sqlInsert1, "w0", "w"));
 			execute(conn, String.format(sqlTruncate, "w"));
 			execute(conn, String.format(sqlInsert2, "w"), now.substract(EasyDate.DAY * 7));
 
+			// Calculate Monthly Ranks
 			execute(conn, String.format(sqlTruncate, "m0"));
 			execute(conn, String.format(sqlInsert1, "m0", "m"));
 			execute(conn, String.format(sqlTruncate, "m"));
 			execute(conn, String.format(sqlInsert2, "m"), now.substract(EasyDate.DAY * 30));
 
+			// Calculate Quarterly Ranks
 			execute(conn, String.format(sqlTruncate, "q0"));
 			execute(conn, String.format(sqlInsert1, "q0", "q"));
 			execute(conn, String.format(sqlTruncate, "q"));
 			execute(conn, String.format(sqlInsert2, "q"), now.substract(EasyDate.DAY * 90));
 
+			// Delete Expired Login Cookies
+			String sqlDelete = "DELETE FROM " + MYSQL_TABLEPRE + "login WHERE expire > ?"; 
+			ps = conn.prepareStatement(sqlDelete);
+			ps.setInt(1, now.getTimeSec());
+			ps.executeUpdate();
 		} catch (Exception e) {
 			Logger.severe(e);
 		} finally {

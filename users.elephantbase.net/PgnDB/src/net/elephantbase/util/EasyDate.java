@@ -35,6 +35,10 @@ public class EasyDate implements Serializable, Cloneable, Comparable<EasyDate> {
 		}
 	}
 
+	public static int currTimeSec() {
+		return (int) (System.currentTimeMillis() / 1000);
+	}
+
 	private long time;
 
 	public EasyDate() {
@@ -51,6 +55,10 @@ public class EasyDate implements Serializable, Cloneable, Comparable<EasyDate> {
 
 	public EasyDate(String strDate, String strTime) {
 		time = parseDate(strDate) + parseTime(strTime) + timeZoneOffset;
+	}
+
+	public int getTimeSec() {
+		return (int) (time / 1000);
 	}
 
 	public long getTime() {

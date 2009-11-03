@@ -51,7 +51,7 @@ public class Logger {
 	}
 
 	public static void info(Throwable t) {
-		info("", t);
+		log(Level.INFO, "", t);
 	}
 
 	public static void info(String s, Throwable t) {
@@ -63,7 +63,7 @@ public class Logger {
 	}
 
 	public static void warning(Throwable t) {
-		warning("", t);
+		log(Level.WARNING, "", t);
 	}
 
 	public static void warning(String s, Throwable t) {
@@ -75,7 +75,7 @@ public class Logger {
 	}
 
 	public static void severe(Throwable t) {
-		severe("", t);
+		log(Level.SEVERE, "", t);
 	}
 
 	public static void severe(String s, Throwable t) {
