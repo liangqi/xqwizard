@@ -3,3 +3,17 @@ CREATE TABLE tb_login (
 	uid INTEGER NOT NULL,
 	expire INTEGER NOT NULL,
 	KEY (expire));
+
+CREATE TABLE tb_pgn (
+	sid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	event VARCHAR(256) NOT NULL,
+	date CHAR(32) NOT NULL,
+	site CHAR(32) NOT NULL,
+	redteam CHAR(32) NOT NULL,
+	red CHAR(32) NOT NULL,
+	blackteam CHAR(32) NOT NULL,
+	black CHAR(32) NOT NULL,
+	movelist TEXT NOT NULL,
+	maxmoves INTEGER NOT NULL,
+	result INTEGER NOT NULL
+	);

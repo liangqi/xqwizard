@@ -21,7 +21,7 @@ public class MainPage extends BasePage {
 	}
 
 	public MainPage() {
-		super("Ê×Ò³", NEED_AUTH);
+		super("Ê×Ò³", WANT_AUTH);
 		add(new MainPanel());
 	}
 }

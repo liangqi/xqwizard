@@ -1,13 +1,10 @@
 package net.elephantbase.ucenter;
 
 import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import net.elephantbase.db.ConnectionPool;
+import net.elephantbase.db.DBUtil;
 import net.elephantbase.util.Bytes;
-import net.elephantbase.util.Closeables;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
@@ -23,118 +20,57 @@ public class Login {
 	}
 
 	public static int login(String username, String password) {
-		Connection conn = ConnectionPool.getInstance().borrowObject();
-		if (conn == null) {
-			Logger.severe("Connection refused");
+		String sql = "SELECT uid, password, salt FROM " +
+				ConnectionPool.UC_DBTABLEPRE + "members WHERE username = ?";
+		Object[] out = (Object[]) DBUtil.executeQuery(3, sql, username);
+		if (out[0] == null) {
 			return -1;
 		}
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-
-			String sql = "SELECT uid, password, salt FROM " +
-					ConnectionPool.UC_DBTABLEPRE + "members WHERE username = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, username);
-			rs = ps.executeQuery();
-			if (!rs.next()) {
-				return -1;
-			}
-
-			int uid = rs.getInt(1);
-			String key = rs.getString(2);
-			String salt = rs.getString(3);
-			return md5(md5(password) + salt).equals(key) ? uid : 0;
-		} catch (Exception e) {
-			Logger.severe(e);
-			return -1;
-		} finally {
-			Closeables.close(rs);
-			Closeables.close(ps);
-			ConnectionPool.getInstance().returnObject(conn);
-		}
+		int uid = ((Integer) out[0]).intValue();
+		String key = (String) out[1];
+		String salt = (String) out[2];
+		return md5(md5(password) + salt).equals(key) ? uid : 0;
 	}
 
 	public static String getUsername(int uid) {
-		Connection conn = ConnectionPool.getInstance().borrowObject();
-		if (conn == null) {
-			Logger.severe("Connection refused");
-			return null;
-		}
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT username FROM " +
-					ConnectionPool.UC_DBTABLEPRE + "members WHERE uid = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, uid);
-			rs = ps.executeQuery();
-			return rs.next() ? rs.getString(1) : null;
-		} catch (Exception e) {
-			Logger.severe(e);
-			return null;
-		} finally {
-			Closeables.close(rs);
-			Closeables.close(ps);
-			ConnectionPool.getInstance().returnObject(conn);
-		}
+		String sql = "SELECT username FROM " +
+				ConnectionPool.UC_DBTABLEPRE + "members WHERE uid = ?";
+		return (String) DBUtil.executeQuery(sql, Integer.valueOf(uid));
 	}
 
 	public static String addCookie(int uid) {
-		Connection conn = ConnectionPool.getInstance().borrowObject();
-		if (conn == null) {
-			Logger.severe("Connection refused");
-			return null;
-		}
-		PreparedStatement ps = null;
-		try {
-			String cookie = Bytes.toHexLower(Bytes.random(16));
-			String sql = "INSERT INTO " + ConnectionPool.MYSQL_TABLEPRE +
-					"login (cookie, uid, expire) VALUES (?, ?, ?)";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, cookie);
-			ps.setInt(2, uid);
-			ps.setInt(3, new EasyDate().add(EasyDate.DAY * 30).getTimeSec());
-			ps.executeUpdate();
-			return cookie;
-		} catch (Exception e) {
-			Logger.severe(e);
-			return null;
-		} finally {
-			Closeables.close(ps);
-			ConnectionPool.getInstance().returnObject(conn);
-		}
+		String sql = "INSERT INTO " + ConnectionPool.MYSQL_TABLEPRE +
+				"login (cookie, uid, expire) VALUES (?, ?, ?)";
+		String cookie = Bytes.toHexLower(Bytes.random(16));
+		int expire = new EasyDate().add(EasyDate.DAY * 30).getTimeSec();
+		DBUtil.executeUpdate(sql, cookie, Integer.valueOf(uid), Integer.valueOf(expire));
+		return cookie;
 	}
 
-	public static int cookieLogin(String cookie, String[] username) {
-		Connection conn = ConnectionPool.getInstance().borrowObject();
-		if (conn == null) {
-			Logger.severe("Connection refused");
+	public static void delCookie(String cookie) {
+		String sql = "DELETE FROM " + ConnectionPool.MYSQL_TABLEPRE +
+				"login WHERE cookie = ?";
+		DBUtil.executeUpdate(sql, cookie);
+	}
+
+	public static int loginCookie(String cookie, String[] username) {
+		String sql = "SELECT uid FROM " +
+				ConnectionPool.MYSQL_TABLEPRE + "login WHERE cookie = ?";
+		Object out = DBUtil.executeQuery(sql, cookie);
+		if (out == null) {
 			return -1;
 		}
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT uid FROM " +
-					ConnectionPool.MYSQL_TABLEPRE + "login WHERE cookie = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, cookie);
-			rs = ps.executeQuery();
-			if (!rs.next()) {
-				return 0;
-			}
-			int uid = rs.getInt(1);
-			if (username != null && username.length > 0) {
-				username[0] = getUsername(uid);
-			}
-			return uid;
-		} catch (Exception e) {
-			Logger.severe(e);
-			return -1;
-		} finally {
-			Closeables.close(rs);
-			Closeables.close(ps);
-			ConnectionPool.getInstance().returnObject(conn);
+		if (out == DBUtil.EMPTY_OBJECT) {
+			return 0;
 		}
+		int uid = ((Integer) out).intValue();
+		sql = "UPDATE " + ConnectionPool.MYSQL_TABLEPRE + "login SET " +
+				"expire = ? WHERE cookie = ?";
+		int expire = new EasyDate().add(EasyDate.DAY * 30).getTimeSec();
+		DBUtil.executeUpdate(sql, Integer.valueOf(expire), cookie);
+		if (username != null && username.length > 0) {
+			username[0] = getUsername(uid);
+		}
+		return uid;
 	}
 }

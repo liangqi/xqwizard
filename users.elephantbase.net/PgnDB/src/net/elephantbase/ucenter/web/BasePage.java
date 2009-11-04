@@ -1,15 +1,11 @@
 package net.elephantbase.ucenter.web;
 
-import javax.servlet.http.Cookie;
-
-import net.elephantbase.ucenter.Login;
+import net.elephantbase.ucenter.BaseSession;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
 
 public class BasePage extends WebPage {
 	public static final String MAIN_PANEL_ID = "pnlMain";
@@ -21,36 +17,23 @@ public class BasePage extends WebPage {
 	public static void setResponsePage(BasePage page) {
 		RequestCycle rc = RequestCycle.get();
 		BaseSession session = (BaseSession) rc.getSession();
-		if (session.getUid() == 0) {
-			if (page.authType == NEED_AUTH) {
-				Cookie cookie = ((WebRequest) rc.getRequest()).getCookie("login");
-				if (cookie != null) {
-					int uid = Login.cookieLogin(cookie.getValue(), null);
-					if (uid > 0) {
-						session.setUid(uid);
-						page.lblLogin.setDefaultModelObject("¡¾×¢Ïú¡¿");
-						rc.setResponsePage(page);
-						return;
-					}
-				}
-				rc.setResponsePage(new LoginPage(page));
-				return;
-			}
-			page.lblLogin.setDefaultModelObject("¡¾µÇÂ¼¡¿");
-		} else {
-			page.lblLogin.setDefaultModelObject("¡¾×¢Ïú¡¿");
+		if (page.authType != NEED_AUTH || session.getUid() > 0 || session.loginCookie()) {
+			rc.setResponsePage(page);
+			return;
 		}
-		rc.setResponsePage(page);
+		rc.setResponsePage(new LoginPage(page));
 	}
 
 	private int authType;
 
+	private Label lblHello = new Label("lblHello", "");
 	private Label lblLogin = new Label("lblLogin", "");
 
 	public BasePage(String title, int authType) {
 		this.authType = authType;
 		add(new Label("lblTitle", title + " - ÏóÆåÎ×Ê¦ÆåÆ×²Ö¿â"));
 		add(new Label("lblSubtitle", title));
+		add(lblHello);
 		Link<Void> lnkLogin = new Link<Void>("lnkLogin") {
 			private static final long serialVersionUID = 1L;
 
@@ -60,18 +43,24 @@ public class BasePage extends WebPage {
 				if (session.getUid() == 0) {
 					setResponsePage(new LoginPage(BasePage.this));
 				} else {
-					Cookie cookie = new Cookie("login", null);
-					cookie.setMaxAge(0);
-					((WebResponse) getResponse()).addCookie(cookie);
-					session.setUid(0);
+					session.logout();
 					BasePage.setResponsePage(BasePage.this);
 				}
 			}
 		};
+		lnkLogin.add(lblLogin);
 		if (authType == NO_AUTH) {
+			lblHello.setVisible(false);
 			lnkLogin.setVisible(false);
 		}
-		lnkLogin.add(lblLogin);
 		add(lnkLogin);
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		String username = ((BaseSession) getSession()).getUsername();
+		lblHello.setDefaultModelObject((username == null ? "ÓÎ¿Í" : username) + "£¬ÄúºÃ£¡");
+		lblLogin.setDefaultModelObject(username == null ? "¡¾µÇÂ¼¡¿" : "¡¾×¢Ïú¡¿");
+		super.onBeforeRender();
 	}
 }

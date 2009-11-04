@@ -1,8 +1,6 @@
 package net.elephantbase.ucenter.web;
 
-import javax.servlet.http.Cookie;
-
-import net.elephantbase.ucenter.Login;
+import net.elephantbase.ucenter.BaseSession;
 import net.elephantbase.util.Bytes;
 import net.elephantbase.util.wicket.CaptchaImageResource;
 
@@ -14,7 +12,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebResponse;
 
 public class LoginPage extends BasePage {
 	public class LoginPanel extends Panel {
@@ -37,14 +34,10 @@ public class LoginPage extends BasePage {
 					if (!captcha.equals(mdlCaptcha.getObject())) {
 						lblInfo.setDefaultModelObject("验证码错误");
 					} else {
-						int uid = Login.login(mdlUsername.getObject(), mdlPassword.getObject());
+						int uid = ((BaseSession) getSession()).login(
+								mdlUsername.getObject(), mdlPassword.getObject(),
+								mdlCookie.getObject().booleanValue());
 						if (uid > 0) {
-							if (mdlCookie.getObject().booleanValue()) {
-								Cookie cookie = new Cookie("login", Login.addCookie(uid));
-								cookie.setMaxAge(86400 * 30);
-								((WebResponse) getResponse()).addCookie(cookie);
-							}
-							((BaseSession) getSession()).setUid(uid);
 							BasePage.setResponsePage(redirectPage);
 						} else if (uid < 0) {
 							lblInfo.setDefaultModelObject("无法连接到象棋巫师用户中心，请稍候再试");
