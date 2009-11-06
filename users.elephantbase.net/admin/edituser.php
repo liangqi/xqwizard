@@ -100,7 +100,7 @@ bottommargin="0" rightmargin="0">
       $info = info(sprintf("用户 %s 已充值 %d 点，请把以下文本发送给用户：", $username, $charge)) .
           "<font size=\"2\"><p align=\"left\">" . sprintf("我们已为您的象棋巫师帐号[%s]充值%d点",
           htmlentities($username, ENT_COMPAT, "GB2312"), $charge) .
-          ($line["charged"] < USER_PLATINUM ? "" : "，并升级为白金会员(提示和悔棋不扣点)") . "。<br>" .
+          ($line["charged"] <USER_PLATINUM ? "" : "，并升级为白金会员(提示和悔棋不扣点)") . "。<br>" .
           sprintf("目前您的帐号共有%d点可用，", $line["points"]) .
           "请用象棋巫师魔法学校“用户中心/查询点数”功能查收。<br>" .
           "有任何问题、意见和建议请及时与我们联系，感谢您对象棋巫师的支持。</p></font>";
@@ -263,18 +263,10 @@ var action = "edituser.php?username=<?php echo urlencode($username); ?>&act=";
 frmCharge.action = action + "charge";
 frmReset.action = action + "reset";
 frmDelete.action = action + "delete";
-// --></script> <a
+// --></script><a
                 href="http://www.elephantbase.net/"
-                target="_blank"><font color="#000060" size="2">版权所有</font><font
-                color="#000060">&copy;</font><font
-                color="#000060" size="2" face="Times New Roman">2004-2009
-                </font><font color="#000060" size="2">象棋百科全书</font></a><font
-                color="#000060" size="2"> </font><a
-                href="http://www.miibeian.gov.cn/"
-                target="_blank"><font color="#000060" size="2">沪</font><font
-                color="#000060" size="2" face="Times New Roman">ICP</font><font
-                color="#000060" size="2">备</font><font
-                color="#000060" size="2" face="Times New Roman">05047724</font></a></p>
+                target="_blank"><font color="#000060" size="2">象棋百科全书
+                荣誉出品</font></a></p>
                 </td>
             </tr>
         </table>

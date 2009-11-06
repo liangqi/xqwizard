@@ -75,8 +75,8 @@ bottommargin="0" rightmargin="0">
   echo htmlentities($userdata->username, ENT_COMPAT, "GB2312");
 ?><!--webbot
                         bot="HTMLMarkup" endspan -->，您好！</strong></td>
-                        <td id="admin"><p align="right"><a href="admin/admin.htm"><font
-                        size="2">【管理】</font></a></p>
+                        <td id="admin"><p align="right"><a
+                        href="admin/admin.htm"><font size="2">【管理】</font></a></p>
                         </td>
                         <td><p align="right"><a href="logout.php"><font
                         size="2">【注销】</font></a></p>
@@ -102,8 +102,8 @@ bottommargin="0" rightmargin="0">
                 size="3"><strong>补充点数</strong></font></td>
             </tr>
             <tr>
-                <td align="center" bgcolor="#F0F0F0"><form action="charge.php"
-                method="POST">
+                <td align="center" bgcolor="#F0F0F0"><form
+                action="charge.php" method="POST">
                     <table border="0">
                         <tr>
                             <td align="right"><font size="2">点卡密码：</font></td>
@@ -181,16 +181,8 @@ admin.style.display = "<?php echo $userdata->isAdmin() ? "block" : "none"; ?>";
 frm.email.value = "<?php echo $userdata->email; ?>";
 // --></script><a
                 href="http://www.elephantbase.net/"
-                target="_blank"><font color="#000060" size="2">版权所有</font><font
-                color="#000060">&copy;</font><font
-                color="#000060" size="2" face="Times New Roman">2004-2009
-                </font><font color="#000060" size="2">象棋百科全书</font></a><font
-                color="#000060" size="2"> </font><a
-                href="http://www.miibeian.gov.cn/"
-                target="_blank"><font color="#000060" size="2">沪</font><font
-                color="#000060" size="2" face="Times New Roman">ICP</font><font
-                color="#000060" size="2">备</font><font
-                color="#000060" size="2" face="Times New Roman">05047724</font></a></p>
+                target="_blank"><font color="#000060" size="2">象棋百科全书
+                荣誉出品</font></a></p>
                 </td>
             </tr>
         </table>
