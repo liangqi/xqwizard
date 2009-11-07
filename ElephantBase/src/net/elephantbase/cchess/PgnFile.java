@@ -16,17 +16,19 @@ public class PgnFile {
 	}
 
 	private String event = "", round = "", date = "", site = "";
-	private String redTeam = "", red = "", redElo = "";
-	private String blackTeam = "", black = "", blackElo = "";
+	private String redTeam = "", red = "";
+	private String blackTeam = "", black = "";
 	private String ecco = "", opening = "", variation = "";
 	private int maxMoves = 0, result = 0, sdStart = 0;
+	private String fen = null;
 	private ArrayList<Integer> sqSrcList = new ArrayList<Integer>();
 	private ArrayList<Integer> sqDstList = new ArrayList<Integer>();
 	private ArrayList<StringBuilder> commentList = new ArrayList<StringBuilder>();
 
-	public PgnFile(BufferedReader in) throws IOException {
-		SimplePos pos = new SimplePos();
-		pos.fromFen(SimplePos.STARTUP_FEN);
+	
+	public void load(BufferedReader in) throws IOException {
+		Position pos = new Position();
+		pos.fromFen(Position.STARTUP_FEN[0]);
 		boolean returned = false, detail = false;
 		int remLevel = 0, notation = 0;
 		String s = in.readLine();
@@ -111,11 +113,11 @@ public class PgnFile {
 								}
 							}
 							if (mv > 0) {
-								int sqSrc = SimplePos.SRC(mv);
-								int sqDst = SimplePos.DST(mv);
+								int sqSrc = Position.SRC(mv);
+								int sqDst = Position.DST(mv);
 								if (sqSrc == sqDst) {
-									pos.squares[sqDst] = (byte) (SimplePos.SIDE_TAG(pos.sdPlayer) +
-											SimplePos.PIECE_PAWN);
+									pos.squares[sqDst] = (byte) (Position.SIDE_TAG(pos.sdPlayer) +
+											Position.PIECE_PAWN);
 								} else {
 									pos.squares[sqDst] = pos.squares[sqSrc];
 									pos.squares[sqSrc] = 0;
@@ -155,14 +157,10 @@ public class PgnFile {
 						redTeam = value;
 					} else if ((value = getLabel(s, "RED")) != null) {
 						red = value;
-					} else if ((value = getLabel(s, "REDELO")) != null) {
-						redElo = value;
 					} else if ((value = getLabel(s, "BLACKTEAM")) != null) {
 						blackTeam = value;
 					} else if ((value = getLabel(s, "BLACK")) != null) {
 						black = value;
-					} else if ((value = getLabel(s, "BLACKELO")) != null) {
-						blackElo = value;
 					} else if ((value = getLabel(s, "RESULT")) != null) {
 						result = value.equals("*") ? 0 : value.equals("1-0") ? 1 :
 								value.equals("1/2-1/2") ? 2 : value.equals("0-1") ? 3 : 0;
@@ -177,6 +175,7 @@ public class PgnFile {
 								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
 					} else if ((value = getLabel(s, "FEN")) != null) {
 						pos.fromFen(value);
+						fen = value;
 						sdStart = pos.sdPlayer;
 					}
 					returned = true;
@@ -211,54 +210,56 @@ public class PgnFile {
 		return maxMoves;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		// 1. Event String
-		sb.append(event);
-		if (round.length() > 0) {
-			sb.append(event.length() == 0 ? "" : " ");
-			try {
-				int nRound = Integer.parseInt(round);
-				sb.append(nRound == 98 ? "半决赛" : nRound == 99 ? "决赛" : "第" + nRound + "轮");
-			} catch (Exception e) {
-				sb.append(round);
-			}
+	public String toEventString() {
+		if (round.isEmpty()) {
+			return event;
 		}
-		sb.append("\n\r");
-		// 2. Result String
-		if (red.length() == 0 || black.length() == 0) {
-			sb.append("(着法：" + (sdStart == 0 ? "红先" : "黑先"));
-			sb.append((result == 0 ? "" : result == 1 ? (sdStart == 0 ? "胜" : "负") :
-					result == 2 ? "和" : (sdStart == 0 ? "负" : "胜")) + ")");
-		} else {
-			sb.append(redTeam + (redTeam.length() == 0 ? "" : " ") + red);
-			sb.append(redElo.length() == 0 ? "" : " (" + redElo + ")");
-			sb.append(result == 0 ? " (对) " :
-					result == 1 ? (sdStart == 0 ? " (先胜) " : " (后胜) ") :
-					result == 2 ? (sdStart == 0 ? " (先和) " : " (后和) ") :
-					(sdStart == 0 ? " (先负) " : " (后负) "));
-			sb.append(blackTeam + (blackTeam.length() == 0 ? "" : " ") + black);
-			sb.append(blackElo.length() == 0 ? "" : " (" + blackElo + ")");
+		String strEvent = (event.isEmpty() ? "" : event + " ");
+		try {
+			return strEvent + "第" + Integer.parseInt(round) + "轮";
+		} catch (Exception e) {
+			return strEvent + round;
 		}
-		sb.append("\n\r\f");
-		// 3. Date/Site String
-		if (date.length() == 0) {
-			sb.append(site.length() == 0 ? "" : "(弈于 " + site + ")");
-		} else {
-			sb.append("(" + date + (site.length() == 0 ? ")" : " 弈于 " + site + ")"));
+	}
+
+	private static final String[][] START_RESULT_1 = {
+		{"红先", "红先胜", "红先和", "红先负"},
+		{"黑先", "黑先负", "黑先和", "黑先胜"},
+	};
+
+	private static final String[][] START_RESULT_2 = {
+		{"对", "先胜", "先和", "先负"},
+		{"对", "后胜", "后和", "后负"},
+	};
+
+	public String toResultString() {
+		if (red.isEmpty() || black.isEmpty()) {
+			return "(着法：" + START_RESULT_1[sdStart][result] + ")";
 		}
-		sb.append("\n\r\f");
-		// 4. Open String
-		sb.append(opening + (opening.length() == 0 || variation.length() == 0 ? "" : "——"));
-		sb.append(variation);
-		if (ecco.length() > 0) {
-			if (opening.length() == 0 && variation.length() == 0) {
-				sb.append("(ECCO开局编号：" + ecco + ")");
-			} else {
-				sb.append("(" + ecco + ")");
-			}
+		String strRed = redTeam + (redTeam.isEmpty() ? "" : " ") + red;
+		String strBlack = blackTeam + (blackTeam.isEmpty() ? "" : " ") + black;
+		return strRed + " (" + START_RESULT_2 + ") " + strBlack;
+	}
+
+	public String toDateSiteString() {
+		if (date.isEmpty()) {
+			return site.isEmpty() ? "" : "(弈于 " + site + ")";
 		}
-		return sb.toString();
+		return "(" + date + (site.isEmpty() ? ")" : " 弈于 " + site + ")");
+	}
+
+	public String toOpenString() {
+		String strOpening = opening + (opening.isEmpty() || variation.isEmpty() ? "" : "——") + variation;
+		return strOpening + (ecco.isEmpty() ? "" :
+				(strOpening.isEmpty() ? "(ECCO开局编号：" + ecco + ")" : "(" + ecco + ")"));
+	}
+
+	public String toFlashString() {
+		String flashVars = "Position=" + fen;
+		return "<embed src=\"http://pub.elephantbase.net/flashxq.swf\" " +
+				"width=\"324\" height=\"396\" type=\"application/x-shockwave-flash\" " +
+				"pluginspage=\"http://www.macromedia.com/go/getflashplayer\" " +
+				"allowScriptAccess=\"always\" quality=\"high\" wmode=\"transparent\" " +
+				"flashvars=\"" + flashVars + "\">";
 	}
 }

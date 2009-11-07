@@ -161,15 +161,15 @@ public class MoveParser {
 
 	private static int xy2Sq(int x, int y, int sd) {
 		int sq = XY_TO_SQ[x * 10 + y];
-		return sd == 0 ? sq : SimplePos.SQUARE_FLIP(sq);
+		return sd == 0 ? sq : Position.SQUARE_FLIP(sq);
 	}
 
-	private static boolean findPiece(int pt, int x, int y, SimplePos p) {
-		return p.squares[xy2Sq(x, y, p.sdPlayer)] == SimplePos.SIDE_TAG(p.sdPlayer) + pt;
+	private static boolean findPiece(int pt, int x, int y, Position p) {
+		return p.squares[xy2Sq(x, y, p.sdPlayer)] == Position.SIDE_TAG(p.sdPlayer) + pt;
 	}
 
 	/** WXF表示转换为内部着法表示 */
-	static int file2Move(String strFile, SimplePos p) {
+	public static int file2Move(String strFile, Position p) {
 		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
 
 		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，
@@ -192,10 +192,10 @@ public class MoveParser {
 		for (int i = 0; i < FIX_FILE.length; i ++) {
 			if (strFile2.equals(FIX_FILE[i])) {
 				if (p.sdPlayer == 0) {
-					return SimplePos.MOVE(FIX_MOVE[i][0], FIX_MOVE[i][1]);
+					return Position.MOVE(FIX_MOVE[i][0], FIX_MOVE[i][1]);
 				}
-				return SimplePos.MOVE(SimplePos.SQUARE_FLIP(FIX_MOVE[i][0]),
-						SimplePos.SQUARE_FLIP(FIX_MOVE[i][1]));
+				return Position.MOVE(Position.SQUARE_FLIP(FIX_MOVE[i][0]),
+						Position.SQUARE_FLIP(FIX_MOVE[i][1]));
 			}
 		}
 
@@ -269,7 +269,7 @@ public class MoveParser {
 		if (n < 0) {
 			return 0;
 		}
-		if (pt == SimplePos.PIECE_KNIGHT) {
+		if (pt == Position.PIECE_KNIGHT) {
 			xDst = n;
 			if (cFile[2] == '+') {
 				yDst = ySrc - 3 + Math.abs(xDst - xSrc);
@@ -291,25 +291,18 @@ public class MoveParser {
 		if (yDst < 0 || yDst >= MAX_RANK) {
 			return 0;
 		}
-		return SimplePos.MOVE(xy2Sq(xSrc, ySrc, p.sdPlayer), xy2Sq(xDst, yDst, p.sdPlayer));
+		return Position.MOVE(xy2Sq(xSrc, ySrc, p.sdPlayer), xy2Sq(xDst, yDst, p.sdPlayer));
 	}
 
-	/** ICCS表示转换为内部着法表示 */
-	static int iccs2Move(String strIccs) {
-		char[] cIccs = strIccs.toCharArray();
-		if (cIccs[0] < 'A' || cIccs[0] > 'I' || cIccs[1] < '0' || cIccs[1] > '9' ||
-				cIccs[3] < 'A' || cIccs[3] > 'I' || cIccs[4] < '0' || cIccs[4] > '9') {
-			return 0;
-		}
-		int sqSrc = SimplePos.COORD_XY(cIccs[0] - 'A' + SimplePos.FILE_LEFT,
-				'9' + SimplePos.RANK_TOP - cIccs[1]);
-		int sqDst = SimplePos.COORD_XY(cIccs[3] - 'A' + SimplePos.FILE_LEFT,
-				'9' + SimplePos.RANK_TOP - cIccs[4]);
-		return SimplePos.MOVE(sqSrc, sqDst);
+	/** 内部着法表示转换为WXF表示 */
+	public static String move2File(String mv, Position p) {
+		// TODO
+		p.getClass();
+		return "" + mv;
 	}
 
 	/** 中文表示转换为WXF表示 */
-	static String chin2File(String strChin) {
+	public static String chin2File(String strChin) {
 		char[] cChin = strChin.toCharArray();
 		char[] cFile = new char[4];
 		int pos = word2Pos(cChin[0]);
@@ -324,5 +317,30 @@ public class MoveParser {
 			cFile[3] = (char) digit2Char(word2Digit(cChin[3]));
 		}
 		return new String(cFile);
+	}
+
+	/** WXF表示转换为中文表示 */
+	public static String file2Chin(String strFile) {
+		// TODO
+		return strFile;
+	}
+
+	/** ICCS表示转换为内部着法表示 */
+	public static int iccs2Move(String strIccs) {
+		char[] cIccs = strIccs.toCharArray();
+		if (cIccs[0] < 'A' || cIccs[0] > 'I' || cIccs[1] < '0' || cIccs[1] > '9' ||
+				cIccs[3] < 'A' || cIccs[3] > 'I' || cIccs[4] < '0' || cIccs[4] > '9') {
+			return 0;
+		}
+		int sqSrc = Position.COORD_XY(cIccs[0] - 'A' + Position.FILE_LEFT,
+				'9' + Position.RANK_TOP - cIccs[1]);
+		int sqDst = Position.COORD_XY(cIccs[3] - 'A' + Position.FILE_LEFT,
+				'9' + Position.RANK_TOP - cIccs[4]);
+		return Position.MOVE(sqSrc, sqDst);
+	}
+
+	/** 内部着法表示转换为ICCS表示 */
+	public static String move2Iccs(int mv) {
+		return "" + mv;
 	}
 }
