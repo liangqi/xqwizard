@@ -1,7 +1,5 @@
 package net.elephantbase.users;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,7 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import net.elephantbase.db.ConnectionPool;
-import net.elephantbase.util.Closeables;
+import net.elephantbase.db.DBUtil;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
@@ -18,65 +16,43 @@ public class DailyTask implements ServletContextListener {
 
 	private Timer timer;
 
-	private static void execute(Connection conn, String sql,
-			EasyDate... params) throws Exception {
-		PreparedStatement ps = null;
-		try {
-			ps = conn.prepareStatement(sql);
-			for (int i = 0; i < params.length; i ++) {
-				ps.setInt(i + 1, params[i].getTimeSec());
-			}
-			ps.execute();
-		} finally {
-			Closeables.close(ps);
-		}
-	}
-
 	static void updateRank() {
-		Connection conn = ConnectionPool.getInstance().borrowObject();
-		if (conn == null) {
-			Logger.severe("Connection refused");
-			return;
-		}
-		PreparedStatement ps = null;
-		try {
-			EasyDate now = new EasyDate();
+		EasyDate now = new EasyDate();
 
-			String sqlTruncate = "TRUNCATE TABLE " + MYSQL_TABLEPRE + "rank%s";
-			String sqlInsert1 = "INSERT INTO " + MYSQL_TABLEPRE + "rank%s (uid, rank) " +
-					"SELECT uid, rank FROM " + MYSQL_TABLEPRE + "rank%s";
-			String sqlInsert2 = "INSERT INTO " + MYSQL_TABLEPRE + "rank%s (uid, score) " +
-					"SELECT uid, score FROM " + MYSQL_TABLEPRE + "user " +
-					"WHERE lasttime > ? ORDER BY score DESC, lasttime DESC";
+		String sqlTruncate = "TRUNCATE TABLE " + MYSQL_TABLEPRE + "rank%s";
+		String sqlInsert1 = "INSERT INTO " + MYSQL_TABLEPRE + "rank%s (uid, rank) " +
+				"SELECT uid, rank FROM " + MYSQL_TABLEPRE + "rank%s";
+		String sqlInsert2 = "INSERT INTO " + MYSQL_TABLEPRE + "rank%s (uid, score) " +
+				"SELECT uid, score FROM " + MYSQL_TABLEPRE + "user " +
+				"WHERE lasttime > ? ORDER BY score DESC, lasttime DESC";
 
-			// Calculate Weekly Ranks
-			execute(conn, String.format(sqlTruncate, "w0"));
-			execute(conn, String.format(sqlInsert1, "w0", "w"));
-			execute(conn, String.format(sqlTruncate, "w"));
-			execute(conn, String.format(sqlInsert2, "w"), now.substract(EasyDate.DAY * 7));
+		// Calculate Weekly Ranks
+		DBUtil.executeUpdate(String.format(sqlTruncate, "w0"));
+		DBUtil.executeUpdate(String.format(sqlTruncate, "w0"));
+		DBUtil.executeUpdate(String.format(sqlInsert1, "w0", "w"));
+		DBUtil.executeUpdate(String.format(sqlTruncate, "w"));
+		DBUtil.executeUpdate(String.format(sqlInsert2, "w"),
+				Integer.valueOf(now.substract(EasyDate.DAY * 7).getTimeSec()));
 
-			// Calculate Monthly Ranks
-			execute(conn, String.format(sqlTruncate, "m0"));
-			execute(conn, String.format(sqlInsert1, "m0", "m"));
-			execute(conn, String.format(sqlTruncate, "m"));
-			execute(conn, String.format(sqlInsert2, "m"), now.substract(EasyDate.DAY * 30));
+		// Calculate Monthly Ranks
+		DBUtil.executeUpdate(String.format(sqlTruncate, "m0"));
+		DBUtil.executeUpdate(String.format(sqlInsert1, "m0", "m"));
+		DBUtil.executeUpdate(String.format(sqlTruncate, "m"));
+		DBUtil.executeUpdate(String.format(sqlInsert2, "m"),
+				Integer.valueOf(now.substract(EasyDate.DAY * 30).getTimeSec()));
 
-			// Calculate Quarterly Ranks
-			execute(conn, String.format(sqlTruncate, "q0"));
-			execute(conn, String.format(sqlInsert1, "q0", "q"));
-			execute(conn, String.format(sqlTruncate, "q"));
-			execute(conn, String.format(sqlInsert2, "q"), now.substract(EasyDate.DAY * 90));
+		// Calculate Quarterly Ranks
+		DBUtil.executeUpdate(String.format(sqlTruncate, "q0"));
+		DBUtil.executeUpdate(String.format(sqlInsert1, "q0", "q"));
+		DBUtil.executeUpdate(String.format(sqlTruncate, "q"));
+		DBUtil.executeUpdate(String.format(sqlInsert2, "q"),
+				Integer.valueOf(now.substract(EasyDate.DAY * 90).getTimeSec()));
+		Logger.info("Weekly/Monthly/Quarterly Ranks Updated");
 
-			// Delete Expired Login Cookies
-			String sqlDelete = "DELETE FROM " + MYSQL_TABLEPRE + "login WHERE expire > ?"; 
-			ps = conn.prepareStatement(sqlDelete);
-			ps.setInt(1, now.getTimeSec());
-			ps.executeUpdate();
-		} catch (Exception e) {
-			Logger.severe(e);
-		} finally {
-			ConnectionPool.getInstance().returnObject(conn);
-		}
+		// Delete Expired Login Cookies
+		String sqlDelete = "DELETE FROM " + MYSQL_TABLEPRE + "login WHERE expire > ?";
+		DBUtil.executeUpdate(sqlDelete, Integer.valueOf(now.getTimeSec()));
+		Logger.info("Expired Login Cookies Deleted");
 	}
 
 	@Override
