@@ -431,6 +431,27 @@ public class Position {
 			}
 		}
 
+		/*
+		InputStream in = rc4.getClass().getResourceAsStream("/book/BOOK.DAT");
+		if (in != null) {
+			try {
+				while (bookSize < MAX_BOOK_SIZE) {
+					bookLock[bookSize] = Util.readInt(in) >>> 1;
+					bookMove[bookSize] = (short) Util.readShort(in);
+					bookValue[bookSize] = (short) Util.readShort(in);
+					bookSize ++;
+				}
+			} catch (Exception e) {
+				// Exit "while" when IOException occurs
+			}
+			try {
+				in.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		*/
+
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.
 					getInstance().append("../etc/BOOK.DAT"));			

@@ -294,11 +294,88 @@ public class MoveParser {
 		return Position.MOVE(xy2Sq(xSrc, ySrc, p.sdPlayer), xy2Sq(xDst, yDst, p.sdPlayer));
 	}
 
+	private static short[] SQUARE_TO_FILESQ = {
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+		0, 0, 0, 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0x00, 0, 0, 0, 0,
+		0, 0, 0, 0x81, 0x71, 0x61, 0x51, 0x41, 0x31, 0x21, 0x11, 0x01, 0, 0, 0, 0,
+		0, 0, 0, 0x82, 0x72, 0x62, 0x52, 0x42, 0x32, 0x22, 0x12, 0x02, 0, 0, 0, 0,
+		0, 0, 0, 0x83, 0x73, 0x63, 0x53, 0x43, 0x33, 0x23, 0x13, 0x03, 0, 0, 0, 0,
+		0, 0, 0, 0x84, 0x74, 0x64, 0x54, 0x44, 0x34, 0x24, 0x14, 0x04, 0, 0, 0, 0,
+		0, 0, 0, 0x85, 0x75, 0x65, 0x55, 0x45, 0x35, 0x25, 0x15, 0x05, 0, 0, 0, 0,
+		0, 0, 0, 0x86, 0x76, 0x66, 0x56, 0x46, 0x36, 0x26, 0x16, 0x06, 0, 0, 0, 0,
+		0, 0, 0, 0x87, 0x77, 0x67, 0x57, 0x47, 0x37, 0x27, 0x17, 0x07, 0, 0, 0, 0,
+		0, 0, 0, 0x88, 0x78, 0x68, 0x58, 0x48, 0x38, 0x28, 0x18, 0x08, 0, 0, 0, 0,
+		0, 0, 0, 0x89, 0x79, 0x69, 0x59, 0x49, 0x39, 0x29, 0x19, 0x09, 0, 0, 0, 0,
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
+	};
+
+	private static short[] FILESQ_TO_SQUARE = {
+		0x3b, 0x4b, 0x5b, 0x6b, 0x7b, 0x8b, 0x9b, 0xab, 0xbb, 0xcb, 0, 0, 0, 0, 0, 0,
+		0x3a, 0x4a, 0x5a, 0x6a, 0x7a, 0x8a, 0x9a, 0xaa, 0xba, 0xca, 0, 0, 0, 0, 0, 0,
+		0x39, 0x49, 0x59, 0x69, 0x79, 0x89, 0x99, 0xa9, 0xb9, 0xc9, 0, 0, 0, 0, 0, 0,
+		0x38, 0x48, 0x58, 0x68, 0x78, 0x88, 0x98, 0xa8, 0xb8, 0xc8, 0, 0, 0, 0, 0, 0,
+		0x37, 0x47, 0x57, 0x67, 0x77, 0x87, 0x97, 0xa7, 0xb7, 0xc7, 0, 0, 0, 0, 0, 0,
+		0x36, 0x46, 0x56, 0x66, 0x76, 0x86, 0x96, 0xa6, 0xb6, 0xc6, 0, 0, 0, 0, 0, 0,
+		0x35, 0x45, 0x55, 0x65, 0x75, 0x85, 0x95, 0xa5, 0xb5, 0xc5, 0, 0, 0, 0, 0, 0,
+		0x34, 0x44, 0x54, 0x64, 0x74, 0x84, 0x94, 0xa4, 0xb4, 0xc4, 0, 0, 0, 0, 0, 0,
+		0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xa3, 0xb3, 0xc3, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
+	};
+
+	private static int FILESQ_RANK_Y(int sq) {
+		return sq & 15;
+	}
+
+	private static int FILESQ_FILE_X(int sq) {
+		return sq >> 4;
+	}
+
+	private static int FILESQ_COORD_XY(int x, int y) {
+		return (x << 4) + y;
+	}
+
 	/** 内部着法表示转换为WXF表示 */
-	public static String move2File(String mv, Position p) {
+	public static String move2File(int mv, Position p) {
+		int[] fileList = new int[9], pieceList = new int[5];
+		char[] cFile = new char[4];
+		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
+
+		// 1. 检查纵线符号是否是仕(士)相(象)的28种固定纵线表示，在这之前首先必须把数字、小写等不统一的格式转换为统一格式；
+		int sqSrc = Position.SRC(mv);
+		int sqDst = Position.DST(mv);
+		if (sqSrc == 0 || sqDst == 0) {
+			return "　　　　";
+		}
+		int pc = p.squares[sqSrc];
+		if (pc == 0) {
+			return "　　　　";
+		}
+		int pt = pc & 8;
+		cFile[0] = PIECE_TO_CHAR.charAt(pt);
+		int xSrc, ySrc, xDst, yDst;
+		if (p.sdPlayer == 0) {
+			xSrc = FILESQ_FILE_X(SQUARE_TO_FILESQ[sqSrc]);
+			ySrc = FILESQ_RANK_Y(SQUARE_TO_FILESQ[sqSrc]);
+			xDst = FILESQ_FILE_X(SQUARE_TO_FILESQ[sqDst]);
+			xDst = FILESQ_RANK_Y(SQUARE_TO_FILESQ[sqDst]);
+		} else {
+			xSrc = FILESQ_FILE_X(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqSrc)]);
+			ySrc = FILESQ_RANK_Y(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqSrc)]);
+			xDst = FILESQ_FILE_X(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqDst)]);
+			xDst = FILESQ_RANK_Y(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqDst)]);
+		}
+		// if (pt >= KING_TYPE && pt <= BISHOP_TYPE) { ...
 		// TODO
-		p.getClass();
-		return "" + mv;
+		return null;
 	}
 
 	/** 中文表示转换为WXF表示 */
@@ -320,9 +397,28 @@ public class MoveParser {
 	}
 
 	/** WXF表示转换为中文表示 */
-	public static String file2Chin(String strFile) {
-		// TODO
-		return strFile;
+	public static String file2Chin(String strFile, int sd) {
+		char[] cFile = strFile.toCharArray();
+		char[] cChin = new char[4];
+		int pos = char2Pos(cFile[0]);
+		if (pos < 0) {
+			pos = char2Pos(cFile[1]);
+			cChin[0] = (pos < 0 ? PIECE_TO_WORD[sd].charAt(char2Piece(cFile[0])) :
+					POS_TO_WORD[0].charAt(pos));
+			cChin[1] = (pos < 0 ? DIGIT_TO_WORD[sd].charAt(char2Digit(cFile[1])) :
+					PIECE_TO_WORD[sd].charAt(char2Piece(cFile[0])));
+		} else {
+			cChin[0] = POS_TO_WORD[0].charAt(pos + DIRECT_TO_POS);
+			cChin[1] = PIECE_TO_WORD[sd].charAt(char2Piece(cFile[0]));
+		}
+		if (cFile[2] == '-' && char2Piece(cFile[3]) == Position.PIECE_PAWN) {
+			cChin[2] = '变';
+			cChin[3] = PIECE_TO_WORD[sd].charAt(Position.PIECE_PAWN);
+		} else {
+			cChin[2] = DIRECT_TO_WORD[0].charAt(char2Direct(cFile[2]));
+			cChin[3] = DIGIT_TO_WORD[sd].charAt(char2Digit(cFile[3]));
+		}
+		return String.valueOf(cChin);
 	}
 
 	/** ICCS表示转换为内部着法表示 */
@@ -341,6 +437,14 @@ public class MoveParser {
 
 	/** 内部着法表示转换为ICCS表示 */
 	public static String move2Iccs(int mv) {
-		return "" + mv;
+		char[] cIccs = new char[5];
+		int src = Position.SRC(mv);
+		int dst = Position.DST(mv);
+		cIccs[0] = (char) ('A' + Position.FILE_X(src));
+		cIccs[1] = (char) ('9' - Position.RANK_Y(src));
+		cIccs[2] = '-';
+		cIccs[3] = (char) ('A' + Position.FILE_X(dst));
+		cIccs[4] = (char) ('9' - Position.RANK_Y(dst));
+		return String.valueOf(cIccs);
 	}
 }
