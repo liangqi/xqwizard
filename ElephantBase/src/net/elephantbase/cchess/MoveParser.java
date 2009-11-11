@@ -63,6 +63,26 @@ public class MoveParser {
 		0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xa3, 0xb3, 0xc3
 	};
 
+	/** 按棋子来查找位置(前中后)，对应的坐标 */
+	private static byte[] SQ_TO_XY = {
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+		0, 0, 0, 80, 70, 60, 50, 40, 30, 20, 10, 0, 0, 0, 0, 0,
+		0, 0, 0, 81, 71, 61, 51, 41, 31, 21, 11, 1, 0, 0, 0, 0,
+		0, 0, 0, 82, 72, 62, 52, 42, 32, 22, 12, 2, 0, 0, 0, 0,
+		0, 0, 0, 83, 73, 63, 53, 43, 33, 23, 13, 3, 0, 0, 0, 0,
+		0, 0, 0, 84, 74, 64, 54, 44, 34, 24, 14, 4, 0, 0, 0, 0,
+		0, 0, 0, 85, 75, 65, 55, 45, 35, 25, 15, 5, 0, 0, 0, 0,
+		0, 0, 0, 86, 76, 66, 56, 46, 36, 26, 16, 6, 0, 0, 0, 0,
+		0, 0, 0, 87, 77, 67, 57, 47, 37, 27, 17, 7, 0, 0, 0, 0,
+		0, 0, 0, 88, 78, 68, 58, 48, 38, 28, 18, 8, 0, 0, 0, 0,
+		0, 0, 0, 89, 79, 69, 59, 49, 39, 29, 19, 9, 0, 0, 0, 0,
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+		0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
+	};
+
 	private static int digit2Char(int n) {
 		return n < 0 || n > 9 ? ' ' : '1' + n;
 	}
@@ -236,25 +256,26 @@ public class MoveParser {
 			}
 			for (int x = 0; x < MAX_FILE; x ++) {
 				for (int y = 0; y < MAX_RANK; y ++) {
-					if (findPiece(pt, x, y, p)) {
-						// 注意：排除一列上只有一枚棋子的情况
-						int n = 0;
-						for (int yy = 0; yy < MAX_RANK && n <= 1; yy ++) {
-							if (findPiece(pt, x, yy, p)) {
-								n ++;
-							}
+					if (!findPiece(pt, x, y, p)) {
+						continue;
+					}
+					// 注意：排除一列上只有一枚棋子的情况
+					int n = 0;
+					for (int yy = 0; yy < MAX_RANK && n <= 1; yy ++) {
+						if (findPiece(pt, x, yy, p)) {
+							n ++;
 						}
-						if (n == 1) {
-							break;
-						}
-						xSrc = x;
-						ySrc = y;
-						// 判断是否到达了相应的位置
-						pos --;
-						if (pos < 0) {
-							x = MAX_FILE;
-							break;
-						}
+					}
+					if (n == 1) {
+						break;
+					}
+					xSrc = x;
+					ySrc = y;
+					// 判断是否到达了相应的位置
+					pos --;
+					if (pos < 0) {
+						x = MAX_FILE;
+						break;
 					}
 				}
 			}
@@ -294,58 +315,16 @@ public class MoveParser {
 		return Position.MOVE(xy2Sq(xSrc, ySrc, p.sdPlayer), xy2Sq(xDst, yDst, p.sdPlayer));
 	}
 
-	private static short[] SQUARE_TO_FILESQ = {
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-		0, 0, 0, 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0x00, 0, 0, 0, 0,
-		0, 0, 0, 0x81, 0x71, 0x61, 0x51, 0x41, 0x31, 0x21, 0x11, 0x01, 0, 0, 0, 0,
-		0, 0, 0, 0x82, 0x72, 0x62, 0x52, 0x42, 0x32, 0x22, 0x12, 0x02, 0, 0, 0, 0,
-		0, 0, 0, 0x83, 0x73, 0x63, 0x53, 0x43, 0x33, 0x23, 0x13, 0x03, 0, 0, 0, 0,
-		0, 0, 0, 0x84, 0x74, 0x64, 0x54, 0x44, 0x34, 0x24, 0x14, 0x04, 0, 0, 0, 0,
-		0, 0, 0, 0x85, 0x75, 0x65, 0x55, 0x45, 0x35, 0x25, 0x15, 0x05, 0, 0, 0, 0,
-		0, 0, 0, 0x86, 0x76, 0x66, 0x56, 0x46, 0x36, 0x26, 0x16, 0x06, 0, 0, 0, 0,
-		0, 0, 0, 0x87, 0x77, 0x67, 0x57, 0x47, 0x37, 0x27, 0x17, 0x07, 0, 0, 0, 0,
-		0, 0, 0, 0x88, 0x78, 0x68, 0x58, 0x48, 0x38, 0x28, 0x18, 0x08, 0, 0, 0, 0,
-		0, 0, 0, 0x89, 0x79, 0x69, 0x59, 0x49, 0x39, 0x29, 0x19, 0x09, 0, 0, 0, 0,
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-		0, 0, 0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0,
-	};
-
-	private static short[] FILESQ_TO_SQUARE = {
-		0x3b, 0x4b, 0x5b, 0x6b, 0x7b, 0x8b, 0x9b, 0xab, 0xbb, 0xcb, 0, 0, 0, 0, 0, 0,
-		0x3a, 0x4a, 0x5a, 0x6a, 0x7a, 0x8a, 0x9a, 0xaa, 0xba, 0xca, 0, 0, 0, 0, 0, 0,
-		0x39, 0x49, 0x59, 0x69, 0x79, 0x89, 0x99, 0xa9, 0xb9, 0xc9, 0, 0, 0, 0, 0, 0,
-		0x38, 0x48, 0x58, 0x68, 0x78, 0x88, 0x98, 0xa8, 0xb8, 0xc8, 0, 0, 0, 0, 0, 0,
-		0x37, 0x47, 0x57, 0x67, 0x77, 0x87, 0x97, 0xa7, 0xb7, 0xc7, 0, 0, 0, 0, 0, 0,
-		0x36, 0x46, 0x56, 0x66, 0x76, 0x86, 0x96, 0xa6, 0xb6, 0xc6, 0, 0, 0, 0, 0, 0,
-		0x35, 0x45, 0x55, 0x65, 0x75, 0x85, 0x95, 0xa5, 0xb5, 0xc5, 0, 0, 0, 0, 0, 0,
-		0x34, 0x44, 0x54, 0x64, 0x74, 0x84, 0x94, 0xa4, 0xb4, 0xc4, 0, 0, 0, 0, 0, 0,
-		0x33, 0x43, 0x53, 0x63, 0x73, 0x83, 0x93, 0xa3, 0xb3, 0xc3, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-		   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0, 0, 0, 0, 0, 0,
-	};
-
-	private static int FILESQ_RANK_Y(int sq) {
-		return sq & 15;
+	private static int XY_RANK_Y(int sq) {
+		return sq % 10;
 	}
 
-	private static int FILESQ_FILE_X(int sq) {
-		return sq >> 4;
-	}
-
-	private static int FILESQ_COORD_XY(int x, int y) {
-		return (x << 4) + y;
+	private static int XY_FILE_X(int sq) {
+		return sq / 10;
 	}
 
 	/** 内部着法表示转换为WXF表示 */
 	public static String move2File(int mv, Position p) {
-		int[] fileList = new int[9], pieceList = new int[5];
 		char[] cFile = new char[4];
 		// 纵线符号表示转换为内部着法表示，通常分为以下几个步骤：
 
@@ -353,29 +332,97 @@ public class MoveParser {
 		int sqSrc = Position.SRC(mv);
 		int sqDst = Position.DST(mv);
 		if (sqSrc == 0 || sqDst == 0) {
-			return "　　　　";
+			return "    ";
 		}
+		// 第一个字符：兵种
 		int pc = p.squares[sqSrc];
 		if (pc == 0) {
-			return "　　　　";
+			return "    ";
 		}
 		int pt = pc & 8;
 		cFile[0] = PIECE_TO_CHAR.charAt(pt);
 		int xSrc, ySrc, xDst, yDst;
 		if (p.sdPlayer == 0) {
-			xSrc = FILESQ_FILE_X(SQUARE_TO_FILESQ[sqSrc]);
-			ySrc = FILESQ_RANK_Y(SQUARE_TO_FILESQ[sqSrc]);
-			xDst = FILESQ_FILE_X(SQUARE_TO_FILESQ[sqDst]);
-			xDst = FILESQ_RANK_Y(SQUARE_TO_FILESQ[sqDst]);
+			xSrc = XY_FILE_X(SQ_TO_XY[sqSrc]);
+			ySrc = XY_RANK_Y(SQ_TO_XY[sqSrc]);
+			xDst = XY_FILE_X(SQ_TO_XY[sqDst]);
+			yDst = XY_RANK_Y(SQ_TO_XY[sqDst]);
 		} else {
-			xSrc = FILESQ_FILE_X(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqSrc)]);
-			ySrc = FILESQ_RANK_Y(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqSrc)]);
-			xDst = FILESQ_FILE_X(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqDst)]);
-			xDst = FILESQ_RANK_Y(SQUARE_TO_FILESQ[Position.SQUARE_FLIP(sqDst)]);
+			xSrc = XY_FILE_X(SQ_TO_XY[Position.SQUARE_FLIP(sqSrc)]);
+			ySrc = XY_RANK_Y(SQ_TO_XY[Position.SQUARE_FLIP(sqSrc)]);
+			xDst = XY_FILE_X(SQ_TO_XY[Position.SQUARE_FLIP(sqDst)]);
+			yDst = XY_RANK_Y(SQ_TO_XY[Position.SQUARE_FLIP(sqDst)]);
 		}
-		// if (pt >= KING_TYPE && pt <= BISHOP_TYPE) { ...
-		// TODO
-		return null;
+
+		// 第二个字符：位置
+		if (pt >= Position.PIECE_KING && pt <= Position.PIECE_BISHOP) {
+			cFile[1] = (char) digit2Char(xSrc);
+		} else {
+			// 找这条线上到底有几枚相同的棋子
+			int x = Position.FILE_X(Position.SRC(mv));
+			int y = 0;
+			for (; y < MAX_RANK; y ++) {
+				if (y != ySrc && findPiece(pt, xSrc, y, p)) {
+					break;
+				}
+			}
+			// 根据n和y的值判断前中后
+			if (y == MAX_RANK) {
+				// 纵线上没有相同兵种，则用坐标表示
+				cFile[1] = (char) digit2Char(xSrc);
+			} else if (pt != Position.PIECE_PAWN) {
+				// 不是兵，则用前后表示
+				cFile[1] = (y < ySrc ? '-' : '+');
+			} else {
+				int[] nFile = new int[9];
+				// 如果是兵，要判断其他纵线上的兵是怎么分布的
+				for (x = 0; x < MAX_FILE; x ++) {
+					nFile[x] = 0;
+					for (y = 0; y < MAX_RANK; y ++) {
+						if (findPiece(Position.PIECE_PAWN, x, y, p)) {
+							nFile[x] ++;
+						}
+					}
+				}
+				int nTotal = 0; // 有多兵卒的全部纵线上，共有几个兵卒
+				int nCurr = -1; // 有多兵卒的全部纵线上，当前棋子是第几个
+				for (x = 0; x < MAX_FILE; x ++) {
+					if (nFile[x] > 1) {
+						for (y = 0; y < MAX_RANK; y ++) {
+							if (findPiece(pt, x, y, p)) {
+								nTotal ++;
+								if (x == xSrc && y == ySrc) {
+									nCurr = nTotal;
+								}
+							}
+						}
+					}
+				}
+				if (nTotal == 2) {
+					cFile[1] = (nCurr == 1 ? '-' : '+');
+				} else if (nTotal == 3) {
+					cFile[1] = (nCurr == 1 ? '-' : nCurr == 2 ? ':' : '+');
+				} else {
+					cFile[1] = (char) ('a' + nTotal - nCurr);					
+				}
+			}
+		}
+
+		// 第三、四个字符：方向和目标
+		if (pt >= Position.PIECE_ADVISOR && pt <= Position.PIECE_KNIGHT) {
+			if (sqSrc == sqDst) {
+				cFile[2] = '=';
+				cFile[3] = 'P';
+			} else {
+				cFile[2] = (yDst > ySrc ? '-' : '+');
+				cFile[3] = (char) digit2Char(xDst);
+			}
+		} else {
+			cFile[2] = (yDst == ySrc ? '.' : yDst > ySrc ? '-' : '+');
+			cFile[3] = (char) (yDst == ySrc ? digit2Char(xDst) :
+					digit2Char(Math.abs(ySrc - yDst) - 1));
+		}
+		return String.valueOf(cFile);
 	}
 
 	/** 中文表示转换为WXF表示 */

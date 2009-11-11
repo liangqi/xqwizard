@@ -13,8 +13,8 @@ CREATE TABLE tb_pgn (
 	red CHAR(32) NOT NULL,
 	blackteam CHAR(32) NOT NULL,
 	black CHAR(32) NOT NULL,
-	fen VARCHAR(256) NOT NULL,
+	ecco INTEGER NOT NULL,
 	movelist TEXT NOT NULL,
 	maxmoves INTEGER NOT NULL,
-	result INTEGER NOT NULL
-	);
+	result INTEGER NOT NULL,
+	KEY (ecco));

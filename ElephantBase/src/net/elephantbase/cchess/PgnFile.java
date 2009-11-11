@@ -164,12 +164,6 @@ public class PgnFile {
 					} else if ((value = getLabel(s, "RESULT")) != null) {
 						result = value.equals("*") ? 0 : value.equals("1-0") ? 1 :
 								value.equals("1/2-1/2") ? 2 : value.equals("0-1") ? 3 : 0;
-					} else if ((value = getLabel(s, "ECCO")) != null) {
-						ecco = value;
-					} else if ((value = getLabel(s, "OPENING")) != null) {
-						opening = value;
-					} else if ((value = getLabel(s, "VARIATION")) != null) {
-						variation = value;
 					} else if ((value = getLabel(s, "FORMAT")) != null) {
 						notation = value.toUpperCase().startsWith("WXF") ? 1 :
 								value.toUpperCase().startsWith("ICCS") ? 2 : 0;
