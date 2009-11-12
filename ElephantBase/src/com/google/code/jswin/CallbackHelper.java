@@ -23,7 +23,7 @@ public abstract class CallbackHelper implements Closeable {
 
 	protected CallbackHelper(int numParams) {
 		this.numParams = numParams;
-		CallProc.prepareCallback(lpucCallbackMem, lpGenericCallback, lpContext, numParams * 4);
+		CallProc.prepareCallback(lpucCallbackMem, lpGenericCallback, lpContext);
 	}
 
 	public int getCallbackMem() {

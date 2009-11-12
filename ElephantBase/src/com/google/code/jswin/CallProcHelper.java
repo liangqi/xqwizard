@@ -6,17 +6,25 @@ public class CallProcHelper {
 	public static final String KERNEL32_DLL = "KERNEL32.DLL";
 	public static final String USER32_DLL = "USER32.DLL";
 
-	private static int lpProcFreeLibrary;
+	private static int lpProcFreeLibrary, lpProcStrLen;
 	private static LinkedHashMap<String, Integer> hModMap = new LinkedHashMap<String, Integer>();
 
 	static {
 		int modKernel = CallProc.loadLibrary(KERNEL32_DLL);
 		lpProcFreeLibrary = CallProc.getProcAddress(modKernel, "FreeLibrary");
+		lpProcStrLen = CallProc.getProcAddress(modKernel, "lstrlenA");
 		hModMap.put(KERNEL32_DLL, Integer.valueOf(modKernel));
 		hModMap.put(USER32_DLL, Integer.valueOf(CallProc.loadLibrary(USER32_DLL)));
 	}
 
 	private int hMod, lpProc;
+
+	public static String getStrA(int lpcstr) {
+		int len = CallProc.callProc(lpProcStrLen, lpcstr);
+		byte[] buffer = new byte[len];
+		CallProc.getByteArray(lpcstr, buffer, 0, len);
+		return new String(buffer);
+	}
 
 	public CallProcHelper(String libFileName, String procName) {
 		Integer modInteger = hModMap.get(libFileName);

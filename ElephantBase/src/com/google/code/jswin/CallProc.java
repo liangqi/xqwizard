@@ -33,6 +33,6 @@ public class CallProc {
 	public static native int loadLibrary(String libFileName);
 	public static native int getProcAddress(int hMod, String procName);
 	public static native int callProc(int lpProc, int... params);
-	public static native void prepareCallback(int lpucCallbackMem, int lpGenericCallback, int lpContext, int paramLen);
+	public static native void prepareCallback(int lpucCallbackMem, int lpGenericCallback, int lpContext);
 	public static native int getCallbackAddress();
 }
