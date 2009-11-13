@@ -4,7 +4,7 @@ import com.google.code.jswin.util.ClassPath;
 
 public class CallProc {
 	static {
-		System.load(ClassPath.getInstance().append("../lib/CALLPROC.DLL").toString());
+		System.load(ClassPath.getInstance("../lib/CALLPROC.DLL").toString());
 	}
 
 	public static final int CALLBACK_SIZE = 32;

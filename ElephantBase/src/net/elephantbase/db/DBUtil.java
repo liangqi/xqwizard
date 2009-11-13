@@ -1,5 +1,8 @@
 package net.elephantbase.db;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,12 +10,14 @@ import java.util.Arrays;
 
 import net.elephantbase.util.Closeables;
 import net.elephantbase.util.Logger;
+import net.elephantbase.util.Streams;
 
 public class DBUtil {
 	public static final Object EMPTY_OBJECT = new Object();
 
 	public static int executeUpdate(String sql, Object... in) {
-		return ((Integer) executeQuery(0, sql, in)).intValue();
+		Integer result = (Integer) executeQuery(0, sql, in);
+		return result == null ? 0 : result.intValue();
 	}
 
 	public static Object executeQuery(String sql, Object... in) {
@@ -55,6 +60,22 @@ public class DBUtil {
 			Closeables.close(rs);
 			Closeables.close(ps);
 			ConnectionPool.getInstance().returnObject(conn);
+		}
+	}
+
+	public static void importSource(File sqlFile) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			FileInputStream inSql = new FileInputStream(sqlFile);
+			Streams.copy(inSql, baos);
+			inSql.close();
+		} catch (Exception e) {
+			Logger.severe(e);
+		}
+		String[] sqls = baos.toString().split(";");
+		for (String sql : sqls) {
+			System.out.println(sql + ";");
+			DBUtil.executeUpdate(sql);
 		}
 	}
 }

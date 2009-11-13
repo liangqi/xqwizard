@@ -21,7 +21,7 @@ public class ConnectionPool extends Pool<Connection> {
 	static {
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.
-					getInstance().append("../etc/Database.properties"));
+					getInstance("../etc/Database.properties"));
 			Properties p = new Properties();
 			p.load(in);
 			in.close();

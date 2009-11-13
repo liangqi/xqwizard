@@ -4,8 +4,7 @@ import xqwlight.util.ClassPath;
 import xqwlight.util.server.JettyServer;
 
 public class Startup {
-	private static final File DEFAULT_HOME = ClassPath.getInstance().
-			append("../../../..");
+	private static final File DEFAULT_HOME = ClassPath.getInstance("../../../..");
 
 	public static void main(String[] args) throws Exception {
 		int port = 80;

@@ -13,12 +13,12 @@ public class Logger {
 	static {
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.
-					getInstance().append("../etc/Logging.properties"));
+					getInstance("../etc/Logging.properties"));
 			Properties p = new Properties();
 			p.load(in);
 			in.close();
 
-			String pattern = ClassPath.getInstance().append("../log") +
+			String pattern = ClassPath.getInstance("../log") +
 					"/" + p.getProperty("pattern");
 			int limit = Integer.parseInt(p.getProperty("limit"));
 			int count = Integer.parseInt(p.getProperty("count"));

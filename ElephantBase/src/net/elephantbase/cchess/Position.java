@@ -453,8 +453,7 @@ public class Position {
 		*/
 
 		try {
-			FileInputStream in = new FileInputStream(ClassPath.
-					getInstance().append("../etc/BOOK.DAT"));			
+			FileInputStream in = new FileInputStream(ClassPath.getInstance("../etc/BOOK.DAT"));
 			while (bookSize < MAX_BOOK_SIZE) {
 				bookLock[bookSize] = Util.readInt(in) >>> 1;
 				bookMove[bookSize] = (short) Util.readShort(in);

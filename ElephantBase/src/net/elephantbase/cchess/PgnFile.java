@@ -25,7 +25,6 @@ public class PgnFile {
 	private ArrayList<Integer> sqDstList = new ArrayList<Integer>();
 	private ArrayList<StringBuilder> commentList = new ArrayList<StringBuilder>();
 
-	
 	public void load(BufferedReader in) throws IOException {
 		Position pos = new Position();
 		pos.fromFen(Position.STARTUP_FEN[0]);

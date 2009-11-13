@@ -11,7 +11,7 @@ public class Ecco {
 	private static CallProcHelper cphEccoOpening, cphEccoVariation, cphEccoIndex;
 
 	static {
-		String libEcco = "" + ClassPath.getInstance().append("../lib/ECCO.DLL");
+		String libEcco = ClassPath.getInstance("../lib/ECCO.DLL").toString();
 		CallProcHelper cphEccoVersion = new CallProcHelper(libEcco, "_EccoVersion@0");
 		VERSION = CallProcHelper.getStrA(cphEccoVersion.callProc());
 		CallProcHelper cphEccoInit = new CallProcHelper(libEcco, "_EccoInitOpenVar@4");

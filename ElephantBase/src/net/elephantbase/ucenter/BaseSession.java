@@ -2,7 +2,6 @@ package net.elephantbase.ucenter;
 
 import javax.servlet.http.Cookie;
 
-
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequest;

@@ -2,8 +2,7 @@ import net.elephantbase.util.ClassPath;
 import net.elephantbase.util.server.JettyServer;
 
 public class Startup {
-	private static final ClassPath DEFAULT_HOME = ClassPath.getInstance().
-			append("../../../..");
+	private static final ClassPath DEFAULT_HOME = ClassPath.getInstance("../../../..");
 
 	public static void main(String[] args) throws Exception {
 		int port = 8080;

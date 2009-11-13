@@ -403,7 +403,7 @@ public class MoveParser {
 				} else if (nTotal == 3) {
 					cFile[1] = (nCurr == 1 ? '-' : nCurr == 2 ? ':' : '+');
 				} else {
-					cFile[1] = (char) ('a' + nTotal - nCurr);					
+					cFile[1] = (char) ('a' + nTotal - nCurr);
 				}
 			}
 		}

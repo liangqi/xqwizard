@@ -50,4 +50,8 @@ public class ClassPath extends File {
 	public static ClassPath getInstance() {
 		return instance;
 	}
+
+	public static ClassPath getInstance(String strPath) {
+		return instance.append(strPath);
+	}
 }
