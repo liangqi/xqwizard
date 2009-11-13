@@ -2,6 +2,7 @@ package net.elephantbase.cchess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class PgnFile {
@@ -21,8 +22,7 @@ public class PgnFile {
 	private String ecco = "", opening = "", variation = "";
 	private int maxMoves = 0, result = 0, sdStart = 0;
 	private String fen = null;
-	private ArrayList<Integer> sqSrcList = new ArrayList<Integer>();
-	private ArrayList<Integer> sqDstList = new ArrayList<Integer>();
+	private ArrayList<Integer> mvList = new ArrayList<Integer>();
 	private ArrayList<StringBuilder> commentList = new ArrayList<StringBuilder>();
 
 	public void load(BufferedReader in) throws IOException {
@@ -35,6 +35,7 @@ public class PgnFile {
 			return;
 		}
 		int index = 0;
+		commentList.add(new StringBuilder());
 		while (true) {
 			if (detail) {
 				if (remLevel > 0) {
@@ -42,7 +43,8 @@ public class PgnFile {
 					while (index < s.length()) {
 						char c = s.charAt(index);
 						index ++;
-						remLevel += (c == '(' || c == '{' ? 1 : c == ')' || c == '}' ? -1 : 0);
+						remLevel += (c == '(' || c == '{' ? 1 :
+								c == ')' || c == '}' ? -1 : 0);
 						if (remLevel == 0) {
 							endFor = false;
 							break;
@@ -115,7 +117,8 @@ public class PgnFile {
 								int sqSrc = Position.SRC(mv);
 								int sqDst = Position.DST(mv);
 								if (sqSrc == sqDst) {
-									pos.squares[sqDst] = (byte) (Position.SIDE_TAG(pos.sdPlayer) +
+									pos.squares[sqDst] = (byte)
+											(Position.SIDE_TAG(pos.sdPlayer) +
 											Position.PIECE_PAWN);
 								} else {
 									pos.squares[sqDst] = pos.squares[sqSrc];
@@ -123,9 +126,8 @@ public class PgnFile {
 								}
 								pos.changeSide();
 								maxMoves ++;
-								// lstComment.addElement(new StringBuffer());
-								sqSrcList.add(Integer.valueOf(sqSrc));
-								sqDstList.add(Integer.valueOf(sqDst));
+								commentList.add(new StringBuilder());
+								mvList.add(Integer.valueOf(mv));
 							}
 							endFor = false;
 						}
@@ -187,12 +189,16 @@ public class PgnFile {
 		}
 	}
 
-	public int getSqSrc(int index) {
-		return sqSrcList.get(index).intValue();
+	public int getMove(int index) {
+		return mvList.get(index).intValue();
 	}
 
-	public int getSqDst(int index) {
-		return sqDstList.get(index).intValue();
+	public String getMoveList() {
+		StringBuilder sb = new StringBuilder();
+		for (Integer mv : mvList) {
+			sb.append(MoveParser.move2Iccs(mv.intValue()) + " ");
+		}
+		return sb.toString();
 	}
 
 	public String getComment(int index) {
@@ -242,13 +248,20 @@ public class PgnFile {
 	}
 
 	public String toOpenString() {
-		String strOpening = opening + (opening.isEmpty() || variation.isEmpty() ? "" : "¡ª¡ª") + variation;
+		String strOpening = opening +
+				(opening.isEmpty() || variation.isEmpty() ? "" : "¡ª¡ª") + variation;
 		return strOpening + (ecco.isEmpty() ? "" :
 				(strOpening.isEmpty() ? "(ECCO¿ª¾Ö±àºÅ£º" + ecco + ")" : "(" + ecco + ")"));
 	}
 
 	public String toFlashString() {
-		String flashVars = "Position=" + fen;
+		String flashVars;
+		try {
+			flashVars = (fen == null ? "MoveList=" : "Position=" + fen + "&MoveList") +
+					URLEncoder.encode(getMoveList(), "UTF-8");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		return "<embed src=\"http://pub.elephantbase.net/flashxq.swf\" " +
 				"width=\"324\" height=\"396\" type=\"application/x-shockwave-flash\" " +
 				"pluginspage=\"http://www.macromedia.com/go/getflashplayer\" " +

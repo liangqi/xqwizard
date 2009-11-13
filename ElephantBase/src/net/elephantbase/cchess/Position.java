@@ -454,11 +454,15 @@ public class Position {
 
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.getInstance("../etc/BOOK.DAT"));
-			while (bookSize < MAX_BOOK_SIZE) {
-				bookLock[bookSize] = Util.readInt(in) >>> 1;
-				bookMove[bookSize] = (short) Util.readShort(in);
-				bookValue[bookSize] = (short) Util.readShort(in);
-				bookSize ++;
+			try {
+				while (bookSize < MAX_BOOK_SIZE) {
+					bookLock[bookSize] = Util.readInt(in) >>> 1;
+					bookMove[bookSize] = (short) Util.readShort(in);
+					bookValue[bookSize] = (short) Util.readShort(in);
+					bookSize ++;
+				}
+			} catch (Exception e) {
+				// Exit "while" when IOException occurs
 			}
 			in.close();
 		} catch (Exception e) {

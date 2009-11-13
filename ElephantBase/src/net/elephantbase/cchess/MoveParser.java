@@ -487,11 +487,11 @@ public class MoveParser {
 		char[] cIccs = new char[5];
 		int src = Position.SRC(mv);
 		int dst = Position.DST(mv);
-		cIccs[0] = (char) ('A' + Position.FILE_X(src));
-		cIccs[1] = (char) ('9' - Position.RANK_Y(src));
+		cIccs[0] = (char) ('A' + Position.FILE_X(src) - Position.FILE_LEFT);
+		cIccs[1] = (char) ('9' - Position.RANK_Y(src) + Position.RANK_TOP);
 		cIccs[2] = '-';
-		cIccs[3] = (char) ('A' + Position.FILE_X(dst));
-		cIccs[4] = (char) ('9' - Position.RANK_Y(dst));
+		cIccs[3] = (char) ('A' + Position.FILE_X(dst) - Position.FILE_LEFT);
+		cIccs[4] = (char) ('9' - Position.RANK_Y(dst) + Position.RANK_TOP);
 		return String.valueOf(cIccs);
 	}
 }
