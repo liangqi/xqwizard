@@ -1,10 +1,19 @@
 package com.google.code.jswin;
 
+import java.io.File;
+
 import com.google.code.jswin.util.ClassPath;
 
 public class CallProc {
+	private static native void initCallback();
+
 	static {
-		System.load(ClassPath.getInstance("../lib/CALLPROC.DLL").toString());
+		if (File.separatorChar == '\\') {
+			System.load(ClassPath.getInstance("../lib/CALLPROC.DLL").toString());
+		} else {
+			System.load(ClassPath.getInstance("../lib/libcallproc.so").toString());
+		}
+		initCallback();
 	}
 
 	public static final int CALLBACK_SIZE = 32;
@@ -24,15 +33,12 @@ public class CallProc {
 	public static native void putByteArray(int lpucDest, byte[] src, int srcPos, int length);
 	public static native void putShortArray(int lpwDest, short[] src, int srcPos, int length);
 	public static native void putIntArray(int lpdwDest, int[] src, int srcPos, int length);
-	public static native String getStr(int lpcwstr);
-	public static native void putStr(int lpwstr, String str);
 	public static native int alloc(int size);
-	public static native int allocStr(String str);
 	public static native void free(int lp);
 
-	public static native int loadLibrary(String libFileName);
-	public static native int getProcAddress(int hMod, String procName);
+	public static native int loadLibrary(byte[] libFileName);
+	public static native void freeLibrary(int hMod);
+	public static native int getProcAddress(int hMod, byte[] procName);
 	public static native int callProc(int lpProc, int... params);
-	public static native void prepareCallback(int lpucCallbackMem, int lpGenericCallback, int lpContext);
-	public static native int getCallbackAddress();
+	public static native void prepareCallback(int lpucCallbackMem, int lpContext);
 }

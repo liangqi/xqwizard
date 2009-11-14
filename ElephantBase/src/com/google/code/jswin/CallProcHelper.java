@@ -1,40 +1,26 @@
 package com.google.code.jswin;
 
-import java.util.LinkedHashMap;
-
 public class CallProcHelper {
-	public static final String KERNEL32_DLL = "KERNEL32.DLL";
-	public static final String USER32_DLL = "USER32.DLL";
-
-	private static int lpProcFreeLibrary, lpProcStrLen;
-	private static LinkedHashMap<String, Integer> hModMap = new LinkedHashMap<String, Integer>();
-
-	static {
-		int modKernel = CallProc.loadLibrary(KERNEL32_DLL);
-		lpProcFreeLibrary = CallProc.getProcAddress(modKernel, "FreeLibrary");
-		lpProcStrLen = CallProc.getProcAddress(modKernel, "lstrlenA");
-		hModMap.put(KERNEL32_DLL, Integer.valueOf(modKernel));
-		hModMap.put(USER32_DLL, Integer.valueOf(CallProc.loadLibrary(USER32_DLL)));
-	}
-
 	private int hMod, lpProc;
 
-	public static String getStrA(int lpcstr) {
-		int len = CallProc.callProc(lpProcStrLen, lpcstr);
+	public static String getStr(int lpcstr) {
+		int len = 0;
+		while (CallProc.getMem1(lpcstr + len) != 0) {
+			len ++;
+		}
 		byte[] buffer = new byte[len];
 		CallProc.getByteArray(lpcstr, buffer, 0, len);
 		return new String(buffer);
 	}
 
 	public CallProcHelper(String libFileName, String procName) {
-		Integer modInteger = hModMap.get(libFileName);
-		hMod = (modInteger == null ? CallProc.loadLibrary(libFileName) : modInteger.intValue());
+		hMod = CallProc.loadLibrary(libFileName.getBytes());
 		if (hMod == 0) {
 			throw new RuntimeException("File not found: " + libFileName);
 		}
-		lpProc = CallProc.getProcAddress(hMod, procName);
+		lpProc = CallProc.getProcAddress(hMod, procName.getBytes());
 		if (lpProc == 0) {
-			throw new RuntimeException("Can't find DLL entry point " + procName + " in " + libFileName);
+			throw new RuntimeException("Can't find DLL/so entry point " + procName + " in " + libFileName);
 		}
 	}
 
@@ -71,8 +57,6 @@ public class CallProcHelper {
 
 	@Override
 	public void finalize() {
-		if (!hModMap.containsValue(Integer.valueOf(hMod))) {
-			CallProc.callProc(lpProcFreeLibrary, hMod);
-		}
+		CallProc.freeLibrary(hMod);
 	}
 }

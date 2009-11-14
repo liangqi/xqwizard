@@ -3,8 +3,6 @@ package com.google.code.jswin;
 import java.io.Closeable;
 
 public abstract class CallbackHelper implements Closeable {
-	private static int lpGenericCallback = CallProc.getCallbackAddress();
-
 	protected abstract int callback(int[] params);
 
 	int numParams;
@@ -23,7 +21,7 @@ public abstract class CallbackHelper implements Closeable {
 
 	protected CallbackHelper(int numParams) {
 		this.numParams = numParams;
-		CallProc.prepareCallback(lpucCallbackMem, lpGenericCallback, lpContext);
+		CallProc.prepareCallback(lpucCallbackMem, lpContext);
 	}
 
 	public int getCallbackMem() {
