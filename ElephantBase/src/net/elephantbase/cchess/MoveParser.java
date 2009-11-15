@@ -339,7 +339,7 @@ public class MoveParser {
 		if (pc == 0) {
 			return "    ";
 		}
-		int pt = pc & 8;
+		int pt = pc & 7;
 		cFile[0] = PIECE_TO_CHAR.charAt(pt);
 		int xSrc, ySrc, xDst, yDst;
 		if (p.sdPlayer == 0) {

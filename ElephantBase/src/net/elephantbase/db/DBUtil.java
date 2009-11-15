@@ -17,7 +17,7 @@ public class DBUtil {
 
 	public static int executeUpdate(String sql, Object... in) {
 		Integer result = (Integer) executeQuery(0, sql, in);
-		return result == null ? 0 : result.intValue();
+		return result == null ? -1 : result.intValue();
 	}
 
 	public static Object executeQuery(String sql, Object... in) {

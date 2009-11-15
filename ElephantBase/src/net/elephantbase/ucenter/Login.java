@@ -23,8 +23,11 @@ public class Login {
 		String sql = "SELECT uid, password, salt FROM " +
 				ConnectionPool.UC_DBTABLEPRE + "members WHERE username = ?";
 		Object[] out = (Object[]) DBUtil.executeQuery(3, sql, username);
-		if (out[0] == null) {
+		if (out == null) {
 			return -1;
+		}
+		if (out[0] == DBUtil.EMPTY_OBJECT) {
+			return 0;
 		}
 		int uid = ((Integer) out[0]).intValue();
 		String key = (String) out[1];
@@ -35,7 +38,8 @@ public class Login {
 	public static String getUsername(int uid) {
 		String sql = "SELECT username FROM " +
 				ConnectionPool.UC_DBTABLEPRE + "members WHERE uid = ?";
-		return (String) DBUtil.executeQuery(sql, Integer.valueOf(uid));
+		Object username = DBUtil.executeQuery(sql, Integer.valueOf(uid));
+		return username == DBUtil.EMPTY_OBJECT ? null : (String) username;
 	}
 
 	public static String addCookie(int uid) {

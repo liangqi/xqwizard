@@ -77,15 +77,15 @@ public class Ecco {
 		return decode(CallProcHelper.getStr(lpcstr));
 	}
 
-	public static String index(String fileStr) {
+	public static String ecco(String fileStr) {
 		return dw2sz(cphEccoIndex.callProc(fileStr));
 	}
 
-	public static int getId(String ecco) {
+	public static int ecco2id(String ecco) {
 		return (ecco.charAt(0) - 'A') * 100 + Integer.parseInt(ecco.substring(1));
 	}
 
-	public static String getEcco(int id) {
+	public static String id2ecco(int id) {
 		return String.format("%c%02d", Character.valueOf((char) ('A' + id / 100)),
 				Integer.valueOf(id % 100));
 	}

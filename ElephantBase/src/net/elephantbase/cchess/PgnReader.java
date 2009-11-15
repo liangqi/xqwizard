@@ -2,10 +2,9 @@ package net.elephantbase.cchess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class PgnFile {
+public class PgnReader {
 	private static String getLabel(String s, String label) {
 		if (s.toUpperCase().startsWith("[" + label + " \"")) {
 			int n = s.indexOf("\"]");
@@ -19,11 +18,66 @@ public class PgnFile {
 	private String event = "", round = "", date = "", site = "";
 	private String redTeam = "", red = "";
 	private String blackTeam = "", black = "";
-	private String ecco = "", opening = "", variation = "";
-	private int maxMoves = 0, result = 0, sdStart = 0;
+	private int maxMoves = 0, result = 0, start = 0;
 	private String fen = null;
 	private ArrayList<Integer> mvList = new ArrayList<Integer>();
 	private ArrayList<StringBuilder> commentList = new ArrayList<StringBuilder>();
+
+	public String getEvent() {
+		return event;
+	}
+
+	public String getRound() {
+		return round;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public String getRedTeam() {
+		return redTeam;
+	}
+
+	public String getRed() {
+		return red;
+	}
+
+	public String getBlackTeam() {
+		return blackTeam;
+	}
+
+	public String getBlack() {
+		return black;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public String getFen() {
+		return fen;
+	}
+
+	public String getMoveList() {
+		StringBuilder sb = new StringBuilder();
+		for (Integer mv : mvList) {
+			sb.append(MoveParser.move2Iccs(mv.intValue()) + " ");
+		}
+		return sb.toString();
+	}
+
+	public int size() {
+		return maxMoves;
+	}
 
 	public void load(BufferedReader in) throws IOException {
 		Position pos = new Position();
@@ -171,7 +225,7 @@ public class PgnFile {
 					} else if ((value = getLabel(s, "FEN")) != null) {
 						pos.fromFen(value);
 						fen = value;
-						sdStart = pos.sdPlayer;
+						start = pos.sdPlayer;
 					}
 					returned = true;
 				} else {
@@ -187,85 +241,5 @@ public class PgnFile {
 				returned = false;
 			}
 		}
-	}
-
-	public int getMove(int index) {
-		return mvList.get(index).intValue();
-	}
-
-	public String getMoveList() {
-		StringBuilder sb = new StringBuilder();
-		for (Integer mv : mvList) {
-			sb.append(MoveParser.move2Iccs(mv.intValue()) + " ");
-		}
-		return sb.toString();
-	}
-
-	public String getComment(int index) {
-		return commentList.get(index).toString();
-	}
-
-	public int size() {
-		return maxMoves;
-	}
-
-	public String toEventString() {
-		if (round.isEmpty()) {
-			return event;
-		}
-		String strEvent = (event.isEmpty() ? "" : event + " ");
-		try {
-			return strEvent + "第" + Integer.parseInt(round) + "轮";
-		} catch (Exception e) {
-			return strEvent + round;
-		}
-	}
-
-	private static final String[][] START_RESULT_1 = {
-		{"红先", "红先胜", "红先和", "红先负"},
-		{"黑先", "黑先负", "黑先和", "黑先胜"},
-	};
-
-	private static final String[][] START_RESULT_2 = {
-		{"对", "先胜", "先和", "先负"},
-		{"对", "后胜", "后和", "后负"},
-	};
-
-	public String toResultString() {
-		if (red.isEmpty() || black.isEmpty()) {
-			return "(着法：" + START_RESULT_1[sdStart][result] + ")";
-		}
-		String strRed = redTeam + (redTeam.isEmpty() ? "" : " ") + red;
-		String strBlack = blackTeam + (blackTeam.isEmpty() ? "" : " ") + black;
-		return strRed + " (" + START_RESULT_2 + ") " + strBlack;
-	}
-
-	public String toDateSiteString() {
-		if (date.isEmpty()) {
-			return site.isEmpty() ? "" : "(弈于 " + site + ")";
-		}
-		return "(" + date + (site.isEmpty() ? ")" : " 弈于 " + site + ")");
-	}
-
-	public String toOpenString() {
-		String strOpening = opening +
-				(opening.isEmpty() || variation.isEmpty() ? "" : "——") + variation;
-		return strOpening + (ecco.isEmpty() ? "" :
-				(strOpening.isEmpty() ? "(ECCO开局编号：" + ecco + ")" : "(" + ecco + ")"));
-	}
-
-	public String toFlashString() {
-		String flashVars;
-		try {
-			flashVars = (fen == null ? "MoveList=" : "Position=" + fen + "&MoveList") +
-					URLEncoder.encode(getMoveList(), "UTF-8");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return "<embed src=\"http://pub.elephantbase.net/flashxq.swf\" " +
-				"width=\"324\" height=\"396\" type=\"application/x-shockwave-flash\" " +
-				"pluginspage=\"http://www.macromedia.com/go/getflashplayer\" " +
-				"allowScriptAccess=\"always\" quality=\"high\" wmode=\"transparent\" " +
-				"flashvars=\"" + flashVars + "\">";
 	}
 }
