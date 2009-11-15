@@ -21,7 +21,7 @@ public class MainPage extends BasePage {
 	}
 
 	public MainPage() {
-		super("首页", WANT_AUTH);
+		super("首页 - 象棋巫师棋谱仓库", NEED_AUTH);
 		add(new MainPanel());
 	}
 }

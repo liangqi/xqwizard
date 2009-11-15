@@ -25,14 +25,22 @@ public class BasePage extends WebPage {
 	}
 
 	private int authType;
+	private String suffix;
 
 	private Label lblHello = new Label("lblHello", "");
 	private Label lblLogin = new Label("lblLogin", "");
 
 	public BasePage(String title, int authType) {
 		this.authType = authType;
-		add(new Label("lblTitle", title + " - 象棋巫师棋谱仓库"));
-		add(new Label("lblSubtitle", title));
+		add(new Label("lblTitle", title));
+		int index = title.indexOf(" - ");
+		if (index < 0) {
+			add(new Label("lblSubtitle", title));
+			suffix = "象棋巫师用户中心";
+		} else {
+			add(new Label("lblSubtitle", title.substring(0, index)));
+			suffix = title.substring(index + 3);
+		}
 		add(lblHello);
 		Link<Void> lnkLogin = new Link<Void>("lnkLogin") {
 			private static final long serialVersionUID = 1L;
@@ -62,5 +70,9 @@ public class BasePage extends WebPage {
 		lblHello.setDefaultModelObject((username == null ? "游客" : username) + "，您好！");
 		lblLogin.setDefaultModelObject(username == null ? "【登录】" : "【注销】");
 		super.onBeforeRender();
+	}
+
+	public String getSuffix() {
+		return suffix;
 	}
 }

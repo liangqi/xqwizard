@@ -7,7 +7,7 @@ import java.io.FileReader;
 import net.elephantbase.cchess.PgnReader;
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
-import net.elephantbase.ecco.Ecco;
+import net.elephantbase.pgndb.biz.EccoUtil;
 import net.elephantbase.pgndb.biz.PgnUtil;
 
 public class ImportPgns {
@@ -51,7 +51,7 @@ public class ImportPgns {
 			date += (month < 0 ? "" : month + "ÔÂ");
 			date += (day < 0 ? "" : day + "ÈÕ");
 			String moveList = pgn.getMoveList();
-			int eccoId = Ecco.ecco2id(PgnUtil.parseEcco(moveList));
+			int eccoId = EccoUtil.ecco2id(PgnUtil.parseEcco(moveList));
 			DBUtil.executeUpdate(sql, Integer.valueOf(year), Integer.valueOf(month),
 					pgn.getEvent(), round, date, site, pgn.getRedTeam(), pgn.getRed(),
 					pgn.getBlackTeam(), pgn.getBlack(), moveList, Integer.valueOf(eccoId),

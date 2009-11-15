@@ -30,8 +30,8 @@ public class Ecco {
 			cphEccoVariation = new CallProcHelper(libEcco, "EccoVariation");
 			cphEccoIndex = new CallProcHelper(libEcco, "EccoIndex");
 		}
-		cphEccoInit.callProc(Integer.valueOf(0));
 		VERSION = CallProcHelper.getStr(cphEccoVersion.callProc());
+		setTraditional(false);
 	}
 
 	public static void setTraditional(boolean traditional) {
@@ -79,14 +79,5 @@ public class Ecco {
 
 	public static String ecco(String fileStr) {
 		return dw2sz(cphEccoIndex.callProc(fileStr));
-	}
-
-	public static int ecco2id(String ecco) {
-		return (ecco.charAt(0) - 'A') * 100 + Integer.parseInt(ecco.substring(1));
-	}
-
-	public static String id2ecco(int id) {
-		return String.format("%c%02d", Character.valueOf((char) ('A' + id / 100)),
-				Integer.valueOf(id % 100));
 	}
 }

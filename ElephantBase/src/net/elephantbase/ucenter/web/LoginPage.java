@@ -47,11 +47,11 @@ public class LoginPage extends BasePage {
 					}
 				}
 			};
-			frm.add(new TextField<String>("txtUsername", mdlUsername));
-			frm.add(new PasswordTextField("txtPassword", mdlPassword));
-			frm.add(new TextField<String>("txtCaptcha", mdlCaptcha));
-			frm.add(new Image("imgCaptcha", new CaptchaImageResource(captcha)));
-			frm.add(new CheckBox("chkSave", mdlCookie));
+			frm.add(new TextField<String>("txtUsername", mdlUsername),
+					new PasswordTextField("txtPassword", mdlPassword),
+					new TextField<String>("txtCaptcha", mdlCaptcha),
+					new Image("imgCaptcha", new CaptchaImageResource(captcha)),
+					new CheckBox("chkSave", mdlCookie));
 			add(frm);
 		}
 	}
@@ -61,7 +61,7 @@ public class LoginPage extends BasePage {
 	BasePage redirectPage;
 
 	public LoginPage(BasePage redirectPage) {
-		super("µÇÂ¼", NO_AUTH);
+		super("µÇÂ¼ - " + redirectPage.getSuffix(), NO_AUTH);
 		this.redirectPage = redirectPage;
 		lblInfo.setVisible(false);
 		LoginPanel panel = new LoginPanel();
