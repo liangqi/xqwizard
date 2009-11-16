@@ -13,18 +13,42 @@ import net.elephantbase.util.Logger;
 import net.elephantbase.util.Streams;
 
 public class DBUtil {
+	public static interface Callback {
+		Object onRecord(Object[] record);
+	}
+
 	public static final Object EMPTY_OBJECT = new Object();
 
 	public static int executeUpdate(String sql, Object... in) {
-		Integer result = (Integer) executeQuery(0, sql, in);
+		Integer result = (Integer) executeQuery(0, sql, null, in);
 		return result == null ? -1 : result.intValue();
 	}
 
 	public static Object executeQuery(String sql, Object... in) {
-		return executeQuery(1, sql, in);
+		return executeQuery(1, sql, new Callback() {
+			@Override
+			public Object onRecord(Object[] record) {
+				return record[0];
+			}
+		}, in);
 	}
 
-	public static Object executeQuery(int columns, String sql, Object... in) {
+	public static Object[] executeQuery(int columns, String sql, Object... in) {
+		Object out = executeQuery(columns, sql, new Callback() {
+			@Override
+			public Object onRecord(Object[] record) {
+				return record;
+			}
+		}, in);
+		if (out == EMPTY_OBJECT) {
+			out = new Object[columns];
+			Arrays.fill((Object[]) out, EMPTY_OBJECT);
+		}
+		return (Object[]) out;
+	}
+
+	public static Object executeQuery(int columns, String sql, Callback callback,
+			Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
 			Logger.severe("Connection refused");
@@ -39,20 +63,19 @@ public class DBUtil {
 			}
 			if (columns == 0) {
 				return Integer.valueOf(ps.executeUpdate());
-			} else if (columns == 1) {
-				rs = ps.executeQuery();
-				return rs.next() ? rs.getObject(1) : EMPTY_OBJECT;
 			}
 			rs = ps.executeQuery();
-			Object[] out = new Object[columns];
-			if (rs.next()) {
+			Object[] record = new Object[columns];
+			while (rs.next()) {
 				for (int i = 0; i < columns; i ++) {
-					out[i] = rs.getObject(i + 1);
+					record[i] = rs.getObject(i + 1);
 				}
-			} else {
-				Arrays.fill(out, EMPTY_OBJECT);
+				Object out = callback.onRecord(record);
+				if (out != null) {
+					return out;
+				}
 			}
-			return out;
+			return EMPTY_OBJECT;
 		} catch (Exception e) {
 			Logger.severe(e);
 			return null;

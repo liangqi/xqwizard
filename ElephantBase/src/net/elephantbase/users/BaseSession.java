@@ -1,6 +1,7 @@
-package net.elephantbase.ucenter;
+package net.elephantbase.users;
 
 import javax.servlet.http.Cookie;
+
 
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;

@@ -1,4 +1,4 @@
-package net.elephantbase.ucenter;
+package net.elephantbase.users;
 
 import java.security.MessageDigest;
 
@@ -9,6 +9,9 @@ import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
 public class Login {
+	private static final String MYSQL_TABLEPRE = ConnectionPool.MYSQL_TABLEPRE;
+	private static final String UC_DBTABLEPRE = ConnectionPool.UC_DBTABLEPRE;
+
 	private static String md5(String input) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -21,8 +24,8 @@ public class Login {
 
 	public static int login(String username, String password) {
 		String sql = "SELECT uid, password, salt FROM " +
-				ConnectionPool.UC_DBTABLEPRE + "members WHERE username = ?";
-		Object[] out = (Object[]) DBUtil.executeQuery(3, sql, username);
+				UC_DBTABLEPRE + "members WHERE username = ?";
+		Object[] out = DBUtil.executeQuery(3, sql, username);
 		if (out == null) {
 			return -1;
 		}
@@ -37,29 +40,28 @@ public class Login {
 
 	public static String getUsername(int uid) {
 		String sql = "SELECT username FROM " +
-				ConnectionPool.UC_DBTABLEPRE + "members WHERE uid = ?";
+				UC_DBTABLEPRE + "members WHERE uid = ?";
 		Object username = DBUtil.executeQuery(sql, Integer.valueOf(uid));
 		return username == DBUtil.EMPTY_OBJECT ? null : (String) username;
 	}
 
 	public static String addCookie(int uid) {
-		String sql = "INSERT INTO " + ConnectionPool.MYSQL_TABLEPRE +
+		String sql = "INSERT INTO " + MYSQL_TABLEPRE +
 				"login (cookie, uid, expire) VALUES (?, ?, ?)";
 		String cookie = Bytes.toHexLower(Bytes.random(16));
 		int expire = new EasyDate().add(EasyDate.DAY * 30).getTimeSec();
-		DBUtil.executeUpdate(sql, cookie, Integer.valueOf(uid), Integer.valueOf(expire));
+		DBUtil.executeUpdate(sql, cookie,
+				Integer.valueOf(uid), Integer.valueOf(expire));
 		return cookie;
 	}
 
 	public static void delCookie(String cookie) {
-		String sql = "DELETE FROM " + ConnectionPool.MYSQL_TABLEPRE +
-				"login WHERE cookie = ?";
+		String sql = "DELETE FROM " + MYSQL_TABLEPRE + "login WHERE cookie = ?";
 		DBUtil.executeUpdate(sql, cookie);
 	}
 
 	public static int loginCookie(String cookie, String[] username) {
-		String sql = "SELECT uid FROM " +
-				ConnectionPool.MYSQL_TABLEPRE + "login WHERE cookie = ?";
+		String sql = "SELECT uid FROM " + MYSQL_TABLEPRE + "login WHERE cookie = ?";
 		Object out = DBUtil.executeQuery(sql, cookie);
 		if (out == null) {
 			return -1;
@@ -68,8 +70,7 @@ public class Login {
 			return 0;
 		}
 		int uid = ((Integer) out).intValue();
-		sql = "UPDATE " + ConnectionPool.MYSQL_TABLEPRE + "login SET " +
-				"expire = ? WHERE cookie = ?";
+		sql = "UPDATE " + MYSQL_TABLEPRE + "login SET expire = ? WHERE cookie = ?";
 		int expire = new EasyDate().add(EasyDate.DAY * 30).getTimeSec();
 		DBUtil.executeUpdate(sql, Integer.valueOf(expire), cookie);
 		if (username != null && username.length > 0) {

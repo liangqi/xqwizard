@@ -14,7 +14,7 @@ public class EccoUtil {
 				Integer.valueOf(id % 100));
 	}
 
-	private static final String[] ECCO_LEVEL_1 = {
+	public static final String[] LEVEL_1 = {
 		"A.非中炮类开局",
 		"B.中炮对反宫马及其他",
 		"C.中炮对屏风马",
@@ -22,7 +22,7 @@ public class EccoUtil {
 		"E.仙人指路局",
 	};
 
-	private static final String[][] ECCO_LEVEL_2 = {
+	public static final String[][] LEVEL_2 = {
 		{
 			"A0.非常见开局",
 			"A1.飞相局(一)",
@@ -65,14 +65,14 @@ public class EccoUtil {
 		}
 	};
 
-	private static String[][][] ECCO_LEVEL_3;
+	public static String[][][] LEVEL_3;
 
 	static {
-		int iMax = ECCO_LEVEL_2.length;
-		ECCO_LEVEL_3 = new String[iMax][][];
+		int iMax = LEVEL_2.length;
+		LEVEL_3 = new String[iMax][][];
 		for (int i = 0; i < iMax; i ++) {
-			int jMax = ECCO_LEVEL_2[i].length;
-			ECCO_LEVEL_3[i] = new String[jMax][];
+			int jMax = LEVEL_2[i].length;
+			LEVEL_3[i] = new String[jMax][];
 			for (int j = 0; j < jMax; j ++) {
 				ArrayList<String> openVarList = new ArrayList<String>();
 				String eccoLevel2 = "" + (char) ('A' + i) + (char) ('0' + j);
@@ -90,17 +90,8 @@ public class EccoUtil {
 					openVarList.add(ecco + "." + opening +
 							(variation.isEmpty() ? "" : "——" + variation));
 				}
-				ECCO_LEVEL_3[i][j] = openVarList.toArray(new String[0]);
+				LEVEL_3[i][j] = openVarList.toArray(new String[0]);
 			}
 		}
-	}
-
-	public static ArrayList<String> getLevel1List() {
-		ArrayList<String> level1List = new ArrayList<String>();
-		level1List.add("=== 全部 ===");
-		for (String eccoLevel1 : ECCO_LEVEL_1) {
-			level1List.add(eccoLevel1);
-		}
-		return level1List;
 	}
 }

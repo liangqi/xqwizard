@@ -1,8 +1,8 @@
 package net.elephantbase.pgndb;
 
-import net.elephantbase.pgndb.web.MainPage;
-import net.elephantbase.ucenter.BaseSession;
-import net.elephantbase.ucenter.web.BasePage;
+import net.elephantbase.pgndb.web.SearchPanel;
+import net.elephantbase.users.BaseSession;
+import net.elephantbase.users.web.BasePanel;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -14,7 +14,7 @@ public class PgnDBApp extends WebApplication {
 	@Override
 	public Class<? extends WebPage> getHomePage() {
 		return new WebPage() {{
-			BasePage.setResponsePage(new MainPage());
+			BasePanel.setResponsePanel(new SearchPanel());
 		}}.getClass();
 	}
 
