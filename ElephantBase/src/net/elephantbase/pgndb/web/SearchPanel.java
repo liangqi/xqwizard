@@ -2,6 +2,7 @@ package net.elephantbase.pgndb.web;
 
 import java.util.ArrayList;
 
+import net.elephantbase.pgndb.PgnDBApp;
 import net.elephantbase.pgndb.biz.EccoUtil;
 import net.elephantbase.users.web.BasePanel;
 
@@ -43,7 +44,7 @@ public class SearchPanel extends BasePanel {
 	}
 
 	public SearchPanel() {
-		super("搜索棋谱 - 象棋巫师棋谱仓库", NO_AUTH);
+		super("搜索棋谱 - " + PgnDBApp.SUFFIX, WANT_AUTH);
 
 		// 按赛事、时间查询
 		final TextField<String> txtEvent = new
@@ -130,7 +131,7 @@ public class SearchPanel extends BasePanel {
 
 			@Override
 			protected void onSubmit() {
-				// setResponsePanel(new SearchPanel());
+				setResponsePanel(new ResultPanel());
 			}
 		};
 		add(frm);

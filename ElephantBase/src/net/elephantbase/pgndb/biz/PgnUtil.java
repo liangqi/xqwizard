@@ -41,9 +41,9 @@ public class PgnUtil {
 
 	public static String toDateSiteString(String date, String site) {
 		if (date.isEmpty()) {
-			return site.isEmpty() ? "" : "(弈于 " + site + ")";
+			return site.isEmpty() ? "" : "弈于 " + site;
 		}
-		return "(" + date + (site.isEmpty() ? ")" : " 弈于 " + site + ")");
+		return date + (site.isEmpty() ? "" : " 弈于 " + site);
 	}
 
 	public static String getOpenString(String ecco, String opening, String variation) {

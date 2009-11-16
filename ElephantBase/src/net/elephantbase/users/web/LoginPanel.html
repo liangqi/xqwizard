@@ -1,45 +1,41 @@
-<html>
-  <body>
-    <wicket:panel>
-      <p><font size="2" color="#FF0000">
-        <span wicket:id="lblInfo"></span>
-      </font></p>
-      <form wicket:id="frm">
-        <table border="0">
-          <tr>
-            <td align="right"><font size="2">用户名：</font></td>
-            <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
-            <td>
-              <input type="text" size="20" wicket:id="txtUsername" tabindex="1">
-              <a href="http://users.elephantbase.net/register.htm" target="_blank"><font size="2">注册帐号</font></a>
-            </td>
-          </tr>
-          <tr>
-            <td align="right"><font size="2">密码：</font></td>
-            <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
-            <td>
-              <input type="password" size="20" wicket:id="txtPassword" tabindex="2">
-              <a href="http://users.elephantbase.net/getpassword.htm" target="_blank"><font size="2">找回密码</font></a>
-            </td>
-          </tr>
-          <tr>
-            <td><font size="2">验证码：</font></td>
-            <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
-            <td><input type="text" size="10" wicket:id="txtCaptcha" tabindex="3"> <img wicket:id="imgCaptcha"></td>
-          </tr>
-          <tr>
-            <td>　</td>
-            <td>　</td>
-            <td><font size="2">数字0-9，字母A-F(大写)</font></td>
-          </tr>
-          <tr>
-            <td>　</td>
-            <td>　</td>
-            <td><font size="2"><input type="checkbox" checked id="chkSave" wicket:id="chkSave" tabindex="4"><label for="chkSave">一个月内不用再登录</label></font></td>
-          </tr>
-        </table>
-        <p align="center"><input type="submit" value="提交" tabindex="5"></p>
-      </form>
-    </wicket:panel>
-  </body>
-</html>
+<wicket:panel>
+  <p><font size="2" color="#FF0000">
+    <span wicket:id="lblInfo"></span>
+  </font></p>
+  <form wicket:id="frm">
+    <table border="0">
+      <tr>
+        <td align="right"><font size="2">用户名：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="text" size="20" wicket:id="txtUsername" tabindex="1">
+          <a href="http://users.elephantbase.net/register.htm" target="_blank"><font size="2">注册帐号</font></a>
+        </td>
+      </tr>
+      <tr>
+        <td align="right"><font size="2">密码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="password" size="20" wicket:id="txtPassword" tabindex="2">
+          <a href="http://users.elephantbase.net/getpassword.htm" target="_blank"><font size="2">找回密码</font></a>
+        </td>
+      </tr>
+      <tr>
+        <td><font size="2">验证码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td><input type="text" size="10" wicket:id="txtCaptcha" tabindex="3"> <img wicket:id="imgCaptcha"></td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+        <td><font size="2">数字0-9，字母A-F(大写)</font></td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+        <td><font size="2"><input type="checkbox" checked id="chkSave" wicket:id="chkSave" tabindex="4"><label for="chkSave">一个月内不用再登录</label></font></td>
+      </tr>
+    </table>
+    <p align="center"><input type="submit" value="提交" tabindex="5"></p>
+  </form>
+</wicket:panel>
