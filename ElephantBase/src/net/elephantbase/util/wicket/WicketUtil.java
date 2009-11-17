@@ -2,15 +2,14 @@ package net.elephantbase.util.wicket;
 
 import net.elephantbase.util.Bytes;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 
 public class WicketUtil {
-	public static void download(Component component, final String ext,
+	public static void download(final String ext,
 			final String type, final byte[] content) {
-		component.getRequestCycle().setRequestTarget(new IRequestTarget() {
+		RequestCycle.get().setRequestTarget(new IRequestTarget() {
 			@Override
 			public void detach(RequestCycle requestCycle) {
 				// Do Nothing

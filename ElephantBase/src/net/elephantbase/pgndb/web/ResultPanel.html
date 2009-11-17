@@ -1,39 +1,51 @@
 <wicket:panel>
-  <table bgcolor="#000000" cellpadding="3" cellspacing="1">
+  <table bgcolor="#000000" cellpadding="4" cellspacing="1">
     <tr>
-      <td width="400" bgcolor="#FFFFFF">
+      <td bgcolor="#FFFFFF">
         <table>
           <tr>
-            <td background="images/headerbg.gif">
+            <td><a href="#" wicket:id="lnkBackTop">
+              <font size="2">搜索棋谱</font>
+            </a></td>
+            <td colspan="3" align="right"><font size="2">
+              <span wicket:id="navTop"></span>
+            </font></td>
+          </tr>
+          <tr>
+            <td background="images/headerbg.gif" align="center">
               <font size="2">赛事</font>
             </td>
-            <td background="images/headerbg.gif">
-              <font size="2">日期地点</font>
-            </td>
-            <td background="images/headerbg.gif">
+            <td background="images/headerbg.gif" align="center">
               <font size="2">对阵双方</font>
             </td>
-            <td background="images/headerbg.gif">
+            <td background="images/headerbg.gif" align="center">
+              <font size="2">时间</font>
+            </td>
+            <td background="images/headerbg.gif" align="center">
               <font size="2">开局</font>
             </td>
           </tr>
           <tr wicket:id="resultList">
-            <td wicket:id="tdEvent"><a href="#" wicket:id="lnkEvent">
-              <font size="2"><span wicket:id="lblEvent"></font>
+            <td wicket:id="tdEvent">
+              <font size="2"><span wicket:id="lblEvent"></span></font>
+            </td>
+            <td wicket:id="tdResult"><a href="#" wicket:id="lnkResult" target="_blank">
+              <font size="2"><span wicket:id="lblResult"></span></font>
             </a></td>
-            <td wicket:id="tdDateSite"><a href="#" wicket:id="lnkDateSite">
-              <font size="2"><span wicket:id="lblDateSite"></font>
-            </a></td>
-            <td wicket:id="tdResult"><a href="#" wicket:id="lnkResult">
-              <font size="2"><span wicket:id="lblResult"></font>
-            </a></td>
-            <td wicket:id="tdOpen"><a href="#" wicket:id="lnkEvent">
-              <font size="2"><span wicket:id="lblEvent"></font>
+            <td wicket:id="tdDateSite">
+              <font size="2"><span wicket:id="lblDateSite"></span></font>
+            </td>
+            <td wicket:id="tdOpening"><a href="#" wicket:id="lnkOpening" target="_blank">
+              <font size="2"><span wicket:id="lblOpening"></span></font>
             </a></td>
           </tr>
           <tr>
-            <td colspan="4">
-            </td>
+            <td><a href="#" wicket:id="lnkBackBottom">
+              <font size="2">搜索棋谱</font>
+            </a></td>
+            <td colspan="3" align="right"><font size="2">
+              <span wicket:id="navBottom"></span>
+            </font></td>
           </tr>
         </table>
       </td>

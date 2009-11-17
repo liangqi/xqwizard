@@ -1,7 +1,5 @@
 package net.elephantbase.pgndb.biz;
 
-import java.net.URLEncoder;
-
 import net.elephantbase.cchess.MoveParser;
 import net.elephantbase.cchess.Position;
 import net.elephantbase.ecco.Ecco;
@@ -32,11 +30,11 @@ public class PgnUtil {
 	public static String toResultString(String redTeam, String red,
 			String blackTeam, String black, int start, int result) {
 		if (red.isEmpty() || black.isEmpty()) {
-			return "(着法：" + START_RESULT_1[start][result] + ")";
+			return "着法：" + START_RESULT_1[start][result];
 		}
 		String strRed = redTeam + (redTeam.isEmpty() ? "" : " ") + red;
 		String strBlack = blackTeam + (blackTeam.isEmpty() ? "" : " ") + black;
-		return strRed + " (" + START_RESULT_2 + ") " + strBlack;
+		return strRed + " " + START_RESULT_2[start][result] + " " + strBlack;
 	}
 
 	public static String toDateSiteString(String date, String site) {
@@ -46,26 +44,10 @@ public class PgnUtil {
 		return date + (site.isEmpty() ? "" : " 弈于 " + site);
 	}
 
-	public static String getOpenString(String ecco, String opening, String variation) {
-		String strOpening = opening +
-				(opening.isEmpty() || variation.isEmpty() ? "" : "——") + variation;
-		return strOpening + (ecco.isEmpty() ? "" :
-				(strOpening.isEmpty() ? "(ECCO开局编号：" + ecco + ")" : "(" + ecco + ")"));
-	}
-
-	public static String toFlashString(String fen, String moveList) {
-		String flashVars;
-		try {
-			flashVars = (fen == null ? "MoveList=" : "Position=" + fen + "&MoveList") +
-					URLEncoder.encode(moveList, "UTF-8");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return "<embed src=\"http://pub.elephantbase.net/flashxq.swf\" " +
-				"width=\"324\" height=\"396\" type=\"application/x-shockwave-flash\" " +
-				"pluginspage=\"http://www.macromedia.com/go/getflashplayer\" " +
-				"allowScriptAccess=\"always\" quality=\"high\" wmode=\"transparent\" " +
-				"flashvars=\"" + flashVars + "\">";
+	public static String getOpeningString(String ecco) {
+		String variation = Ecco.variation(ecco);
+		return ecco + ". " + Ecco.opening(ecco) +
+				(variation.isEmpty() ? "" : "——" + variation);
 	}
 
 	public static String parseEcco(String moveList) {

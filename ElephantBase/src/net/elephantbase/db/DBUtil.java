@@ -13,10 +13,6 @@ import net.elephantbase.util.Logger;
 import net.elephantbase.util.Streams;
 
 public class DBUtil {
-	public static interface Callback {
-		Object onRecord(Object[] record);
-	}
-
 	public static final Object EMPTY_OBJECT = new Object();
 
 	public static int executeUpdate(String sql, Object... in) {
@@ -25,19 +21,19 @@ public class DBUtil {
 	}
 
 	public static Object executeQuery(String sql, Object... in) {
-		return executeQuery(1, sql, new Callback() {
+		return executeQuery(1, sql, new RowCallback() {
 			@Override
-			public Object onRecord(Object[] record) {
-				return record[0];
+			public Object onRow(Object[] row) {
+				return row[0];
 			}
 		}, in);
 	}
 
 	public static Object[] executeQuery(int columns, String sql, Object... in) {
-		Object out = executeQuery(columns, sql, new Callback() {
+		Object out = executeQuery(columns, sql, new RowCallback() {
 			@Override
-			public Object onRecord(Object[] record) {
-				return record;
+			public Object onRow(Object[] row) {
+				return row;
 			}
 		}, in);
 		if (out == EMPTY_OBJECT) {
@@ -47,7 +43,7 @@ public class DBUtil {
 		return (Object[]) out;
 	}
 
-	public static Object executeQuery(int columns, String sql, Callback callback,
+	public static Object executeQuery(int columns, String sql, RowCallback callback,
 			Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
@@ -65,12 +61,12 @@ public class DBUtil {
 				return Integer.valueOf(ps.executeUpdate());
 			}
 			rs = ps.executeQuery();
-			Object[] record = new Object[columns];
+			Object[] row = new Object[columns];
 			while (rs.next()) {
 				for (int i = 0; i < columns; i ++) {
-					record[i] = rs.getObject(i + 1);
+					row[i] = rs.getObject(i + 1);
 				}
-				Object out = callback.onRecord(record);
+				Object out = callback.onRow(row);
 				if (out != null) {
 					return out;
 				}

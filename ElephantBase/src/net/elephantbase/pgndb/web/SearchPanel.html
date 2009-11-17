@@ -2,62 +2,36 @@
   <form wicket:id="frm">
     <table>
       <tr>
-        <td width="150" align="right" title="输入赛事关键字，如“联赛”、“个人赛”、“五羊杯”等">
-          <font size="2">赛事:
-              <input type="text" wicket:id="txtEvent" size="10"></font>
-        </td>
-        <td></td>
-        <td width="150"><font size="2">从
-          <select wicket:id="optFromYear"></select>年<select wicket:id="optFromMonth"></select>月
-        </font></td>
-        <td width="400"><font size="2">到
-          <select wicket:id="optToYear"></select>年<select wicket:id="optToMonth"></select>月
-        </font></td>
-      </tr>
-      <tr>
-        <td colspan="4"><font size="1">　</font></td>
-      </tr>
-      <tr>
-        <td align="right" title="输入某个棋手，如“胡荣华”，就能找到这个棋手的对局">
-          <font size="2">棋手:
-              <input type="text" wicket:id="txtPlayer1" size="10"></font>
-        </td>
+        <td align="right"><font size="2">赛事:</font></td>
         <td></td>
         <td><font size="2">
-          <input type="checkbox" wicket:id="chkRed1">执红
-          <input type="checkbox" wicket:id="chkBlack1">执黑
-        </font></td>
-        <td><font size="2">
-          <input type="checkbox" wicket:id="chkWin1">胜
-          <input type="checkbox" wicket:id="chkDraw1">和
-          <input type="checkbox" wicket:id="chkLoss1">负
-          <input type="checkbox" wicket:id="chkUnknown1">未知
+          <input align="right" title="输入赛事关键字，如“联赛”、“个人赛”、“五羊杯”等"
+              type="text" wicket:id="txtEvent" size="10">　从
+          <select wicket:id="selYearFrom"></select>年<select wicket:id="selMonthFrom"></select>月　到
+          <select wicket:id="selYearTo"></select>年<select wicket:id="selMonthTo"></select>月
         </font></td>
       </tr>
       <tr>
-        <td align="right" title="如果要找两个棋手之间的对局，那么在这里输入第二个棋手">
-          <font size="2">棋手:
-              <input type="text" wicket:id="txtPlayer2" size="10"></font>
-        </td>
+        <td colspan="3"><font size="1">　</font></td>
+      </tr>
+      <tr>
+        <td align="right"><font size="2">棋手:</font></td>
         <td></td>
         <td><font size="2">
-          <input type="checkbox" wicket:id="chkRed2">执红
-          <input type="checkbox" wicket:id="chkBlack2">执黑
-        </font></td>
-        <td><font size="2">
-          <input type="checkbox" wicket:id="chkWin2">胜
-          <input type="checkbox" wicket:id="chkDraw2">和
-          <input type="checkbox" wicket:id="chkLoss2">负
-          <input type="checkbox" wicket:id="chkUnknown2">未知
+          <input title="输入某个棋手，如“胡荣华”，就能找到这个棋手的对局"
+              type="text" wicket:id="txtPlayer1" size="10">　
+          <select wicket:id="selRedBlack"></select>　
+          <input title="如果要找两个棋手之间的对局，那么在这里输入第二个棋手"
+              type="text" wicket:id="txtPlayer2" size="10">
         </font></td>
       </tr>
       <tr>
-        <td colspan="4"><font size="1">　</font></td>
+        <td colspan="3"><font size="1">　</font></td>
       </tr>
       <tr>
         <td align="right"><font size="2">开局总类:</font></td>
         <td></td>
-        <td colspan="2"><select wicket:id="optEccoLevel1"></select>
+        <td colspan="5"><select wicket:id="selEccoLevel1"></select>
           <a href="http://www.elephantbase.net/ecco.htm" target="_blank">
             <font size="2">什么是ECCO开局分类？</font>
           </a>
@@ -66,21 +40,20 @@
       <tr>
         <td align="right"><font size="2">开局子类:</font></td>
         <td></td>
-        <td colspan="2"><select wicket:id="optEccoLevel2"></select></td>
+        <td><select wicket:id="selEccoLevel2"></select></td>
       </tr>
       <tr>
         <td align="right"><font size="2">开局分支:</font></td>
         <td></td>
-        <td colspan="2"><select wicket:id="optEccoLevel3"></select></td>
+        <td><select wicket:id="selEccoLevel3"></select></td>
       </tr>
       <tr>
         <td align="right"><font size="2">胜负:</font></td>
         <td></td>
-        <td colspan="2"><font size="2">
+        <td><font size="2">
           <input type="checkbox" wicket:id="chkWin">先胜
           <input type="checkbox" wicket:id="chkDraw">先和
           <input type="checkbox" wicket:id="chkLoss">先负
-          <input type="checkbox" wicket:id="chkUnknown">未知
         </font></td>
       </tr>
     </table>

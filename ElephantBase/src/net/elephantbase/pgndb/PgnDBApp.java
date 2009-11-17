@@ -1,8 +1,7 @@
 package net.elephantbase.pgndb;
 
-import net.elephantbase.pgndb.web.SearchPanel;
+import net.elephantbase.pgndb.web.PgnDBPage;
 import net.elephantbase.users.BaseSession;
-import net.elephantbase.users.web.BasePanel;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -11,13 +10,14 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 
 public class PgnDBApp extends WebApplication {
-	public static final String SUFFIX = "ÏóÆåÎ×Ê¦ÆåÆ×²Ö¿â";
-
 	@Override
 	public Class<? extends WebPage> getHomePage() {
-		return new WebPage() {{
-			BasePanel.setResponsePanel(new SearchPanel());
-		}}.getClass();
+		return PgnDBPage.class;
+	}
+
+	@Override
+	protected void init() {
+		getApplicationSettings().setPageExpiredErrorPage(PgnDBPage.class);
 	}
 
 	@Override

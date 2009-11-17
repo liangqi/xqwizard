@@ -11,6 +11,7 @@ import javax.servlet.ServletContextListener;
 
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.RowCallback;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
@@ -41,13 +42,13 @@ public class DailyTask implements ServletContextListener {
 		Integer nowInt = Integer.valueOf(now.getTimeSec());
 		sql = "SELECT uid, eventip, eventtime, eventtype, detail FROM " +
 				MYSQL_TABLEPRE + "log WHERE eventtime < ?";
-		DBUtil.executeQuery(5, sql, new DBUtil.Callback() {
+		DBUtil.executeQuery(5, sql, new RowCallback() {
 			@Override
-			public Object onRecord(Object[] record) {
+			public Object onRow(Object[] row) {
 				out.printf("INSERT INTO " + ConnectionPool.MYSQL_TABLEPRE + "log " +
 						"(uid, eventip, eventtime, eventtype, detail) VALUES " +
 						"(%d, '%s', %d, %d, %d);\r\n",
-						record[0], record[1], record[2], record[3], record[4]);
+						row[0], row[1], row[2], row[3], row[4]);
 				return null;
 			}
 		}, nowInt);

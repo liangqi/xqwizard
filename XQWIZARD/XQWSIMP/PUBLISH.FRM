@@ -462,7 +462,7 @@ If Publish_bContent Then
         szCopy = szCopy + "# http://pub.elephantbase.net/fen.php?fen=" + UrlEncode(szFen) + szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy + "[img]" + GetBoardUrl(szFen) + "[/img]" + szBr
-        szCopy = szCopy + "[url=http://pub.elephantbase.net/fen.php?fen=" + _
+        szCopy = szCopy + "# [url=http://pub.elephantbase.net/fen.php?fen=" + _
                 UrlEncode(szFen) + "]用象棋巫师打开盘面[/url]" + szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy + "<img src=""" + GetBoardUrl(szFen) + """>" + szBr
@@ -485,7 +485,7 @@ Else
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
             ' 后面有Flash棋盘，这里就不再显示图片棋盘了
             ' szCopy = szCopy + "<img src=""" + GetBoardUrl(Game_szIrrevFen(0)) + """>" + szBr
-            szCopy = szCopy + "<a href=""http://pub.elephantbase.net/fen.php?fen=" + _
+            szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/fen.php?fen=" + _
                     UrlEncode(Game_szIrrevFen(0)) + """>用象棋巫师打开盘面</a>" + szBr
         End Select
     End If

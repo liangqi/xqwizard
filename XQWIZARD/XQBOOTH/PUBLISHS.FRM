@@ -405,7 +405,7 @@ Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
     CchessFen2Board pos, App_szEndgames(Gui_nCurr)
     szCopy = szCopy + GetBoardText(pos)
-    szCopy = szCopy + "#" + App_szEndgames(Gui_nCurr) + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
+    szCopy = szCopy + "# " + App_szEndgames(Gui_nCurr) + szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
     szCopy = szCopy + "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" + szBr
     szCopy = szCopy + "# http://pub.elephantbase.net/fen.php?fen=" + UrlEncode(App_szEndgames(Gui_nCurr)) + szBr
 Case PUB_FORMAT_UBB

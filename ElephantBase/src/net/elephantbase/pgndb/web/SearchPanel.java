@@ -1,9 +1,10 @@
 package net.elephantbase.pgndb.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import net.elephantbase.pgndb.PgnDBApp;
 import net.elephantbase.pgndb.biz.EccoUtil;
+import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,7 +24,8 @@ public class SearchPanel extends BasePanel {
 		for (int i = from; i <= to; i ++) {
 			intList.add(Integer.valueOf(i));
 		}
-		return new DropDownChoice<Integer>(id, Model.of(Integer.valueOf(init)), intList);
+		return new DropDownChoice<Integer>(id,
+				Model.of(Integer.valueOf(init)), intList);
 	}
 
 	private static final String CHOICE_TOTAL = "=== 全部 ===";
@@ -43,103 +45,99 @@ public class SearchPanel extends BasePanel {
 		component.setModel(Model.of(CHOICE_TOTAL));
 	}
 
-	public SearchPanel() {
-		super("搜索棋谱 - " + PgnDBApp.SUFFIX, WANT_AUTH);
+	public SearchPanel(final SearchCond cond) {
+		super("搜索棋谱 - " + PgnDBPage.SUFFIX, WANT_AUTH);
 
 		// 按赛事、时间查询
 		final TextField<String> txtEvent = new
 				TextField<String>("txtEvent", Model.of(""));
-		final DropDownChoice<Integer> optFromYear =
-				newChoice("optFromYear", 1990, 2010, 1990);
-		final DropDownChoice<Integer> optFromMonth =
-				newChoice("optFromMonth", 1, 12, 1);
-		final DropDownChoice<Integer> optToYear =
-				newChoice("optToYear", 1990, 2010, 2010);
-		final DropDownChoice<Integer> optToMonth =
-				newChoice("optToMonth", 1, 12, 12);
+		txtEvent.setRequired(false);
+		final DropDownChoice<Integer> selFromYear = newChoice("selYearFrom",
+				SearchCond.YEAR_FROM, SearchCond.YEAR_TO, cond.yearFrom);
+		final DropDownChoice<Integer> selFromMonth = newChoice("selMonthFrom",
+				SearchCond.MONTH_FROM, SearchCond.MONTH_TO, cond.monthFrom);
+		final DropDownChoice<Integer> selToYear = newChoice("selYearTo",
+				SearchCond.YEAR_FROM, SearchCond.YEAR_TO, cond.yearTo);
+		final DropDownChoice<Integer> selToMonth = newChoice("selMonthTo",
+				SearchCond.MONTH_FROM, SearchCond.MONTH_TO, cond.monthTo);
 
 		// 按选手查询
 		final TextField<String> txtPlayer1 = new
 				TextField<String>("txtPlayer1", Model.of(""));
-		final CheckBox chkRed1 = new CheckBox("chkRed1", Model.of(Boolean.TRUE));
-		final CheckBox chkBlack1 = new CheckBox("chkBlack1", Model.of(Boolean.TRUE));
-		final CheckBox chkWin1 = new CheckBox("chkWin1", Model.of(Boolean.TRUE));
-		final CheckBox chkDraw1 = new CheckBox("chkDraw1", Model.of(Boolean.TRUE));
-		final CheckBox chkLoss1 = new CheckBox("chkLoss1", Model.of(Boolean.TRUE));
-		final CheckBox chkUnknown1 = new CheckBox("chkUnknown1", Model.of(Boolean.TRUE));
-
+		txtPlayer1.setRequired(false);
+		final DropDownChoice<String> selSide = new
+				DropDownChoice<String>("selRedBlack",
+				Model.of(SearchCond.SIDE_CHOICES[SearchCond.SIDE_BOTH]),
+				Arrays.asList(SearchCond.SIDE_CHOICES));
 		final TextField<String> txtPlayer2 = new
 				TextField<String>("txtPlayer2", Model.of(""));
-		final CheckBox chkRed2 = new CheckBox("chkRed2", Model.of(Boolean.TRUE));
-		final CheckBox chkBlack2 = new CheckBox("chkBlack2", Model.of(Boolean.TRUE));
-		final CheckBox chkWin2 = new CheckBox("chkWin2", Model.of(Boolean.TRUE));
-		final CheckBox chkDraw2 = new CheckBox("chkDraw2", Model.of(Boolean.TRUE));
-		final CheckBox chkLoss2 = new CheckBox("chkLoss2", Model.of(Boolean.TRUE));
-		final CheckBox chkUnknown2 = new CheckBox("chkUnknown2", Model.of(Boolean.TRUE));
+		txtPlayer2.setRequired(false);
 
 		// 按开局查
-		final DropDownChoice<String> optEccoLevel1 = new
-				DropDownChoice<String>("optEccoLevel1");
-		final DropDownChoice<String> optEccoLevel2 = new
-				DropDownChoice<String>("optEccoLevel2");
-		final DropDownChoice<String> optEccoLevel3 = new
-				DropDownChoice<String>("optEccoLevel3");
-		final CheckBox chkWin = new CheckBox("chkWin", Model.of(Boolean.TRUE));
-		final CheckBox chkDraw = new CheckBox("chkDraw", Model.of(Boolean.TRUE));
-		final CheckBox chkLoss = new CheckBox("chkLoss", Model.of(Boolean.TRUE));
-		final CheckBox chkUnknown = new CheckBox("chkUnknown", Model.of(Boolean.TRUE));
+		final DropDownChoice<String> selEccoLevel1 = new
+				DropDownChoice<String>("selEccoLevel1");
+		final DropDownChoice<String> selEccoLevel2 = new
+				DropDownChoice<String>("selEccoLevel2");
+		final DropDownChoice<String> selEccoLevel3 = new
+				DropDownChoice<String>("selEccoLevel3");
+		final CheckBox chkWin = new CheckBox("chkWin",
+				Model.of(Boolean.valueOf(cond.win)));
+		final CheckBox chkDraw = new CheckBox("chkDraw",
+				Model.of(Boolean.valueOf(cond.draw)));
+		final CheckBox chkLoss = new CheckBox("chkLoss",
+				Model.of(Boolean.valueOf(cond.loss)));
 
-		setChoices(optEccoLevel1, EccoUtil.LEVEL_1);
-		optEccoLevel1.add(new OnChangeAjaxBehavior() {
+		setChoices(selEccoLevel1, EccoUtil.LEVEL_1);
+		selEccoLevel1.add(new OnChangeAjaxBehavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				int level1 = Integer.parseInt(optEccoLevel1.getModelValue());
+				int level1 = Integer.parseInt(selEccoLevel1.getModelValue());
 				if (level1 == 0) {
-					setChoices(optEccoLevel2, null);
+					setChoices(selEccoLevel2, null);
 				} else {
-					setChoices(optEccoLevel2, EccoUtil.LEVEL_2[level1 - 1]);
+					setChoices(selEccoLevel2, EccoUtil.LEVEL_2[level1 - 1]);
 				}
-				setChoices(optEccoLevel3, null);
-				target.addComponent(optEccoLevel2);
-				target.addComponent(optEccoLevel3);
+				setChoices(selEccoLevel3, null);
+				target.addComponent(selEccoLevel2);
+				target.addComponent(selEccoLevel3);
 			}
 		});
-		optEccoLevel2.setEnabled(false);
-		optEccoLevel2.setOutputMarkupId(true);
-		optEccoLevel2.add(new OnChangeAjaxBehavior() {
+		selEccoLevel2.setEnabled(false);
+		selEccoLevel2.setOutputMarkupId(true);
+		selEccoLevel2.add(new OnChangeAjaxBehavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				int level1 = Integer.parseInt(optEccoLevel1.getModelValue());
-				int level2 = Integer.parseInt(optEccoLevel2.getModelValue());
+				int level1 = Integer.parseInt(selEccoLevel1.getModelValue());
+				int level2 = Integer.parseInt(selEccoLevel2.getModelValue());
 				if (level2 == 0) {
-					setChoices(optEccoLevel3, null);
+					setChoices(selEccoLevel3, null);
 				} else {
-					setChoices(optEccoLevel3, EccoUtil.LEVEL_3[level1 - 1][level2 - 1]);
+					setChoices(selEccoLevel3,
+							EccoUtil.LEVEL_3[level1 - 1][level2 - 1]);
 				}
-				target.addComponent(optEccoLevel3);
+				target.addComponent(selEccoLevel3);
 			}
 		});
-		optEccoLevel3.setEnabled(false);
-		optEccoLevel3.setOutputMarkupId(true);
+		selEccoLevel3.setEnabled(false);
+		selEccoLevel3.setOutputMarkupId(true);
 
 		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit() {
-				setResponsePanel(new ResultPanel());
+				setResponsePanel(new ResultPanel(cond));
 			}
 		};
 		add(frm);
 
-		frm.add(txtEvent, optFromYear, optFromMonth, optToYear, optToMonth);
-		frm.add(txtPlayer1, chkRed1, chkBlack1, chkWin1, chkDraw1, chkLoss1, chkUnknown1);
-		frm.add(txtPlayer2, chkRed2, chkBlack2, chkWin2, chkDraw2, chkLoss2, chkUnknown2);
-		frm.add(optEccoLevel1, optEccoLevel2, optEccoLevel3);
-		frm.add(chkWin, chkDraw, chkLoss, chkUnknown);
+		frm.add(txtEvent, selFromYear, selFromMonth, selToYear, selToMonth);
+		frm.add(txtPlayer1, selSide, txtPlayer2);
+		frm.add(selEccoLevel1, selEccoLevel2, selEccoLevel3);
+		frm.add(chkWin, chkDraw, chkLoss);
 	}
 }

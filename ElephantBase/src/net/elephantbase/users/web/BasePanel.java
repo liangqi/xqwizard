@@ -12,15 +12,15 @@ public abstract class BasePanel extends Panel {
 	public static final int WANT_AUTH = 1;
 	public static final int NEED_AUTH = 2;
 
-	public static void setResponsePanel(BasePanel page) {
+	public static void setResponsePanel(BasePanel panel) {
 		RequestCycle rc = RequestCycle.get();
 		BaseSession session = (BaseSession) rc.getSession();
-		if (page.getAuthType() != BasePanel.NEED_AUTH ||
+		if (panel.getAuthType() != BasePanel.NEED_AUTH ||
 				session.getUid() > 0 || session.loginCookie()) {
-			rc.setResponsePage(new BasePage(page));
+			rc.setResponsePage(new BasePage(panel));
 			return;
 		}
-		rc.setResponsePage(new BasePage(new LoginPanel(page)));
+		rc.setResponsePage(new BasePage(new LoginPanel(panel)));
 	}
 
 	private String title;
