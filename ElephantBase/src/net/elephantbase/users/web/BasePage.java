@@ -13,7 +13,7 @@ public class BasePage extends WebPage {
 	public BasePage(final BasePanel panel) {
 		String title = panel.getTitle();
 		add(new Label("lblTitle", title));
-		int index = title.indexOf(" - ");
+		int index = title.lastIndexOf(" - ");
 		if (index < 0) {
 			add(new Label("lblSubtitle", title));
 		} else {

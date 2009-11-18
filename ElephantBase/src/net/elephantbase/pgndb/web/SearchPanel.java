@@ -31,6 +31,11 @@ public class SearchPanel extends BasePanel {
 	private static final String CHOICE_TOTAL = "=== 全部 ===";
 
 	static void setChoices(DropDownChoice<String> component, String[] choices) {
+		setChoices(component, choices, -1);
+	}
+
+	static void setChoices(DropDownChoice<String> component, String[] choices,
+			int index) {
 		ArrayList<String> choiceList = new ArrayList<String>();
 		choiceList.add(CHOICE_TOTAL);
 		if (choices == null) {
@@ -42,7 +47,7 @@ public class SearchPanel extends BasePanel {
 			}
 		}
 		component.setChoices(choiceList);
-		component.setModel(Model.of(CHOICE_TOTAL));
+		component.setModel(Model.of(choiceList.get(index + 1)));
 	}
 
 	public SearchPanel(final SearchCond cond) {
@@ -50,36 +55,36 @@ public class SearchPanel extends BasePanel {
 
 		// 按赛事、时间查询
 		final TextField<String> txtEvent = new
-				TextField<String>("txtEvent", Model.of(""));
+				TextField<String>("txtEvent", Model.of(cond.event));
 		txtEvent.setRequired(false);
-		final DropDownChoice<Integer> selFromYear = newChoice("selYearFrom",
+		final DropDownChoice<Integer> selYearFrom = newChoice("selYearFrom",
 				SearchCond.YEAR_FROM, SearchCond.YEAR_TO, cond.yearFrom);
-		final DropDownChoice<Integer> selFromMonth = newChoice("selMonthFrom",
+		final DropDownChoice<Integer> selMonthFrom = newChoice("selMonthFrom",
 				SearchCond.MONTH_FROM, SearchCond.MONTH_TO, cond.monthFrom);
-		final DropDownChoice<Integer> selToYear = newChoice("selYearTo",
+		final DropDownChoice<Integer> selYearTo = newChoice("selYearTo",
 				SearchCond.YEAR_FROM, SearchCond.YEAR_TO, cond.yearTo);
-		final DropDownChoice<Integer> selToMonth = newChoice("selMonthTo",
+		final DropDownChoice<Integer> selMonthTo = newChoice("selMonthTo",
 				SearchCond.MONTH_FROM, SearchCond.MONTH_TO, cond.monthTo);
 
 		// 按选手查询
 		final TextField<String> txtPlayer1 = new
-				TextField<String>("txtPlayer1", Model.of(""));
+				TextField<String>("txtPlayer1", Model.of(cond.player1));
 		txtPlayer1.setRequired(false);
 		final DropDownChoice<String> selSide = new
 				DropDownChoice<String>("selRedBlack",
-				Model.of(SearchCond.SIDE_CHOICES[SearchCond.SIDE_BOTH]),
+				Model.of(SearchCond.SIDE_CHOICES[cond.side]),
 				Arrays.asList(SearchCond.SIDE_CHOICES));
 		final TextField<String> txtPlayer2 = new
-				TextField<String>("txtPlayer2", Model.of(""));
+				TextField<String>("txtPlayer2", Model.of(cond.player2));
 		txtPlayer2.setRequired(false);
 
 		// 按开局查
-		final DropDownChoice<String> selEccoLevel1 = new
-				DropDownChoice<String>("selEccoLevel1");
-		final DropDownChoice<String> selEccoLevel2 = new
-				DropDownChoice<String>("selEccoLevel2");
-		final DropDownChoice<String> selEccoLevel3 = new
-				DropDownChoice<String>("selEccoLevel3");
+		final DropDownChoice<String> selLevel1 = new
+				DropDownChoice<String>("selLevel1");
+		final DropDownChoice<String> selLevel2 = new
+				DropDownChoice<String>("selLevel2");
+		final DropDownChoice<String> selLevel3 = new
+				DropDownChoice<String>("selLevel3");
 		final CheckBox chkWin = new CheckBox("chkWin",
 				Model.of(Boolean.valueOf(cond.win)));
 		final CheckBox chkDraw = new CheckBox("chkDraw",
@@ -87,57 +92,84 @@ public class SearchPanel extends BasePanel {
 		final CheckBox chkLoss = new CheckBox("chkLoss",
 				Model.of(Boolean.valueOf(cond.loss)));
 
-		setChoices(selEccoLevel1, EccoUtil.LEVEL_1);
-		selEccoLevel1.add(new OnChangeAjaxBehavior() {
+		setChoices(selLevel1, EccoUtil.LEVEL_1, cond.level1);
+		if (cond.level1 < 0) {
+			selLevel2.setEnabled(false);
+			selLevel3.setEnabled(false);
+		} else {
+			setChoices(selLevel2, EccoUtil.LEVEL_2[cond.level1], cond.level2);
+			if (cond.level2 < 0) {
+				selLevel3.setEnabled(false);
+			} else {
+				setChoices(selLevel3,
+						EccoUtil.LEVEL_3[cond.level1][cond.level2], cond.level3);
+			}
+		}
+
+		selLevel1.add(new OnChangeAjaxBehavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				int level1 = Integer.parseInt(selEccoLevel1.getModelValue());
-				if (level1 == 0) {
-					setChoices(selEccoLevel2, null);
+				int level1 = Integer.parseInt(selLevel1.getModelValue()) - 1;
+				if (level1 < 0) {
+					setChoices(selLevel2, null);
 				} else {
-					setChoices(selEccoLevel2, EccoUtil.LEVEL_2[level1 - 1]);
+					setChoices(selLevel2, EccoUtil.LEVEL_2[level1]);
 				}
-				setChoices(selEccoLevel3, null);
-				target.addComponent(selEccoLevel2);
-				target.addComponent(selEccoLevel3);
+				setChoices(selLevel3, null);
+				target.addComponent(selLevel2);
+				target.addComponent(selLevel3);
 			}
 		});
-		selEccoLevel2.setEnabled(false);
-		selEccoLevel2.setOutputMarkupId(true);
-		selEccoLevel2.add(new OnChangeAjaxBehavior() {
+		selLevel2.setOutputMarkupId(true);
+		selLevel2.add(new OnChangeAjaxBehavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				int level1 = Integer.parseInt(selEccoLevel1.getModelValue());
-				int level2 = Integer.parseInt(selEccoLevel2.getModelValue());
+				int level1 = Integer.parseInt(selLevel1.getModelValue());
+				int level2 = Integer.parseInt(selLevel2.getModelValue());
 				if (level2 == 0) {
-					setChoices(selEccoLevel3, null);
+					setChoices(selLevel3, null);
 				} else {
-					setChoices(selEccoLevel3,
+					setChoices(selLevel3,
 							EccoUtil.LEVEL_3[level1 - 1][level2 - 1]);
 				}
-				target.addComponent(selEccoLevel3);
+				target.addComponent(selLevel3);
 			}
 		});
-		selEccoLevel3.setEnabled(false);
-		selEccoLevel3.setOutputMarkupId(true);
+		selLevel3.setOutputMarkupId(true);
 
 		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit() {
-				setResponsePanel(new ResultPanel(cond));
+				SearchCond cond_ = new SearchCond();
+				cond_.event = txtEvent.getModelObject();
+				cond_.yearFrom = selYearFrom.getModelObject().intValue();
+				cond_.monthFrom = selMonthFrom.getModelObject().intValue();
+				cond_.yearTo = selYearTo.getModelObject().intValue();
+				cond_.monthTo = selMonthTo.getModelObject().intValue();
+				cond_.player1 = txtPlayer1.getModelObject();
+				cond_.side = Integer.parseInt(selSide.getModelValue());
+				cond_.player2 = txtPlayer2.getModelObject();
+				cond_.level1 = Integer.parseInt(selLevel1.getModelValue()) - 1;
+				cond_.level2 = Integer.parseInt(selLevel2.getModelValue()) - 1;
+				cond_.level3 = Integer.parseInt(selLevel3.getModelValue()) - 1;
+				cond_.win = chkWin.getModelObject().booleanValue();
+				cond_.draw = chkDraw.getModelObject().booleanValue();
+				cond_.loss = chkLoss.getModelObject().booleanValue();
+				cond_.validate();
+				setResponsePanel(new ResultPanel(cond_));
 			}
 		};
 		add(frm);
 
-		frm.add(txtEvent, selFromYear, selFromMonth, selToYear, selToMonth);
+		frm.add(txtEvent, selYearFrom, selMonthFrom, selYearTo, selMonthTo);
 		frm.add(txtPlayer1, selSide, txtPlayer2);
-		frm.add(selEccoLevel1, selEccoLevel2, selEccoLevel3);
+		frm.add(selLevel1, selLevel2, selLevel3);
 		frm.add(chkWin, chkDraw, chkLoss);
 	}
 }

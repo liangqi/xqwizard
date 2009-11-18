@@ -16,7 +16,7 @@ public class LoginPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
 	private static String getSuffix(String title) {
-		int index = title.indexOf(" - ");
+		int index = title.lastIndexOf(" - ");
 		return index < 0 ? "象棋巫师用户中心" : title.substring(index + 3);
 	}
 

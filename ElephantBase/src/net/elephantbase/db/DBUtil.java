@@ -97,4 +97,20 @@ public class DBUtil {
 			DBUtil.executeUpdate(sql);
 		}
 	}
+
+	public static String and(Iterable<String> conditions) {
+		StringBuilder sb = new StringBuilder();
+		for (String condition : conditions) {
+			sb.append(" AND (" + condition + ")");
+		}
+		return sb.substring(5);
+	}
+
+	public static String or(Iterable<String> conditions) {
+		StringBuilder sb = new StringBuilder();
+		for (String condition : conditions) {
+			sb.append(" OR (" + condition + ")");
+		}
+		return sb.substring(4);
+	}
 }

@@ -1,12 +1,7 @@
 package net.elephantbase.pgndb.web;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import net.elephantbase.db.ConnectionPool;
-import net.elephantbase.db.DBUtil;
-import net.elephantbase.db.RowCallback;
-import net.elephantbase.pgndb.biz.EccoUtil;
-import net.elephantbase.pgndb.biz.PgnUtil;
 import net.elephantbase.pgndb.biz.PgnInfo;
 import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
@@ -27,29 +22,20 @@ public class ResultPanel extends BasePanel {
 	private static final int LINK_PGN = 1;
 	private static final int LINK_ECCO = 2;
 
+	public ResultPanel(String ecco) {
+		this(new SearchCond(ecco));
+	}
+
 	public ResultPanel(final SearchCond cond) {
-		super("搜索结果 - " + PgnDBPage.SUFFIX, WANT_AUTH);
+		super(cond + PgnDBPage.SUFFIX, WANT_AUTH);
 
-		// 从数据库中搜索棋谱
-		final ArrayList<PgnInfo> resultList = new ArrayList<PgnInfo>();
-		String sql = "SELECT sid, event, round, date, site, redteam, red, blackteam, " +
-				"black, ecco, result FROM " + ConnectionPool.MYSQL_TABLEPRE + "pgn";
-		DBUtil.executeQuery(11, sql, new RowCallback() {
-			@Override
-			public Object onRow(Object[] row) {
-				int sid = ((Integer) row[0]).intValue();
-				String event = PgnUtil.toEventString((String) row[1], (String) row[2]);
-				String result = PgnUtil.toResultString((String) row[5], (String) row[6],
-						(String) row[7], (String) row[8], 0, ((Integer) row[10]).intValue());
-				String dateSite = PgnUtil.toDateSiteString((String) row[3], (String) row[4]);
-				String ecco = EccoUtil.id2ecco(((Integer) row[9]).intValue());
-				String opening = PgnUtil.getOpeningString(ecco);
-				resultList.add(new PgnInfo(sid, event, result, dateSite, opening));
-				return null;
-			}
-		});
+		WebMarkupContainer trNotFound = new WebMarkupContainer("trNotFound");
+		WebMarkupContainer trFound = new WebMarkupContainer("trFound");
+		List<PgnInfo> resultList = cond.search();
+		trNotFound.setVisible(resultList.isEmpty());
+		trFound.setVisible(!resultList.isEmpty());
+		add(trNotFound, trFound);
 
-		// 显示搜索结果列表
 		DataView<PgnInfo> dataView = new DataView<PgnInfo>("resultList",
 				new ListDataProvider<PgnInfo>(resultList)) {
 			private static final long serialVersionUID = 1L;
@@ -74,7 +60,8 @@ public class ResultPanel extends BasePanel {
 							if (type == LINK_PGN) {
 								setResponsePanel(new PgnPanel(pgnInfo));
 							} else {
-								setResponsePanel(new ResultPanel(cond));
+								String ecco = pgnInfo.getOpening().substring(0, 3);
+								setResponsePanel(new ResultPanel(ecco));
 							}
 						}
 					};
@@ -96,7 +83,6 @@ public class ResultPanel extends BasePanel {
 		dataView.setItemsPerPage(20);
 		add(dataView);
 
-		// 显示上下两行返回链接和翻页链接
 		add(new Link<Void>("lnkBackTop") {
 			private static final long serialVersionUID = 1L;
 

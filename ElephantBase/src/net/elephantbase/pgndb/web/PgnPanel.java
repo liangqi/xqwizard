@@ -16,7 +16,6 @@ import net.elephantbase.db.DBUtil;
 import net.elephantbase.ecco.Ecco;
 import net.elephantbase.pgndb.biz.EccoUtil;
 import net.elephantbase.pgndb.biz.PgnInfo;
-import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.wicket.WicketUtil;
 
@@ -57,7 +56,6 @@ public class PgnPanel extends BasePanel {
 
 		// 赛事、结果、地点、Flash、开局
 		add(new Label("lblEvent", pgnInfo.getEvent()));
-		add(new Label("lblResult", pgnInfo.getResult()));
 		add(new Label("lblDateSite", pgnInfo.getDateSite()));
 		add(new Label("lblBlack", "黑方 " + blackTeam + " " + black));
 		WebComponent embed = new WebComponent("embed");
@@ -74,7 +72,7 @@ public class PgnPanel extends BasePanel {
 
 			@Override
 			public void onClick() {
-				setResponsePanel(new ResultPanel(new SearchCond(ecco)));
+				setResponsePanel(new ResultPanel(ecco));
 			}
 		};
 		lnkEcco.add(new Label("lblOpening", pgnInfo.getOpening()));
@@ -99,15 +97,18 @@ public class PgnPanel extends BasePanel {
 				int counter = (pos.distance / 2 + 1);
 				sb.append((counter < 10 ? " " : "") + counter + ". " + chin + " ");
 			} else {
-				sb.append(chin + "\n");
+				sb.append(chin + "\r\n");
 			}
 			pos.makeMove(mv);
 		}
 		if (pos.sdPlayer == 1) {
-			sb.append("\n");
+			sb.append("\r\n");
 		}
 		final String content = sb.toString();
-		add(new Label("lblContent", content + "　　" + RESULT_STRING[result]));
+		Label lblContent = new Label("lblContent", content.replaceAll(" ", "&nbsp;").
+				replaceAll("\r\n", "<br>") + "　　" + RESULT_STRING[result]);
+		lblContent.setEscapeModelStrings(false);
+		add(lblContent);
 
 		// 下载棋谱
 		add(new Link<Void>("lnkPgn") {
@@ -117,25 +118,25 @@ public class PgnPanel extends BasePanel {
 			public void onClick() {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				PrintStream out = new PrintStream(baos);
-				out.println("[Game \"Chinese Chess\"]");
-				out.println("[Event \"" + event + "\"]");
-				out.println("[Round \"" + round + "\"]");
-				out.println("[Date \"" + date + "\"]");
-				out.println("[Site \"" + site + "\"]");
-				out.println("[RedTeam \"" + redTeam + "\"]");
-				out.println("[Red \"" + red + "\"]");
-				out.println("[BlackTeam \"" + blackTeam + "\"]");
-				out.println("[Black \"" + black + "\"]");
-				out.println("[Result \"" + resultTag + "\"]");
-				out.println("[ECCO \"" + ecco + "\"]");
-				out.println("[Opening \"" + Ecco.opening(ecco) + "\"]");
-				out.println("[Variation \"" + Ecco.variation(ecco) + "\"]");
+				out.print("[Game \"Chinese Chess\"]\r\n");
+				out.printf("[Event \"%s\"]\r\n", event);
+				out.printf("[Round \"%s\"]\r\n", round);
+				out.printf("[Date \"%s\"]\r\n", date);
+				out.printf("[Site \"%s\"]\r\n", site);
+				out.printf("[RedTeam \"%s\"]\r\n", redTeam);
+				out.printf("[Red \"%s\"]\r\n", red);
+				out.printf("[BlackTeam \"%s\"]\r\n", blackTeam);
+				out.printf("[Black \"%s\"]\r\n", black);
+				out.printf("[Result \"%s\"]\r\n", resultTag);
+				out.printf("[ECCO \"%s\"]\r\n", ecco);
+				out.printf("[Opening \"%s\"]\r\n", Ecco.opening(ecco));
+				out.printf("[Variation \"%s\"]\r\n", Ecco.variation(ecco));
 				out.print(content);
-				out.println(resultTag);
-				out.println("============================");
-				out.println(" 欢迎访问《象棋百科全书网》 ");
-				out.println(" 推荐用《象棋巫师》观赏棋谱 ");
-				out.println("http://www.elephantbase.net/");
+				out.print(resultTag + "\r\n");
+				out.print("============================\r\n");
+				out.print(" 欢迎访问《象棋百科全书网》 \r\n");
+				out.print(" 推荐用《象棋巫师》观赏棋谱 \r\n");
+				out.print("http://www.elephantbase.net/");
 				WicketUtil.download("pgn", "text/plain", baos.toByteArray());
 			}
 		});
