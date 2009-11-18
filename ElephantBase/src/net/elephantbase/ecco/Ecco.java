@@ -3,9 +3,9 @@ package net.elephantbase.ecco;
 import java.io.File;
 
 import net.elephantbase.util.Bytes;
+import net.elephantbase.util.ClassPath;
 
 import com.google.code.jswin.CallProcHelper;
-import com.google.code.jswin.util.ClassPath;
 
 public class Ecco {
 	public static String VERSION;
