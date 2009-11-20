@@ -109,10 +109,10 @@ public class SearchPanel extends BasePanel {
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				int level1 = Integer.parseInt(selLevel1.getModelValue()) - 1;
-				if (level1 < 0) {
-					setChoices(selLevel2, null);
-				} else {
+				if (level1 >= 0 && level1 < EccoUtil.LEVEL_1.length) {
 					setChoices(selLevel2, EccoUtil.LEVEL_2[level1]);
+				} else {
+					setChoices(selLevel2, null);
 				}
 				setChoices(selLevel3, null);
 				target.addComponent(selLevel2);
@@ -125,13 +125,13 @@ public class SearchPanel extends BasePanel {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				int level1 = Integer.parseInt(selLevel1.getModelValue());
-				int level2 = Integer.parseInt(selLevel2.getModelValue());
-				if (level2 == 0) {
-					setChoices(selLevel3, null);
+				int level1 = Integer.parseInt(selLevel1.getModelValue()) - 1;
+				int level2 = Integer.parseInt(selLevel2.getModelValue()) - 1;
+				if (level1 >= 0 && level1 < EccoUtil.LEVEL_1.length &&
+						level2 >= 0 && level2 < EccoUtil.LEVEL_2[level1].length) {
+					setChoices(selLevel3, EccoUtil.LEVEL_3[level1][level2]);
 				} else {
-					setChoices(selLevel3,
-							EccoUtil.LEVEL_3[level1 - 1][level2 - 1]);
+					setChoices(selLevel3, null);
 				}
 				target.addComponent(selLevel3);
 			}
