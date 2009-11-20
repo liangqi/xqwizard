@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Arrays;
 
 import net.elephantbase.util.Closeables;
@@ -16,8 +17,42 @@ public class DBUtil {
 	public static final Object EMPTY_OBJECT = new Object();
 
 	public static int executeUpdate(String sql, Object... in) {
-		Integer result = (Integer) executeQuery(0, sql, null, in);
-		return result == null ? -1 : result.intValue();
+		return executeUpdate(null, sql, in);
+	}
+
+	public static int executeUpdate(int[] insertId, String sql, Object... in) {
+		Connection conn = ConnectionPool.getInstance().borrowObject();
+		if (conn == null) {
+			Logger.severe("Connection refused");
+			return -1;
+		}
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			if (insertId != null && insertId.length > 0) {
+				ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			} else {
+				ps = conn.prepareStatement(sql);
+			}
+			for (int i = 0; i < in.length; i ++) {
+				ps.setObject(i + 1, in[i]);
+			}
+			int numRows = ps.executeUpdate();
+			if (insertId != null && insertId.length > 0) {
+				rs = ps.getGeneratedKeys();
+				if (rs.next()) {
+					insertId[0] = rs.getInt(1);
+				}
+			}
+			return numRows;
+		} catch (Exception e) {
+			Logger.severe(e);
+			return -1;
+		} finally {
+			Closeables.close(rs);
+			Closeables.close(ps);
+			ConnectionPool.getInstance().returnObject(conn);
+		}
 	}
 
 	public static Object executeQuery(String sql, Object... in) {
@@ -56,9 +91,6 @@ public class DBUtil {
 			ps = conn.prepareStatement(sql);
 			for (int i = 0; i < in.length; i ++) {
 				ps.setObject(i + 1, in[i]);
-			}
-			if (columns == 0) {
-				return Integer.valueOf(ps.executeUpdate());
 			}
 			rs = ps.executeQuery();
 			Object[] row = new Object[columns];

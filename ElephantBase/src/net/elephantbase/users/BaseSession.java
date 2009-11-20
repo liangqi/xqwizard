@@ -1,12 +1,8 @@
 package net.elephantbase.users;
 
-import javax.servlet.http.Cookie;
-
+import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WebSession;
 
 public class BaseSession extends WebSession {
@@ -33,21 +29,18 @@ public class BaseSession extends WebSession {
 	}
 
 	public boolean loginCookie() {
-		RequestCycle rc = RequestCycle.get();
-		Cookie cookie = ((WebRequest) rc.getRequest()).getCookie("login");
+		String cookie = WicketUtil.getCookie("login");
 		if (cookie == null) {
 			return false;
 		}
-		String loginCookie_ = cookie.getValue();
 		String[] username_ = new String[1];
-		uid = Login.loginCookie(loginCookie_, username_);
+		uid = Login.loginCookie(cookie, username_);
 		if (uid <= 0) {
 			return false;
 		}
 		username = username_[0];
-		loginCookie = loginCookie_;
-		cookie.setMaxAge(86400 * 30);
-		((WebResponse) rc.getResponse()).addCookie(cookie);
+		loginCookie = cookie;
+		WicketUtil.setCookie("login", cookie, 86400 * 15);
 		return true;
 	}
 
@@ -61,14 +54,11 @@ public class BaseSession extends WebSession {
 			return uid;
 		}
 		loginCookie = Login.addCookie(uid);
-		Cookie cookie = new Cookie("login", loginCookie);
-		cookie.setMaxAge(86400 * 30);
-		((WebResponse) RequestCycle.get().getResponse()).addCookie(cookie);
+		WicketUtil.setCookie("login", loginCookie, 86400 * 15);
 		return uid;
 	}
 
 	public void logout() {
-		RequestCycle rc = RequestCycle.get();
 		uid = 0;
 		username = null;
 		if (loginCookie == null) {
@@ -76,8 +66,6 @@ public class BaseSession extends WebSession {
 		}
 		Login.delCookie(loginCookie);
 		loginCookie = null;
-		Cookie cookie = new Cookie("login", null);
-		cookie.setMaxAge(0);
-		((WebResponse) rc.getResponse()).addCookie(cookie);
+		WicketUtil.setCookie("login", null, 0);
 	}
 }

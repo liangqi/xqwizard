@@ -31,7 +31,7 @@ public class PgnPanel extends BasePanel {
 	};
 
 	public PgnPanel(PgnInfo pgnInfo) {
-		super(pgnInfo.getResult() + " - " + PgnDBPage.SUFFIX, WANT_AUTH);
+		super(pgnInfo.getResult(), PgnDBPage.SUFFIX, WANT_AUTH);
 
 		// 从数据库中读取棋谱
 		String sql = "SELECT event, round, date, site, redteam, red, " +

@@ -48,12 +48,12 @@ public class SearchCond implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(event == null ? "" : event + " - ");
-		sb.append(player1 == null ? "" : player1 + " - ");
-		sb.append(player2 == null ? "" : player2 + " - ");
+		sb.append(event == null ? "" : " - " + event);
+		sb.append(player1 == null ? "" : " - " + player1);
+		sb.append(player2 == null ? "" : " - " + player2);
 		String opening = EccoUtil.toOpeningString(level1, level2, level3);
-		sb.append(opening == null ? "" : opening + " - ");
-		return sb.length() == 0 ? "搜索结果 - " : sb.toString();
+		sb.append(opening == null ? "" : " - " + opening);
+		return sb.length() == 0 ? "搜索结果" : sb.substring(3);
 	}
 
 	public void validate() {

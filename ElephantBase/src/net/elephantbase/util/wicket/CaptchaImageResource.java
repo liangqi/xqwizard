@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 public class CaptchaImageResource extends DynamicImageResource {
 	private static final long serialVersionUID = 1L;
 
-	private static final int WIDTH = 50;
+	private static final int WIDTH = 80;
 	private static final int HEIGHT = 20;
 
 	private static Font font = new Font("Arial", Font.BOLD, 15);
@@ -25,7 +25,7 @@ public class CaptchaImageResource extends DynamicImageResource {
 	@Override
 	protected byte[] getImageData() {
 		Random r = new Random();
-		BufferedImage image = new BufferedImage(50, 20, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
 		g.setFont(font);
 		g.setColor(new Color(200, 200, 200));
@@ -37,7 +37,7 @@ public class CaptchaImageResource extends DynamicImageResource {
 		g.drawRect(0, 0, WIDTH, HEIGHT);
 	    for (int i = 0; i < captcha.length(); i ++) {
 			g.setColor(new Color(r.nextInt(100), r.nextInt(150), r.nextInt(200)));
-			g.drawString("" + captcha.charAt(i), i * WIDTH / 5 + 6,
+			g.drawString("" + captcha.charAt(i), i * WIDTH / captcha.length() + 4,
 					r.nextInt(HEIGHT) / 10 + 15);
 		}
 		g.setColor(Color.BLACK);

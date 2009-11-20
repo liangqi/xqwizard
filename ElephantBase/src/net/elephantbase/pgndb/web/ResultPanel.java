@@ -27,7 +27,7 @@ public class ResultPanel extends BasePanel {
 	}
 
 	public ResultPanel(final SearchCond cond) {
-		super(cond + PgnDBPage.SUFFIX, WANT_AUTH);
+		super(cond.toString(), PgnDBPage.SUFFIX, WANT_AUTH);
 
 		WebMarkupContainer trNotFound = new WebMarkupContainer("trNotFound");
 		WebMarkupContainer trFound = new WebMarkupContainer("trFound");

@@ -51,12 +51,11 @@ public class SearchPanel extends BasePanel {
 	}
 
 	public SearchPanel(final SearchCond cond) {
-		super("搜索棋谱 - " + PgnDBPage.SUFFIX, WANT_AUTH);
+		super("搜索棋谱", PgnDBPage.SUFFIX, WANT_AUTH);
 
 		// 按赛事、时间查询
 		final TextField<String> txtEvent = new
 				TextField<String>("txtEvent", Model.of(cond.event));
-		txtEvent.setRequired(false);
 		final DropDownChoice<Integer> selYearFrom = newChoice("selYearFrom",
 				SearchCond.YEAR_FROM, SearchCond.YEAR_TO, cond.yearFrom);
 		final DropDownChoice<Integer> selMonthFrom = newChoice("selMonthFrom",
@@ -69,14 +68,12 @@ public class SearchPanel extends BasePanel {
 		// 按选手查询
 		final TextField<String> txtPlayer1 = new
 				TextField<String>("txtPlayer1", Model.of(cond.player1));
-		txtPlayer1.setRequired(false);
 		final DropDownChoice<String> selSide = new
 				DropDownChoice<String>("selRedBlack",
 				Model.of(SearchCond.SIDE_CHOICES[cond.side]),
 				Arrays.asList(SearchCond.SIDE_CHOICES));
 		final TextField<String> txtPlayer2 = new
 				TextField<String>("txtPlayer2", Model.of(cond.player2));
-		txtPlayer2.setRequired(false);
 
 		// 按开局查
 		final DropDownChoice<String> selLevel1 = new

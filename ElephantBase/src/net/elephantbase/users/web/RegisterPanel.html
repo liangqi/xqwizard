@@ -1,0 +1,61 @@
+<wicket:panel>
+  <span wicket:id="lblWelcome">
+    <p align="left">　　只要填写以下表单，即可成为象棋巫师注册用户，随时随地提交和获取闯关成绩，并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。</p>
+    <p align="center"><font size="2">如果您已经在象棋巫师用户中心或<a href="http://home.elephantbase.net/"
+        target="_blank">【象棋家园】</a>注册过用户，请直接<a href="#" wicket:id="lnkLogin">【登录】</a></font></p> 
+  </span>
+  <font size="2" color="#FF0000"><span wicket:id="lblWarn"></span></font>
+  <form wicket:id="frm">
+    <table border="0">
+      <tr>
+        <td align="right"><font size="2">用户名：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="text" size="20" wicket:id="txtUsername" tabindex="1">
+        </td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+        <td><font size="2">6-15个字符(一个汉字算2个字符)</font></td>
+      </tr>
+      <tr>
+        <td align="right"><font size="2">密码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="password" size="20" wicket:id="txtPassword" tabindex="2">
+        </td>
+      </tr>
+      <tr>
+        <td align="right"><font size="2">确认密码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="password" size="20" wicket:id="txtPassword2" tabindex="3">
+        </td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+        <td><font size="2">建议用字母、数字和符号的组合</font></td>
+      </tr>
+      <tr>
+        <td align="right"><font size="2">确认密码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td>
+          <input type="text" size="20" wicket:id="txtEmail" tabindex="4">
+        </td>
+      </tr>
+      <tr>
+        <td><font size="2">验证码：</font></td>
+        <td align="right"><font color="#FF0000" face="Times New Roman"><sup>*</sup></font></td>
+        <td><input type="text" size="10" wicket:id="txtCaptcha" tabindex="5"> <img wicket:id="imgCaptcha"></td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+        <td><font size="2">数字0-9，字母A-F</font></td>
+      </tr>
+    </table>
+    <p align="center"><input type="submit" value="注册" tabindex="5"></p>
+  </form>
+</wicket:panel>

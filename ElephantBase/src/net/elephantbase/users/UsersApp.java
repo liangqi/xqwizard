@@ -1,22 +1,21 @@
-package net.elephantbase.pgndb;
+package net.elephantbase.users;
 
-import net.elephantbase.pgndb.web.PgnDBPage;
-import net.elephantbase.users.BaseSession;
+import net.elephantbase.users.web.UsersPage;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 
-public class PgnDBApp extends WebApplication {
+public class UsersApp extends WebApplication {
 	@Override
-	public Class<? extends PgnDBPage> getHomePage() {
-		return PgnDBPage.class;
+	public Class<? extends UsersPage> getHomePage() {
+		return UsersPage.class;
 	}
 
 	@Override
 	protected void init() {
-		getApplicationSettings().setPageExpiredErrorPage(PgnDBPage.class);
+		getApplicationSettings().setPageExpiredErrorPage(UsersPage.class);
 	}
 
 	@Override
