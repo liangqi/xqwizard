@@ -1,4 +1,4 @@
-package net.elephantbase.users;
+package net.elephantbase.users.biz;
 
 import java.security.MessageDigest;
 
@@ -10,6 +10,8 @@ import net.elephantbase.util.Logger;
 import net.elephantbase.util.wicket.WicketUtil;
 
 public class Login {
+	public static final int COOKIE_EXPIRY = 15;
+
 	private static final String MYSQL_TABLEPRE = ConnectionPool.MYSQL_TABLEPRE;
 	private static final String UC_DBTABLEPRE = ConnectionPool.UC_DBTABLEPRE;
 
@@ -100,7 +102,7 @@ public class Login {
 		String sql = "INSERT INTO " + MYSQL_TABLEPRE +
 				"login (cookie, uid, expire) VALUES (?, ?, ?)";
 		String cookie = Bytes.toHexLower(Bytes.random(16));
-		int expire = new EasyDate().add(EasyDate.DAY * 15).getTimeSec();
+		int expire = new EasyDate().add(EasyDate.DAY * COOKIE_EXPIRY).getTimeSec();
 		DBUtil.executeUpdate(sql, cookie,
 				Integer.valueOf(uid), Integer.valueOf(expire));
 		return cookie;
@@ -122,7 +124,7 @@ public class Login {
 		}
 		int uid = ((Integer) out).intValue();
 		sql = "UPDATE " + MYSQL_TABLEPRE + "login SET expire = ? WHERE cookie = ?";
-		int expire = new EasyDate().add(EasyDate.DAY * 15).getTimeSec();
+		int expire = new EasyDate().add(EasyDate.DAY * COOKIE_EXPIRY).getTimeSec();
 		DBUtil.executeUpdate(sql, Integer.valueOf(expire), cookie);
 		if (username != null && username.length > 0) {
 			username[0] = getUsername(uid);

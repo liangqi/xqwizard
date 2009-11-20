@@ -100,6 +100,9 @@ public class PgnPanel extends BasePanel {
 				sb.append(chin + "\r\n");
 			}
 			pos.makeMove(mv);
+			if (pos.captured()) {
+				pos.setIrrev();
+			}
 		}
 		if (pos.sdPlayer == 1) {
 			sb.append("\r\n");

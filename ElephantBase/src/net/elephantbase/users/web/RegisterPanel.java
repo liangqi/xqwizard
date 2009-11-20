@@ -1,20 +1,20 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.Login;
-import net.elephantbase.util.Bytes;
-import net.elephantbase.util.wicket.CaptchaImageResource;
+import net.elephantbase.users.biz.CaptchaValidator;
+import net.elephantbase.users.biz.Login;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 
 public class RegisterPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
+
+	CaptchaValidator captcha = new CaptchaValidator("txtCaptcha", "imgCaptcha");
 
 	public RegisterPanel(final BasePanel... redirectPanels) {
 		super("×¢²á", redirectPanels[0].getSuffix(), NO_AUTH);
@@ -33,12 +33,14 @@ public class RegisterPanel extends BasePanel {
 		lblWarn.setVisible(false);
 		add(lblWelcome, lblWarn);
 
-		final TextField<String> txtUsername = new TextField<String>("txtUsername", Model.of(""));
-		final PasswordTextField txtPassword = new PasswordTextField("txtPassword", Model.of(""));
-		final PasswordTextField txtPassword2 = new PasswordTextField("txtPassword2", Model.of(""));
-		final TextField<String> txtEmail = new TextField<String>("txtEmail", Model.of("@"));
-		final TextField<String> txtCaptcha = new TextField<String>("txtCaptcha", Model.of(""));
-		final String captcha = Bytes.toHexUpper(Bytes.random(2));
+		final RequiredTextField<String> txtUsername = new
+				RequiredTextField<String>("txtUsername", Model.of(""));
+		final PasswordTextField txtPassword = new
+				PasswordTextField("txtPassword", Model.of(""));
+		final PasswordTextField txtPassword2 = new
+				PasswordTextField("txtPassword2", Model.of(""));
+		final RequiredTextField<String> txtEmail = new
+				RequiredTextField<String>("txtEmail", Model.of("@"));
 
 		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
@@ -47,7 +49,7 @@ public class RegisterPanel extends BasePanel {
 			protected void onSubmit() {
 				lblWelcome.setVisible(false);
 				lblWarn.setVisible(true);
-				if (!txtCaptcha.getModelObject().toUpperCase().equals(captcha)) {
+				if (!captcha.validate()) {
 					lblWarn.setDefaultModelObject("ÑéÖ¤Âë´íÎó");
 					return;
 				}
@@ -77,8 +79,14 @@ public class RegisterPanel extends BasePanel {
 				}
 			}
 		};
-		frm.add(txtUsername, txtPassword, txtPassword2, txtEmail, txtCaptcha);
-		frm.add(new Image("imgCaptcha", new CaptchaImageResource(captcha)));
+		frm.add(txtUsername, txtPassword, txtPassword2, txtEmail);
+		frm.add(captcha);
 		add(frm);
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		captcha.reset();
+		super.onBeforeRender();
 	}
 }

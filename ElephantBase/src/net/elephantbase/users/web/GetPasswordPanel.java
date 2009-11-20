@@ -1,43 +1,38 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.Login;
+import net.elephantbase.users.biz.CaptchaValidator;
+import net.elephantbase.users.biz.Login;
 import net.elephantbase.util.Smtp;
-import net.elephantbase.util.wicket.CaptchaImageResource;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.Model;
 
 public class GetPasswordPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
-	String captcha;
-	Image imgCaptcha = new Image("imgCaptcha");
-	TextField<String> txtCaptcha = new TextField<String>("txtCaptcha", Model.of(""));
+	CaptchaValidator captcha = new CaptchaValidator("txtCaptcha", "imgCaptcha");
 
 	public GetPasswordPanel() {
 		super("’“ªÿ√‹¬Î", UsersPage.SUFFIX, NO_AUTH);
 
-		final Label lblInfo = new Label("lblInfo", "");
 		final Label lblWarn = new Label("lblWarn", "");
-		lblInfo.setVisible(true);
 		lblWarn.setVisible(false);
-		add(lblInfo, lblWarn);
+		add(lblWarn);
 
-		final RequiredTextField<String> txtUsername = new RequiredTextField<String>("txtUsername", Model.of(""));
-		final RequiredTextField<String> txtEmail = new RequiredTextField<String>("txtEmail", Model.of("@"));
+		final RequiredTextField<String> txtUsername = new
+				RequiredTextField<String>("txtUsername", Model.of(""));
+		final RequiredTextField<String> txtEmail = new
+				RequiredTextField<String>("txtEmail", Model.of("@"));
 
 		Form<Void> frm = new Form<Void>("frm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit() {
-				lblInfo.setVisible(false);
 				lblWarn.setVisible(true);
-				if (!txtCaptcha.getModelObject().toLowerCase().equals(captcha)) {
+				if (!captcha.validate()) {
 					lblWarn.setDefaultModelObject("—È÷§¬Î¥ÌŒÛ");
 					return;
 				}
@@ -64,15 +59,14 @@ public class GetPasswordPanel extends BasePanel {
 				}
 			}
 		};
-		frm.add(txtUsername, txtEmail, txtCaptcha, imgCaptcha);
+		frm.add(txtUsername, txtEmail);
+		frm.add(captcha);
 		add(frm);
 	}
 
 	@Override
 	protected void onBeforeRender() {
-		captcha = Login.getSalt();
-		txtCaptcha.setModelObject("");
-		imgCaptcha.setImageResource(new CaptchaImageResource(captcha));
+		captcha.reset();
 		super.onBeforeRender();
 	}
 }

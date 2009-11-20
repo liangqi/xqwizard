@@ -37,8 +37,4 @@
     <filter-name>UsersApp</filter-name>
     <url-pattern>/users/*</url-pattern>
   </filter-mapping>
-
-  <listener>
-    <listener-class>net.elephantbase.users.DailyTask</listener-class>
-  </listener>
 </web-app>

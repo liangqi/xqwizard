@@ -34,7 +34,7 @@ public class Smtp {
 		Properties pSession = new Properties();
 		pSession.setProperty("mail.smtp.host", p.getProperty("host"));
 		pSession.setProperty("mail.smtp.auth", "true");
-		session = Session.getDefaultInstance(p, new Authenticator() {
+		session = Session.getDefaultInstance(pSession, new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
@@ -45,7 +45,7 @@ public class Smtp {
 	public static boolean send(String recipient, String subject, String text) {
 		MimeMessage message = new MimeMessage(session);
 		try {
-			message.setSender(from);
+			message.setFrom(from);
 			message.setRecipients(Message.RecipientType.TO, recipient);
 			message.setSubject(subject);
 			message.setText(text);

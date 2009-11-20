@@ -1,6 +1,6 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.BaseSession;
+import net.elephantbase.users.biz.BaseSession;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -16,12 +16,13 @@ public abstract class BasePanel extends Panel {
 	public static void setResponsePanel(BasePanel... panels) {
 		RequestCycle rc = RequestCycle.get();
 		BaseSession session = (BaseSession) rc.getSession();
-		if (panels[0].getAuthType() != BasePanel.NEED_AUTH ||
-				session.getUid() > 0 || session.loginCookie()) {
+		int authType = panels[0].getAuthType();
+		if (authType == BasePanel.NO_AUTH || session.getUid() > 0 ||
+				session.loginCookie() || authType == BasePanel.WANT_AUTH) {
 			rc.setResponsePage(new BasePage(panels));
-			return;
+		} else {
+			rc.setResponsePage(new BasePage(new LoginPanel(panels)));
 		}
-		rc.setResponsePage(new BasePage(new LoginPanel(panels)));
 	}
 
 	private String title, suffix;

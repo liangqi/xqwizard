@@ -1,7 +1,7 @@
 package net.elephantbase.pgndb;
 
 import net.elephantbase.pgndb.web.PgnDBPage;
-import net.elephantbase.users.BaseSession;
+import net.elephantbase.users.biz.BaseSession;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;

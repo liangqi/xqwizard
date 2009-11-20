@@ -1,6 +1,6 @@
 package net.elephantbase.xqbooth;
 
-import net.elephantbase.users.Login;
+import net.elephantbase.users.biz.Login;
 
 public class XQBoothLogin {
 	public static int login(String username, String password, String[] cookie) {

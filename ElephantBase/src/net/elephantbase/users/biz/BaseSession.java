@@ -1,4 +1,4 @@
-package net.elephantbase.users;
+package net.elephantbase.users.biz;
 
 import net.elephantbase.util.wicket.WicketUtil;
 
@@ -40,7 +40,7 @@ public class BaseSession extends WebSession {
 		}
 		username = username_[0];
 		loginCookie = cookie;
-		WicketUtil.setCookie("login", cookie, 86400 * 15);
+		WicketUtil.setCookie("login", cookie, 86400 * Login.COOKIE_EXPIRY);
 		return true;
 	}
 
@@ -54,7 +54,7 @@ public class BaseSession extends WebSession {
 			return uid;
 		}
 		loginCookie = Login.addCookie(uid);
-		WicketUtil.setCookie("login", loginCookie, 86400 * 15);
+		WicketUtil.setCookie("login", loginCookie, 86400 * Login.COOKIE_EXPIRY);
 		return uid;
 	}
 

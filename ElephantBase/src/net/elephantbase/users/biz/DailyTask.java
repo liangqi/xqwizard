@@ -1,28 +1,30 @@
-package net.elephantbase.users;
+package net.elephantbase.users.biz;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.zip.GZIPOutputStream;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.db.RowCallback;
+import net.elephantbase.util.ClassPath;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
-import com.google.code.jswin.util.ClassPath;
-
-public class DailyTask implements ServletContextListener {
+public class DailyTask extends TimerTask {
 	private static final String MYSQL_TABLEPRE = ConnectionPool.MYSQL_TABLEPRE;
 
-	private Timer timer;
+	@Override
+	public void run() {
+		try {
+			run0();
+		} catch (RuntimeException e) {
+			Logger.severe(e);
+		}
+	}
 
-	static void updateRank() {
+	private void run0() {
 		EasyDate now = new EasyDate();
 
 		// Delete Expired Login Cookies
@@ -89,28 +91,7 @@ public class DailyTask implements ServletContextListener {
 		Logger.info("Weekly/Monthly/Quarterly Ranks Updated");
 	}
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		timer = new Timer();
-		// Do DailyTask at 4:00 everyday
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				try {
-					updateRank();
-				} catch (RuntimeException e) {
-					Logger.severe(e);
-				}
-			}
-		}, new EasyDate().nextMidnightPlus(EasyDate.HOUR * 4).getDate(), EasyDate.DAY);
-	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent event) {
-		timer.cancel();
-	}
-
 	public static void main(String[] args) {
-		updateRank();
+		new DailyTask().run();
 	}
 }

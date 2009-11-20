@@ -1,11 +1,12 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.BaseSession;
+import net.elephantbase.users.biz.BaseSession;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.Loop;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 public class BasePage extends WebPage {
 	public static final String SUBTITLE_ID = "lblSubtitle";
@@ -20,6 +21,7 @@ public class BasePage extends WebPage {
 		add(new Label("lblHeader", suffix));
 		add(new Label(SUBTITLE_ID, title));
 		add(lblHello);
+
 		Link<Void> lnkLogin = new Link<Void>("lnkLogin") {
 			private static final long serialVersionUID = 1L;
 
@@ -40,7 +42,9 @@ public class BasePage extends WebPage {
 			lnkLogin.setVisible(false);
 		}
 		add(lnkLogin);
+
 		add(panels[0]);
+
 		add(new Loop("loop", panels.length - 1) {
 			private static final long serialVersionUID = 1L;
 
@@ -51,6 +55,10 @@ public class BasePage extends WebPage {
 				item.add(panels[i]);
 			}
 		});
+
+		FeedbackPanel panel = new FeedbackPanel("feedback");
+		panel.setVisible(false);
+		add(panel);
 	}
 
 	@Override
