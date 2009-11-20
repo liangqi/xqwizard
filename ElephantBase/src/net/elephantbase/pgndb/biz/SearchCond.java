@@ -151,7 +151,7 @@ public class SearchCond implements Serializable {
 				condList2.add("result = 2");
 			}
 			if (loss) {
-				condList2.add("result = 2");
+				condList2.add("result = 3");
 			}
 			if (!condList2.isEmpty()) {
 				condList.add(DBUtil.or(condList2));
