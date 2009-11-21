@@ -1,6 +1,6 @@
 package net.elephantbase.ecco;
 
-import net.elephantbase.pgndb.biz.EccoUtil;
+import net.elephantbase.xqbase.biz.EccoUtil;
 
 public class TestEcco {
 	public static void main(String[] args) {

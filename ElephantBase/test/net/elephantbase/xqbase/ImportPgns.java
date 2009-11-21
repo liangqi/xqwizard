@@ -1,4 +1,4 @@
-package net.elephantbase.pgndb;
+package net.elephantbase.xqbase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.FileReader;
 import net.elephantbase.cchess.PgnReader;
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
-import net.elephantbase.pgndb.biz.EccoUtil;
+import net.elephantbase.xqbase.biz.EccoUtil;
 
 public class ImportPgns {
 	public static void main(String[] args) throws Exception {
