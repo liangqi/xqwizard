@@ -58,7 +58,7 @@ public class ResultPanel extends BasePanel {
 						@Override
 						public void onClick() {
 							if (type == LINK_PGN) {
-								setResponsePanel(new PgnPanel(pgnInfo));
+								setResponsePanel(new DetailPanel(pgnInfo));
 							} else {
 								String ecco = pgnInfo.getOpening().substring(0, 3);
 								setResponsePanel(new ResultPanel(ecco));

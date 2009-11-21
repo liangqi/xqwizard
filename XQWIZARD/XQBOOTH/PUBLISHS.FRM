@@ -243,7 +243,7 @@ Attribute VB_Exposed = False
 ' PUBLISH.FRM - Source Code for XiangQi Wizard, Part XI
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
+' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -279,9 +279,9 @@ cmbFormat.ListIndex = Publish_nFormat
 ' 注意：先有发布格式，再有发布站点！
 ' 发布站点
 cmbLocation.Clear
-cmbLocation.AddItem "中国象棋大师网", 0
+cmbLocation.AddItem "百度知道", 0
 cmbLocation.AddItem "百度贴吧象棋吧", 1
-cmbLocation.AddItem "百度知道", 2
+cmbLocation.AddItem "象棋家园", 2
 cmbLocation.AddItem "新浪博客", 3
 cmbLocation.AddItem "QQ空间", 4
 cmbLocation.AddItem "(其他)", 5
@@ -420,15 +420,14 @@ End Select
 ' 给象棋巫师做个广告
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-    szCopy = szCopy + "# 象棋巫师是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "# http://pub.elephantbase.net/xqwizard.php" + szBr
-    szCopy = szCopy + "# 欢迎访问象棋百科全书网 http://www.elephantbase.net/"
+    szCopy = szCopy + "# 下载象棋巫师 http://pub.elephantbase.net/xqwizard.php" + szBr
+    szCopy = szCopy + "# 象棋百科全书 http://www.elephantbase.net/"
 Case PUB_FORMAT_UBB
-    szCopy = szCopy + "# [url=http://pub.elephantbase.net/xqwizard.php]象棋巫师[/url]是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "[url=http://pub.elephantbase.net/][img]http://pub.elephantbase.net/index.gif[/img][/url]"
+    szCopy = szCopy + "# [url=http://pub.elephantbase.net/xqwizard.php]下载象棋巫师[/url]" + szBr
+    szCopy = szCopy + "[url=http://pub.elephantbase.net/]象棋百科全书[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/xqwizard.php"" target=""_blank"">象棋巫师</a>是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，欢迎大家使用" + szBr
-    szCopy = szCopy + "<a href=""http://pub.elephantbase.net/"" target=""_blank""><img src=""http://pub.elephantbase.net/index.gif"" border=""0""></a>"
+    szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/xqwizard.php"" target=""_blank"">下载象棋巫师</a>" + szBr
+    szCopy = szCopy + "# <a href=""http://pub.elephantbase.net/"" target=""_blank"">象棋百科全书</a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then
@@ -444,12 +443,12 @@ Else
 End If
 ' 打开要发布的网页
 Select Case Publish_nLocation
-Case PUB_LOCATION_TIEBA
-    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
-Case PUB_LOCATION_ZGXQDS
-    ShellExecuteA 0, vbNullString, "http://www.zgxqds.com/bbs/titlepost.asp", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_ZHIDAO
     ShellExecuteA 0, vbNullString, "http://zhidao.baidu.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_TIEBA
+    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
+Case PUB_LOCATION_HOME
+    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_SINA
     ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_QZONE
@@ -482,12 +481,12 @@ Private Sub cmbLocation_Click()
 
 Publish_nLocation = cmbLocation.ListIndex
 Select Case Publish_nLocation
-Case PUB_LOCATION_TIEBA
-    Publish_nFormat = PUB_FORMAT_TEXT
-Case PUB_LOCATION_ZGXQDS
-    Publish_nFormat = PUB_FORMAT_UBB
 Case PUB_LOCATION_ZHIDAO
     Publish_nFormat = PUB_FORMAT_TEXT
+Case PUB_LOCATION_TIEBA
+    Publish_nFormat = PUB_FORMAT_TEXT
+Case PUB_LOCATION_HOME
+    Publish_nFormat = PUB_FORMAT_WEB
 Case PUB_LOCATION_SINA
     Publish_nFormat = PUB_FORMAT_WEB
 Case PUB_LOCATION_QZONE

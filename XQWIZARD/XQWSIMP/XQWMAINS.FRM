@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
@@ -527,8 +527,20 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Label lblOpen 
          Alignment       =   2  'Center
+         BeginProperty Font 
+            Name            =   "宋体"
+            Size            =   9
+            Charset         =   134
+            Weight          =   400
+            Underline       =   -1  'True
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FF0000&
          Height          =   375
          Left            =   0
+         MouseIcon       =   "XQWMAINS.frx":0AC2
+         MousePointer    =   99  'Custom
          TabIndex        =   6
          Top             =   840
          Width           =   3735
@@ -1557,6 +1569,18 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardSep2 
          Caption         =   "-"
       End
+      Begin VB.Menu mnSearchOpening 
+         Caption         =   "搜索开局(&O)"
+      End
+      Begin VB.Menu mnSearchPosition 
+         Caption         =   "搜索局面(&F)"
+      End
+      Begin VB.Menu mnSearchEndgame 
+         Caption         =   "搜索残局(&E)"
+      End
+      Begin VB.Menu mnWizardSep3 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnWizardPublish 
          Caption         =   "发布棋谱(&U)"
       End
@@ -1884,7 +1908,7 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
+' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
 ' Copyright (C) 2004-2009 www.elephantbase.net
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2274,6 +2298,33 @@ EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
+Private Sub mnSearchOpening_Click()
+
+If Game_szEcco <> "" Then
+    ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?ecco=" + _
+            Game_szEcco, vbNullString, vbNullString, SW_SHOWNORMAL
+End If
+
+End Sub
+
+Private Sub mnSearchPosition_Click()
+
+Dim szFen As String
+szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?position=" + _
+        UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnSearchEndgame_Click()
+
+Dim szFen As String
+szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?endgame=" + _
+        UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
 Private Sub mnWizardPublish_Click()
 
 frmPublish.Show vbModal, Me
@@ -2516,7 +2567,7 @@ End Sub
 
 Private Sub mnHelpContents_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqwizard/contents.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqwizard/help.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2655,6 +2706,12 @@ Else
         End If
     End If
 End If
+
+End Sub
+
+Private Sub lblOpen_Click()
+
+mnSearchOpening_Click
 
 End Sub
 

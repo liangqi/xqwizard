@@ -2,21 +2,31 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Languages]
-Name: "zh"; MessagesFile: "compiler:Languages\ChineseSimp.isl"; InfoBeforeFile: "GPL.TXT"
+Name: "simp"; MessagesFile: "compiler:Languages\ChineseSimp.isl"; InfoBeforeFile: "GPL.TXT"
+Name: "trad"; MessagesFile: "compiler:Languages\ChineseTrad.isl"; InfoBeforeFile: "GPL.TXT"
 
 [CustomMessages]
 Quot="
 
+[Code]
+function AppName(Param: String): String;
+begin
+  if (ExpandConstant('{language}') = 'trad') then
+    Result := '禜囱畍'
+  else 
+    Result := '象棋巫师';
+end;
+
 [Setup]
-AppName=象棋巫师
-AppVerName=象棋巫师 4.4 (简体版)
+AppName={code:AppName}
+AppVerName={code:AppName} 4.5
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
 AppUpdatesURL=http://www.elephantbase.net/
 DefaultDirName={pf}\XQWizard
-DefaultGroupName=象棋巫师
-OutputBaseFilename=xqwizard_simp
+DefaultGroupName={code:AppName}
+OutputBaseFilename=xqwizard_setup
 OutputDir=.
 Compression=lzma
 SolidCompression=yes
@@ -86,6 +96,8 @@ Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -654,7 +666,7 @@ Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; Valu
 Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{group}\象棋巫师帮助主题"; Filename: "http://www.elephantbase.net/xqwizard/contents.htm"
+Name: "{group}\象棋巫师帮助主题"; Filename: "http://www.elephantbase.net/xqwizard/help.htm"
 Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"
 Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
 Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
@@ -666,4 +678,4 @@ Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: 
 [Run]
 Filename: "{app}\XQBOOTH.EXE"; Description: "开始闯关"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked
-Filename: "http://www.elephantbase.net/xqwizard/contents.htm"; Description: "象棋巫师介绍"; Flags: nowait postinstall shellexec skipifsilent unchecked
+Filename: "http://www.elephantbase.net/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked

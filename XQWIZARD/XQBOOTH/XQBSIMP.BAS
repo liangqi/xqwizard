@@ -74,9 +74,9 @@ Public Const PUB_SIZE_SMALL     As Integer = 2
 Public Const PUB_SIZE_LARGE     As Integer = 3
 Public Const PUB_SIZE_MAX       As Integer = 4
 ' 全局常量——发布站点
-Public Const PUB_LOCATION_ZGXQDS As Integer = 0
+Public Const PUB_LOCATION_ZHIDAO As Integer = 0
 Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_ZHIDAO As Integer = 2
+Public Const PUB_LOCATION_HOME  As Integer = 2
 Public Const PUB_LOCATION_SINA  As Integer = 3
 Public Const PUB_LOCATION_QZONE As Integer = 4
 Public Const PUB_LOCATION_OTHER As Integer = 5

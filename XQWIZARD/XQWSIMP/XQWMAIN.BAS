@@ -169,9 +169,9 @@ Public Const PUB_SIZE_SMALL     As Integer = 2
 Public Const PUB_SIZE_LARGE     As Integer = 3
 Public Const PUB_SIZE_MAX       As Integer = 4
 ' 全局常量——发布站点
-Public Const PUB_LOCATION_ZGXQDS As Integer = 0
+Public Const PUB_LOCATION_ZHIDAO As Integer = 0
 Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_ZHIDAO As Integer = 2
+Public Const PUB_LOCATION_HOME  As Integer = 2
 Public Const PUB_LOCATION_SINA  As Integer = 3
 Public Const PUB_LOCATION_QZONE As Integer = 4
 Public Const PUB_LOCATION_OTHER As Integer = 5
@@ -211,11 +211,6 @@ Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_bAutoPlay        As Boolean  ' 自动播放
 Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
-Public Options_bEscapeDouble    As Boolean  ' 用两个Esc输入ANSI
-Public Options_bAnsiText        As Boolean  ' 使用ANSI文本棋盘
-Public Options_bMonoBitmap      As Boolean  ' 图片棋盘的红子用白底红字表示
-Public Options_bPrintDigit      As Boolean  ' 印刷棋盘上下显示数字
-Public Options_nFlashXQ         As Integer  ' Flash棋盘尺寸
 Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自动翻转棋盘
 Public Options_bEngineName      As Boolean  ' 显示引擎名称
@@ -2652,11 +2647,6 @@ Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(S
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
-Options_bEscapeDouble = (Str2Int(GetSetting("XQWizard", "Options", "EscapeDouble", "0")) <> 0)
-Options_bAnsiText = (Str2Int(GetSetting("XQWizard", "Options", "AnsiText", "0")) <> 0)
-Options_bMonoBitmap = (Str2Int(GetSetting("XQWizard", "Options", "MonoBitmap", "0")) <> 0)
-Options_bPrintDigit = (Str2Int(GetSetting("XQWizard", "Options", "PrintDigit", "1")) <> 0)
-Options_nFlashXQ = Str2Int(GetSetting("XQWizard", "Options", "FlashXQ", "1"), FLASHXQ_SMALL, FLASHXQ_LARGE)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
@@ -2720,11 +2710,6 @@ SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
-SaveSetting "XQWizard", "Options", "EscapeDouble", IIf(Options_bEscapeDouble, "1", "0")
-SaveSetting "XQWizard", "Options", "AnsiText", IIf(Options_bAnsiText, "1", "0")
-SaveSetting "XQWizard", "Options", "MonoBitmap", IIf(Options_bMonoBitmap, "1", "0")
-SaveSetting "XQWizard", "Options", "PrintDigit", IIf(Options_bPrintDigit, "1", "0")
-SaveSetting "XQWizard", "Options", "FlashXQ", LTrim(Str(Options_nFlashXQ))
 SaveSetting "XQWizard", "Options", "MoveDelay", LTrim(Str(Options_nMoveDelay))
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
@@ -2805,7 +2790,7 @@ sz = ""
 QueryPerformanceCounter VarPtr(dwCounter(0))
 szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
+sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
         STRING_VERSION + "&userid=" + szUserID)
 On Error GoTo 0
 If sz = "" Then
@@ -2819,12 +2804,12 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
         If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.elephantbase.net/xqwizard/download.htm"

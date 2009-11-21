@@ -19,7 +19,7 @@ import net.elephantbase.util.wicket.WicketUtil;
 import net.elephantbase.xqbase.biz.EccoUtil;
 import net.elephantbase.xqbase.biz.PgnInfo;
 
-public class PgnPanel extends BasePanel {
+public class DetailPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
 	private static final String[] RESULT_STRING = {
@@ -30,7 +30,7 @@ public class PgnPanel extends BasePanel {
 		"*", "1-0", "1/2-1/2", "0-1",
 	};
 
-	public PgnPanel(PgnInfo pgnInfo) {
+	public DetailPanel(PgnInfo pgnInfo) {
 		super(pgnInfo.getResult(), XQBasePage.SUFFIX, WANT_AUTH);
 
 		// 从数据库中读取棋谱

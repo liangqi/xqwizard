@@ -9,7 +9,7 @@ Quot="
 
 [Setup]
 AppName=象棋巫師
-AppVerName=象棋巫師 4.4 (繁體版)
+AppVerName=象棋巫師 4.41 (繁體版)
 AppPublisher=www.elephantbase.net
 AppPublisherURL=http://www.elephantbase.net/
 AppSupportURL=http://www.elephantbase.net/
@@ -86,6 +86,8 @@ Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
