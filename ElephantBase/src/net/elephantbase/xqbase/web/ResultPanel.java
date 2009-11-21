@@ -1,10 +1,10 @@
-package net.elephantbase.pgndb.web;
+package net.elephantbase.xqbase.web;
 
 import java.util.List;
 
-import net.elephantbase.pgndb.biz.PgnInfo;
-import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
+import net.elephantbase.xqbase.biz.PgnInfo;
+import net.elephantbase.xqbase.biz.SearchCond;
 
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,7 +27,7 @@ public class ResultPanel extends BasePanel {
 	}
 
 	public ResultPanel(final SearchCond cond) {
-		super(cond.toString(), PgnDBPage.SUFFIX, WANT_AUTH);
+		super(cond.toString(), XQBasePage.SUFFIX, WANT_AUTH);
 
 		WebMarkupContainer trNotFound = new WebMarkupContainer("trNotFound");
 		WebMarkupContainer trFound = new WebMarkupContainer("trFound");

@@ -1,22 +1,22 @@
-package net.elephantbase.pgndb;
+package net.elephantbase.xqbase;
 
-import net.elephantbase.pgndb.web.PgnDBPage;
 import net.elephantbase.users.biz.BaseSession;
+import net.elephantbase.xqbase.web.XQBasePage;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 
-public class PgnDBApp extends WebApplication {
+public class XQBaseApp extends WebApplication {
 	@Override
-	public Class<? extends PgnDBPage> getHomePage() {
-		return PgnDBPage.class;
+	public Class<? extends XQBasePage> getHomePage() {
+		return XQBasePage.class;
 	}
 
 	@Override
 	protected void init() {
-		getApplicationSettings().setPageExpiredErrorPage(PgnDBPage.class);
+		getApplicationSettings().setPageExpiredErrorPage(XQBasePage.class);
 	}
 
 	@Override

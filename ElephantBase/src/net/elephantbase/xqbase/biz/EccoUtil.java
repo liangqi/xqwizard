@@ -1,4 +1,4 @@
-package net.elephantbase.pgndb.biz;
+package net.elephantbase.xqbase.biz;
 
 import java.util.ArrayList;
 

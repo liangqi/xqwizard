@@ -1,11 +1,11 @@
-package net.elephantbase.pgndb.web;
+package net.elephantbase.xqbase.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.elephantbase.pgndb.biz.EccoUtil;
-import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
+import net.elephantbase.xqbase.biz.EccoUtil;
+import net.elephantbase.xqbase.biz.SearchCond;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -51,7 +51,7 @@ public class SearchPanel extends BasePanel {
 	}
 
 	public SearchPanel(final SearchCond cond) {
-		super("搜索棋谱", PgnDBPage.SUFFIX, WANT_AUTH);
+		super("搜索棋谱", XQBasePage.SUFFIX, WANT_AUTH);
 
 		// 按赛事、时间查询
 		final TextField<String> txtEvent = new

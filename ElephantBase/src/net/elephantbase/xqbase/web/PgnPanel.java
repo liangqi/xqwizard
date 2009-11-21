@@ -1,4 +1,4 @@
-package net.elephantbase.pgndb.web;
+package net.elephantbase.xqbase.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -14,10 +14,10 @@ import net.elephantbase.cchess.Position;
 import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.ecco.Ecco;
-import net.elephantbase.pgndb.biz.EccoUtil;
-import net.elephantbase.pgndb.biz.PgnInfo;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.wicket.WicketUtil;
+import net.elephantbase.xqbase.biz.EccoUtil;
+import net.elephantbase.xqbase.biz.PgnInfo;
 
 public class PgnPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
@@ -31,7 +31,7 @@ public class PgnPanel extends BasePanel {
 	};
 
 	public PgnPanel(PgnInfo pgnInfo) {
-		super(pgnInfo.getResult(), PgnDBPage.SUFFIX, WANT_AUTH);
+		super(pgnInfo.getResult(), XQBasePage.SUFFIX, WANT_AUTH);
 
 		// 从数据库中读取棋谱
 		String sql = "SELECT event, round, date, site, redteam, red, " +

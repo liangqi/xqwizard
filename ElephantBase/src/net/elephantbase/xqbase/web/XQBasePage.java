@@ -1,12 +1,12 @@
-package net.elephantbase.pgndb.web;
+package net.elephantbase.xqbase.web;
 
-import net.elephantbase.pgndb.biz.SearchCond;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.wicket.WicketUtil;
+import net.elephantbase.xqbase.biz.SearchCond;
 
 import org.apache.wicket.markup.html.WebPage;
 
-public class PgnDBPage extends WebPage {
+public class XQBasePage extends WebPage {
 	public static final String SUFFIX = "ÏóÆåÎ×Ê¦ÆåÆ×²Ö¿â";
 
 	{
