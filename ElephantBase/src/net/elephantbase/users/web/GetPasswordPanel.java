@@ -1,8 +1,8 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.biz.CaptchaValidator;
 import net.elephantbase.users.biz.Login;
 import net.elephantbase.util.Smtp;
+import net.elephantbase.util.wicket.CaptchaPanel;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -12,7 +12,7 @@ import org.apache.wicket.model.Model;
 public class GetPasswordPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
-	CaptchaValidator captcha = new CaptchaValidator("txtCaptcha", "imgCaptcha");
+	CaptchaPanel pnlCaptcha = new CaptchaPanel("pnlCaptcha");
 
 	public GetPasswordPanel() {
 		super("’“ªÿ√‹¬Î", UsersPage.SUFFIX, NO_AUTH);
@@ -32,7 +32,7 @@ public class GetPasswordPanel extends BasePanel {
 			@Override
 			protected void onSubmit() {
 				lblWarn.setVisible(true);
-				if (!captcha.validate()) {
+				if (!pnlCaptcha.validate()) {
 					lblWarn.setDefaultModelObject("—È÷§¬Î¥ÌŒÛ");
 					return;
 				}
@@ -59,14 +59,7 @@ public class GetPasswordPanel extends BasePanel {
 				}
 			}
 		};
-		frm.add(txtUsername, txtEmail);
-		frm.add(captcha);
+		frm.add(txtUsername, txtEmail, pnlCaptcha);
 		add(frm);
-	}
-
-	@Override
-	protected void onBeforeRender() {
-		captcha.reset();
-		super.onBeforeRender();
 	}
 }

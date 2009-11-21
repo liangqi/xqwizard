@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 public class CaptchaImageResource extends DynamicImageResource {
 	private static final long serialVersionUID = 1L;
 
-	private static final int WIDTH = 80;
+	private static final int WIDTH = 50;
 	private static final int HEIGHT = 20;
 
 	private static Font font = new Font("Arial", Font.BOLD, 15);

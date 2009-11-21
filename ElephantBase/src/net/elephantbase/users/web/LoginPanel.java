@@ -1,7 +1,7 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.BaseSession;
-import net.elephantbase.users.biz.CaptchaValidator;
+import net.elephantbase.util.wicket.CaptchaPanel;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -16,7 +16,7 @@ public class LoginPanel extends BasePanel {
 
 	Label lblInfo = new Label("lblInfo", "");
 	Label lblWarn = new Label("lblWarn", "");
-	CaptchaValidator captcha = new CaptchaValidator("txtCaptcha", "imgCaptcha");
+	CaptchaPanel pnlCaptcha = new CaptchaPanel("pnlCaptcha");
 
 	public LoginPanel(final BasePanel... redirectPanels) {
 		super("µÇÂ¼", redirectPanels[0].getSuffix(), NO_AUTH);
@@ -55,7 +55,7 @@ public class LoginPanel extends BasePanel {
 			protected void onSubmit() {
 				lblInfo.setVisible(false);
 				lblWarn.setVisible(true);
-				if (!captcha.validate()) {
+				if (!pnlCaptcha.validate()) {
 					lblWarn.setDefaultModelObject("ÑéÖ¤Âë´íÎó");
 					return;
 				}
@@ -71,15 +71,9 @@ public class LoginPanel extends BasePanel {
 				}
 			}
 		};
-		frm.add(txtUsername, txtPassword, chkSave, lnkRegister, lnkGetPassword);
-		frm.add(captcha);
+		frm.add(txtUsername, txtPassword, pnlCaptcha,
+				chkSave, lnkRegister, lnkGetPassword);
 		add(frm);
-	}
-
-	@Override
-	protected void onBeforeRender() {
-		captcha.reset();
-		super.onBeforeRender();
 	}
 
 	public void setInfo(String info) {

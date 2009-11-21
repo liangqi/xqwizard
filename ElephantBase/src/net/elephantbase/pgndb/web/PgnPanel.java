@@ -83,6 +83,7 @@ public class PgnPanel extends BasePanel {
 		Position pos = new Position();
 		pos.fromFen(Position.STARTUP_FEN[0]);
 		String[] iccsMoves = moveList.split(" ");
+		int counter = 0;
 		for (String iccsMove : iccsMoves) {
 			if (iccsMove.length() < 5) {
 				continue;
@@ -94,7 +95,7 @@ public class PgnPanel extends BasePanel {
 			String file = MoveParser.move2File(mv, pos);
 			String chin = MoveParser.file2Chin(file, pos.sdPlayer);
 			if (pos.sdPlayer == 0) {
-				int counter = (pos.distance / 2 + 1);
+				counter ++;
 				sb.append((counter < 10 ? " " : "") + counter + ". " + chin + " ");
 			} else {
 				sb.append(chin + "\r\n");

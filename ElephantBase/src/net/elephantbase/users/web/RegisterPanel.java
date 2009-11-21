@@ -1,7 +1,7 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.biz.CaptchaValidator;
 import net.elephantbase.users.biz.Login;
+import net.elephantbase.util.wicket.CaptchaPanel;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -14,7 +14,7 @@ import org.apache.wicket.model.Model;
 public class RegisterPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
-	CaptchaValidator captcha = new CaptchaValidator("txtCaptcha", "imgCaptcha");
+	CaptchaPanel captcha = new CaptchaPanel("pnlCaptcha");
 
 	public RegisterPanel(final BasePanel... redirectPanels) {
 		super("зЂВс", redirectPanels[0].getSuffix(), NO_AUTH);
@@ -79,14 +79,7 @@ public class RegisterPanel extends BasePanel {
 				}
 			}
 		};
-		frm.add(txtUsername, txtPassword, txtPassword2, txtEmail);
-		frm.add(captcha);
+		frm.add(txtUsername, txtPassword, txtPassword2, txtEmail, captcha);
 		add(frm);
-	}
-
-	@Override
-	protected void onBeforeRender() {
-		captcha.reset();
-		super.onBeforeRender();
 	}
 }
