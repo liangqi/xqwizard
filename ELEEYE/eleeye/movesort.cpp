@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "../base/base.h"
-#include "../base/x86asm.h"
 #include "position.h"
 #include "movesort.h"
 
