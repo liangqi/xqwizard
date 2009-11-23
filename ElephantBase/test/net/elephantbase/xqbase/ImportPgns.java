@@ -5,15 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 
 import net.elephantbase.cchess.PgnReader;
-import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.xqbase.biz.EccoUtil;
 
 public class ImportPgns {
 	public static void main(String[] args) throws Exception {
-		String sql = "INSERT INTO " + ConnectionPool.MYSQL_TABLEPRE + "pgn " +
-				"(year, month, event, round, date, site, redteam, red, " +
-				"blackteam, black, movelist, ecco, maxmoves, result) " +
+		String sql = "INSERT INTO xq_pgn (year, month, event, round, date, site, " +
+				"redteam, red, blackteam, black, movelist, ecco, maxmoves, result) " +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		File pgnDir = new File("D:\\PGNS");
 		File[] files = pgnDir.listFiles();
@@ -51,7 +49,7 @@ public class ImportPgns {
 			date += (day < 0 ? "" : day + "ÈÕ");
 			String moveList = pgn.getMoveList();
 			int eccoId = EccoUtil.ecco2id(EccoUtil.parseEcco(moveList));
-			DBUtil.executeUpdate(sql, Integer.valueOf(year), Integer.valueOf(month),
+			DBUtil.update(sql, Integer.valueOf(year), Integer.valueOf(month),
 					pgn.getEvent(), round, date, site, pgn.getRedTeam(), pgn.getRed(),
 					pgn.getBlackTeam(), pgn.getBlack(), moveList, Integer.valueOf(eccoId),
 					Integer.valueOf(pgn.size()), Integer.valueOf(pgn.getResult()));

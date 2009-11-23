@@ -3,7 +3,6 @@ package net.elephantbase.xqbase.biz;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.db.RowCallback;
 
@@ -158,12 +157,11 @@ public class SearchCond implements Serializable {
 			}
 		}
 		String sql = "SELECT sid, event, round, date, site, redteam, red, " +
-				"blackteam, black, ecco, result FROM " +
-				ConnectionPool.MYSQL_TABLEPRE + "pgn WHERE " + DBUtil.and(condList) +
-				" LIMIT 100";
+				"blackteam, black, ecco, result FROM xq_pgn WHERE " +
+				DBUtil.and(condList) + " LIMIT 100";
 
 		final ArrayList<PgnInfo> resultList = new ArrayList<PgnInfo>();
-		DBUtil.executeQuery(11, sql, new RowCallback() {
+		DBUtil.query(11, sql, new RowCallback() {
 			@Override
 			public Object onRow(Object[] row) {
 				int sid = ((Integer) row[0]).intValue();

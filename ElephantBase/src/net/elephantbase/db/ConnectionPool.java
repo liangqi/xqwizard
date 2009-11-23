@@ -16,8 +16,6 @@ public class ConnectionPool extends Pool<Connection> {
 	private static String url, username, password;
 	private static int retryInterval, retryCount;
 
-	public static String MYSQL_TABLEPRE, UC_DBTABLEPRE;
-
 	static {
 		try {
 			FileInputStream in = new FileInputStream(ClassPath.
@@ -32,9 +30,6 @@ public class ConnectionPool extends Pool<Connection> {
 			retryInterval = Integer.parseInt(p.getProperty("retry_interval")) * 1000;
 			retryCount = Integer.parseInt(p.getProperty("retry_count"));
 			Class.forName(p.getProperty("driver"));
-
-			MYSQL_TABLEPRE = p.getProperty("mysql_tablepre");
-			UC_DBTABLEPRE = p.getProperty("uc_dbtablepre");
 		} catch (Exception e) {
 			Logger.severe(e);
 			throw new RuntimeException(e);

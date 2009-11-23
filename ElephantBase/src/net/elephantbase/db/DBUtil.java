@@ -16,11 +16,11 @@ import net.elephantbase.util.Streams;
 public class DBUtil {
 	public static final Object EMPTY_OBJECT = new Object();
 
-	public static int executeUpdate(String sql, Object... in) {
-		return executeUpdate(null, sql, in);
+	public static int update(String sql, Object... in) {
+		return update(null, sql, in);
 	}
 
-	public static int executeUpdate(int[] insertId, String sql, Object... in) {
+	public static int update(int[] insertId, String sql, Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
 			Logger.severe("Connection refused");
@@ -55,8 +55,8 @@ public class DBUtil {
 		}
 	}
 
-	public static Object executeQuery(String sql, Object... in) {
-		return executeQuery(1, sql, new RowCallback() {
+	public static Object query(String sql, Object... in) {
+		return query(1, sql, new RowCallback() {
 			@Override
 			public Object onRow(Object[] row) {
 				return row[0];
@@ -64,8 +64,8 @@ public class DBUtil {
 		}, in);
 	}
 
-	public static Object[] executeQuery(int columns, String sql, Object... in) {
-		Object out = executeQuery(columns, sql, new RowCallback() {
+	public static Object[] query(int columns, String sql, Object... in) {
+		Object out = query(columns, sql, new RowCallback() {
 			@Override
 			public Object onRow(Object[] row) {
 				return row;
@@ -78,7 +78,7 @@ public class DBUtil {
 		return (Object[]) out;
 	}
 
-	public static Object executeQuery(int columns, String sql, RowCallback callback,
+	public static Object query(int columns, String sql, RowCallback callback,
 			Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
@@ -114,7 +114,7 @@ public class DBUtil {
 		}
 	}
 
-	public static void importSource(File sqlFile) {
+	public static void source(File sqlFile) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			FileInputStream inSql = new FileInputStream(sqlFile);
@@ -126,7 +126,7 @@ public class DBUtil {
 		String[] sqls = baos.toString().split(";");
 		for (String sql : sqls) {
 			System.out.println(sql + ";");
-			DBUtil.executeUpdate(sql);
+			DBUtil.update(sql);
 		}
 	}
 

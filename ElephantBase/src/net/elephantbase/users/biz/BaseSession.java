@@ -34,13 +34,15 @@ public class BaseSession extends WebSession {
 			return false;
 		}
 		String[] username_ = new String[1];
-		uid = Login.loginCookie(cookie, username_);
+		String[] cookie_ = new String[] {cookie};
+		uid = Login.loginCookie(cookie_, username_);
 		if (uid <= 0) {
 			return false;
 		}
+		EventLog.log(uid, EventLog.EVENT_LOGIN_COOKIE, 0);
 		username = username_[0];
-		loginCookie = cookie;
-		WicketUtil.setCookie("login", cookie, 86400 * Login.COOKIE_EXPIRY);
+		loginCookie = cookie_[0];
+		WicketUtil.setCookie("login", loginCookie, 86400 * Login.COOKIE_EXPIRY);
 		return true;
 	}
 
@@ -49,6 +51,7 @@ public class BaseSession extends WebSession {
 		if (uid <= 0) {
 			return uid;
 		}
+		EventLog.log(uid, EventLog.EVENT_LOGIN, 0);
 		username = username_;
 		if (!addCookie) {
 			return uid;
@@ -59,6 +62,7 @@ public class BaseSession extends WebSession {
 	}
 
 	public void logout() {
+		EventLog.log(uid, EventLog.EVENT_LOGOUT, 0);
 		uid = 0;
 		username = null;
 		if (loginCookie == null) {

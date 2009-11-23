@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.link.Link;
 
 import net.elephantbase.cchess.MoveParser;
 import net.elephantbase.cchess.Position;
-import net.elephantbase.db.ConnectionPool;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.ecco.Ecco;
 import net.elephantbase.users.web.BasePanel;
@@ -36,8 +35,8 @@ public class DetailPanel extends BasePanel {
 		// 从数据库中读取棋谱
 		String sql = "SELECT event, round, date, site, redteam, red, " +
 				"blackteam, black, ecco, movelist, result FROM " +
-				ConnectionPool.MYSQL_TABLEPRE + "pgn WHERE sid = ?";
-		Object[] row = DBUtil.executeQuery(11, sql, Integer.valueOf(pgnInfo.getSid()));
+				"xq_pgn WHERE sid = ?";
+		Object[] row = DBUtil.query(11, sql, Integer.valueOf(pgnInfo.getSid()));
 		final String event = (String) row[0];
 		final String round = (String) row[1];
 		final String date = (String) row[2];
