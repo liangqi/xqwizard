@@ -35,19 +35,19 @@ public class BaseSession extends WebSession {
 		}
 		String[] username_ = new String[1];
 		String[] cookie_ = new String[] {cookie};
-		uid = Login.loginCookie(cookie_, username_);
+		uid = Users.loginCookie(cookie_, username_);
 		if (uid <= 0) {
 			return false;
 		}
 		EventLog.log(uid, EventLog.EVENT_LOGIN_COOKIE, 0);
 		username = username_[0];
 		loginCookie = cookie_[0];
-		WicketUtil.setCookie("login", loginCookie, 86400 * Login.COOKIE_EXPIRY);
+		WicketUtil.setCookie("login", loginCookie, 86400 * Users.COOKIE_EXPIRY);
 		return true;
 	}
 
 	public int login(String username_, String password, boolean addCookie) {
-		uid = Login.login(username_, password);
+		uid = Users.login(username_, password);
 		if (uid <= 0) {
 			return uid;
 		}
@@ -56,8 +56,8 @@ public class BaseSession extends WebSession {
 		if (!addCookie) {
 			return uid;
 		}
-		loginCookie = Login.addCookie(uid);
-		WicketUtil.setCookie("login", loginCookie, 86400 * Login.COOKIE_EXPIRY);
+		loginCookie = Users.addCookie(uid);
+		WicketUtil.setCookie("login", loginCookie, 86400 * Users.COOKIE_EXPIRY);
 		return uid;
 	}
 
@@ -68,7 +68,7 @@ public class BaseSession extends WebSession {
 		if (loginCookie == null) {
 			return;
 		}
-		Login.delCookie(loginCookie);
+		Users.delCookie(loginCookie);
 		loginCookie = null;
 		WicketUtil.setCookie("login", null, 0);
 	}

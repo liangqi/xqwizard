@@ -29,12 +29,12 @@ public class ResultPanel extends BasePanel {
 	public ResultPanel(final SearchCond cond) {
 		super(cond.toString(), XQBasePage.SUFFIX, WANT_AUTH);
 
-		WebMarkupContainer trNotFound = new WebMarkupContainer("trNotFound");
-		WebMarkupContainer trFound = new WebMarkupContainer("trFound");
 		List<PgnInfo> resultList = cond.search();
-		trNotFound.setVisible(resultList.isEmpty());
-		trFound.setVisible(!resultList.isEmpty());
-		add(trNotFound, trFound);
+		if (resultList.isEmpty()) {
+			setWarn("没有找到符合条件的棋谱");
+		} else {
+			setInfo("共找到" + resultList.size() + "份棋谱");
+		}
 
 		DataView<PgnInfo> dataView = new DataView<PgnInfo>("resultList",
 				new ListDataProvider<PgnInfo>(resultList)) {

@@ -1,6 +1,7 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.BaseSession;
+import net.elephantbase.util.wicket.FeedbackPanel;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -28,11 +29,22 @@ public abstract class BasePanel extends Panel {
 	private String title, suffix;
 	private int authType;
 
+	private FeedbackPanel pnlFeedback = new FeedbackPanel("pnlFeedback");
+
+	protected void init() {
+		// Do Nothing
+	}
+
+	protected BasePanel(String title) {
+		this(title, null, NO_AUTH);
+	}
+
 	protected BasePanel(String title, String suffix, int authType) {
 		super(BASE_PANEL_ID);
 		this.title = title;
 		this.suffix = suffix;
 		this.authType = authType;
+		add(pnlFeedback);
 	}
 
 	public String getTitle() {
@@ -50,5 +62,13 @@ public abstract class BasePanel extends Panel {
 
 	public int getAuthType() {
 		return authType;
+	}
+
+	public void setInfo(String msg) {
+		pnlFeedback.setInfo(msg);
+	}
+
+	public void setWarn(String msg) {
+		pnlFeedback.setWarn(msg);
 	}
 }

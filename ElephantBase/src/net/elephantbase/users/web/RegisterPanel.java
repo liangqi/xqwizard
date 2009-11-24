@@ -1,10 +1,10 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.biz.Login;
+import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.wicket.CaptchaPanel;
+import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
@@ -29,9 +29,7 @@ public class RegisterPanel extends BasePanel {
 			}
 		};
 		lblWelcome.add(lnkLogin);
-		final Label lblWarn = new Label("lblWarn", "");
-		lblWarn.setVisible(false);
-		add(lblWelcome, lblWarn);
+		add(lblWelcome);
 
 		final RequiredTextField<String> txtUsername = new
 				RequiredTextField<String>("txtUsername", Model.of(""));
@@ -48,34 +46,33 @@ public class RegisterPanel extends BasePanel {
 			@Override
 			protected void onSubmit() {
 				lblWelcome.setVisible(false);
-				lblWarn.setVisible(true);
 				if (!captcha.validate()) {
-					lblWarn.setDefaultModelObject("验证码错误");
+					setWarn("验证码错误");
 					return;
 				}
 				String password = txtPassword.getModelObject();
 				if (!password.equals(txtPassword2.getModelObject())) {
-					lblWarn.setDefaultModelObject("两遍密码不一致");
+					setWarn("两遍密码不一致");
 					return;
 				}
 				String username = txtUsername.getModelObject();
 				if (username.getBytes().length < 6 || password.length() < 6) {
-					lblWarn.setDefaultModelObject("用户名和密码都不能少于6个字符");
+					setWarn("用户名和密码都不能少于6个字符");
 					return;
 				}
 				String email = txtEmail.getModelObject();
-				int indexAt = email.indexOf('@');
-				int indexDot = email.indexOf('.');
-				if (!(indexAt > 0 && indexDot > indexAt + 1 && indexDot < email.length() - 1)) {
-					lblWarn.setDefaultModelObject("Email不符合规格");
+				if (!Users.validateEmail(email)) {
+					setWarn("Email不符合规格");
 					return;
 				}
-				if (Login.register(username, password, email)) {
+				if (Users.register(username, password, email,
+						WicketUtil.getServletRequest().getRemoteHost())) {
 					LoginPanel panel = new LoginPanel(redirectPanels);
-					panel.setInfo("您已成功注册了帐号[" + username + "]，现在就可以登录了");
+					panel.setInfo("您已成功注册了帐号[" + username +
+							"]，现在就可以登录了");
 					setResponsePanel(panel);
 				} else {
-					lblWarn.setDefaultModelObject("已经存在同样的名用户");
+					setWarn("已经存在同样的名用户");
 				}
 			}
 		};

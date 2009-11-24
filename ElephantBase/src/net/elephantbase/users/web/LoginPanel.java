@@ -3,7 +3,6 @@ package net.elephantbase.users.web;
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.util.wicket.CaptchaPanel;
 
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -14,16 +13,10 @@ import org.apache.wicket.model.Model;
 public class LoginPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
-	Label lblInfo = new Label("lblInfo", "");
-	Label lblWarn = new Label("lblWarn", "");
 	CaptchaPanel pnlCaptcha = new CaptchaPanel("pnlCaptcha");
 
 	public LoginPanel(final BasePanel... redirectPanels) {
 		super("登录", redirectPanels[0].getSuffix(), NO_AUTH);
-
-		lblInfo.setVisible(false);
-		lblWarn.setVisible(false);
-		add(lblInfo, lblWarn);
 
 		final RequiredTextField<String> txtUsername = new
 				RequiredTextField<String>("txtUsername", Model.of(""));
@@ -53,10 +46,8 @@ public class LoginPanel extends BasePanel {
 
 			@Override
 			protected void onSubmit() {
-				lblInfo.setVisible(false);
-				lblWarn.setVisible(true);
 				if (!pnlCaptcha.validate()) {
-					lblWarn.setDefaultModelObject("验证码错误");
+					setWarn("验证码错误");
 					return;
 				}
 				int uid = ((BaseSession) getSession()).login(
@@ -65,20 +56,14 @@ public class LoginPanel extends BasePanel {
 				if (uid > 0) {
 					setResponsePanel(redirectPanels);
 				} else if (uid < 0) {
-					lblWarn.setDefaultModelObject("无法连接到象棋巫师用户中心，请稍候再试");
+					setWarn("无法连接到象棋巫师用户中心，请稍候再试");
 				} else {
-					lblWarn.setDefaultModelObject("用户名或密码不正确");
+					setWarn("用户名或密码不正确");
 				}
 			}
 		};
 		frm.add(txtUsername, txtPassword, pnlCaptcha,
 				chkSave, lnkRegister, lnkGetPassword);
 		add(frm);
-	}
-
-	public void setInfo(String info) {
-		lblInfo.setVisible(true);
-		lblWarn.setVisible(false);
-		lblInfo.setDefaultModelObject(info);
 	}
 }

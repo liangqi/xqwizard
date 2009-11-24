@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.EventLog;
-import net.elephantbase.users.biz.Login;
+import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 
@@ -20,13 +20,11 @@ public class XQBoothServlet extends HttpServlet {
 	private static final int NO_RETRY = -1;
 	private static final int INTERNAL_ERROR = -2;
 
-	private static final int USER_PLATINUM = 2800;
-
 	private static int login(String username, String password, String[] cookie) {
 		// 1. Login with Cookie
 		String[] username_ = new String[1];
 		String[] cookie_ = new String[] {password};
-		int uid = Login.loginCookie(cookie_, username_);
+		int uid = Users.loginCookie(cookie_, username_);
 		if (uid > 0 && username_[0].equals(username)) {
 			if (cookie != null && cookie.length > 0) {
 				cookie[0] = cookie_[0];
@@ -34,58 +32,43 @@ public class XQBoothServlet extends HttpServlet {
 			return uid;
 		}
 
-		// 2. Get "uid"
-		String sql = "SELECT uid, password, salt FROM uc_members WHERE username = ?";
-		Object[] row = DBUtil.query(3, sql, username);
-		if (row == null) {
-			return INTERNAL_ERROR;
-		}
-		if (row[0] == DBUtil.EMPTY_OBJECT) {
-			return 0;
-		}
-		uid = ((Integer) row[0]).intValue();
-		String key = (String) row[1];
-		String salt = (String) row[2];
-
-		// 3. Check if "noretry"
-		sql = "SELECT retrycount, retrytime FROM xq_retry WHERE uid = ?";
-		row = DBUtil.query(2, sql, Integer.valueOf(uid));
-		if (row == null) {
-			return INTERNAL_ERROR;
-		}
-		boolean retry = false;
-		int retryCount = 0, retryTime = 0;
-		if (row[0] != DBUtil.EMPTY_OBJECT) {
-			if (EasyDate.currTimeSec() < ((Integer) row[1]).intValue()) {
-				return NO_RETRY;
-			}
-			retry = true;
-			retryCount = ((Integer) row[0]).intValue();
-			retryTime = ((Integer) row[1]).intValue();
-		}
-
-		// 4. Check Password
-		if (Login.getKey(password, salt).equals(key)) {
+		// 2. Try Login
+		uid = Users.login(username, password);
+		if (uid > 0) {
 			if (cookie != null && cookie.length > 0) {
-				cookie[0] = Login.addCookie(uid);
+				cookie[0] = Users.addCookie(uid);
 			}
-			if (retry) {
-				// TODO DELETE
-			}
+			String sql = "DELETE FROM xq_retry WHERE uid = ?";
+			DBUtil.update(sql, Integer.valueOf(uid));
 			return uid;
 		}
-		if (!retry) {
-			sql = "INSERT INTO xq_retry (uid, retrycount, retrytime) VALUES (?, 1, 0)";
+
+		// 3. Get "uid" and Check if "noretry"
+		String sql = "SELECT uc_members.uid, retrycount, retrytime FROM " +
+				"uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
+		Object[] row = DBUtil.query(2, sql, username);
+		uid = DBUtil.getInt(row, 0);
+		if (uid == 0) {
+			return INCORRECT;
+		}
+		int retryCount = DBUtil.getInt(row, 1);
+		if (retryCount == 0) {
+			sql = "INSERT INTO xq_retry (uid, retrycount, retrytime) " +
+			"VALUES (?, 1, 0)";
 			DBUtil.update(sql, Integer.valueOf(uid));
 			return INCORRECT;
 		}
+		if (EasyDate.currTimeSec() < DBUtil.getInt(row, 2)) {
+			return NO_RETRY;
+		}
 		if (retryCount < 5) {
 			sql = "UPDATE xq_retry SET retrycount = retrycount + 1 WHERE uid = ?";
-			// TODO UPDATE
+			DBUtil.update(sql, Integer.valueOf(uid));
 			return INCORRECT;
 		}
-		sql = "UPDATE xq_retry SET retrycount = 0, retrytime = ? WHERE uid = ?";
-		// TODO UPDATE
+		sql = "UPDATE xq_retry SET retrycount = 1, retrytime = ? WHERE uid = ?";
+		DBUtil.update(sql, Integer.valueOf(EasyDate.currTimeSec() + 300),
+				Integer.valueOf(uid));
 		return NO_RETRY;
 	}
 
@@ -112,6 +95,7 @@ public class XQBoothServlet extends HttpServlet {
 			resp.setHeader("Login-Result", "error");
 			return;
 		}
+		resp.setHeader("Login-Cookie", cookie[0]);
 		String act = req.getParameter("act");
 		if (act == null) {
 			return;
@@ -154,17 +138,12 @@ public class XQBoothServlet extends HttpServlet {
 		} else if (act.equals("queryrank")) {
 			sql = "SELECT rank, score FROM xq_rank WHERE uid = ?";
 			row = DBUtil.query(2, sql, Integer.valueOf(uid));
-			if (row == null || row[0] == DBUtil.EMPTY_OBJECT) {
-				resp.setHeader("Login-Result", "ok 0|0|0");
-				return;
-			}
-			int scoreToday = ((Integer) row[0]).intValue();
-			int rankToday = ((Integer) row[1]).intValue();
+			int scoreToday = DBUtil.getInt(row, 0);
+			int rankToday = DBUtil.getInt(row, 1);
 			int rankYesterday = 0;
-			sql = "SELECT rank FROM xq_rank0 WHERE uid = ?";
-			Object rowYesterday = DBUtil.query(sql, Integer.valueOf(uid));
-			if (rowYesterday != null && row != DBUtil.EMPTY_OBJECT) {
-				rankYesterday = ((Integer) rowYesterday).intValue();
+			if (rankToday > 0) {
+				sql = "SELECT rank FROM xq_rank0 WHERE uid = ?";
+				rankYesterday = DBUtil.getInt(DBUtil.query(sql, Integer.valueOf(uid)));
 			}
 			resp.setHeader("Login-Result", "ok " + scoreToday + "|" +
 					rankToday + "|" + rankYesterday);
@@ -197,10 +176,10 @@ public class XQBoothServlet extends HttpServlet {
 		} else if (act.equals("hint")) {
 			if (stage < 500) {
 				resp.setHeader("Login-Result", "ok");
-			} else if (points < 10 && charged < USER_PLATINUM) {
+			} else if (points < 10 && charged < Users.PLATINUM) {
 				resp.setHeader("Login-Result", "nopoints");
 			} else {
-				if (charged < USER_PLATINUM) {
+				if (charged < Users.PLATINUM) {
 					sql = "UPDATE xq_user SET points = points - 10 WHERE uid = ?";
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}
@@ -210,10 +189,10 @@ public class XQBoothServlet extends HttpServlet {
 		} else if (act.equals("retract")) {
 			if (stage < 500) {
 				resp.setHeader("Login-Result", "ok");
-			} else if (points < 1 && charged < USER_PLATINUM) {
+			} else if (points < 1 && charged < Users.PLATINUM) {
 				resp.setHeader("Login-Result", "nopoints");
 			} else {
-				if (charged < USER_PLATINUM) {
+				if (charged < Users.PLATINUM) {
 					sql = "UPDATE xq_user SET points = points - 1 WHERE uid = ?";
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}

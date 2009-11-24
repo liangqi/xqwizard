@@ -130,6 +130,31 @@ public class DBUtil {
 		}
 	}
 
+	public static int getInt(Object row) {
+		return row == null || row == EMPTY_OBJECT ? 0 : ((Integer) row).intValue();
+	}
+
+	public static int getInt(Object[] row, int column) {
+		return row == null || row[column] == EMPTY_OBJECT || row[column] == null ?
+				0 : ((Integer) row[column]).intValue();
+	}
+
+	public static String getString(Object row) {
+		return row == null || row == EMPTY_OBJECT ? null : (String) row;
+	}
+
+	public static String getString(Object[] row, int column) {
+		return row == null || row[column] == EMPTY_OBJECT ?
+				null : ((String) row[column]);
+	}
+
+	public static String escape(String in) {
+		String out = in.replaceAll("\\\\", "\\\\\\\\");
+		out = out.replaceAll("\\\'", "\\\\\\\'");
+		out = out.replaceAll("\\\"", "\\\\\\\"");
+		return out;
+	}
+
 	public static String and(Iterable<String> conditions) {
 		StringBuilder sb = new StringBuilder();
 		for (String condition : conditions) {

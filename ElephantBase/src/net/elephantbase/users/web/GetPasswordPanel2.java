@@ -5,5 +5,6 @@ public class GetPasswordPanel2 extends BasePanel {
 
 	public GetPasswordPanel2() {
 		super("找回密码", UsersPage.SUFFIX, NO_AUTH);
+		setInfo("找回密码的方法已经通过Email发送到您的信箱中");
 	}
 }

@@ -1,10 +1,9 @@
 package net.elephantbase.users.web;
 
-import net.elephantbase.users.biz.Login;
+import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.Smtp;
 import net.elephantbase.util.wicket.CaptchaPanel;
 
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.model.Model;
@@ -17,10 +16,6 @@ public class GetPasswordPanel extends BasePanel {
 	public GetPasswordPanel() {
 		super("找回密码", UsersPage.SUFFIX, NO_AUTH);
 
-		final Label lblWarn = new Label("lblWarn", "");
-		lblWarn.setVisible(false);
-		add(lblWarn);
-
 		final RequiredTextField<String> txtUsername = new
 				RequiredTextField<String>("txtUsername", Model.of(""));
 		final RequiredTextField<String> txtEmail = new
@@ -31,18 +26,17 @@ public class GetPasswordPanel extends BasePanel {
 
 			@Override
 			protected void onSubmit() {
-				lblWarn.setVisible(true);
 				if (!pnlCaptcha.validate()) {
-					lblWarn.setDefaultModelObject("验证码错误");
+					setWarn("验证码错误");
 					return;
 				}
 				String username = txtUsername.getModelObject();
 				String email = txtEmail.getModelObject();
-				if (!email.equals(Login.getEmail(username))) {
-					lblWarn.setDefaultModelObject("用户名与Email不匹配");
+				if (!email.equals(Users.getEmail(username))) {
+					setWarn("用户名与Email不匹配");
 					return;
 				}
-				String password = Login.getSalt();
+				String password = Users.getSalt();
 				StringBuilder sb = new StringBuilder();
 				sb.append(username + "，您好！\r\n\r\n");
 				sb.append("　　您的密码已被重置为：" + password + "\r\n");
@@ -52,10 +46,10 @@ public class GetPasswordPanel extends BasePanel {
 				sb.append("　　感谢您使用象棋巫师。\r\n\r\n");
 				sb.append("象棋巫师用户中心");
 				if (Smtp.send(email, username + "的密码已被重置", sb.toString())) {
-					Login.updateInfo(username, email, password);
+					Users.updateInfo(username, email, password);
 					setResponsePanel(new GetPasswordPanel2());
 				} else {
-					lblWarn.setDefaultModelObject("发送Email失败，请稍候再试");
+					setWarn("发送Email失败，请稍候再试");
 				}
 			}
 		};
