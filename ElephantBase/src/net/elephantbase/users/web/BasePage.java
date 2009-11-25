@@ -43,7 +43,7 @@ public class BasePage extends WebPage {
 		}
 		add(lnkLogin);
 
-		panels[0].init();
+		panels[0].load();
 		add(panels[0]);
 
 		add(new Loop("loop", panels.length - 1) {
@@ -53,14 +53,12 @@ public class BasePage extends WebPage {
 			protected void populateItem(LoopItem item) {
 				int i = item.getIteration() + 1;
 				item.add(new Label("lblSubtitle", panels[i].getTitle()));
-				panels[i].init();
+				panels[i].load();
 				item.add(panels[i]);
 			}
 		});
 
-		FeedbackPanel panel = new FeedbackPanel("feedback");
-		panel.setVisible(false);
-		add(panel);
+		add(new FeedbackPanel("feedback"));
 	}
 
 	@Override

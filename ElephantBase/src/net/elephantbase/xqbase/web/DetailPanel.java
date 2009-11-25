@@ -140,6 +140,7 @@ public class DetailPanel extends BasePanel {
 				out.print(" 欢迎访问《象棋百科全书网》 \r\n");
 				out.print(" 推荐用《象棋巫师》观赏棋谱 \r\n");
 				out.print("http://www.elephantbase.net/");
+				out.close();
 				WicketUtil.download("pgn", "text/plain", baos.toByteArray());
 			}
 		});

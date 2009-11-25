@@ -11,7 +11,8 @@ public class CaptchaPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 
 	private String captcha;
-	private RequiredTextField<String> txtCaptcha = new RequiredTextField<String>("txt");
+	private RequiredTextField<String> txtCaptcha =
+			new RequiredTextField<String>("txt");
 	private Image imgCaptcha = new Image("img");
 
 	public CaptchaPanel(String id) {

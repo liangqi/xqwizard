@@ -1,6 +1,8 @@
 package net.elephantbase.users.web;
 
+import net.elephantbase.users.biz.UserDetail;
 import net.elephantbase.users.web.admin.ChargeCodePanel;
+import net.elephantbase.users.web.admin.DetailInfoPanel;
 import net.elephantbase.users.web.admin.ExportDataPanel;
 import net.elephantbase.users.web.admin.QnReportPanel;
 import net.elephantbase.users.web.admin.SearchExactPanel;
@@ -22,6 +24,12 @@ public class UsersPage extends WebPage {
 		return new BasePanel[] {
 			new SearchExactPanel(), new SearchLikePanel(),
 			new QnReportPanel(), new ChargeCodePanel(), new ExportDataPanel(),
+		};
+	}
+
+	public static BasePanel[] getEditUserPanels(UserDetail user) {
+		return new BasePanel[] {
+			new DetailInfoPanel(user),
 		};
 	}
 

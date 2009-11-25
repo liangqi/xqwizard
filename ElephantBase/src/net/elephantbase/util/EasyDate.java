@@ -39,6 +39,42 @@ public class EasyDate implements Serializable, Cloneable, Comparable<EasyDate> {
 		return (int) (System.currentTimeMillis() / 1000);
 	}
 
+	public static String toDateString(long millis) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(millis);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		return String.format("%04d-%02d-%02d", Integer.valueOf(year),
+				Integer.valueOf(month), Integer.valueOf(day));
+	}
+
+	public static String toTimeString(long millis) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(millis);
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		int second = cal.get(Calendar.SECOND);
+		return String.format("%02d:%02d:%02d", Integer.valueOf(hour),
+				Integer.valueOf(minute), Integer.valueOf(second));
+	}
+
+	public static String toString(long millis) {
+		return toDateString(millis) + " " + toTimeString(millis);
+	}
+
+	public static String toDateStringSec(int sec) {
+		return toDateString((long) sec * 1000);
+	}
+
+	public static String toTimeStringSec(int sec) {
+		return toTimeString((long) sec * 1000);
+	}
+
+	public static String toStringSec(int sec) {
+		return toString((long) sec * 1000);
+	}
+
 	private long time;
 
 	public EasyDate() {
@@ -70,28 +106,16 @@ public class EasyDate implements Serializable, Cloneable, Comparable<EasyDate> {
 	}
 
 	public String toDateString() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		return String.format("%04d-%02d-%02d", Integer.valueOf(year),
-				Integer.valueOf(month), Integer.valueOf(day));
+		return toDateString(time);
 	}
 
 	public String toTimeString() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		int hour = cal.get(Calendar.HOUR_OF_DAY);
-		int minute = cal.get(Calendar.MINUTE);
-		int second = cal.get(Calendar.SECOND);
-		return String.format("%02d:%02d:%02d", Integer.valueOf(hour),
-				Integer.valueOf(minute), Integer.valueOf(second));
+		return toTimeString(time);
 	}
 
 	@Override
 	public String toString() {
-		return toDateString() + " " + toTimeString();
+		return toString(time);
 	}
 
 	@Override

@@ -10,10 +10,9 @@ import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
 public class ResultPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
@@ -36,43 +35,43 @@ public class ResultPanel extends BasePanel {
 			setInfo("¹²ÕÒµ½" + resultList.size() + "·ÝÆåÆ×");
 		}
 
-		DataView<PgnInfo> dataView = new DataView<PgnInfo>("resultList",
-				new ListDataProvider<PgnInfo>(resultList)) {
+		PageableListView<PgnInfo> listView = new
+				PageableListView<PgnInfo>("resultList", resultList, 20) {
 			private static final long serialVersionUID = 1L;
 
-			private void addTd(Item<PgnInfo> item, String tag,
+			private void addTd(ListItem<PgnInfo> item, String tag,
 					String content, int limit, final int type) {
 				WebMarkupContainer td = new WebMarkupContainer("td" + tag);
+				item.add(td);
 				td.add(new SimpleAttributeModifier("title", content));
 				td.add(new SimpleAttributeModifier("bgcolor",
 						item.getIndex() % 2 == 0 ? "#EEEEEE" : "DDDDDD"));
-				Label lbl = new Label("lbl" + tag, content.length() < limit ? content :
-						content.substring(0, limit - 2) + "...");
+				Label lbl = new Label("lbl" + tag, content.length() < limit ?
+						content : content.substring(0, limit - 2) + "...");
 				if (type == LINK_NONE) {
 					td.add(lbl);
-				} else {
-					final PgnInfo pgnInfo = item.getModelObject();
-					Link<Void> lnk = new Link<Void>("lnk" + tag) {
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						public void onClick() {
-							if (type == LINK_PGN) {
-								setResponsePanel(new DetailPanel(pgnInfo));
-							} else {
-								String ecco = pgnInfo.getOpening().substring(0, 3);
-								setResponsePanel(new ResultPanel(ecco));
-							}
-						}
-					};
-					lnk.add(lbl);
-					td.add(lnk);
+					return;
 				}
-				item.add(td);
+				final PgnInfo pgnInfo = item.getModelObject();
+				Link<Void> lnk = new Link<Void>("lnk" + tag) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onClick() {
+						if (type == LINK_PGN) {
+							setResponsePanel(new DetailPanel(pgnInfo));
+						} else {
+							String ecco = pgnInfo.getOpening().substring(0, 3);
+							setResponsePanel(new ResultPanel(ecco));
+						}
+					}
+				};
+				lnk.add(lbl);
+				td.add(lnk);
 			}
 
 			@Override
-			protected void populateItem(Item<PgnInfo> item) {
+			protected void populateItem(ListItem<PgnInfo> item) {
 				PgnInfo entry = item.getModelObject();
 				addTd(item, "Event", entry.getEvent(), 15, LINK_NONE);
 				addTd(item, "Result", entry.getResult(), 20, LINK_PGN);
@@ -80,8 +79,7 @@ public class ResultPanel extends BasePanel {
 				addTd(item, "Opening", entry.getOpening(), 20, LINK_ECCO);
 			}			
 		};
-		dataView.setItemsPerPage(20);
-		add(dataView);
+		add(listView);
 
 		add(new Link<Void>("lnkBackTop") {
 			private static final long serialVersionUID = 1L;
@@ -91,7 +89,7 @@ public class ResultPanel extends BasePanel {
 				setResponsePanel(new SearchPanel(cond));
 			}
 		});
-		add(new PagingNavigator("navTop", dataView));
+		add(new PagingNavigator("navTop", listView));
 		add(new Link<Void>("lnkBackBottom") {
 			private static final long serialVersionUID = 1L;
 
@@ -100,6 +98,6 @@ public class ResultPanel extends BasePanel {
 				setResponsePanel(new SearchPanel(cond));
 			}
 		});
-		add(new PagingNavigator("navBottom", dataView));
+		add(new PagingNavigator("navBottom", listView));
 	}
 }

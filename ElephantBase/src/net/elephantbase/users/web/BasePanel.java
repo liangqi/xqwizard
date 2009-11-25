@@ -26,12 +26,14 @@ public abstract class BasePanel extends Panel {
 		}
 	}
 
+	private boolean loaded = false;
 	private String title, suffix;
 	private int authType;
 
 	private FeedbackPanel pnlFeedback = new FeedbackPanel("pnlFeedback");
 
-	protected void init() {
+	/** @param session */
+	protected void onLoad(BaseSession session) {
 		// Do Nothing
 	}
 
@@ -45,6 +47,13 @@ public abstract class BasePanel extends Panel {
 		this.suffix = suffix;
 		this.authType = authType;
 		add(pnlFeedback);
+	}
+
+	public void load() {
+		if (!loaded) {
+			loaded = true;
+			onLoad((BaseSession) getSession());
+		}
 	}
 
 	public String getTitle() {

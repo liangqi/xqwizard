@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.EventLog;
+import net.elephantbase.users.biz.UserData;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
@@ -112,32 +113,19 @@ public class XQBoothServlet extends HttpServlet {
 			// Ignored
 		}
 
-		String sql = "SELECT score, points, charged FROM xq_user WHERE uid = ?";
-		Object[] row = DBUtil.query(3, sql, Integer.valueOf(uid));
-		int score = 0, points = 0, charged = 0;
-		if (row == null || row[0] == DBUtil.EMPTY_OBJECT) {
-			sql = "INSERT INTO xq_user (uid, lastip, lasttime) VALUES (?, ?, ?)";
-			DBUtil.update(sql, Integer.valueOf(uid), req.getRemoteHost(),
-					Integer.valueOf(EasyDate.currTimeSec()));
-	    } else {
-	    	score = ((Integer) row[0]).intValue();
-	    	points = ((Integer) row[1]).intValue();
-	    	charged = ((Integer) row[2]).intValue();
-			sql = "UPDATE xq_user SET lastip = ?, lasttime = ? WHERE uid = ?";
-			DBUtil.update(sql, req.getRemoteHost(),
-					Integer.valueOf(EasyDate.currTimeSec()), Integer.valueOf(uid));
-	    }
 		String ip = req.getRemoteAddr();
+		UserData user = new UserData(uid, ip);
 
 		if (false) {
 	    	// Code Style
 	    } else if (act.equals("querypoints")) {
-			resp.setHeader("Login-Result", "ok " + points + "|" + charged);
+			resp.setHeader("Login-Result", "ok " +
+					user.getPoints() + "|" + user.getCharged());
 		} else if (act.equals("queryscore")) {
-			resp.setHeader("Login-Result", "ok " + score);
+			resp.setHeader("Login-Result", "ok " + user.getScore());
 		} else if (act.equals("queryrank")) {
-			sql = "SELECT rank, score FROM xq_rank WHERE uid = ?";
-			row = DBUtil.query(2, sql, Integer.valueOf(uid));
+			String sql = "SELECT rank, score FROM xq_rank WHERE uid = ?";
+			Object[] row = DBUtil.query(2, sql, Integer.valueOf(uid));
 			int scoreToday = DBUtil.getInt(row, 0);
 			int rankToday = DBUtil.getInt(row, 1);
 			int rankYesterday = 0;
@@ -148,8 +136,8 @@ public class XQBoothServlet extends HttpServlet {
 			resp.setHeader("Login-Result", "ok " + scoreToday + "|" +
 					rankToday + "|" + rankYesterday);
 		} else if (act.equals("ranklist")) {
-			sql = "SELECT username, score FROM xq_rank LEFT JOIN uc_members " +
-					"USING (uid) ORDER BY rank LIMIT 100";
+			String sql = "SELECT username, score FROM xq_rank LEFT JOIN " +
+					"uc_members USING (uid) ORDER BY rank LIMIT 100";
 			final PrintWriter out;
 			try {
 				out = resp.getWriter();
@@ -165,8 +153,8 @@ public class XQBoothServlet extends HttpServlet {
 				}
 			});
 		} else if (act.equals("save")) {
-			if (stage > score) {
-				sql = "UPDATE xq_user SET score = ? WHERE uid = ?";
+			if (stage > user.getScore()) {
+				String sql = "UPDATE xq_user SET score = ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(stage), Integer.valueOf(uid));
 				resp.setHeader("Login-Result", "ok");
 				EventLog.log(uid, ip, EventLog.EVENT_SAVE, stage);
@@ -176,11 +164,12 @@ public class XQBoothServlet extends HttpServlet {
 		} else if (act.equals("hint")) {
 			if (stage < 500) {
 				resp.setHeader("Login-Result", "ok");
-			} else if (points < 10 && charged < Users.PLATINUM) {
+			} else if (user.getPoints() < 10 && !user.isPlatinum()) {
 				resp.setHeader("Login-Result", "nopoints");
 			} else {
-				if (charged < Users.PLATINUM) {
-					sql = "UPDATE xq_user SET points = points - 10 WHERE uid = ?";
+				if (!user.isPlatinum()) {
+					String sql = "UPDATE xq_user SET points = " +
+							"points - 10 WHERE uid = ?";
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}
 				resp.setHeader("Login-Result", "ok");
@@ -189,11 +178,12 @@ public class XQBoothServlet extends HttpServlet {
 		} else if (act.equals("retract")) {
 			if (stage < 500) {
 				resp.setHeader("Login-Result", "ok");
-			} else if (points < 1 && charged < Users.PLATINUM) {
+			} else if (user.getPoints() < 1 && !user.isPlatinum()) {
 				resp.setHeader("Login-Result", "nopoints");
 			} else {
-				if (charged < Users.PLATINUM) {
-					sql = "UPDATE xq_user SET points = points - 1 WHERE uid = ?";
+				if (!user.isPlatinum()) {
+					String sql = "UPDATE xq_user SET points = " +
+							"points - 1 WHERE uid = ?";
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}
 				resp.setHeader("Login-Result", "ok");

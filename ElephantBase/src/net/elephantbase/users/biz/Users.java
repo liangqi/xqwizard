@@ -10,11 +10,6 @@ import net.elephantbase.util.Logger;
 public class Users {
 	public static final int COOKIE_EXPIRY = 14;
 
-	public static final int PLATINUM = 2800;
-	public static final int DIAMOND = 8800;
-
-	public static final int TYPE_ADMIN = 128;
-
 	public static boolean validateEmail(String email) {
 		int indexAt = email.indexOf('@');
 		int indexDot = email.indexOf('.');
