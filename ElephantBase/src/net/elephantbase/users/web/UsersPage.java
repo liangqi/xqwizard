@@ -1,10 +1,13 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.UserDetail;
+import net.elephantbase.users.web.admin.AddPointsPanel;
 import net.elephantbase.users.web.admin.ChargeCodePanel;
+import net.elephantbase.users.web.admin.DelUserPanel;
 import net.elephantbase.users.web.admin.DetailInfoPanel;
 import net.elephantbase.users.web.admin.ExportDataPanel;
 import net.elephantbase.users.web.admin.QnReportPanel;
+import net.elephantbase.users.web.admin.ResetPasswordPanel;
 import net.elephantbase.users.web.admin.SearchExactPanel;
 import net.elephantbase.users.web.admin.SearchLikePanel;
 import net.elephantbase.util.wicket.WicketUtil;
@@ -12,7 +15,7 @@ import net.elephantbase.util.wicket.WicketUtil;
 import org.apache.wicket.markup.html.WebPage;
 
 public class UsersPage extends WebPage {
-	public static final String SUFFIX = "象棋巫师用户中心";
+	public static final String SUFFIX = BasePanel.DEFAULT_SUFFIX;
 
 	public static BasePanel[] getPanels() {
 		return new BasePanel[] {
@@ -29,7 +32,8 @@ public class UsersPage extends WebPage {
 
 	public static BasePanel[] getEditUserPanels(UserDetail user) {
 		return new BasePanel[] {
-			new DetailInfoPanel(user),
+			new DetailInfoPanel(user), new AddPointsPanel(user),
+			new ResetPasswordPanel(user), new DelUserPanel(user),
 		};
 	}
 

@@ -11,7 +11,7 @@ public class DetailInfoPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
 	public DetailInfoPanel(UserDetail user) {
-		super("编辑用户", UsersPage.SUFFIX, NEED_AUTH);
+		super("编辑用户", UsersPage.SUFFIX, NEED_ADMIN);
 
 		add(new Label("lblUsername", user.username));
 		add(new Label("lblEmail", user.email));

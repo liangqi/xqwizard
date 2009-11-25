@@ -51,7 +51,7 @@ public class Users {
 		return getKey(password, salt).equals(key) ? uid : 0;
 	}
 
-	public static boolean register(String username, String password,
+	public static int register(String username, String password,
 			String email, String regIp) {
 		String sql = "INSERT INTO uc_members (username, password, email, " +
 				"regip, regdate, salt) VALUES (?, ?, ?, ?, ?, ?)";
@@ -61,20 +61,20 @@ public class Users {
 		int[] insertId = new int[1];
 		if (DBUtil.update(insertId, sql, username,
 				key, email, regIp, regDate, salt) < 0) {
-			return false;
+			return 0;
 		}
 		sql = "INSERT INTO uc_memberfields (uid, blacklist) VALUES (?, ?)";
 		DBUtil.update(sql, Integer.valueOf(insertId[0]), "");
-		return true;
+		return insertId[0];
 	}
 
-	public void delUser(int uid) {
+	public static void delUser(int uid) {
 		String sql = "DELETE FROM xq_user WHERE uid = ?";
-		DBUtil.query(sql, Integer.valueOf(uid));
+		DBUtil.update(sql, Integer.valueOf(uid));
 		sql = "DELETE FROM uc_memberfields WHERE uid = ?";
-		DBUtil.query(sql, Integer.valueOf(uid));
+		DBUtil.update(sql, Integer.valueOf(uid));
 		sql = "DELETE FROM uc_members WHERE uid = ?";
-		DBUtil.query(sql, Integer.valueOf(uid));
+		DBUtil.update(sql, Integer.valueOf(uid));
 	}
 
 	public static String getEmail(String username) {
@@ -91,9 +91,15 @@ public class Users {
 		}
 		String salt = getSalt();
 		String key = getKey(password, salt);
-		String sql = "UPDATE uc_members SET email = ?, " +
-				"password = ?, salt = ? WHERE username = ?";
-		DBUtil.update(sql, email, key, salt, username);
+		if (email == null) {
+			String sql = "UPDATE uc_members SET " +
+					"password = ?, salt = ? WHERE username = ?";
+			DBUtil.update(sql, key, salt, username);
+		} else {
+			String sql = "UPDATE uc_members SET email = ?, " +
+					"password = ?, salt = ? WHERE username = ?";
+			DBUtil.update(sql, email, key, salt, username);
+		}
 	}
 
 	public static String addCookie(int uid) {

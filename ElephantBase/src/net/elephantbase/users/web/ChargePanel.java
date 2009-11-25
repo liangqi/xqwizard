@@ -47,7 +47,6 @@ public class ChargePanel extends BasePanel {
 						"charged = charged + ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(points),
 						Integer.valueOf(points), Integer.valueOf(uid));
-				EventLog.log(uid, EventLog.EVENT_CHARGE, points);
 
 				UserData user = new UserData(uid);
 				String info = "您刚才补充了 " + points + " 点，现在共有 " +
@@ -58,6 +57,7 @@ public class ChargePanel extends BasePanel {
 					lblInfo.setVisible(true);
 				}
 				setInfo(info);
+				EventLog.log(uid, EventLog.EVENT_CHARGE, points);
 			}
 		};
 		frm.add(txtChargeCode);

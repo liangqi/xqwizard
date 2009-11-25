@@ -1,5 +1,6 @@
 package net.elephantbase.users.web;
 
+import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.wicket.CaptchaPanel;
 import net.elephantbase.util.wicket.WicketUtil;
@@ -65,15 +66,16 @@ public class RegisterPanel extends BasePanel {
 					setWarn("Email不符合规格");
 					return;
 				}
-				if (Users.register(username, password, email,
-						WicketUtil.getServletRequest().getRemoteHost())) {
-					LoginPanel panel = new LoginPanel(redirectPanels);
-					panel.setInfo("您已成功注册了帐号[" + username +
-							"]，现在就可以登录了");
-					setResponsePanel(panel);
-				} else {
+				int uid = Users.register(username, password, email,
+						WicketUtil.getServletRequest().getRemoteHost());
+				if (uid <= 0) {
 					setWarn("已经存在同样的名用户");
+					return;
 				}
+				LoginPanel panel = new LoginPanel(redirectPanels);
+				panel.setInfo("您已成功注册了帐号[" + username + "]，现在就可以登录了");
+				EventLog.log(uid, EventLog.EVENT_REGISTER, 0);
+				setResponsePanel(panel);
 			}
 		};
 		frm.add(txtUsername, txtPassword, txtPassword2, txtEmail, captcha);

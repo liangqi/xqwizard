@@ -21,7 +21,7 @@ public class UserListPanel extends BasePanel {
 	private static final int LINK_EMAIL = 2;
 
 	public UserListPanel(ArrayList<UserDetail> userList) {
-		super("用户列表", UsersPage.SUFFIX, NEED_AUTH);
+		super("用户列表", UsersPage.SUFFIX, NEED_ADMIN);
 
 		ListView<UserDetail> listView = new
 				ListView<UserDetail>("userList", userList) {

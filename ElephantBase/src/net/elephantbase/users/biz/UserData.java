@@ -22,7 +22,7 @@ public class UserData {
 		Object[] row = DBUtil.query(4, sql, Integer.valueOf(uid));
 		if (row == null || row[0] == DBUtil.EMPTY_OBJECT) {
 			sql = "INSERT INTO xq_user (uid, lastip, lasttime) VALUES (?, ?, ?)";
-			DBUtil.update(sql, Integer.valueOf(uid), ip,
+			DBUtil.update(sql, Integer.valueOf(uid), ip == null ? "" : ip,
 					Integer.valueOf(EasyDate.currTimeSec()));
 	    } else {
 	    	admin = (((Integer) row[0]).intValue() & TYPE_ADMIN) != 0;
@@ -54,10 +54,18 @@ public class UserData {
 	}
 
 	public boolean isPlatinum() {
-		return charged >= PLATINUM;
+		return isPlatinum(charged);
 	}
 
 	public boolean isDiamond() {
+		return isDiamond(charged);
+	}
+
+	public static boolean isPlatinum(int charged) {
+		return charged >= PLATINUM;
+	}
+
+	public static boolean isDiamond(int charged) {
 		return charged >= DIAMOND;
 	}
 }

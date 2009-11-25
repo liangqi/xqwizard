@@ -1,6 +1,7 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.BaseSession;
+import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.Users;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -47,18 +48,23 @@ public class UpdatePanel extends BasePanel {
 				if (password1 == null || password1.length() < 6) {
 					Users.updateInfo(username, email, null);
 					setInfo("Email更新成功");
+					// TODO
+					EventLog.log(0, EventLog.EVENT_ADMIN_DELETE, 0);
 					return;
 				}
 				if (!password1.equals(password2)) {
 					setWarn("两遍密码不一致");
 					return;
 				}
-				if (Users.login(username, password1) <= 0) {
+				String password0 = txtPassword0.getModelObject();
+				if (Users.login(username, password0) <= 0) {
 					setWarn("原密码错误");
 					return;
 				}
 				Users.updateInfo(username, email, password1);
 				setInfo("Email和密码更新成功");
+				// TODO
+				EventLog.log(0, EventLog.EVENT_ADMIN_DELETE, 0);
 			}
 		};
 		frm.add(txtPassword0, txtPassword1, txtPassword2, txtEmail);

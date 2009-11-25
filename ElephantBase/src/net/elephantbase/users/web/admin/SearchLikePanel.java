@@ -65,7 +65,7 @@ public class SearchLikePanel extends BasePanel {
 				String sql1 = "SELECT uc_members.uid, username, email, regip, " +
 						"regdate, lastip, lasttime, score, points, charged FROM " +
 						"uc_members INNER JOIN xq_user USING (uid)";
-				String sql3 = " ORDER BY " + ORDER_BY[order] + " LIMIT " +
+				String sql3 = " ORDER BY " + ORDER_BY[order] + " DESC LIMIT " +
 						rowsList.get(rows);
 
 				final ArrayList<UserDetail> userList = new ArrayList<UserDetail>();
@@ -77,7 +77,7 @@ public class SearchLikePanel extends BasePanel {
 						user.username = (String) row[1];
 						user.email = (String) row[2];
 						user.regIp = (String) row[3];
-						user.regTime = ((Long) row[4]).intValue();
+						user.regTime = DBUtil.getInt(row, 4);
 						user.lastIp = (String) row[5];
 						user.lastTime = DBUtil.getInt(row, 6);
 						user.score = DBUtil.getInt(row, 7);

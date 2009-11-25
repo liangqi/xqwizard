@@ -131,12 +131,12 @@ public class DBUtil {
 	}
 
 	public static int getInt(Object row) {
-		return row == null || row == EMPTY_OBJECT ? 0 : ((Integer) row).intValue();
+		return row == null || row == EMPTY_OBJECT ? 0 : ((Number) row).intValue();
 	}
 
 	public static int getInt(Object[] row, int column) {
 		return row == null || row[column] == EMPTY_OBJECT || row[column] == null ?
-				0 : ((Integer) row[column]).intValue();
+				0 : ((Number) row[column]).intValue();
 	}
 
 	public static String getString(Object row) {

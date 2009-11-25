@@ -47,7 +47,10 @@ public class GetPasswordPanel extends BasePanel {
 				sb.append("象棋巫师用户中心");
 				if (Smtp.send(email, username + "的密码已被重置", sb.toString())) {
 					Users.updateInfo(username, email, password);
-					setResponsePanel(new GetPasswordPanel2());
+					ClosePanel panel = new ClosePanel("找回密码");
+					panel.setInfo("找回密码的方法已经通过Email发送到您的信箱中");
+					// No Log
+					setResponsePanel(panel);
 				} else {
 					setWarn("发送Email失败，请稍候再试");
 				}
