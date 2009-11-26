@@ -1,15 +1,18 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.UserDetail;
-import net.elephantbase.users.web.admin.AddPointsPanel;
 import net.elephantbase.users.web.admin.ChargeCodePanel;
-import net.elephantbase.users.web.admin.DelUserPanel;
-import net.elephantbase.users.web.admin.DetailInfoPanel;
 import net.elephantbase.users.web.admin.ExportDataPanel;
-import net.elephantbase.users.web.admin.QnReportPanel;
-import net.elephantbase.users.web.admin.ResetPasswordPanel;
+import net.elephantbase.users.web.admin.QuestionnairePanel;
 import net.elephantbase.users.web.admin.SearchExactPanel;
 import net.elephantbase.users.web.admin.SearchLikePanel;
+import net.elephantbase.users.web.admin.user.AddPointsPanel;
+import net.elephantbase.users.web.admin.user.DelUserPanel;
+import net.elephantbase.users.web.admin.user.DetailInfoPanel;
+import net.elephantbase.users.web.admin.user.ResetPasswordPanel;
+import net.elephantbase.users.web.user.ChargePanel;
+import net.elephantbase.users.web.user.InfoPanel;
+import net.elephantbase.users.web.user.UpdatePanel;
 import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.markup.html.WebPage;
@@ -17,7 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 public class UsersPage extends WebPage {
 	public static final String SUFFIX = BasePanel.DEFAULT_SUFFIX;
 
-	public static BasePanel[] getPanels() {
+	public static BasePanel[] getUserPanels() {
 		return new BasePanel[] {
 			new InfoPanel(), new ChargePanel(), new UpdatePanel(),
 		};
@@ -26,7 +29,7 @@ public class UsersPage extends WebPage {
 	public static BasePanel[] getAdminPanels() {
 		return new BasePanel[] {
 			new SearchExactPanel(), new SearchLikePanel(),
-			new QnReportPanel(), new ChargeCodePanel(), new ExportDataPanel(),
+			new QuestionnairePanel(), new ChargeCodePanel(), new ExportDataPanel(),
 		};
 	}
 
@@ -40,9 +43,9 @@ public class UsersPage extends WebPage {
 	{
 		String act = WicketUtil.getServletRequest().getParameter("act");
 		if (act == null) {
-			BasePanel.setResponsePanel(getPanels());
+			BasePanel.setResponsePanel(getUserPanels());
 		} else if (act.equals("register")) {
-			BasePanel.setResponsePanel(new RegisterPanel(getPanels()));
+			BasePanel.setResponsePanel(new RegisterPanel(getUserPanels()));
 		} else if (act.equals("getpassword")) {
 			BasePanel.setResponsePanel(new GetPasswordPanel());
 		}

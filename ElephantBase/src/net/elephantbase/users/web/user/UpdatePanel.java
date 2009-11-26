@@ -1,8 +1,9 @@
-package net.elephantbase.users.web;
+package net.elephantbase.users.web.user;
 
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.Users;
+import net.elephantbase.users.web.BasePanel;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -17,7 +18,9 @@ public class UpdatePanel extends BasePanel {
 	}
 
 	@Override
-	protected void onLoad(BaseSession session) {
+	protected void onLoad() {
+		BaseSession session = (BaseSession) getSession();
+		final int uid = session.getUid();
 		final String username = session.getUsername();
 
 		final PasswordTextField txtPassword0 = new
@@ -48,8 +51,7 @@ public class UpdatePanel extends BasePanel {
 				if (password1 == null || password1.length() < 6) {
 					Users.updateInfo(username, email, null);
 					setInfo("Email更新成功");
-					// TODO
-					EventLog.log(0, EventLog.EVENT_ADMIN_DELETE, 0);
+					EventLog.log(uid, EventLog.EMAIL, 0);
 					return;
 				}
 				if (!password1.equals(password2)) {
@@ -63,8 +65,7 @@ public class UpdatePanel extends BasePanel {
 				}
 				Users.updateInfo(username, email, password1);
 				setInfo("Email和密码更新成功");
-				// TODO
-				EventLog.log(0, EventLog.EVENT_ADMIN_DELETE, 0);
+				EventLog.log(uid, EventLog.PASSWORD, 0);
 			}
 		};
 		frm.add(txtPassword0, txtPassword1, txtPassword2, txtEmail);

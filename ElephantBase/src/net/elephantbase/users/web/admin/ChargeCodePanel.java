@@ -8,6 +8,7 @@ import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.Bytes;
+import net.elephantbase.util.Integers;
 import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -33,13 +34,8 @@ public class ChargeCodePanel extends BasePanel {
 			@Override
 			protected void onSubmit() {
 				String regname = txtRegname.getModelObject();
-				int points = 0, number = 0;
-				try {
-					points = Integer.parseInt(txtPoints.getModelObject());
-					number = Integer.parseInt(txtNumber.getModelObject());
-				} catch (Exception e) {
-					// Ignored
-				}
+				int points = Integers.parseInt(txtPoints.getModelObject());
+				int number = Integers.parseInt(txtNumber.getModelObject());
 				if (points <= 0 || number <= 0) {
 					return;
 				}
@@ -54,7 +50,7 @@ public class ChargeCodePanel extends BasePanel {
 				out.close();
 				WicketUtil.download("txt", "text/plain", baos.toByteArray());
 				EventLog.log(((BaseSession) getSession()).getUid(),
-						EventLog.EVENT_CHARGECODE, points * number);
+						EventLog.CHARGECODE, points * number);
 			}
 		};
 		frm.add(txtRegname, txtPoints, txtNumber);

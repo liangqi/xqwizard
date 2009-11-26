@@ -1,4 +1,4 @@
-package net.elephantbase.users.web.admin;
+package net.elephantbase.users.web.admin.user;
 
 import net.elephantbase.users.biz.UserDetail;
 import net.elephantbase.users.web.BasePanel;
@@ -25,8 +25,12 @@ public class DetailInfoPanel extends BasePanel {
 	}
 
 	@Override
-	protected void onBeforeRender() {
+	protected void onLoad() {
 		setTitle("ÏêÏ¸ĞÅÏ¢");
-		super.onBeforeRender();
+	}
+
+	@Override
+	protected void onLogout() {
+		setResponsePanel(UsersPage.getUserPanels());
 	}
 }

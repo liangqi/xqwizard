@@ -1,0 +1,37 @@
+<wicket:panel>
+  <span wicket:id="pnlFeedback"></span>
+  <table align="center" bgcolor="#000000" cellpadding="4" cellspacing="1">
+    <tr>
+      <td bgcolor="#FFFFFF">
+        <table>
+          <tr>
+            <td background="images/headerbg.gif" align="center">
+              <font size="2">IP地址</font>
+            </td>
+            <td background="images/headerbg.gif" align="center">
+              <font size="2">时间</font>
+            </td>
+            <td background="images/headerbg.gif" align="center">
+              <font size="2">评论</font>
+            </td>
+            <td background="images/headerbg.gif" align="center">　</td>
+          </tr>
+          <tr wicket:id="commentList">
+            <td wicket:id="tdIp" align="center">
+              <font size="2"><span wicket:id="lblIp"></span></font>
+            </td>
+            <td wicket:id="tdTime" align="center">
+              <font size="2"><span wicket:id="lblTime"></span></font>
+            </td>
+            <td wicket:id="tdComment" align="center">
+              <font size="2"><span wicket:id="lblComment"></span></font>
+            </td>
+            <td wicket:id="tdDelete" align="center">
+              <a href="#" wicket:id="lnkDelete"><font size="2">删除</font></a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</wicket:panel>

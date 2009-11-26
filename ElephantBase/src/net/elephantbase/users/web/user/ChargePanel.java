@@ -1,9 +1,10 @@
-package net.elephantbase.users.web;
+package net.elephantbase.users.web.user;
 
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserData;
+import net.elephantbase.users.web.BasePanel;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -57,7 +58,7 @@ public class ChargePanel extends BasePanel {
 					lblInfo.setVisible(true);
 				}
 				setInfo(info);
-				EventLog.log(uid, EventLog.EVENT_CHARGE, points);
+				EventLog.log(uid, EventLog.CHARGE, points);
 			}
 		};
 		frm.add(txtChargeCode);

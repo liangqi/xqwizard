@@ -55,9 +55,9 @@ CREATE TABLE xq_qn_answer (
 	qid INTEGER NOT NULL,
 	answer INTEGER NOT NULL);
 
-CREATE TABLE xq_qn_comments (
+CREATE TABLE xq_qn_comment (
 	uid INTEGER NOT NULL,
-	comments VARCHAR(255) NOT NULL);
+	comment VARCHAR(255) NOT NULL);
 
 CREATE TABLE xq_upload (
 	fid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -85,10 +85,10 @@ CREATE TABLE xq_download (
 	PRIMARY KEY (fid, uid),
 	KEY (uid));
 
-CREATE TABLE xq_download_comments (
+CREATE TABLE xq_download_comment (
 	fid INTEGER NOT NULL,
 	uid INTEGER NOT NULL,
-	comments VARCHAR(255) NOT NULL,
+	comment VARCHAR(255) NOT NULL,
 	eventtime INTEGER NOT NULL,
 	PRIMARY KEY (fid, uid));
 

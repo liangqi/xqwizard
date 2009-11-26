@@ -65,15 +65,20 @@ public class SearchExactPanel extends BasePanel {
 
 			@Override
 			public void onClick() {
-				setResponsePanel(UsersPage.getPanels());
+				setResponsePanel(UsersPage.getUserPanels());
 			}
 		};
 		add(lnkInfo);
 	}
 
 	@Override
-	protected void onBeforeRender() {
+	protected void onLoad() {
 		setTitle("¾«È·²éÑ¯");
-		super.onBeforeRender();
+	}
+
+
+	@Override
+	protected void onLogout() {
+		setResponsePanel(UsersPage.getUserPanels());
 	}
 }

@@ -1,5 +1,6 @@
 package net.elephantbase.users.web;
 
+import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.Smtp;
 import net.elephantbase.util.wicket.CaptchaPanel;
@@ -32,7 +33,8 @@ public class GetPasswordPanel extends BasePanel {
 				}
 				String username = txtUsername.getModelObject();
 				String email = txtEmail.getModelObject();
-				if (!email.equals(Users.getEmail(username))) {
+				int[] uid = new int[1];
+				if (!email.equals(Users.getEmail(username, uid))) {
 					setWarn("用户名与Email不匹配");
 					return;
 				}
@@ -49,7 +51,7 @@ public class GetPasswordPanel extends BasePanel {
 					Users.updateInfo(username, email, password);
 					ClosePanel panel = new ClosePanel("找回密码");
 					panel.setInfo("找回密码的方法已经通过Email发送到您的信箱中");
-					// No Log
+					EventLog.log(uid[0], EventLog.GETPASSWORD, 0);
 					setResponsePanel(panel);
 				} else {
 					setWarn("发送Email失败，请稍候再试");

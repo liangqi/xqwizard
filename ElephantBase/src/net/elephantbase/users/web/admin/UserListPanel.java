@@ -31,7 +31,6 @@ public class UserListPanel extends BasePanel {
 					String content, int type) {
 				WebMarkupContainer td = new WebMarkupContainer("td" + tag);
 				item.add(td);
-				td.add(new SimpleAttributeModifier("title", content));
 				td.add(new SimpleAttributeModifier("bgcolor",
 						item.getIndex() % 2 == 0 ? "#EEEEEE" : "DDDDDD"));
 				Label lbl = new Label("lbl" + tag, content);
@@ -68,8 +67,13 @@ public class UserListPanel extends BasePanel {
 				addTd(item, "Score", "" + user.score, LINK_NONE);
 				addTd(item, "Points", "" + user.points, LINK_NONE);
 				addTd(item, "Charged", "" + user.charged, LINK_NONE);
-			}			
+			}
 		};
 		add(listView);
+	}
+
+	@Override
+	protected void onLogout() {
+		setResponsePanel(UsersPage.getUserPanels());
 	}
 }

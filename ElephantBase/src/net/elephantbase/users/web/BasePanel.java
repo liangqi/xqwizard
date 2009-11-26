@@ -19,10 +19,15 @@ public abstract class BasePanel extends Panel {
 
 	public static void setResponsePanel(BasePanel... panels) {
 		RequestCycle rc = RequestCycle.get();
-		BaseSession session = (BaseSession) rc.getSession();
 		int authType = panels[0].getAuthType();
-		if (authType == BasePanel.NO_AUTH || session.getUid() > 0 ||
-				session.loginCookie() || authType == BasePanel.WANT_AUTH) {
+		if (authType == BasePanel.NO_AUTH) {
+			// Perhaps no BaseSession (from QuestionnairePage)
+			rc.setResponsePage(new BasePage(panels));
+			return;
+		}
+		BaseSession session = (BaseSession) rc.getSession();
+		if (session.getUid() > 0 || session.loginCookie() ||
+				authType == BasePanel.WANT_AUTH) {
 			if (authType == BasePanel.NEED_ADMIN) {
 				UserData user = new UserData(session.getUid(),
 						WicketUtil.getServletRequest().getRemoteHost());
@@ -39,14 +44,16 @@ public abstract class BasePanel extends Panel {
 		}
 	}
 
-	private boolean loaded = false;
 	private String title, suffix;
 	private int authType;
 
 	private FeedbackPanel pnlFeedback = new FeedbackPanel("pnlFeedback");
 
-	/** @param session */
-	protected void onLoad(BaseSession session) {
+	protected void onLoad() {
+		// Do Nothing
+	}
+
+	protected void onLogout() {
 		// Do Nothing
 	}
 
@@ -60,13 +67,6 @@ public abstract class BasePanel extends Panel {
 		this.suffix = suffix;
 		this.authType = authType;
 		add(pnlFeedback);
-	}
-
-	public void load() {
-		if (!loaded) {
-			loaded = true;
-			onLoad((BaseSession) getSession());
-		}
 	}
 
 	public String getTitle() {

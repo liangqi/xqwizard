@@ -74,7 +74,7 @@ public class RegisterPanel extends BasePanel {
 				}
 				LoginPanel panel = new LoginPanel(redirectPanels);
 				panel.setInfo("您已成功注册了帐号[" + username + "]，现在就可以登录了");
-				EventLog.log(uid, EventLog.EVENT_REGISTER, 0);
+				EventLog.log(uid, EventLog.REGISTER, 0);
 				setResponsePanel(panel);
 			}
 		};

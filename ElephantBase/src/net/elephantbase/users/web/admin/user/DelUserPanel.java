@@ -1,4 +1,4 @@
-package net.elephantbase.users.web.admin;
+package net.elephantbase.users.web.admin.user;
 
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserDetail;
@@ -32,7 +32,7 @@ public class DelUserPanel extends BasePanel {
 				Users.delUser(uid);
 				ClosePanel panel = new ClosePanel("管理");
 				panel.setInfo("用户[" + user.username + "]已经被删除");
-				EventLog.log(uid, EventLog.EVENT_ADMIN_DELETE, 0);
+				EventLog.log(uid, EventLog.ADMIN_DELETE, 0);
 				setResponsePanel(panel);
 			}
 		};

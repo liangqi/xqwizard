@@ -6,6 +6,7 @@ import java.io.FileReader;
 
 import net.elephantbase.cchess.PgnReader;
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.util.Integers;
 import net.elephantbase.xqbase.biz.EccoUtil;
 
 public class ImportPgns {
@@ -26,24 +27,9 @@ public class ImportPgns {
 			site = site.equals("?") ? "" : site;
 			String date = pgn.getDate();
 			String[] ss = date.split("\\.");
-			int year = -1;
-			try {
-				year = Integer.parseInt(ss[0]);
-			} catch (Exception e) {
-				// Ignored
-			}
-			int month = -1;
-			try {
-				month = Integer.parseInt(ss[1]);
-			} catch (Exception e) {
-				// Ignored
-			}
-			int day = -1;
-			try {
-				day = Integer.parseInt(ss[2]);
-			} catch (Exception e) {
-				// Ignored
-			}
+			int year = Integers.parseInt(ss[0], -1);
+			int month = Integers.parseInt(ss[1], -1);
+			int day = Integers.parseInt(ss[2], -1);
 			date = (year < 0 ? "" : year + "Äê");
 			date += (month < 0 ? "" : month + "ÔÂ");
 			date += (day < 0 ? "" : day + "ÈÕ");

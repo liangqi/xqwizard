@@ -13,6 +13,7 @@ import net.elephantbase.users.biz.UserData;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
+import net.elephantbase.util.Integers;
 
 public class XQBoothServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -106,13 +107,7 @@ public class XQBoothServlet extends HttpServlet {
 		if (strStage == null) {
 			strStage = req.getParameter("score");
 		}
-		int stage = 0;
-		try {
-			stage = Integer.parseInt(strStage);
-		} catch (Exception e) {
-			// Ignored
-		}
-
+		int stage = Integers.parseInt(strStage);
 		String ip = req.getRemoteAddr();
 		UserData user = new UserData(uid, ip);
 
@@ -157,7 +152,7 @@ public class XQBoothServlet extends HttpServlet {
 				String sql = "UPDATE xq_user SET score = ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(stage), Integer.valueOf(uid));
 				resp.setHeader("Login-Result", "ok");
-				EventLog.log(uid, ip, EventLog.EVENT_SAVE, stage);
+				EventLog.log(uid, ip, EventLog.SAVE, stage);
 			} else {
 				resp.setHeader("Login-Result", "nosave");
 			}
@@ -173,7 +168,7 @@ public class XQBoothServlet extends HttpServlet {
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}
 				resp.setHeader("Login-Result", "ok");
-				EventLog.log(uid, ip, EventLog.EVENT_HINT, stage);
+				EventLog.log(uid, ip, EventLog.HINT, stage);
 			}
 		} else if (act.equals("retract")) {
 			if (stage < 500) {
@@ -187,7 +182,7 @@ public class XQBoothServlet extends HttpServlet {
 					DBUtil.update(sql, Integer.valueOf(uid));
 				}
 				resp.setHeader("Login-Result", "ok");
-				EventLog.log(uid, ip, EventLog.EVENT_RETRACT, stage);
+				EventLog.log(uid, ip, EventLog.RETRACT, stage);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package net.elephantbase.users.web.admin;
+package net.elephantbase.users.web.admin.user;
 
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserDetail;
@@ -25,7 +25,7 @@ public class ResetPasswordPanel extends BasePanel {
 				String password = txtPassword.getModelObject();
 				Users.updateInfo(user.username, null, password);
 				setInfo("用户[" + user.username + "]的密码已被重置");
-				EventLog.log(user.uid, EventLog.EVENT_ADMIN_PASSWORD, 0);
+				EventLog.log(user.uid, EventLog.ADMIN_PASSWORD, 0);
 			}
 		};
 		frm.add(txtPassword);

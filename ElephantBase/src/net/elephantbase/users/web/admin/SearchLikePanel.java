@@ -13,6 +13,7 @@ import net.elephantbase.db.DBUtil;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.UserDetail;
 import net.elephantbase.users.web.BasePanel;
+import net.elephantbase.util.Integers;
 
 public class SearchLikePanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
@@ -48,20 +49,10 @@ public class SearchLikePanel extends BasePanel {
 			protected void onSubmit() {
 				String username = txtUsername.getModelObject();
 				String email = txtEmail.getModelObject();
-				int order = 0;
-				try {
-					order = Integer.parseInt(selOrder.getModelValue());
-				} catch (Exception e) {
-					// Ignored
-				}
-				order = Math.max(0, Math.min(order, orderList.size() - 1));
-				int rows = 0;
-				try {
-					rows = Integer.parseInt(selRows.getModelValue());
-				} catch (Exception e) {
-					// Ignored
-				}
-				rows = Math.max(0, Math.min(rows, rowsList.size() - 1));
+				int order = Integers.minMax(0, Integers.parseInt(selOrder.getModelValue()),
+						orderList.size() - 1);
+				int rows = Integers.minMax(0, Integers.parseInt(selRows.getModelValue()),
+						rowsList.size() - 1);
 				String sql1 = "SELECT uc_members.uid, username, email, regip, " +
 						"regdate, lastip, lasttime, score, points, charged FROM " +
 						"uc_members INNER JOIN xq_user USING (uid)";

@@ -1,10 +1,11 @@
-package net.elephantbase.users.web.admin;
+package net.elephantbase.users.web.admin.user;
 
 import net.elephantbase.db.DBUtil;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserData;
 import net.elephantbase.users.biz.UserDetail;
 import net.elephantbase.users.web.BasePanel;
+import net.elephantbase.util.Integers;
 
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
@@ -28,12 +29,7 @@ public class AddPointsPanel extends BasePanel {
 			@Override
 			protected void onSubmit() {
 				lblInfo.setVisible(false);
-				int points = 0;
-				try {
-					points = Integer.parseInt(txtPoints.getModelObject());
-				} catch (Exception e) {
-					// Ignored
-				}
+				int points = Integers.parseInt(txtPoints.getModelObject());
 				if (points == 0) {
 					setWarn("请输入一个数值，正数代表补充，负值代表消耗");
 					return;
@@ -46,7 +42,7 @@ public class AddPointsPanel extends BasePanel {
 					user.points += points;
 					setInfo(String.format("用户[%s]消耗了%s点",
 								user.username, "" + -points));
-					EventLog.log(user.uid, EventLog.EVENT_ADMIN_CHARGE, points);
+					EventLog.log(user.uid, EventLog.ADMIN_CHARGE, points);
 					return;
 				}
 				String sql = "UPDATE xq_user SET points = points + ?, " +
@@ -57,7 +53,7 @@ public class AddPointsPanel extends BasePanel {
 				user.charged += points;
 				setInfo(String.format("用户[%s]补充了%s点，请把以下文本发送给用户：",
 						user.username, "" + points));
-				EventLog.log(user.uid, EventLog.EVENT_ADMIN_CHARGE, points);
+				EventLog.log(user.uid, EventLog.ADMIN_CHARGE, points);
 				StringBuilder sb = new StringBuilder();
 				sb.append(String.format("我们已为您的象棋巫师帐号[%s]充值%s点",
 						user.username, "" + points));

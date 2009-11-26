@@ -1,7 +1,9 @@
-package net.elephantbase.users.web;
+package net.elephantbase.users.web.user;
 
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.UserData;
+import net.elephantbase.users.web.BasePanel;
+import net.elephantbase.users.web.UsersPage;
 import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,8 +17,8 @@ public class InfoPanel extends BasePanel {
 	}
 
 	@Override
-	protected void onLoad(BaseSession session) {
-		UserData user = new UserData(session.getUid(),
+	protected void onLoad() {
+		UserData user = new UserData(((BaseSession) getSession()).getUid(),
 				WicketUtil.getServletRequest().getRemoteHost());
 		Label lblScore = new Label("lblScore", "" + user.getScore());
 		Label lblPoints = new Label("lblPoints", user.getPoints() == 0 ? "" :
@@ -37,5 +39,10 @@ public class InfoPanel extends BasePanel {
 		};
 		lnkAdmin.setVisible(admin);
 		add(lblScore, lblPoints, lblCharged, lnkAdmin);
+	}
+
+	@Override
+	protected void onLogout() {
+		setResponsePanel(UsersPage.getUserPanels());
 	}
 }

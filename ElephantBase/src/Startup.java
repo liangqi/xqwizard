@@ -1,4 +1,5 @@
 import net.elephantbase.util.ClassPath;
+import net.elephantbase.util.Integers;
 import net.elephantbase.util.server.JettyServer;
 
 public class Startup {
@@ -7,11 +8,7 @@ public class Startup {
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
 		if (args.length > 0) {
-			try {
-				port = Integer.parseInt(args[0]);
-			} catch (Exception e) {
-				// Ignored if "port" cannot be parsed
-			}
+			port = Integers.parseInt(args[0]);
 		}
 		JettyServer server = new JettyServer(DEFAULT_HOME, port);
 		server.start();

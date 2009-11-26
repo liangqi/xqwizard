@@ -39,7 +39,7 @@ public class BaseSession extends WebSession {
 		if (uid <= 0) {
 			return false;
 		}
-		EventLog.log(uid, EventLog.EVENT_LOGIN_COOKIE, 0);
+		EventLog.log(uid, EventLog.LOGIN_COOKIE, 0);
 		username = username_[0];
 		loginCookie = cookie_[0];
 		WicketUtil.setCookie("login", loginCookie, 86400 * Users.COOKIE_EXPIRY);
@@ -51,7 +51,7 @@ public class BaseSession extends WebSession {
 		if (uid <= 0) {
 			return uid;
 		}
-		EventLog.log(uid, EventLog.EVENT_LOGIN, 0);
+		EventLog.log(uid, EventLog.LOGIN, 0);
 		username = username_;
 		if (!addCookie) {
 			return uid;
@@ -62,7 +62,7 @@ public class BaseSession extends WebSession {
 	}
 
 	public void logout() {
-		EventLog.log(uid, EventLog.EVENT_LOGOUT, 0);
+		EventLog.log(uid, EventLog.LOGOUT, 0);
 		uid = 0;
 		username = null;
 		if (loginCookie == null) {

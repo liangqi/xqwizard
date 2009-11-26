@@ -11,20 +11,6 @@
   </context-param>
 -->
   <filter>
-    <filter-name>XQBaseApp</filter-name>
-    <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-    <init-param>
-      <param-name>applicationClassName</param-name>
-      <param-value>net.elephantbase.xqbase.XQBaseApp</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </filter>
-  <filter-mapping>
-    <filter-name>XQBaseApp</filter-name>
-    <url-pattern>/xqbase/*</url-pattern>
-  </filter-mapping>
-
-  <filter>
     <filter-name>UsersApp</filter-name>
     <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
     <init-param>
@@ -36,5 +22,33 @@
   <filter-mapping>
     <filter-name>UsersApp</filter-name>
     <url-pattern>/users/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>QuestionnaireApp</filter-name>
+    <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+    <init-param>
+      <param-name>applicationClassName</param-name>
+      <param-value>net.elephantbase.questionnaire.QuestionnaireApp</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </filter>
+  <filter-mapping>
+    <filter-name>QuestionnaireApp</filter-name>
+    <url-pattern>/questionnaire/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>XQBaseApp</filter-name>
+    <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+    <init-param>
+      <param-name>applicationClassName</param-name>
+      <param-value>net.elephantbase.xqbase.XQBaseApp</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </filter>
+  <filter-mapping>
+    <filter-name>XQBaseApp</filter-name>
+    <url-pattern>/xqbase/*</url-pattern>
   </filter-mapping>
 </web-app>

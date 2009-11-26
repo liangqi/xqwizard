@@ -60,12 +60,12 @@ public class DailyTask extends TimerTask {
 
 		// Update Ranks
 		DBUtil.update("TRUNCATE TABLE xq_rank0");
-		DBUtil.update("INSERT INTO xq_rank0 (uid, rank) " +
-				"SELECT uid, rank FROM xq_rank");
+		DBUtil.update("INSERT INTO xq_rank0 (uid, rank) SELECT " +
+				"uid, rank FROM xq_rank");
 		DBUtil.update("TRUNCATE TABLE xq_rank");
-		sql = "INSERT INTO xq_rank (uid, score) " +
-				"SELECT uid, score FROM xq_user " +
-				"WHERE lasttime > ? ORDER BY score DESC, lasttime DESC";
+		sql = "INSERT INTO xq_rank (uid, score) SELECT " +
+				"uid, score FROM xq_user WHERE lasttime > ? AND " +
+				"score > 0 ORDER BY score DESC, lasttime DESC";
 		DBUtil.update(sql,
 				Integer.valueOf(now.substract(EasyDate.DAY * 14).getTimeSec()));
 		Logger.info("Rank (2 Weeks' Active Users) Updated");

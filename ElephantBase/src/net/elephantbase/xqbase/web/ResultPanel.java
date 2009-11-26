@@ -77,7 +77,7 @@ public class ResultPanel extends BasePanel {
 				addTd(item, "Result", entry.getResult(), 20, LINK_PGN);
 				addTd(item, "DateSite", entry.getDateSite(), 10, LINK_NONE);
 				addTd(item, "Opening", entry.getOpening(), 20, LINK_ECCO);
-			}			
+			}
 		};
 		add(listView);
 

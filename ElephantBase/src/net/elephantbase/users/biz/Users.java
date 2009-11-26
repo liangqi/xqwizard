@@ -78,8 +78,16 @@ public class Users {
 	}
 
 	public static String getEmail(String username) {
-		String sql = "SELECT email FROM uc_members WHERE username = ?";
-		return DBUtil.getString(DBUtil.query(sql, username));
+		return getEmail(username, null);
+	}
+
+	public static String getEmail(String username, int[] uid) {
+		String sql = "SELECT uid, email FROM uc_members WHERE username = ?";
+		Object[] row = DBUtil.query(2, sql, username);
+		if (uid != null && uid.length > 0) {
+			uid[0] = DBUtil.getInt(row, 0);
+		}
+		return DBUtil.getString(row, 1);
 	}
 
 	public static void updateInfo(String username,
