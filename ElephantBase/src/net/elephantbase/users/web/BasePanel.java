@@ -1,9 +1,7 @@
 package net.elephantbase.users.web;
 
 import net.elephantbase.users.biz.BaseSession;
-import net.elephantbase.users.biz.UserData;
 import net.elephantbase.util.wicket.FeedbackPanel;
-import net.elephantbase.util.wicket.WicketUtil;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,21 +24,15 @@ public abstract class BasePanel extends Panel {
 			return;
 		}
 		BaseSession session = (BaseSession) rc.getSession();
-		if (session.getUid() > 0 || session.loginCookie() ||
-				authType == BasePanel.WANT_AUTH) {
-			if (authType == BasePanel.NEED_ADMIN) {
-				UserData user = new UserData(session.getUid(),
-						WicketUtil.getServletRequest().getRemoteHost());
-				if (!user.isAdmin()) {
-					ClosePanel panel = new ClosePanel("管理", DEFAULT_SUFFIX);
-					panel.setWarn("只有管理员才能访问该页面");
-					rc.setResponsePage(new BasePage(panel));
-					return;
-				}
-			}
-			rc.setResponsePage(new BasePage(panels));
-		} else {
+		if (session.getUid() == 0 && !session.loginCookie() &&
+				authType > BasePanel.WANT_AUTH) {
 			rc.setResponsePage(new BasePage(new LoginPanel(panels)));
+		} else if (authType == BasePanel.NEED_ADMIN && !session.getData().isAdmin()) {
+			ClosePanel panel = new ClosePanel("管理", DEFAULT_SUFFIX);
+			panel.setWarn("只有管理员才能访问该页面");
+			rc.setResponsePage(new BasePage(panel));
+		} else {
+			rc.setResponsePage(new BasePage(panels));
 		}
 	}
 

@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.zip.GZIPOutputStream;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.Logger;
@@ -34,31 +35,31 @@ public class ExportDataPanel extends BasePanel {
 
 				String sql = "SELECT uid, username, password, salt, email " +
 						"FROM uc_members";
-				DBUtil.query(5, sql, new RowCallback() {
+				DBUtil.query(5, new RowCallback() {
 					@Override
-					public Object onRow(Object[] row) {
-						String username = DBUtil.escape((String) row[1]);
-						String email = DBUtil.escape((String) row[4]);
+					public boolean onRow(Row row) {
+						String username = DBUtil.escape(row.getString(2));
+						String email = DBUtil.escape(row.getString(5));
 						out.printf("INSERT INTO uc_members " +
 								"(uid, username, password, salt, email) VALUES " +
 								"(%d, '%s', '%s', '%s', '%s'));\r\n",
-								row[0], username, row[2], row[3], email);
-						return null;
+								row.get(1), username, row.get(3), row.get(4), email);
+						return true;
 					}
-				});
+				}, sql);
 
 				sql = "SELECT uid, usertype, score, points, charged " +
 						"FROM xq_user";
-				DBUtil.query(5, sql, new RowCallback() {
+				DBUtil.query(5, new RowCallback() {
 					@Override
-					public Object onRow(Object[] row) {
+					public boolean onRow(Row row) {
 						out.printf("INSERT INTO xq_user " +
 								"(uid, usertype, score, points, charged) VALUES " +
-								"(%d, %d, %d, %d, %d);\r\n",
-								row[0], row[1], row[2], row[3], row[4]);
-						return null;
+								"(%d, %d, %d, %d, %d);\r\n", row.get(1),
+								row.get(2), row.get(3), row.get(4), row.get(5));
+						return true;
 					}
-				});
+				}, sql);
 
 				out.close();
 				WicketUtil.download("sql.gz", "application/x-gzip", baos.toByteArray());

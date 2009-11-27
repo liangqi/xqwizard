@@ -7,15 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import net.elephantbase.util.Closeables;
 import net.elephantbase.util.Logger;
 import net.elephantbase.util.Streams;
 
 public class DBUtil {
-	public static final Object EMPTY_OBJECT = new Object();
-
 	public static int update(String sql, Object... in) {
 		return update(null, sql, in);
 	}
@@ -55,35 +52,28 @@ public class DBUtil {
 		}
 	}
 
-	public static Object query(String sql, Object... in) {
-		return query(1, sql, new RowCallback() {
+	public static Row query(int columns, String sql, Object... in) {
+		final Row[] row_ = new Row[1];
+		row_[0] = null;
+		RowCallback callback = new RowCallback() {
 			@Override
-			public Object onRow(Object[] row) {
-				return row[0];
+			public boolean onRow(Row row) {
+				row_[0] = row;
+				return false;
 			}
-		}, in);
-	}
-
-	public static Object[] query(int columns, String sql, Object... in) {
-		Object out = query(columns, sql, new RowCallback() {
-			@Override
-			public Object onRow(Object[] row) {
-				return row;
-			}
-		}, in);
-		if (out == EMPTY_OBJECT) {
-			out = new Object[columns];
-			Arrays.fill((Object[]) out, EMPTY_OBJECT);
+		};
+		if (!query(columns, callback, sql, in)) {
+			return Row.ERROR;
 		}
-		return (Object[]) out;
+		return (row_[0] == null ? Row.EMPTY : row_[0]);
 	}
 
-	public static Object query(int columns, String sql, RowCallback callback,
-			Object... in) {
+	public static boolean query(int columns, RowCallback callback,
+			String sql, Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
 			Logger.severe("Connection refused");
-			return null;
+			return false;
 		}
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -93,20 +83,13 @@ public class DBUtil {
 				ps.setObject(i + 1, in[i]);
 			}
 			rs = ps.executeQuery();
-			Object[] row = new Object[columns];
-			while (rs.next()) {
-				for (int i = 0; i < columns; i ++) {
-					row[i] = rs.getObject(i + 1);
-				}
-				Object out = callback.onRow(row);
-				if (out != null) {
-					return out;
-				}
+			while (rs.next() && callback.onRow(new Row(rs, columns))) {
+				// Do Nothing
 			}
-			return EMPTY_OBJECT;
+			return true;
 		} catch (Exception e) {
 			Logger.severe(e);
-			return null;
+			return false;
 		} finally {
 			Closeables.close(rs);
 			Closeables.close(ps);
@@ -128,24 +111,6 @@ public class DBUtil {
 			System.out.println(sql + ";");
 			DBUtil.update(sql);
 		}
-	}
-
-	public static int getInt(Object row) {
-		return row == null || row == EMPTY_OBJECT ? 0 : ((Number) row).intValue();
-	}
-
-	public static int getInt(Object[] row, int column) {
-		return row == null || row[column] == EMPTY_OBJECT || row[column] == null ?
-				0 : ((Number) row[column]).intValue();
-	}
-
-	public static String getString(Object row) {
-		return row == null || row == EMPTY_OBJECT ? null : (String) row;
-	}
-
-	public static String getString(Object[] row, int column) {
-		return row == null || row[column] == EMPTY_OBJECT ?
-				null : ((String) row[column]);
 	}
 
 	public static String escape(String in) {

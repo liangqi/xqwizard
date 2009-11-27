@@ -3,6 +3,7 @@ package net.elephantbase.users.biz;
 import java.security.MessageDigest;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.util.Bytes;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
@@ -27,7 +28,7 @@ public class Users {
 		}
 	}
 
-	private static String getKey(String password, String salt) {
+	public static String getKey(String password, String salt) {
 		return md5(md5(password) + salt);
 	}
 
@@ -36,18 +37,25 @@ public class Users {
 	}
 
 	public static int login(String username, String password) {
-		String sql = "SELECT uid, password, salt FROM " +
+		return login(username, password, null);
+	}
+
+	public static int login(String username, String password, String[] email) {
+		String sql = "SELECT uid, password, salt, email FROM " +
 				"uc_members WHERE username = ?";
-		Object[] row = DBUtil.query(3, sql, username);
-		if (row == null) {
+		Row row = DBUtil.query(4, sql, username);
+		if (row.error()) {
 			return -1;
 		}
-		if (row[0] == DBUtil.EMPTY_OBJECT) {
+		if (row.empty()) {
 			return 0;
 		}
-		int uid = ((Integer) row[0]).intValue();
-		String key = (String) row[1];
-		String salt = (String) row[2];
+		int uid = row.getInt(1);
+		String key = row.getString(2);
+		String salt = row.getString(3);
+		if (email != null && email.length > 0) {
+			email[0] = row.getString(4);
+		}
 		return getKey(password, salt).equals(key) ? uid : 0;
 	}
 
@@ -77,36 +85,25 @@ public class Users {
 		DBUtil.update(sql, Integer.valueOf(uid));
 	}
 
-	public static String getEmail(String username) {
-		return getEmail(username, null);
+	public static void setEmail(int uid ,String email) {
+		String sql = "UPDATE uc_members SET email = ? WHERE uid = ?";
+		DBUtil.update(sql, email, Integer.valueOf(uid));
 	}
 
-	public static String getEmail(String username, int[] uid) {
-		String sql = "SELECT uid, email FROM uc_members WHERE username = ?";
-		Object[] row = DBUtil.query(2, sql, username);
-		if (uid != null && uid.length > 0) {
-			uid[0] = DBUtil.getInt(row, 0);
-		}
-		return DBUtil.getString(row, 1);
+	public static void setPassword(int uid, String password) {
+		setPassword(uid, password, null);
 	}
 
-	public static void updateInfo(String username,
-			String email, String password) {
-		if (password == null) {
-			String sql = "UPDATE uc_members SET email = ? WHERE username = ?";
-			DBUtil.update(sql, email, username);
-			return;
-		}
+	public static void setPassword(int uid, String password, String email) {
 		String salt = getSalt();
 		String key = getKey(password, salt);
 		if (email == null) {
-			String sql = "UPDATE uc_members SET " +
-					"password = ?, salt = ? WHERE username = ?";
-			DBUtil.update(sql, key, salt, username);
+			String sql = "UPDATE uc_members SET password = ?, salt = ? WHERE uid = ?";
+			DBUtil.update(sql, key, salt, Integer.valueOf(uid));
 		} else {
-			String sql = "UPDATE uc_members SET email = ?, " +
-					"password = ?, salt = ? WHERE username = ?";
-			DBUtil.update(sql, email, key, salt, username);
+			String sql = "UPDATE uc_members SET password = ?, salt = ?, " +
+					"email = ? WHERE uid = ?";
+			DBUtil.update(sql, key, salt, email, Integer.valueOf(uid));
 		}
 	}
 
@@ -126,30 +123,33 @@ public class Users {
 		DBUtil.update(sql, cookie);
 	}
 
-	public static int loginCookie(String[] cookie, String[] username) {
+	public static int loginCookie(String[] cookie, String[] username, String[] email) {
 		if (cookie == null || cookie.length == 0) {
 			return -1;
 		}
 		String sql = "SELECT uid FROM xq_login WHERE cookie = ?";
-		Object row = DBUtil.query(sql, cookie[0]);
-		if (row == null) {
+		Row row = DBUtil.query(1, sql, cookie[0]);
+		if (row.error()) {
 			return -1;
 		}
-		if (row == DBUtil.EMPTY_OBJECT) {
+		if (row.empty()) {
 			return 0;
 		}
-		int uid = ((Integer) row).intValue();
+		int uid = row.getInt(1);
 		sql = "DELETE FROM xq_login WHERE cookie = ?";
 		DBUtil.update(sql, cookie[0]);
-		sql = "SELECT username FROM uc_members WHERE uid = ?";
-		String username_ = DBUtil.getString(DBUtil.
-				query(sql, Integer.valueOf(uid)));
+		sql = "SELECT username, email FROM uc_members WHERE uid = ?";
+		row = DBUtil.query(2, sql, Integer.valueOf(uid));
+		String username_ = row.getString(1, null);
 		if (username_ == null) {
 			return 0;
 		}
 		cookie[0] = addCookie(uid);
 		if (username != null && username.length > 0) {
 			username[0] = username_;
+		}
+		if (email != null && email.length > 0) {
+			email[0] = row.getString(2);
 		}
 		return uid;
 	}

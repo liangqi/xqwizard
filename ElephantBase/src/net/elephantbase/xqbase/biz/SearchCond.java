@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 
 public class SearchCond implements Serializable {
@@ -161,20 +162,30 @@ public class SearchCond implements Serializable {
 				DBUtil.and(condList) + " LIMIT 100";
 
 		final ArrayList<PgnInfo> resultList = new ArrayList<PgnInfo>();
-		DBUtil.query(11, sql, new RowCallback() {
+		DBUtil.query(11, new RowCallback() {
 			@Override
-			public Object onRow(Object[] row) {
-				int sid = ((Integer) row[0]).intValue();
-				String event_ = PgnInfo.toEventString((String) row[1], (String) row[2]);
-				String result = PgnInfo.toResultString((String) row[5], (String) row[6],
-						(String) row[7], (String) row[8], 0, ((Integer) row[10]).intValue());
-				String dateSite = PgnInfo.toDateSiteString((String) row[3], (String) row[4]);
-				String ecco = EccoUtil.id2ecco(((Integer) row[9]).intValue());
+			public boolean onRow(Row row) {
+				int sid = row.getInt(1);
+				String event_ = row.getString(2);
+				String round = row.getString(3);
+				String date = row.getString(4);
+				String site = row.getString(5);
+				String redTeam = row.getString(6);
+				String red = row.getString(7);
+				String blackTeam = row.getString(8);
+				String black = row.getString(9);
+				int eccoId = row.getInt(10);
+				int result_ = row.getInt(11);
+				event_ = PgnInfo.toEventString(event_, round);
+				String result = PgnInfo.toResultString(red, redTeam,
+						black, blackTeam, 0, result_);
+				String dateSite = PgnInfo.toDateSiteString(date, site);
+				String ecco = EccoUtil.id2ecco(eccoId);
 				String opening = EccoUtil.toOpeningString(ecco);
 				resultList.add(new PgnInfo(sid, event_, result, dateSite, opening));
-				return null;
+				return true;
 			}
-		}, in.toArray(new Object[0]));
+		}, sql, in.toArray(new Object[0]));
 		return resultList;
 	}
 }

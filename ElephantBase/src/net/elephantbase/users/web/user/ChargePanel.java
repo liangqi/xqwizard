@@ -1,6 +1,7 @@
 package net.elephantbase.users.web.user;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserData;
@@ -31,7 +32,8 @@ public class ChargePanel extends BasePanel {
 				lblInfo.setVisible(false);
 				String chargeCode = txtChargeCode.getModelObject();
 				String sql = "SELECT points FROM xq_chargecode WHERE chargecode = ?";
-				int points = DBUtil.getInt(DBUtil.query(sql, chargeCode));
+				Row row = DBUtil.query(1, sql, chargeCode);
+				int points = row.getInt(1, 0);
 				if (points == 0) {
 					setWarn("点卡密码错误");
 					return;
@@ -43,22 +45,24 @@ public class ChargePanel extends BasePanel {
 					return;
 				}
 
-				int uid = ((BaseSession) getSession()).getUid();
+				BaseSession session = (BaseSession) getSession();
 				sql = "UPDATE xq_user SET points = points + ?, " +
 						"charged = charged + ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(points),
-						Integer.valueOf(points), Integer.valueOf(uid));
+						Integer.valueOf(points), Integer.valueOf(session.getUid()));
+				UserData data = session.getData();
+				data.setPoints(data.getPoints() + points);
+				data.setCharged(data.getCharged() + points);
 
-				UserData user = new UserData(uid);
 				String info = "您刚才补充了 " + points + " 点，现在共有 " +
-						user.getPoints() + " 点可用";
-				if (user.isPlatinum()) {
-					lblInfo.setDefaultModelObject(user.isDiamond() ?
+						data.getPoints() + " 点可用";
+				if (data.isPlatinum()) {
+					lblInfo.setDefaultModelObject(data.isDiamond() ?
 							"您已经升级为：钻石会员用户" : "您已经升级为：白金会员用户");
 					lblInfo.setVisible(true);
 				}
 				setInfo(info);
-				EventLog.log(uid, EventLog.CHARGE, points);
+				EventLog.log(session.getUid(), EventLog.CHARGE, points);
 			}
 		};
 		frm.add(txtChargeCode);

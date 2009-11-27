@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.EventLog;
@@ -37,18 +38,18 @@ public class CommentPanel extends BasePanel {
 		final ArrayList<CommentEntry> commentList = new ArrayList<CommentEntry>();
 		String sql = "SELECT uid, eventip, eventtime, comment FROM " +
 				"xq_qn_comment LEFT JOIN xq_qn_user USING (uid)";
-		DBUtil.query(4, sql, new RowCallback() {
+		DBUtil.query(4, new RowCallback() {
 			@Override
-			public Object onRow(Object[] row) {
+			public boolean onRow(Row row) {
 				CommentEntry comment = new CommentEntry();
-				comment.uid = DBUtil.getInt(row, 0);
-				comment.ip = (String) row[1];
-				comment.time = DBUtil.getInt(row, 2);
-				comment.comment = (String) row[3];
+				comment.uid = row.getInt(1);
+				comment.ip = row.getString(2);
+				comment.time = row.getInt(3);
+				comment.comment = row.getString(4);
 				commentList.add(comment);
-				return null;
+				return true;
 			}
-		});
+		}, sql);
 
 		ListView<CommentEntry> listView = new
 				ListView<CommentEntry>("commentList", commentList) {

@@ -1,9 +1,14 @@
 package net.elephantbase.users.biz;
 
+import java.io.Serializable;
+
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.util.EasyDate;
 
-public class UserData {
+public class UserData implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private static final int PLATINUM = 2800;
 	private static final int DIAMOND = 8800;
 
@@ -12,23 +17,19 @@ public class UserData {
 	private boolean admin = false;
 	private int score = 0, points = 0, charged = 0;
 
-	public UserData(int uid) {
-		this(uid, null);
-	}
-
 	public UserData(int uid, String ip) {
 		String sql = "SELECT usertype, score, points, charged FROM " +
 				"xq_user WHERE uid = ?";
-		Object[] row = DBUtil.query(4, sql, Integer.valueOf(uid));
-		if (row == null || row[0] == DBUtil.EMPTY_OBJECT) {
+		Row row = DBUtil.query(4, sql, Integer.valueOf(uid));
+		if (row.error() || row.empty()) {
 			sql = "INSERT INTO xq_user (uid, lastip, lasttime) VALUES (?, ?, ?)";
 			DBUtil.update(sql, Integer.valueOf(uid), ip == null ? "" : ip,
 					Integer.valueOf(EasyDate.currTimeSec()));
 	    } else {
-	    	admin = (((Integer) row[0]).intValue() & TYPE_ADMIN) != 0;
-	    	score = ((Integer) row[1]).intValue();
-	    	points = ((Integer) row[2]).intValue();
-	    	charged = ((Integer) row[3]).intValue();
+	    	admin = (row.getInt(1) & TYPE_ADMIN) != 0;
+	    	score = row.getInt(2);
+	    	points = row.getInt(3);
+	    	charged = row.getInt(4);
 	    	if (ip != null) {
 	    		sql = "UPDATE xq_user SET lastip = ?, lasttime = ? WHERE uid = ?";
 	    		DBUtil.update(sql, ip, Integer.valueOf(EasyDate.currTimeSec()),
@@ -49,8 +50,16 @@ public class UserData {
 		return points;
 	}
 
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
 	public int getCharged() {
 		return charged;
+	}
+
+	public void setCharged(int charged) {
+		this.charged = charged;
 	}
 
 	public boolean isPlatinum() {

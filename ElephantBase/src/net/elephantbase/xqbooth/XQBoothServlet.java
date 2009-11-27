@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserData;
@@ -26,7 +27,7 @@ public class XQBoothServlet extends HttpServlet {
 		// 1. Login with Cookie
 		String[] username_ = new String[1];
 		String[] cookie_ = new String[] {password};
-		int uid = Users.loginCookie(cookie_, username_);
+		int uid = Users.loginCookie(cookie_, username_, null);
 		if (uid > 0 && username_[0].equals(username)) {
 			if (cookie != null && cookie.length > 0) {
 				cookie[0] = cookie_[0];
@@ -34,34 +35,40 @@ public class XQBoothServlet extends HttpServlet {
 			return uid;
 		}
 
-		// 2. Try Login
-		uid = Users.login(username, password);
-		if (uid > 0) {
+		// 2. Get "uid" and Check if "noretry"
+		String sql = "SELECT uc_members.uid, retrycount, retrytime, password, salt" +
+				"FROM uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
+		Row row = DBUtil.query(5, sql, username);
+		if (row.error()) {
+			return INTERNAL_ERROR;
+		}
+		if (row.empty()) {
+			return INCORRECT;
+		}
+		uid = row.getInt(1);
+		int retryCount = row.getInt(2);
+		if (retryCount > 0 && EasyDate.currTimeSec() < row.getInt(3)) {
+			return NO_RETRY;
+		}
+
+		// 3. Try Login
+		String key = row.getString(4);
+		String salt = row.getString(5);
+		if (Users.getKey(password, salt).equals(key)) {
 			if (cookie != null && cookie.length > 0) {
 				cookie[0] = Users.addCookie(uid);
 			}
-			String sql = "DELETE FROM xq_retry WHERE uid = ?";
+			sql = "DELETE FROM xq_retry WHERE uid = ?";
 			DBUtil.update(sql, Integer.valueOf(uid));
 			return uid;
 		}
 
-		// 3. Get "uid" and Check if "noretry"
-		String sql = "SELECT uc_members.uid, retrycount, retrytime FROM " +
-				"uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
-		Object[] row = DBUtil.query(2, sql, username);
-		uid = DBUtil.getInt(row, 0);
-		if (uid == 0) {
-			return INCORRECT;
-		}
-		int retryCount = DBUtil.getInt(row, 1);
+		// 4. Update "retry" table
 		if (retryCount == 0) {
 			sql = "INSERT INTO xq_retry (uid, retrycount, retrytime) " +
 			"VALUES (?, 1, 0)";
 			DBUtil.update(sql, Integer.valueOf(uid));
 			return INCORRECT;
-		}
-		if (EasyDate.currTimeSec() < DBUtil.getInt(row, 2)) {
-			return NO_RETRY;
 		}
 		if (retryCount < 5) {
 			sql = "UPDATE xq_retry SET retrycount = retrycount + 1 WHERE uid = ?";
@@ -120,13 +127,14 @@ public class XQBoothServlet extends HttpServlet {
 			resp.setHeader("Login-Result", "ok " + user.getScore());
 		} else if (act.equals("queryrank")) {
 			String sql = "SELECT rank, score FROM xq_rank WHERE uid = ?";
-			Object[] row = DBUtil.query(2, sql, Integer.valueOf(uid));
-			int scoreToday = DBUtil.getInt(row, 0);
-			int rankToday = DBUtil.getInt(row, 1);
-			int rankYesterday = 0;
+			Row row = DBUtil.query(2, sql, Integer.valueOf(uid));
+			int rankToday = row.getInt(1, 0);
+			int scoreToday = 0, rankYesterday = 0;
 			if (rankToday > 0) {
+				scoreToday = row.getInt(2);
 				sql = "SELECT rank FROM xq_rank0 WHERE uid = ?";
-				rankYesterday = DBUtil.getInt(DBUtil.query(sql, Integer.valueOf(uid)));
+				row = DBUtil.query(1, sql, Integer.valueOf(uid));
+				rankYesterday = row.getInt(1, 0);
 			}
 			resp.setHeader("Login-Result", "ok " + scoreToday + "|" +
 					rankToday + "|" + rankYesterday);
@@ -140,13 +148,13 @@ public class XQBoothServlet extends HttpServlet {
 				Logger.severe(e);
 				return;
 			}
-			DBUtil.query(2, sql, new RowCallback() {
+			DBUtil.query(2, new RowCallback() {
 				@Override
-				public Object onRow(Object[] row_) {
-					out.print(row_[1] + "|" + row_[0] + "\r\n");
-					return null;
+				public boolean onRow(Row row) {
+					out.print(row.getInt(2) + "|" + row.getString(1) + "\r\n");
+					return true;
 				}
-			});
+			}, sql);
 		} else if (act.equals("save")) {
 			if (stage > user.getScore()) {
 				String sql = "UPDATE xq_user SET score = ? WHERE uid = ?";

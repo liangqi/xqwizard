@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.users.web.UsersPage;
@@ -29,17 +30,17 @@ public class AnswerPanel extends BasePanel {
 		final ArrayList<AnswerEntry> answerList = new ArrayList<AnswerEntry>();
 		String sql = "SELECT qid, answer, COUNT(*) FROM xq_qn_answer WHERE " +
 				"answer > 0 GROUP BY qid, answer ORDER BY qid, answer";
-		DBUtil.query(3, sql, new RowCallback() {
+		DBUtil.query(3, new RowCallback() {
 			@Override
-			public Object onRow(Object[] row) {
+			public boolean onRow(Row row) {
 				AnswerEntry answer = new AnswerEntry();
-				answer.qid = DBUtil.getInt(row, 0);
-				answer.answer = DBUtil.getInt(row, 1);
-				answer.count = DBUtil.getInt(row, 2);
+				answer.qid = row.getInt(1);
+				answer.answer = row.getInt(2);
+				answer.count = row.getInt(3);
 				answerList.add(answer);
-				return null;
+				return true;
 			}
-		});
+		}, sql);
 
 		ListView<AnswerEntry> listView = new
 				ListView<AnswerEntry>("answerList", answerList) {

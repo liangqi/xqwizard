@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.util.zip.GZIPOutputStream;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.util.ClassPath;
 import net.elephantbase.util.EasyDate;
@@ -43,16 +44,16 @@ public class DailyTask extends TimerTask {
 		Integer nowInt = Integer.valueOf(now.getTimeSec());
 		sql = "SELECT uid, eventip, eventtime, eventtype, detail FROM " +
 				"xq_log WHERE eventtime < ?";
-		DBUtil.query(5, sql, new RowCallback() {
+		DBUtil.query(5, new RowCallback() {
 			@Override
-			public Object onRow(Object[] row) {
+			public boolean onRow(Row row) {
 				out.printf("INSERT INTO xq_log " +
 						"(uid, eventip, eventtime, eventtype, detail) VALUES " +
 						"(%d, '%s', %d, %d, %d);\r\n",
-						row[0], row[1], row[2], row[3], row[4]);
-				return null;
+						row.get(1), row.get(2), row.get(3), row.get(4), row.get(5));
+				return true;
 			}
-		}, nowInt);
+		}, sql, nowInt);
 		out.close();
 		sql = "DELETE FROM xq_log WHERE eventtime < ?";
 		DBUtil.update(sql, nowInt);

@@ -24,6 +24,7 @@ public class QuestionnairePage extends WebPage {
 		while ((s = req.getParameter("a" + qid)) != null) {
 			int a = Integers.parseInt(s);
 			if (a == 0) {
+				qid ++;
 				continue;
 			}
 			sql = "INSERT INTO xq_qn_answer (uid, qid, answer) VALUES (?, ?, ?)";

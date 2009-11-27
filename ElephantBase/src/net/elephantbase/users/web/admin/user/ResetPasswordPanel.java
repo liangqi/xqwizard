@@ -23,7 +23,7 @@ public class ResetPasswordPanel extends BasePanel {
 			@Override
 			protected void onSubmit() {
 				String password = txtPassword.getModelObject();
-				Users.updateInfo(user.username, null, password);
+				Users.setPassword(user.uid, password);
 				setInfo("用户[" + user.username + "]的密码已被重置");
 				EventLog.log(user.uid, EventLog.ADMIN_PASSWORD, 0);
 			}

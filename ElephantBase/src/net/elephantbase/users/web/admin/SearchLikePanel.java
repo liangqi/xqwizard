@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.db.RowCallback;
 import net.elephantbase.users.biz.UserDetail;
 import net.elephantbase.users.web.BasePanel;
@@ -53,40 +54,40 @@ public class SearchLikePanel extends BasePanel {
 						orderList.size() - 1);
 				int rows = Integers.minMax(0, Integers.parseInt(selRows.getModelValue()),
 						rowsList.size() - 1);
-				String sql1 = "SELECT uc_members.uid, username, email, regip, " +
-						"regdate, lastip, lasttime, score, points, charged FROM " +
-						"uc_members INNER JOIN xq_user USING (uid)";
+				String sql1 = "SELECT uc_members.uid, username, email, regip, regdate, " +
+						"lastip, lasttime, score, points, charged FROM uc_members " +
+						"INNER JOIN xq_user USING (uid)";
 				String sql3 = " ORDER BY " + ORDER_BY[order] + " DESC LIMIT " +
 						rowsList.get(rows);
 
 				final ArrayList<UserDetail> userList = new ArrayList<UserDetail>();
 				RowCallback callback = new RowCallback() {
 					@Override
-					public Object onRow(Object[] row) {
+					public boolean onRow(Row row) {
 						UserDetail user = new UserDetail();
-						user.uid = DBUtil.getInt(row, 0);
-						user.username = (String) row[1];
-						user.email = (String) row[2];
-						user.regIp = (String) row[3];
-						user.regTime = DBUtil.getInt(row, 4);
-						user.lastIp = (String) row[5];
-						user.lastTime = DBUtil.getInt(row, 6);
-						user.score = DBUtil.getInt(row, 7);
-						user.points = DBUtil.getInt(row, 8);
-						user.charged = DBUtil.getInt(row, 9);
+						user.uid = row.getInt(1);
+						user.username = row.getString(2);
+						user.email = row.getString(3);
+						user.regIp = row.getString(4);
+						user.regTime = row.getInt(5);
+						user.lastIp = row.getString(6);
+						user.lastTime = row.getInt(7);
+						user.score = row.getInt(8);
+						user.points = row.getInt(9);
+						user.charged = row.getInt(10);
 						userList.add(user);
-						return null;
+						return true;
 					}
 				};
 
 				if (username != null) {
 					String sql = sql1 + " WHERE username LIKE ?" + sql3;
-					DBUtil.query(10, sql, callback, "%" + username + "%");
+					DBUtil.query(10, callback, sql, "%" + username + "%");
 				} else if (email != null) {
 					String sql = sql1 + " WHERE email LIKE ?" + sql3;
-					DBUtil.query(10, sql, callback, "%" + email + "%");
+					DBUtil.query(10, callback, sql, "%" + email + "%");
 				} else {
-					DBUtil.query(10, sql1 + sql3, callback);
+					DBUtil.query(10, callback, sql1 + sql3);
 				}
 				setResponsePanel(new UserListPanel(userList));
 			}

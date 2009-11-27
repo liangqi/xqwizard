@@ -1,5 +1,5 @@
 package net.elephantbase.db;
 
 public interface RowCallback {
-	Object onRow(Object[] row);
+	boolean onRow(Row row);
 }

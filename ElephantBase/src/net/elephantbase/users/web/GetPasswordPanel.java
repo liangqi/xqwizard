@@ -1,5 +1,7 @@
 package net.elephantbase.users.web;
 
+import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.Smtp;
@@ -33,8 +35,10 @@ public class GetPasswordPanel extends BasePanel {
 				}
 				String username = txtUsername.getModelObject();
 				String email = txtEmail.getModelObject();
-				int[] uid = new int[1];
-				if (!email.equals(Users.getEmail(username, uid))) {
+				String sql = "SELECT uid, email FROM uc_members WHERE username = ?";
+				Row row = DBUtil.query(2, sql, username);
+				int uid = row.getInt(1, 0);
+				if (uid == 0 || !email.equals(row.getString(1))) {
 					setWarn("用户名与Email不匹配");
 					return;
 				}
@@ -48,10 +52,10 @@ public class GetPasswordPanel extends BasePanel {
 				sb.append("　　感谢您使用象棋巫师。\r\n\r\n");
 				sb.append("象棋巫师用户中心");
 				if (Smtp.send(email, username + "的密码已被重置", sb.toString())) {
-					Users.updateInfo(username, email, password);
+					Users.setPassword(uid, password);
 					ClosePanel panel = new ClosePanel("找回密码");
 					panel.setInfo("找回密码的方法已经通过Email发送到您的信箱中");
-					EventLog.log(uid[0], EventLog.GETPASSWORD, 0);
+					EventLog.log(uid, EventLog.GETPASSWORD, 0);
 					setResponsePanel(panel);
 				} else {
 					setWarn("发送Email失败，请稍候再试");

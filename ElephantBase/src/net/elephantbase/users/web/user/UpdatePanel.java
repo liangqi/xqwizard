@@ -19,9 +19,7 @@ public class UpdatePanel extends BasePanel {
 
 	@Override
 	protected void onLoad() {
-		BaseSession session = (BaseSession) getSession();
-		final int uid = session.getUid();
-		final String username = session.getUsername();
+		final BaseSession session = (BaseSession) getSession();
 
 		final PasswordTextField txtPassword0 = new
 				PasswordTextField("txtPassword0", Model.of(""));
@@ -30,8 +28,7 @@ public class UpdatePanel extends BasePanel {
 		final PasswordTextField txtPassword2 = new
 				PasswordTextField("txtPassword2", Model.of(""));
 		final TextField<String> txtEmail = new
-				TextField<String>("txtEmail",
-				Model.of(Users.getEmail(username)));
+				TextField<String>("txtEmail", Model.of(session.getEmail()));
 		txtPassword0.setRequired(false);
 		txtPassword1.setRequired(false);
 		txtPassword2.setRequired(false);
@@ -46,10 +43,11 @@ public class UpdatePanel extends BasePanel {
 					setWarn("Email不符合规格");
 					return;
 				}
+				int uid = session.getUid();
 				String password1 = txtPassword1.getModelObject();
 				String password2 = txtPassword2.getModelObject();
 				if (password1 == null || password1.length() < 6) {
-					Users.updateInfo(username, email, null);
+					Users.setEmail(uid, email);
 					setInfo("Email更新成功");
 					EventLog.log(uid, EventLog.EMAIL, 0);
 					return;
@@ -59,11 +57,12 @@ public class UpdatePanel extends BasePanel {
 					return;
 				}
 				String password0 = txtPassword0.getModelObject();
-				if (Users.login(username, password0) <= 0) {
+				if (Users.login(session.getUsername(), password0) != uid) {
 					setWarn("原密码错误");
 					return;
 				}
-				Users.updateInfo(username, email, password1);
+				Users.setPassword(uid, password1, email);
+				session.setEmail(email);
 				setInfo("Email和密码更新成功");
 				EventLog.log(uid, EventLog.PASSWORD, 0);
 			}

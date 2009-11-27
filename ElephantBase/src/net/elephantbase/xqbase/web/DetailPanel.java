@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.link.Link;
 import net.elephantbase.cchess.MoveParser;
 import net.elephantbase.cchess.Position;
 import net.elephantbase.db.DBUtil;
+import net.elephantbase.db.Row;
 import net.elephantbase.ecco.Ecco;
 import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.util.wicket.WicketUtil;
@@ -36,18 +37,18 @@ public class DetailPanel extends BasePanel {
 		String sql = "SELECT event, round, date, site, redteam, red, " +
 				"blackteam, black, ecco, movelist, result FROM " +
 				"xq_pgn WHERE sid = ?";
-		Object[] row = DBUtil.query(11, sql, Integer.valueOf(pgnInfo.getSid()));
-		final String event = (String) row[0];
-		final String round = (String) row[1];
-		final String date = (String) row[2];
-		final String site = (String) row[3];
-		final String redTeam = (String) row[4];
-		final String red = (String) row[5];
-		final String blackTeam = (String) row[6];
-		final String black = (String) row[7];
-		final String ecco = EccoUtil.id2ecco(((Integer) row[8]).intValue());
-		String moveList = (String) row[9];
-		int result = ((Integer) row[10]).intValue();
+		Row row = DBUtil.query(11, sql, Integer.valueOf(pgnInfo.getSid()));
+		final String event = row.getString(1);
+		final String round = row.getString(2);
+		final String date = row.getString(3);
+		final String site = row.getString(4);
+		final String redTeam = row.getString(5);
+		final String red = row.getString(6);
+		final String blackTeam = row.getString(7);
+		final String black = row.getString(8);
+		final String ecco = EccoUtil.id2ecco(row.getInt(9));
+		String moveList = row.getString(10);
+		int result = row.getInt(11);
 		if (result < 1 || result > 3) {
 			result = 0;
 		}
