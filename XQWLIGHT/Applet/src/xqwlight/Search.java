@@ -2,7 +2,7 @@
 Search.java - Source Code for XiangQi Wizard Light, Part II
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.22, Last Modified: Feb. 2008
+Designed by Morning Yellow, Version: 1.31, Last Modified: Dec. 2009
 Copyright (C) 2004-2007 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -129,11 +129,36 @@ public class Search {
 		private int mvHash, mvKiller1, mvKiller2;
 		private int[] mvs, vls;
 
+		boolean singleReply = false;
+
 		SortItem(int mvHash) {
-			phase = PHASE_HASH;
-			this.mvHash = mvHash;
-			this.mvKiller1 = mvKiller[pos.distance][0];
-			this.mvKiller2 = mvKiller[pos.distance][1];
+			if (!pos.inCheck()) {
+				phase = PHASE_HASH;
+				this.mvHash = mvHash;
+				this.mvKiller1 = mvKiller[pos.distance][0];
+				this.mvKiller2 = mvKiller[pos.distance][1];
+				return;
+			}
+			phase = PHASE_REST;
+			this.mvHash = mvKiller1 = mvKiller2 = 0;
+			mvs = new int[MAX_GEN_MOVES];
+			vls = new int[MAX_GEN_MOVES];
+			moves = 0;
+			int[] mvsAll = new int[MAX_GEN_MOVES];
+			int numAll = pos.generateAllMoves(mvsAll);
+			for (int i = 0; i < numAll; i ++) {
+				int mv = mvsAll[i];
+				if (!pos.makeMove(mv)) {
+					continue;
+				}
+				pos.undoMakeMove();
+				mvs[moves] = mv;
+				vls[moves] = historyTable[pos.historyIndex(mv)];
+				moves ++;
+			}
+			Util.shellSort(mvs, vls, 0, moves);
+			index = 0;
+			singleReply = moves == 1;
 		}
 
 		int next() {
@@ -294,7 +319,7 @@ public class Search {
 			if (!pos.makeMove(mv)) {
 				continue;
 			}
-			int newDepth = pos.inCheck() ? depth : depth - 1;
+			int newDepth = pos.inCheck() || sort.singleReply ? depth : depth - 1;
 			if (vlBest == -MATE_VALUE) {
 				vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
 			} else {
@@ -361,6 +386,23 @@ public class Search {
 		return vlBest;
 	}
 
+	public boolean searchUnique(int vlBeta, int depth) {
+		SortItem sort = new SortItem(mvResult);
+		sort.next();
+		int mv;
+		while ((mv = sort.next()) > 0) {
+			if (!pos.makeMove(mv)) {
+				continue;
+			}
+			int vl = -searchFull(-vlBeta, 1 - vlBeta, pos.inCheck() ? depth : depth - 1);
+			pos.undoMakeMove();
+			if (vl >= vlBeta) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public int searchMain(int millis) {
 		return searchMain(LIMIT_DEPTH, millis);
 	}
@@ -374,19 +416,6 @@ public class Search {
 				return mvResult;
 			}
 			pos.undoMakeMove();
-		}
-		int vl = 0;
-		int[] mvs = new int[MAX_GEN_MOVES];
-		int genMoves = pos.generateAllMoves(mvs);
-		for (int i = 0; i < genMoves; i ++) {
-			if (pos.makeMove(mvs[i])) {
-				pos.undoMakeMove();
-				mvResult = mvs[i];
-				vl ++;
-			}
-		}
-		if (vl == 1) {
-			return mvResult;
 		}
 		for (int i = 0; i <= hashMask; i ++) {
 			HashItem hash = hashTable[i];
@@ -405,12 +434,15 @@ public class Search {
 		pos.distance = 0;
 		long t = System.currentTimeMillis();
 		for (int i = 1; i <= depth; i ++) {
-			vl = searchRoot(i);
+			int vl = searchRoot(i);
+			allMillis = (int) (System.currentTimeMillis() - t);
+			if (allMillis > millis) {
+				break;
+			}
 			if (vl > WIN_VALUE || vl < -WIN_VALUE) {
 				break;
 			}
-			allMillis = (int) (System.currentTimeMillis() - t);
-			if (allMillis > millis) {
+			if (searchUnique(1 - WIN_VALUE, i)) {
 				break;
 			}
 		}

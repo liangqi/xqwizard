@@ -1,10 +1,14 @@
 package xqwlight.web;
 
+import java.io.Serializable;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.model.Model;
 
-public class CookieEntry {
+public class CookieEntry implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private Model<String> name;
 	private Model<String> value;
 

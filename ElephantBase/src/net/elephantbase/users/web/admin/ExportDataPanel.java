@@ -42,7 +42,7 @@ public class ExportDataPanel extends BasePanel {
 						String email = DBUtil.escape(row.getString(5));
 						out.printf("INSERT INTO uc_members " +
 								"(uid, username, password, salt, email) VALUES " +
-								"(%d, '%s', '%s', '%s', '%s'));\r\n",
+								"(%d, '%s', '%s', '%s', '%s');\r\n",
 								row.get(1), username, row.get(3), row.get(4), email);
 						return true;
 					}
