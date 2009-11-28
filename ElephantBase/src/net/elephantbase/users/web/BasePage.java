@@ -34,7 +34,7 @@ public class BasePage extends WebPage {
 					setResponsePage(new BasePage(new LoginPanel(panels)));
 				} else {
 					session.logout();
-					panels[0].onLogout();
+					BasePanel.setResponsePanel(panels);
 				}
 			}
 		};
@@ -57,9 +57,6 @@ public class BasePage extends WebPage {
 			}
 		});
 		add(new FeedbackPanel("feedback"));
-		for (int i = 0; i < panels.length; i ++) {
-			panels[i].onLoad();
-		}
 	}
 
 	@Override

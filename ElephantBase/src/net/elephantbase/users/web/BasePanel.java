@@ -41,14 +41,6 @@ public abstract class BasePanel extends Panel {
 
 	private FeedbackPanel pnlFeedback = new FeedbackPanel("pnlFeedback");
 
-	protected void onLoad() {
-		// Do Nothing
-	}
-
-	protected void onLogout() {
-		// Do Nothing
-	}
-
 	protected BasePanel(String title) {
 		this(title, null, NO_AUTH);
 	}
@@ -84,5 +76,26 @@ public abstract class BasePanel extends Panel {
 
 	public void setWarn(String msg) {
 		pnlFeedback.setWarn(msg);
+	}
+
+	public BaseSession getUserSession() {
+		BaseSession session = (BaseSession) super.getSession();
+		if (session.getUid() == 0) {
+			setWarn("请用重新登录");
+			return null;
+		}
+		return session;
+	}
+
+	public BaseSession getAdminSession() {
+		BaseSession session = getUserSession();
+		if (session == null) {
+			return null;
+		}
+		if (!session.getData().isAdmin()) {
+			setWarn("请用管理员帐号登录");
+			return null;
+		}
+		return session;
 	}
 }

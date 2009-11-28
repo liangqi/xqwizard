@@ -12,7 +12,7 @@ public class CaptchaPanel extends Panel {
 
 	private String captcha;
 	private RequiredTextField<String> txtCaptcha =
-			new RequiredTextField<String>("txt");
+			new RequiredTextField<String>("txt", Model.of(""));
 	private Image imgCaptcha = new Image("img");
 
 	public CaptchaPanel(String id) {
@@ -23,7 +23,7 @@ public class CaptchaPanel extends Panel {
 	@Override
 	protected void onBeforeRender() {
 		captcha = Bytes.toHexUpper(Bytes.random(2));
-		txtCaptcha.setModel(Model.of(""));
+		txtCaptcha.setModelObject("");
 		imgCaptcha.setImageResource(new CaptchaImageResource(captcha));
 		super.onBeforeRender();
 	}

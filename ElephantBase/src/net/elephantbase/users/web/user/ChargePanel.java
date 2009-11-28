@@ -45,7 +45,10 @@ public class ChargePanel extends BasePanel {
 					return;
 				}
 
-				BaseSession session = (BaseSession) getSession();
+				BaseSession session = getUserSession();
+				if (session == null) {
+					return;
+				}
 				sql = "UPDATE xq_user SET points = points + ?, " +
 						"charged = charged + ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(points),

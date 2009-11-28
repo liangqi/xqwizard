@@ -13,22 +13,16 @@ import org.apache.wicket.model.Model;
 public class UpdatePanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
+	TextField<String> txtEmail = new TextField<String>("txtEmail", Model.of(""));
+
 	public UpdatePanel() {
 		super("更改信息");
-	}
-
-	@Override
-	protected void onLoad() {
-		final BaseSession session = (BaseSession) getSession();
-
 		final PasswordTextField txtPassword0 = new
 				PasswordTextField("txtPassword0", Model.of(""));
 		final PasswordTextField txtPassword1 = new
 				PasswordTextField("txtPassword1", Model.of(""));
 		final PasswordTextField txtPassword2 = new
 				PasswordTextField("txtPassword2", Model.of(""));
-		final TextField<String> txtEmail = new
-				TextField<String>("txtEmail", Model.of(session.getEmail()));
 		txtPassword0.setRequired(false);
 		txtPassword1.setRequired(false);
 		txtPassword2.setRequired(false);
@@ -43,11 +37,16 @@ public class UpdatePanel extends BasePanel {
 					setWarn("Email不符合规格");
 					return;
 				}
+				BaseSession session = getUserSession();
+				if (session == null) {
+					return;
+				}
 				int uid = session.getUid();
 				String password1 = txtPassword1.getModelObject();
 				String password2 = txtPassword2.getModelObject();
 				if (password1 == null || password1.length() < 6) {
 					Users.setEmail(uid, email);
+					session.setEmail(email);
 					setInfo("Email更新成功");
 					EventLog.log(uid, EventLog.EMAIL, 0);
 					return;
@@ -69,5 +68,14 @@ public class UpdatePanel extends BasePanel {
 		};
 		frm.add(txtPassword0, txtPassword1, txtPassword2, txtEmail);
 		add(frm);
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		BaseSession session = getUserSession();
+		if (session != null) {
+			txtEmail.setModelObject(session.getEmail());
+		}
+		super.onBeforeRender();
 	}
 }

@@ -73,13 +73,8 @@ public class SearchExactPanel extends BasePanel {
 	}
 
 	@Override
-	protected void onLoad() {
+	protected void onBeforeRender() {
 		setTitle("¾«È·²éÑ¯");
-	}
-
-
-	@Override
-	protected void onLogout() {
-		setResponsePanel(UsersPage.getUserPanels());
+		super.onBeforeRender();
 	}
 }

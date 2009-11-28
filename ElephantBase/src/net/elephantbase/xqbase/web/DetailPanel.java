@@ -86,13 +86,16 @@ public class DetailPanel extends BasePanel {
 		int counter = 0;
 		for (String iccsMove : iccsMoves) {
 			if (iccsMove.length() < 5) {
-				continue;
+				break;
 			}
 			int mv = MoveParser.iccs2Move(iccsMove);
 			if (mv == 0) {
-				continue;
+				break;
 			}
 			String file = MoveParser.move2File(mv, pos);
+			if (file.equals("    ")) {
+				break;
+			}
 			String chin = MoveParser.file2Chin(file, pos.sdPlayer);
 			if (pos.sdPlayer == 0) {
 				counter ++;
@@ -100,7 +103,9 @@ public class DetailPanel extends BasePanel {
 			} else {
 				sb.append(chin + "\r\n");
 			}
-			pos.makeMove(mv);
+			if (!pos.makeMove(mv)) {
+				break;
+			}
 			if (pos.captured()) {
 				pos.setIrrev();
 			}

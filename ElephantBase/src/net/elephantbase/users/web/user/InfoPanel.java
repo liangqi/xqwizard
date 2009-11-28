@@ -11,36 +11,40 @@ import org.apache.wicket.markup.html.link.Link;
 public class InfoPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
+	private Label lblScore = new Label("lblScore", "");
+	private Label lblPoints = new Label("lblPoints", "");
+	private Label lblCharged = new Label("lblCharged", "");
+	private Link<Void> lnkAdmin = new Link<Void>("lnkAdmin") {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void onClick() {
+			setResponsePanel(UsersPage.getAdminPanels());
+		}
+	};
+
+	boolean admin;
+
 	public InfoPanel() {
 		super("用户信息", UsersPage.SUFFIX, NEED_AUTH);
-	}
-
-	@Override
-	protected void onLoad() {
-		UserData data = ((BaseSession) getSession()).getData();
-		Label lblScore = new Label("lblScore", "" + data.getScore());
-		Label lblPoints = new Label("lblPoints", data.getPoints() == 0 ? "" :
-				"您还有 " + data.getPoints() + " 点可用");
-		Label lblCharged = new Label("lblCharged", data.isDiamond() ?
-				"您现在是：钻石会员用户" : data.isPlatinum() ?
-				"您现在是：白金会员用户" : "");
-		final boolean admin = data.isAdmin();
-		Link<Void> lnkAdmin = new Link<Void>("lnkAdmin") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick() {
-				if (admin) {
-					setResponsePanel(UsersPage.getAdminPanels());
-				}
-			}
-		};
-		lnkAdmin.setVisible(admin);
 		add(lblScore, lblPoints, lblCharged, lnkAdmin);
 	}
 
 	@Override
-	protected void onLogout() {
-		setResponsePanel(UsersPage.getUserPanels());
+	protected void onBeforeRender() {
+		BaseSession session = getUserSession();
+		if (session == null) {
+			super.onBeforeRender();
+			return;
+		}
+		UserData data = session.getData();
+		lblScore.setDefaultModelObject("" + data.getScore());
+		lblPoints.setDefaultModelObject(data.getPoints() == 0 ? "" :
+				"您还有 " + data.getPoints() + " 点可用");
+		lblCharged.setDefaultModelObject(data.isDiamond() ?
+				"您现在是：钻石会员用户" : data.isPlatinum() ?
+				"您现在是：白金会员用户" : "");
+		lnkAdmin.setVisible(data.isAdmin());
+		super.onBeforeRender();
 	}
 }

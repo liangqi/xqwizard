@@ -64,9 +64,4 @@ public class AnswerPanel extends BasePanel {
 		};
 		add(listView);
 	}
-
-	@Override
-	protected void onLogout() {
-		setResponsePanel(UsersPage.getUserPanels());
-	}
 }

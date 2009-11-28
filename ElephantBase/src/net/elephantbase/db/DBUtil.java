@@ -14,10 +14,19 @@ import net.elephantbase.util.Streams;
 
 public class DBUtil {
 	public static int update(String sql, Object... in) {
-		return update(null, sql, in);
+		return update(null, false, sql, in);
+	}
+
+	public static int update(boolean ignoreError, String sql, Object... in) {
+		return update(null, ignoreError, sql, in);
 	}
 
 	public static int update(int[] insertId, String sql, Object... in) {
+		return update(insertId, false, sql, in);
+	}
+
+	public static int update(int[] insertId, boolean ignoreError,
+			String sql, Object... in) {
 		Connection conn = ConnectionPool.getInstance().borrowObject();
 		if (conn == null) {
 			Logger.severe("Connection refused");
@@ -34,7 +43,17 @@ public class DBUtil {
 			for (int i = 0; i < in.length; i ++) {
 				ps.setObject(i + 1, in[i]);
 			}
-			int numRows = ps.executeUpdate();
+			int numRows;
+			if (ignoreError) {
+				try {
+					numRows = ps.executeUpdate();
+				} catch (Exception e) {
+					Logger.info(e.getMessage());
+					return -1;
+				}
+			} else {
+				numRows = ps.executeUpdate();
+			}
 			if (insertId != null && insertId.length > 0) {
 				rs = ps.getGeneratedKeys();
 				if (rs.next()) {

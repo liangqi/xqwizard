@@ -39,6 +39,10 @@ public class ChargeCodePanel extends BasePanel {
 				if (points <= 0 || number <= 0) {
 					return;
 				}
+				BaseSession session = getAdminSession();
+				if (session == null) {
+					return;
+				}
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				PrintStream out = new PrintStream(baos);
 				for (int i = 0; i < number; i ++) {
@@ -49,7 +53,7 @@ public class ChargeCodePanel extends BasePanel {
 				}
 				out.close();
 				WicketUtil.download("txt", "text/plain", baos.toByteArray());
-				EventLog.log(((BaseSession) getSession()).getUid(),
+				EventLog.log(session.getUid(),
 						EventLog.CHARGECODE, points * number);
 			}
 		};

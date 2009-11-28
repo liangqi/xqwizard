@@ -24,8 +24,11 @@ public class ClearPanel extends BasePanel {
 
 			@Override
 			protected void onSubmit() {
+				BaseSession session = getAdminSession();
+				if (session == null) {
+					return;
+				}
 				String password = txtPassword.getModelObject();
-				BaseSession session = (BaseSession) getSession();
 				int uid = Users.login(session.getUsername(), password);
 				if (uid != session.getUid()) {
 					setWarn("ÃÜÂë²»ÕýÈ·");

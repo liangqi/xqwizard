@@ -86,6 +86,8 @@ public class BaseSession extends WebSession {
 		EventLog.log(uid, EventLog.LOGOUT, 0);
 		uid = 0;
 		username = null;
+		email = null;
+		data = null;
 		if (loginCookie == null) {
 			return;
 		}

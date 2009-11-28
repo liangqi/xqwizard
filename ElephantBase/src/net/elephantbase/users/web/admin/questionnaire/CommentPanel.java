@@ -36,8 +36,8 @@ public class CommentPanel extends BasePanel {
 		super("评论");
 
 		final ArrayList<CommentEntry> commentList = new ArrayList<CommentEntry>();
-		String sql = "SELECT uid, eventip, eventtime, comment FROM " +
-				"xq_qn_comment LEFT JOIN xq_qn_user USING (uid)";
+		String sql = "SELECT uid, eventip, eventtime, comment FROM xq_qn_comment " +
+				"LEFT JOIN xq_qn_user USING (uid) ORDER BY eventtime DESC";
 		DBUtil.query(4, new RowCallback() {
 			@Override
 			public boolean onRow(Row row) {
@@ -78,11 +78,15 @@ public class CommentPanel extends BasePanel {
 
 					@Override
 					public void onClick() {
+						BaseSession session = getAdminSession();
+						if (session == null) {
+							return;
+						}
 						String sql_ = "DELETE FROM xq_qn_comment WHERE uid = ?";
 						DBUtil.update(sql_, Integer.valueOf(uid));
 						CommentPanel panel = new CommentPanel();
 						panel.setInfo("评论[" + shorten + "]已被删除");
-						EventLog.log(((BaseSession) getSession()).getUid(),
+						EventLog.log(session.getUid(),
 								EventLog.QN_DELETE, uid);
 						setResponsePanel(new AnswerPanel(),
 								panel, new ClearPanel());

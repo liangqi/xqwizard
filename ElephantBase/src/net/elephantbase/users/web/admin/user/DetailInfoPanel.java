@@ -25,12 +25,8 @@ public class DetailInfoPanel extends BasePanel {
 	}
 
 	@Override
-	protected void onLoad() {
+	protected void onBeforeRender() {
 		setTitle("œÍœ∏–≈œ¢");
-	}
-
-	@Override
-	protected void onLogout() {
-		setResponsePanel(UsersPage.getUserPanels());
+		super.onBeforeRender();
 	}
 }
