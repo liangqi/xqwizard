@@ -24,7 +24,7 @@ import org.apache.wicket.util.time.Duration;
 
 import xqwlight.Position;
 import xqwlight.Search;
-import xqwlight.Util;
+import xqwlight.util.Integers;
 import xqwlight.util.wicket.AjaxPlayerPanel;
 import xqwlight.util.wicket.RefreshPage;
 import xqwlight.util.wicket.ResourceComponent;
@@ -271,16 +271,10 @@ public class XQWLightPage extends WebPage {
 	}
 
 	private int getCookieValue(String name, int min, int max, int defaultValue) {
-		int value = defaultValue;
 		Cookie cookie = ((WebRequest) getRequest()).getCookie(name);
-		if (cookie != null) {
-			try {
-				value = Integer.parseInt(cookie.getValue());
-			} catch (Exception e) {
-				// Ignored;
-			}
-		}
-		return Util.MIN_MAX(min, value, max);
+		int value = (cookie == null ? defaultValue :
+				Integers.parseInt(cookie.getValue(), defaultValue));
+		return Integers.minMax(min, value, max);
 	}
 
 	private boolean getCookieValue(String name, boolean defaultValue) {

@@ -67,7 +67,7 @@ public class Users {
 		String key = getKey(password, salt);
 		Integer regDate = Integer.valueOf(EasyDate.currTimeSec());
 		int[] insertId = new int[1];
-		if (DBUtil.update(insertId, false, sql, username,
+		if (DBUtil.update(insertId, true, sql, username,
 				key, email, regIp, regDate, salt) < 0) {
 			return 0;
 		}

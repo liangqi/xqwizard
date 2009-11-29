@@ -38,7 +38,7 @@ public class GetPasswordPanel extends BasePanel {
 				String sql = "SELECT uid, email FROM uc_members WHERE username = ?";
 				Row row = DBUtil.query(2, sql, username);
 				int uid = row.getInt(1, 0);
-				if (uid == 0 || !email.equals(row.getString(1))) {
+				if (uid == 0 || !email.equals(row.getString(2))) {
 					setWarn("用户名与Email不匹配");
 					return;
 				}
