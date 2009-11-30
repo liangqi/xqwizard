@@ -15,6 +15,7 @@ import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Logger;
 import net.elephantbase.util.Integers;
+import net.elephantbase.util.Servlets;
 
 public class XQBoothServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -115,7 +116,7 @@ public class XQBoothServlet extends HttpServlet {
 			strStage = req.getParameter("score");
 		}
 		int stage = Integers.parseInt(strStage);
-		String ip = req.getRemoteAddr();
+		String ip = Servlets.getRemoteHost(req);
 		UserData user = new UserData(uid, ip);
 
 		if (false) {

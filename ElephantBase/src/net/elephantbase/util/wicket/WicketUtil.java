@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.elephantbase.util.Bytes;
+import net.elephantbase.util.Servlets;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
@@ -20,6 +21,10 @@ public class WicketUtil {
 	public static HttpServletResponse getServletResponse() {
 		return ((WebResponse) RequestCycle.get().getResponse()).
 				getHttpServletResponse();
+	}
+
+	public static String getRemoteHost() {
+		return Servlets.getRemoteHost(getServletRequest());
 	}
 
 	public static String getCookie(String name) {

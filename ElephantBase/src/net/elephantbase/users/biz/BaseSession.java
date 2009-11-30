@@ -58,7 +58,7 @@ public class BaseSession extends WebSession {
 		username = username_[0];
 		email = email_[0];
 		loginCookie = cookie_[0];
-		data = new UserData(uid, WicketUtil.getServletRequest().getRemoteHost());
+		data = new UserData(uid, WicketUtil.getRemoteHost());
 		WicketUtil.setCookie("login", loginCookie, 86400 * Users.COOKIE_EXPIRY);
 		return true;
 	}
@@ -72,7 +72,7 @@ public class BaseSession extends WebSession {
 		EventLog.log(uid, EventLog.LOGIN, 0);
 		username = username_;
 		email = email_[0];
-		data = new UserData(uid, WicketUtil.getServletRequest().getRemoteHost());
+		data = new UserData(uid, WicketUtil.getRemoteHost());
 		if (!addCookie) {
 			loginCookie = null;
 			return uid;

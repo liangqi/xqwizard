@@ -67,7 +67,7 @@ public class RegisterPanel extends BasePanel {
 					return;
 				}
 				int uid = Users.register(username, password, email,
-						WicketUtil.getServletRequest().getRemoteHost());
+						WicketUtil.getRemoteHost());
 				if (uid <= 0) {
 					setWarn("已经存在同样的名用户");
 					return;

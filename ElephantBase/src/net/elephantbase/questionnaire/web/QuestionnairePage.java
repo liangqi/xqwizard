@@ -9,6 +9,7 @@ import net.elephantbase.users.web.BasePanel;
 import net.elephantbase.users.web.ClosePanel;
 import net.elephantbase.util.EasyDate;
 import net.elephantbase.util.Integers;
+import net.elephantbase.util.Servlets;
 import net.elephantbase.util.wicket.WicketUtil;
 
 public class QuestionnairePage extends WebPage {
@@ -16,7 +17,7 @@ public class QuestionnairePage extends WebPage {
 		HttpServletRequest req = WicketUtil.getServletRequest();
 		String sql = "INSERT INTO xq_qn_user (eventip, eventtime) VALUES (?, ?)";
 		int[] insertId = new int[1];
-		DBUtil.update(insertId, sql, req.getRemoteHost(),
+		DBUtil.update(insertId, sql, Servlets.getRemoteHost(req),
 				Integer.valueOf(EasyDate.currTimeSec()));
 		int uid = insertId[0];
 		int qid = 1;
