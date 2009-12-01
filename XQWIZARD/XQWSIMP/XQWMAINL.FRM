@@ -139,7 +139,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPlay"
-            Object.ToolTipText     =   "播放棋局"
+            Object.ToolTipText     =   "自动播放"
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -1529,7 +1529,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnWizard 
       Caption         =   "魔法(&W)"
       Begin VB.Menu mnWizardPlay 
-         Caption         =   "播放棋局(&P)"
+         Caption         =   "自动播放(&P)"
       End
       Begin VB.Menu mnWizardSep1 
          Caption         =   "-"
