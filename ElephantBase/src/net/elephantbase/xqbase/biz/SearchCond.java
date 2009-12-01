@@ -177,8 +177,8 @@ public class SearchCond implements Serializable {
 				int eccoId = row.getInt(10);
 				int result_ = row.getInt(11);
 				event_ = PgnInfo.toEventString(event_, round);
-				String result = PgnInfo.toResultString(red, redTeam,
-						black, blackTeam, 0, result_);
+				String result = PgnInfo.toResultString(redTeam, red,
+						blackTeam, black, 0, result_);
 				String dateSite = PgnInfo.toDateSiteString(date, site);
 				String ecco = EccoUtil.id2ecco(eccoId);
 				String opening = EccoUtil.toOpeningString(ecco);

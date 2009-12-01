@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "ieframe.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
@@ -1880,11 +1880,11 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋巫师的网站(&H)"
       End
+      Begin VB.Menu mnHelpBase 
+         Caption         =   "棋谱仓库(&B)"
+      End
       Begin VB.Menu mnHelpLeague 
          Caption         =   "获取UCCI引擎(&G)"
-      End
-      Begin VB.Menu mnHelpMantis 
-         Caption         =   "缺陷报告(&B)"
       End
       Begin VB.Menu mnHelpUpdate 
          Caption         =   "检查最新版本(&P)"
@@ -2301,7 +2301,7 @@ End Sub
 Private Sub mnSearchOpening_Click()
 
 If Game_szEcco <> "" Then
-    ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?ecco=" + _
+    ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?ecco=" + _
             Game_szEcco, vbNullString, vbNullString, SW_SHOWNORMAL
 End If
 
@@ -2311,7 +2311,7 @@ Private Sub mnSearchPosition_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?position=" + _
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?position=" + _
         UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
@@ -2320,7 +2320,7 @@ Private Sub mnSearchEndgame_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net:8080/xqbase/?endgame=" + _
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?endgame=" + _
         UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
@@ -2589,15 +2589,15 @@ ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/", vbNullString, vbN
 
 End Sub
 
-Private Sub mnHelpLeague_Click()
+Private Sub mnHelpBase_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/league.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
-Private Sub mnHelpMantis_Click()
+Private Sub mnHelpLeague_Click()
 
-ShellExecuteA 0, vbNullString, "http://mantis.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/league.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
