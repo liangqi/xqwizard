@@ -51,4 +51,14 @@
     <filter-name>XQBaseApp</filter-name>
     <url-pattern>/xqbase/*</url-pattern>
   </filter-mapping>
+
+  <servlet>
+    <servlet-name>XQBoothServlet</servlet-name>
+    <servlet-class>net.elephantbase.xqbooth.XQBoothServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>XQBoothServlet</servlet-name>
+    <url-pattern>/xqbooth/*</url-pattern>
+  </servlet-mapping>
 </web-app>

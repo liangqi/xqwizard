@@ -25,8 +25,20 @@ public class DailyTask extends TimerTask {
 	private void run0() {
 		EasyDate now = new EasyDate();
 
+		// Update Ranks
+		DBUtil.update("TRUNCATE TABLE xq_rank0");
+		DBUtil.update("INSERT INTO xq_rank0 (uid, rank) SELECT " +
+				"uid, rank FROM xq_rank");
+		DBUtil.update("TRUNCATE TABLE xq_rank");
+		String sql = "INSERT INTO xq_rank (uid, score) SELECT " +
+				"uid, score FROM xq_user WHERE lasttime > ? AND " +
+				"score > 0 ORDER BY score DESC, lasttime DESC";
+		DBUtil.update(sql,
+				Integer.valueOf(now.substract(EasyDate.DAY * 14).getTimeSec()));
+		Logger.info("Rank (2 Weeks' Active Users) Updated");
+
 		// Delete Expired Login Cookies
-		String sql = "DELETE FROM xq_login WHERE expire > ?";
+		sql = "DELETE FROM xq_login WHERE expire > ?";
 		DBUtil.update(sql, Integer.valueOf(now.getTimeSec()));
 		DBUtil.update("TRUNCATE TABLE xq_retry");
 		Logger.info("Expired Login Cookies Deleted");
@@ -39,6 +51,7 @@ public class DailyTask extends TimerTask {
 			out = new PrintStream(new GZIPOutputStream(new
 					FileOutputStream(logBackup)));
 		} catch (Exception e) {
+			Logger.severe(e);
 			throw new RuntimeException(e);
 		}
 		Integer nowInt = Integer.valueOf(now.getTimeSec());
@@ -59,17 +72,16 @@ public class DailyTask extends TimerTask {
 		DBUtil.update(sql, nowInt);
 		Logger.info("Log Backuped");
 
-		// Update Ranks
-		DBUtil.update("TRUNCATE TABLE xq_rank0");
-		DBUtil.update("INSERT INTO xq_rank0 (uid, rank) SELECT " +
-				"uid, rank FROM xq_rank");
-		DBUtil.update("TRUNCATE TABLE xq_rank");
-		sql = "INSERT INTO xq_rank (uid, score) SELECT " +
-				"uid, score FROM xq_user WHERE lasttime > ? AND " +
-				"score > 0 ORDER BY score DESC, lasttime DESC";
-		DBUtil.update(sql,
-				Integer.valueOf(now.substract(EasyDate.DAY * 14).getTimeSec()));
-		Logger.info("Rank (2 Weeks' Active Users) Updated");
+		// Backup User Data
+		ClassPath userBackup = ClassPath.getInstance("../backup/xq_user_" +
+				now.toDateString() + ".sql.gz");
+		try {
+			Users.backup(new FileOutputStream(userBackup));
+		} catch (Exception e) {
+			Logger.severe(e);
+			throw new RuntimeException(e);
+		}
+		Logger.info("User Data Backuped");
 	}
 
 	public static void main(String[] args) {

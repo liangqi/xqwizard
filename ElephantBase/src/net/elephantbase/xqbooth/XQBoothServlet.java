@@ -37,7 +37,7 @@ public class XQBoothServlet extends HttpServlet {
 		}
 
 		// 2. Get "uid" and Check if "noretry"
-		String sql = "SELECT uc_members.uid, retrycount, retrytime, password, salt" +
+		String sql = "SELECT uc_members.uid, retrycount, retrytime, password, salt " +
 				"FROM uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
 		Row row = DBUtil.query(5, sql, username);
 		if (row.error()) {
@@ -67,7 +67,7 @@ public class XQBoothServlet extends HttpServlet {
 		// 4. Update "retry" table
 		if (retryCount == 0) {
 			sql = "INSERT INTO xq_retry (uid, retrycount, retrytime) " +
-			"VALUES (?, 1, 0)";
+					"VALUES (?, 1, 0)";
 			DBUtil.update(sql, Integer.valueOf(uid));
 			return INCORRECT;
 		}
@@ -89,6 +89,39 @@ public class XQBoothServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			req.setCharacterEncoding("GBK");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		resp.setCharacterEncoding("GBK");
+		String act = req.getPathInfo();
+		if (act == null) {
+			return;
+		}
+		while (act.startsWith("/")) {
+			act = act.substring(1);
+		}
+		if (act.equals("ranklist")) {
+			String sql = "SELECT username, score FROM xq_rank LEFT JOIN " +
+					"uc_members USING (uid) ORDER BY rank LIMIT 100";
+			final PrintWriter out;
+			try {
+				out = resp.getWriter();
+			} catch (Exception e) {
+				Logger.severe(e);
+				return;
+			}
+			DBUtil.query(2, new RowCallback() {
+				@Override
+				public boolean onRow(Row row) {
+					out.print(row.getInt(2) + "|" + row.getString(1) + "\r\n");
+					return true;
+				}
+			}, sql);
+			return;
+		}
+
 		String username = req.getHeader("Login-UserName");
 		String password = req.getHeader("Login-Password");
 		String[] cookie = new String[1];
@@ -106,10 +139,6 @@ public class XQBoothServlet extends HttpServlet {
 			return;
 		}
 		resp.setHeader("Login-Cookie", cookie[0]);
-		String act = req.getParameter("act");
-		if (act == null) {
-			return;
-		}
 
 		String strStage = req.getParameter("stage");
 		if (strStage == null) {
@@ -139,23 +168,6 @@ public class XQBoothServlet extends HttpServlet {
 			}
 			resp.setHeader("Login-Result", "ok " + scoreToday + "|" +
 					rankToday + "|" + rankYesterday);
-		} else if (act.equals("ranklist")) {
-			String sql = "SELECT username, score FROM xq_rank LEFT JOIN " +
-					"uc_members USING (uid) ORDER BY rank LIMIT 100";
-			final PrintWriter out;
-			try {
-				out = resp.getWriter();
-			} catch (Exception e) {
-				Logger.severe(e);
-				return;
-			}
-			DBUtil.query(2, new RowCallback() {
-				@Override
-				public boolean onRow(Row row) {
-					out.print(row.getInt(2) + "|" + row.getString(1) + "\r\n");
-					return true;
-				}
-			}, sql);
 		} else if (act.equals("save")) {
 			if (stage > user.getScore()) {
 				String sql = "UPDATE xq_user SET score = ? WHERE uid = ?";
