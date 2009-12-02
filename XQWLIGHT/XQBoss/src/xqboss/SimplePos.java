@@ -35,7 +35,7 @@ class SimplePos {
 	static final int FILE_LEFT = 3;
 	static final int FILE_RIGHT = 11;
 
-	static final byte[] IN_BOARD = new byte[] {
+	static final byte[] IN_BOARD = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

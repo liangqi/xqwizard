@@ -13,8 +13,8 @@ import net.elephantbase.users.biz.EventLog;
 import net.elephantbase.users.biz.UserData;
 import net.elephantbase.users.biz.Users;
 import net.elephantbase.util.EasyDate;
-import net.elephantbase.util.Logger;
 import net.elephantbase.util.Integers;
+import net.elephantbase.util.Logger;
 import net.elephantbase.util.Servlets;
 
 public class XQBoothServlet extends HttpServlet {
@@ -27,7 +27,7 @@ public class XQBoothServlet extends HttpServlet {
 	private static int login(String username, String password, String[] cookie) {
 		// 1. Login with Cookie
 		String[] username_ = new String[1];
-		String[] cookie_ = new String[] {password};
+		String[] cookie_ = {password};
 		int uid = Users.loginCookie(cookie_, username_, null);
 		if (uid > 0 && username_[0].equals(username)) {
 			if (cookie != null && cookie.length > 0) {
@@ -39,7 +39,20 @@ public class XQBoothServlet extends HttpServlet {
 		// 2. Get "uid" and Check if "noretry"
 		String sql = "SELECT uc_members.uid, retrycount, retrytime, password, salt " +
 				"FROM uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
-		Row row = DBUtil.query(5, sql, username);
+		byte[] bb;
+		try {
+			bb = username.getBytes("ISO-8859-1");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		Row row = DBUtil.query(5, sql, new String(bb));
+		if (row.empty()) {
+			try {
+				row = DBUtil.query(5, sql, new String(bb, "BIG5"));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
 		if (row.error()) {
 			return INTERNAL_ERROR;
 		}
@@ -89,12 +102,6 @@ public class XQBoothServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-		try {
-			req.setCharacterEncoding("GBK");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		resp.setCharacterEncoding("GBK");
 		String act = req.getPathInfo();
 		if (act == null) {
 			return;
@@ -106,6 +113,7 @@ public class XQBoothServlet extends HttpServlet {
 			String sql = "SELECT username, score FROM xq_rank LEFT JOIN " +
 					"uc_members USING (uid) ORDER BY rank LIMIT 100";
 			final PrintWriter out;
+			resp.setCharacterEncoding("GBK");
 			try {
 				out = resp.getWriter();
 			} catch (Exception e) {

@@ -19,7 +19,7 @@ import net.elephantbase.util.Integers;
 public class SearchLikePanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
-	static final String[] ORDER_BY = new String[] {
+	static final String[] ORDER_BY = {
 		"regdate", "lasttime", "score", "points", "charged",
 	};
 

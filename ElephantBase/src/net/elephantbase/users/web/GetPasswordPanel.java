@@ -47,7 +47,7 @@ public class GetPasswordPanel extends BasePanel {
 				sb.append(username + "，您好！\r\n\r\n");
 				sb.append("　　您的密码已被重置为：" + password + "\r\n");
 				sb.append("　　请用此密码登录到象棋巫师用户中心：\r\n");
-				sb.append("　　　　http://www.elephantbase.net:8080/users/\r\n");
+				sb.append("　　　　http://www.elephantbase.net/users/\r\n");
 				sb.append("　　登录成功后请马上把密码改掉。\r\n\r\n");
 				sb.append("　　感谢您使用象棋巫师。\r\n\r\n");
 				sb.append("象棋巫师用户中心");

@@ -48,7 +48,7 @@ public class BaseSession extends WebSession {
 			return false;
 		}
 		String[] username_ = new String[1];
-		String[] cookie_ = new String[] {cookie};
+		String[] cookie_ = {cookie};
 		String[] email_ = new String[1];
 		uid = Users.loginCookie(cookie_, username_, email_);
 		if (uid <= 0) {

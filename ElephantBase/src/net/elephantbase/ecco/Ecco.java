@@ -49,7 +49,7 @@ public class Ecco {
 		return new String(buffer, 0, 4);
 	}
 
-	private static final byte[] EMPTY_BYTES_4 = new byte[] {0, 0, 0, 0};
+	private static final byte[] EMPTY_BYTES_4 = {0, 0, 0, 0};
 
 	private static int sz2dw(String sz) {
 		byte[] buffer = Bytes.add(sz.getBytes(), EMPTY_BYTES_4);

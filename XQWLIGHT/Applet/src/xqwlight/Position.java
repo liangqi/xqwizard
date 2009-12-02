@@ -50,7 +50,7 @@ public class Position {
 	public static final int FILE_LEFT = 3;
 	public static final int FILE_RIGHT = 11;
 
-	public static final byte[] IN_BOARD = new byte[] {
+	public static final byte[] IN_BOARD = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -69,7 +69,7 @@ public class Position {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	public static final byte[] IN_FORT = new byte[] {
+	public static final byte[] IN_FORT = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -88,7 +88,7 @@ public class Position {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	public static final byte[] LEGAL_SPAN = new byte[] {
+	public static final byte[] LEGAL_SPAN = {
 							 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -124,7 +124,7 @@ public class Position {
 		0, 0, 0, 0, 0, 0, 0,
 	};
 
-	public static final byte[] KNIGHT_PIN = new byte[] {
+	public static final byte[] KNIGHT_PIN = {
 									0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
