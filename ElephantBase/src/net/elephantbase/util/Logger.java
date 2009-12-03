@@ -3,13 +3,14 @@ package net.elephantbase.util;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
 public class Logger {
 	private static java.util.logging.Logger logger =
 			java.util.logging.Logger.getLogger(Logger.class.getClassLoader().toString());
+
+	private static FileHandler handler;
 
 	static {
 		try {
@@ -23,7 +24,7 @@ public class Logger {
 					"/" + p.getProperty("pattern");
 			int limit = Integer.parseInt(p.getProperty("limit"));
 			int count = Integer.parseInt(p.getProperty("count"));
-			FileHandler handler = new FileHandler(pattern, limit, count, true);
+			handler = new FileHandler(pattern, limit, count, true);
 			handler.setFormatter(new SimpleFormatter());
 
 			logger.setLevel(Level.parse(p.getProperty("level")));
@@ -84,8 +85,7 @@ public class Logger {
 	}
 
 	public static void close() {
-		for (Handler handler : logger.getHandlers()) {
-			handler.close();
-		}
+		logger.removeHandler(handler);
+		handler.close();
 	}
 }
