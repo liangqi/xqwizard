@@ -6,6 +6,7 @@ import net.elephantbase.users.biz.BaseSession;
 import net.elephantbase.users.biz.DailyTask;
 import net.elephantbase.users.web.UsersPage;
 import net.elephantbase.util.EasyDate;
+import net.elephantbase.util.Logger;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
@@ -32,6 +33,7 @@ public class UsersApp extends WebApplication {
 	@Override
 	protected void onDestroy() {
 		timer.cancel();
+		Logger.close();
 	}
 
 	@Override

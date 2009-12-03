@@ -17,9 +17,13 @@ public class Users {
 
 	public static boolean validateEmail(String email) {
 		int indexAt = email.indexOf('@');
-		int indexDot = email.indexOf('.');
-		return indexAt > 0 && indexDot > indexAt + 1 &&
-				indexDot < email.length() - 1;
+		int indexDot = email.lastIndexOf('.');
+		if (!(indexAt > 0 && indexDot > indexAt + 1 &&
+				indexDot < email.length() - 1)) {
+			return false;
+		}
+		int length = email.getBytes().length;
+		return length <= 32 && length == email.length();
 	}
 
 	private static String md5(String input) {

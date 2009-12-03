@@ -57,8 +57,13 @@ public class RegisterPanel extends BasePanel {
 					return;
 				}
 				String username = txtUsername.getModelObject();
-				if (username.getBytes().length < 6 || password.length() < 6) {
+				int length = username.getBytes().length;
+				if (length < 6 || password.length() < 6) {
 					setWarn("用户名和密码都不能少于6个字符");
+					return;
+				}
+				if (length > 15) {
+					setWarn("用户名不能超过15个字符");
 					return;
 				}
 				String email = txtEmail.getModelObject();

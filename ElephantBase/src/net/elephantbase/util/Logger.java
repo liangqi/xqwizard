@@ -3,6 +3,7 @@ package net.elephantbase.util;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
@@ -80,5 +81,11 @@ public class Logger {
 
 	public static void severe(String s, Throwable t) {
 		log(Level.SEVERE, s, t);
+	}
+
+	public static void close() {
+		for (Handler handler : logger.getHandlers()) {
+			handler.close();
+		}
 	}
 }
