@@ -36,7 +36,7 @@ public class ResultPanel extends BasePanel {
 		}
 
 		PageableListView<PgnInfo> listView = new
-				PageableListView<PgnInfo>("resultList", resultList, 20) {
+				PageableListView<PgnInfo>("lstResult", resultList, 20) {
 			private static final long serialVersionUID = 1L;
 
 			private void addTd(ListItem<PgnInfo> item, String tag,

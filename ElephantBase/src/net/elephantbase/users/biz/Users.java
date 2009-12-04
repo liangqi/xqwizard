@@ -135,8 +135,9 @@ public class Users {
 		if (cookie == null || cookie.length == 0) {
 			return -1;
 		}
-		String sql = "SELECT uid FROM xq_login WHERE cookie = ?";
-		Row row = DBUtil.query(1, sql, cookie[0]);
+		String sql = "SELECT xq_login.uid, username, email FROM xq_login LEFT JOIN " +
+				"uc_members USING (uid) WHERE cookie = ?";
+		Row row = DBUtil.query(3, sql, cookie[0]);
 		if (row.error()) {
 			return -1;
 		}
@@ -146,9 +147,7 @@ public class Users {
 		int uid = row.getInt(1);
 		sql = "DELETE FROM xq_login WHERE cookie = ?";
 		DBUtil.update(sql, cookie[0]);
-		sql = "SELECT username, email FROM uc_members WHERE uid = ?";
-		row = DBUtil.query(2, sql, Integer.valueOf(uid));
-		String username_ = row.getString(1, null);
+		String username_ = row.getString(2, null);
 		if (username_ == null) {
 			return 0;
 		}
@@ -157,7 +156,7 @@ public class Users {
 			username[0] = username_;
 		}
 		if (email != null && email.length > 0) {
-			email[0] = row.getString(2);
+			email[0] = row.getString(3);
 		}
 		return uid;
 	}

@@ -1,6 +1,8 @@
 package net.elephantbase.xqbooth;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,34 +26,67 @@ public class XQBoothServlet extends HttpServlet {
 	private static final int NO_RETRY = -1;
 	private static final int INTERNAL_ERROR = -2;
 
-	private static int login(String username, String password, String[] cookie) {
+	private static LinkedList<ScoreEntry> queue = new LinkedList<ScoreEntry>();
+
+	public static synchronized ArrayList<ScoreEntry> getRecentList() {
+		return new ArrayList<ScoreEntry>(queue);
+	}
+
+	private static synchronized void addEntry(ScoreEntry entry) {
+		for (ScoreEntry old : queue) {
+			if (old.getUid() == entry.getUid()) {
+				queue.remove(old);
+				break;
+			}
+		}
+		if (queue.size() == 10) {
+			queue.removeLast();
+		}
+		queue.addFirst(entry);
+	}
+
+	private static int login(String[] username, String password, String[] cookie) {
+		if (username == null || username.length == 0 || username[0] == null) {
+			return INTERNAL_ERROR;
+		}
+
+		String gbk, big5;
+		try {
+			byte[] b = username[0].getBytes("ISO-8859-1");
+			gbk = new String(b, "GBK");
+			big5 = new String(b, "BIG5");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 		// 1. Login with Cookie
 		String[] username_ = new String[1];
 		String[] cookie_ = {password};
 		int uid = Users.loginCookie(cookie_, username_, null);
-		if (uid > 0 && username_[0].equals(username)) {
-			if (cookie != null && cookie.length > 0) {
-				cookie[0] = cookie_[0];
+		if (uid > 0) {
+			if (username_[0].equals(gbk)) {
+				username[0] = gbk;
+			} else if (username_[0].equals(big5)) {
+				username[0] = big5;
+			} else {
+				uid = 0;
 			}
-			return uid;
+			if (uid > 0) {
+				if (cookie != null && cookie.length > 0) {
+					cookie[0] = cookie_[0];
+				}
+				return uid;
+			}
 		}
 
 		// 2. Get "uid" and Check if "noretry"
 		String sql = "SELECT uc_members.uid, retrycount, retrytime, password, salt " +
 				"FROM uc_members LEFT JOIN xq_retry USING (uid) WHERE username = ?";
-		byte[] bb;
-		try {
-			bb = username.getBytes("ISO-8859-1");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		Row row = DBUtil.query(5, sql, new String(bb));
+		Row row = DBUtil.query(5, sql, gbk);
+		username[0] = gbk;
 		if (row.empty()) {
-			try {
-				row = DBUtil.query(5, sql, new String(bb, "BIG5"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+			row = DBUtil.query(5, sql, big5);
+			username[0] = big5;
 		}
 		if (row.error()) {
 			return INTERNAL_ERROR;
@@ -130,7 +165,7 @@ public class XQBoothServlet extends HttpServlet {
 			return;
 		}
 
-		String username = req.getHeader("Login-UserName");
+		String[] username = {req.getHeader("Login-UserName")};
 		String password = req.getHeader("Login-Password");
 		String[] cookie = new String[1];
 		int uid = login(username, password, cookie);
@@ -181,6 +216,7 @@ public class XQBoothServlet extends HttpServlet {
 				String sql = "UPDATE xq_user SET score = ? WHERE uid = ?";
 				DBUtil.update(sql, Integer.valueOf(stage), Integer.valueOf(uid));
 				resp.setHeader("Login-Result", "ok");
+				addEntry(new ScoreEntry(uid, username[0], stage));
 				EventLog.log(uid, ip, EventLog.SAVE, stage);
 			} else {
 				resp.setHeader("Login-Result", "nosave");

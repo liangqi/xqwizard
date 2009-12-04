@@ -12,6 +12,7 @@ import net.elephantbase.users.web.admin.user.DetailInfoPanel;
 import net.elephantbase.users.web.admin.user.ResetPasswordPanel;
 import net.elephantbase.users.web.user.ChargePanel;
 import net.elephantbase.users.web.user.InfoPanel;
+import net.elephantbase.users.web.user.RecentPanel;
 import net.elephantbase.users.web.user.UpdatePanel;
 import net.elephantbase.util.wicket.WicketUtil;
 
@@ -45,7 +46,8 @@ public class UsersPage extends WebPage {
 		if (act == null) {
 			BasePanel.setResponsePanel(getUserPanels());
 		} else if (act.equals("register")) {
-			BasePanel.setResponsePanel(new RegisterPanel(getUserPanels()));
+			BasePanel.setResponsePanel(new
+					RegisterPanel(getUserPanels()), new RecentPanel());
 		} else if (act.equals("getpassword")) {
 			BasePanel.setResponsePanel(new GetPasswordPanel());
 		}

@@ -43,7 +43,7 @@ public class AnswerPanel extends BasePanel {
 		}, sql);
 
 		ListView<AnswerEntry> listView = new
-				ListView<AnswerEntry>("answerList", answerList) {
+				ListView<AnswerEntry>("lstAnswer", answerList) {
 			private static final long serialVersionUID = 1L;
 
 			private void addTd(ListItem<AnswerEntry> item, String tag, String content) {

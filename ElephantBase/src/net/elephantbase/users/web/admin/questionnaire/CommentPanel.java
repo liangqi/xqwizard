@@ -52,7 +52,7 @@ public class CommentPanel extends BasePanel {
 		}, sql);
 
 		ListView<CommentEntry> listView = new
-				ListView<CommentEntry>("commentList", commentList) {
+				ListView<CommentEntry>("lstComment", commentList) {
 			private static final long serialVersionUID = 1L;
 
 			private void addTd(ListItem<CommentEntry> item, String tag,

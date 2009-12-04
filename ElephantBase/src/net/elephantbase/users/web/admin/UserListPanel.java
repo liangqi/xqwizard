@@ -24,7 +24,7 @@ public class UserListPanel extends BasePanel {
 		super("用户列表", UsersPage.SUFFIX, NEED_ADMIN);
 
 		ListView<UserDetail> listView = new
-				ListView<UserDetail>("userList", userList) {
+				ListView<UserDetail>("lstUser", userList) {
 			private static final long serialVersionUID = 1L;
 
 			private void addTd(ListItem<UserDetail> item, String tag,
