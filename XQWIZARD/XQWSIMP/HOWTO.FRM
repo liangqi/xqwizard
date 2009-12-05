@@ -143,7 +143,7 @@ chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 If App_bPromotion Then
     If MsgBox(cszPromotion, vbQuestion + vbYesNo, "关于仕(士)相(象)升变成兵(卒)的规则") = vbYes Then
-        ShellExecuteA 0, vbNullString, App_szPath + "HELP\PROMOTE.HTM", vbNullString, vbNullString, SW_SHOWNORMAL
+        ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqwizard/promotion.htm", vbNullString, vbNullString, SW_SHOWNORMAL
     End If
 End If
 SetTopMost hWnd

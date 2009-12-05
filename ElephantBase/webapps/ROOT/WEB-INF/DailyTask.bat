@@ -1,1 +1,0 @@
-"%JRE_HOME%\bin\java.exe" -cp classes;..\..\..\lib\servlet-api.jar;lib\mysql-connector.jar net.elephantbase.users.biz.DailyTask
