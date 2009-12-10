@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlMain"
 ' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -43,12 +43,13 @@ Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxPar
 
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "4.41"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
-Public Const TEMP_FILE_NAME     As String = "查看文本棋谱(只读).TXT"
+Public Const TEMP_FILE_NAME_S   As String = "查看文本棋谱(只读).TXT"
+Public Const TEMP_FILE_NAME_T   As String = "查看文本棋譜(只讀).TXT"
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -207,6 +208,7 @@ Public App_bPrevInstance        As Boolean  ' 是否再一次启动
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 读入的残局
 ' 全局变量——选项
+Public Options_nLanguage        As Integer  ' 语言
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_bAutoPlay        As Boolean  ' 自动播放
@@ -229,7 +231,7 @@ Public Options_bPromptSave      As Boolean  ' 提示保存
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机对弈用户
 Public Options_bShowNew         As Boolean  ' 启动时显示“开始对局”对话框
-' 全局变量——界面
+' 全局变量——界面(杂项)
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
 Public Gui_nEndgamesIndex       As Integer  ' 残局的条目序号
@@ -340,6 +342,13 @@ Public Engine_szSlaveName       As String   ' 副引擎名称
 
 ' 以下是实用函数例程
 
+' 简繁选择，0选简体，1选繁体
+Public Function ST(ByVal szSimp As String, ByVal szTrad As String) As String
+
+ST = Choose(Options_nLanguage + 1, szSimp, szTrad)
+
+End Function
+
 ' 把字符转换成数字，显示棋谱坐标时用
 Public Function Byte2Digit(ByVal szChar As String) As Integer
 
@@ -361,7 +370,7 @@ End Function
 ' 显示着法前的回合数，红方格式是“???. 某某某某”，黑方格式是“     某某某某”，着法是对齐的
 Public Function NumberText(cnt As Integer, sd As Integer) As String
 
-NumberText = IIf(sd = 0, LTrim(Str(cnt)) + ".", Space(Len(Str(cnt))))
+NumberText = IIf(sd = 0, cnt & ".", Space(Len("" & cnt) + 1))
 
 End Function
 
@@ -369,7 +378,7 @@ End Function
 Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
 Dim szFileName As String, szFilter As String
-szFilter = szFileType + " (*." + szExt + ")|*." + szExt + "|所有文件 (*.*)|*.*"
+szFilter = szFileType & " (*." & szExt & ")|*." & szExt & "|" & ST("所有文件", "所有文件") & " (*.*)|*.*"
 If szSave = "" Then
     szFileName = OpenFileDialog(szTitle, szFilter)
 Else
@@ -384,7 +393,7 @@ Else
     szFileName = Replace(szFileName, "<", "＜")
     szFileName = Replace(szFileName, ">", "＞")
     szFileName = Replace(szFileName, "|", "｜")
-    szFileName = SaveFileDialog(szTitle, szFilter, szFileName + "." + szExt, szExt)
+    szFileName = SaveFileDialog(szTitle, szFilter, szFileName & "." & szExt, szExt)
 End If
 FileDialog = szFileName
 
@@ -394,7 +403,7 @@ End Function
 Public Sub PlayWavSound(ByVal szSoundFile As String)
 
 If Options_bSounds Then
-    PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+    PlaySoundA App_szPath & "SOUNDS\" & szSoundFile & ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
 End If
 
 End Sub
@@ -417,7 +426,7 @@ Public Function GetLabel(ByRef szDst As String, ByVal szSrc As String, ByVal szL
 
 Dim nLen As Integer, i As Integer
 nLen = Len(szLabelName)
-If UCase(Left(szSrc, nLen + 3)) = "[" + szLabelName + " """ Then
+If UCase(Left(szSrc, nLen + 3)) = "[" & szLabelName & " """ Then
     i = InStr(nLen + 4, szSrc, """")
     If i > 0 Then
         szDst = Mid(szSrc, nLen + 4, i - nLen - 4)
@@ -444,15 +453,15 @@ If nRemLevel > 0 Then
         nRemLevel = nRemLevel + Switch(szChar = "(" Or szChar = "{", 1, szChar = ")" Or szChar = "}", -1, True, 0)
         If nRemLevel = 0 Then
             szLineStr = Mid(szLineStr, i + 1)
-            Game_szComment(Game_nMaxMove) = Game_szComment(Game_nMaxMove) + szRemStr
+            Game_szComment(Game_nMaxMove) = Game_szComment(Game_nMaxMove) & szRemStr
             szRemStr = ""
             bEndFor = False
             Exit For
         End If
-        szRemStr = szRemStr + szChar
+        szRemStr = szRemStr & szChar
     Next
     If bEndFor Then
-        szRemStr = szRemStr + vbCrLf
+        szRemStr = szRemStr & vbCrLf
         szLineStr = ""
     End If
 Else
@@ -507,11 +516,11 @@ Else
                     End If
                     j = Byte2Digit(Mid(szMoveStr, 2, 1))
                     If j > 0 Then
-                        szMoveStr = Left(szMoveStr, 1) + Digit2Word(j) + Mid(szMoveStr, 3)
+                        szMoveStr = Left(szMoveStr, 1) & Digit2Word(j) & Mid(szMoveStr, 3)
                     End If
                     j = Byte2Digit(Mid(szMoveStr, 4, 1))
                     If j > 0 Then
-                        szMoveStr = Left(szMoveStr, 3) + Digit2Word(j)
+                        szMoveStr = Left(szMoveStr, 3) & Digit2Word(j)
                     End If
                     mv = CchessFile2Move(CchessChin2File(CvC(szMoveStr)), Game_posIrrev(Game_nCurrIrrev))
                     AddMove mv
@@ -558,25 +567,25 @@ Dim szLineStr As String, szLineStrEx As String, szRemStr As String, nRemLevel As
 
 bNoTitle = False
 If UCase(Right(App_szFileName, 4)) = ".XQF" Then
-    ConvXqf2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvXqf2Pgn App_szFileName, App_szPath & "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".MXQ" Then
-    ConvMxq2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvMxq2Pgn App_szFileName, App_szPath & "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHE" Then
-    ConvChe2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvChe2Pgn App_szFileName, App_szPath & "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CHN" Then
-    ConvChn2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvChn2Pgn App_szFileName, App_szPath & "AUTOSAVE.PGN"
     bNoTitle = True
 ElseIf UCase(Right(App_szFileName, 4)) = ".CCM" Then
-    ConvCcm2Pgn App_szFileName, App_szPath + "AUTOSAVE.PGN"
+    ConvCcm2Pgn App_szFileName, App_szPath & "AUTOSAVE.PGN"
     bNoTitle = True
 End If
 If bAutoSave Or bNoTitle Then
     App_szFileName = ""
     RestartGame
-    App_szFileName = App_szPath + "AUTOSAVE.PGN"
+    App_szFileName = App_szPath & "AUTOSAVE.PGN"
 Else
     RestartGame
 End If
@@ -607,7 +616,7 @@ Do While Not (EOF(nFileNo) And szLineStr = "" And szLineStrEx = "")
     End If
     If bDetail Then
         If Not (bCchess Or App_szFileName = "") Then
-            MsgBox App_szFileName + " 可能不是中国象棋的PGN文件。", vbExclamation
+            MsgBox App_szFileName & ST(" 可能不是中国象棋的PGN文件。", " 可能不是中國象棋的PGN文件。"), vbExclamation
             App_szFileName = ""
             SetTitle
         End If
@@ -682,7 +691,7 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 If Not bAutoSave Then
-    MsgBox "无法打开文件 " + App_szFileName, vbExclamation
+    MsgBox "无法打开文件 " & App_szFileName, vbExclamation
 End If
 BoardFlush
 LabelFlush
@@ -701,7 +710,7 @@ Public Function PutLabel(ByVal LabelName As String, ByVal LabelValue As String) 
 
 LabelValue = Replace(LabelValue, Chr(13), "")
 LabelValue = Replace(LabelValue, Chr(10), "")
-PutLabel = "[" + LabelName + " """ + LabelValue + """]"
+PutLabel = "[" & LabelName & " """ & LabelValue & """]"
 
 End Function
 
@@ -712,7 +721,7 @@ Dim sd As Integer, cnt As Integer
 Dim i As Integer, bReturned As Boolean, nFileNo As Integer
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open IIf(bTempFile, App_szPath + TEMP_FILE_NAME, App_szFileName) For Output As #nFileNo
+Open IIf(bTempFile, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), App_szFileName) For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, PutLabel("Game", "Chinese Chess")
 Print #nFileNo, PutLabel("Event", Game_szEvent)
@@ -734,14 +743,14 @@ If Game_nFormat > 0 Then
     Print #nFileNo, PutLabel("Format", IIf(Game_nFormat = 1, "WXF", "ICCS"))
 End If
 If Game_szComment(0) <> "" Then
-    Print #nFileNo, "{" + Game_szComment(0) + "}"
+    Print #nFileNo, "{" & Game_szComment(0) & "}"
 End If
 bReturned = True
 cnt = Game_cntStart
 sd = Game_sdStart
 For i = 1 To Game_nMaxMove
     If bReturned Then
-        Print #nFileNo, Space(4 - Len(Str(cnt))) + LTrim(Str(cnt)) + ". ";
+        Print #nFileNo, Space(3 - Len("" & cnt)) & cnt & ". ";
         If sd = 1 Then
             Print #nFileNo, Space(Choose(Game_nFormat + 1, 8, 4, 5));
         End If
@@ -750,24 +759,24 @@ For i = 1 To Game_nMaxMove
         Print #nFileNo, Game_szMoveText(Game_nFormat, i);
         bReturned = False
     Else
-        Print #nFileNo, " " + Game_szMoveText(Game_nFormat, i)
+        Print #nFileNo, " " & Game_szMoveText(Game_nFormat, i)
         bReturned = True
     End If
     If Game_szComment(i) <> "" Then
         If Not bReturned Then
             Print #nFileNo,
         End If
-        Print #nFileNo, "{" + Game_szComment(i) + "}"
+        Print #nFileNo, "{" & Game_szComment(i) & "}"
         bReturned = True
     End If
     sd = 1 - sd
     cnt = cnt + 1 - sd
 Next
 Print #nFileNo, Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1")
-Print #nFileNo, "============================"
-Print #nFileNo, " 欢迎访问《象棋百科全书网》 "
-Print #nFileNo, " 推荐用《象棋巫师》观赏棋谱 "
-Print #nFileNo, "http://www.elephantbase.net/"
+Print #nFileNo, "======================"
+Print #nFileNo, ST(" 欢迎访问象棋百科全书网 ", " 歡迎訪問象棋百科全書網 ")
+Print #nFileNo, ST(" 推荐用象棋巫师观赏棋谱 ", " 推荐用象棋巫師觀賞棋譜 ")
+Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 If Not bTempFile Then
     App_bUpdated = False
@@ -778,7 +787,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + IIf(bTempFile, App_szPath + TEMP_FILE_NAME, App_szFileName), vbExclamation
+MsgBox "无法打开文件 " & IIf(bTempFile, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), App_szFileName), vbExclamation
 
 End Sub
 
@@ -795,8 +804,13 @@ End Sub
 Public Sub OpenFile()
 
 Dim szFileName As String
-szFileName = OpenFileDialog("打开棋谱文件", "所有棋谱 (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" + _
-        "可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|联众象棋棋谱 (*.CHN)|*.CHN|中游象棋棋谱 (*.CCM)|*.CCM|所有文件 (*.*)|*.*")
+If Options_nLanguage = 0 Then
+    szFileName = OpenFileDialog("打开棋谱文件", "所有棋谱 (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
+            "可移植棋谱 (*.PGN)|*.PGN|象棋演播室棋谱 (*.XQF)|*.XQF|弈天棋谱 (*.MXQ)|*.MXQ|QQ象棋棋谱 (*.CHE)|*.CHE|联众象棋棋谱 (*.CHN)|*.CHN|中游象棋棋谱 (*.CCM)|*.CCM|所有文件 (*.*)|*.*")
+Else
+    szFileName = OpenFileDialog("打開棋譜文件", "所有棋譜 (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
+            "可移植棋譜 (*.PGN)|*.PGN|象棋演播室棋譜 (*.XQF)|*.XQF|弈天棋譜 (*.MXQ)|*.MXQ|QQ象棋棋譜 (*.CHE)|*.CHE|聯眾象棋棋譜 (*.CHN)|*.CHN|中游象棋棋譜 (*.CCM)|*.CCM|所有文件 (*.*)|*.*")
+End If
 If szFileName <> "" Then
     App_szFileName = szFileName
     ReadFile
@@ -807,11 +821,17 @@ End Sub
 ' 如果是“已更新”状态，那么提示保存PGN棋谱
 Public Function CancelSave() As Boolean
 
+Dim dwResult As Long
 If Not (Options_bPromptSave And App_bUpdated) Then
     CancelSave = False
     Exit Function
 End If
-Select Case MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " + App_szFileName + " 已更改。") + vbCrLf + "是否保存更改？", vbYesNoCancel + vbExclamation)
+If Options_nLanguage = 0 Then
+    dwResult = MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " & App_szFileName & " 已更改。") & vbCrLf & "是否保存更改？", vbYesNoCancel + vbExclamation)
+Else
+    dwResult = MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " & App_szFileName & " 已更改。") & vbCrLf & "是否保存更改？", vbYesNoCancel + vbExclamation)
+End If
+Select Case dwResult
 Case vbYes
     If App_szFileName = "" Then
         If SaveFileAs() Then
@@ -835,7 +855,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim sz As String
-sz = FileDialog("保存棋谱文件", "可移植棋谱", "PGN", DefaultFileName)
+sz = FileDialog(ST("保存棋谱文件", "保存棋譜文件"), ST("可移植棋谱", "可移植棋譜"), "PGN", DefaultFileName)
 If sz <> "" Then
     App_szFileName = sz
     SetTitle
@@ -851,10 +871,10 @@ End Function
 Public Sub ExportXqf()
 
 Dim sz As String
-sz = FileDialog("输出为XQF格式", "象棋演播室棋谱", "XQF", DefaultFileName)
+sz = FileDialog(ST("输出为XQF格式", "輸出為XQF格式"), ST("象棋演播室棋谱", "象棋演播室棋譜"), "XQF", DefaultFileName)
 If sz <> "" Then
     WriteFile WRITE_TEMP_FILE
-    ConvPgn2Xqf App_szPath + TEMP_FILE_NAME, sz
+    ConvPgn2Xqf App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), sz
 End If
 
 End Sub
@@ -878,7 +898,7 @@ LoadFenStr szFenStr
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + szFenFile, vbExclamation
+MsgBox "无法打开文件 " & szFenFile, vbExclamation
 
 End Sub
 
@@ -920,9 +940,9 @@ End Sub
 Public Function TimeText(ByVal nSeconds As Long) As String
 
 Dim sz As String
-sz = Chr((nSeconds \ 36000) Mod 6 + 48) + Chr((nSeconds \ 3600) Mod 10 + 48) + ":"
-sz = sz + Chr((nSeconds \ 600) Mod 6 + 48) + Chr((nSeconds \ 60) Mod 10 + 48) + ":"
-sz = sz + Chr((nSeconds \ 10) Mod 6 + 48) + Chr((nSeconds \ 1) Mod 10 + 48)
+sz = Chr((nSeconds \ 36000) Mod 6 + 48) & Chr((nSeconds \ 3600) Mod 10 + 48) & ":"
+sz = sz & Chr((nSeconds \ 600) Mod 6 + 48) & Chr((nSeconds \ 60) Mod 10 + 48) & ":"
+sz = sz & Chr((nSeconds \ 10) Mod 6 + 48) & Chr((nSeconds \ 1) Mod 10 + 48)
 TimeText = sz
 
 End Function
@@ -935,11 +955,19 @@ sdThis = IIf(sd = -1, Game_sdMax, sd)
 nSeconds = IIf(sd = -1, Game_sdMax, sd)
 If sdThis = 0 Eqv App_bFlipped Then
     App_frmMain.lblTimeLeftUp.Caption = TimeText(Timer_nTimeLeft(sdThis))
-    App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加" + Str(Timer_nIncTime) + " 秒", "走完" + Str(Timer_nMoveLeft(sdThis)) + " 步")
+    If Options_nLanguage = 0 Then
+        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+    Else
+        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", "走完" & Timer_nMoveLeft(sdThis) & " 步")
+    End If
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
     App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
-    App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加" + Str(Timer_nIncTime) + " 秒", "走完" + Str(Timer_nMoveLeft(sdThis)) + " 步")
+    If Options_nLanguage = 0 Then
+        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+    Else
+        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+    End If
     App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 End If
 
@@ -948,23 +976,15 @@ End Sub
 ' 赛事字符串
 Public Function EventString() As String
     
-Dim sz As String
+Dim sz As String, nRound As Integer
 sz = Game_szEvent
 If Game_szRound <> "" Then
-    sz = sz + IIf(Game_szEvent = "", "", " ")
+    sz = sz & IIf(Game_szEvent = "", "", " ")
     If Len(Game_szRound) > 5 Then
-        sz = sz + Game_szRound
+        sz = sz & Game_szRound
     Else
-        Select Case Str2Int(Game_szRound)
-        Case 0
-            sz = sz + Game_szRound
-        Case 1 To 97
-            sz = sz + "第" + Game_szRound + "轮"
-        Case 98
-            sz = sz + "半决赛"
-        Case 99
-            sz = sz + "决赛"
-        End Select
+        nRound = Str2Int(Game_szRound)
+        sz = sz & IIf(nRound = 0, Game_szRound, ST("第", "第") & Game_szRound & ST("轮", "輪"))
     End If
 End If
 EventString = sz
@@ -975,11 +995,21 @@ End Function
 Public Function ResultString() As String
 
 If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
-    ResultString = "(着法：" + IIf(Game_sdStart = 0, "红先", "黑先") + Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "负"), "和", IIf(Game_sdStart = 0, "负", "胜")) + ")"
+    If Options_nLanguage = 0 Then
+        ResultString = "(着法：" & IIf(Game_sdStart = 0, "红先", "黑先") & Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "胜", "负"), "和", IIf(Game_sdStart = 0, "负", "胜")) & ")"
+    Else
+        ResultString = "(著法：" & IIf(Game_sdStart = 0, "红先", "黑先") & Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "勝", "负"), "和", IIf(Game_sdStart = 0, "負", "勝")) & ")"
+    End If
 Else
-    ResultString = Game_szRedTeam + IIf(Game_szRedTeam = "", "", " ") + Game_szRedPlayer + _
-            Choose(Game_nResult + 1, " (对) ", IIf(Game_sdStart = 0, " (先胜) ", " (后胜) "), IIf(Game_sdStart = 0, " (先和) ", " (后和) "), IIf(Game_sdStart = 0, " (先负) ", " (后负) ")) + _
-            Game_szBlackTeam + IIf(Game_szBlackTeam = "", "", " ") + Game_szBlackPlayer
+    If Options_nLanguage = 0 Then
+        ResultString = Game_szRedTeam & IIf(Game_szRedTeam = "", "", " ") & Game_szRedPlayer & _
+                Choose(Game_nResult + 1, " (对) ", IIf(Game_sdStart = 0, " (先胜) ", " (后胜) "), IIf(Game_sdStart = 0, " (先和) ", " (后和) "), IIf(Game_sdStart = 0, " (先负) ", " (后负) ")) & _
+                Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
+    Else
+        ResultString = Game_szRedTeam & IIf(Game_szRedTeam = "", "", " ") & Game_szRedPlayer & _
+                Choose(Game_nResult + 1, " (對) ", IIf(Game_sdStart = 0, " (先勝) ", " (後勝) "), IIf(Game_sdStart = 0, " (先和) ", " (後和) "), IIf(Game_sdStart = 0, " (先負) ", " (後負) ")) & _
+                Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
+    End If
 End If
 
 End Function
@@ -988,9 +1018,9 @@ End Function
 Public Function DateSiteString() As String
 
 If Game_szDate = "" Then
-    DateSiteString = IIf(Game_szSite = "", "", "(弈于 " + Game_szSite + ")")
+    DateSiteString = IIf(Game_szSite = "", "", ST("(弈于 ", "(弈於 ") & Game_szSite & ")")
 Else
-    DateSiteString = "(" + Game_szDate + IIf(Game_szSite = "", ")", " 弈于 " + Game_szSite + ")")
+    DateSiteString = "(" & Game_szDate & IIf(Game_szSite = "", ")", ST(" 弈于 ", " 弈於 ") & Game_szSite & ")")
 End If
 
 End Function
@@ -998,8 +1028,8 @@ End Function
 ' 开局字符串
 Public Function OpenString() As String
 
-OpenString = Game_szOpen + IIf(Game_szOpen = "" Or Game_szVar = "", "", "——") + Game_szVar + _
-        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", "(ECCO开局编号：" + Game_szEcco + ")", True, "(" + Game_szEcco + ")")
+OpenString = Game_szOpen & IIf(Game_szOpen = "" Or Game_szVar = "", "", "——") & Game_szVar & _
+        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", ST("(ECCO开局编号：", "(ECCO開局編號：") & Game_szEcco & ")", True, "(" & Game_szEcco & ")")
 
 End Function
 
@@ -1008,7 +1038,7 @@ Public Function DefaultFileName() As String
 
 Dim sz As String
 sz = EventString
-DefaultFileName = IIf(sz = "", "", sz + " - ") + ResultString
+DefaultFileName = IIf(sz = "", "", sz & " - ") & ResultString
 
 End Function
 
@@ -1062,7 +1092,7 @@ End If
 mbp.cbSize = Len(mbp)
 mbp.hwndOwner = App_frmMain.hWnd
 mbp.hInstance = 0
-mbp.lpszText = szPrompt + vbCrLf + vbCrLf + "再来一局吗？"
+mbp.lpszText = szPrompt & vbCrLf & vbCrLf & ST("再来一局吗？", "再來一局嗎？")
 mbp.lpszCaption = App.Title
 mbp.dwStyle = MB_USERICON + MB_YESNO
 mbp.lpszIcon = IDI_QUESTION
@@ -1101,12 +1131,12 @@ If Engine_nStatus > IDLE_UNLOAD Then
             SendEngine "setoption ponder false", SLAVE_ENGINE
             SendEngine "setoption ponder false"
         Else
-            SendEngine "setoption ponder " + IIf(Options_bAlwaysPonder, "true", "false")
+            SendEngine "setoption ponder " & IIf(Options_bAlwaysPonder, "true", "false")
         End If
     End If
     EngineLoaded True
 End If
-Game_szIrrevFen(0) = CCHESS_START_FEN + " - - 0 1"
+Game_szIrrevFen(0) = CCHESS_START_FEN & " - - 0 1"
 CchessFen2Board Game_posIrrev(0), Game_szIrrevFen(0)
 SetTitle
 App_frmMain.mnFileSave.Enabled = False
@@ -1342,7 +1372,7 @@ Dim szMoveChinText As String, szMoveFileText As String, szMoveIccsText As String
 If Game_cntCurr = 1000 Or Game_posIrrev(Game_nCurrIrrev).nMoveNum = 256 Then
     AddMove = False
     If bEcho Then
-        MsgBox "超过最大回合数限制！", vbExclamation
+        MsgBox ST("超过最大回合数限制！", "超過最大回合數限制！"), vbExclamation
     End If
     Exit Function
 End If
@@ -1361,7 +1391,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
     End If
     If Game_nCurrMove < Game_nMaxMove Then
-        If MsgBox("必须清除以后所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) = vbYes Then
+        If MsgBox(ST("必须清除以后所有的着法。", "必須清除以後所有的著法。") & vbCrLf & ST("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) = vbYes Then
             MoveCut
         Else
             AddMove = False
@@ -1373,8 +1403,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         Game_nMaxIrrev = Game_nMaxIrrev + 1
         CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
         CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
-        Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) + " - - 0" + _
-                Str(IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1))
+        Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) & " - - 0 " & _
+                IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1)
     End If
     If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
         If Timer_bIncMode Then
@@ -1411,7 +1441,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
             szResult = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-            EndGame szResult, IIf(Game_sdCurr = 1, "红胜。", "黑胜。")
+            EndGame szResult, IIf(Game_sdCurr = 1, ST("红胜。", "紅勝。"), ST("黑胜。", "黑勝。"))
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1421,16 +1451,16 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     Else
         If bEcho Then
             If (nMoveStatus And MOVE_CHECK) <> 0 Then
-                PlayWavSound "CHECK" + IIf(bEngine, "2", "")
+                PlayWavSound "CHECK" & IIf(bEngine, "2", "")
             ElseIf (nMoveStatus And MOVE_CAPTURE) <> 0 Then
-                PlayWavSound IIf(Src(mv) = Dst(mv), "PROMOTE", "CAPTURE") + IIf(bEngine, "2", "")
+                PlayWavSound IIf(Src(mv) = Dst(mv), "PROMOTE", "CAPTURE") & IIf(bEngine, "2", "")
             Else
-                PlayWavSound "MOVE" + IIf(bEngine, "2", "")
+                PlayWavSound "MOVE" & IIf(bEngine, "2", "")
             End If
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                EndGame "DRAW", "自然作和。"
+                EndGame "DRAW", ST("自然作和。", "自然作和。")
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1454,7 +1484,11 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Else
                     szResult = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
                 End If
-                EndGame szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
+                If Options_nLanguage = 0 Then
+                    EndGame szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
+                Else
+                    EndGame szResult, Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！")
+                End If
             End If
             App_frmMain.lblResult = ResultString
             Timer_bEnabled = False
@@ -1475,20 +1509,25 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                EndGame "WIN", IIf(Game_sdMax = 0, "红方认输。", "黑方认输。")
+                EndGame "WIN", IIf(Game_sdMax = 0, ST("红方认输。", "紅方認輸。"), ST("黑方认输。", "黑方認輸。"))
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                EndGame "DRAW", IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。")
+                EndGame "DRAW", IIf(Game_sdMax = 0, ST("红方接受提和。", "紅方接受提和。"), ST("黑方接受提和。", "黑方接受提和。"))
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
                 If Options_bAllowResign And Engine_bPonderFinishedDraw Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") + vbCrLf + "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" + _
-                                vbCrLf + "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
+                        If Options_nLanguage = 0 Then
+                            MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") & vbCrLf & "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" & _
+                                    vbCrLf & "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
+                        Else
+                            MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") & vbCrLf & "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" & _
+                                    vbCrLf & "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
+                        End If
                     End If
                 End If
                 If Engine_mvPonderFinishedPonder <> 0 Then
@@ -1519,7 +1558,7 @@ Dim szMoveStr As String
 If App_bAutoEcco And Game_bStartPos And Game_nMaxMove <= 20 Then
     szMoveStr = ""
     For i = 1 To Game_nMaxMove
-        szMoveStr = szMoveStr + Game_szMoveText(1, i)
+        szMoveStr = szMoveStr & Game_szMoveText(1, i)
     Next
     dwEcco = EccoIndex(szMoveStr)
     Game_szEcco = Left(MkL(dwEcco), 3)
@@ -1537,11 +1576,11 @@ End Sub
 ' 显示引擎信息的对话框
 Public Sub AboutEngine()
 
-MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" + Engine_szName + vbCrLf) + _
-        IIf(Engine_szVersion = "", "", "版本：" + Engine_szVersion + vbCrLf) + _
-        IIf(Engine_szCopyright = "", "", "版权：" + Engine_szCopyright + vbCrLf) + _
-        IIf(Engine_szAuthor = "", "", "作者：" + Engine_szAuthor + vbCrLf) + _
-        IIf(Engine_szUser = "", "", "用户：" + Engine_szUser), "关于UCCI引擎", Engine_szFile
+MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
+        IIf(Engine_szVersion = "", "", "版本：" & Engine_szVersion & vbCrLf) & _
+        IIf(Engine_szCopyright = "", "", "版权：" & Engine_szCopyright & vbCrLf) & _
+        IIf(Engine_szAuthor = "", "", "作者：" & Engine_szAuthor & vbCrLf) & _
+        IIf(Engine_szUser = "", "", "用户：" & Engine_szUser), "关于UCCI引擎", Engine_szFile
 
 End Sub
 
@@ -1622,7 +1661,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
     On Error GoTo lnErrorOpen
     Open Engine_szLogFile For Append As #nLogFileNo
-    Print #nLogFileNo, "<font color=""" + IIf(bSlaveEngine, "#FF00FF", "#FF0000") + """>" + szLineStr + "</font><br>"
+    Print #nLogFileNo, "<font color=""" & IIf(bSlaveEngine, "#FF00FF", "#FF0000") & """>" & szLineStr & "</font><br>"
     Close #nLogFileNo
 End If
 
@@ -1639,7 +1678,7 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile
     On Error GoTo lnErrorOpen
     Open Engine_szLogFile For Append As #nLogFileNo
-    Print #nLogFileNo, "<font color=""" + IIf(bSlaveEngine, "#000080", "#0000FF") + """>" + szLineStr + "</font><br>"
+    Print #nLogFileNo, "<font color=""" & IIf(bSlaveEngine, "#000080", "#0000FF") & """>" & szLineStr & "</font><br>"
     Close #nLogFileNo
 End If
 
@@ -1667,9 +1706,9 @@ End If
 szFenStr = Game_szIrrevFen(Game_nCurrIrrev)
 nIrrevMove = Game_nCurrMove + 1 - Game_posIrrev(Game_nCurrIrrev).nMoveNum
 If Game_nCurrMove > nIrrevMove Then
-    szFenStr = szFenStr + " moves"
+    szFenStr = szFenStr & " moves"
     For i = nIrrevMove + 1 To Game_nCurrMove
-        szFenStr = szFenStr + " " + Move2Coord(Game_mvMove(i))
+        szFenStr = szFenStr & " " & Move2Coord(Game_mvMove(i))
     Next
 End If
 szGoPonder = "go"
@@ -1683,38 +1722,38 @@ If Engine_nStatus = BUSY_PONDER Then
         Engine_szPonderStr = Move2Iccs(Engine_mvPonder)
     End Select
     If CchessTryMove(Engine_posBoard, nMoveStatus, Engine_mvPonder) <> 0 Then
-        szFenStr = szFenStr + IIf(Game_nCurrMove > nIrrevMove, "", " moves")
-        szFenStr = szFenStr + " " + Move2Coord(Engine_mvPonder)
-        szGoPonder = szGoPonder + " ponder"
+        szFenStr = szFenStr & IIf(Game_nCurrMove > nIrrevMove, "", " moves")
+        szFenStr = szFenStr & " " & Move2Coord(Engine_mvPonder)
+        szGoPonder = szGoPonder & " ponder"
     End If
 Else
     If Engine_bDraw Then
-        szGoPonder = szGoPonder + " draw"
+        szGoPonder = szGoPonder & " draw"
     End If
 End If
 bSlaveEngine = IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack)
 nTimeRatio = IIf(bSlaveEngine, Engine_nTimeRatioSlave, Engine_nTimeRatio)
-SendEngine "position fen " + szFenStr, bSlaveEngine
+SendEngine "position fen " & szFenStr, bSlaveEngine
 If Engine_mvBan <> 0 Then
-    SendEngine "banmoves " + Move2Coord(Engine_mvBan), bSlaveEngine
+    SendEngine "banmoves " & Move2Coord(Engine_mvBan), bSlaveEngine
 End If
 If Engine_nStatus = BUSY_ANALYZE Then
     SendEngine "go infinite", bSlaveEngine
 Else
     If Timer_nDepth <= 0 Then
         If Timer_bIncMode Then
-            SendEngine szGoPonder + " time" + Str(nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
-                    " increment" + Str(IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime)) + _
-                    " opptime" + Str(nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
-                    " oppincrement" + Str(IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime)), bSlaveEngine
+            SendEngine szGoPonder & " time " & (nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) & _
+                    " increment " & IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime) & _
+                    " opptime " & (nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) & _
+                    " oppincrement " & IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime), bSlaveEngine
         Else
-            SendEngine szGoPonder + " time" + Str(nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) + _
-                    " movestogo" + Str(Timer_nMoveLeft(Engine_posBoard.sdPlayer)) + _
-                    " opptime" + Str(nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) + _
-                    " oppmovestogo" + Str(Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
+            SendEngine szGoPonder & " time " & (nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) & _
+                    " movestogo " & Timer_nMoveLeft(Engine_posBoard.sdPlayer) & _
+                    " opptime " & (nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) & _
+                    " oppmovestogo " & (Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
         End If
     Else
-        SendEngine szGoPonder + " depth" + Str(Timer_nDepth), bSlaveEngine
+        SendEngine szGoPonder & " depth " & Timer_nDepth, bSlaveEngine
     End If
 End If
 App_frmMain.stb.Panels("Curr").Text = ""
@@ -1733,9 +1772,9 @@ If App_frmMain.txtThink.Text = "" Then
     App_frmMain.txtThink.Text = sz
     App_frmMain.txtThink.SelStart = 0
 Else
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + vbCrLf
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text & vbCrLf
     nTextLen = Len(App_frmMain.txtThink.Text)
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text + sz
+    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text & sz
     App_frmMain.txtThink.SelStart = nTextLen
 End If
 
@@ -1763,7 +1802,7 @@ If i > 0 Then
         Case 2
             szMoveList = Move2Iccs(mv)
         End Select
-        App_frmMain.stb.Panels("Curr").Text = LTrim(Str(Engine_nDepth)) + " (" + LTrim(Str(Engine_nCurrMove)) + "/" + LTrim(Str(Engine_nMoves)) + ") " + szMoveList
+        App_frmMain.stb.Panels("Curr").Text = Engine_nDepth & " (" & Engine_nCurrMove & "/" & Engine_nMoves & ") " & szMoveList
     End If
 End If
 
@@ -1775,7 +1814,7 @@ If Options_bStatusBar Then
         nTime = (Timer - Engine_dwTime) * 1000
         nTime = IIf(nTime < 0, nTime + 86400000, nTime)
         If nTime > 0 Then
-            App_frmMain.stb.Panels("Nps").Text = "NPS" + Str(nNodes \ nTime) + "K"
+            App_frmMain.stb.Panels("Nps").Text = "NPS " & (nNodes \ nTime) & "K"
         End If
     End If
 End If
@@ -1792,36 +1831,36 @@ If i > 0 Then
         If Engine_bAnalyze And Options_bEngineTime Then
             nTime = Int((Timer - Engine_dwTime) * 1000)
             nTime = IIf(nTime < 0, nTime + 86400000, nTime)
-            AppendThink TimeText(nTime \ 1000) + "." + Right(Str(nTime \ 100), 1) + " ->"
+            AppendThink TimeText(nTime \ 1000) & "." & ((nTime \ 100) Mod 10) & " ->"
         End If
     End If
-    szMoveList = Space(4 - Len(Str(Engine_nDepth))) + LTrim(Str(Engine_nDepth))
+    szMoveList = Space(3 - Len("" & Engine_nDepth)) & Engine_nDepth
     i = InStr(szReceived, " score ")
     If i > 0 Then
         nScore = Str2Int(Mid(szReceived, i + 7))
         If nScore > 0 Then
-            szMoveList = szMoveList + Space(6 - Len(Str(nScore))) + "(+" + LTrim(Str(nScore)) + ")"
+            szMoveList = szMoveList & Space(5 - Len("" & nScore)) & "(+" & nScore & ")"
         ElseIf nScore < 0 Then
-            szMoveList = szMoveList + Space(6 - Len(Str(nScore))) + "(" + Str(nScore) + ")"
+            szMoveList = szMoveList & Space(5 - Len("" & nScore)) & "(" & nScore & ")"
         Else
-            szMoveList = szMoveList + "     (0)"
+            szMoveList = szMoveList & "     (0)"
         End If
         i = InStr(szReceived, " pv ")
         If i > 0 Then
             pos = Engine_posBoard
             If Engine_nStatus = BUSY_PONDER Then
-                szMoveList = szMoveList + " (" + Engine_szPonderStr + ")"
+                szMoveList = szMoveList & " (" & Engine_szPonderStr & ")"
             End If
             i = i + 4
             Do While i < Len(szReceived)
                 mv = Coord2Move(Mid(szReceived, i))
                 Select Case Game_nFormat
                 Case 0
-                    szMoveList = szMoveList + " " + MkC(CchessFile2Chin(CchessMove2File(mv, pos), pos.sdPlayer))
+                    szMoveList = szMoveList & " " & MkC(CchessFile2Chin(CchessMove2File(mv, pos), pos.sdPlayer))
                 Case 1
-                    szMoveList = szMoveList + " " + MkL(CchessMove2File(mv, pos))
+                    szMoveList = szMoveList & " " & MkL(CchessMove2File(mv, pos))
                 Case 2
-                    szMoveList = szMoveList + " " + Move2Iccs(mv)
+                    szMoveList = szMoveList & " " & Move2Iccs(mv)
                 End Select
                 CchessTryMove pos, nMoveStatus, mv
                 i = i + 5
@@ -1916,8 +1955,8 @@ Else
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") + vbCrLf + "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" + _
-                                vbCrLf + "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
+                        MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") & vbCrLf & "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" & _
+                                vbCrLf & "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
                     End If
                 End If
                 If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
@@ -1932,7 +1971,7 @@ Else
                 Engine_nStatus = IDLE_REST
             End If
         Case Else
-            MsgBox "不该接收到引擎的信息：" + szReceived, vbExclamation
+            MsgBox "不该接收到引擎的信息：" & szReceived, vbExclamation
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -1949,7 +1988,7 @@ Else
         Case BUSY_THINK
             Engine_nStatus = IDLE_REST
         Case Else
-            ' MsgBox "不该接收到引擎的信息：" + szReceived, vbExclamation
+            ' MsgBox "不该接收到引擎的信息：" & szReceived, vbExclamation
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -1991,28 +2030,28 @@ End Sub
 ' 设置引擎参数
 Public Sub SetEngine(Optional ByVal bSlaveEngine As Boolean = False)
 
-SendEngine "setoption promotion " + IIf(App_bPromotion, "true", "false"), bSlaveEngine
-SendEngine "setoption usebook " + IIf(Engine_bUseBook, "true", "false"), bSlaveEngine
-SendEngine "setoption useegtb " + IIf(Engine_bUseEgtb, "true", "false"), bSlaveEngine
+SendEngine "setoption promotion " & IIf(App_bPromotion, "true", "false"), bSlaveEngine
+SendEngine "setoption usebook " & IIf(Engine_bUseBook, "true", "false"), bSlaveEngine
+SendEngine "setoption useegtb " & IIf(Engine_bUseEgtb, "true", "false"), bSlaveEngine
 If Engine_szBookFiles <> "" Then
-    SendEngine "setoption bookfiles " + Engine_szBookFiles, bSlaveEngine
+    SendEngine "setoption bookfiles " & Engine_szBookFiles, bSlaveEngine
 End If
 If Engine_szEgtbPaths <> "" Then
-    SendEngine "setoption egtbpaths " + Engine_szEgtbPaths, bSlaveEngine
+    SendEngine "setoption egtbpaths " & Engine_szEgtbPaths, bSlaveEngine
 End If
-SendEngine "setoption hashsize" + IIf(Engine_nHash = 0, " 0", Str(16 * 2 ^ (Engine_nHash - 1))), bSlaveEngine
+SendEngine "setoption hashsize " & IIf(Engine_nHash = 0, 0, 16 * 2 ^ (Engine_nHash - 1)), bSlaveEngine
 If Engine_nThreads = 0 Then
     SendEngine "setoption threads 0"
     SendEngine "setoption idle none"
 ElseIf Engine_nThreads < 4 Then
     SendEngine "setoption threads 1"
-    SendEngine "setoption idle " + Choose(Engine_nThreads, "large", "medium", "small"), bSlaveEngine
+    SendEngine "setoption idle " & Choose(Engine_nThreads, "large", "medium", "small"), bSlaveEngine
 Else
-    SendEngine "setoption threads" + Str(2 ^ (Engine_nThreads - 4)), bSlaveEngine
+    SendEngine "setoption threads " & (2 ^ (Engine_nThreads - 4)), bSlaveEngine
     SendEngine "setoption idle none"
 End If
-SendEngine "setoption randomness " + Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine
-SendEngine "setoption style " + Choose(Engine_nStyle + 1, "solid", "normal", "risky"), bSlaveEngine
+SendEngine "setoption randomness " & Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine
+SendEngine "setoption style " & Choose(Engine_nStyle + 1, "solid", "normal", "risky"), bSlaveEngine
 
 End Sub
 
@@ -2202,7 +2241,7 @@ If bInfo Then
         If Engine_szFile = "" Then
             MsgBox "没有加载引擎！", vbExclamation
         Else
-            MsgBox Engine_szFile + " 不是中国象棋引擎文件！", vbExclamation
+            MsgBox Engine_szFile & " 不是中国象棋引擎文件！", vbExclamation
             Engine_szFile = ""
         End If
     End If
@@ -2226,7 +2265,7 @@ szEngineFile = FileDialog("加载副引擎", "引擎文件", "EXE")
 If szEngineFile = "" Then
     MsgBox "没有加载引擎！", vbExclamation
 ElseIf GetAppType(szEngineFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-    MsgBox szEngineFile + " 不是中国象棋引擎文件！", vbExclamation
+    MsgBox szEngineFile & " 不是中国象棋引擎文件！", vbExclamation
 Else
     PipeOpen Engine_pipeSlave, szEngineFile
     SendEngine "ucci", SLAVE_ENGINE
@@ -2264,10 +2303,10 @@ Else
         End If
     Loop
     If Engine_bSlaveBlack Then
-        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" + Engine_szSlaveName + vbCrLf) + _
-                IIf(szCopyright = "", "", "版权：" + szCopyright + vbCrLf) + _
-                IIf(szAuthor = "", "", "作者：" + szAuthor + vbCrLf) + _
-                IIf(szUser = "", "", "用户：" + szUser), "关于UCCI引擎", szEngineFile
+        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+                IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
+                IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
+                IIf(szUser = "", "", "用户：" & szUser), "关于UCCI引擎", szEngineFile
         If Engine_nTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
@@ -2275,7 +2314,7 @@ Else
     Else
         SendEngine "quit", SLAVE_ENGINE
         PipeClose Engine_pipeSlave
-        MsgBox szEngineFile + " 不是中国象棋引擎文件！", vbExclamation
+        MsgBox szEngineFile & " 不是中国象棋引擎文件！", vbExclamation
     End If
 End If
 
@@ -2389,9 +2428,9 @@ End Sub
 Public Sub BoardSettingSmallHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
-frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath + "IMAGES_S\" + _
+frmHide.imgBoardSmall.Picture = LoadPicture(App_szPath & "IMAGES_S\" & _
         Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", _
-        "CLOUDS", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "QIANHONG") + ".GIF")
+        "CLOUDS", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL", "QIANHONG") & ".GIF")
 On Error GoTo 0
 
 End Sub
@@ -2413,8 +2452,8 @@ End Sub
 Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
 
 On Error Resume Next
-frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") + ".GIF")
+frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath & "IMAGES_L\" & _
+        Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") & ".GIF")
 On Error GoTo 0
 
 End Sub
@@ -2440,15 +2479,15 @@ If nIndex = 30 Then
 ElseIf nIndex = 31 Then
     PieceFileName = "BKM"
 ElseIf nIndex >= 15 Then
-    PieceFileName = PieceFileName(nIndex - 15) + "S"
+    PieceFileName = PieceFileName(nIndex - 15) & "S"
 Else
     If nIndex = 0 Then
         PieceFileName = "OO"
     Else
         If nIndex > 7 Then
-            PieceFileName = "B" + PieceByte(nIndex - 8)
+            PieceFileName = "B" & PieceByte(nIndex - 8)
         Else
-            PieceFileName = "R" + PieceByte(nIndex - 1)
+            PieceFileName = "R" & PieceByte(nIndex - 1)
         End If
     End If
 End If
@@ -2459,10 +2498,10 @@ End Function
 Public Sub PiecesSettingSmallHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_S\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") + "\"
+sz = App_szPath & "IMAGES_S\" & Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH", "XQSTUDIO", "MOVESKY", "MRSJ", "ZMBL") & "\"
 On Error Resume Next
 For i = 0 To 31
-    frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
+    frmHide.imgPiecesSmall(i).Picture = LoadPicture(sz & PieceFileName(i) & ".GIF")
 Next
 On Error GoTo 0
 
@@ -2489,10 +2528,10 @@ End Sub
 Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_L\" + Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH") + "\"
+sz = App_szPath & "IMAGES_L\" & Choose(nPiecesIndex + 1, "WOOD", "DELICATE", "POLISH") & "\"
 On Error Resume Next
 For i = 0 To 31
-    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
+    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz & PieceFileName(i) & ".GIF")
 Next
 On Error GoTo 0
 
@@ -2521,9 +2560,9 @@ Public Sub MusicSetting(ByVal nMusicIndex As Integer)
 Dim i As Integer
 frmHide.mci.Command = "Close"
 If nMusicIndex < MUSIC_NONE Then
-    frmHide.mci.FileName = App_szPath + "MUSICS\" + _
+    frmHide.mci.FileName = App_szPath & "MUSICS\" & _
             Choose(nMusicIndex + 1, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
-            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "PAL", "CMUSIC") + ".MID"
+            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "PAL", "CMUSIC") & ".MID"
     If Not App_bPrevInstance Then
         frmHide.mci.Command = "Open"
         frmHide.mci.Command = "Play"
@@ -2543,18 +2582,20 @@ End Sub
 ' 加载“日积月累”
 Public Sub LoadTips()
 
+If Options_nLanguage = 0 Then
+
 Gui_szTips(1) = "　　象棋巫师是一款功能超强的象棋教学、电脑对弈和棋谱编辑软件，具有方便的人机对战、棋谱记录、欣赏、发布、管理棋局的功能，还内置大量象棋习题，完全可以满足各层次象棋爱好者、棋手、裁判员及象棋文字工作者的各种需要。"
-Gui_szTips(2) = "　　象棋巫师支持多个通用象棋引擎，他们大都具有专业棋手的水平，是象棋爱好者和专业棋手提高棋艺的良师益友。" + vbCrLf + _
-        "　　如果您对象棋巫师自带的引擎 ElephantEye 的表现不满意，可以登录 http://www.elephantbase.net/league.htm ，下载到其他各具特色的引擎。"
+Gui_szTips(2) = "　　象棋巫师支持多个通用象棋引擎，他们大都具有专业棋手的水平，是象棋爱好者和专业棋手提高棋艺的良师益友。" & vbCrLf & _
+        "　　如果您对象棋巫师自带的引擎 ElephantEye 的表现不满意，可以登录 http://www.xqbase.com/league.htm ，下载到其他各具特色的引擎。"
 Gui_szTips(3) = "　　点击“新的棋局”按钮，就可以展开人机对弈，象棋巫师提供了五种的难度和四种的让子模式给用户体验。"
-Gui_szTips(4) = "　　如果您不希望让电脑走棋，而仅仅是想知道电脑在想些什么，或者让电脑给你一些启发，可以点击“电脑分析”按钮，打开思考细节窗口。" + vbCrLf + _
+Gui_szTips(4) = "　　如果您不希望让电脑走棋，而仅仅是想知道电脑在想些什么，或者让电脑给你一些启发，可以点击“电脑分析”按钮，打开思考细节窗口。" & vbCrLf & _
         "　　您可以把思考细节窗口中的思考路线复制下来，粘贴到主窗口中，对思考线路进行推演。"
-Gui_szTips(5) = "　　点击“发布棋谱”按钮，就可以在网上和棋友交流棋谱，或者向高手求助。" + vbCrLf + _
+Gui_szTips(5) = "　　点击“发布棋谱”按钮，就可以在网上和棋友交流棋谱，或者向高手求助。" & vbCrLf & _
         "　　象棋巫师推荐了几个著名的象棋论坛，并给用户提供快捷的发帖引导，很方便地让用户在这些象棋论坛上发布棋谱或发起求助。"
-Gui_szTips(6) = "　　象棋巫师目前主要通过网络发行，最新的版本可以从《象棋百科全书网》获得：" + vbCrLf + "　　http://www.elephantbase.net/"
-Gui_szTips(7) = "　　目前网络上已经有数以万计通用格式的棋谱文件(后缀.PGN)可供下载。您可以到以下页面下载近20年内全国顶级象棋比赛的棋谱：http://www.elephantbase.net/resource.htm" + vbCrLf + _
+Gui_szTips(6) = "　　象棋巫师目前主要通过网络发行，最新的版本可以从象棋百科全书网获得：" & vbCrLf & "　　http://www.xqbase.com/"
+Gui_szTips(7) = "　　目前网络上已经有数以万计通用格式的棋谱文件(后缀.PGN)可供下载。您可以到以下页面下载近20年内全国顶级象棋比赛的棋谱：http://www.xqbase.com/xqbase/" & vbCrLf & _
         "　　同时也欢迎您将自己制作的文件上传给我们。"
-Gui_szTips(8) = "　　如果您对象棋巫师有什么意见或建议，可以跟象棋巫师开发团队联系，邮件地址是：" + vbCrLf + "　　webmaster@elephantbase.net" + vbCrLf + _
+Gui_szTips(8) = "　　如果您对象棋巫师有什么意见或建议，可以跟象棋巫师开发团队联系，邮件地址是：" & vbCrLf & "　　webmaster@elephantbase.net" & vbCrLf & _
         "　　象棋巫师开发团队非常希望和大家保持联系。"
 Gui_szTips(9) = "　　您可以双击桌面上的象棋巫师图标(由棋子“象”、棋盘和巫师棒组成)直接启动象棋巫师。"
 Gui_szTips(10) = "　　如果您是一个象棋巫师的初学者，请您仔细阅读本软件“帮助”选单中的“帮助主题”并多加练习，祝您早日精通象棋巫师的各种功能。"
@@ -2568,35 +2609,94 @@ Gui_szTips(17) = "　　在欣赏棋谱的过程中，点击“播放棋局”按钮就可从该步自动演示
 Gui_szTips(18) = "　　在欣赏棋谱的过程中，可以使用棋盘倒置和左右调换功能来从不同的角度欣赏棋局。其中左右调换功能还可以一次将类似于“炮八平五”开局这样的棋谱自动转换成大家习惯的“炮二平五”。反之亦然。"
 Gui_szTips(19) = "　　如果在欣赏棋谱时遇到复杂的局面，可以点击“分析局面”按钮，将当前棋局新开设一个象棋巫师的窗口，自由推演后续的变化。"
 Gui_szTips(20) = "　　在两个象棋巫师窗口中，灵活运用“查看文本棋谱”和“从剪贴板导入”功能，可将推演棋盘中的棋谱记录导入到当前棋局中。"
-Gui_szTips(21) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" + vbCrLf + _
+Gui_szTips(21) = "　　象棋巫师是个自由软件，如果您觉得好用，可以自由地将本软件上载到任一个共享软件下载站点。" & vbCrLf & _
         "　　象棋巫师的源程序发布在 http://sourceforge.net/projects/xqwizard/ 这个页面上，您可以根据自己的需要对源程序进行修改，并依照GPL协议发布您修改过的源程序。"
-Gui_szTips(22) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.elephantbase.net/ 。" + vbCrLf + _
-        "　　您也可以将本软件的主页链接到自己的站点上。请您使用 http://www.elephantbase.net/ 作为链接的路径。"
+Gui_szTips(22) = "　　象棋巫师在开发过程中得到了广大棋迷朋友的热情支持，作者在此表示衷心的感谢，同时也希望您继续支持象棋巫师，关注 http://www.xqbase.com/ 。" & vbCrLf & _
+        "　　您也可以将本软件的主页链接到自己的站点上。请您使用 http://www.xqbase.com/ 作为链接的路径。"
 
-Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
-Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
-Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
-Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
+Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
+
+Else
+
+Gui_szTips(1) = "　　象棋巫師是一款功能超強的象棋教學、電腦對弈和棋譜編輯軟件，具有方便的人機對戰、棋譜記錄、欣賞、發布、管理棋局的功能，還內置大量象棋習題，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各種需要。"
+Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
+        "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.xqbase.com/league.htm ，下載到其他各具特色的引擎。"
+Gui_szTips(3) = "　　點擊“新的棋局”按鈕，就可以展開人機對弈，象棋巫師提供了五種的難度和四種的讓子模式給用戶體驗。"
+Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“電腦分析”按鈕，打開思考細節窗口。" + vbCrLf + _
+        "　　您可以把思考細節窗口中的思考路線複製下來，粘貼到主窗口中，對思考線路進行推演。"
+Gui_szTips(5) = "　　點擊“發布棋譜”按鈕，就可以在網上和棋友交流棋譜，或者向高手求助。" + vbCrLf + _
+        "　　象棋巫師推薦了幾個著名的象棋論壇，並給用戶提供快捷的發帖引導，很方便地讓用戶在這些象棋論壇上發布棋譜或發起求助。"
+Gui_szTips(6) = "　　象棋巫師目前主要通過網絡發行，最新的版本可以從《象棋百科全書網》獲得：" + vbCrLf + "　　http://www.xqbase.com/"
+Gui_szTips(7) = "　　目前網絡上已經有數以万計通用格式的棋譜文件(後綴.PGN)可供下載。您可以到以下頁面下載近20年內全國頂級象棋比賽的棋譜：http://www.xqbase.com/xqbase/" + vbCrLf + _
+        "　　同時也歡迎您將自己製作的文件上傳給我們。"
+Gui_szTips(8) = "　　如果您對象棋巫師有什么意見或建議，可以跟象棋巫師開發團隊聯系，郵件地址是：" + vbCrLf + "　　webmaster@elephantbase.net" + vbCrLf + _
+        "　　象棋巫師開發團隊非常希望和大家保持聯系。"
+Gui_szTips(9) = "　　您可以雙擊桌面上的象棋巫師圖標(由棋子“象”、棋盤和巫師棒組成)直接啟動象棋巫師。"
+Gui_szTips(10) = "　　如果您是一個象棋巫師的初學者，請您仔細閱讀本軟件“幫助”選單中的“幫助主題”并多加練習，祝您早日精通象棋巫師的各种功能。"
+Gui_szTips(11) = "　　象棋巫師支持文件關聯功能，雙擊PGN文件(圖標是棋子“相”)可以打開棋譜，雙擊FEN文件(圖標是棋盤)可以打開局面。"
+Gui_szTips(12) = "　　象棋巫師支持“象棋演播室”的棋譜。只要雙擊XQF文件(圖標是“象”字)，或者點擊“打開”按鈕并選擇一個XQF文件，象棋巫師就會打開這個棋譜。"
+Gui_szTips(13) = "　　象棋巫師最适合800x600和1024x768的顯示分辯率，在“選項設置”對話框(“選項”選單中的“設置”一項)，把“界面”設成“大”，就可在1024x768的顯示分辯率下得到最舒适的顯示效果。"
+Gui_szTips(14) = "　　點擊“查看文本棋譜”按鈕，就可以看到棋譜文本，為粘貼到BBS上或者Word文檔中提供了方便。"
+Gui_szTips(15) = "　　象棋巫師可讀入聯眾、弈天、中國游戲中心等中國象棋的存盤文件和大部分的文本棋譜文件，把這些含有著法的文本複製到剪貼板，點擊“從剪貼板導入”按鈕，這些著法就會錄製到象棋巫師中。"
+Gui_szTips(16) = "　　象棋巫師提供的棋譜鍵盤輸入法為喜歡鍵盤錄入棋譜的棋友提供了一种高效的棋譜輸入方法，棋友可根据自己的習慣在數字小鍵盤或WXF字母格式中任意選擇。"
+Gui_szTips(17) = "　　在欣賞棋譜的過程中，點擊“播放棋局”按鈕就可從該步自動演示，演示的時間間隔可以自由調整。再次點擊“播放棋局”按鈕可停止自動演示。"
+Gui_szTips(18) = "　　在欣賞棋譜的過程中，可以使用棋盤倒置和左右調換功能來從不同的角度欣賞棋局。其中左右調換功能還可以一次將類似於“炮八平五”開局這樣的棋譜自動轉換成大家習慣的“炮二平五”。反之亦然。"
+Gui_szTips(19) = "　　如果在欣賞棋譜時遇到複雜的局面，可以點擊“分析局面”按鈕，將當前棋局新開設一個象棋巫師的窗口，自由推演後續的變化。"
+Gui_szTips(20) = "　　在兩個象棋巫師窗口中，靈活運用“查看文本棋譜”和“從剪貼板導入”功能，可將推演棋盤中的棋譜記錄導入到當前棋局中。"
+Gui_szTips(21) = "　　象棋巫師是個自由軟件，如果您覺得好用，可以自由地將本軟件上載到任一個共享軟件下載站點。" + vbCrLf + _
+        "　　象棋巫師的源程序發布在 http://sourceforge.net/projects/xqwizard/ 這個頁面上，您可以根据自己的需要對源程序進行修改，并依照GPL協議發布您修改過的源程序。"
+Gui_szTips(22) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此表示衷心的感謝，同時也希望您繼續支持象棋巫師，關注 http://www.xqbase.com/ 。" + vbCrLf + _
+        "　　您也可以將本軟件的主頁鏈接到自己的站點上。請您使用 http://www.xqbase.com/ 作為鏈接的路徑。"
+
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公》"
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問》"
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而》"
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
+Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之臺，起於累土；千里之行，始於足下。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
 Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
-Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·地形》"
+Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" + vbCrLf + vbCrLf + _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·火攻》"
+
+End If
 
 End Sub
 
@@ -2606,7 +2706,7 @@ Public Sub LoadEndgames(ByVal szEpdName As String, ByVal szTitle As String)
 Dim nFileNo As Integer, i As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open App_szPath + "ENDGAMES\" + szEpdName + ".EPD" For Input As #nFileNo
+Open App_szPath & "ENDGAMES\" & szEpdName & ".EPD" For Input As #nFileNo
 On Error GoTo 0
 App_nEndgames = 0
 Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
@@ -2620,7 +2720,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+    MsgBox "无法打开文件 " & App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
     ' Unload frmEndgames ' App_nEndgames = 0 说明 frmEndgames 未被加载过
 Else
     If Gui_nEndgamesIndex >= App_nEndgames Then
@@ -2636,13 +2736,14 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + "ENDGAMES\" + szEpdName + ".EPD", vbExclamation
+MsgBox "无法打开文件 " & App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
 
 End Sub
 
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
@@ -2699,7 +2800,7 @@ Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
 Engine_nThreads = Str2Int(GetSetting("XQWizard", "Engine", "Threads", "0"), 0, 9)
 Engine_nRandomness = Str2Int(GetSetting("XQWizard", "Engine", "Randomness", "1"), 0, 3)
 Engine_nStyle = Str2Int(GetSetting("XQWizard", "Engine", "Style", "1"), 0, 2)
-Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", App_szPath + "ELEEYE.EXE")
+Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", App_szPath & "ELEEYE.EXE")
 
 End Sub
 
@@ -2709,58 +2810,58 @@ Public Sub SaveRegs()
 SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
-SaveSetting "XQWizard", "Options", "PlayIntv", LTrim(Str(Options_nPlayIntv))
-SaveSetting "XQWizard", "Options", "MoveDelay", LTrim(Str(Options_nMoveDelay))
+SaveSetting "XQWizard", "Options", "PlayIntv", Options_nPlayIntv
+SaveSetting "XQWizard", "Options", "MoveDelay", Options_nMoveDelay
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
 SaveSetting "XQWizard", "Options", "AlwaysPonder", IIf(Options_bAlwaysPonder, "1", "0")
 SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
 SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
-SaveSetting "XQWizard", "Options", "EnginePlay", LTrim(Str(Options_nEnginePlay))
-SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
-SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
-SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
-SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
-SaveSetting "XQWizard", "Options", "Music", LTrim(Str(Options_nMusic))
+SaveSetting "XQWizard", "Options", "EnginePlay", Options_nEnginePlay
+SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
+SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
+SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
+SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
+SaveSetting "XQWizard", "Options", "Music", Options_nMusic
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Options", "ShowNew", IIf(Options_bShowNew, "1", "0")
-SaveSetting "XQWizard", "Gui", "Left", LTrim(Str(Gui_nLeft))
-SaveSetting "XQWizard", "Gui", "Top", LTrim(Str(Gui_nTop))
-SaveSetting "XQWizard", "Gui", "EndgamesIndex", LTrim(Str(Gui_nEndgamesIndex))
+SaveSetting "XQWizard", "Gui", "Left", Gui_nLeft
+SaveSetting "XQWizard", "Gui", "Top", Gui_nTop
+SaveSetting "XQWizard", "Gui", "EndgamesIndex", Gui_nEndgamesIndex
 SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
-SaveSetting "XQWizard", "Gui", "TipIndex", LTrim(Str(Gui_nTipIndex))
+SaveSetting "XQWizard", "Gui", "TipIndex", Gui_nTipIndex
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
 SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
-SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
-SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
-SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
-SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
+SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
+SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
+SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
 SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
-SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
-SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
-SaveSetting "XQWizard", "Timer", "Depth", LTrim(Str(Timer_nDepth))
+SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
+SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
+SaveSetting "XQWizard", "Timer", "Depth", Timer_nDepth
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
-SaveSetting "XQWizard", "Timer", "InitTime", LTrim(Str(Timer_nInitTime))
-SaveSetting "XQWizard", "Timer", "IncMove", LTrim(Str(Timer_nIncMove))
-SaveSetting "XQWizard", "Timer", "IncTime", LTrim(Str(Timer_nIncTime))
+SaveSetting "XQWizard", "Timer", "InitTime", Timer_nInitTime
+SaveSetting "XQWizard", "Timer", "IncMove", Timer_nIncMove
+SaveSetting "XQWizard", "Timer", "IncTime", Timer_nIncTime
 SaveSetting "XQWizard", "Engine", "EngineLog", IIf(Engine_bEngineLog, "1", "0")
 SaveSetting "XQWizard", "Engine", "LogFile", Engine_szLogFile
 SaveSetting "XQWizard", "Engine", "UseBook", IIf(Engine_bUseBook, "1", "0")
 SaveSetting "XQWizard", "Engine", "UseEgtb", IIf(Engine_bUseEgtb, "1", "0")
 SaveSetting "XQWizard", "Engine", "BookFiles", Engine_szBookFiles
 SaveSetting "XQWizard", "Engine", "EgtbPaths", Engine_szEgtbPaths
-SaveSetting "XQWizard", "Engine", "Hash", LTrim(Str(Engine_nHash))
-SaveSetting "XQWizard", "Engine", "Threads", LTrim(Str(Engine_nThreads))
-SaveSetting "XQWizard", "Engine", "Randomness", LTrim(Str(Engine_nRandomness))
-SaveSetting "XQWizard", "Engine", "Style", LTrim(Str(Engine_nStyle))
+SaveSetting "XQWizard", "Engine", "Hash", Engine_nHash
+SaveSetting "XQWizard", "Engine", "Threads", Engine_nThreads
+SaveSetting "XQWizard", "Engine", "Randomness", Engine_nRandomness
+SaveSetting "XQWizard", "Engine", "Style", Engine_nStyle
 SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
 
 End Sub
@@ -2776,7 +2877,7 @@ If UCase(Right(sz, 4)) = ".PGN" Then
     sz = Left(sz, Len(sz) - 4)
 End If
 sz = IIf(sz = "", IIf(Engine_szName = "ElephantEye", "", Engine_szName), sz)
-App_frmMain.Caption = IIf(sz = "", "", sz + " - ") + IIf(App_bPromotion, "超级象棋巫师", "象棋巫师")
+App_frmMain.Caption = IIf(sz = "", "", sz & " - ") & IIf(App_bPromotion, "超级象棋巫师", "象棋巫师")
 
 End Sub
 
@@ -2788,14 +2889,14 @@ Dim dwCounter(0 To 1) As Long
 
 sz = ""
 QueryPerformanceCounter VarPtr(dwCounter(0))
-szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
-        STRING_VERSION + "&userid=" + szUserID)
+sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" & _
+        STRING_VERSION & "&userid=" & szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
-        MsgBox "无法访问 www.elephantbase.net，请稍后再试。", vbExclamation
+        MsgBox "无法访问 www.xqbase.com，请稍后再试。", vbExclamation
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
@@ -2804,15 +2905,15 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
         On Error GoTo 0
-        If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+        If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " & sz & " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
-                szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+                szUrl = "http://www.xqbase.com/xqwizard/download.htm"
             End If
             ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
         Else
@@ -2837,7 +2938,7 @@ If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
 End If
 ' 如果退弹成功，那么当天就不再退弹了
 SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_simp.htm"
+frmHide.web.Navigate "http://www.xqbase.com/advert/popup_simp.htm"
 ' 退弹调用了frmHide.web，为保证成功，等待1秒钟
 dfLastTime = Timer
 Do
@@ -2860,7 +2961,7 @@ Dim imgLoading As Picture
 ' 弹出启动画面，初始化
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
-App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show
 frmStartup.Refresh
 CchessInit
@@ -2972,7 +3073,7 @@ If Not App_bPrevInstance Then
     App_frmMain.Top = Gui_nTop
 End If
 App_frmMain.Show
-App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+App_frmMain.web.Navigate2 App_szPath & "ADVERT\elephantbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
 For i = 1 To 29
@@ -2998,87 +3099,81 @@ nEventIndex = EVENT_TIMER
 App_bRunning = True
 Do While App_bRunning
     ' 始终把接收引擎的事件放在第一位(高优先级)
-    If Not ReceiveEngine Then
-        ' 轮转循环，依次检测以下几个事件
-        Select Case nEventIndex
-        Case EVENT_TIMER ' 时间
-            If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
-                dfThisTime = Timer
-                dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
-                If dfThisTime > Timer_dfLastTime + 1# Then
-                    Timer_dfLastTime = Timer
-                    Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) - 1
-                    Timer_nTimeElapsed(Game_sdMax) = Timer_nTimeElapsed(Game_sdMax) + 1
-                    If Timer_nTimeElapsed(Game_sdMax) > 28800 Then
-                        Timer_nTimeElapsed(Game_sdMax) = 28800
-                    End If
-                    If Timer_nTimeLeft(Game_sdMax) < 0 Then
-                        MsgBox IIf(Game_sdMax = 0, "红方超时作负！", "黑方超时作负！"), vbInformation
-                        Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-                        Timer_bOver(Game_sdMax) = True
-                        Timer_nTimeLeft(Game_sdMax) = 0
-                        App_frmMain.lblResult = ResultString
-                    End If
-                    SetTimer
-                End If
-            End If
-            nEventIndex = EVENT_PLAY
-        Case EVENT_PLAY ' 播放棋局
-            If App_bPlay Then
-                dfThisTime = Timer
-                dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
-                If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
-                    Timer_dfLastTime = Timer
-                    MoveForward
-                    MoveFlush
-                End If
-            End If
-            nEventIndex = EVENT_ENGINE
-        Case EVENT_ENGINE ' 引擎(是否应该开始思考了)
-            If Engine_nStatus = IDLE_READY Then
-                If IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack) Then
-                    If Game_nCurrMove < Game_nMaxMove Then
-                        Do While Game_nCurrMove < Game_nMaxMove
-                            MoveForward
-                        Loop
-                        MoveFlush
-                    End If
-                    Engine_nStatus = BUSY_THINK
-                    RunEngine
-                ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
-                    Engine_nStatus = BUSY_ANALYZE
-                    RunEngine
-                End If
-            End If
-            nEventIndex = EVENT_MUSIC
-        Case EVENT_MUSIC ' 音乐
-            If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
-                If frmHide.mci.Length = frmHide.mci.Position Then
-                    frmHide.mci.To = 0
-                    frmHide.mci.Command = "Seek"
-                    frmHide.mci.Command = "Play"
-                End If
-            End If
-            nEventIndex = EVENT_ADVERT
-        Case EVENT_ADVERT ' 广告
-            ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
-            dfThisTime = Timer
-            dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
-            If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
-                Gui_dfLastTime = Timer
-                Gui_nAdvertIndex = Gui_nAdvertIndex + 1
-                If Gui_nAdvertIndex > Gui_nAdvertNum Then
-                    Gui_nAdvertIndex = 1
-                End If
-                App_frmMain.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
-            End If
-            nEventIndex = EVENT_GUI
-        Case EVENT_GUI ' 界面
-            DoEvents
-            nEventIndex = EVENT_TIMER
-        End Select
-        Sleep 1
+    If ReceiveEngine Then
+        GoTo lnContinue
     End If
+    ' 依次检测以下几个事件
+    ' 时间
+    If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
+        If dfThisTime > Timer_dfLastTime + 1# Then
+            Timer_dfLastTime = Timer
+            Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) - 1
+            Timer_nTimeElapsed(Game_sdMax) = Timer_nTimeElapsed(Game_sdMax) + 1
+            If Timer_nTimeElapsed(Game_sdMax) > 28800 Then
+                Timer_nTimeElapsed(Game_sdMax) = 28800
+            End If
+            If Timer_nTimeLeft(Game_sdMax) < 0 Then
+                MsgBox IIf(Game_sdMax = 0, "红方超时作负！", "黑方超时作负！"), vbInformation
+                Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+                Timer_bOver(Game_sdMax) = True
+                Timer_nTimeLeft(Game_sdMax) = 0
+                App_frmMain.lblResult = ResultString
+            End If
+            SetTimer
+        End If
+    End If
+    ' 播放棋局
+    If App_bPlay Then
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
+        If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
+            Timer_dfLastTime = Timer
+            MoveForward
+            MoveFlush
+        End If
+    End If
+    ' 引擎(是否应该开始思考了)
+    If Engine_nStatus = IDLE_READY Then
+        If IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack) Then
+            If Game_nCurrMove < Game_nMaxMove Then
+                Do While Game_nCurrMove < Game_nMaxMove
+                    MoveForward
+                Loop
+                MoveFlush
+            End If
+            Engine_nStatus = BUSY_THINK
+            RunEngine
+        ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
+            Engine_nStatus = BUSY_ANALYZE
+            RunEngine
+        End If
+    End If
+    ' 音乐
+    If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
+        If frmHide.mci.Length = frmHide.mci.Position Then
+            frmHide.mci.To = 0
+            frmHide.mci.Command = "Seek"
+            frmHide.mci.Command = "Play"
+        End If
+    End If
+    ' 广告
+    ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
+    If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
+        Gui_dfLastTime = Timer
+        Gui_nAdvertIndex = Gui_nAdvertIndex + 1
+        If Gui_nAdvertIndex > Gui_nAdvertNum Then
+            Gui_nAdvertIndex = 1
+        End If
+        App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
+    End If
+    ' 界面
+    DoEvents
+    Sleep 1
+lnContinue:
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then

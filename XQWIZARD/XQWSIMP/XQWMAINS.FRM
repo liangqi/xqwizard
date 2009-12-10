@@ -1844,6 +1844,20 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnOptionsTopMost 
          Caption         =   "总在最前面(&T)"
       End
+      Begin VB.Menu mnOptionsSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnOptionsLanguage_ 
+         Caption         =   "语言/&Language"
+         Begin VB.Menu mnOptionsLanguage 
+            Caption         =   "简体中文/&Simplified Chinese"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsLanguage 
+            Caption         =   "繁体中文/&Traditional Chinese"
+            Index           =   1
+         End
+      End
    End
    Begin VB.Menu mnTools 
       Caption         =   "工具(&T)"
@@ -2537,6 +2551,12 @@ Private Sub mnOptionsTopMost_Click()
 Options_bTopMost = Not Options_bTopMost
 mnOptionsTopMost.Checked = Options_bTopMost
 SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0, 0, SWP_NOMOVE + SWP_NOSIZE
+
+End Sub
+
+Private Sub mnOptionsLanguage_Click(Index As Integer)
+
+SaveSetting "XQWizard", "Options", "Language", Index
 
 End Sub
 
