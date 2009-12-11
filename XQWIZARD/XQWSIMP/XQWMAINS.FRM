@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
@@ -418,7 +418,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Label lblTimeRuleDown 
          Alignment       =   2  'Center
-         Caption         =   "时限规则"
          Height          =   255
          Left            =   720
          TabIndex        =   23
@@ -444,7 +443,6 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Label lblTimeRuleUp 
          Alignment       =   2  'Center
-         Caption         =   "时限规则"
          Height          =   255
          Left            =   720
          TabIndex        =   18
@@ -2568,7 +2566,12 @@ End Sub
 
 Private Sub mnOptionsLanguage_Click(Index As Integer)
 
-SaveSetting "XQWizard", "Options", "Language", Index
+If Not mnOptionsLanguage(Index).Checked Then
+    mnOptionsLanguage(Index).Checked = True
+    mnOptionsLanguage(1 - Index).Checked = False
+    SaveSetting "XQWizard", "Options", "Language", Index
+    MsgBox ST("语言已经更改，重新启动程序后才能生效。", "語言已經更改，重新啟動程序後才能生效。"), vbInformation
+End If
 
 End Sub
 
@@ -2657,9 +2660,9 @@ End If
 
 End Sub
 
-Private Sub tlb_ButtonClick(ByVal button As MSComctlLib.button)
+Private Sub tlb_ButtonClick(ByVal Button As MSComctlLib.Button)
 
-Select Case button.Key
+Select Case Button.Key
 Case "FileNew"
     mnFileNew_Click
 Case "FileOpen"
@@ -2717,7 +2720,7 @@ End Select
 
 End Sub
 
-Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, X As Single, Y As Single)
 
 Dim sq As Integer, pc As Integer, bCanPromote As Boolean, mv As Long
 sq = IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)
@@ -2826,7 +2829,7 @@ End If
 
 End Sub
 
-Private Sub btnCoord_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
+Private Sub btnCoord_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, X As Single, Y As Single)
 
 btnCoord(nIndex).Enabled = False
 btnCoord(nIndex).Enabled = True

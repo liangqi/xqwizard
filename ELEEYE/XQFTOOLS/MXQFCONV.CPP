@@ -37,12 +37,12 @@ int Pgn2Xqf(const char *szPgnFile, const char *szXqfFile);
 
 static EccoApiStruct EccoApi;
 
-extern "C" __declspec(dllexport) VOID WINAPI ConvInit(void) {
+extern "C" __declspec(dllexport) VOID WINAPI ConvInit(BOOL bTrad) {
   char szLibEccoFile[MAX_PATH];
   PreGenInit();
-  ChineseInit();
+  ChineseInit(bTrad != FALSE);
   LocatePath(szLibEccoFile, cszLibEccoFile);
-  EccoApi.Startup(szLibEccoFile);
+  EccoApi.Startup(szLibEccoFile, bTrad != FALSE);
 }
 
 extern "C" __declspec(dllexport) VOID WINAPI ConvXqf2Pgn(LPCSTR szXqfFile, LPCSTR szPgnFile) {

@@ -21,7 +21,7 @@ struct EccoApiStruct {
       EccoIndex = (LONG (WINAPI *)(LPCSTR)) GetProcAddress(hModule, "_EccoIndex@4");
       EccoOpening = (LPCSTR (WINAPI *)(LONG)) GetProcAddress(hModule, "_EccoOpening@4");
       EccoVariation = (LPCSTR (WINAPI *)(LONG)) GetProcAddress(hModule, "_EccoVariation@4");
-      EccoInitOpenVar(false);
+      EccoInitOpenVar((LONG) bTrad);
       return true;
     } else {
       return false;

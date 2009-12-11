@@ -217,6 +217,8 @@ Option Explicit
 
 Private Sub Form_Load()
 
+Dim i As Integer
+
 Select Case Options_nEnginePlay
 Case ENGINE_PLAY_RED
     optFlip(1).Value = True
@@ -247,6 +249,23 @@ End Select
 chkNoComputer.Value = IIf(Options_nEnginePlay = ENGINE_PLAY_NONE, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+frmFlip.Caption = "誰先走"
+optFlip(0).Caption = "我先走"
+optFlip(1).Caption = "電腦先走"
+frmHandicap.Caption = "先走讓子"
+optHandicap(0).Caption = "不讓子"
+optHandicap(1).Caption = "讓單馬"
 
 End Sub
 

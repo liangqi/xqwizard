@@ -74,7 +74,7 @@ Public Declare Function CchessFile2Move Lib "CCHESS.DLL" Alias "_CchessFile2Move
 Public Declare Function CchessMove2File Lib "CCHESS.DLL" Alias "_CchessMove2File@8" (ByVal mv As Long, ByRef pos As PositionStruct) As Long
 
 Public Declare Function EccoVersion Lib "ECCO.DLL" Alias "_EccoVersion@0" () As Long
-Public Declare Function EccoInitOpenVar Lib "ECCO.DLL" Alias "_EccoInitOpenVar@4" (Optional ByVal bTraditional As Long = 0) As Long
+Public Declare Sub EccoInitOpenVar Lib "ECCO.DLL" Alias "_EccoInitOpenVar@4" (Optional ByVal bTraditional As Long = 0)
 Public Declare Function EccoOpening Lib "ECCO.DLL" Alias "_EccoOpening@4" (ByVal dwEccoIndex As Long) As Long
 Public Declare Function EccoVariation Lib "ECCO.DLL" Alias "_EccoVariation@4" (ByVal dwEccoIndex As Long) As Long
 Public Declare Function EccoIndex Lib "ECCO.DLL" Alias "_EccoIndex@4" (ByVal szFileMove As String) As Long

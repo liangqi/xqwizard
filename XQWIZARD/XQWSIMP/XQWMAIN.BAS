@@ -42,7 +42,7 @@ Private Const IDI_QUESTION      As Long = 32514
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.41"
+Public Const STRING_VERSION     As String = "4.5"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
@@ -150,13 +150,6 @@ Public Const MUSIC_PAL          As Integer = 9
 Public Const MUSIC_CMUSIC       As Integer = 10
 Public Const MUSIC_NONE         As Integer = 11
 Public Const MUSIC_MAX          As Integer = 12
-' 全局常量——循环事件
-Public Const EVENT_TIMER        As Integer = 0
-Public Const EVENT_PLAY         As Integer = 1
-Public Const EVENT_ENGINE       As Integer = 2
-Public Const EVENT_MUSIC        As Integer = 3
-Public Const EVENT_ADVERT       As Integer = 4
-Public Const EVENT_GUI          As Integer = 5
 ' 全局常量——棋盘坐标
 Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
 ' 全局常量——让子
@@ -785,8 +778,8 @@ For i = 1 To Game_nMaxMove
 Next
 Print #nFileNo, Choose(Game_nResult + 1, " *", " 1-0", " 1/2-1/2", " 0-1")
 Print #nFileNo, "======================"
-Print #nFileNo, ST(" 欢迎访问象棋百科全书网 ", " 歡迎訪問象棋百科全書網 ")
-Print #nFileNo, ST(" 推荐用象棋巫师观赏棋谱 ", " 推荐用象棋巫師觀賞棋譜 ")
+Print #nFileNo, ST("欢迎访问象棋百科全书网", "歡迎訪問象棋百科全書網")
+Print #nFileNo, ST("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
 Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 If Not bTempFile Then
@@ -977,7 +970,7 @@ If sdThis = 0 Eqv App_bFlipped Then
                 "走完 " & Timer_nMoveLeft(sdThis) & " 步")
     Else
         App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
-                "走完" & Timer_nMoveLeft(sdThis) & " 步")
+                "走完 " & Timer_nMoveLeft(sdThis) & " 步")
     End If
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
@@ -1024,7 +1017,7 @@ If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
     Else
         szWinLoss = Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "勝", "负"), _
                 "和", IIf(Game_sdStart = 0, "負", "勝"))
-        ResultString = "(著法：" & IIf(Game_sdStart = 0, "红先", "黑先") & szWinLoss & ")"
+        ResultString = "(著法：" & IIf(Game_sdStart = 0, "紅先", "黑先") & szWinLoss & ")"
     End If
 Else
     If Options_nLanguage = 0 Then
@@ -1235,7 +1228,7 @@ End Sub
 Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
         Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, X As Integer, Y As Integer
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -1243,24 +1236,24 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-y = sq \ 16
-x = sq Mod 16
-Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - y) * 9 + 11 - x, (y - 3) * 9 + x - 3))
+Y = sq \ 16
+X = sq Mod 16
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - Y) * 9 + 11 - X, (Y - 3) * 9 + X - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
     ' 以下是新功能 - 抖一下将死的子
     img.ZOrder
-    x = img.Left
-    y = img.Top
+    X = img.Left
+    Y = img.Top
     For i = 5 To 1 Step -1
-        img.Move x + i * 20, y
+        img.Move X + i * 20, Y
         img.Refresh
         Sleep 50
-        img.Move x - i * 20, y
+        img.Move X - i * 20, Y
         img.Refresh
         Sleep 50
     Next
-    img.Move x, y
+    img.Move X, Y
     ' 以上是新功能 - 抖一下将死的子
 End If
 img.Picture = App_picPieces(nPicId)
@@ -2794,7 +2787,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
+    ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD"
     ' Unload frmEndgames ' App_nEndgames = 0 说明 frmEndgames 未被加载过
 Else
     If Gui_nEndgamesIndex >= App_nEndgames Then
@@ -3028,11 +3021,118 @@ Loop Until dfThisTime > dfLastTime + 5#
 
 End Sub
 
+' 主窗口语言
+Public Sub SetLang()
+
+Dim i As Integer
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+App.Title = "象棋巫師"
+App_frmMain.Font.Charset = 136
+App_frmMain.Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To App_frmMain.Controls.Count - 1
+    App_frmMain.Controls(i).Font = App_frmMain.Font
+Next
+On Error GoTo 0
+App_frmMain.strpRight.Tabs(1).Caption = "棋局信息"
+App_frmMain.strpRight.Tabs(2).Caption = "電腦分析"
+App_frmMain.lblTimeLeftUp1.Caption = "時限"
+App_frmMain.lblTimeElapsedUp1.Caption = "用時"
+App_frmMain.lblTimeLeftDown1.Caption = "時限"
+App_frmMain.lblTimeElapsedDown1.Caption = "用時"
+App_frmMain.frmMove.Caption = "著法列表"
+App_frmMain.lblInput.Caption = "輸入"
+App_frmMain.lblFormat.Caption = "格式"
+App_frmMain.lblComment.Caption = "註釋"
+
+End Sub
+
 ' 以下是主函数例程
+
+' 用户事件
+Public Sub DoEvent()
+
+Dim dfThisTime As Double
+' 依次检测以下几个事件
+' 时间
+If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
+    If dfThisTime > Timer_dfLastTime + 1# Then
+        Timer_dfLastTime = Timer
+        Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) - 1
+        Timer_nTimeElapsed(Game_sdMax) = Timer_nTimeElapsed(Game_sdMax) + 1
+        If Timer_nTimeElapsed(Game_sdMax) > 28800 Then
+            Timer_nTimeElapsed(Game_sdMax) = 28800
+        End If
+        If Timer_nTimeLeft(Game_sdMax) < 0 Then
+            MsgBox IIf(Game_sdMax = 0, ST("红方超时作负！", "紅方超時作負！"), _
+                    ST("黑方超时作负！", "黑方超時作負！")), vbInformation
+            Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+            Timer_bOver(Game_sdMax) = True
+            Timer_nTimeLeft(Game_sdMax) = 0
+            App_frmMain.lblResult = ResultString
+        End If
+        SetTimer
+    End If
+End If
+' 播放棋局
+If App_bPlay Then
+    dfThisTime = Timer
+    dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
+    If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
+        Timer_dfLastTime = Timer
+        MoveForward
+        MoveFlush
+    End If
+End If
+' 引擎(是否应该开始思考了)
+If Engine_nStatus = IDLE_READY Then
+    If IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack) Then
+        If Game_nCurrMove < Game_nMaxMove Then
+            Do While Game_nCurrMove < Game_nMaxMove
+                MoveForward
+            Loop
+            MoveFlush
+        End If
+        Engine_nStatus = BUSY_THINK
+        RunEngine
+    ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
+        Engine_nStatus = BUSY_ANALYZE
+        RunEngine
+    End If
+End If
+' 音乐
+If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
+    If frmHide.mci.Length = frmHide.mci.Position Then
+        frmHide.mci.To = 0
+        frmHide.mci.Command = "Seek"
+        frmHide.mci.Command = "Play"
+    End If
+End If
+' 广告
+' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
+dfThisTime = Timer
+dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
+If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
+    Gui_dfLastTime = Timer
+    Gui_nAdvertIndex = Gui_nAdvertIndex + 1
+    If Gui_nAdvertIndex > Gui_nAdvertNum Then
+        Gui_nAdvertIndex = 1
+    End If
+    App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
+End If
+' 界面
+DoEvents
+Sleep 1
+
+End Sub
 
 Public Sub Main()
 
-Dim dfThisTime As Double, nEventIndex As Integer, nLogFileNo As Integer
+Dim nLogFileNo As Integer
 Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 Dim imgLoading As Picture
 
@@ -3055,7 +3155,7 @@ Else
     sz = Command
 End If
 EccoInitOpenVar Options_nLanguage
-ConvInit
+ConvInit Options_nLanguage
 LoadTips
 If Options_bLargeGui Then
     Set App_frmMain = frmMainLarge
@@ -3150,6 +3250,8 @@ If Not App_bPrevInstance Then
     App_frmMain.Left = Gui_nLeft
     App_frmMain.Top = Gui_nTop
 End If
+' 在显示窗口以前，先把语言设置好
+SetLang
 App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.txtMove.SetFocus
@@ -3163,6 +3265,7 @@ If Not App_bPromotion Then
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
+App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
 Unload frmStartup
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
@@ -3173,86 +3276,12 @@ If bNewGame Then
 End If
 
 ' 进入用户状态，接收事件
-nEventIndex = EVENT_TIMER
 App_bRunning = True
 Do While App_bRunning
     ' 始终把接收引擎的事件放在第一位(高优先级)
-    If ReceiveEngine Then
-        GoTo lnContinue
+    If Not ReceiveEngine Then
+        DoEvent
     End If
-    ' 依次检测以下几个事件
-    ' 时间
-    If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
-        dfThisTime = Timer
-        dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
-        If dfThisTime > Timer_dfLastTime + 1# Then
-            Timer_dfLastTime = Timer
-            Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) - 1
-            Timer_nTimeElapsed(Game_sdMax) = Timer_nTimeElapsed(Game_sdMax) + 1
-            If Timer_nTimeElapsed(Game_sdMax) > 28800 Then
-                Timer_nTimeElapsed(Game_sdMax) = 28800
-            End If
-            If Timer_nTimeLeft(Game_sdMax) < 0 Then
-                MsgBox IIf(Game_sdMax = 0, ST("红方超时作负！", "紅方超時作負！"), _
-                        ST("黑方超时作负！", "黑方超時作負！")), vbInformation
-                Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-                Timer_bOver(Game_sdMax) = True
-                Timer_nTimeLeft(Game_sdMax) = 0
-                App_frmMain.lblResult = ResultString
-            End If
-            SetTimer
-        End If
-    End If
-    ' 播放棋局
-    If App_bPlay Then
-        dfThisTime = Timer
-        dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
-        If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
-            Timer_dfLastTime = Timer
-            MoveForward
-            MoveFlush
-        End If
-    End If
-    ' 引擎(是否应该开始思考了)
-    If Engine_nStatus = IDLE_READY Then
-        If IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack) Then
-            If Game_nCurrMove < Game_nMaxMove Then
-                Do While Game_nCurrMove < Game_nMaxMove
-                    MoveForward
-                Loop
-                MoveFlush
-            End If
-            Engine_nStatus = BUSY_THINK
-            RunEngine
-        ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
-            Engine_nStatus = BUSY_ANALYZE
-            RunEngine
-        End If
-    End If
-    ' 音乐
-    If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
-        If frmHide.mci.Length = frmHide.mci.Position Then
-            frmHide.mci.To = 0
-            frmHide.mci.Command = "Seek"
-            frmHide.mci.Command = "Play"
-        End If
-    End If
-    ' 广告
-    ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
-    dfThisTime = Timer
-    dfThisTime = dfThisTime + IIf(dfThisTime < Gui_dfLastTime, 86400#, 0#)
-    If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
-        Gui_dfLastTime = Timer
-        Gui_nAdvertIndex = Gui_nAdvertIndex + 1
-        If Gui_nAdvertIndex > Gui_nAdvertNum Then
-            Gui_nAdvertIndex = 1
-        End If
-        App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
-    End If
-    ' 界面
-    DoEvents
-    Sleep 1
-lnContinue:
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
