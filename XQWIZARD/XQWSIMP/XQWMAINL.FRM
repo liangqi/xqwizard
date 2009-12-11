@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -1885,8 +1885,8 @@ Attribute VB_Exposed = False
 ' XQWMAIN.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -1907,8 +1907,8 @@ Option Explicit
 Private Sub Form_Load()
 
 lstMoveText.Clear
-lstMoveText.AddItem "===开始===", 0
-cmbFormat.AddItem "炮二平五", 0
+lstMoveText.AddItem ST("===开始===", "===開始==="), 0
+cmbFormat.AddItem ST("炮二平五", "炮二平五"), 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 
@@ -1987,7 +1987,7 @@ End Sub
 Private Sub mnFilePgn_Click()
 
 WriteFile WRITE_TEMP_FILE
-ShellExecuteA 0, vbNullString, App_szPath + "查看文本棋谱(只读).TXT", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2012,7 +2012,8 @@ End Sub
 Private Sub mnMoveDel_Click()
 
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox("必须清除以后所有的着法。" + vbCrLf + "是否继续？", vbYesNo + vbQuestion) <> vbYes Then
+    If MsgBox(ST("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & _
+            ST("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
         Exit Sub
     End If
 End If
@@ -2067,7 +2068,7 @@ Private Sub mnMoveImport_Click()
 
 Dim nFileNo As Integer, i As Integer, szFileName As String
 Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
-szFileName = FileDialog("从文本文件导入", "文本文件", "TXT")
+szFileName = FileDialog(ST("从文本文件导入", "從文本文件導入"), ST("文本文件", "文本文件"), "TXT")
 If szFileName = "" Then
     Exit Sub
 End If
@@ -2106,7 +2107,7 @@ FileUpdated
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + szFileName, vbExclamation
+ErrorOpen szFileName
 
 End Sub
 
@@ -2205,7 +2206,7 @@ Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
 Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
-MsgBox "FEN串已复制到剪贴板。", vbInformation
+MsgBox ST("FEN串已复制到剪贴板。", "FEN串已復製到剪貼板"), vbInformation
 
 End Sub
 
@@ -2224,7 +2225,7 @@ Dim szFileName As String
 If CancelSave Then
     Exit Sub
 End If
-szFileName = FileDialog("从FEN文件导入", "象棋局面文件", "FEN")
+szFileName = FileDialog(ST("从FEN文件导入", "從FEN文件導入"), ST("象棋局面文件", "象棋局面文件"), "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -2234,7 +2235,8 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog("导出到FEN文件", "象棋局面文件", "FEN", DefaultFileName)
+szFileName = FileDialog(ST("导出到FEN文件", "導出到FEN文件"), _
+        ST("象棋局面文件", "象棋局面文件"), "FEN", DefaultFileName)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -2247,7 +2249,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + szFileName, vbExclamation
+ErrorOpen szFileName
 
 End Sub
 
@@ -2284,7 +2286,7 @@ End Sub
 Private Sub mnSearchOpening_Click()
 
 If Game_szEcco <> "" Then
-    ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?ecco=" + _
+    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?ecco=" + _
             Game_szEcco, vbNullString, vbNullString, SW_SHOWNORMAL
 End If
 
@@ -2294,7 +2296,7 @@ Private Sub mnSearchPosition_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?position=" + _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?position=" + _
         UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
@@ -2303,7 +2305,7 @@ Private Sub mnSearchEndgame_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/?endgame=" + _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" + _
         UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
@@ -2322,7 +2324,7 @@ Private Sub mnEndgamesFunny_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "FUNNY", "趣味象棋"
+LoadEndgames "FUNNY", ST("趣味象棋", "趣味象棋")
 
 End Sub
 
@@ -2333,8 +2335,15 @@ If CancelSave Then
     Exit Sub
 End If
 szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
-szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
-        "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
+If Options_nLanguage = 0 Then
+    szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", _
+            "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
+            "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
+Else
+    szTitle = Choose(nIndex + 1, "基本殺法", "基本戰術", "中局殺法", "象棋殺著大全", _
+            "殘局攻殺譜", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
+            "", "橘中秘(殘局篇)", "適情雅趣", "爛柯神機", "象局匯存", "江湖百局秘譜")
+End If
 LoadEndgames szEpdName, szTitle
 
 End Sub
@@ -2354,7 +2363,7 @@ End Sub
 Private Sub mnEngineLoad_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("加载引擎", "引擎文件", "EXE")
+szFileName = FileDialog(ST("加载引擎", "加載引擎"), ST("引擎文件", "引擎文件"), "EXE")
 If szFileName <> "" Then
     Engine_szFile = szFileName
     OpenEngine LOAD_WITH_INFO
@@ -2466,13 +2475,16 @@ If Engine_bDraw Then
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST
-    EndGame "DRAW", IIf(Game_sdMax = 0, "红方接受提和。", "黑方接受提和。")
+    EndGame "DRAW", IIf(Game_sdMax = 0, ST("红方接受提和。", "紅方接受提和。"), _
+            ST("黑方接受提和。", "黑方接受提和。"))
 Else
     If mnEngineDraw.Checked Then
-        MsgBox "放弃提和。", vbInformation
+        MsgBox ST("放弃提和。", "放棄提和。"), vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox "请走一着棋，然后等待电脑接受或拒绝提和。" + vbCrLf + "如果电脑拒绝提和，则不会理睬，而是继续走棋。", vbInformation
+        MsgBox ST("请走一着棋，然后等待电脑接受或拒绝提和。", "請走一著棋，然後等待電腦接受或拒絕提和。") & _
+                vbCrLf & ST("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
+                "如果電腦拒絕提和，則不會理睬，而是繼續走棋。"), vbInformation
         mnEngineDraw.Checked = True
     End If
 End If
@@ -2550,7 +2562,7 @@ End Sub
 
 Private Sub mnHelpContents_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqwizard/help.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2568,19 +2580,19 @@ End Sub
 
 Private Sub mnHelpHome_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub mnHelpBase_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/xqbase/", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub mnHelpLeague_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.elephantbase.net/league.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/league.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2598,7 +2610,13 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+If Options_nLanguage = 0 Then
+    MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+Else
+    MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT & vbCrLf & "本產品符合GNU通用公共許可協議", "關於象棋巫師"
+End If
 
 End Sub
 

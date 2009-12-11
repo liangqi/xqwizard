@@ -3,8 +3,8 @@ Option Explicit
 ' ADVERT.BAS - Source Code for XiangQi Wizard, Part XV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.94, Last Modified: Apr. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.50, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ Public Sub DownloadAdvertList(ByVal szAdvertFile As String)
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szAdvertFile)
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szAdvertFile)
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -82,7 +82,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szFileName + ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -95,7 +95,7 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.elephantbase.net/advert/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szFileName + ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
@@ -128,7 +128,7 @@ If EOF(nFileNo) Then
 End If
 ' 检查广告文件是否正确
 Line Input #nFileNo, sz
-If sz <> "www.elephantbase.net Advert List" Then
+If sz <> "www.xqbase.com Advert List" Then
     Close #nFileNo
     Exit Sub
 End If
@@ -136,7 +136,7 @@ End If
 Do While Not EOF(nFileNo)
     Line Input #nFileNo, sz
     ' 每一行包含的信息有：文件名，播放时间，htm文件大小，gif文件大小
-    ' 四项用逗号隔开，如“elephantbase,10,183,5618”
+    ' 四项用逗号隔开，如“xqbase,11,111,1111”
     szs = Split(sz, ",")
     If UBound(szs) >= 0 Then
         Gui_nAdvertNum = Gui_nAdvertNum + 1

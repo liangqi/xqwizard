@@ -374,8 +374,16 @@ NumberText = IIf(sd = 0, cnt & ".", Space(Len("" & cnt) + 1))
 
 End Function
 
+' ÎŞ·¨´ò¿ªÎÄ¼şÌáÊ¾
+Public Sub ErrorOpen(ByVal szFileName As String)
+
+MsgBox ST("ÎŞ·¨´ò¿ªÎÄ¼ş ", "Ÿo·¨´òé_ÎÄ¼ş ") & szFileName, vbExclamation
+
+End Sub
+
 ' ´ò¿ªÎÄ¼ş¶Ô»°¿ò
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, ByVal szExt As String, Optional ByVal szSave As String = "") As String
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, _
+        ByVal szExt As String, Optional ByVal szSave As String = "") As String
 
 Dim szFileName As String, szFilter As String
 szFilter = szFileType & " (*." & szExt & ")|*." & szExt & "|" & ST("ËùÓĞÎÄ¼ş", "ËùÓĞÎÄ¼ş") & " (*.*)|*.*"
@@ -440,7 +448,8 @@ End If
 
 End Function
 
-' ¶ÁÈëÒ»ĞĞPGNÎÄ¼şµÄÄÚÈİ£¬·µ»ØTrue±íÊ¾Õû¸öÆå¾Ö½áÊø£¬·µ»ØFalse±íÊ¾ºóÃæ»¹ÓĞÄÚÈİ£¬¶ÁÍêºóÊ£ÏÂµÄÄÚÈİ±£´æÔÚszLineStrÖĞ£¬ÒÔºóÈÔ¾ÉĞëÓÃ"ImportLine"È¥¶Á
+' ¶ÁÈëÒ»ĞĞPGNÎÄ¼şµÄÄÚÈİ£¬·µ»ØTrue±íÊ¾Õû¸öÆå¾Ö½áÊø£¬·µ»ØFalse±íÊ¾ºóÃæ»¹ÓĞÄÚÈİ£¬
+' ¶ÁÍêºóÊ£ÏÂµÄÄÚÈİ±£´æÔÚszLineStrÖĞ£¬ÒÔºóÈÔ¾ÉĞëÓÃ"ImportLine"È¥¶Á
 Public Function ImportLine(ByRef szLineStr As String, ByRef szRemStr As String, ByRef nRemLevel As Integer) As Boolean
 
 Dim i As Integer, j As Integer, bEndFor As Boolean
@@ -528,7 +537,8 @@ Else
                     Exit For
                 End If
             Else
-                If (szChar >= "A" And szChar <= "Z") Or (szChar >= "a" And szChar <= "z") Or szChar = "+" Or szChar = "-" Or szChar = "=" Then
+                If (szChar >= "A" And szChar <= "Z") Or (szChar >= "a" And szChar <= "z") Or _
+                        szChar = "+" Or szChar = "-" Or szChar = "=" Then
                     j = InStr(i + 1, szLineStr, " ")
                     If j = 0 Then
                         szMoveStr = Mid(szLineStr, i)
@@ -640,7 +650,8 @@ Do While Not (EOF(nFileNo) And szLineStr = "" And szLineStrEx = "")
             ElseIf GetLabel(Game_szBlackTeam, szLineStr, "BLACKTEAM") Then
             ElseIf GetLabel(Game_szBlackPlayer, szLineStr, "BLACK") Then
             ElseIf GetLabel(szResult, szLineStr, "RESULT") Then
-                Game_nResult = Switch(szResult = "1-0", RESULT_REDWIN, szResult = "1/2-1/2", RESULT_DRAW, szResult = "0-1", RESULT_BLACKWIN, True, RESULT_UNKNOWN)
+                Game_nResult = Switch(szResult = "1-0", RESULT_REDWIN, szResult = "1/2-1/2", RESULT_DRAW, _
+                        szResult = "0-1", RESULT_BLACKWIN, True, RESULT_UNKNOWN)
             ElseIf GetLabel(Game_szEcco, szLineStr, "ECCO") Then
                 App_bAutoEcco = False
             ElseIf GetLabel(Game_szOpen, szLineStr, "OPENING") Then
@@ -691,7 +702,7 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 If Not bAutoSave Then
-    MsgBox "ÎŞ·¨´ò¿ªÎÄ¼ş " & App_szFileName, vbExclamation
+    ErrorOpen App_szFileName
 End If
 BoardFlush
 LabelFlush
@@ -787,7 +798,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "ÎŞ·¨´ò¿ªÎÄ¼ş " & IIf(bTempFile, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), App_szFileName), vbExclamation
+ErrorOpen IIf(bTempFile, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), App_szFileName)
 
 End Sub
 
@@ -805,11 +816,15 @@ Public Sub OpenFile()
 
 Dim szFileName As String
 If Options_nLanguage = 0 Then
-    szFileName = OpenFileDialog("´ò¿ªÆåÆ×ÎÄ¼ş", "ËùÓĞÆåÆ× (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
-            "¿ÉÒÆÖ²ÆåÆ× (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆåÆ× (*.XQF)|*.XQF|ŞÄÌìÆåÆ× (*.MXQ)|*.MXQ|QQÏóÆåÆåÆ× (*.CHE)|*.CHE|ÁªÖÚÏóÆåÆåÆ× (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆåÆ× (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
+    szFileName = OpenFileDialog("´ò¿ªÆåÆ×ÎÄ¼ş", "ËùÓĞÆåÆ× (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|" & _
+            "*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
+            "¿ÉÒÆÖ²ÆåÆ× (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆåÆ× (*.XQF)|*.XQF|ŞÄÌìÆåÆ× (*.MXQ)|*.MXQ|" & _
+            "QQÏóÆåÆåÆ× (*.CHE)|*.CHE|ÁªÖÚÏóÆåÆåÆ× (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆåÆ× (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
 Else
-    szFileName = OpenFileDialog("´òé_Æå×VÎÄ¼ş", "ËùÓĞÆå×V (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
-            "¿ÉÒÆÖ²Æå×V (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆå×V (*.XQF)|*.XQF|ŞÄÌìÆå×V (*.MXQ)|*.MXQ|QQÏóÆåÆå×V (*.CHE)|*.CHE|Â“±ŠÏóÆåÆå×V (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆå×V (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
+    szFileName = OpenFileDialog("´òé_Æå×VÎÄ¼ş", "ËùÓĞÆå×V (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|" & _
+            "*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
+            "¿ÉÒÆÖ²Æå×V (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆå×V (*.XQF)|*.XQF|ŞÄÌìÆå×V (*.MXQ)|*.MXQ|" & _
+            "QQÏóÆåÆå×V (*.CHE)|*.CHE|Â“±ŠÏóÆåÆå×V (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆå×V (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
 End If
 If szFileName <> "" Then
     App_szFileName = szFileName
@@ -827,9 +842,11 @@ If Not (Options_bPromptSave And App_bUpdated) Then
     Exit Function
 End If
 If Options_nLanguage = 0 Then
-    dwResult = MsgBox(IIf(App_szFileName = "", "ÎÄ¼şÒÑ¸ü¸Ä¡£", "ÎÄ¼ş " & App_szFileName & " ÒÑ¸ü¸Ä¡£") & vbCrLf & "ÊÇ·ñ±£´æ¸ü¸Ä£¿", vbYesNoCancel + vbExclamation)
+    dwResult = MsgBox(IIf(App_szFileName = "", "ÎÄ¼şÒÑ¸ü¸Ä¡£", "ÎÄ¼ş " & App_szFileName & " ÒÑ¸ü¸Ä¡£") & _
+            vbCrLf & "ÊÇ·ñ±£´æ¸ü¸Ä£¿", vbYesNoCancel + vbExclamation)
 Else
-    dwResult = MsgBox(IIf(App_szFileName = "", "ÎÄ¼şÒÑ¸ü¸Ä¡£", "ÎÄ¼ş " & App_szFileName & " ÒÑ¸ü¸Ä¡£") & vbCrLf & "ÊÇ·ñ±£´æ¸ü¸Ä£¿", vbYesNoCancel + vbExclamation)
+    dwResult = MsgBox(IIf(App_szFileName = "", "ÎÄ¼şÒÑ¸ü¸Ä¡£", "ÎÄ¼ş " & App_szFileName & " ÒÑ¸ü¸Ä¡£") & _
+            vbCrLf & "ÊÇ·ñ±£´æ¸ü¸Ä£¿", vbYesNoCancel + vbExclamation)
 End If
 Select Case dwResult
 Case vbYes
@@ -898,7 +915,7 @@ LoadFenStr szFenStr
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "ÎŞ·¨´ò¿ªÎÄ¼ş " & szFenFile, vbExclamation
+ErrorOpen szFenFile
 
 End Sub
 
@@ -956,17 +973,21 @@ nSeconds = IIf(sd = -1, Game_sdMax, sd)
 If sdThis = 0 Eqv App_bFlipped Then
     App_frmMain.lblTimeLeftUp.Caption = TimeText(Timer_nTimeLeft(sdThis))
     If Options_nLanguage = 0 Then
-        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
+        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", _
+                "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
     Else
-        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", "×ßÍê" & Timer_nMoveLeft(sdThis) & " ²½")
+        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", _
+                "×ßÍê" & Timer_nMoveLeft(sdThis) & " ²½")
     End If
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
     App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
     If Options_nLanguage = 0 Then
-        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
+        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", _
+                "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
     Else
-        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
+        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "Ã¿²½¼Ó " & Timer_nIncTime & " Ãë", _
+                "×ßÍê " & Timer_nMoveLeft(sdThis) & " ²½")
     End If
     App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 End If
@@ -994,21 +1015,28 @@ End Function
 ' ±ÈÈü½á¹û×Ö·û´®
 Public Function ResultString() As String
 
+Dim szWinLoss As String
 If Game_szRedPlayer = "" Or Game_szBlackPlayer = "" Then
     If Options_nLanguage = 0 Then
-        ResultString = "(×Å·¨£º" & IIf(Game_sdStart = 0, "ºìÏÈ", "ºÚÏÈ") & Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "Ê¤", "¸º"), "ºÍ", IIf(Game_sdStart = 0, "¸º", "Ê¤")) & ")"
+        szWinLoss = Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "Ê¤", "¸º"), _
+                "ºÍ", IIf(Game_sdStart = 0, "¸º", "Ê¤"))
+        ResultString = "(×Å·¨£º" & IIf(Game_sdStart = 0, "ºìÏÈ", "ºÚÏÈ") & szWinLoss & ")"
     Else
-        ResultString = "(Öø·¨£º" & IIf(Game_sdStart = 0, "ºìÏÈ", "ºÚÏÈ") & Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "„Ù", "¸º"), "ºÍ", IIf(Game_sdStart = 0, "Ø“", "„Ù")) & ")"
+        szWinLoss = Choose(Game_nResult + 1, "", IIf(Game_sdStart = 0, "„Ù", "¸º"), _
+                "ºÍ", IIf(Game_sdStart = 0, "Ø“", "„Ù"))
+        ResultString = "(Öø·¨£º" & IIf(Game_sdStart = 0, "ºìÏÈ", "ºÚÏÈ") & szWinLoss & ")"
     End If
 Else
     If Options_nLanguage = 0 Then
+        szWinLoss = Choose(Game_nResult + 1, " (¶Ô) ", IIf(Game_sdStart = 0, " (ÏÈÊ¤) ", " (ºóÊ¤) "), _
+                IIf(Game_sdStart = 0, " (ÏÈºÍ) ", " (ºóºÍ) "), IIf(Game_sdStart = 0, " (ÏÈ¸º) ", " (ºó¸º) "))
         ResultString = Game_szRedTeam & IIf(Game_szRedTeam = "", "", " ") & Game_szRedPlayer & _
-                Choose(Game_nResult + 1, " (¶Ô) ", IIf(Game_sdStart = 0, " (ÏÈÊ¤) ", " (ºóÊ¤) "), IIf(Game_sdStart = 0, " (ÏÈºÍ) ", " (ºóºÍ) "), IIf(Game_sdStart = 0, " (ÏÈ¸º) ", " (ºó¸º) ")) & _
-                Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
+                szWinLoss & Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
     Else
+        szWinLoss = Choose(Game_nResult + 1, " (Œ¦) ", IIf(Game_sdStart = 0, " (ÏÈ„Ù) ", " (áá„Ù) "), _
+                IIf(Game_sdStart = 0, " (ÏÈºÍ) ", " (ááºÍ) "), IIf(Game_sdStart = 0, " (ÏÈØ“) ", " (ááØ“) "))
         ResultString = Game_szRedTeam & IIf(Game_szRedTeam = "", "", " ") & Game_szRedPlayer & _
-                Choose(Game_nResult + 1, " (Œ¦) ", IIf(Game_sdStart = 0, " (ÏÈ„Ù) ", " (áá„Ù) "), IIf(Game_sdStart = 0, " (ÏÈºÍ) ", " (ááºÍ) "), IIf(Game_sdStart = 0, " (ÏÈØ“) ", " (ááØ“) ")) & _
-                Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
+                szWinLoss & Game_szBlackTeam & IIf(Game_szBlackTeam = "", "", " ") & Game_szBlackPlayer
     End If
 End If
 
@@ -1020,7 +1048,8 @@ Public Function DateSiteString() As String
 If Game_szDate = "" Then
     DateSiteString = IIf(Game_szSite = "", "", ST("(ŞÄÓÚ ", "(ŞÄì¶ ") & Game_szSite & ")")
 Else
-    DateSiteString = "(" & Game_szDate & IIf(Game_szSite = "", ")", ST(" ŞÄÓÚ ", " ŞÄì¶ ") & Game_szSite & ")")
+    DateSiteString = "(" & Game_szDate & IIf(Game_szSite = "", ")", ST(" ŞÄÓÚ ", " ŞÄì¶ ") & _
+            Game_szSite & ")")
 End If
 
 End Function
@@ -1028,8 +1057,15 @@ End Function
 ' ¿ª¾Ö×Ö·û´®
 Public Function OpenString() As String
 
-OpenString = Game_szOpen & IIf(Game_szOpen = "" Or Game_szVar = "", "", "¡ª¡ª") & Game_szVar & _
-        Switch(Game_szEcco = "", "", Game_szOpen = "" And Game_szVar = "", ST("(ECCO¿ª¾Ö±àºÅ£º", "(ECCOé_¾Ö¾Ì–£º") & Game_szEcco & ")", True, "(" & Game_szEcco & ")")
+Dim szOpenVar As String
+szOpenVar = Game_szOpen & IIf(Game_szOpen = "" Or Game_szVar = "", "", "¡ª¡ª") & Game_szVar
+If Game_szEcco = "" Then
+    OpenString = szOpenVar
+ElseIf Game_szOpen = "" And Game_szVar = "" Then
+    OpenString = szOpenVar & ST("(ECCO¿ª¾Ö±àºÅ£º", "(ECCOé_¾Ö¾Ì–£º") & Game_szEcco & ")"
+Else
+    OpenString = szOpenVar & "(" & Game_szEcco & ")"
+End If
 
 End Function
 
@@ -1045,8 +1081,12 @@ End Function
 ' ÏÔÊ¾È«²¿±êÇ©
 Public Sub LabelFlush()
 
-App_frmMain.imgUp.Picture = IIf(App_bFlipped, IIf(Engine_bRed, App_picEngineRed, App_picPieces(1)), IIf(Engine_bBlack, App_picEngineBlack, App_picPieces(8)))
-App_frmMain.imgDown.Picture = IIf(App_bFlipped, IIf(Engine_bBlack, App_picEngineBlack, App_picPieces(8)), IIf(Engine_bRed, App_picEngineRed, App_picPieces(1)))
+App_frmMain.imgUp.Picture = IIf(App_bFlipped, _
+        IIf(Engine_bRed, App_picEngineRed, App_picPieces(1)), _
+        IIf(Engine_bBlack, App_picEngineBlack, App_picPieces(8)))
+App_frmMain.imgDown.Picture = IIf(App_bFlipped, _
+        IIf(Engine_bBlack, App_picEngineBlack, App_picPieces(8)), _
+        IIf(Engine_bRed, App_picEngineRed, App_picPieces(1)))
 App_frmMain.cmbFormat.ListIndex = Game_nFormat
 App_frmMain.lblEvent = EventString
 App_frmMain.lblResult = ResultString
@@ -1190,8 +1230,10 @@ App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
 
 End Sub
 
-' ÔÚÆåÅÌÉÏÏÔÊ¾Æå×Ó£¬Èç¹ûÖ¸¶¨"DRAW_SELECTED"²ÎÊı£¬ÔòÔÙÏÔÊ¾Ò»¸ö±ê¼Ç¿ò£¬"frmPosEdit"ÖĞ»¹ÓĞ¸öÏàÓ¦µÄ"DrawPosSquare/DrawCapSquare"¹ı³Ì
-Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, Optional ByVal bMate As Boolean = False)
+' ÔÚÆåÅÌÉÏÏÔÊ¾Æå×Ó£¬Èç¹ûÖ¸¶¨"DRAW_SELECTED"²ÎÊı£¬ÔòÔÙÏÔÊ¾Ò»¸ö±ê¼Ç¿ò
+' "frmPosEdit"ÖĞ»¹ÓĞ¸öÏàÓ¦µÄ"DrawPosSquare/DrawCapSquare"¹ı³Ì
+Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
+        Optional ByVal bMate As Boolean = False)
 
 Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
@@ -1201,7 +1243,9 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - sq \ 16) * 9 + 11 - sq Mod 16, (sq \ 16 - 3) * 9 + sq Mod 16 - 3))
+y = sq \ 16
+x = sq Mod 16
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - y) * 9 + 11 - x, (y - 3) * 9 + x - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
     ' ÒÔÏÂÊÇĞÂ¹¦ÄÜ - ¶¶Ò»ÏÂ½«ËÀµÄ×Ó
@@ -1391,7 +1435,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
     End If
     If Game_nCurrMove < Game_nMaxMove Then
-        If MsgBox(ST("±ØĞëÇå³ıÒÔºóËùÓĞµÄ×Å·¨¡£", "±ØíšÇå³ıÒÔááËùÓĞµÄÖø·¨¡£") & vbCrLf & ST("ÊÇ·ñ¼ÌĞø£¿", "ÊÇ·ñÀ^Àm£¿"), vbYesNo + vbQuestion) = vbYes Then
+        If MsgBox(ST("±ØĞëÇå³ıÒÔºóËùÓĞµÄ×Å·¨¡£", "±ØíšÇå³ıÒÔááËùÓĞµÄÖø·¨¡£") & vbCrLf _
+                & ST("ÊÇ·ñ¼ÌĞø£¿", "ÊÇ·ñÀ^Àm£¿"), vbYesNo + vbQuestion) = vbYes Then
             MoveCut
         Else
             AddMove = False
@@ -1403,8 +1448,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         Game_nMaxIrrev = Game_nMaxIrrev + 1
         CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
         CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
-        Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) & " - - 0 " & _
-                IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1)
+        Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) & _
+                " - - 0 " & IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1)
     End If
     If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
         If Timer_bIncMode Then
@@ -1430,7 +1475,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     Game_szMoveText(0, Game_nMaxMove) = szMoveChinText
     Game_szMoveText(1, Game_nMaxMove) = szMoveFileText
     Game_szMoveText(2, Game_nMaxMove) = szMoveIccsText
-    App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) + Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
+    App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) & _
+            Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
     Game_mvMove(Game_nMaxMove) = mv
     MoveForward
     If bEcho Then
@@ -1514,7 +1560,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                EndGame "DRAW", IIf(Game_sdMax = 0, ST("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), ST("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£"))
+                EndGame "DRAW", IIf(Game_sdMax = 0, ST("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), _
+                        ST("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£"))
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
@@ -1522,11 +1569,13 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
                         If Options_nLanguage = 0 Then
-                            MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & _
-                                    vbCrLf & "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌĞøÏÂÒ»×ÅÆå¡£", vbInformation
+                            MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
+                                    "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+                                    "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌĞøÏÂÒ»×ÅÆå¡£", vbInformation
                         Else
-                            MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & _
-                                    vbCrLf & "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
+                            MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
+                                    "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+                                    "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
                         End If
                     End If
                 End If
@@ -1576,11 +1625,19 @@ End Sub
 ' ÏÔÊ¾ÒıÇæĞÅÏ¢µÄ¶Ô»°¿ò
 Public Sub AboutEngine()
 
-MsgBoxWithIcon IIf(Engine_szName = "", "", "ÒıÇæ£º" & Engine_szName & vbCrLf) & _
-        IIf(Engine_szVersion = "", "", "°æ±¾£º" & Engine_szVersion & vbCrLf) & _
-        IIf(Engine_szCopyright = "", "", "°æÈ¨£º" & Engine_szCopyright & vbCrLf) & _
-        IIf(Engine_szAuthor = "", "", "×÷Õß£º" & Engine_szAuthor & vbCrLf) & _
-        IIf(Engine_szUser = "", "", "ÓÃ»§£º" & Engine_szUser), "¹ØÓÚUCCIÒıÇæ", Engine_szFile
+If Options_nLanguage = 0 Then
+    MsgBoxWithIcon IIf(Engine_szName = "", "", "ÒıÇæ£º" & Engine_szName & vbCrLf) & _
+            IIf(Engine_szVersion = "", "", "°æ±¾£º" & Engine_szVersion & vbCrLf) & _
+            IIf(Engine_szCopyright = "", "", "°æÈ¨£º" & Engine_szCopyright & vbCrLf) & _
+            IIf(Engine_szAuthor = "", "", "×÷Õß£º" & Engine_szAuthor & vbCrLf) & _
+            IIf(Engine_szUser = "", "", "ÓÃ»§£º" & Engine_szUser), "¹ØÓÚUCCIÒıÇæ", Engine_szFile
+Else
+    MsgBoxWithIcon IIf(Engine_szName = "", "", "ÒıÇæ£º" & Engine_szName & vbCrLf) & _
+            IIf(Engine_szVersion = "", "", "°æ±¾£º" & Engine_szVersion & vbCrLf) & _
+            IIf(Engine_szCopyright = "", "", "°æ™à£º" & Engine_szCopyright & vbCrLf) & _
+            IIf(Engine_szAuthor = "", "", "×÷Õß£º" & Engine_szAuthor & vbCrLf) & _
+            IIf(Engine_szUser = "", "", "ÓÃ‘ô£º" & Engine_szUser), "êPì¶UCCIÒıÇæ", Engine_szFile
+End If
 
 End Sub
 
@@ -1611,8 +1668,8 @@ End If
 App_frmMain.mnPosFlip.Checked = App_bFlipped
 App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpressed)
 If Options_bEngineName Then
-    szName = IIf(Engine_szName = "ElephantEye", "ÏóÆåÎ×Ê¦", Engine_szName)
-    szSlaveName = IIf(Engine_szSlaveName = "ElephantEye", "ÏóÆåÎ×Ê¦", Engine_szSlaveName)
+    szName = IIf(Engine_szName = "ElephantEye", ST("ÏóÆåÎ×Ê¦", "ÏóÆåÎ×Ÿ"), Engine_szName)
+    szSlaveName = IIf(Engine_szSlaveName = "ElephantEye", ST("ÏóÆåÎ×Ê¦", "ÏóÆåÎ×Ÿ"), Engine_szSlaveName)
     Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, szSlaveName, szName), Options_szUser)
     Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, szSlaveName, szName), Options_szUser)
 End If
@@ -1802,7 +1859,8 @@ If i > 0 Then
         Case 2
             szMoveList = Move2Iccs(mv)
         End Select
-        App_frmMain.stb.Panels("Curr").Text = Engine_nDepth & " (" & Engine_nCurrMove & "/" & Engine_nMoves & ") " & szMoveList
+        App_frmMain.stb.Panels("Curr").Text = Engine_nDepth & _
+                " (" & Engine_nCurrMove & "/" & Engine_nMoves & ") " & szMoveList
     End If
 End If
 
@@ -1898,7 +1956,8 @@ If Engine_nStatus = IDLE_UNLOAD Then
     ReceiveEngine = False
     Exit Function
 End If
-bSlaveEngine = (Engine_nStatus >= BUSY_WAIT And IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack))
+bSlaveEngine = (Engine_nStatus >= BUSY_WAIT And _
+        IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack))
 If bSlaveEngine Then
     lpStr = PipeLineInput(Engine_pipeSlave)
 Else
@@ -1941,7 +2000,7 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                EndGame "WIN", IIf(Game_sdMax = 0, "ºì·½ÈÏÊä¡£", "ºÚ·½ÈÏÊä¡£")
+                EndGame "WIN", IIf(Game_sdMax = 0, ST("ºì·½ÈÏÊä¡£", "¼t·½ÕJİ”¡£"), ST("ºÚ·½ÈÏÊä¡£", "ºÚ·½ÕJİ”¡£"))
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
@@ -1949,14 +2008,22 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                EndGame "DRAW", IIf(Game_sdMax = 0, "ºì·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£")
+                EndGame "DRAW", IIf(Game_sdMax = 0, ST("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), _
+                        ST("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£"))
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
                     Engine_bDraw = True
                     If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & _
-                                vbCrLf & "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌĞøÏÂÒ»×ÅÆå¡£", vbInformation
+                        If Options_nLanguage = 0 Then
+                            MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
+                                    "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+                                    "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌĞøÏÂÒ»×ÅÆå¡£", vbInformation
+                        Else
+                            MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
+                                    "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+                                    "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
+                        End If
                     End If
                 End If
                 If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
@@ -1971,7 +2038,7 @@ Else
                 Engine_nStatus = IDLE_REST
             End If
         Case Else
-            MsgBox "²»¸Ã½ÓÊÕµ½ÒıÇæµÄĞÅÏ¢£º" & szReceived, vbExclamation
+            MsgBox ST("²»¸Ã½ÓÊÕµ½ÒıÇæµÄĞÅÏ¢£º", "²»Ô“½ÓÊÕµ½ÒıÇæµÄĞÅÏ¢£º") & szReceived, vbExclamation
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -2127,7 +2194,7 @@ Do While Engine_nStatus > IDLE_UNLOAD
 Loop
 PipeClose Engine_pipe
 If Engine_nStatus > IDLE_UNLOAD Then
-    MsgBox "ÎŞ·¨Õı³£Ğ¶ÔØÒıÇæ£¡", vbExclamation
+    MsgBox ST("ÎŞ·¨Õı³£Ğ¶ÔØÒıÇæ£¡", "Ÿo·¨Õı³£Ğ¶İdÒıÇæ£¡"), vbExclamation
     Engine_nStatus = IDLE_UNLOAD
 End If
 
@@ -2160,7 +2227,7 @@ Do While (Engine_bSlaveRed Or Engine_bSlaveBlack)
 Loop
 PipeClose Engine_pipeSlave
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
-    MsgBox "ÎŞ·¨Õı³£Ğ¶ÔØÒıÇæ£¡", vbExclamation
+    MsgBox ST("ÎŞ·¨Õı³£Ğ¶ÔØÒıÇæ£¡", "Ÿo·¨Õı³£Ğ¶İdÒıÇæ£¡"), vbExclamation
     Engine_bSlaveRed = False
     Engine_bSlaveBlack = False
 End If
@@ -2239,9 +2306,9 @@ If bInfo Then
         AboutEngine
     Else
         If Engine_szFile = "" Then
-            MsgBox "Ã»ÓĞ¼ÓÔØÒıÇæ£¡", vbExclamation
+            MsgBox ST("Ã»ÓĞ¼ÓÔØÒıÇæ£¡", "›]ÓĞ¼ÓİdÒıÇæ£¡"), vbExclamation
         Else
-            MsgBox Engine_szFile & " ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", vbExclamation
+            MsgBox Engine_szFile & ST(" ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", " ²»ÊÇÖĞ‡øÏóÆåÒıÇæÎÄ¼ş£¡"), vbExclamation
             Engine_szFile = ""
         End If
     End If
@@ -2261,11 +2328,11 @@ Dim lpStr As Long, szReceived As String
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
 End If
-szEngineFile = FileDialog("¼ÓÔØ¸±ÒıÇæ", "ÒıÇæÎÄ¼ş", "EXE")
+szEngineFile = FileDialog(ST("¼ÓÔØ¸±ÒıÇæ", "¼Óİd¸±ÒıÇæ"), ST("ÒıÇæÎÄ¼ş", "ÒıÇæÎÄ¼ş"), "EXE")
 If szEngineFile = "" Then
-    MsgBox "Ã»ÓĞ¼ÓÔØÒıÇæ£¡", vbExclamation
+    MsgBox ST("Ã»ÓĞ¼ÓÔØÒıÇæ£¡", "›]ÓĞ¼ÓİdÒıÇæ£¡"), vbExclamation
 ElseIf GetAppType(szEngineFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-    MsgBox szEngineFile & " ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", vbExclamation
+    MsgBox szEngineFile & ST(" ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", " ²»ÊÇÖĞ‡øÏóÆåÒıÇæÎÄ¼ş£¡"), vbExclamation
 Else
     PipeOpen Engine_pipeSlave, szEngineFile
     SendEngine "ucci", SLAVE_ENGINE
@@ -2303,10 +2370,17 @@ Else
         End If
     Loop
     If Engine_bSlaveBlack Then
-        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "ÒıÇæ£º" & Engine_szSlaveName & vbCrLf) & _
-                IIf(szCopyright = "", "", "°æÈ¨£º" & szCopyright & vbCrLf) & _
-                IIf(szAuthor = "", "", "×÷Õß£º" & szAuthor & vbCrLf) & _
-                IIf(szUser = "", "", "ÓÃ»§£º" & szUser), "¹ØÓÚUCCIÒıÇæ", szEngineFile
+        If Options_nLanguage = 0 Then
+            MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "ÒıÇæ£º" & Engine_szSlaveName & vbCrLf) & _
+                    IIf(szCopyright = "", "", "°æÈ¨£º" & szCopyright & vbCrLf) & _
+                    IIf(szAuthor = "", "", "×÷Õß£º" & szAuthor & vbCrLf) & _
+                    IIf(szUser = "", "", "ÓÃ»§£º" & szUser), "¹ØÓÚUCCIÒıÇæ", szEngineFile
+        Else
+            MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "ÒıÇæ£º" & Engine_szSlaveName & vbCrLf) & _
+                    IIf(szCopyright = "", "", "°æ™à£º" & szCopyright & vbCrLf) & _
+                    IIf(szAuthor = "", "", "×÷Õß£º" & szAuthor & vbCrLf) & _
+                    IIf(szUser = "", "", "ÓÃ‘ô£º" & szUser), "êPì¶UCCIÒıÇæ", szEngineFile
+        End If
         If Engine_nTimeRatioSlave = 1000 Then
             SendEngine "setoption usemillisec true", SLAVE_ENGINE
         End If
@@ -2314,7 +2388,7 @@ Else
     Else
         SendEngine "quit", SLAVE_ENGINE
         PipeClose Engine_pipeSlave
-        MsgBox szEngineFile & " ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", vbExclamation
+        MsgBox szEngineFile & ST(" ²»ÊÇÖĞ¹úÏóÆåÒıÇæÎÄ¼ş£¡", " ²»ÊÇÖĞ‡øÏóÆåÒıÇæÎÄ¼ş£¡"), vbExclamation
     End If
 End If
 
@@ -2595,7 +2669,7 @@ Gui_szTips(5) = "¡¡¡¡µã»÷¡°·¢²¼ÆåÆ×¡±°´Å¥£¬¾Í¿ÉÒÔÔÚÍøÉÏºÍÆåÓÑ½»Á÷ÆåÆ×£¬»òÕßÏò¸ßÊ
 Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×Ê¦Ä¿Ç°Ö÷ÒªÍ¨¹ıÍøÂç·¢ĞĞ£¬×îĞÂµÄ°æ±¾¿ÉÒÔ´ÓÏóÆå°Ù¿ÆÈ«ÊéÍø»ñµÃ£º" & vbCrLf & "¡¡¡¡http://www.xqbase.com/"
 Gui_szTips(7) = "¡¡¡¡Ä¿Ç°ÍøÂçÉÏÒÑ¾­ÓĞÊıÒÔÍò¼ÆÍ¨ÓÃ¸ñÊ½µÄÆåÆ×ÎÄ¼ş(ºó×º.PGN)¿É¹©ÏÂÔØ¡£Äú¿ÉÒÔµ½ÒÔÏÂÒ³ÃæÏÂÔØ½ü20ÄêÄÚÈ«¹ú¶¥¼¶ÏóÆå±ÈÈüµÄÆåÆ×£ºhttp://www.xqbase.com/xqbase/" & vbCrLf & _
         "¡¡¡¡Í¬Ê±Ò²»¶Ó­Äú½«×Ô¼ºÖÆ×÷µÄÎÄ¼şÉÏ´«¸øÎÒÃÇ¡£"
-Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓĞÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼şµØÖ·ÊÇ£º" & vbCrLf & "¡¡¡¡webmaster@elephantbase.net" & vbCrLf & _
+Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓĞÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏµ£¬ÓÊ¼şµØÖ·ÊÇ£º" & vbCrLf & "¡¡¡¡webmaster@xqbase.com" & vbCrLf & _
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÁªÏµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ĞÏ¸ÔÄ¶Á±¾Èí¼ş¡°°ïÖú¡±Ñ¡µ¥ÖĞµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
@@ -2652,7 +2726,7 @@ Gui_szTips(5) = "¡¡¡¡üc“ô¡°°l²¼Æå×V¡±°´âo£¬¾Í¿ÉÒÔÔÚ¾WÉÏºÍÆåÓÑ½»Á÷Æå×V£¬»òÕßÏò¸ßÊ
 Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŸÄ¿Ç°Ö÷ÒªÍ¨ß^¾W½j°lĞĞ£¬×îĞÂµÄ°æ±¾¿ÉÒÔÄ¡¶ÏóÆå°Ù¿ÆÈ«•ø¾W¡·«@µÃ£º" + vbCrLf + "¡¡¡¡http://www.xqbase.com/"
 Gui_szTips(7) = "¡¡¡¡Ä¿Ç°¾W½jÉÏÒÑ½›ÓĞ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼ş(áá¾Y.PGN)¿É¹©ÏÂİd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂİd½ü20ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.xqbase.com/xqbase/" + vbCrLf + _
         "¡¡¡¡Í¬•rÒ²šgÓ­ÄúŒ¢×Ô¼ºÑu×÷µÄÎÄ¼şÉÏ‚÷½oÎÒ‚ƒ¡£"
-Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŸÓĞÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×Ÿé_°lˆFê Â“Ïµ£¬à]¼şµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@elephantbase.net" + vbCrLf + _
+Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŸÓĞÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×Ÿé_°lˆFê Â“Ïµ£¬à]¼şµØÖ·ÊÇ£º" + vbCrLf + "¡¡¡¡webmaster@xqbase.com" + vbCrLf + _
         "¡¡¡¡ÏóÆåÎ×Ÿé_°lˆFê ·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÂ“Ïµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔëp“ô×ÀÃæÉÏµÄÏóÆåÎ×ŸˆD˜Ë(ÓÉÆå×Ó¡°Ïó¡±¡¢Æå±PºÍÎ×Ÿ°ô½M³É)Ö±½Ó†¢„ÓÏóÆåÎ×Ÿ¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»‚€ÏóÆåÎ×ŸµÄ³õŒWÕß£¬ÕˆÄú×Ğ¼šé†×x±¾Ü›¼ş¡°ÍÖú¡±ßx†ÎÖĞµÄ¡°ÍÖúÖ÷î}¡±²¢¶à¼Ó¾šÁ•£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×ŸµÄ¸÷ÖÖ¹¦ÄÜ¡£"
@@ -2720,7 +2794,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    MsgBox "ÎŞ·¨´ò¿ªÎÄ¼ş " & App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
+    ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
     ' Unload frmEndgames ' App_nEndgames = 0 ËµÃ÷ frmEndgames Î´±»¼ÓÔØ¹ı
 Else
     If Gui_nEndgamesIndex >= App_nEndgames Then
@@ -2736,7 +2810,7 @@ End If
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "ÎŞ·¨´ò¿ªÎÄ¼ş " & App_szPath & "ENDGAMES\" & szEpdName & ".EPD", vbExclamation
+ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD"
 
 End Sub
 
@@ -2764,13 +2838,13 @@ Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "8"), 0, MUS
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
-Options_szUser = GetSetting("XQWizard", "Options", "User", "ÏóÆåÎ×Ê¦²âÊÔÍÅ¶Ó")
+Options_szUser = GetSetting("XQWizard", "Options", "User", ST("ÏóÆåÎ×Ê¦²âÊÔÍÅ¶Ó", "ÏóÆåÎ×ŸœyÔ‡ˆFê "))
 Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
 Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
-Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", "È¤Î¶ÏóÆå")
+Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", ST("È¤Î¶ÏóÆå", "È¤Î¶ÏóÆå"))
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
@@ -2807,7 +2881,6 @@ End Sub
 ' ±£´æ²ÎÊıµ½×¢²á±í
 Public Sub SaveRegs()
 
-SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", Options_nPlayIntv
@@ -2877,7 +2950,8 @@ If UCase(Right(sz, 4)) = ".PGN" Then
     sz = Left(sz, Len(sz) - 4)
 End If
 sz = IIf(sz = "", IIf(Engine_szName = "ElephantEye", "", Engine_szName), sz)
-App_frmMain.Caption = IIf(sz = "", "", sz & " - ") & IIf(App_bPromotion, "³¬¼¶ÏóÆåÎ×Ê¦", "ÏóÆåÎ×Ê¦")
+App_frmMain.Caption = IIf(sz = "", "", sz & " - ") & _
+        IIf(App_bPromotion, ST("³¬¼¶ÏóÆåÎ×Ê¦", "³¬¼‰ÏóÆåÎ×Ÿ"), ST("ÏóÆåÎ×Ê¦", "ÏóÆåÎ×Ÿ"))
 
 End Sub
 
@@ -2891,12 +2965,12 @@ sz = ""
 QueryPerformanceCounter VarPtr(dwCounter(0))
 szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" & _
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=xqwizard&version=" & _
         STRING_VERSION & "&userid=" & szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
-        MsgBox "ÎŞ·¨·ÃÎÊ www.xqbase.com£¬ÇëÉÔºóÔÙÊÔ¡£", vbExclamation
+        MsgBox ST("ÎŞ·¨·ÃÎÊ www.xqbase.com£¬ÇëÉÔºóÔÙÊÔ¡£", "Ÿo·¨ÔL†– www.xqbase.com£¬ÕˆÉÔááÔÙÔ‡¡£"), vbExclamation
     End If
 Else
     Gui_szUpgradeDate = Date ' Èç¹û·ÃÎÊÉı¼¶ĞÅÏ¢³É¹¦£¬ÄÇÃ´µ±Ìì¾Í²»ÔÙ·ÃÎÊÉı¼¶ĞÅÏ¢
@@ -2905,12 +2979,16 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew.txt")
         On Error GoTo 0
-        If MsgBox(IIf(szWhatsNew = "", "ÏóÆåÎ×Ê¦ " & sz & " ÒÑ¾­·¢²¼£¬ĞèÒªÏÂÔØ×îĞÂ°æ±¾Âğ£¿", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+        If szWhatsNew = "" Then
+            szWhatsNew = ST("ÏóÆåÎ×Ê¦ ", "ÏóÆåÎ×Ÿ") & sz & _
+                    ST(" ÒÑ¾­·¢²¼£¬ĞèÒªÏÂÔØ×îĞÂ°æ±¾Âğ£¿", " ÒÑ½›°l²¼£¬ĞèÒªÏÂİd×îĞÂ°æ±¾†á£¿")
+        End If
+        If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.xqbase.com/xqwizard/download.htm"
@@ -2921,7 +2999,7 @@ Else
         End If
     Else
         If bManual Then
-            MsgBox "ÄúµÄ¡°ÏóÆåÎ×Ê¦¡±ÒÑ¾­ÊÇ×îĞÂ°æ±¾ÁË¡£", vbInformation
+            MsgBox ST("ÄúµÄÏóÆåÎ×Ê¦ÒÑ¾­ÊÇ×îĞÂ°æ±¾ÁË¡£", "ÄúµÄÏóÆåÎ×ŸÒÑ½›ÊÇ×îĞÂ°æ±¾ÁË¡£"), vbInformation
         End If
     End If
 End If
@@ -2938,7 +3016,7 @@ If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
 End If
 ' Èç¹ûÍËµ¯³É¹¦£¬ÄÇÃ´µ±Ìì¾Í²»ÔÙÍËµ¯ÁË
 SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.xqbase.com/advert/popup_simp.htm"
+frmHide.web.Navigate "http://www.xqbase.com/advert/popup.htm"
 ' ÍËµ¯µ÷ÓÃÁËfrmHide.web£¬Îª±£Ö¤³É¹¦£¬µÈ´ı1ÃëÖÓ
 dfLastTime = Timer
 Do
@@ -2964,7 +3042,8 @@ App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show
 frmStartup.Refresh
-CchessInit
+LoadRegs
+CchessInit Options_nLanguage
 ' ÅĞ¶ÏÊÇ·ñÔÊĞíÉı±ä
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
     CchessPromotion 1
@@ -2975,9 +3054,8 @@ Else
     App_bPromotion = False
     sz = Command
 End If
-EccoInitOpenVar
+EccoInitOpenVar Options_nLanguage
 ConvInit
-LoadRegs
 LoadTips
 If Options_bLargeGui Then
     Set App_frmMain = frmMainLarge
@@ -3051,11 +3129,11 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10ÃëÖÓºó¿ªÊ¼²¥·Å¹ã¸æ
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList "advert_simp.txt"
+    DownloadAdvertList "advert_0450.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
-        Gui_szAdvertFiles(1) = "elephantbase"
+        Gui_szAdvertFiles(1) = "xqbase"
         Gui_nAdvertTimes(1) = 32767
     Else
         Gui_szAdvertDate = Date
@@ -3073,7 +3151,7 @@ If Not App_bPrevInstance Then
     App_frmMain.Top = Gui_nTop
 End If
 App_frmMain.Show
-App_frmMain.web.Navigate2 App_szPath & "ADVERT\elephantbase.htm"
+App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide.imglst
 For i = 1 To 29
@@ -3115,7 +3193,8 @@ Do While App_bRunning
                 Timer_nTimeElapsed(Game_sdMax) = 28800
             End If
             If Timer_nTimeLeft(Game_sdMax) < 0 Then
-                MsgBox IIf(Game_sdMax = 0, "ºì·½³¬Ê±×÷¸º£¡", "ºÚ·½³¬Ê±×÷¸º£¡"), vbInformation
+                MsgBox IIf(Game_sdMax = 0, ST("ºì·½³¬Ê±×÷¸º£¡", "¼t·½³¬•r×÷Ø“£¡"), _
+                        ST("ºÚ·½³¬Ê±×÷¸º£¡", "ºÚ·½³¬•r×÷Ø“£¡")), vbInformation
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 Timer_bOver(Game_sdMax) = True
                 Timer_nTimeLeft(Game_sdMax) = 0
@@ -3177,7 +3256,7 @@ lnContinue:
 Loop
 ' ÍË³öÇ°ÏÂÔØ¹ã¸æÁĞ±í
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList "advert_simp.txt"
+    DownloadAdvertList "advert_0450.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date

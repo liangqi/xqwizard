@@ -312,8 +312,8 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.2, Last Modified: Aug. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -336,11 +336,11 @@ Private nPlayIntv As Integer, nMoveDelay As Integer
 Private Sub Form_Load()
 
 cmbEnginePlay.Clear
-cmbEnginePlay.AddItem "不启用电脑", 0
-cmbEnginePlay.AddItem "电脑执红", 1
-cmbEnginePlay.AddItem "电脑执黑", 2
-cmbEnginePlay.AddItem "红黑轮流", 3
-cmbEnginePlay.AddItem "红黑随机", 4
+cmbEnginePlay.AddItem ST("不启用电脑", "不啟用電腦。"), 0
+cmbEnginePlay.AddItem ST("电脑执红", "電腦執紅"), 1
+cmbEnginePlay.AddItem ST("电脑执黑", "電腦執黑"), 2
+cmbEnginePlay.AddItem ST("红黑轮流", "紅黑輪流"), 3
+cmbEnginePlay.AddItem ST("红黑随机", "紅黑隨機"), 4
 
 optSmallGui.Value = Not Options_bLargeGui
 optLargeGui.Value = Options_bLargeGui
@@ -386,9 +386,9 @@ End Sub
 Private Sub btnConfirm_Click()
 
 If Options_bLargeGui <> optLargeGui.Value Then
-    MsgBox "显示模式已经更改，重新启动程序后才能生效。", vbInformation
+    MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
+    SaveSetting "XQWizard", "Options", "LargeGui", IIf(optLargeGui.Value, "1", "0")
 End If
-Options_bLargeGui = optLargeGui.Value
 Options_bSounds = (chkSounds.Value = 1)
 Options_nPlayIntv = nPlayIntv
 Options_bAutoPlay = (chkAutoPlay.Value = 1)

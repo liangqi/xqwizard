@@ -26,7 +26,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "加载副引擎"
       Height          =   375
       Left            =   6480
-      TabIndex        =   24
+      TabIndex        =   26
       Top             =   2760
       Width           =   1215
    End
@@ -34,7 +34,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "副引擎执红"
       Height          =   255
       Left            =   6480
-      TabIndex        =   23
+      TabIndex        =   25
       Top             =   2400
       Width           =   1215
    End
@@ -45,10 +45,26 @@ Begin VB.Form frmEngineSet
       TabIndex        =   8
       Top             =   2400
       Width           =   6255
+      Begin VB.CommandButton btnResetPath 
+         Caption         =   "重置"
+         Height          =   255
+         Left            =   5520
+         TabIndex        =   16
+         Top             =   600
+         Width           =   615
+      End
+      Begin VB.CommandButton btnResetFile 
+         Caption         =   "重置"
+         Height          =   255
+         Left            =   5520
+         TabIndex        =   12
+         Top             =   240
+         Width           =   615
+      End
       Begin VB.CommandButton btnSelectFile 
          Caption         =   "浏览"
          Height          =   255
-         Left            =   5520
+         Left            =   4800
          TabIndex        =   11
          Top             =   240
          Width           =   615
@@ -60,7 +76,7 @@ Begin VB.Form frmEngineSet
          Locked          =   -1  'True
          TabIndex        =   10
          Top             =   240
-         Width           =   4335
+         Width           =   3615
       End
       Begin VB.CheckBox chkUseBook 
          Caption         =   "开局库"
@@ -74,15 +90,15 @@ Begin VB.Form frmEngineSet
          Caption         =   "残局库"
          Height          =   255
          Left            =   120
-         TabIndex        =   12
+         TabIndex        =   13
          Top             =   600
          Width           =   855
       End
       Begin VB.CommandButton btnSelectPath 
          Caption         =   "浏览"
          Height          =   255
-         Left            =   5520
-         TabIndex        =   14
+         Left            =   4800
+         TabIndex        =   15
          Top             =   600
          Width           =   615
       End
@@ -91,17 +107,17 @@ Begin VB.Form frmEngineSet
          Height          =   270
          Left            =   1080
          Locked          =   -1  'True
-         TabIndex        =   13
+         TabIndex        =   14
          Top             =   600
-         Width           =   4335
+         Width           =   3615
       End
       Begin VB.ComboBox cmbThreads 
          Height          =   300
          ItemData        =   "ENGINE.frx":000C
-         Left            =   600
+         Left            =   2160
          List            =   "ENGINE.frx":000E
          Style           =   2  'Dropdown List
-         TabIndex        =   18
+         TabIndex        =   20
          Top             =   1320
          Width           =   855
       End
@@ -111,61 +127,61 @@ Begin VB.Form frmEngineSet
          Left            =   600
          List            =   "ENGINE.frx":0012
          Style           =   2  'Dropdown List
-         TabIndex        =   16
-         Top             =   960
+         TabIndex        =   18
+         Top             =   1320
          Width           =   855
       End
       Begin VB.ComboBox cmbStyle 
          Height          =   300
          ItemData        =   "ENGINE.frx":0014
-         Left            =   5520
+         Left            =   5280
          List            =   "ENGINE.frx":0016
          Style           =   2  'Dropdown List
-         TabIndex        =   22
+         TabIndex        =   24
          Top             =   1320
-         Width           =   615
+         Width           =   855
       End
       Begin VB.ComboBox cmbRandomness 
          Height          =   300
          ItemData        =   "ENGINE.frx":0018
-         Left            =   5520
+         Left            =   3720
          List            =   "ENGINE.frx":001A
          Style           =   2  'Dropdown List
-         TabIndex        =   20
-         Top             =   960
-         Width           =   615
+         TabIndex        =   22
+         Top             =   1320
+         Width           =   855
       End
       Begin VB.Label lblHash 
          Caption         =   "内存"
          Height          =   255
          Left            =   120
-         TabIndex        =   15
-         Top             =   960
-         Width           =   615
+         TabIndex        =   17
+         Top             =   1320
+         Width           =   375
       End
       Begin VB.Label lblStyle 
          Caption         =   "风格"
          Height          =   255
-         Left            =   5040
-         TabIndex        =   21
+         Left            =   4800
+         TabIndex        =   23
          Top             =   1320
          Width           =   375
       End
       Begin VB.Label lblRandomness 
          Caption         =   "随机"
          Height          =   255
-         Left            =   5040
-         TabIndex        =   19
-         Top             =   960
+         Left            =   3240
+         TabIndex        =   21
+         Top             =   1320
          Width           =   375
       End
       Begin VB.Label lblThreads 
          Caption         =   "负荷"
          Height          =   255
-         Left            =   120
-         TabIndex        =   17
+         Left            =   1680
+         TabIndex        =   19
          Top             =   1320
-         Width           =   615
+         Width           =   375
       End
    End
    Begin VB.Frame frmUcci 
@@ -236,7 +252,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "取消"
       Height          =   375
       Left            =   6480
-      TabIndex        =   26
+      TabIndex        =   28
       Top             =   3720
       Width           =   1215
    End
@@ -244,7 +260,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "确定"
       Height          =   375
       Left            =   6480
-      TabIndex        =   25
+      TabIndex        =   27
       Top             =   3240
       Width           =   1215
    End
@@ -257,8 +273,8 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -281,7 +297,7 @@ Private EngineSet_bRunning As Boolean, EngineSet_bCommandSent As Boolean
 Private Sub Form_Load()
 
 cmbHash.Clear
-cmbHash.AddItem "自动", 0
+cmbHash.AddItem ST("自动", "自動"), 0
 cmbHash.AddItem "16MB", 1
 cmbHash.AddItem "32MB", 2
 cmbHash.AddItem "64MB", 3
@@ -290,25 +306,25 @@ cmbHash.AddItem "256MB", 5
 cmbHash.AddItem "512MB", 6
 cmbHash.AddItem "1024MB", 7
 cmbThreads.Clear
-cmbThreads.AddItem "自动", 0
-cmbThreads.AddItem "低负荷", 1
-cmbThreads.AddItem "中负荷", 2
-cmbThreads.AddItem "高负荷", 3
-cmbThreads.AddItem "满负荷", 4
-cmbThreads.AddItem "2线程", 5
-cmbThreads.AddItem "4线程", 6
-cmbThreads.AddItem "8线程", 7
-cmbThreads.AddItem "16线程", 8
-cmbThreads.AddItem "32线程", 9
+cmbThreads.AddItem ST("自动", "自動"), 0
+cmbThreads.AddItem ST("低负荷", "低負荷"), 1
+cmbThreads.AddItem ST("中负荷", "中負荷"), 2
+cmbThreads.AddItem ST("高负荷", "高負荷"), 3
+cmbThreads.AddItem ST("满负荷", "滿負荷"), 4
+cmbThreads.AddItem ST("2线程", "2線程"), 5
+cmbThreads.AddItem ST("4线程", "4線程"), 6
+cmbThreads.AddItem ST("8线程", "8線程"), 7
+cmbThreads.AddItem ST("16线程", "16線程"), 8
+cmbThreads.AddItem ST("32线程", "32線程"), 9
 cmbRandomness.Clear
-cmbRandomness.AddItem "没有", 0
-cmbRandomness.AddItem "少量", 1
-cmbRandomness.AddItem "适中", 2
-cmbRandomness.AddItem "充分", 3
+cmbRandomness.AddItem ST("没有", "沒有"), 0
+cmbRandomness.AddItem ST("少量", "少量"), 1
+cmbRandomness.AddItem ST("适中", "適中"), 2
+cmbRandomness.AddItem ST("充分", "充分"), 3
 cmbStyle.Clear
-cmbStyle.AddItem "保守", 0
-cmbStyle.AddItem "均衡", 1
-cmbStyle.AddItem "冒进", 2
+cmbStyle.AddItem ST("保守", "保守"), 0
+cmbStyle.AddItem ST("均衡", "均衡"), 1
+cmbStyle.AddItem ST("冒进", "冒進"), 2
 
 chkEngineLog.Value = IIf(Engine_bEngineLog, 1, 0)
 txtLogFile.Text = Engine_szLogFile
@@ -359,13 +375,12 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("选择日志文件", "HTM文件", "HTM", DefaultFileName)
+szFileName = FileDialog(ST("选择日志文件", "選擇日誌文件"), ST("HTM文件", "HTM文件"), "HTM", DefaultFileName)
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If
 
 End Sub
-
 
 Private Sub btnOpenLog_Click()
 
@@ -380,7 +395,7 @@ Exit Sub
 
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + txtLogFile.Text, vbExclamation
+ErrorOpen txtLogFile.Text
 
 End Sub
 
@@ -391,7 +406,7 @@ If txtCommand.Text = vbNullString Then
     Exit Sub
 End If
 If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
-    MsgBox "别开这种玩笑！", vbExclamation
+    MsgBox ST("别开这种玩笑！", "別開這種玩笑！"), vbExclamation
     Exit Sub
 End If
 SendEngine txtCommand.Text
@@ -443,20 +458,34 @@ End Sub
 Private Sub btnSelectFile_Click()
 
 Dim szFileName As String
-szFileName = FileDialog("选择开局库", "开局库文件", "DAT")
+szFileName = FileDialog(ST("选择开局库", "選擇開局庫"), ST("开局库文件", "開局庫文件"), "DAT")
 If szFileName <> "" Then
     txtBookFile.Text = szFileName
 End If
 
 End Sub
 
+Private Sub btnResetFile_Click()
+
+chkUseBook.Value = vbChecked
+txtBookFile.Text = ""
+
+End Sub
+
 Private Sub btnSelectPath_Click()
 
 Dim szPathName As String
-szPathName = BrowseForFolder("请选择残局库所在文件夹")
+szPathName = BrowseForFolder(ST("请选择残局库所在文件夹", "請選擇殘局庫所在文件夾"))
 If szPathName <> "" Then
     txtEgtbPath.Text = szPathName
 End If
+
+End Sub
+
+Private Sub btnResetPath_Click()
+
+chkUseEgtb.Value = vbChecked
+txtEgtbPath.Text = ""
 
 End Sub
 
