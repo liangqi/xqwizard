@@ -994,12 +994,8 @@ Dim sz As String, nRound As Integer
 sz = Game_szEvent
 If Game_szRound <> "" Then
     sz = sz & IIf(Game_szEvent = "", "", " ")
-    If Len(Game_szRound) > 5 Then
-        sz = sz & Game_szRound
-    Else
-        nRound = Str2Int(Game_szRound)
-        sz = sz & IIf(nRound = 0, Game_szRound, ST("第", "第") & Game_szRound & ST("轮", "輪"))
-    End If
+    nRound = Str2Int(Game_szRound)
+    sz = sz & IIf(nRound = 0, Game_szRound, ST("第", "第") & Game_szRound & ST("轮", "輪"))
 End If
 EventString = sz
 
@@ -1228,7 +1224,7 @@ End Sub
 Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
         Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, X As Integer, Y As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -1236,24 +1232,24 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-Y = sq \ 16
-X = sq Mod 16
-Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - Y) * 9 + 11 - X, (Y - 3) * 9 + X - 3))
+y = sq \ 16
+x = sq Mod 16
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - y) * 9 + 11 - x, (y - 3) * 9 + x - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
     ' 以下是新功能 - 抖一下将死的子
     img.ZOrder
-    X = img.Left
-    Y = img.Top
+    x = img.Left
+    y = img.Top
     For i = 5 To 1 Step -1
-        img.Move X + i * 20, Y
+        img.Move x + i * 20, y
         img.Refresh
         Sleep 50
-        img.Move X - i * 20, Y
+        img.Move x - i * 20, y
         img.Refresh
         Sleep 50
     Next
-    img.Move X, Y
+    img.Move x, y
     ' 以上是新功能 - 抖一下将死的子
 End If
 img.Picture = App_picPieces(nPicId)
@@ -1640,17 +1636,13 @@ Public Sub EnginePlayer()
 Dim szName As String, szSlaveName As String
 Engine_bPonder = False
 App_frmMain.mnEnginePonder.Checked = False
-App_frmMain.tlb.Buttons("EnginePonder").Value = tbrUnpressed
 If Engine_bRed Eqv Engine_bBlack Then
     App_frmMain.mnEnginePonder.Enabled = False
-    App_frmMain.tlb.Buttons("EnginePonder").Enabled = False
 Else
     App_frmMain.mnEnginePonder.Enabled = True
-    App_frmMain.tlb.Buttons("EnginePonder").Enabled = True
     If Options_bAlwaysPonder Then
         Engine_bPonder = True
         App_frmMain.mnEnginePonder.Checked = True
-        App_frmMain.tlb.Buttons("EnginePonder").Value = tbrPressed
     End If
     If Options_bAutoFlip Then
         App_bFlipped = Engine_bRed
@@ -2132,8 +2124,6 @@ App_frmMain.tlb.Buttons("EngineBlack").Value = tbrUnpressed
 Engine_bPonder = False
 App_frmMain.mnEnginePonder.Enabled = False
 App_frmMain.mnEnginePonder.Checked = False
-App_frmMain.tlb.Buttons("EnginePonder").Enabled = False
-App_frmMain.tlb.Buttons("EnginePonder").Value = tbrUnpressed
 If Engine_bAnalyze Then
     StopAnalyze
 End If
@@ -2709,17 +2699,17 @@ Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。
 Else
 
 Gui_szTips(1) = "　　象棋巫師是一款功能超強的象棋教學、電腦對弈和棋譜編輯軟件，具有方便的人機對戰、棋譜記錄、欣賞、發布、管理棋局的功能，還內置大量象棋習題，完全可以滿足各層次象棋愛好者、棋手、裁判員及象棋文字工作者的各種需要。"
-Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" + vbCrLf + _
+Gui_szTips(2) = "　　象棋巫師支持多個通用象棋引擎，他們大都具有專業棋手的水平，是象棋愛好者和專業棋手提高棋藝的良師益友。" & vbCrLf & _
         "　　如果您對象棋巫師自帶的引擎 ElephantEye 的表現不滿意，可以登錄 http://www.xqbase.com/league.htm ，下載到其他各具特色的引擎。"
 Gui_szTips(3) = "　　點擊“新的棋局”按鈕，就可以展開人機對弈，象棋巫師提供了五種的難度和四種的讓子模式給用戶體驗。"
-Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“電腦分析”按鈕，打開思考細節窗口。" + vbCrLf + _
+Gui_szTips(4) = "　　如果您不希望讓電腦走棋，而僅僅是想知道電腦在想些什么，或者讓電腦給你一些啟發，可以點擊“電腦分析”按鈕，打開思考細節窗口。" & vbCrLf & _
         "　　您可以把思考細節窗口中的思考路線複製下來，粘貼到主窗口中，對思考線路進行推演。"
-Gui_szTips(5) = "　　點擊“發布棋譜”按鈕，就可以在網上和棋友交流棋譜，或者向高手求助。" + vbCrLf + _
+Gui_szTips(5) = "　　點擊“發布棋譜”按鈕，就可以在網上和棋友交流棋譜，或者向高手求助。" & vbCrLf & _
         "　　象棋巫師推薦了幾個著名的象棋論壇，並給用戶提供快捷的發帖引導，很方便地讓用戶在這些象棋論壇上發布棋譜或發起求助。"
-Gui_szTips(6) = "　　象棋巫師目前主要通過網絡發行，最新的版本可以從《象棋百科全書網》獲得：" + vbCrLf + "　　http://www.xqbase.com/"
-Gui_szTips(7) = "　　目前網絡上已經有數以万計通用格式的棋譜文件(後綴.PGN)可供下載。您可以到以下頁面下載近20年內全國頂級象棋比賽的棋譜：http://www.xqbase.com/xqbase/" + vbCrLf + _
+Gui_szTips(6) = "　　象棋巫師目前主要通過網絡發行，最新的版本可以從《象棋百科全書網》獲得：" & vbCrLf & "　　http://www.xqbase.com/"
+Gui_szTips(7) = "　　目前網絡上已經有數以万計通用格式的棋譜文件(後綴.PGN)可供下載。您可以到以下頁面下載近20年內全國頂級象棋比賽的棋譜：http://www.xqbase.com/xqbase/" & vbCrLf & _
         "　　同時也歡迎您將自己製作的文件上傳給我們。"
-Gui_szTips(8) = "　　如果您對象棋巫師有什么意見或建議，可以跟象棋巫師開發團隊聯系，郵件地址是：" + vbCrLf + "　　webmaster@xqbase.com" + vbCrLf + _
+Gui_szTips(8) = "　　如果您對象棋巫師有什么意見或建議，可以跟象棋巫師開發團隊聯系，郵件地址是：" & vbCrLf & "　　webmaster@xqbase.com" & vbCrLf & _
         "　　象棋巫師開發團隊非常希望和大家保持聯系。"
 Gui_szTips(9) = "　　您可以雙擊桌面上的象棋巫師圖標(由棋子“象”、棋盤和巫師棒組成)直接啟動象棋巫師。"
 Gui_szTips(10) = "　　如果您是一個象棋巫師的初學者，請您仔細閱讀本軟件“幫助”選單中的“幫助主題”并多加練習，祝您早日精通象棋巫師的各种功能。"
@@ -2733,34 +2723,34 @@ Gui_szTips(17) = "　　在欣賞棋譜的過程中，點擊“播放棋局”按鈕就可從該步自動演示
 Gui_szTips(18) = "　　在欣賞棋譜的過程中，可以使用棋盤倒置和左右調換功能來從不同的角度欣賞棋局。其中左右調換功能還可以一次將類似於“炮八平五”開局這樣的棋譜自動轉換成大家習慣的“炮二平五”。反之亦然。"
 Gui_szTips(19) = "　　如果在欣賞棋譜時遇到複雜的局面，可以點擊“分析局面”按鈕，將當前棋局新開設一個象棋巫師的窗口，自由推演後續的變化。"
 Gui_szTips(20) = "　　在兩個象棋巫師窗口中，靈活運用“查看文本棋譜”和“從剪貼板導入”功能，可將推演棋盤中的棋譜記錄導入到當前棋局中。"
-Gui_szTips(21) = "　　象棋巫師是個自由軟件，如果您覺得好用，可以自由地將本軟件上載到任一個共享軟件下載站點。" + vbCrLf + _
+Gui_szTips(21) = "　　象棋巫師是個自由軟件，如果您覺得好用，可以自由地將本軟件上載到任一個共享軟件下載站點。" & vbCrLf & _
         "　　象棋巫師的源程序發布在 http://sourceforge.net/projects/xqwizard/ 這個頁面上，您可以根据自己的需要對源程序進行修改，并依照GPL協議發布您修改過的源程序。"
-Gui_szTips(22) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此表示衷心的感謝，同時也希望您繼續支持象棋巫師，關注 http://www.xqbase.com/ 。" + vbCrLf + _
+Gui_szTips(22) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此表示衷心的感謝，同時也希望您繼續支持象棋巫師，關注 http://www.xqbase.com/ 。" & vbCrLf & _
         "　　您也可以將本軟件的主頁鏈接到自己的站點上。請您使用 http://www.xqbase.com/ 作為鏈接的路徑。"
 
-Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
-Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公》"
-Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問》"
-Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" + vbCrLf + vbCrLf + _
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而》"
-Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之臺，起於累土；千里之行，始於足下。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之臺，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·地形》"
-Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" + vbCrLf + vbCrLf + _
+Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·火攻》"
 
 End If
@@ -3036,8 +3026,150 @@ For i = 0 To App_frmMain.Controls.Count - 1
     App_frmMain.Controls(i).Font = App_frmMain.Font
 Next
 On Error GoTo 0
+' 菜单
+App_frmMain.mnFile.Caption = "文件(&F)"
+App_frmMain.mnFileNew.Caption = "新的對局(&N)"
+App_frmMain.mnFileOpen.Caption = "打開(&O)..."
+App_frmMain.mnFileSave.Caption = "保存(&S)"
+App_frmMain.mnFileSaveAs.Caption = "另存為(&A)..."
+App_frmMain.mnFileExportXqf.Caption = "輸出為&XQF格式..."
+App_frmMain.mnFilePgn.Caption = "查看文本棋譜(&V)"
+App_frmMain.mnFileTags.Caption = "編輯標簽(&T)..."
+App_frmMain.mnFileExit.Caption = "退出(&X)"
+
+App_frmMain.mnMove.Caption = "著法(&M)"
+App_frmMain.mnMovePromote.Caption = "升變(&P)"
+App_frmMain.mnMoveStart.Caption = "起始局面(&S)"
+App_frmMain.mnMoveBack.Caption = "上一著(&B)"
+App_frmMain.mnMoveForward.Caption = "下一著(&F)"
+App_frmMain.mnMoveEnd.Caption = "最後局面(&E)"
+App_frmMain.mnMoveDel.Caption = "刪除(&D)"
+App_frmMain.mnMoveImport.Caption = "從文本文件導入(&I)..."
+App_frmMain.mnMovePaste.Caption = "從剪貼板導入(&C)"
+
+App_frmMain.mnPos.Caption = "局面(&P)"
+App_frmMain.mnPosFlip.Caption = "翻轉棋盤(&F)"
+App_frmMain.mnPosMirror.Caption = "左右對稱(&M)"
+App_frmMain.mnPosAnalyze.Caption = "在新窗口中推演(&A)"
+App_frmMain.mnPosEdit.Caption = "編輯局面(&E)..."
+App_frmMain.mnPosCopy.Caption = "复制FEN串(&C)"
+App_frmMain.mnPosPaste.Caption = "粘貼FEN串(&P)"
+App_frmMain.mnPosLoad.Caption = "從FEN文件導入(&L)..."
+App_frmMain.mnPosStore.Caption = "導出到FEN文件(&S)..."
+
+App_frmMain.mnWizard.Caption = "魔法(&W)"
+App_frmMain.mnWizardPlay.Caption = "自動播放(&P)"
+App_frmMain.mnWizardHandicap_.Caption = "讓子(&H)"
+App_frmMain.mnWizardHandicap(0).Caption = "被讓單馬(&A)"
+App_frmMain.mnWizardHandicap(1).Caption = "被讓雙馬(&B)"
+App_frmMain.mnWizardHandicap(2).Caption = "被讓九子(&C)"
+App_frmMain.mnWizardHandicap(4).Caption = "讓單馬(&D)"
+App_frmMain.mnWizardHandicap(5).Caption = "讓單馬(&D)"
+App_frmMain.mnWizardHandicap(6).Caption = "讓九子(&F)"
+App_frmMain.mnWizardPublish.Caption = "發布棋譜(&U)"
+App_frmMain.mnSearchOpening.Caption = "搜索開局(&O)"
+App_frmMain.mnSearchPosition.Caption = "搜索局面(&F)"
+App_frmMain.mnSearchEndgame.Caption = "搜索殘局(&E)"
+
+App_frmMain.mnEndgames_.Caption = "挑戰(&C)"
+App_frmMain.mnEndgamesStart.Caption = "當前題庫(&S)"
+App_frmMain.mnEndgamesFunny.Caption = "趣味象棋(&Y)"
+App_frmMain.mnEndgames(0).Caption = "基本殺法(&A)"
+App_frmMain.mnEndgames(1).Caption = "基本戰術(&B)"
+App_frmMain.mnEndgames(2).Caption = "中局殺法(&C)"
+App_frmMain.mnEndgames(3).Caption = "象棋殺著大全(&D)"
+App_frmMain.mnEndgames(4).Caption = "殘局攻殺譜(&E)"
+App_frmMain.mnEndgames(5).Caption = "象棋實用殘局(第一集)(&F)"
+App_frmMain.mnEndgames(6).Caption = "象棋實用殘局(第二集)(&G)"
+App_frmMain.mnEndgames(8).Caption = "橘中秘(殘局篇)(&H)"
+App_frmMain.mnEndgames(9).Caption = "适情雅趣(&I)"
+App_frmMain.mnEndgames(10).Caption = "爛柯神机(&J)"
+App_frmMain.mnEndgames(11).Caption = "象局匯存(&K)"
+App_frmMain.mnEndgames(12).Caption = "江湖百局秘譜(&L)"
+
+App_frmMain.mnEngine.Caption = "電腦(&E)"
+App_frmMain.mnEngineLevel.Caption = "級別設置(&L)..."
+App_frmMain.mnEngineLoad.Caption = "加載引擎(&E)..."
+App_frmMain.mnEngineSet.Caption = "設置參數(&S)..."
+App_frmMain.mnEngineRed.Caption = "電腦執紅(&R)"
+App_frmMain.mnEngineBlack.Caption = "電腦執黑(&B)"
+App_frmMain.mnEnginePonder.Caption = "後台思考(&P)"
+App_frmMain.mnEngineAnalyze.Caption = "電腦分析(&A)"
+App_frmMain.mnEngineRetract.Caption = "悔棋(&T)"
+App_frmMain.mnEngineBan.Caption = "設為禁著(&N)"
+App_frmMain.mnEngineDraw.Caption = "提和/接受提和(&D)"
+App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
+
+App_frmMain.mnOptions.Caption = "選項(&O)"
+App_frmMain.mnOptionsSettings.Caption = "設置(&O)..."
+App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
+App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
+App_frmMain.mnOptionsMusic_.Caption = "音樂(&M)"
+App_frmMain.mnOptionsMusic(0).Caption = "緊張(&A)"
+App_frmMain.mnOptionsMusic(1).Caption = "風趣(&B)"
+App_frmMain.mnOptionsMusic(2).Caption = "巴赫(&C)"
+App_frmMain.mnOptionsMusic(3).Caption = "莫扎特一(&D)"
+App_frmMain.mnOptionsMusic(4).Caption = "莫扎特四(&E)"
+App_frmMain.mnOptionsMusic(5).Caption = "貝多芬(&F)"
+App_frmMain.mnOptionsMusic(6).Caption = "李斯特(&G)"
+App_frmMain.mnOptionsMusic(7).Caption = "柴可夫斯基(&H)"
+App_frmMain.mnOptionsMusic(8).Caption = "德沃夏克(&I)"
+App_frmMain.mnOptionsMusic(9).Caption = "仙劍奇俠傳(&J)"
+App_frmMain.mnOptionsMusic(10).Caption = "望江南(&K)"
+App_frmMain.mnOptionsMusic(11).Caption = "無聲(&L)"
+App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
+App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
+App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
+App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
+
+App_frmMain.mnTools.Caption = "工具(&T)"
+App_frmMain.mnToolBooth.Caption = "象棋巫師魔法學校(&T)"
+App_frmMain.mnToolPgns2Jar.Caption = "制作手机棋譜(&J)"
+App_frmMain.mnToolConvert.Caption = "批量轉換棋譜(&C)"
+App_frmMain.mnToolBook.Caption = "管理開局庫(&B)"
+
+App_frmMain.mnHelp.Caption = "幫助(&H)"
+App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
+App_frmMain.mnHelpHowTo.Caption = "日積月累(&W)..."
+App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
+App_frmMain.mnHelpHome.Caption = "象棋巫師的网站(&H)"
+App_frmMain.mnHelpBase.Caption = "棋譜倉庫(&B)"
+App_frmMain.mnHelpLeague.Caption = "獲取UCCI引擎(&G)"
+App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
+App_frmMain.mnHelpEngine.Caption = "關于&UCCI引擎..."
+App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
+
+' 工具栏
+App_frmMain.tlb.Buttons("FileNew").ToolTipText = "新的對局"
+App_frmMain.tlb.Buttons("FileOpen").ToolTipText = "打開"
+App_frmMain.tlb.Buttons("FileSave").ToolTipText = "保存"
+App_frmMain.tlb.Buttons("FileViewPgn").ToolTipText = "查看文本棋譜"
+App_frmMain.tlb.Buttons("FileEditTags").ToolTipText = "編輯標簽"
+App_frmMain.tlb.Buttons("MovePromote").ToolTipText = "升變"
+App_frmMain.tlb.Buttons("MoveStart").ToolTipText = "起始局面"
+App_frmMain.tlb.Buttons("MoveBack").ToolTipText = "上一著"
+App_frmMain.tlb.Buttons("MoveForward").ToolTipText = "下一著"
+App_frmMain.tlb.Buttons("MoveEnd").ToolTipText = "最後局面"
+App_frmMain.tlb.Buttons("MoveDel").ToolTipText = "刪除"
+App_frmMain.tlb.Buttons("MovePaste").ToolTipText = "從剪貼板導入"
+App_frmMain.tlb.Buttons("PosFlip").ToolTipText = "翻轉棋盤"
+App_frmMain.tlb.Buttons("PosAnalyze").ToolTipText = "在新窗口中推演"
+App_frmMain.tlb.Buttons("PosEdit").ToolTipText = "編輯局面"
+App_frmMain.tlb.Buttons("WizardPlay").ToolTipText = "自動播放"
+App_frmMain.tlb.Buttons("SearchPosition").ToolTipText = "搜索局面"
+App_frmMain.tlb.Buttons("WizardPublish").ToolTipText = "發布棋譜"
+App_frmMain.tlb.Buttons("EndgamesStart").ToolTipText = "挑戰 - 當前題庫"
+App_frmMain.tlb.Buttons("EngineLevel").ToolTipText = "設置級別"
+App_frmMain.tlb.Buttons("EngineRed").ToolTipText = "電腦執紅"
+App_frmMain.tlb.Buttons("EngineBlack").ToolTipText = "電腦執黑"
+App_frmMain.tlb.Buttons("EngineAnalyze").ToolTipText = "電腦分析"
+App_frmMain.tlb.Buttons("EngineStop").ToolTipText = "停止思考/立即走棋"
+' 界面
 App_frmMain.strpRight.Tabs(1).Caption = "棋局信息"
 App_frmMain.strpRight.Tabs(2).Caption = "電腦分析"
+App_frmMain.lblDepth.Caption = "深度"
+App_frmMain.lblScore.Caption = "評價"
+App_frmMain.lblPv.Caption = "思考路線"
 App_frmMain.lblTimeLeftUp1.Caption = "時限"
 App_frmMain.lblTimeElapsedUp1.Caption = "用時"
 App_frmMain.lblTimeLeftDown1.Caption = "時限"
@@ -3046,6 +3178,10 @@ App_frmMain.frmMove.Caption = "著法列表"
 App_frmMain.lblInput.Caption = "輸入"
 App_frmMain.lblFormat.Caption = "格式"
 App_frmMain.lblComment.Caption = "註釋"
+App_frmMain.stb.Panels(1).ToolTipText = "思考著法"
+App_frmMain.stb.Panels(2).ToolTipText = "每秒鐘分析的節點數"
+App_frmMain.stb.Panels(3).ToolTipText = "思考路線"
+App_frmMain.stb.Panels(4).ToolTipText = "提示信息"
 
 End Sub
 

@@ -196,8 +196,8 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.3, Last Modified: Aug. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -260,12 +260,26 @@ For i = 0 To Controls.Count - 1
     Controls(i).Font = Font
 Next
 On Error GoTo 0
+Caption = "開始對局"
 frmFlip.Caption = "誰先走"
 optFlip(0).Caption = "我先走"
 optFlip(1).Caption = "電腦先走"
 frmHandicap.Caption = "先走讓子"
 optHandicap(0).Caption = "不讓子"
 optHandicap(1).Caption = "讓單馬"
+optHandicap(2).Caption = "讓雙馬"
+optHandicap(3).Caption = "讓九子"
+chkCustom.Caption = "自定義"
+frmLevel.Caption = "電腦水平"
+optLevel(0).Caption = "入門"
+optLevel(1).Caption = "業余"
+optLevel(2).Caption = "專業"
+optLevel(3).Caption = "大師"
+optLevel(4).Caption = "特級大師"
+chkNoComputer.Caption = "不用電腦，只觀看或編輯棋局"
+chkShowNew.Caption = "始終顯示“開始對局”對話框"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 

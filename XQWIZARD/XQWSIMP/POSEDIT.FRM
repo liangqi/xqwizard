@@ -1124,8 +1124,8 @@ Attribute VB_Exposed = False
 ' POSEDIT.FRM - Source Code for XiangQi Wizard, Part III
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.66, Last Modified: Mar. 2008
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -1200,12 +1200,32 @@ Edit_pcSelected = 0
 Edit_posBoard = Game_posIrrev(Game_nCurrIrrev)
 imgBoard.Picture = frmHide.imgBoardSmall.Picture
 PosBoardFlush
-Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
 txtFen.Text = Edit_szFen
 optRedMove.Value = (Edit_posBoard.sdPlayer = 0)
 optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
 txtCounter.Text = Edit_cnt
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "編輯局面"
+lblPlayer.Caption = "先行"
+optRedMove.Caption = "紅"
+optBlackMove.Caption = "黑"
+lblCounter.Caption = "回合"
+btnClear.Caption = "清空棋盤"
+btnExchange.Caption = "紅黑互換"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 
@@ -1237,7 +1257,7 @@ Private Sub optRedMove_Click()
 
 If Edit_posBoard.sdPlayer = 1 Then
     Edit_posBoard.sdPlayer = 0
-    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
     txtFen.Text = Edit_szFen
 End If
 
@@ -1247,7 +1267,7 @@ Private Sub optBlackMove_Click()
 
 If Edit_posBoard.sdPlayer = 0 Then
     Edit_posBoard.sdPlayer = 1
-    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
     txtFen.Text = Edit_szFen
 End If
 
@@ -1258,7 +1278,7 @@ Private Sub txtCounter_Change()
 If Edit_cnt <> Str2Int(txtCounter.Text) Then
     Edit_cnt = Str2Int(txtCounter.Text, 1, 999)
     txtCounter.Text = Edit_cnt
-    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
     txtFen.Text = Edit_szFen
 End If
 
@@ -1289,7 +1309,7 @@ If nButton = vbLeftButton Then
         DrawPosSquare sq
         Edit_sqSelected = 0
         Edit_pcSelected = 0
-        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
         txtFen.Text = Edit_szFen
     Else
         If Edit_posBoard.ucpcSquares(sq) > 0 Then
@@ -1311,7 +1331,7 @@ ElseIf nButton = vbRightButton Then
         CchessAddPiece Edit_posBoard, sq, pcDst, CCHESS_DELETE_PIECE
         DrawPosSquare sq
         DrawCapSquare pcDst
-        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
         txtFen.Text = Edit_szFen
     End If
 End If
@@ -1327,7 +1347,7 @@ If Edit_sqSelected > 0 Then
     DrawPosSquare Edit_sqSelected
     DrawCapSquare pc
     Edit_sqSelected = 0
-    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+    Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
     txtFen.Text = Edit_szFen
 Else
     pc = nIndex + 16
@@ -1347,7 +1367,7 @@ Private Sub btnClear_Click()
 CchessClearBoard Edit_posBoard
 Edit_sqSelected = 0
 PosBoardFlush
-Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
 txtFen.Text = Edit_szFen
 
 End Sub
@@ -1359,7 +1379,7 @@ Edit_sqSelected = 0
 PosBoardFlush
 optRedMove.Value = (Edit_posBoard.sdPlayer = 0)
 optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
-Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
 txtFen.Text = Edit_szFen
 
 End Sub
@@ -1374,7 +1394,7 @@ If sqWhiteKing > 0 And sqBlackKing > sqWhiteKing Then
         CchessFlipBoard Edit_posBoard
         ' Edit_sqSelected = 0
         ' PosBoardFlush
-        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) + " - - 0" + Str(Edit_cnt)
+        Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
         ' txtFen.Text = Edit_szFen
     End If
 End If

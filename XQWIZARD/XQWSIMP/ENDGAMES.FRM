@@ -715,8 +715,8 @@ Attribute VB_Exposed = False
 ' ENDGAMES.FRM - Source Code for XiangQi Wizard, Part IX
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 3.6, Last Modified: Dec. 2007
-' Copyright (C) 2004-2007 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -731,6 +731,7 @@ Attribute VB_Exposed = False
 ' You should have received a copy of the GNU General Public License along
 ' with this program; if not, write to the Free Software Foundation, Inc.,
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
 Option Explicit
 
 Private Sub Form_Load()

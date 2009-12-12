@@ -143,38 +143,37 @@ Begin VB.Form frmMainLarge
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "SearchPosition"
+            Object.ToolTipText     =   "搜索局面"
+         EndProperty
+         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPublish"
             Object.ToolTipText     =   "发布棋谱"
          EndProperty
-         BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
-         BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
             Object.ToolTipText     =   "挑战 - 当前题库"
          EndProperty
-         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
             Style           =   1
          EndProperty
-         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "电脑执红"
             Style           =   1
          EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "电脑执黑"
-            Style           =   1
-         EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "EnginePonder"
-            Object.ToolTipText     =   "后台思考"
             Style           =   1
          EndProperty
          BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -1426,12 +1425,15 @@ Begin VB.Form frmMainLarge
       Caption         =   "文件(&F)"
       Begin VB.Menu mnFileNew 
          Caption         =   "新的对局(&N)"
+         Shortcut        =   ^N
       End
       Begin VB.Menu mnFileOpen 
          Caption         =   "打开(&O)..."
+         Shortcut        =   ^O
       End
       Begin VB.Menu mnFileSave 
          Caption         =   "保存(&S)"
+         Shortcut        =   ^S
       End
       Begin VB.Menu mnFileSaveAs 
          Caption         =   "另存为(&A)..."
@@ -1444,6 +1446,7 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnFilePgn 
          Caption         =   "查看文本棋谱(&V)"
+         Shortcut        =   ^P
       End
       Begin VB.Menu mnFileTags 
          Caption         =   "编辑标签(&T)..."
@@ -1480,6 +1483,7 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnMoveDel 
          Caption         =   "删除(&D)"
+         Shortcut        =   {DEL}
       End
       Begin VB.Menu mnMoveSep3 
          Caption         =   "-"
@@ -1491,7 +1495,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "从剪贴板导入(&C)"
       End
    End
-   Begin VB.Menu mnMenuPos 
+   Begin VB.Menu mnPos 
       Caption         =   "局面(&P)"
       Begin VB.Menu mnPosFlip 
          Caption         =   "翻转棋盘(&F)"
@@ -1504,18 +1508,22 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnPosAnalyze 
          Caption         =   "在新窗口中推演(&A)"
+         Shortcut        =   ^K
       End
       Begin VB.Menu mnPosEdit 
          Caption         =   "编辑局面(&E)..."
+         Shortcut        =   ^E
       End
       Begin VB.Menu mnPosSep2 
          Caption         =   "-"
       End
       Begin VB.Menu mnPosCopy 
          Caption         =   "复制FEN串(&C)"
+         Shortcut        =   ^{INSERT}
       End
       Begin VB.Menu mnPosPaste 
          Caption         =   "粘贴FEN串(&P)"
+         Shortcut        =   +{INSERT}
       End
       Begin VB.Menu mnPosLoad 
          Caption         =   "从FEN文件导入(&L)..."
@@ -1571,6 +1579,7 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnSearchPosition 
          Caption         =   "搜索局面(&F)"
+         Shortcut        =   {F3}
       End
       Begin VB.Menu mnSearchEndgame 
          Caption         =   "搜索残局(&E)"
@@ -1586,6 +1595,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "挑战(&C)"
       Begin VB.Menu mnEndgamesStart 
          Caption         =   "当前题库(&S)"
+         Shortcut        =   {F5}
       End
       Begin VB.Menu mnEndgamesSep1 
          Caption         =   "-"
@@ -1683,6 +1693,7 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnEngineRetract 
          Caption         =   "悔棋(&T)"
+         Shortcut        =   +{DEL}
       End
       Begin VB.Menu mnEngineBan 
          Caption         =   "设为禁着(&N)"
@@ -1695,6 +1706,7 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnEngineStop 
          Caption         =   "停止思考/立即走棋(&O)"
+         Shortcut        =   ^T
       End
    End
    Begin VB.Menu mnOptions 
@@ -1842,6 +1854,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "帮助(&H)"
       Begin VB.Menu mnHelpContents 
          Caption         =   "帮助主题(&C)"
+         Shortcut        =   {F1}
       End
       Begin VB.Menu mnHelpHowTo 
          Caption         =   "日积月累(&W)..."
@@ -1910,6 +1923,20 @@ cmbFormat.AddItem ST("炮二平五", "炮二平五"), 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+mnOptionsBoard(0).Caption = "櫟木(&A)"
+mnOptionsBoard(1).Caption = "綠色大理石(&B)"
+mnOptionsBoard(2).Caption = "白色大理石(&C)"
+mnOptionsBoard(3).Caption = "再生紙(&D)"
+mnOptionsBoard(4).Caption = "畫布(&E)"
+mnOptionsBoard(5).Caption = "水滴(&F)"
+mnOptionsBoard(6).Caption = "淺紅象棋(&G)"
+mnOptionsPieces(0).Caption = "木刻(&A)"
+mnOptionsPieces(1).Caption = "精緻(&B)"
+mnOptionsPieces(2).Caption = "光澤(&C)"
+
 End Sub
 
 Private Sub Form_Unload(nCancel As Integer)
@@ -1926,7 +1953,7 @@ If Engine_nStatus > IDLE_UNLOAD Then
 End If
 App_bRunning = False
 If Options_bAutoSave Then
-    App_szFileName = App_szPath + "AUTOSAVE.PGN"
+    App_szFileName = App_szPath & "AUTOSAVE.PGN"
     WriteFile
 End If
 If Not App_bPrevInstance Then
@@ -2171,7 +2198,7 @@ For i = 1 To Game_nMaxMove
     Game_szMoveText(2, i) = Move2Iccs(Game_mvMove(i))
     Game_szMoveText(1, i) = MkL(CchessFileMirror(CvL(Game_szMoveText(1, i))))
     Game_szMoveText(0, i) = MkC(CchessFile2Chin(CvL(Game_szMoveText(1, i)), sd))
-    lstMoveText.List(i) = NumberText(cnt, sd) + Game_szMoveText(Game_nFormat, i)
+    lstMoveText.List(i) = NumberText(cnt, sd) & Game_szMoveText(Game_nFormat, i)
     sd = 1 - sd
     cnt = cnt + 1 - sd
 Next
@@ -2186,8 +2213,9 @@ End Sub
 
 Private Sub mnPosAnalyze_Click()
 
-Shell App_szPath + App.EXEName + IIf(App_bPromotion, " /P /S ", " /S ") + """" + _
-        AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr) + """", vbNormalFocus
+Shell App_szPath & App.EXEName & IIf(App_bPromotion, " /P /S ", " /S ") & _
+        """" & AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
+        " - - 0 " & Game_cntCurr & """", vbNormalFocus
 
 End Sub
 
@@ -2203,7 +2231,8 @@ End Sub
 Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
-Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
+        " - - 0 " & Game_cntCurr
 MsgBox ST("FEN串已复制到剪贴板。", "FEN串已復製到剪貼板"), vbInformation
 
 End Sub
@@ -2240,7 +2269,8 @@ If szFileName <> "" Then
     On Error GoTo lnErrorOpen
     Open szFileName For Output As #nFileNo
     On Error GoTo 0
-    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) + " - - 0" + Str(Game_cntCurr)
+    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
+            " - - 0 " & Game_cntCurr
     Close #nFileNo
 End If
 
@@ -2284,8 +2314,8 @@ End Sub
 Private Sub mnSearchOpening_Click()
 
 If Game_szEcco <> "" Then
-    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?ecco=" + _
-            Game_szEcco, vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?ecco=" & Game_szEcco, _
+            vbNullString, vbNullString, SW_SHOWNORMAL
 End If
 
 End Sub
@@ -2294,8 +2324,8 @@ Private Sub mnSearchPosition_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?position=" + _
-        UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?position=" & UrlEncode(szFen), _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2303,8 +2333,8 @@ Private Sub mnSearchEndgame_Click()
 
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" + _
-        UrlEncode(szFen), vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & UrlEncode(szFen), _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2332,7 +2362,7 @@ Dim szEpdName As String, szTitle As String
 If CancelSave Then
     Exit Sub
 End If
-szEpdName = "_" + Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
+szEpdName = "_" & Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
 If Options_nLanguage = 0 Then
     szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", _
             "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
@@ -2418,7 +2448,6 @@ If Engine_bPonder And Engine_nStatus <> BUSY_THINK Then
 End If
 Engine_bPonder = Not Engine_bPonder
 mnEnginePonder.Checked = Engine_bPonder
-tlb.Buttons("EnginePonder").Value = IIf(Engine_bPonder, tbrPressed, tbrUnpressed)
 
 End Sub
 
@@ -2541,25 +2570,25 @@ End Sub
 Private Sub mnToolBooth_Click()
 
 WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath + "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub mnToolPgns2Jar_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "PGNS2JAR.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "PGNS2JAR.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub mnToolConvert_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub mnToolBook_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath + "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -2661,6 +2690,8 @@ Case "PosEdit"
 ' Separator
 Case "WizardPlay"
     mnWizardPlay_Click
+Case "SearchPosition"
+    mnSearchPosition_Click
 Case "WizardPublish"
     mnWizardPublish_Click
 ' Separator
@@ -2673,8 +2704,6 @@ Case "EngineRed"
     mnEngineRed_Click
 Case "EngineBlack"
     mnEngineBlack_Click
-Case "EnginePonder"
-    mnEnginePonder_Click
 Case "EngineAnalyze"
     mnEngineAnalyze_Click
 Case "EngineStop"
@@ -2683,7 +2712,7 @@ End Select
 
 End Sub
 
-Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, X As Single, Y As Single)
+Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 Dim sq As Integer, pc As Integer, bCanPromote As Boolean, mv As Long
 sq = IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)
@@ -2756,7 +2785,7 @@ sd = Game_sdStart
 If Game_nFormat <> cmbFormat.ListIndex Then
     Game_nFormat = cmbFormat.ListIndex
     For i = 1 To Game_nMaxMove
-        lstMoveText.List(i) = NumberText(cnt, sd) + Game_szMoveText(Game_nFormat, i)
+        lstMoveText.List(i) = NumberText(cnt, sd) & Game_szMoveText(Game_nFormat, i)
         sd = 1 - sd
         cnt = cnt + 1 - sd
     Next
@@ -2792,7 +2821,7 @@ End If
 
 End Sub
 
-Private Sub btnCoord_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, X As Single, Y As Single)
+Private Sub btnCoord_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
 btnCoord(nIndex).Enabled = False
 btnCoord(nIndex).Enabled = True

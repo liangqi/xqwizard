@@ -240,15 +240,15 @@ For i = 1 To Len(sz)
     szChar = Mid(sz, i, 1)
     Select Case szChar
     Case " "
-        szReturn = szReturn + "+"
+        szReturn = szReturn & "+"
     Case "*", ".", "-", "0" To "9", "@", "A" To "Z", "_", "a" To "z"
-        szReturn = szReturn + szChar
+        szReturn = szReturn & szChar
     Case Else
         nAscii = Asc(szChar)
         If nAscii < 0 Then
-            szReturn = szReturn + "%" + Left(Hex(nAscii), 2) + "%" + Right(Hex(nAscii), 2)
+            szReturn = szReturn & "%" & Left(Hex(nAscii), 2) & "%" & Right(Hex(nAscii), 2)
         Else
-            szReturn = szReturn + "%" + Mid(Hex(&H100 + nAscii), 2, 2)
+            szReturn = szReturn & "%" & Mid(Hex(&H100 + nAscii), 2, 2)
         End If
     End Select
 Next
@@ -266,19 +266,19 @@ For i = 1 To Len(sz)
     szChar = Mid(sz, i, 1)
     Select Case szChar
     Case "+"
-        szReturn = szReturn + " "
+        szReturn = szReturn & " "
     Case "%"
         szChar = Mid(sz, i + 1, 2)
         If szChar < "80" Then
-            szReturn = szReturn + Chr(Val("&H" + szChar))
+            szReturn = szReturn & Chr(Val("&H" & szChar))
             i = i + 2
         Else
-            szChar = szChar + Mid(sz, i + 4, 2)
-            szReturn = szReturn + Chr(Val("&H" + szChar))
+            szChar = szChar & Mid(sz, i + 4, 2)
+            szReturn = szReturn & Chr(Val("&H" & szChar))
             i = i + 5
         End If
     Case Else
-        szReturn = szReturn + szChar
+        szReturn = szReturn & szChar
     End Select
 Next
 UrlDecode = szReturn
@@ -383,7 +383,7 @@ On Error GoTo 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
-ofn.lpstrFilter = szFilter + Chr(0)
+ofn.lpstrFilter = szFilter & Chr(0)
 ofn.lpstrFile = String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
@@ -413,8 +413,8 @@ On Error GoTo 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
-ofn.lpstrFilter = szFilter + Chr(0)
-ofn.lpstrFile = szFileName + String(260, 0)
+ofn.lpstrFilter = szFilter & Chr(0)
+ofn.lpstrFile = szFileName & String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
 ofn.flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT
@@ -473,7 +473,7 @@ nid.uID = 0
 nid.uFlags = NIF_MESSAGE + NIF_ICON + NIF_TIP
 nid.uCallbackMessage = WM_TRAY
 nid.hIcon = IIf(hIcon = 0, frm.Icon.Handle, hIcon)
-nid.szTip = IIf(szTip = "", frm.Caption, szTip) + Chr(0)
+nid.szTip = IIf(szTip = "", frm.Caption, szTip) & Chr(0)
 Shell_NotifyIconA NIM_ADD, nid
 
 End Sub
@@ -509,7 +509,7 @@ If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) <> 0 Then
 End If
 AllocConsole
 SetConsoleCtrlHandler AddressOf CtrlHandlerRoutine, 1
-szTitle = "Console" + Str(App.hInstance) + Str(App.ThreadID)
+szTitle = "Console " & App.hInstance & " " & App.ThreadID
 SetConsoleTitleA szTitle
 hWnd = 0
 Do While hWnd = 0

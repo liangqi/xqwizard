@@ -1,5 +1,4 @@
 Attribute VB_Name = "mdlAdvert"
-Option Explicit
 ' ADVERT.BAS - Source Code for XiangQi Wizard, Part XV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
@@ -20,6 +19,8 @@ Option Explicit
 ' with this program; if not, write to the Free Software Foundation, Inc.,
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+Option Explicit
+
 Public Const MAX_ADVERTS    As Integer = 100            ' 最大广告数
 
 Public Gui_nAdvertNum As Integer                        ' 广告数量
@@ -32,16 +33,16 @@ Public Sub DownloadAdvertList(ByVal szAdvertFile As String)
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szAdvertFile)
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szAdvertFile)
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
-    MkDir App_szPath + "ADVERT"
+    MkDir App_szPath & "ADVERT"
     On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\advert.txt" For Output As #nFileNo
+    Open App_szPath & "ADVERT\advert.txt" For Output As #nFileNo
     On Error GoTo 0
     sz = Replace(sz, Chr(10), vbCrLf)
-    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+    sz = Replace(sz, Chr(13) & vbCrLf, vbCrLf)
     Print #nFileNo, sz;
     Close #nFileNo
 End If
@@ -73,8 +74,8 @@ Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Long, ByVal
 
 Dim nFileNo As Integer, sz As String, buffer() As Byte
 ' 判断文件字节数，如果跟广告列表中的一致，就不需要下载了
-If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".htm") = nHtmSize Then
-    If GetFileSize(App_szPath + "ADVERT\" + szFileName + ".gif") = nGifSize Then
+If GetFileSize(App_szPath & "ADVERT\" & szFileName & ".htm") = nHtmSize Then
+    If GetFileSize(App_szPath & "ADVERT\" & szFileName & ".gif") = nGifSize Then
         Exit Sub
     End If
 End If
@@ -82,26 +83,26 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szFileName + ".htm")
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\" + szFileName + ".htm" For Output As #nFileNo
+    Open App_szPath & "ADVERT\" & szFileName & ".htm" For Output As #nFileNo
     On Error GoTo 0
     sz = Replace(sz, Chr(10), vbCrLf)
-    sz = Replace(sz, Chr(13) + vbCrLf, vbCrLf)
+    sz = Replace(sz, Chr(13) & vbCrLf, vbCrLf)
     Print #nFileNo, sz;
     Close #nFileNo
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" + szFileName + ".gif", icByteArray)
+buffer() = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".gif", icByteArray)
 On Error GoTo 0
 If UBound(buffer) >= 0 Then
     On Error Resume Next
-    Kill App_szPath + "ADVERT\" + szFileName + ".gif"
+    Kill App_szPath & "ADVERT\" & szFileName & ".gif"
     On Error GoTo lnErrorOpen
-    Open App_szPath + "ADVERT\" + szFileName + ".gif" For Binary Access Write As #nFileNo
+    Open App_szPath & "ADVERT\" & szFileName & ".gif" For Binary Access Write As #nFileNo
     On Error GoTo 0
     Put #nFileNo, , buffer()
     Close #nFileNo
@@ -120,7 +121,7 @@ Dim nFileNo As Integer, sz As String, szs() As String
 Gui_nAdvertNum = 0
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open App_szPath + "ADVERT\advert.txt" For Input As #nFileNo
+Open App_szPath & "ADVERT\advert.txt" For Input As #nFileNo
 On Error GoTo 0
 If EOF(nFileNo) Then
     Close #nFileNo
