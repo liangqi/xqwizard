@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -152,6 +152,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
+            MixedState      =   -1  'True
          EndProperty
          BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
@@ -2213,9 +2214,8 @@ End Sub
 
 Private Sub mnPosAnalyze_Click()
 
-Shell App_szPath & App.EXEName & IIf(App_bPromotion, " /P /S ", " /S ") & _
-        """" & AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
-        " - - 0 " & Game_cntCurr & """", vbNormalFocus
+Shell App_szPath & App.EXEName & IIf(App_bPromotion, " /P /S ", " /S ") & """" & _
+        AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr & """", vbNormalFocus
 
 End Sub
 
@@ -2231,8 +2231,7 @@ End Sub
 Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
-Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
-        " - - 0 " & Game_cntCurr
+Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
 MsgBox ST("FEN¥Æ“—∏¥÷∆µΩºÙÃ˘∞Â°£", "FEN¥Æ“—èÕ—uµΩºÙŸN∞Â"), vbInformation
 
 End Sub
@@ -2269,8 +2268,7 @@ If szFileName <> "" Then
     On Error GoTo lnErrorOpen
     Open szFileName For Output As #nFileNo
     On Error GoTo 0
-    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & _
-            " - - 0 " & Game_cntCurr
+    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
     Close #nFileNo
 End If
 
@@ -2305,12 +2303,6 @@ EngineNewGame IIf(nIndex < 4, ENGINE_PLAY_RED, ENGINE_PLAY_BLACK)
 
 End Sub
 
-Private Sub mnWizardPublish_Click()
-
-frmPublish.Show vbModal, Me
-
-End Sub
-
 Private Sub mnSearchOpening_Click()
 
 If Game_szEcco <> "" Then
@@ -2335,6 +2327,12 @@ Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & UrlEncode(szFen), _
         vbNullString, vbNullString, SW_SHOWNORMAL
+
+End Sub
+
+Private Sub mnWizardPublish_Click()
+
+frmPublish.Show vbModal, Me
 
 End Sub
 

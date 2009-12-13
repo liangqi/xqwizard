@@ -736,8 +736,24 @@ Option Explicit
 
 Private Sub Form_Load()
 
+Dim i As Integer
 lstGames.Clear
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+lblTitle.Font.Name = "標楷體"
+lblTitle.Font.Size = 15
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 

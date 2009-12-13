@@ -144,7 +144,7 @@ Begin VB.Form frmMainSmall
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "SearchPosition"
-            Object.ToolTipText     =   "ËÑË÷ÆåÆ×"
+            Object.ToolTipText     =   "ËÑË÷¾ÖÃæ"
          EndProperty
          BeginProperty Button21 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPublish"

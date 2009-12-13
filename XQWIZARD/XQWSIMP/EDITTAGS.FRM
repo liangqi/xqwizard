@@ -292,6 +292,7 @@ Option Explicit
 
 Private Sub Form_Load()
 
+Dim i As Integer
 txtEvent = Game_szEvent
 txtRound = Game_szRound
 txtDate = Game_szDate
@@ -312,6 +313,36 @@ txtVar = Game_szVar
 chkAutoEcco.Value = IIf(App_bAutoEcco, 1, 0)
 chkAutoEcco.Enabled = Game_bStartPos
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "編輯標簽"
+frmMatch.Caption = "比賽"
+lblEvent.Caption = "賽事"
+lblRound.Caption = "輪次"
+lblDate.Caption = "日期"
+lblSite.Caption = "地點"
+lblResult.Caption = "結果"
+frmRed.Caption = "紅方"
+lblRedTeam.Caption = "單位"
+lblRedPlayer.Caption = "選手"
+frmBlack.Caption = "黑方"
+lblBlackTeam.Caption = "單位"
+lblBlackPlayer.Caption = "選手"
+frmOpen.Caption = "開局"
+chkAutoEcco.Caption = "自動解析開局"
+lblOpen.Caption = "開局"
+lblVar.Caption = "變例"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 

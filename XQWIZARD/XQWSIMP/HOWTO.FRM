@@ -149,6 +149,7 @@ Private Const PROMOTION_T As String = "　　中國象棋在增加了仕(士)相(象)升變成兵(
 
 Private Sub Form_Load()
 
+Dim i As Integer
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 If App_bPromotion Then
@@ -175,8 +176,8 @@ lblDoYouKnow.Font.Size = 15
 lblDoYouKnow.Caption = "你知道嗎？"
 chkShowHowTo.Caption = "啟動時顯示"
 btnPrev.Caption = "< 上一條"
+btnNext.Caption = "下一條 >"
 btnCancel.Caption = "關閉"
-btnNext.Caption = "下一條 >"""
 
 End Sub
 
