@@ -33,6 +33,7 @@ Begin VB.Form frmEditTags
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "È·¶¨"
+      Default         =   -1  'True
       Height          =   375
       Left            =   1200
       TabIndex        =   29

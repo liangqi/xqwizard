@@ -25,6 +25,7 @@ Begin VB.Form frmHowTo
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
       Caption         =   "¹Ø±Õ"
+      Default         =   -1  'True
       Height          =   375
       Left            =   3600
       TabIndex        =   5

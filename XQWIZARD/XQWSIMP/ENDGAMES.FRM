@@ -32,6 +32,7 @@ Begin VB.Form frmEndgames
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
+      Default         =   -1  'True
       Height          =   375
       Left            =   2640
       TabIndex        =   2
@@ -757,23 +758,6 @@ btnCancel.Caption = "取消"
 
 End Sub
 
-Private Sub btnConfirm_Click()
-
-LoadFenStr App_szEndgames(Gui_nEndgamesIndex)
-EngineNewGame ENGINE_PLAY_BLACK
-Game_szEvent = Caption
-Game_szRound = lstGames.List(Gui_nEndgamesIndex)
-LabelFlush
-Unload Me
-
-End Sub
-
-Private Sub btnCancel_Click()
-
-Unload Me
-
-End Sub
-
 Private Sub lstGames_Click()
 
 Dim i As Integer, j As Integer, pc As Integer, nPicId As Integer
@@ -794,3 +778,27 @@ For i = 3 To 12
 Next
 
 End Sub
+
+Private Sub lstGames_DblClick()
+
+btnConfirm_Click
+
+End Sub
+
+Private Sub btnConfirm_Click()
+
+LoadFenStr App_szEndgames(Gui_nEndgamesIndex)
+EngineNewGame ENGINE_PLAY_BLACK
+Game_szEvent = Caption
+Game_szRound = lstGames.List(Gui_nEndgamesIndex)
+LabelFlush
+Unload Me
+
+End Sub
+
+Private Sub btnCancel_Click()
+
+Unload Me
+
+End Sub
+

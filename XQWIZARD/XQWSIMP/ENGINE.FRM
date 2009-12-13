@@ -23,7 +23,6 @@ Begin VB.Form frmEngineSet
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin VB.CommandButton btnLoadSlave 
-      Caption         =   "加载副引擎"
       Height          =   375
       Left            =   6480
       TabIndex        =   26
@@ -258,6 +257,7 @@ Begin VB.Form frmEngineSet
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
+      Default         =   -1  'True
       Height          =   375
       Left            =   6480
       TabIndex        =   27
@@ -337,8 +337,13 @@ cmbHash.ListIndex = Engine_nHash
 cmbThreads.ListIndex = Engine_nThreads
 cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
-chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
-chkSlaveRed.Enabled = (Engine_bSlaveRed Or Engine_bSlaveBlack)
+If Engine_bSlaveRed Or Engine_bSlaveBlack Then
+    chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
+    btnLoadSlave.Caption = ST("卸载副引擎", "卸載副引擎")
+Else
+    chkSlaveRed.Enabled = False
+    btnLoadSlave.Caption = ST("加载副引擎", "加載副引擎")
+End If
 SetTopMost hWnd
 
 If Options_nLanguage = 0 Then
@@ -369,7 +374,6 @@ lblThreads.Caption = "負荷"
 lblRandomness.Caption = "隨機"
 lblStyle.Caption = "風格"
 chkSlaveRed.Caption = "副引擎執紅"
-btnLoadSlave.Caption = "加載副引擎"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
 
@@ -524,15 +528,23 @@ End Sub
 
 Private Sub chkSlaveRed_Click()
 
-Engine_bSlaveRed = (chkSlaveRed.Value <> 0)
-Engine_bSlaveBlack = (chkSlaveRed.Value = 0)
+If Engine_bSlaveRed Or Engine_bSlaveBlack Then
+    Engine_bSlaveRed = (chkSlaveRed.Value <> 0)
+    Engine_bSlaveBlack = (chkSlaveRed.Value = 0)
+End If
 
 End Sub
 
 Private Sub btnLoadSlave_Click()
 
 OpenSlaveEngine
-chkSlaveRed.Enabled = Engine_bSlaveBlack
+If Engine_bSlaveBlack Then
+    chkSlaveRed.Enabled = True
+    btnLoadSlave.Caption = ST("卸载副引擎", "卸載副引擎")
+Else
+    chkSlaveRed.Enabled = False
+    btnLoadSlave.Caption = ST("加载副引擎", "加載副引擎")
+End If
 chkSlaveRed.Value = 0
 
 End Sub

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmPublish 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "棋谱交流"
+   Caption         =   "发布棋谱"
    ClientHeight    =   3195
    ClientLeft      =   45
    ClientTop       =   330
@@ -136,7 +136,7 @@ Begin VB.Form frmPublish
          Top             =   960
          Width           =   375
       End
-      Begin VB.Label Label1 
+      Begin VB.Label lblPieces 
          Caption         =   "棋子样式"
          Height          =   255
          Left            =   2280
@@ -290,6 +290,7 @@ Option Explicit
 
 Private Sub Form_Load()
 
+Dim i As Integer
 ' 图片类型
 optSize(Publish_nSize).Value = True
 
@@ -302,7 +303,7 @@ cmbFormat.AddItem ST("纯文本", "純文本"), 0
 cmbFormat.AddItem ST("ANSI文本", "ANSI文本"), 1
 cmbFormat.AddItem ST("UBB文本", "UBB文本"), 2
 cmbFormat.AddItem ST("HTML文本", "HTML文本"), 3
-cmbFormat.AddItem ST("HTML内容", "HTML内容"), 4
+cmbFormat.AddItem ST("HTML内容", "HTML內容"), 4
 cmbFormat.ListIndex = Publish_nFormat
 
 ' 注意：先有发布格式，再有发布站点！
@@ -317,6 +318,41 @@ cmbLocation.AddItem ST("(其他)", "(其他)"), 5
 cmbLocation.ListIndex = Publish_nLocation
 
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+lblViewBoard.Font.Underline = True
+lblLocation.Font.Underline = True
+lblFormat.Font.Underline = True
+Caption = "發布棋譜"
+frmBoard.Caption = "棋盤"
+lblSize.Caption = "圖片類型"
+optSize(0).Caption = "簡單"
+optSize(1).Caption = "印刷"
+optSize(2).Caption = "適中"
+optSize(3).Caption = "最大"
+lblBoard.Caption = "棋盤樣式"
+lblPieces.Caption = "棋子樣式"
+lblBoardUrl.Caption = "圖片地址"
+txtBoardUrl.ToolTipText = "按Ctrl-C複製到剪貼板"
+lblViewBoard.Caption = "預覽"
+frmPublish.Caption = "發布"
+lblContent.Caption = "發布內容"
+optContent(0).Caption = "整個棋局"
+optContent(1).Caption = "當前局面"
+lblLocation.Caption = "發布站點"
+lblFormat.Caption = "發布格式"
+btnHelp.Caption = "幫助"
+btnPublish.Caption = "發布"
+btnCancel.Caption = "關閉"
 
 End Sub
 
@@ -347,45 +383,45 @@ cmbBoard.Clear
 cmbPieces.Clear
 Select Case nIndex
 Case PUB_SIZE_MINI, PUB_SIZE_PRINT
-    cmbBoard.AddItem ST("默认", ""), 0
+    cmbBoard.AddItem ST("默认", "默認"), 0
     cmbBoard.ListIndex = 0
-    cmbPieces.AddItem ST("简体", ""), 0
-    cmbPieces.AddItem ST("繁体", ""), 1
+    cmbPieces.AddItem ST("简体", "簡體"), 0
+    cmbPieces.AddItem ST("繁体", "繁體"), 1
     cmbPieces.ListIndex = IIf(Publish_bTrad, 1, 0)
 Case PUB_SIZE_SMALL
-    cmbBoard.AddItem ST("栎木", ""), 0
-    cmbBoard.AddItem ST("绿色大理石", ""), 1
-    cmbBoard.AddItem ST("白色大理石", ""), 2
-    cmbBoard.AddItem ST("再生纸", ""), 3
-    cmbBoard.AddItem ST("画布", ""), 4
-    cmbBoard.AddItem ST("水滴", ""), 5
-    cmbBoard.AddItem ST("蓝天白云石", ""), 6
-    cmbBoard.AddItem ST("象棋演播室", ""), 7
-    cmbBoard.AddItem ST("弈天棋缘", ""), 8
-    cmbBoard.AddItem ST("梦入神机", ""), 9
-    cmbBoard.AddItem ST("纵马奔流", ""), 10
-    cmbBoard.AddItem ST("浅红象棋", ""), 11
+    cmbBoard.AddItem ST("栎木", "櫟木"), 0
+    cmbBoard.AddItem ST("绿色大理石", "綠色大理石"), 1
+    cmbBoard.AddItem ST("白色大理石", "白色大理石"), 2
+    cmbBoard.AddItem ST("再生纸", "再生紙"), 3
+    cmbBoard.AddItem ST("画布", "畫布"), 4
+    cmbBoard.AddItem ST("水滴", "水滴"), 5
+    cmbBoard.AddItem ST("蓝天白云石", "藍天白雲"), 6
+    cmbBoard.AddItem ST("象棋演播室", "象棋演播室"), 7
+    cmbBoard.AddItem ST("弈天棋缘", "弈天棋緣"), 8
+    cmbBoard.AddItem ST("梦入神机", "夢入神機"), 9
+    cmbBoard.AddItem ST("纵马奔流", "縱馬奔流"), 10
+    cmbBoard.AddItem ST("浅红象棋", "淺紅象棋"), 11
     cmbBoard.ListIndex = Publish_nBoardS
-    cmbPieces.AddItem ST("木刻", ""), 0
-    cmbPieces.AddItem ST("精致", ""), 1
-    cmbPieces.AddItem ST("光泽", ""), 2
-    cmbPieces.AddItem ST("象棋演播室", ""), 3
-    cmbPieces.AddItem ST("弈天棋缘", ""), 4
-    cmbPieces.AddItem ST("梦入神机", ""), 5
-    cmbPieces.AddItem ST("纵马奔流", ""), 6
+    cmbPieces.AddItem ST("木刻", "木刻"), 0
+    cmbPieces.AddItem ST("精致", "精緻"), 1
+    cmbPieces.AddItem ST("光泽", "光澤"), 2
+    cmbPieces.AddItem ST("象棋演播室", "象棋演播室"), 3
+    cmbPieces.AddItem ST("弈天棋缘", "弈天棋緣"), 4
+    cmbPieces.AddItem ST("梦入神机", "夢入神機"), 5
+    cmbPieces.AddItem ST("纵马奔流", "縱馬奔流"), 6
     cmbPieces.ListIndex = Publish_nPiecesS
 Case PUB_SIZE_LARGE
-    cmbBoard.AddItem ST("栎木", ""), 0
-    cmbBoard.AddItem ST("绿色大理石", ""), 1
-    cmbBoard.AddItem ST("白色大理石", ""), 2
-    cmbBoard.AddItem ST("再生纸", ""), 3
-    cmbBoard.AddItem ST("画布", ""), 4
-    cmbBoard.AddItem ST("水滴", ""), 5
-    cmbBoard.AddItem ST("浅红象棋", ""), 6
+    cmbBoard.AddItem ST("栎木", "櫟木"), 0
+    cmbBoard.AddItem ST("绿色大理石", "綠色大理石"), 1
+    cmbBoard.AddItem ST("白色大理石", "白色大理石"), 2
+    cmbBoard.AddItem ST("再生纸", "再生紙"), 3
+    cmbBoard.AddItem ST("画布", "畫布"), 4
+    cmbBoard.AddItem ST("水滴", "水滴"), 5
+    cmbBoard.AddItem ST("浅红象棋", "淺紅象棋"), 6
     cmbBoard.ListIndex = Publish_nBoardL
-    cmbPieces.AddItem ST("木刻", ""), 0
-    cmbPieces.AddItem ST("精致", ""), 1
-    cmbPieces.AddItem ST("光泽", ""), 2
+    cmbPieces.AddItem ST("木刻", "木刻"), 0
+    cmbPieces.AddItem ST("精致", "精緻"), 1
+    cmbPieces.AddItem ST("光泽", "光澤"), 2
     cmbPieces.ListIndex = Publish_nPiecesL
 End Select
 
@@ -434,6 +470,7 @@ Private Sub btnPublish_Click()
 
 Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
 Dim bReturned As Boolean, cnt As Integer, sd As Integer, i As Integer
+Dim szSt1 As String, szSt2 As String
 Dim pos As PositionStruct
 
 ' 输出标题(赛事、结果、日起地点、开局)
@@ -451,6 +488,8 @@ End If
 If OpenString <> "" Then
     szCopy = szCopy & OpenString & szBr
 End If
+szSt1 = ST("# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面", "# 在瀏覽器中打開下面的鏈接，就能直接用象棋巫師打開盤面")
+szSt2 = ST("用象棋巫师打开盘面", "用象棋巫師打開盤面")
 If Publish_bContent Then
     ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
     szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
@@ -458,16 +497,16 @@ If Publish_bContent Then
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
         szCopy = szCopy & GetBoardText(Game_posIrrev(Game_nCurrIrrev))
         szCopy = szCopy & "# " & szFen & szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
-        szCopy = szCopy & "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" & szBr
+        szCopy = szCopy & szSt1 & szBr
         szCopy = szCopy & "# http://www.xqbase.com/pub/fen.php?fen=" & UrlEncode(szFen) & szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy & "[img]" & GetBoardUrl(szFen) & "[/img]" & szBr
         szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-                UrlEncode(szFen) & "]用象棋巫师打开盘面[/url]" & szBr
+                UrlEncode(szFen) & "]" & szSt2 & "[/url]" & szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "<img src=""" & GetBoardUrl(szFen) & """>" & szBr
         szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-                UrlEncode(szFen) & """>用象棋巫师打开盘面</a>" & szBr
+                UrlEncode(szFen) & """>" & szSt2 & "</a>" & szBr
     End Select
 Else
     ' 发布整个棋局，如果不是从起始局面开始的，那么依次显示文本棋盘/图片棋盘，外加FEN链接
@@ -476,17 +515,17 @@ Else
         Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
             CchessFen2Board pos, Game_szIrrevFen(0)
             szCopy = szCopy & GetBoardText(pos)
-            szCopy = szCopy & "# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面" & szBr
+            szCopy = szCopy & szSt1 & szBr
             szCopy = szCopy & "# http://www.xqbase.com/pub/fen.php?fen=" & UrlEncode(Game_szIrrevFen(0)) & szBr
         Case PUB_FORMAT_UBB
             szCopy = szCopy & "[img]" & GetBoardUrl(Game_szIrrevFen(0)) & "[/img]" & szBr
             szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & "]用象棋巫师打开盘面[/url]" & szBr
+                    UrlEncode(Game_szIrrevFen(0)) & "]" & szSt2 & "[/url]" & szBr
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
             ' 后面有Flash棋盘，这里就不再显示图片棋盘了
             ' szCopy = szCopy & "<img src=""" & GetBoardUrl(Game_szIrrevFen(0)) & """>" & szBr
             szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & """>用象棋巫师打开盘面</a>" & szBr
+                    UrlEncode(Game_szIrrevFen(0)) & """>" & szSt2 & "</a>" & szBr
         End Select
     End If
     ' 如果发布模式是UBB或者HTML，那么显示Flash棋盘
@@ -500,15 +539,18 @@ Else
         ' szCopy = szCopy & "# 在浏览器中打开下面的链接，就能播放棋谱" & szBr
         ' szCopy = szCopy & "# http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & szBr
     Case PUB_FORMAT_UBB
-        szCopy = szCopy & "# [url=http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & "]播放棋谱[/url]" & szBr
+        szCopy = szCopy & "# [url=http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & _
+                ST("]播放棋谱[/url]", "]播放棋譜[/url]") & szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" width=""324"" height=""396"" " & _
-                "type=""application/x-shockwave-flash"" pluginspage=""http://www.macromedia.com/go/getflashplayer"" " & _
-                "allowScriptAccess=""always"" quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
+        szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
+                "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
+                "pluginspage=""http://www.macromedia.com/go/getflashplayer"" allowScriptAccess=""always"" " & _
+                "quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
     End Select
     ' 显示文本棋谱
     ' 以下是供复制粘贴的文本棋谱
-    szCopy = szCopy & "=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===" & szBr
+    szCopy = szCopy & ST("=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
+            "=== 選中以下文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
     ' 润色字体
     Select Case Publish_nFormat
     Case PUB_FORMAT_ANSI
@@ -560,20 +602,23 @@ Else
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "</font>"
     End Select
-    szCopy = szCopy & "=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===" & szBr
+    szCopy = szCopy & ST("=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
+            "=== 選中以上文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
     ' 以上是供复制粘贴的文本棋谱
 End If
 ' 给象棋巫师做个广告
+szSt1 = ST("下载象棋巫师", "下載象棋巫師")
+szSt2 = ST("象棋百科全书", "象棋百科全書")
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-    szCopy = szCopy & "# 下载象棋巫师 http://www.xqbase.com/pub/xqwizard.php" & szBr
-    szCopy = szCopy & "# 象棋百科全书 http://www.xqbase.com/"
+    szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
+    szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/"
 Case PUB_FORMAT_UBB
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]下载象棋巫师[/url]" & szBr
-    szCopy = szCopy & "[url=http://www.xqbase.com/pub/]象棋百科全书[/url]"
+    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt1 & "[/url]" & szBr
+    szCopy = szCopy & "[url=http://www.xqbase.com/pub/]" & szSt2 & "[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">下载象棋巫师</a>" & szBr
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">象棋百科全书</a>"
+    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
+    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt2 & "</a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then
@@ -600,7 +645,8 @@ Case PUB_LOCATION_SINA
 Case PUB_LOCATION_QZONE
     ShellExecuteA 0, vbNullString, "http://user.qzone.qq.com/", vbNullString, vbNullString, SW_SHOWNORMAL
 End Select
-MsgBox "棋谱已复制到剪贴板，请找到发表帖子的内容框，按 Ctrl-V 键粘贴。", vbInformation
+MsgBox ST("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
+        "棋譜已復製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。"), vbInformation
 
 End Sub
 

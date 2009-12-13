@@ -2435,9 +2435,14 @@ Private Sub mnEngineLoad_Click()
 
 Dim szFileName As String
 szFileName = FileDialog(ST("加载引擎", "加載引擎"), ST("引擎文件", "引擎文件"), "EXE")
-If szFileName <> "" Then
+If szFileName = "" Then
+    Exit Sub
+End If
+If GetAppType(szFileName) = IMAGE_SUBSYSTEM_WINDOWS_CUI Then
     Engine_szFile = szFileName
     OpenEngine LOAD_WITH_INFO
+Else
+    MsgBox szFileName & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
 End If
 
 End Sub

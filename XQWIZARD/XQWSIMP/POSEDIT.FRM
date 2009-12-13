@@ -343,6 +343,7 @@ Begin VB.Form frmPosEdit
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "È·¶¨"
+      Default         =   -1  'True
       Height          =   375
       Left            =   7320
       TabIndex        =   10

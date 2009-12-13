@@ -1880,11 +1880,16 @@ If i > 0 Then
     szMoveList = Space(3 - Len("" & Engine_nDepth)) & Engine_nDepth
     i = InStr(szReceived, " score ")
     If i > 0 Then
-        nScore = Str2Int(Mid(szReceived, i + 7))
+        If Mid(szReceived, i + 7, 5) = "mate " Then
+            nScore = Str2Int(Mid(szReceived, i + 12))
+            nScore = IIf(nScore < 0, -10000, 10000) - nScore
+        Else
+            nScore = Str2Int(Mid(szReceived, i + 7))
+        End If
         If nScore > 0 Then
             szMoveList = szMoveList & Space(5 - Len("" & nScore)) & "(+" & nScore & ")"
         ElseIf nScore < 0 Then
-            szMoveList = szMoveList & Space(5 - Len("" & nScore)) & "(" & nScore & ")"
+            szMoveList = szMoveList & Space(6 - Len("" & nScore)) & "(" & nScore & ")"
         Else
             szMoveList = szMoveList & "     (0)"
         End If
@@ -2210,7 +2215,7 @@ Do While (Engine_bSlaveRed Or Engine_bSlaveBlack)
 Loop
 PipeClose Engine_pipeSlave
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
-    MsgBox ST("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
+    MsgBox ST("无法正常卸载副引擎！", "無法正常卸載副引擎！"), vbExclamation
     Engine_bSlaveRed = False
     Engine_bSlaveBlack = False
 End If
@@ -2220,83 +2225,82 @@ End Sub
 ' 打开引擎
 Public Sub OpenEngine(Optional ByVal bInfo As Boolean = False)
 
-Dim bLoaded As Boolean
 Dim dfLastTime As Double, dfThisTime As Double
 Dim lpStr As Long, szReceived As String
+
 If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
 End If
 If Engine_szFile = "" Then
-    bLoaded = False
-ElseIf GetAppType(Engine_szFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-    bLoaded = False
-Else
-    PipeOpen Engine_pipe, Engine_szFile
-    SendEngine "ucci"
-    dfLastTime = Timer
-    Engine_szName = ""
-    Engine_szVersion = ""
-    Engine_szCopyright = ""
-    Engine_szAuthor = ""
-    Engine_szUser = ""
-    Engine_nTimeRatio = 1
-    Do While Engine_nStatus = IDLE_UNLOAD
-        lpStr = PipeLineInput(Engine_pipe)
-        If lpStr = 0 Then
-            Sleep 1
-            dfThisTime = Timer
-            dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            ' 加载引擎的时间延长到30秒
-            If dfThisTime > dfLastTime + 30# Then
-                Exit Do
-            End If
-        Else
-            szReceived = AllocString(lpStr)
-            ReceiveEngineLog szReceived
-            If Left(szReceived, 8) = "id name " Then
-                Engine_szName = Mid(szReceived, 9)
-            ElseIf Left(szReceived, 11) = "id version " Then
-                Engine_szVersion = Mid(szReceived, 12)
-            ElseIf Left(szReceived, 13) = "id copyright " Then
-                Engine_szCopyright = Mid(szReceived, 14)
-            ElseIf Left(szReceived, 10) = "id author " Then
-                Engine_szAuthor = Mid(szReceived, 11)
-            ElseIf Left(szReceived, 8) = "id user " Then
-                Engine_szUser = Mid(szReceived, 9)
-            ElseIf Left(szReceived, 19) = "option usemillisec " Then
-                Engine_nTimeRatio = 1000
-            ElseIf szReceived = "ucciok" Then
-                Engine_nStatus = IDLE_READY
-            End If
-        End If
-    Loop
-    If Engine_nStatus > IDLE_UNLOAD Then
-        bLoaded = True
-        Engine_bSlaveRed = False
-        Engine_bSlaveBlack = False
-        If Engine_nTimeRatio = 1000 Then
-            SendEngine "setoption usemillisec true"
-        End If
-        SetEngine
-    Else
-        SendEngine "quit"
-        PipeClose Engine_pipe
-        bLoaded = False
-    End If
+    EngineLoaded False
+    SetTitle
+    Exit Sub
 End If
-If bInfo Then
-    If bLoaded Then
+If GetAppType(Engine_szFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+    EngineLoaded False
+    SetTitle
+    Exit Sub
+End If
+
+PipeOpen Engine_pipe, Engine_szFile
+SendEngine "ucci"
+dfLastTime = Timer
+Engine_szName = ""
+Engine_szVersion = ""
+Engine_szCopyright = ""
+Engine_szAuthor = ""
+Engine_szUser = ""
+Engine_nTimeRatio = 1
+Do While Engine_nStatus = IDLE_UNLOAD
+    lpStr = PipeLineInput(Engine_pipe)
+    If lpStr = 0 Then
+        Sleep 1
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+        ' 加载引擎的时间延长到30秒
+        If dfThisTime > dfLastTime + 30# Then
+            Exit Do
+        End If
+    Else
+        szReceived = AllocString(lpStr)
+        ReceiveEngineLog szReceived
+        If Left(szReceived, 8) = "id name " Then
+            Engine_szName = Mid(szReceived, 9)
+        ElseIf Left(szReceived, 11) = "id version " Then
+            Engine_szVersion = Mid(szReceived, 12)
+        ElseIf Left(szReceived, 13) = "id copyright " Then
+            Engine_szCopyright = Mid(szReceived, 14)
+        ElseIf Left(szReceived, 10) = "id author " Then
+            Engine_szAuthor = Mid(szReceived, 11)
+        ElseIf Left(szReceived, 8) = "id user " Then
+            Engine_szUser = Mid(szReceived, 9)
+        ElseIf Left(szReceived, 19) = "option usemillisec " Then
+            Engine_nTimeRatio = 1000
+        ElseIf szReceived = "ucciok" Then
+            Engine_nStatus = IDLE_READY
+        End If
+    End If
+Loop
+If Engine_nStatus > IDLE_UNLOAD Then
+    Engine_bSlaveRed = False
+    Engine_bSlaveBlack = False
+    If Engine_nTimeRatio = 1000 Then
+        SendEngine "setoption usemillisec true"
+    End If
+    SetEngine
+    If bInfo Then
         AboutEngine
-    Else
-        If Engine_szFile = "" Then
-            MsgBox ST("没有加载引擎！", "沒有加載引擎！"), vbExclamation
-        Else
-            MsgBox Engine_szFile & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
-            Engine_szFile = ""
-        End If
     End If
+    EngineLoaded True
+Else
+    SendEngine "quit"
+    PipeClose Engine_pipe
+    If bInfo Then
+        MsgBox Engine_szFile & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
+        Engine_szFile = ""
+    End If
+    EngineLoaded False
 End If
-EngineLoaded bLoaded
 SetTitle
 
 End Sub
@@ -2310,69 +2314,72 @@ Dim lpStr As Long, szReceived As String
 
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
+    MsgBox ST("副引擎已卸载。", "副引擎已卸載。"), vbInformation
+    Exit Sub
 End If
 szEngineFile = FileDialog(ST("加载副引擎", "加載副引擎"), ST("引擎文件", "引擎文件"), "EXE")
 If szEngineFile = "" Then
-    MsgBox ST("没有加载引擎！", "沒有加載引擎！"), vbExclamation
-ElseIf GetAppType(szEngineFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+    Exit Sub
+End If
+If GetAppType(szEngineFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
     MsgBox szEngineFile & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
-Else
-    PipeOpen Engine_pipeSlave, szEngineFile
-    SendEngine "ucci", SLAVE_ENGINE
-    dfLastTime = Timer
-    Engine_szSlaveName = ""
-    szCopyright = ""
-    szAuthor = ""
-    szUser = ""
-    Engine_nTimeRatioSlave = 1
-    Do While Not Engine_bSlaveBlack
-        lpStr = PipeLineInput(Engine_pipeSlave)
-        If lpStr = 0 Then
-            Sleep 1
-            dfThisTime = Timer
-            dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-            If dfThisTime > dfLastTime + 10# Then
-                Exit Do
-            End If
-        Else
-            szReceived = AllocString(lpStr)
-            ReceiveEngineLog szReceived, SLAVE_ENGINE
-            If Left(szReceived, 8) = "id name " Then
-                Engine_szSlaveName = Mid(szReceived, 9)
-            ElseIf Left(szReceived, 13) = "id copyright " Then
-                szCopyright = Mid(szReceived, 14)
-            ElseIf Left(szReceived, 10) = "id author " Then
-                szAuthor = Mid(szReceived, 11)
-            ElseIf Left(szReceived, 8) = "id user " Then
-                szUser = Mid(szReceived, 9)
-            ElseIf Left(szReceived, 19) = "option usemillisec " Then
-                Engine_nTimeRatioSlave = 1000
-            ElseIf szReceived = "ucciok" Then
-                Engine_bSlaveBlack = True
-            End If
+    Exit Sub
+End If
+PipeOpen Engine_pipeSlave, szEngineFile
+SendEngine "ucci", SLAVE_ENGINE
+dfLastTime = Timer
+Engine_szSlaveName = ""
+szCopyright = ""
+szAuthor = ""
+szUser = ""
+Engine_nTimeRatioSlave = 1
+Do While Not Engine_bSlaveBlack
+    lpStr = PipeLineInput(Engine_pipeSlave)
+    If lpStr = 0 Then
+        Sleep 1
+        dfThisTime = Timer
+        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
+        If dfThisTime > dfLastTime + 10# Then
+            Exit Do
         End If
-    Loop
-    If Engine_bSlaveBlack Then
-        If Options_nLanguage = 0 Then
-            MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
-                    IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
-                    IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                    IIf(szUser = "", "", "用户：" & szUser), "关于UCCI引擎", szEngineFile
-        Else
-            MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
-                    IIf(szCopyright = "", "", "版權：" & szCopyright & vbCrLf) & _
-                    IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                    IIf(szUser = "", "", "用戶：" & szUser), "關於UCCI引擎", szEngineFile
-        End If
-        If Engine_nTimeRatioSlave = 1000 Then
-            SendEngine "setoption usemillisec true", SLAVE_ENGINE
-        End If
-        SetEngine SLAVE_ENGINE
     Else
-        SendEngine "quit", SLAVE_ENGINE
-        PipeClose Engine_pipeSlave
-        MsgBox szEngineFile & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
+        szReceived = AllocString(lpStr)
+        ReceiveEngineLog szReceived, SLAVE_ENGINE
+        If Left(szReceived, 8) = "id name " Then
+            Engine_szSlaveName = Mid(szReceived, 9)
+        ElseIf Left(szReceived, 13) = "id copyright " Then
+            szCopyright = Mid(szReceived, 14)
+        ElseIf Left(szReceived, 10) = "id author " Then
+            szAuthor = Mid(szReceived, 11)
+        ElseIf Left(szReceived, 8) = "id user " Then
+            szUser = Mid(szReceived, 9)
+        ElseIf Left(szReceived, 19) = "option usemillisec " Then
+            Engine_nTimeRatioSlave = 1000
+        ElseIf szReceived = "ucciok" Then
+            Engine_bSlaveBlack = True
+        End If
     End If
+Loop
+If Engine_bSlaveBlack Then
+    If Options_nLanguage = 0 Then
+        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+                IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
+                IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
+                IIf(szUser = "", "", "用户：" & szUser), "关于UCCI引擎", szEngineFile
+    Else
+        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+                IIf(szCopyright = "", "", "版權：" & szCopyright & vbCrLf) & _
+                IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
+                IIf(szUser = "", "", "用戶：" & szUser), "關於UCCI引擎", szEngineFile
+    End If
+    If Engine_nTimeRatioSlave = 1000 Then
+        SendEngine "setoption usemillisec true", SLAVE_ENGINE
+    End If
+    SetEngine SLAVE_ENGINE
+Else
+    SendEngine "quit", SLAVE_ENGINE
+    PipeClose Engine_pipeSlave
+    MsgBox szEngineFile & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
 End If
 
 End Sub
@@ -2746,7 +2753,7 @@ Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf 
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
 Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之臺，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
+Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
 Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·地形》"

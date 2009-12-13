@@ -23,7 +23,7 @@ Begin VB.Form frmOptions
    ScaleWidth      =   6840
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
-   Begin VB.Frame frmOther 
+   Begin VB.Frame frmMisc 
       Caption         =   "其他"
       Height          =   975
       Left            =   120
@@ -197,6 +197,7 @@ Begin VB.Form frmOptions
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
+      Default         =   -1  'True
       Height          =   375
       Left            =   2040
       TabIndex        =   30
@@ -261,7 +262,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196640
+         BuddyDispid     =   196635
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -335,6 +336,8 @@ Private nPlayIntv As Integer, nMoveDelay As Integer
 
 Private Sub Form_Load()
 
+Dim i As Integer
+
 cmbEnginePlay.Clear
 cmbEnginePlay.AddItem ST("不启用电脑", "不啟用電腦。"), 0
 cmbEnginePlay.AddItem ST("电脑执红", "電腦執紅"), 1
@@ -362,6 +365,44 @@ chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "選項設置"
+frmGui.Caption = "外觀"
+lblDisplay.Caption = "顯示"
+optSmallGui.Caption = "小"
+optLargeGui.Caption = "大"
+chkSounds.Caption = "聲音效果"
+frmWizard.Caption = "魔法"
+chkAutoPlay.Caption = "自動播放"
+lblPlayIntv.Caption = "播放延時"
+lblIntvSec.Caption = "秒"
+frmMisc.Caption = "其他"
+chkShowNew.Caption = "啟動時顯示“開始對局”對話框"
+chkPromptSave.Caption = "提示保存棋局"
+chkAutoSave.Caption = "自動保存棋局"
+frmEngine.Caption = "電腦"
+lblMoveDelay.Caption = "走子延時"
+lblDelaySec.Caption = "秒"
+chkAutoFlip.Caption = "自動翻轉棋盤"
+chkEngineName.Caption = "顯示引擎名稱"
+chkAlwaysPonder.Caption = "啟用後台思考"
+chkAllowResign.Caption = "允許提和認輸"
+chkEngineTime.Caption = "顯示思考時間"
+chkStatusBar.Caption = "輸出到狀態欄"
+lblEnginePlay.Caption = "新局電腦狀態"
+lblUser.Caption = "人機對弈用戶"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 
