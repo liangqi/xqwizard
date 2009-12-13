@@ -383,6 +383,7 @@ End Sub
 
 Private Sub Form_Load()
 
+Dim i As Integer
 Select Case Timer_nDepth
 Case LEVEL_GRANDMASTER
     optGrandMaster.Value = True
@@ -421,6 +422,36 @@ Case LEVEL_INFINITE
 End Select
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "引擎設置"
+optBeginner.Caption = "入門"
+optAmateur.Caption = "業餘"
+optExpert.Caption = "專業"
+optMaster.Caption = "大師"
+optGrandMaster.Caption = "特級大師"
+optOverwhelming.Caption = "無敵(不限時)"
+optOverwhelming.ToolTipText = "僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。您可以按“停止思考”按鈕中止電腦的運算。"
+optTimer.Caption = "限定時間"
+lblStart.Caption = "限時"
+lblMinutes.Caption = "分"
+optIncMove.Caption = "限著"
+lblMoves.Caption = "著"
+optIncTime.Caption = "加時"
+lblSeconds.Caption = "秒"
+optDepth.Caption = "限定深度(不限時)"
+lblDepth.Caption = "層"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 

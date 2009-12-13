@@ -298,22 +298,22 @@ optContent(IIf(Publish_bContent, 1, 0)).Value = True
 
 ' 发布格式
 cmbFormat.Clear
-cmbFormat.AddItem "纯文本", 0
-cmbFormat.AddItem "ANSI文本", 1
-cmbFormat.AddItem "UBB文本", 2
-cmbFormat.AddItem "HTML文本", 3
-cmbFormat.AddItem "HTML内容", 4
+cmbFormat.AddItem ST("纯文本", "純文本"), 0
+cmbFormat.AddItem ST("ANSI文本", "ANSI文本"), 1
+cmbFormat.AddItem ST("UBB文本", "UBB文本"), 2
+cmbFormat.AddItem ST("HTML文本", "HTML文本"), 3
+cmbFormat.AddItem ST("HTML内容", "HTML内容"), 4
 cmbFormat.ListIndex = Publish_nFormat
 
 ' 注意：先有发布格式，再有发布站点！
 ' 发布站点
 cmbLocation.Clear
-cmbLocation.AddItem "百度知道", 0
-cmbLocation.AddItem "百度贴吧象棋吧", 1
-cmbLocation.AddItem "象棋家园", 2
-cmbLocation.AddItem "新浪博客", 3
-cmbLocation.AddItem "QQ空间", 4
-cmbLocation.AddItem "(其他)", 5
+cmbLocation.AddItem ST("百度知道", "百度知道"), 0
+cmbLocation.AddItem ST("百度贴吧象棋吧", "百度貼吧象棋吧"), 1
+cmbLocation.AddItem ST("象棋家园", "象棋家園"), 2
+cmbLocation.AddItem ST("新浪博客", "新浪博客"), 3
+cmbLocation.AddItem ST("QQ空间", "QQ空間"), 4
+cmbLocation.AddItem ST("(其他)", "(其他)"), 5
 cmbLocation.ListIndex = Publish_nLocation
 
 SetTopMost hWnd
@@ -347,45 +347,45 @@ cmbBoard.Clear
 cmbPieces.Clear
 Select Case nIndex
 Case PUB_SIZE_MINI, PUB_SIZE_PRINT
-    cmbBoard.AddItem "默认", 0
+    cmbBoard.AddItem ST("默认", ""), 0
     cmbBoard.ListIndex = 0
-    cmbPieces.AddItem "简体", 0
-    cmbPieces.AddItem "繁体", 1
+    cmbPieces.AddItem ST("简体", ""), 0
+    cmbPieces.AddItem ST("繁体", ""), 1
     cmbPieces.ListIndex = IIf(Publish_bTrad, 1, 0)
 Case PUB_SIZE_SMALL
-    cmbBoard.AddItem "栎木", 0
-    cmbBoard.AddItem "绿色大理石", 1
-    cmbBoard.AddItem "白色大理石", 2
-    cmbBoard.AddItem "再生纸", 3
-    cmbBoard.AddItem "画布", 4
-    cmbBoard.AddItem "水滴", 5
-    cmbBoard.AddItem "蓝天白云石", 6
-    cmbBoard.AddItem "象棋演播室", 7
-    cmbBoard.AddItem "弈天棋缘", 8
-    cmbBoard.AddItem "梦入神机", 9
-    cmbBoard.AddItem "纵马奔流", 10
-    cmbBoard.AddItem "浅红象棋", 11
+    cmbBoard.AddItem ST("栎木", ""), 0
+    cmbBoard.AddItem ST("绿色大理石", ""), 1
+    cmbBoard.AddItem ST("白色大理石", ""), 2
+    cmbBoard.AddItem ST("再生纸", ""), 3
+    cmbBoard.AddItem ST("画布", ""), 4
+    cmbBoard.AddItem ST("水滴", ""), 5
+    cmbBoard.AddItem ST("蓝天白云石", ""), 6
+    cmbBoard.AddItem ST("象棋演播室", ""), 7
+    cmbBoard.AddItem ST("弈天棋缘", ""), 8
+    cmbBoard.AddItem ST("梦入神机", ""), 9
+    cmbBoard.AddItem ST("纵马奔流", ""), 10
+    cmbBoard.AddItem ST("浅红象棋", ""), 11
     cmbBoard.ListIndex = Publish_nBoardS
-    cmbPieces.AddItem "木刻", 0
-    cmbPieces.AddItem "精致", 1
-    cmbPieces.AddItem "光泽", 2
-    cmbPieces.AddItem "象棋演播室", 3
-    cmbPieces.AddItem "弈天棋缘", 4
-    cmbPieces.AddItem "梦入神机", 5
-    cmbPieces.AddItem "纵马奔流", 6
+    cmbPieces.AddItem ST("木刻", ""), 0
+    cmbPieces.AddItem ST("精致", ""), 1
+    cmbPieces.AddItem ST("光泽", ""), 2
+    cmbPieces.AddItem ST("象棋演播室", ""), 3
+    cmbPieces.AddItem ST("弈天棋缘", ""), 4
+    cmbPieces.AddItem ST("梦入神机", ""), 5
+    cmbPieces.AddItem ST("纵马奔流", ""), 6
     cmbPieces.ListIndex = Publish_nPiecesS
 Case PUB_SIZE_LARGE
-    cmbBoard.AddItem "栎木", 0
-    cmbBoard.AddItem "绿色大理石", 1
-    cmbBoard.AddItem "白色大理石", 2
-    cmbBoard.AddItem "再生纸", 3
-    cmbBoard.AddItem "画布", 4
-    cmbBoard.AddItem "水滴", 5
-    cmbBoard.AddItem "浅红象棋", 6
+    cmbBoard.AddItem ST("栎木", ""), 0
+    cmbBoard.AddItem ST("绿色大理石", ""), 1
+    cmbBoard.AddItem ST("白色大理石", ""), 2
+    cmbBoard.AddItem ST("再生纸", ""), 3
+    cmbBoard.AddItem ST("画布", ""), 4
+    cmbBoard.AddItem ST("水滴", ""), 5
+    cmbBoard.AddItem ST("浅红象棋", ""), 6
     cmbBoard.ListIndex = Publish_nBoardL
-    cmbPieces.AddItem "木刻", 0
-    cmbPieces.AddItem "精致", 1
-    cmbPieces.AddItem "光泽", 2
+    cmbPieces.AddItem ST("木刻", ""), 0
+    cmbPieces.AddItem ST("精致", ""), 1
+    cmbPieces.AddItem ST("光泽", ""), 2
     cmbPieces.ListIndex = Publish_nPiecesL
 End Select
 
@@ -673,13 +673,13 @@ Private Function GetBoardText(ByRef pos As PositionStruct) As String
 
 Dim sz As String
 sz = AllocString(CchessBoardText(pos, IIf(Publish_nFormat = PUB_FORMAT_ANSI, CCHESS_ANSI_TEXT, 0)))
-' 在百度贴吧里，要把所有双空格全部替换"‐"，这样显示出来可能会美观些
+' 在百度贴吧里，要把所有双空格全部替换"‐"(繁体是"．")，这样显示出来可能会美观些
 ' If Publish_nLocation = PUB_LOCATION_TIEBA Or Publish_nLocation = PUB_LOCATION_ZHIDAO Then
 If Publish_nFormat = PUB_FORMAT_ANSI Then
     sz = AllocString(CchessBoardText(pos, CCHESS_ANSI_TEXT))
 Else
     sz = AllocString(CchessBoardText(pos))
-    sz = Replace(sz, "  ", "‐")
+    sz = Replace(sz, "  ", ST("‐", "．"))
     sz = Replace(sz, "--", "—")
 End If
 GetBoardText = sz

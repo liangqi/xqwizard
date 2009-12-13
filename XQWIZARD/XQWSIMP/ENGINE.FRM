@@ -296,6 +296,7 @@ Private EngineSet_bRunning As Boolean, EngineSet_bCommandSent As Boolean
 
 Private Sub Form_Load()
 
+Dim i As Integer
 cmbHash.Clear
 cmbHash.AddItem ST("自动", "自動"), 0
 cmbHash.AddItem "16MB", 1
@@ -339,6 +340,38 @@ cmbStyle.ListIndex = Engine_nStyle
 chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
 chkSlaveRed.Enabled = (Engine_bSlaveRed Or Engine_bSlaveBlack)
 SetTopMost hWnd
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "引擎設置"
+frmUcci.Caption = "調試UCCI引擎"
+chkEngineLog.Caption = "記錄日誌"
+btnSelectLog.Caption = "瀏覽"
+btnOpenLog.Caption = "查看"
+btnSend.Caption = "發送"
+frmOptions.Caption = "選項"
+chkUseBook.Caption = "開局庫"
+btnSelectFile.Caption = "瀏覽"
+btnResetFile.Caption = "重置"
+chkUseEgtb.Caption = "殘局庫"
+btnSelectPath.Caption = "瀏覽"
+btnResetPath.Caption = "重置"
+lblHash.Caption = "內存"
+lblThreads.Caption = "負荷"
+lblRandomness.Caption = "隨機"
+lblStyle.Caption = "風格"
+chkSlaveRed.Caption = "副引擎執紅"
+btnLoadSlave.Caption = "加載副引擎"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 
