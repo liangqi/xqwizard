@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlCChess"
 ' CCHESS.BAS - Source Code for ElephantEye, Additional Part
 '
 ' ElephantEye - a Chinese Chess Program (UCCI Engine)
-' Designed by Morning Yellow, Version: 3.11, Last Modified: Apr. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This library is free software; you can redistribute it and/or
 ' modify it under the terms of the GNU Lesser General Public
@@ -160,7 +160,7 @@ End Function
 
 Public Function Move2Coord(ByVal mv As Long) As String
 
-Move2Coord = Chr(Src(mv) Mod 16 + 94) + Chr(60 - Src(mv) \ 16) + Chr(Dst(mv) Mod 16 + 94) + Chr(60 - Dst(mv) \ 16)
+Move2Coord = Chr(Src(mv) Mod 16 + 94) & Chr(60 - Src(mv) \ 16) & Chr(Dst(mv) Mod 16 + 94) & Chr(60 - Dst(mv) \ 16)
 
 End Function
 
@@ -183,7 +183,7 @@ End Function
 
 Public Function Move2Iccs(ByVal mv As Long) As String
 
-Move2Iccs = Chr(Src(mv) Mod 16 + 62) + Chr(60 - Src(mv) \ 16) + "-" + Chr(Dst(mv) Mod 16 + 62) + Chr(60 - Dst(mv) \ 16)
+Move2Iccs = Chr(Src(mv) Mod 16 + 62) & Chr(60 - Src(mv) \ 16) & "-" & Chr(Dst(mv) Mod 16 + 62) & Chr(60 - Dst(mv) \ 16)
 
 End Function
 

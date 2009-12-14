@@ -1,5 +1,5 @@
-Attribute VB_Name = "mdlMain"
-' XQWMAIN.BAS - Source Code for XiangQi Wizard, Part I
+Attribute VB_Name = "mdlXQWizard"
+' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
@@ -2736,29 +2736,29 @@ Gui_szTips(22) = "　　象棋巫師在開發過程中得到了廣大棋迷朋友的熱情支持，作者在此
         "　　您也可以將本軟件的主頁鏈接到自己的站點上。請您使用 http://www.xqbase.com/ 作為鏈接的路徑。"
 
 Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
 Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·衛靈公》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
 Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·憲問》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
 Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·子張》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
 Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·學而》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
 Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語·述而》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
 Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
 Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
 Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
 Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
 Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·地形》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
 Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法·火攻》"
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
 
 End If
 

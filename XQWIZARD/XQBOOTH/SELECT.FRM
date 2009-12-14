@@ -15,7 +15,7 @@ Begin VB.Form frmSelect
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "SELECTS.frx":0000
+   Icon            =   "SELECT.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7200
@@ -5401,8 +5401,8 @@ Attribute VB_Exposed = False
 ' SELECT.FRM - Source Code for XiangQi Witchcraft School, Part III
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.4, Last Modified: Oct. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -5530,10 +5530,10 @@ Dim nCurr As Integer
 nCurr = hsb.Value * BOARD_NUM + nSelected
 If nCurr <= Gui_nLast And nCurr < App_nEndgames Then
     If Gui_nCurr <> nCurr Then
-        App_frmXQBooth.ClearHint
+        App_frmMain.ClearHint
     End If
     Gui_nCurr = nCurr
-    App_frmXQBooth.LoadGame
+    App_frmMain.LoadGame
     Unload Me
 Else
     MsgBox "您尚未闯到这一关。", vbExclamation

@@ -2,8 +2,8 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ Attribute VB_Name = "mdlXQBooth"
 Option Explicit
 
 ' 全局常量
-Public Const STRING_VERSION     As String = "4.41"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2009 www.elephantbase.net"
+Public Const STRING_VERSION     As String = "4.5"
+Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
@@ -98,7 +98,8 @@ Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
-Public App_frmXQBooth           As Form     ' 主窗体
+Public App_frmMain              As Form     ' 主窗体
+Public Options_nLanguage        As Integer  ' 语言
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_bSounds          As Boolean  ' 声音
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
@@ -135,60 +136,38 @@ Public Rank_nYesterday          As Long     ' 昨日排名
 Public Rank_szList              As String   ' 排名列表
 Public Engine_pipe          As PipeStruct   ' 引擎管道
 
-' 简单字符异或函数
-Public Function SimpleXor(ByVal n As Integer, ByVal i As Integer) As Integer
+' 简繁选择，0选简体，1选繁体
+Public Function ST(ByVal szSimp As String, ByVal szTrad As String) As String
 
-SimpleXor = n Xor Asc(Mid(STRING_COPYRIGHT, (i - 1) Mod Len(STRING_COPYRIGHT) + 1, 1))
-
-End Function
-
-' 简单加密函数
-Public Function SimpleEncrypt(ByVal szPlain As String) As String
-
-Dim nLen As Integer, i As Integer
-
-nLen = Len(szPlain)
-If nLen = 0 Then
-    SimpleEncrypt = ""
-    Exit Function
-End If
-ReDim szCiphers(0 To nLen - 1) As String
-For i = 1 To nLen
-    szCiphers(i - 1) = LTrim(Str(SimpleXor(Asc(Mid(szPlain, i, 1)), i)))
-Next
-SimpleEncrypt = Join(szCiphers, ",")
-Erase szCiphers
+ST = Choose(Options_nLanguage + 1, szSimp, szTrad)
 
 End Function
 
-' 简单解密函数
-Public Function SimpleDecrypt(ByVal szCipher As String) As String
+' 无法打开文件提示
+Public Sub ErrorOpen(ByVal szFileName As String)
 
-Dim szCiphers() As String, szPlain As String, nLen As Integer, i As Integer
+MsgBox ST("无法打开文件 ", "無法打開文件 ") & szFileName, vbExclamation
 
-szCiphers = Split(szCipher, ",")
-nLen = UBound(szCiphers) + 1
-szPlain = Space(nLen)
-For i = 1 To nLen
-    Mid(szPlain, i, 1) = Chr(SimpleXor(Val(szCiphers(i - 1)), i))
-Next
-SimpleDecrypt = szPlain
-
-End Function
+End Sub
 
 ' 用象棋巫师打开
 Public Sub OpenWithXQWizard(ByRef pos As PositionStruct)
 
-Dim nFileNo As Integer, i As Integer
+Dim nFileNo As Integer, i As Integer, szFile As String
 Dim nStatus As Long, mv As Long, dwFileStr As Long
 Dim posStart As PositionStruct
 
+szFile = ST("象棋巫师魔法学校.PGN", "象棋巫師魔法學校.PGN")
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open App_szPath + "象棋巫师魔法学校.PGN" For Output As #nFileNo
+Open App_szPath & szFile For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, "[Game ""Chinese Chess""]"
-Print #nFileNo, "[Event ""第" + Str(Gui_nCurr + 1) + " 关 - 象棋巫师魔法学校""]"
+If Options_nLanguage = 0 Then
+    Print #nFileNo, "[Event ""第 " & (Gui_nCurr + 1) & " 关 - 象棋巫师魔法学校""]"
+Else
+    Print #nFileNo, "[Event ""第 " & (Gui_nCurr + 1) & " 關 - 象棋巫師魔法學校""]"
+End If
 Print #nFileNo, "[Result ""1-0""]"
 Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
 
@@ -197,31 +176,32 @@ For i = 0 To pos.nMoveNum - 2
     mv = pos.rbsList(i + 1).mvs And &HFFFF&
     dwFileStr = CchessMove2File(mv, posStart)
     If i Mod 2 = 0 Then ' 红
-        Print #nFileNo, Str(i \ 2 + 1) + ". " + MkC(CchessFile2Chin(dwFileStr, 0));
+        Print #nFileNo, " " & (i \ 2 + 1) & ". " & MkC(CchessFile2Chin(dwFileStr, 0));
     Else ' 黑
-        Print #nFileNo, " " + MkC(CchessFile2Chin(dwFileStr, 1))
+        Print #nFileNo, " " & MkC(CchessFile2Chin(dwFileStr, 1))
     End If
     CchessTryMove posStart, nStatus, mv
 Next
 Print #nFileNo, " 1-0"
-Print #nFileNo, "============================"
-Print #nFileNo, " 欢迎访问《象棋百科全书网》 "
-Print #nFileNo, " 推荐用《象棋巫师》观赏棋谱 "
-Print #nFileNo, "http://www.elephantbase.net/"
+Print #nFileNo, "======================"
+Print #nFileNo, ST("欢迎访问象棋百科全书网", "歡迎訪問象棋百科全書網")
+Print #nFileNo, ST("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
+Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 
-Shell App_szPath + "XQWIZARD.EXE """ + App_szPath + "象棋巫师魔法学校.PGN" + """", vbNormalFocus
+Shell App_szPath & "XQWIZARD.EXE """ & App_szPath & szFile + """", vbNormalFocus
 
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-MsgBox "无法打开文件 " + App_szPath + "象棋巫师魔法学校.PGN", vbExclamation
+ErrorOpen App_szPath & szFile
 
 End Sub
 
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
@@ -251,25 +231,24 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
-SaveSetting "XQWizard", "Options", "LargeGui", IIf(Options_bLargeGui, "1", "0")
 SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
-SaveSetting "XQWizard", "Options", "BoardSmall", LTrim(Str(Options_nBoardS))
-SaveSetting "XQWizard", "Options", "PiecesSmall", LTrim(Str(Options_nPiecesS))
-SaveSetting "XQWizard", "Options", "BoardLarge", LTrim(Str(Options_nBoardL))
-SaveSetting "XQWizard", "Options", "PiecesLarge", LTrim(Str(Options_nPiecesL))
+SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
+SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
+SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
+SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Publish", "Size", LTrim(Str(Publish_nSize))
+SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
 SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
-SaveSetting "XQWizard", "Publish", "BoardS", LTrim(Str(Publish_nBoardS))
-SaveSetting "XQWizard", "Publish", "PiecesS", LTrim(Str(Publish_nPiecesS))
-SaveSetting "XQWizard", "Publish", "BoardL", LTrim(Str(Publish_nBoardL))
-SaveSetting "XQWizard", "Publish", "PiecesL", LTrim(Str(Publish_nPiecesL))
+SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
+SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
+SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
+SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
 SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
-SaveSetting "XQWizard", "Publish", "Location", LTrim(Str(Publish_nLocation))
-SaveSetting "XQWizard", "Publish", "Format", LTrim(Str(Publish_nFormat))
-SaveSetting "XQBooth", "Gui", "Last", LTrim(Str(Gui_nLast))
-SaveSetting "XQBooth", "Gui", "Curr", LTrim(Str(Gui_nCurr))
+SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
+SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
+SaveSetting "XQBooth", "Gui", "Last", Gui_nLast
+SaveSetting "XQBooth", "Gui", "Curr", Gui_nCurr
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
 SaveSetting "XQBooth", "Gui", "Password", SimpleEncrypt(Login_szPassword)
 SaveSetting "XQBooth", "Gui", "Remember", IIf(Login_bRemember, "1", "0")
@@ -284,14 +263,14 @@ Dim dwCounter(0 To 1) As Long
 
 sz = ""
 QueryPerformanceCounter VarPtr(dwCounter(0))
-szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) + Hex(dwCounter(1)))
+szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/version_simp.php?referer=xqwizard&version=" + _
-        STRING_VERSION + "&userid=" + szUserID)
+sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=xqbooth&version=" & _
+        STRING_VERSION & "&userid=" & szUserID)
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
-        MsgBox "无法访问 www.elephantbase.net，请稍后再试。", vbExclamation
+        MsgBox ST("无法访问 www.xqbase.com，请稍后再试。", "無法訪問 www.xqbase.com，請稍後再試。"), vbExclamation
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
@@ -300,15 +279,19 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/whatsnew_simp.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew.txt")
         On Error GoTo 0
-        If MsgBox(IIf(szWhatsNew = "", "象棋巫师 " + sz + " 已经发布，需要下载最新版本吗？", szWhatsNew), vbQuestion + vbYesNo) = vbYes Then
+        If szWhatsNew = "" Then
+            szWhatsNew = ST("象棋巫师 ", "象棋巫師") & sz & _
+                    ST(" 已经发布，需要下载最新版本吗？", " 已經發布，需要下載最新版本嗎？")
+        End If
+        If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://mirror.elephantbase.net/xqwizard/download_simp.txt")
+            szUrl = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
-                szUrl = "http://www.elephantbase.net/xqwizard/download.htm"
+                szUrl = "http://www.xqbase.com/xqwizard/download.htm"
             End If
             ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
         Else
@@ -316,7 +299,7 @@ Else
         End If
     Else
         If bManual Then
-            MsgBox "您的“象棋巫师”已经是最新版本了。", vbInformation
+            MsgBox ST("您的象棋巫师已经是最新版本了。", "您的象棋巫師已經是最新版本了。"), vbInformation
         End If
     End If
 End If
@@ -325,6 +308,8 @@ End Sub
 
 ' 加载名言
 Public Sub LoadTips()
+
+If Options_nLanguage = 0 Then
 
 Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
@@ -350,6 +335,35 @@ Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbC
         "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
 Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" + vbCrLf + vbCrLf + _
         "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
+
+Else
+
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
+Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
+Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
+
+End If
 
 End Sub
 
@@ -413,7 +427,7 @@ Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
     Unload frmStartup
-    MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
+    ErrorOpen App_szPath & ENDGAME_FILE
     Exit Sub
 End If
 ' Last的范围是[0, Endgames]
@@ -477,13 +491,13 @@ If Gui_szUpgradeDate <> Date Then
 End If
 
 If Options_bLargeGui Then
-    Set App_frmXQBooth = frmXQBoothLarge
+    Set App_frmMain = frmMainLarge
 Else
-    Set App_frmXQBooth = frmXQBoothSmall
+    Set App_frmMain = frmMainSmall
 End If
-App_frmXQBooth.Show
-App_frmXQBooth.mnOptionsSounds.Checked = Options_bSounds
-App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+App_frmMain.Show
+App_frmMain.mnOptionsSounds.Checked = Options_bSounds
+App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
 Unload frmStartup
 
 ' 提示建立存档
@@ -507,7 +521,7 @@ Do While App_bRunning
         If Gui_nAdvertIndex > Gui_nAdvertNum Then
             Gui_nAdvertIndex = 1
         End If
-        App_frmXQBooth.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
+        App_frmMain.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
     End If
     DoEvents
     Sleep 1
@@ -556,6 +570,6 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 Unload frmStartup
-MsgBox "无法打开文件 " + App_szPath + ENDGAME_FILE, vbExclamation
+ErrorOpen App_szPath & ENDGAME_FILE
 
 End Sub

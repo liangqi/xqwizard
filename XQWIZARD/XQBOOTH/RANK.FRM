@@ -14,7 +14,7 @@ Begin VB.Form frmRank
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "RANKS.frx":0000
+   Icon            =   "RANK.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   4440
@@ -427,11 +427,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part II
+' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part V
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.0, Last Modified: Jun. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by

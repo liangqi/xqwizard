@@ -15,7 +15,7 @@ Begin VB.Form frmPublish
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "PUBLISHS.frx":0000
+   Icon            =   "PUBLISH.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   3195
@@ -130,7 +130,7 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   3960
-         MouseIcon       =   "PUBLISHS.frx":000C
+         MouseIcon       =   "PUBLISH.frx":000C
          MousePointer    =   99  'Custom
          TabIndex        =   12
          Top             =   960
@@ -207,7 +207,7 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   2280
-         MouseIcon       =   "PUBLISHS.frx":015E
+         MouseIcon       =   "PUBLISH.frx":015E
          MousePointer    =   99  'Custom
          TabIndex        =   16
          Top             =   600
@@ -227,7 +227,7 @@ Begin VB.Form frmPublish
          ForeColor       =   &H00FF0000&
          Height          =   255
          Left            =   120
-         MouseIcon       =   "PUBLISHS.frx":02B0
+         MouseIcon       =   "PUBLISH.frx":02B0
          MousePointer    =   99  'Custom
          TabIndex        =   14
          Top             =   600
@@ -240,11 +240,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' PUBLISH.FRM - Source Code for XiangQi Wizard, Part XI
+' PUBLISH.FRM - Source Code for XiangQi Witchcraft School, Part VI
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.41, Last Modified: Nov. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -388,7 +388,7 @@ End Sub
 Private Sub btnHelp_Click()
 
 ShellExecuteA 0, vbNullString, _
-        "http://www.elephantbase.net/xqwizard/publish.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+        "http://www.xqbase.com/xqwizard/publish.htm", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
@@ -448,7 +448,7 @@ Case PUB_LOCATION_ZHIDAO
 Case PUB_LOCATION_TIEBA
     ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_HOME
-    ShellExecuteA 0, vbNullString, "http://home.elephantbase.net/cp.php?ac=blog", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://home.xqbase.com/cp.php?ac=blog", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_SINA
     ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", vbNullString, vbNullString, SW_SHOWNORMAL
 Case PUB_LOCATION_QZONE
@@ -505,22 +505,21 @@ End Sub
 Private Sub lblLocation_Click()
 
 ShellExecuteA 0, vbNullString, _
-        "http://www.elephantbase.net/xqwizard/publish.htm#location", vbNullString, vbNullString, SW_SHOWNORMAL
+        "http://www.xqbase.com/xqwizard/publish.htm#location", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub lblFormat_Click()
 
 ShellExecuteA 0, vbNullString, _
-        "http://www.elephantbase.net/xqwizard/publish.htm#format", vbNullString, vbNullString, SW_SHOWNORMAL
+        "http://www.xqbase.com/xqwizard/publish.htm#format", vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Function GetBoardUrl(ByVal szFen As String) As String
 
-GetBoardUrl = "http://pub.elephantbase.net/board.php?&fen=" + _
-        UrlEncode(szFen) + "&size=" + LTrim(Str(Publish_nSize)) + "&board=" + _
-        LTrim(Str(cmbBoard.ListIndex)) + "&pieces=" + LTrim(Str(cmbPieces.ListIndex))
+GetBoardUrl = "http://www.xqbase.com/pub/board.php?&fen=" & UrlEncode(szFen) & _
+        "&size=" & Publish_nSize & "&board=" & cmbBoard.ListIndex & "&pieces=" & cmbPieces.ListIndex
 
 End Function
 

@@ -14,7 +14,7 @@ Begin VB.Form frmLogin
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "LOGINS.frx":0000
+   Icon            =   "LOGIN.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   1920
@@ -77,7 +77,7 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINS.frx":000C
+      MouseIcon       =   "LOGIN.frx":000C
       MousePointer    =   99  'Custom
       TabIndex        =   7
       Top             =   840
@@ -97,7 +97,7 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINS.frx":015E
+      MouseIcon       =   "LOGIN.frx":015E
       MousePointer    =   99  'Custom
       TabIndex        =   2
       Top             =   120
@@ -133,7 +133,7 @@ Begin VB.Form frmLogin
       ForeColor       =   &H00FF0000&
       Height          =   255
       Left            =   2400
-      MouseIcon       =   "LOGINS.frx":02B0
+      MouseIcon       =   "LOGIN.frx":02B0
       MousePointer    =   99  'Custom
       TabIndex        =   5
       Top             =   480
@@ -156,8 +156,8 @@ Attribute VB_Exposed = False
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part IV
 '
 ' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
-' Designed by Morning Yellow, Version: 4.1, Last Modified: Jul. 2009
-' Copyright (C) 2004-2009 www.elephantbase.net
+' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
