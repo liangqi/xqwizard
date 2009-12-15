@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
@@ -2690,13 +2690,7 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-If Options_nLanguage = 0 Then
-    MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
-Else
-    MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本產品符合GNU通用公共許可協議", "關於象棋巫師"
-End If
+AboutXQWizard
 
 End Sub
 

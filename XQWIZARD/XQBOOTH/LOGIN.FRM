@@ -155,7 +155,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part IV
 '
-' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
@@ -177,6 +177,8 @@ Option Explicit
 
 Private Sub Form_Load()
 
+Dim i As Integer
+
 Login_bCancel = True
 Caption = Login_szTitle
 lblPrompt.Caption = Login_szPrompt
@@ -189,30 +191,55 @@ If Login_bRemember Then
     chkRemember.Value = 1
 End If
 
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+lblRegister.Font.Underline = True
+lblGetPassword.Font.Underline = True
+lblCharge.Font.Underline = True
+lblUserName.Caption = "用戶名："
+lblPassword.Caption = "密碼："
+chkRemember.Caption = "記住密碼"
+lblRegister.Caption = "建立存檔"
+lblGetPassword.Caption = "找回密碼"
+lblCharge.Caption = "補充點數"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
+
 End Sub
 
 Private Sub lblRegister_Click()
 
-ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/register.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=register", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub lblGetPassword_Click()
 
-ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/getpassword.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=getpassword", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub lblCharge_Click()
 
-ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/charge.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
+        vbNullString, vbNullString, SW_SHOWNORMAL
 
 End Sub
 
 Private Sub btnOK_Click()
 
 If Len(txtUserName.Text) = 0 Or Len(txtPassword.Text) = 0 Then
-    MsgBox "用户名和密码不能为空", vbExclamation
+    MsgBox ST("用户名和密码不能为空", "用戶名和密碼不能為空"), vbExclamation
     Exit Sub
 End If
 Login_bCancel = False

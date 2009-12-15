@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMainLarge 
    BorderStyle     =   1  'Fixed Single
@@ -909,20 +909,8 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
          Visible         =   0   'False
       End
-      Begin VB.Menu mnUsersRank_ 
+      Begin VB.Menu mnUsersRank 
          Caption         =   "排名(&R)"
-         Begin VB.Menu mnUsersRank 
-            Caption         =   "近一周排名(&W)"
-            Index           =   0
-         End
-         Begin VB.Menu mnUsersRank 
-            Caption         =   "近一月排名(&M)"
-            Index           =   1
-         End
-         Begin VB.Menu mnUsersRank 
-            Caption         =   "近三月排名(&Q)"
-            Index           =   2
-         End
       End
       Begin VB.Menu mnUsersPoints 
          Caption         =   "查询点数(&P)"
@@ -1036,7 +1024,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
-' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
@@ -1096,15 +1084,15 @@ If nIndex = 30 Then
 ElseIf nIndex = 31 Then
     PieceFileName = "BKM"
 ElseIf nIndex >= 15 Then
-    PieceFileName = PieceFileName(nIndex - 15) + "S"
+    PieceFileName = PieceFileName(nIndex - 15) & "S"
 Else
     If nIndex = 0 Then
         PieceFileName = "OO"
     Else
         If nIndex > 7 Then
-            PieceFileName = "B" + PieceByte(nIndex - 8)
+            PieceFileName = "B" & PieceByte(nIndex - 8)
         Else
-            PieceFileName = "R" + PieceByte(nIndex - 1)
+            PieceFileName = "R" & PieceByte(nIndex - 1)
         End If
     End If
 End If
@@ -1114,7 +1102,7 @@ End Function
 Private Sub PlayWavSound(ByVal szSoundFile As String)
 
 If Options_bSounds Then
-    PlaySoundA App_szPath + "SOUNDS\" + szSoundFile + ".WAV", 0, _
+    PlaySoundA App_szPath & "SOUNDS\" & szSoundFile & ".WAV", 0, _
             SND_ASYNC + SND_NOWAIT + SND_FILENAME
 End If
 
@@ -1194,7 +1182,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
         If pos.ucsqPieces(16) > 0 Then
             DrawSquare pos.ucsqPieces(16), , DRAW_MATE
         End If
-        MsgBoxMute "请再接再厉！", vbInformation
+        MsgBoxMute ST("请再接再厉！", "請再接再厲！"), vbInformation
         GetResult = PHASE_LOSS
     Else
         mnGameXQWizard.Enabled = True
@@ -1209,9 +1197,9 @@ If (nStatus And MOVE_MATE) <> 0 Then
             DrawSquare pos.ucsqPieces(32), , DRAW_MATE
         End If
         If Gui_nCurr = App_nEndgames - 1 Then
-            MsgBoxMute "恭喜你闯过所有关卡！", vbInformation
+            MsgBoxMute ST("恭喜你闯过所有关卡！", "恭喜你闖過所有關卡！"), vbInformation
         Else
-            MsgBoxMute "恭喜你过关！", vbInformation
+            MsgBoxMute ST("恭喜你过关！", "恭喜你過關！"), vbInformation
         End If
         If Gui_nCurr = Gui_nLast Then
             Gui_nLast = Gui_nLast + 1
@@ -1223,17 +1211,17 @@ End If
 If (nStatus And MOVE_PERPETUAL) <> 0 Then
     EnableHint False
     PlayWavSound "PROMOTE2"
-    MsgBoxMute "请不要气馁！", vbInformation
+    MsgBoxMute ST("请不要气馁！", "請不要氣餒！"), vbInformation
     GetResult = PHASE_LOSS
     Exit Function
 End If
 ' 由于"position fen ..."使用EPD文件中的初始局面，所以即便吃子也不能置pos为不可逆
 If (nStatus And MOVE_CHECK) <> 0 Then
-    PlayWavSound "CHECK" + IIf(pos.sdPlayer = 0, "2", "")
+    PlayWavSound "CHECK" & IIf(pos.sdPlayer = 0, "2", "")
 ElseIf (nStatus And MOVE_CAPTURE) <> 0 Then
-    PlayWavSound "CAPTURE" + IIf(pos.sdPlayer = 0, "2", "")
+    PlayWavSound "CAPTURE" & IIf(pos.sdPlayer = 0, "2", "")
 Else
-    PlayWavSound "MOVE" + IIf(pos.sdPlayer = 0, "2", "")
+    PlayWavSound "MOVE" & IIf(pos.sdPlayer = 0, "2", "")
 End If
 GetResult = PHASE_READY
 
@@ -1243,11 +1231,11 @@ Private Function GetBestMove() As Long
 
 Dim lpStr As Long, mv As Long, nStatus As Long
 Dim i As Integer, sz As String
-sz = "position fen " + App_szEndgames(Gui_nCurr)
+sz = "position fen " & App_szEndgames(Gui_nCurr)
 If pos.nMoveNum > 1 Then
-    sz = sz + " moves"
+    sz = sz & " moves"
     For i = 1 To pos.nMoveNum - 1
-        sz = sz + " " + Move2Coord(pos.rbsList(i).mvs And &HFFFF&)
+        sz = sz & " " & Move2Coord(pos.rbsList(i).mvs And &HFFFF&)
     Next
 End If
 PipeLineOutput Engine_pipe, sz
@@ -1287,7 +1275,7 @@ mnGameNext.Enabled = bNext
 btnNext.Enabled = bNext
 EnableHint True
 EnableRetract False
-Caption = "第" + Str(Gui_nCurr + 1) + " 关 - 象棋巫师魔法学校"
+Caption = ST("第 ", "第 ") & (Gui_nCurr + 1) & ST(" 关 - 象棋巫师魔法学校", "關 - 象棋巫師魔法學校")
 CchessFen2Board pos, App_szEndgames(Gui_nCurr)
 BoardFlush
 sqSelected = 0
@@ -1405,7 +1393,7 @@ End Sub
 Private Sub DoRetract()
 
 If pos.nDistance = 0 Then
-    MsgBox "悔棋失败。", vbInformation
+    MsgBox ST("悔棋失败。", "悔棋失敗。"), vbInformation
     Exit Sub
 End If
 If pos.nDistance Mod 2 = 0 Then
@@ -1441,25 +1429,28 @@ End Sub
 
 Private Sub ConnError()
 
-MsgBox "无法登录到象棋巫师用户中心，请稍后再试。", vbExclamation
+MsgBox ST("无法登录到象棋巫师用户中心，请稍后再试。", _
+        "無法登錄到像棋巫師用戶中心，請稍後再試。"), vbExclamation
 
 End Sub
 
 Private Sub LoginError()
 
-MsgBox "用户名或密码不正确。", vbExclamation
+MsgBox ST("用户名或密码不正确。", "用戶名或密碼不正確。"), vbExclamation
 
 End Sub
 
 Private Sub NoRetryError()
 
-MsgBox "您的密码已经连续5次输入错误，请过5分钟再做尝试。", vbExclamation
+MsgBox ST("您的密码已经连续5次输入错误，请过5分钟再做尝试。", _
+        "您的密碼已經連續5次輸入錯誤，請過5分鐘再做嘗試。"), vbExclamation
 
 End Sub
 
 Private Sub NoPointsError(ByVal nPoints As Integer)
 
-MsgBox "您的点数不足" + Str(nPoints) + " 点，补充点数后才能使用此功能。", vbExclamation
+MsgBox ST("您的点数不足", "您的點數不足") & nPoints & _
+        ST("点，补充点数后才能使用此功能。", "點，補充點數後才能使用此功能。"), vbExclamation
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
         vbNullString, vbNullString, SW_SHOWNORMAL
 
@@ -1485,9 +1476,10 @@ Case USERS_SAVE
     ' 请求“提交”，处理响应
     Select Case szResult
     Case "ok"
-        MsgBox "成绩提交成功。", vbInformation
+        MsgBox ST("成绩提交成功。", "成績提交成功。"), vbInformation
     Case "nosave"
-        MsgBox "您以前提交的成绩比当前成绩好，当前成绩不予提交。", vbInformation
+        MsgBox ST("您以前提交的成绩比当前成绩好，当前成绩不予提交。", _
+                "您以前提交的成績比當前成績好，當前成績不予提交。"), vbInformation
     Case "error"
         LoginError
         LeaveBusy
@@ -1515,7 +1507,8 @@ Case USERS_LOAD
             bLoad = False
             If nResult > Gui_nLast Then
                 bLoad = True
-            ElseIf MsgBox("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", vbQuestion + vbYesNo) = vbYes Then
+            ElseIf MsgBox(ST("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
+                    "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
                 bLoad = True
             End If
             If bLoad Then
@@ -1525,7 +1518,7 @@ Case USERS_LOAD
                 LoadGame
                 ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
                 nPhaseSaved = PHASE_READY
-                MsgBox "成绩获取成功。", vbInformation
+                MsgBox ST("成绩获取成功。", "成績獲取成功。"), vbInformation
             End If
         Else
             ConnError
@@ -1538,7 +1531,7 @@ Case USERS_RANK
     Case "error"
         LoginError
         LeaveBusy
-        mnUsersRank_Click Rank_nType
+        mnUsersRank_Click
         Exit Sub
     Case "noretry"
         NoRetryError
@@ -1609,8 +1602,13 @@ Case USERS_POINTS
             szResults = Split(Mid(szResult, 4), "|")
             If UBound(szResults) = 1 Then
                 nResult = Str2Int(szResults(1))
-                MsgBox "您还有 " + szResults(0) + " 点可用。" + IIf(nResult < 2800, "", _
-                        vbCrLf + vbCrLf + "您是白金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
+                If options_nlanguagae = 0 Then
+                    MsgBox "您还有 " & szResults(0) & " 点可用。" & IIf(nResult < 2800, "", _
+                            vbCrLf & vbCrLf & "您是白金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
+                Else
+                    MsgBox "您還有 " & szResults(0) & " 點可用。" & IIf(nResult < 2800, "", _
+                            vbCrLf & vbCrLf & "您是白金會員用戶，可以無限次使用提示和悔棋功能。"), vbInformation
+                End If
             Else
                 ConnError
             End If
@@ -1630,7 +1628,7 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = "提交成绩"
+Login_szTitle = ST("提交成绩", "提交成績")
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1640,11 +1638,11 @@ End If
 EnterBusy
 nUsersEvent = USERS_SAVE
 On Error GoTo lnError
-inet.Execute BASE_URL + "save.php", _
+inet.Execute BASE_URL & "save", _
         "POST", "score=" & Gui_nLast, _
-        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1661,7 +1659,7 @@ If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = "获取成绩"
+Login_szTitle = ST("获取成绩", "獲取成績")
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1671,9 +1669,9 @@ End If
 EnterBusy
 nUsersEvent = USERS_LOAD
 On Error GoTo lnError
-inet.Execute BASE_URL + "queryscore.php", "GET", "", _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+inet.Execute BASE_URL & "queryscore", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1694,8 +1692,9 @@ End If
 
 dfThinkTime = Timer
 dfThinkTime = dfThinkTime + IIf(dfThinkTime < dfHintTime, 86400#, 0#) - dfHintTime
-If dfThinkTime < 30 + Gui_nCurr \ 100 Then
-    MsgBox "您只思考了" + Str(Int(dfThinkTime)) + " 秒，请再多想想吧。", vbExclamation
+If dfThinkTime / 60 < 1 + Gui_nCurr \ 1000 Then
+    MsgBox ST("您只思考了不到", "您只思考了不到") & Int(dfThinkTime / 60) & _
+            ST("分钟，请再多想想吧。", "分鐘，請再多想想吧。"), vbExclamation
     Exit Sub
 End If
 
@@ -1706,11 +1705,11 @@ If nHint <> HINT_NONE Or Gui_nCurr < 200 Then
     Exit Sub
 End If
 
-Login_szTitle = "提示"
+Login_szTitle = ST("提示", "提示")
 If Gui_nCurr < 500 Then
-    Login_szPrompt = "200关以后需要登录用户中心"
+    Login_szPrompt = ST("200关以后需要登录用户中心", "200關以後需要登錄用戶中心")
 Else
-    Login_szPrompt = "提示需要消耗点数10点"
+    Login_szPrompt = ST("提示需要消耗点数10点", "提示需要消耗點數10點")
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1720,11 +1719,11 @@ End If
 EnterBusy
 nUsersEvent = USERS_HINT
 On Error GoTo lnError
-inet.Execute BASE_URL + "hint.php", _
+inet.Execute BASE_URL & "hint", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1748,11 +1747,11 @@ If Gui_nCurr < 200 Then
     Exit Sub
 End If
 
-Login_szTitle = "悔棋"
+Login_szTitle = ST("悔棋", "悔棋")
 If Gui_nCurr < 500 Then
-    Login_szPrompt = "200关以后需要登录用户中心"
+    Login_szPrompt = ST("200关以后需要登录用户中心", "200關以後需要登錄用戶中心")
 Else
-    Login_szPrompt = "悔棋需要消耗点数1点"
+    Login_szPrompt = ST("悔棋需要消耗点数1点", "悔棋需要消耗點數1點")
 End If
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1762,11 +1761,11 @@ End If
 EnterBusy
 nUsersEvent = USERS_RETRACT
 On Error GoTo lnError
-inet.Execute BASE_URL + "retract.php", _
+inet.Execute BASE_URL & "retract", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" + vbCrLf + _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1776,16 +1775,13 @@ ConnError
 LeaveBusy
 End Sub
 
-Private Sub mnUsersRank_Click(nIndex As Integer)
+Private Sub mnUsersRank_Click()
 
-Dim szRankType As String
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-Rank_nType = nIndex
-szRankType = Choose(Rank_nType + 1, "w", "m", "q")
 
-Login_szTitle = "查询近" + Choose(Rank_nType + 1, "一周", "一个月", "三个月") + "排名"
+Login_szTitle = ST("查询排名", "查詢排名")
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1795,7 +1791,7 @@ End If
 EnterBusy
 Rank_szList = ""
 On Error Resume Next
-Rank_szList = inet.OpenURL(BASE_URL + "ranklist.php?type=" + szRankType)
+Rank_szList = inet.OpenURL(BASE_URL & "ranklist")
 On Error GoTo 0
 If Rank_szList = "" Then
     ConnError
@@ -1805,9 +1801,9 @@ End If
 
 nUsersEvent = USERS_RANK
 On Error GoTo lnError
-inet.Execute BASE_URL + "queryrank.php?type=" + szRankType, "GET", "", _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+inet.Execute BASE_URL & "queryrank", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1823,7 +1819,7 @@ Private Sub mnUsersPoints_Click()
 If nPhase = PHASE_BUSY Then
     Exit Sub
 End If
-Login_szTitle = "查询点数"
+Login_szTitle = ST("查询点数", "查詢點數")
 Login_szPrompt = ""
 frmLogin.Show vbModal, Me
 If Login_bCancel Then
@@ -1833,9 +1829,9 @@ End If
 EnterBusy
 nUsersEvent = USERS_POINTS
 On Error GoTo lnError
-inet.Execute BASE_URL + "querypoints.php", "GET", "", _
-        "Login-UserName: " + Login_szUserName + vbCrLf + _
-        "Login-Password: " + Login_szPassword + vbCrLf
+inet.Execute BASE_URL & "querypoints", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
 On Error GoTo 0
 
 Exit Sub
@@ -1860,18 +1856,9 @@ frmPublish.Show vbModal, Me
 
 End Sub
 
-Private Sub SwapGui()
-
-Options_bLargeGui = Not Options_bLargeGui
-mnOptionsGuiSmall.Checked = Not Options_bLargeGui
-mnOptionsGuiLarge.Checked = Options_bLargeGui
-MsgBox "显示模式已经更改，重新启动程序后才能生效。", vbInformation
-
-End Sub
-
 Private Sub mnOptionsGuiSmall_Click()
 
-If Options_bLargeGui Then
+If Not mnOptionsGuiSmall.Checked Then
     SwapGui
 End If
 
@@ -1879,7 +1866,7 @@ End Sub
 
 Private Sub mnOptionsGuiLarge_Click()
 
-If Not Options_bLargeGui Then
+If Not mnOptionsGuiLarge.Checked Then
     SwapGui
 End If
 
@@ -1889,8 +1876,8 @@ Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
 Dim i As Integer
 On Error Resume Next
-imgBoard.Picture = LoadPicture(App_szPath + "IMAGES_L\" + _
-        Choose(nIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") + ".GIF")
+imgBoard.Picture = LoadPicture(App_szPath & "IMAGES_L\" & _
+        Choose(nIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") & ".GIF")
 On Error GoTo 0
 For i = 0 To BOARD_L_MAX - 1
     mnOptionsBoard(i).Checked = (nIndex = i)
@@ -1902,10 +1889,10 @@ End Sub
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
 Dim i As Integer, sz As String
-sz = App_szPath + "IMAGES_L\" + Choose(nIndex + 1, "WOOD", "DELICATE", "POLISH") + "\"
+sz = App_szPath & "IMAGES_L\" & Choose(nIndex + 1, "WOOD", "DELICATE", "POLISH") & "\"
 On Error Resume Next
 For i = 0 To 31
-    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz + PieceFileName(i) + ".GIF")
+    frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz & PieceFileName(i) & ".GIF")
 Next
 On Error GoTo 0
 For i = 0 To PIECES_L_MAX - 1
@@ -1943,8 +1930,7 @@ End Sub
 
 Private Sub mnHelpAbout_Click()
 
-MsgBoxWithIcon "象棋巫师 " + STRING_VERSION + vbCrLf + "象棋百科全书 荣誉出品" + vbCrLf + vbCrLf + _
-        STRING_COPYRIGHT + vbCrLf + "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+AboutXQWizard
 
 End Sub
 

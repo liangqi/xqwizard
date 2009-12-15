@@ -1,7 +1,8 @@
 Attribute VB_Name = "mdlAdvert"
-' ADVERT.BAS - Source Code for XiangQi Wizard, Part XV
+' ADVERT.BAS - Source Code for XiangQi Wizard & XiangQi Witchcraft School
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.50, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '

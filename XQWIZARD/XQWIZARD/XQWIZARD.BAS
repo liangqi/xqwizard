@@ -41,13 +41,9 @@ Private Const IDI_QUESTION      As Long = 32514
 
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
 
-' È«¾Ö³£Á¿¡ª¡ªÏóÆåÎ×Ê¦ÐÅÏ¢
-Public Const STRING_VERSION     As String = "4.5"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
-Public Const TIP_NUM            As Integer = 22   ' ÈÕ»ýÔÂÀÛÌõÄ¿Êý
-Public Const QUOTE_NUM          As Integer = 12   ' ÃûÑÔÌõÄ¿Êý
-Public Const ICON_QUOTE         As Integer = 8    ' ÃûÑÔÍ¼±ê
+' È«¾Ö³£Á¿¡ª¡ªÏóÆåÎ×Ê¦²ÎÊý
 Public Const MAX_ENDGAMES       As Integer = 1024 ' ²Ð¾ÖµÄ×î´óÌõÄ¿Êý
+Public Const TIP_NUM            As Integer = 22   ' ÈÕ»ýÔÂÀÛÌõÄ¿Êý
 Public Const TEMP_FILE_NAME_S   As String = "²é¿´ÎÄ±¾ÆåÆ×(Ö»¶Á).TXT"
 Public Const TEMP_FILE_NAME_T   As String = "²é¿´ÎÄ±¾Æå×V(Ö»×x).TXT"
 ' È«¾Ö³£Á¿¡ª¡ª¿ÉÑ¡²ÎÊý
@@ -63,7 +59,6 @@ Public Const VIEW_BMP_MONO      As Boolean = True ' ViewBitmap
 Public Const FLASH_HOME         As Boolean = True ' CopyFlash
 Public Const LOAD_WITH_INFO     As Boolean = True ' OpenEngine
 Public Const SLAVE_ENGINE       As Boolean = True ' SetEngine / SendEngine / ReceiveEngineLog
-Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
 ' È«¾Ö³£Á¿¡ª¡ªÒýÇæ×´Ì¬
 Public Const IDLE_UNLOAD        As Integer = 0 ' Ã»ÓÐ¼ÓÔØÒýÇæ
 Public Const IDLE_READY         As Integer = 1 ' ÒýÇæ´ýÃü(Èç¹ûÂÖµ½µçÄÔ×ßÆå£¬ÄÇÃ´ÒýÇæÁ¢¼´¹¤×÷)
@@ -95,47 +90,6 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
-' È«¾Ö³£Á¿¡ª¡ªFlashÆåÅÌ´óÐ¡
-Public Const FLASHXQ_SMALL      As Integer = 0
-Public Const FLASHXQ_MEDIUM     As Integer = 1
-Public Const FLASHXQ_LARGE      As Integer = 2
-' È«¾Ö³£Á¿¡ª¡ªÆåÅÌ(Ð¡)ÉèÖÃÑ¡Ïî
-Public Const BOARD_S_WOOD       As Integer = 0
-Public Const BOARD_S_GREEN      As Integer = 1
-Public Const BOARD_S_WHITE      As Integer = 2
-Public Const BOARD_S_SHEET      As Integer = 3
-Public Const BOARD_S_CANVAS     As Integer = 4
-Public Const BOARD_S_DROPS      As Integer = 5
-Public Const BOARD_S_CLOUDS     As Integer = 6
-Public Const BOARD_S_XQSTUDIO   As Integer = 7
-Public Const BOARD_S_MOVESKY    As Integer = 8
-Public Const BOARD_S_MRSJ       As Integer = 9
-Public Const BOARD_S_ZMBL       As Integer = 10
-Public Const BOARD_S_QIANHONG   As Integer = 11
-Public Const BOARD_S_MAX        As Integer = 12
-' È«¾Ö³£Á¿¡ª¡ªÆå×Ó(Ð¡)ÉèÖÃÑ¡Ïî
-Public Const PIECES_S_WOOD      As Integer = 0
-Public Const PIECES_S_DELICATE  As Integer = 1
-Public Const PIECES_S_POLISH    As Integer = 2
-Public Const PIECES_S_XQSTUDIO  As Integer = 3
-Public Const PIECES_S_MOVESKY   As Integer = 4
-Public Const PIECES_S_MRSJ      As Integer = 5
-Public Const PIECES_S_ZMBL      As Integer = 6
-Public Const PIECES_S_MAX       As Integer = 7
-' È«¾Ö³£Á¿¡ª¡ªÆåÅÌ(´ó)ÉèÖÃÑ¡Ïî
-Public Const BOARD_L_WOOD       As Integer = 0
-Public Const BOARD_L_GREEN      As Integer = 1
-Public Const BOARD_L_WHITE      As Integer = 2
-Public Const BOARD_L_SHEET      As Integer = 3
-Public Const BOARD_L_CANVAS     As Integer = 4
-Public Const BOARD_L_DROPS      As Integer = 5
-Public Const BOARD_L_QIANHONG   As Integer = 6
-Public Const BOARD_L_MAX        As Integer = 7
-' È«¾Ö³£Á¿¡ª¡ªÆå×Ó(´ó)ÉèÖÃÑ¡Ïî
-Public Const PIECES_L_WOOD      As Integer = 0
-Public Const PIECES_L_DELICATE  As Integer = 1
-Public Const PIECES_L_POLISH    As Integer = 2
-Public Const PIECES_L_MAX       As Integer = 3
 ' È«¾Ö³£Á¿¡ª¡ªÒôÀÖÉèÖÃÑ¡Ïî
 Public Const MUSIC_EXPRESS      As Integer = 0
 Public Const MUSIC_FUNNY        As Integer = 1
@@ -156,27 +110,6 @@ Public Const COORD_CHAR         As String = "£±£²£³£´£µ£¶£·£¸£¹¾Å°ËÆßÁùÎåËÄÈý¶þÒ
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
-' È«¾Ö³£Á¿¡ª¡ª·¢²¼Í¼Æ¬´óÐ¡
-Public Const PUB_SIZE_MINI      As Integer = 0
-Public Const PUB_SIZE_PRINT     As Integer = 1
-Public Const PUB_SIZE_SMALL     As Integer = 2
-Public Const PUB_SIZE_LARGE     As Integer = 3
-Public Const PUB_SIZE_MAX       As Integer = 4
-' È«¾Ö³£Á¿¡ª¡ª·¢²¼Õ¾µã
-Public Const PUB_LOCATION_ZHIDAO As Integer = 0
-Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_HOME  As Integer = 2
-Public Const PUB_LOCATION_SINA  As Integer = 3
-Public Const PUB_LOCATION_QZONE As Integer = 4
-Public Const PUB_LOCATION_OTHER As Integer = 5
-Public Const PUB_LOCATION_MAX   As Integer = 6
-' È«¾Ö³£Á¿¡ª¡ª·¢²¼¸ñÊ½
-Public Const PUB_FORMAT_TEXT    As Integer = 0
-Public Const PUB_FORMAT_ANSI    As Integer = 1
-Public Const PUB_FORMAT_UBB     As Integer = 2
-Public Const PUB_FORMAT_HTML    As Integer = 3
-Public Const PUB_FORMAT_WEB     As Integer = 4
-Public Const PUB_FORMAT_MAX     As Integer = 5
 
 ' È«¾Ö±äÁ¿¡ª¡ª³ÌÐò
 Public App_frmMain              As Form     ' Ö÷´°¿Ú¶ÔÏóÒýÓÃ
@@ -201,9 +134,6 @@ Public App_bPrevInstance        As Boolean  ' ÊÇ·ñÔÙÒ»´ÎÆô¶¯
 Public App_nEndgames            As Integer  ' ¶ÁÈëµÄ²Ð¾ÖÊýÁ¿
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' ¶ÁÈëµÄ²Ð¾Ö
 ' È«¾Ö±äÁ¿¡ª¡ªÑ¡Ïî
-Public Options_nLanguage        As Integer  ' ÓïÑÔ
-Public Options_bLargeGui        As Boolean  ' ´ó½çÃæ
-Public Options_bSounds          As Boolean  ' ÉùÒô
 Public Options_bAutoPlay        As Boolean  ' ×Ô¶¯²¥·Å
 Public Options_nPlayIntv        As Integer  ' ²¥·Å¼ä¸ô(Ãë)
 Public Options_nMoveDelay       As Integer  ' ×ß×ÓÑÓÊ±
@@ -214,10 +144,6 @@ Public Options_bAlwaysPonder    As Boolean  ' ÆôÓÃºóÌ¨Ë¼¿¼
 Public Options_bEngineTime      As Boolean  ' ÏÔÊ¾ÒýÇæËÙ¶È
 Public Options_bStatusBar       As Boolean  ' Êä³öµ½×´Ì¬À¸
 Public Options_nEnginePlay      As Integer  ' ÐÂ¾ÖÒýÇæ×´Ì¬
-Public Options_nBoardS          As Integer  ' Ð¡½çÃæµÄÆåÅÌ
-Public Options_nPiecesS         As Integer  ' Ð¡½çÃæµÄÆå×Ó
-Public Options_nBoardL          As Integer  ' ´ó½çÃæµÄÆåÅÌ
-Public Options_nPiecesL         As Integer  ' ´ó½çÃæµÄÆå×Ó
 Public Options_nMusic           As Integer  ' ÒôÀÖ
 Public Options_bTopMost         As Integer  ' ×ÜÔÚ×îÇ°Ãæ
 Public Options_bPromptSave      As Boolean  ' ÌáÊ¾±£´æ
@@ -233,22 +159,8 @@ Public Gui_szEpdTitle           As String   ' ²Ð¾Ö±êÌâ
 Public Gui_bShowHowTo           As Boolean  ' Æô¶¯Ê±ÏÔÊ¾¡°ÈÕ»ýÔÂÀÛ¡±
 Public Gui_nTipIndex            As Integer  ' ¡°ÈÕ»ýÔÂÀÛ¡±µÄÌõÄ¿ÐòºÅ
 Public Gui_szTips(1 To TIP_NUM) As String   ' ¡°ÈÕ»ýÔÂÀÛ¡±µÄÌõÄ¿
-Public Gui_szQuotes(1 To QUOTE_NUM) As String ' ¡°ÃûÑÔ¡±µÄÌõÄ¿
-Public Gui_szUpgradeVer         As String   ' ¼ì²éÉý¼¶µÄ°æ±¾
-Public Gui_szUpgradeDate        As String   ' ¼ì²éÉý¼¶µÄÈÕÆÚ
-Public Gui_szAdvertDate         As String   ' ¼ì²é¹ã¸æµÄÈÕÆÚ
-Public Gui_nAdvertIndex         As Integer  ' µ±Ç°¹ã¸æÐòºÅ
-Public Gui_dfLastTime           As Double   ' µ±Ç°Ê±¼ä(Ã¿Ìì00:00¹ýÈ¥µÄÃëÊý)
 ' È«¾Ö±äÁ¿¡ª¡ª·¢²¼ÉèÖÃ
-Public Publish_nSize            As Integer  ' Í¼Æ¬ÀàÐÍ
-Public Publish_bTrad            As Boolean  ' ÊÇ·ñ·±Ìå(¼òµ¥/Ó¡Ë¢)
-Public Publish_nBoardS          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
-Public Publish_nPiecesS         As Integer  ' Æå×ÓÀàÐÍ(Ð¡)
-Public Publish_nBoardL          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
-Public Publish_nPiecesL         As Integer  ' Æå×ÓÀàÐÍ(´ó)
 Public Publish_bContent         As Boolean  ' ÊÇ·ñÖ»·¢²¼µ±Ç°¾ÖÃæ
-Public Publish_nLocation        As Integer  ' ·¢²¼Õ¾µã
-Public Publish_nFormat          As Integer  ' ·¢²¼¸ñÊ½
 ' È«¾Ö±äÁ¿¡ª¡ªÆå¾Ö
 Public Game_szEvent             As String   ' ÈüÊÂ
 Public Game_szRound             As String   ' ÂÖ´Î
@@ -335,13 +247,6 @@ Public Engine_szSlaveName       As String   ' ¸±ÒýÇæÃû³Æ
 
 ' ÒÔÏÂÊÇÊµÓÃº¯ÊýÀý³Ì
 
-' ¼ò·±Ñ¡Ôñ£¬0Ñ¡¼òÌå£¬1Ñ¡·±Ìå
-Public Function ST(ByVal szSimp As String, ByVal szTrad As String) As String
-
-ST = Choose(Options_nLanguage + 1, szSimp, szTrad)
-
-End Function
-
 ' °Ñ×Ö·û×ª»»³ÉÊý×Ö£¬ÏÔÊ¾ÆåÆ××ø±êÊ±ÓÃ
 Public Function Byte2Digit(ByVal szChar As String) As Integer
 
@@ -366,13 +271,6 @@ Public Function NumberText(cnt As Integer, sd As Integer) As String
 NumberText = IIf(sd = 0, cnt & ".", Space(Len("" & cnt) + 1))
 
 End Function
-
-' ÎÞ·¨´ò¿ªÎÄ¼þÌáÊ¾
-Public Sub ErrorOpen(ByVal szFileName As String)
-
-MsgBox ST("ÎÞ·¨´ò¿ªÎÄ¼þ ", "Ÿo·¨´òé_ÎÄ¼þ ") & szFileName, vbExclamation
-
-End Sub
 
 ' ´ò¿ªÎÄ¼þ¶Ô»°¿ò
 Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, _
@@ -399,15 +297,6 @@ End If
 FileDialog = szFileName
 
 End Function
-
-' ²¥·ÅÉùÒô
-Public Sub PlayWavSound(ByVal szSoundFile As String)
-
-If Options_bSounds Then
-    PlaySoundA App_szPath & "SOUNDS\" & szSoundFile & ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
-End If
-
-End Sub
 
 ' ×ÜÔÚ×îÇ°Ãæ
 Public Sub SetTopMost(ByVal hWnd As Long)
@@ -2678,31 +2567,6 @@ Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇ¸ö×ÔÓÉÈí¼þ£¬Èç¹ûÄú¾õµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØ½«±¾Èí¼þÉÏ
 Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×Ê¦ÔÚ¿ª·¢¹ý³ÌÖÐµÃµ½ÁË¹ã´óÆåÃÔÅóÓÑµÄÈÈÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔÐÄµÄ¸ÐÐ»£¬Í¬Ê±Ò²Ï£ÍûÄú¼ÌÐøÖ§³ÖÏóÆåÎ×Ê¦£¬¹Ø×¢ http://www.xqbase.com/ ¡£" & vbCrLf & _
         "¡¡¡¡ÄúÒ²¿ÉÒÔ½«±¾Èí¼þµÄÖ÷Ò³Á´½Óµ½×Ô¼ºµÄÕ¾µãÉÏ¡£ÇëÄúÊ¹ÓÃ http://www.xqbase.com/ ×÷ÎªÁ´½ÓµÄÂ·¾¶¡£"
 
-Gui_szQuotes(1) = "¡¡¡¡×ÓÔ»£º¡°Ñ§¶øÊ±Ï°Ö®£¬²»ÒàËµºõ£¿ÓÐÅó×ÔÔ¶·½À´£¬²»ÒàÀÖºõ£¿ÈË²»Öª¶ø²»ã³£¬²»Òà¾ý×Óºõ£¿¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤Ñ§¶ø¡·"
-Gui_szQuotes(2) = "¡¡¡¡×Ó¹±ÎÊÔ»£º¡°ÓÐÒ»ÑÔ¶ø¿ÉÒÔÖÕÉíÐÐÖ®Õßºõ£¿¡±×ÓÔ»£º¡°ÆäË¡ºõ£¡¼ºËù²»Óû£¬ÎðÊ©ì¶ÈË¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤ÎÀÁé¹«¡·"
-Gui_szQuotes(3) = "¡¡¡¡»òÔ»£º¡°ÒÔµÂ±¨Ô¹£¬ºÎÈç£¿¡±×ÓÔ»£º¡°ºÎÒÔ±¨µÂ£¿ÒÔÖ±±¨Ô¹£¬ÒÔµÂ±¨µÂ¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤ÏÜÎÊ¡·"
-Gui_szQuotes(4) = "¡¡¡¡×ÓÏÄÔ»£º¡°²©Ñ§¶øóÆÖ¾£¬ÇÐÎÊ¶ø½üË¼£»ÈÊÔÚÆäÖÐÒÓ¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤×ÓÕÅ¡·"
-Gui_szQuotes(5) = "¡¡¡¡×ÓÔ»£º¡°²»»¼ÈËÖ®²»¼ºÖª£¬»¼²»ÖªÈËÒ²¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤Ñ§¶ø¡·"
-Gui_szQuotes(6) = "¡¡¡¡×ÓÔ»£º¡°ÈýÈËÐÐ£¬±ØÓÐÎÒÊ¦ÑÉ£ºÔñÆäÉÆÕß¶ø´ÓÖ®£¬Æä²»ÉÆÕß¶ø¸ÄÖ®¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÂÛÓï¡¤Êö¶ø¡·"
-Gui_szQuotes(7) = "¡¡¡¡½«Óûì¨Ö®£¬±Ø¹ÌÕÅÖ®£»½«ÓûÈõÖ®£¬±Ø¹ÌÇ¿Ö®£»½«Óû·ÏÖ®£¬±Ø¹ÌÐËÖ®£»½«ÓûÈ¡Ö®£¬±Ø¹ÌÓëÖ®¡£ÊÇÎ½Î¢Ã÷¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó¡¤µÚÈýÊ®ÁùÕÂ¡·"
-Gui_szQuotes(8) = "¡¡¡¡ÈáÈõÊ¤¸ÕÇ¿¡£Óã²»¿ÉÍÑÓÚÔ¨£¬¹úÖ®ÀûÆ÷²»¿ÉÒÔÊ¾ÈË¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó¡¤µÚÈýÊ®ÁùÕÂ¡·"
-Gui_szQuotes(9) = "¡¡¡¡Í¼ÄÑÓÚÆäÒ×£»Îª´óÓÚÆäÏ¸¡£ÌìÏÂÄÑÊÂ£¬±Ø×÷ÓÚÒ×£»ÌìÏÂ´óÊÂ£¬±Ø×÷ÓÚÏ¸¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó¡¤µÚÁùÊ®ÈýÕÂ¡·"
-Gui_szQuotes(10) = "¡¡¡¡ºÏ±§Ö®Ä¾£¬ÉúÓÚºÁÄ©£»¾Å²ãÖ®Ì¨£¬ÆðÓÚÀÛÍÁ£»Ç§ÀïÖ®ÐÐ£¬Ê¼ÓÚ×ãÏÂ¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó¡¤µÚÁùÊ®ËÄÕÂ¡·"
-Gui_szQuotes(11) = "¡¡¡¡Öª±ËÖª¼º£¬Ê¤ÄË²»´ù£»ÖªÌìÖªµØ£¬Ê¤ÄË¿ÉÈ«¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Ëï×Ó±ø·¨¡¤µØÐÎ¡·"
-Gui_szQuotes(12) = "¡¡¡¡Å­¿ÉÒÔ¸´Ï²£¬ã³¿ÉÒÔ¸´Ëµ£¬Íö¹ú²»¿ÉÒÔ¸´´æ£¬ËÀÕß²»¿ÉÒÔ¸´Éú¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Ëï×Ó±ø·¨¡¤»ð¹¥¡·"
-
 Else
 
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×ŽŸÊÇÒ»¿î¹¦ÄÜ³¬ŠµÄÏóÆå½ÌŒW¡¢ëŠÄXŒ¦ÞÄºÍÆå×V¾ŽÝ‹Ü›¼þ£¬¾ßÓÐ·½±ãµÄÈË™CŒ¦‘ð¡¢Æå×VÓ›ä›¡¢ÐÀÙp¡¢°l²¼¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ß€ƒÈÖÃ´óÁ¿ÏóÆåÁ•î}£¬ÍêÈ«¿ÉÒÔM×ã¸÷ŒÓ´ÎÏóÆåÛºÃÕß¡¢ÆåÊÖ¡¢²ÃÅÐ†T¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷·NÐèÒª¡£"
@@ -2734,31 +2598,6 @@ Gui_szTips(21) = "¡¡¡¡ÏóÆåÎ×ŽŸÊÇ‚€×ÔÓÉÜ›¼þ£¬Èç¹ûÄúÓXµÃºÃÓÃ£¬¿ÉÒÔ×ÔÓÉµØŒ¢±¾Ü›¼þÉÏ
         "¡¡¡¡ÏóÆåÎ×ŽŸµÄÔ´³ÌÐò°l²¼ÔÚ http://sourceforge.net/projects/xqwizard/ ß@‚€í“ÃæÉÏ£¬Äú¿ÉÒÔ¸ù¾Ý×Ô¼ºµÄÐèÒªŒ¦Ô´³ÌÐòßMÐÐÐÞ¸Ä£¬²¢ÒÀÕÕGPL…f×h°l²¼ÄúÐÞ¸Äß^µÄÔ´³ÌÐò¡£"
 Gui_szTips(22) = "¡¡¡¡ÏóÆåÎ×ŽŸÔÚé_°lß^³ÌÖÐµÃµ½ÁËV´óÆåÃÔÅóÓÑµÄŸáÇéÖ§³Ö£¬×÷ÕßÔÚ´Ë±íÊ¾ÖÔÐÄµÄ¸ÐÖx£¬Í¬•rÒ²Ï£ÍûÄúÀ^ÀmÖ§³ÖÏóÆåÎ×ŽŸ£¬êP×¢ http://www.xqbase.com/ ¡£" & vbCrLf & _
         "¡¡¡¡ÄúÒ²¿ÉÒÔŒ¢±¾Ü›¼þµÄÖ÷í“æœ½Óµ½×Ô¼ºµÄÕ¾ücÉÏ¡£ÕˆÄúÊ¹ÓÃ http://www.xqbase.com/ ×÷žéæœ½ÓµÄÂ·½¡£"
-
-Gui_szQuotes(1) = "¡¡¡¡×ÓÔ»£º¡°ŒW¶ø•rÁ•Ö®£¬²»ÒàÕfºõ£¿ÓÐÅó×Ôßh·½í£¬²»Òà˜·ºõ£¿ÈË²»Öª¶ø²»‘C£¬²»Òà¾ý×Óºõ£¿¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®ŒW¶ø¡·"
-Gui_szQuotes(2) = "¡¡¡¡×ÓØ•†–Ô»£º¡°ÓÐÒ»ÑÔ¶ø¿ÉÒÔ½KÉíÐÐÖ®Õßºõ£¿¡±×ÓÔ»£º¡°ÆäË¡ºõ£¡¼ºËù²»Óû£¬ÎðÊ©ì¶ÈË¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®Ðlì`¹«¡·"
-Gui_szQuotes(3) = "¡¡¡¡»òÔ»£º¡°ÒÔµÂˆóÔ¹£¬ºÎÈç£¿¡±×ÓÔ»£º¡°ºÎÒÔˆóµÂ£¿ÒÔÖ±ˆóÔ¹£¬ÒÔµÂˆóµÂ¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®‘—†–¡·"
-Gui_szQuotes(4) = "¡¡¡¡×ÓÏÄÔ»£º¡°²©ŒW¶øºVÖ¾£¬ÇÐ†–¶ø½üË¼£»ÈÊÔÚÆäÖÐÒÓ¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®×Óˆ¡·"
-Gui_szQuotes(5) = "¡¡¡¡×ÓÔ»£º¡°²»»¼ÈËÖ®²»¼ºÖª£¬»¼²»ÖªÈËÒ²¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®ŒW¶ø¡·"
-Gui_szQuotes(6) = "¡¡¡¡×ÓÔ»£º¡°ÈýÈËÐÐ£¬±ØÓÐÎÒŽŸÑÉ£º“ñÆäÉÆÕß¶øÄÖ®£¬Æä²»ÉÆÕß¶ø¸ÄÖ®¡£¡±" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶Õ“ÕZ£®Êö¶ø¡·"
-Gui_szQuotes(7) = "¡¡¡¡Œ¢Óûì¨Ö®£¬±Ø¹ÌˆÖ®£»Œ¢ÓûÈõÖ®£¬±Ø¹ÌŠÖ®£»Œ¢ÓûUÖ®£¬±Ø¹ÌÅdÖ®£»Œ¢ÓûÈ¡Ö®£¬±Ø¹ÌÓëÖ®¡£ÊÇÖ^Î¢Ã÷¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó£®µÚÈýÊ®ÁùÕÂ¡·"
-Gui_szQuotes(8) = "¡¡¡¡ÈáÈõÊ¤„‚Š¡£ô~²»¿ÉÃ“ì¶œY£¬‡øÖ®ÀûÆ÷²»¿ÉÒÔÊ¾ÈË¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó£®µÚÈýÊ®ÁùÕÂ¡·"
-Gui_szQuotes(9) = "¡¡¡¡ˆDëyì¶ÆäÒ×£»žé´óì¶Æä¼š¡£ÌìÏÂëyÊÂ£¬±Ø×÷ì¶Ò×£»ÌìÏÂ´óÊÂ£¬±Ø×÷ì¶¼š¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó£®µÚÁùÊ®ÈýÕÂ¡·"
-Gui_szQuotes(10) = "¡¡¡¡ºÏ±§Ö®Ä¾£¬Éúì¶ºÁÄ©£»¾ÅŒÓÖ®Ì¨£¬Æðì¶ÀÛÍÁ£»Ç§ÀïÖ®ÐÐ£¬Ê¼ì¶×ãÏÂ¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ÀÏ×Ó£®µÚÁùÊ®ËÄÕÂ¡·"
-Gui_szQuotes(11) = "¡¡¡¡Öª±ËÖª¼º£¬Ê¤ÄË²»´ù£»ÖªÌìÖªµØ£¬Ê¤ÄË¿ÉÈ«¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ŒO×Ó±ø·¨£®µØÐÎ¡·"
-Gui_szQuotes(12) = "¡¡¡¡Å­¿ÉÒÔÑ}Ï²£¬‘C¿ÉÒÔÑ}Õf£¬Íö‡ø²»¿ÉÒÔÑ}´æ£¬ËÀÕß²»¿ÉÒÔÑ}Éú¡£" & vbCrLf & vbCrLf & _
-        "¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ª¡ª¡¶ŒO×Ó±ø·¨£®»ð¹¥¡·"
 
 End If
 
@@ -2805,11 +2644,8 @@ ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD"
 End Sub
 
 ' ´Ó×¢²á±í¼ÓÔØ²ÎÊý
-Public Sub LoadRegs()
+Public Sub LoadRegs2()
 
-Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, 1)
-Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
-Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
 Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
@@ -2820,10 +2656,6 @@ Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign",
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
-Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
-Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
-Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
-Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "8"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
@@ -2837,18 +2669,7 @@ Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", ST("È¤Î¶ÏóÆå", "È¤Î¶ÏóÆå"))
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
-Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
-Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
-Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
-Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
-Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
-Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
-Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
-Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
-Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
 Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
-Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
-Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
@@ -2869,9 +2690,8 @@ Engine_szFile = GetSetting("XQWizard", "Engine", "FileName", App_szPath & "ELEEY
 End Sub
 
 ' ±£´æ²ÎÊýµ½×¢²á±í
-Public Sub SaveRegs()
+Public Sub SaveRegs2()
 
-SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", Options_nPlayIntv
 SaveSetting "XQWizard", "Options", "MoveDelay", Options_nMoveDelay
@@ -2882,10 +2702,6 @@ SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1",
 SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
 SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
 SaveSetting "XQWizard", "Options", "EnginePlay", Options_nEnginePlay
-SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
-SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
-SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
-SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
 SaveSetting "XQWizard", "Options", "Music", Options_nMusic
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
@@ -2899,17 +2715,7 @@ SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", Gui_nTipIndex
-SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
-SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
-SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
-SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
-SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
-SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
 SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
-SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
-SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
 SaveSetting "XQWizard", "Timer", "Depth", Timer_nDepth
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", Timer_nInitTime
@@ -2942,79 +2748,6 @@ End If
 sz = IIf(sz = "", IIf(Engine_szName = "ElephantEye", "", Engine_szName), sz)
 App_frmMain.Caption = IIf(sz = "", "", sz & " - ") & _
         IIf(App_bPromotion, ST("³¬¼¶ÏóÆåÎ×Ê¦", "³¬¼‰ÏóÆåÎ×ŽŸ"), ST("ÏóÆåÎ×Ê¦", "ÏóÆåÎ×ŽŸ"))
-
-End Sub
-
-' ¼ì²é¸üÐÂ
-Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
-
-Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
-Dim dwCounter(0 To 1) As Long
-
-sz = ""
-QueryPerformanceCounter VarPtr(dwCounter(0))
-szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
-On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=xqwizard&version=" & _
-        STRING_VERSION & "&userid=" & szUserID)
-On Error GoTo 0
-If sz = "" Then
-    If bManual Then
-        MsgBox ST("ÎÞ·¨·ÃÎÊ www.xqbase.com£¬ÇëÉÔºóÔÙÊÔ¡£", "Ÿo·¨ÔL†– www.xqbase.com£¬ÕˆÉÔááÔÙÔ‡¡£"), vbExclamation
-    End If
-Else
-    Gui_szUpgradeDate = Date ' Èç¹û·ÃÎÊÉý¼¶ÐÅÏ¢³É¹¦£¬ÄÇÃ´µ±Ìì¾Í²»ÔÙ·ÃÎÊÉý¼¶ÐÅÏ¢
-    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' Á¢¼´Ð´×¢²á±í£¬±ÜÃâÖØ¿ª´°¿Úµ¼ÖÂµÄÖØ¸´·ÃÎÊ
-    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' Í¬ÉÏ
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
-        szWhatsNew = ""
-        On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew.txt")
-        On Error GoTo 0
-        If szWhatsNew = "" Then
-            szWhatsNew = ST("ÏóÆåÎ×Ê¦ ", "ÏóÆåÎ×ŽŸ") & sz & _
-                    ST(" ÒÑ¾­·¢²¼£¬ÐèÒªÏÂÔØ×îÐÂ°æ±¾Âð£¿", " ÒÑ½›°l²¼£¬ÐèÒªÏÂÝd×îÐÂ°æ±¾†á£¿")
-        End If
-        If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
-            szUrl = ""
-            On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
-            On Error GoTo 0
-            If Left(szUrl, 7) <> "http://" Then
-                szUrl = "http://www.xqbase.com/xqwizard/download.htm"
-            End If
-            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
-        Else
-            Gui_szUpgradeVer = sz
-        End If
-    Else
-        If bManual Then
-            MsgBox ST("ÄúµÄÏóÆåÎ×Ê¦ÒÑ¾­ÊÇ×îÐÂ°æ±¾ÁË¡£", "ÄúµÄÏóÆåÎ×ŽŸÒÑ½›ÊÇ×îÐÂ°æ±¾ÁË¡£"), vbInformation
-        End If
-    End If
-End If
-
-End Sub
-
-' ÍËµ¯
-Public Sub ExitPopup()
-
-Dim dfThisTime As Double, dfLastTime As Double
-' ÓÃµ½Ê±²Å¶Á×¢²á±í£¬±ÜÃâÖØ¿ª´°¿Úµ¼ÖÂµÄÖØ¸´·ÃÎÊ¡£ÕâÀïµÄ×ö·¨ÓëGui_szAdvertDateÏà·´£¬µ«´ïµ½µÄÄ¿µÄÊÇÒ»ÑùµÄ¡£
-If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
-    Exit Sub
-End If
-' Èç¹ûÍËµ¯³É¹¦£¬ÄÇÃ´µ±Ìì¾Í²»ÔÙÍËµ¯ÁË
-SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.xqbase.com/advert/popup.htm"
-' ÍËµ¯µ÷ÓÃÁËfrmHide.web£¬Îª±£Ö¤³É¹¦£¬µÈ´ý1ÃëÖÓ
-dfLastTime = Timer
-Do
-    DoEvents
-    Sleep 1
-    dfThisTime = Timer
-    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-Loop Until dfThisTime > dfLastTime + 5#
 
 End Sub
 
@@ -3139,7 +2872,7 @@ App_frmMain.mnHelp.Caption = "ŽÍÖú(&H)"
 App_frmMain.mnHelpContents.Caption = "ŽÍÖúÖ÷î}(&C)"
 App_frmMain.mnHelpHowTo.Caption = "ÈÕ·eÔÂÀÛ(&W)..."
 App_frmMain.mnHelpQuote.Caption = "ÃûÑÔ(&Q)..."
-App_frmMain.mnHelpHome.Caption = "ÏóÆåÎ×ŽŸµÄÍøÕ¾(&H)"
+App_frmMain.mnHelpHome.Caption = "ÏóÆåÎ×ŽŸµÄ¾WÕ¾(&H)"
 App_frmMain.mnHelpBase.Caption = "Æå×V‚}Žì(&B)"
 App_frmMain.mnHelpLeague.Caption = "«@È¡UCCIÒýÇæ(&G)"
 App_frmMain.mnHelpUpdate.Caption = "™z²é×îÐÂ°æ±¾(&P)"
@@ -3286,6 +3019,7 @@ App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show
 frmStartup.Refresh
 LoadRegs
+LoadRegs2
 CchessInit Options_nLanguage
 ' ÅÐ¶ÏÊÇ·ñÔÊÐíÉý±ä
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3299,6 +3033,7 @@ Else
 End If
 EccoInitOpenVar Options_nLanguage
 ConvInit Options_nLanguage
+LoadQuotes
 LoadTips
 If Options_bLargeGui Then
     Set App_frmMain = frmMainLarge
@@ -3435,6 +3170,7 @@ If Gui_szAdvertDate <> Date Then
     End If
 End If
 SaveRegs
+SaveRegs2
 PlaySoundA vbNullString, 0, 0
 frmHide.mci.Command = "Close"
 ExitPopup

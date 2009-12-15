@@ -1,7 +1,7 @@
 Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
-' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
@@ -129,7 +129,6 @@ Public Login_bCancel            As Boolean  ' 登录是否取消
 Public Login_szUserName         As String   ' 登录用户名
 Public Login_szPassword         As String   ' 登录密码
 Public Login_bRemember          As Boolean  ' 记住密码
-Public Rank_nType               As Integer  ' 排名类型
 Public Rank_nScore              As Integer  ' 排名成绩
 Public Rank_nToday              As Long     ' 今日排名
 Public Rank_nYesterday          As Long     ' 昨日排名
@@ -169,7 +168,7 @@ Else
     Print #nFileNo, "[Event ""第 " & (Gui_nCurr + 1) & " 關 - 象棋巫師魔法學校""]"
 End If
 Print #nFileNo, "[Result ""1-0""]"
-Print #nFileNo, "[FEN """ + App_szEndgames(Gui_nCurr) + """]"
+Print #nFileNo, "[FEN """ & App_szEndgames(Gui_nCurr) & """]"
 
 CchessFen2Board posStart, App_szEndgames(Gui_nCurr)
 For i = 0 To pos.nMoveNum - 2
@@ -189,12 +188,98 @@ Print #nFileNo, ST("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
 Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 
-Shell App_szPath & "XQWIZARD.EXE """ & App_szPath & szFile + """", vbNormalFocus
+Shell App_szPath & "XQWIZARD.EXE """ & App_szPath & szFile & """", vbNormalFocus
 
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 ErrorOpen App_szPath & szFile
+
+End Sub
+
+' 切换界面
+Public Sub SwapGui()
+
+Dim bLargeGui As Boolean
+bLargeGui = App_frmMain.mnOptionsGuiSmall.Checked
+App_frmMain.mnOptionsGuiSmall.Checked = Not bLargeGui
+App_frmMain.mnOptionsGuiLarge.Checked = bLargeGui
+SaveSetting "XQWizard", "Options", "LargeGui", IIf(bLargeGui, "1", "0")
+MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
+
+End Sub
+
+' 关于象棋巫师
+Public Sub AboutXQWizard()
+
+If Options_nLanguage = 0 Then
+    MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+Else
+    MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT & vbCrLf & "本產品符合GNU通用公共許可協議", "關於象棋巫師"
+End If
+
+End Sub
+
+' 加载名言
+Public Sub LoadTips()
+
+If Options_nLanguage = 0 Then
+
+Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
+Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
+Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
+Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
+Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
+Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
+
+Else
+
+Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
+Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
+Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
+Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
+Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
+Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
+Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
+Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
+
+End If
 
 End Sub
 
@@ -279,7 +364,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew.txt")
+        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & ST("simp.txt", "trad.txt"))
         On Error GoTo 0
         If szWhatsNew = "" Then
             szWhatsNew = ST("象棋巫师 ", "象棋巫師") & sz & _
@@ -306,67 +391,6 @@ End If
 
 End Sub
 
-' 加载名言
-Public Sub LoadTips()
-
-If Options_nLanguage = 0 Then
-
-Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
-Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
-Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
-Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
-Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" + vbCrLf + vbCrLf + _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
-
-Else
-
-Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
-Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
-Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
-Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
-Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
-
-End If
-
-End Sub
-
 ' 退弹
 Public Sub ExitPopup()
 
@@ -377,7 +401,7 @@ If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
 End If
 ' 如果退弹成功，那么当天就不再退弹了
 SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.elephantbase.net/advert/popup_simp.htm"
+frmHide.web.Navigate "http://www.xqbase.com/advert/popup.htm"
 ' 退弹调用了frmHide.web，为保证成功，等待1秒钟
 dfLastTime = Timer
 Do
@@ -389,11 +413,74 @@ Loop Until dfThisTime > dfLastTime + 5#
 
 End Sub
 
+' 主窗口语言
+Public Sub SetLang()
+
+Dim i As Integer
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+App.Title = "象棋巫師魔法學校"
+App_frmMain.Font.Charset = 136
+App_frmMain.Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To App_frmMain.Controls.Count - 1
+    App_frmMain.Controls(i).Font = App_frmMain.Font
+Next
+On Error GoTo 0
+' 菜单
+frmMainSmall.mnGame.Caption = "游戲(&G)"
+frmMainSmall.mnGameSelect.Caption = "選關(&O)"
+frmMainSmall.mnGameNext.Caption = "下一關(&N)"
+frmMainSmall.mnGameRestart.Caption = "再試一次(&R)"
+frmMainSmall.mnGameXQWizard.Caption = "用象棋巫師打開(&X)"
+frmMainSmall.mnGameHint.Caption = "提示(&H)"
+frmMainSmall.mnGameRetract.Caption = "悔棋(&T)"
+frmMainSmall.mnGameExit.Caption = "离開(&X)"
+
+frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
+frmMainSmall.mnUsersSave.Caption = "提交成績(&S)"
+frmMainSmall.mnUsersLoad.Caption = "獲取成績(&L)"
+frmMainSmall.mnUsersHint.Caption = "提示(&H)"
+frmMainSmall.mnUsersRetract.Caption = "悔棋(&T)"
+frmMainSmall.mnUsersRank.Caption = "排名(&R)"
+frmMainSmall.mnUsersPoints.Caption = "查詢點數(&P)"
+frmMainSmall.mnUsersCenter.Caption = "用戶中心首頁(&C)"
+frmMainSmall.mnUsersHelp.Caption = "求助(&E)"
+frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
+frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
+
+frmMainSmall.mnOptions.Caption = "選項(&O)"
+frmMainSmall.mnOptionsGui.Caption = "界面(&G)"
+frmMainSmall.mnOptionsGuiSmall.Caption = "小(&S)"
+frmMainSmall.mnOptionsGuiLarge.Caption = "大(&L)"
+frmMainSmall.mnOptionsBoard_.Caption = "棋盤(&B)"
+frmMainSmall.mnOptionsPieces_.Caption = "棋子(&P)"
+frmMainSmall.mnOptionsSounds.Caption = "音效(&S)"
+App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
+App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
+App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
+
+App_frmMain.mnHelp.Caption = "幫助(&H)"
+App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
+App_frmMain.mnHelpHome.Caption = "象棋巫師的網站(&H)"
+App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
+App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
+
+' 按钮
+frmMainSmall.btnRetract.Caption = "悔棋"
+frmMainSmall.btnHint.Caption = "提示"
+frmMainSmall.btnSave.Caption = "提交成績"
+frmMainSmall.btnRestart.Caption = "再試一次"
+frmMainSmall.btnNext.Caption = "下一關"
+
+End Sub
+
 ' 主函数
 Public Sub Main()
 
 Dim i As Integer, nFileNo As Integer, bLoaded As Boolean
-Dim sz As String, lpStr As Long
+Dim sz As String, lpStr As Long, dwResult As Long
 Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
@@ -437,7 +524,7 @@ Gui_nCurr = IIf(Gui_nCurr > Gui_nLast, Gui_nLast, Gui_nCurr)
 Gui_nCurr = IIf(Gui_nCurr > App_nEndgames - 1, App_nEndgames - 1, Gui_nCurr)
 
 ' 加载引擎
-PipeOpen Engine_pipe, App_szPath + ENGINE_FILE
+PipeOpen Engine_pipe, App_szPath & ENGINE_FILE
 PipeLineOutput Engine_pipe, "ucci"
 dfLastTime = Timer
 bLoaded = False
@@ -461,7 +548,7 @@ If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
     Unload frmStartup
-    MsgBox "无法加载引擎 " + App_szPath + ENGINE_FILE, vbExclamation
+    MsgBox ST("无法加载引擎 ", "無法加載引擎 ") & App_szPath & ENGINE_FILE, vbExclamation
     Exit Sub
 End If
 ' 电脑执黑，不能只考虑将军走法
@@ -473,11 +560,11 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList "advert_simp.txt"
+    DownloadAdvertList "advert_0450.txt"
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
-        Gui_szAdvertFiles(1) = "elephantbase"
+        Gui_szAdvertFiles(1) = "xqbase"
         Gui_nAdvertTimes(1) = 32767
     Else
         Gui_szAdvertDate = Date
@@ -495,17 +582,27 @@ If Options_bLargeGui Then
 Else
     Set App_frmMain = frmMainSmall
 End If
+' 在显示窗口以前，先把语言设置好
+SetLang
 App_frmMain.Show
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds
-App_frmMain.web.Navigate2 App_szPath + "ADVERT\elephantbase.htm"
+App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 Unload frmStartup
 
 ' 提示建立存档
 If Login_szUserName = "" Then
-    If MsgBox("　　建立象棋巫师魔法学校的闯关存档，就可以随时随地提交和获取闯关成绩，" + _
-            "并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。" + vbCrLf + vbCrLf + _
-            "　　是否现在就建立闯关存档？", vbQuestion + vbYesNo) = vbYes Then
-        ShellExecuteA 0, vbNullString, "http://users.elephantbase.net/register.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+    If Options_nLanguage = 0 Then
+        dwResult = MsgBox("　　建立象棋巫师魔法学校的闯关存档，就可以随时随地提交和获取闯关成绩，" & _
+                "并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。" & vbCrLf & vbCrLf & _
+                "　　是否现在就建立闯关存档？", vbQuestion + vbYesNo)
+    Else
+        dwResult = MsgBox("　　建立像棋巫師魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關成績，" & _
+                "並跟眾多玩家一起參與闖關排名，充分享受提高棋藝的樂趣。" & vbCrLf & vbCrLf & _
+                "　　是否現在就建立闖關存檔？", vbQuestion + vbYesNo)
+    End If
+    If dwResult = vbYes Then
+        ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=register", _
+                vbNullString, vbNullString, SW_SHOWNORMAL
     End If
 End If
 
@@ -521,14 +618,14 @@ Do While App_bRunning
         If Gui_nAdvertIndex > Gui_nAdvertNum Then
             Gui_nAdvertIndex = 1
         End If
-        App_frmMain.web.Navigate2 App_szPath + "ADVERT\" + Gui_szAdvertFiles(Gui_nAdvertIndex) + ".htm"
+        App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
     End If
     DoEvents
     Sleep 1
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList "advert_simp.txt"
+    DownloadAdvertList "advert_0450.txt"
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date
@@ -555,7 +652,7 @@ Do While bLoaded
 Loop
 PipeClose Engine_pipe
 If bLoaded Then
-    MsgBox "无法正常卸载引擎！", vbExclamation
+    MsgBox ST("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
 End If
 ' 退出
 If Not Login_bRemember Then

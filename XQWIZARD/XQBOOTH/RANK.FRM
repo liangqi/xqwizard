@@ -1,6 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmRank 
    BorderStyle     =   3  'Fixed Dialog
+   Caption         =   "近两周排名"
    ClientHeight    =   4440
    ClientLeft      =   45
    ClientTop       =   330
@@ -429,7 +430,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' XQBOOTH.FRM - Source Code for XiangQi Witchcraft School, Part V
 '
-' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
@@ -461,20 +462,17 @@ End Sub
 
 Private Sub Form_Load()
 
-Dim szTimeSpan As String
-szTimeSpan = Choose(Rank_nType + 1, "一周", "一个月", "三个月")
-Caption = "近" + szTimeSpan + "排名"
 If Rank_nToday = 0 Then
     lblRankSelf.Caption = "-"
-    SetTip "您在近" + szTimeSpan + "内没有排名"
+    SetTip "您在近两周内没有排名"
 Else
     lblRankSelf.Caption = Rank_nToday
     If Rank_nYesterday > 0 Then
         If Rank_nToday = Rank_nYesterday Then
             SetTip "排名没有变化"
         Else
-            SetTip "排名" + IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") + _
-                    Str(Abs(Rank_nToday - Rank_nYesterday)) + " 位"
+            SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
+                    Abs(Rank_nToday - Rank_nYesterday) & "位"
         End If
     End If
 End If

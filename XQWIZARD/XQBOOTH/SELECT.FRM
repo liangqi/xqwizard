@@ -5400,7 +5400,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 ' SELECT.FRM - Source Code for XiangQi Witchcraft School, Part III
 '
-' XiangQi Witchcraft School - a Little Chinese Chess Challenge Game
+' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
@@ -5461,7 +5461,7 @@ For i = 0 To 7
     If nCurr < nSelLast Then
         imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, frmHide.imgBoardMini.Picture, frmHide.imgUnavailable.Picture)
         DrawBoard i, App_szEndgames(nCurr)
-        lblTag(i).Caption = "第" + Str(nCurr + 1) + " 关"
+        lblTag(i).Caption = ST("第 ", "第 ") & (nCurr + 1) & ST(" 关", " 關")
     Else
         imgBoard(i).Picture = Nothing
         DrawBoard i
@@ -5474,6 +5474,8 @@ End Sub
 
 Private Sub Form_Load()
 
+Dim i As Integer
+
 nSelLast = Gui_nLast + IIf(Gui_nLast = App_nEndgames, 0, 1) + (App_nEndgames \ 1000 - Gui_nLast \ 1000)
 nSelected = -1
 hsb.Min = 0
@@ -5481,6 +5483,17 @@ hsb.Max = (nSelLast - 1) \ BOARD_NUM
 hsb.Value = Gui_nCurr \ BOARD_NUM
 nSelected = Gui_nCurr Mod BOARD_NUM
 Reset
+
+If Options_nLanguage = 0 Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
 
 End Sub
 

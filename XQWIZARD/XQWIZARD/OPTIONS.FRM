@@ -427,8 +427,9 @@ End Sub
 Private Sub btnConfirm_Click()
 
 If Options_bLargeGui <> optLargeGui.Value Then
-    MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
     SaveSetting "XQWizard", "Options", "LargeGui", IIf(optLargeGui.Value, "1", "0")
+    MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", _
+            "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
 End If
 Options_bSounds = (chkSounds.Value = 1)
 Options_nPlayIntv = nPlayIntv
