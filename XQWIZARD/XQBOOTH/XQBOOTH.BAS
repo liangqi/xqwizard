@@ -568,7 +568,7 @@ End If
 EnterBusy
 Rank_szList = ""
 On Error Resume Next
-Rank_szList = frmHide.inet.OpenURL(USERS_URL & "ranklist")
+Rank_szList = frmHide.inet.OpenURL(USERS_URL & "ranklist?encoding=" & L("GBK", "BIG5"))
 On Error GoTo 0
 If Rank_szList = "" Then
     ConnError

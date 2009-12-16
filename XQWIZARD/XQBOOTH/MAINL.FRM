@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMainLarge 
    BorderStyle     =   1  'Fixed Single
@@ -1003,9 +1003,6 @@ Begin VB.Form frmMainLarge
       End
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋巫师的网站(&H)"
-      End
-      Begin VB.Menu mnHelpMantis 
-         Caption         =   "报告缺陷(&B)"
       End
       Begin VB.Menu mnHelpUpdate 
          Caption         =   "检查最新版本(&P)"
