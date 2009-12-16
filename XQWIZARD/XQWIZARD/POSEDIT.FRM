@@ -1208,7 +1208,7 @@ optBlackMove.Value = (Edit_posBoard.sdPlayer = 1)
 txtCounter.Text = Edit_cnt
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136

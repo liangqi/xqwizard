@@ -84,6 +84,10 @@ Public Const PUB_FORMAT_UBB     As Integer = 2
 Public Const PUB_FORMAT_HTML    As Integer = 3
 Public Const PUB_FORMAT_WEB     As Integer = 4
 Public Const PUB_FORMAT_MAX     As Integer = 5
+' 全局常量——语言
+Public Const LANGUAGE_ZH_CN     As Integer = 0
+Public Const LANGUAGE_ZH_TW     As Integer = 1
+Public Const LANGUAGE_MAX       As Integer = 2
 ' 全局变量——选项
 Public Options_nLanguage        As Integer  ' 语言
 Public Options_bLargeGui        As Boolean  ' 大界面
@@ -106,37 +110,50 @@ Public Publish_nBoardS          As Integer  ' 棋盘类型(小)
 Public Publish_nPiecesS         As Integer  ' 棋子类型(小)
 Public Publish_nBoardL          As Integer  ' 棋盘类型(小)
 Public Publish_nPiecesL         As Integer  ' 棋子类型(大)
-Public Publish_bContent         As Boolean  ' 是否只发布当前局面
 Public Publish_nLocation        As Integer  ' 发布站点
 Public Publish_nFormat          As Integer  ' 发布格式
 
 ' 简繁选择，0选简体，1选繁体
-Public Function ST(ByVal szSimp As String, ByVal szTrad As String) As String
+Public Function L(ParamArray sz() As Variant) As String
 
-ST = Choose(Options_nLanguage + 1, szSimp, szTrad)
+L = sz(Options_nLanguage)
 
 End Function
 
 ' 无法打开文件提示
 Public Sub ErrorOpen(ByVal szFileName As String)
 
-MsgBox ST("无法打开文件 ", "無法打開文件 ") & szFileName, vbExclamation
+MsgBox L("无法打开文件 ", "無法打開文件 ") & szFileName, vbExclamation
 
 End Sub
 
-' 播放声音
-Public Sub PlayWavSound(ByVal szSoundFile As String)
+' 获得棋子图片的文件名
+Public Function PieceFileName(ByVal nIndex As Integer) As String
 
-If Options_bSounds Then
-    PlaySoundA App_szPath & "SOUNDS\" & szSoundFile & ".WAV", 0, SND_ASYNC + SND_NOWAIT + SND_FILENAME
+If nIndex = 30 Then
+    PieceFileName = "RKM"
+ElseIf nIndex = 31 Then
+    PieceFileName = "BKM"
+ElseIf nIndex >= 15 Then
+    PieceFileName = PieceFileName(nIndex - 15) & "S"
+Else
+    If nIndex = 0 Then
+        PieceFileName = "OO"
+    Else
+        If nIndex > 7 Then
+            PieceFileName = "B" & PieceByte(nIndex - 8)
+        Else
+            PieceFileName = "R" & PieceByte(nIndex - 1)
+        End If
+    End If
 End If
 
-End Sub
+End Function
 
 ' 关于象棋巫师
 Public Sub AboutXQWizard()
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
             STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
 Else
@@ -161,7 +178,7 @@ sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=" 
 On Error GoTo 0
 If sz = "" Then
     If bManual Then
-        MsgBox ST("无法访问 www.xqbase.com，请稍后再试。", "無法訪問 www.xqbase.com，請稍後再試。"), vbExclamation
+        MsgBox L("无法访问 www.xqbase.com，请稍后再试。", "無法訪問 www.xqbase.com，請稍後再試。"), vbExclamation
     End If
 Else
     Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
@@ -170,11 +187,11 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & ST("simp.txt", "trad.txt"))
+        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & L("simp.txt", "trad.txt"))
         On Error GoTo 0
         If szWhatsNew = "" Then
-            szWhatsNew = ST("象棋巫师 ", "象棋巫師") & sz & _
-                    ST(" 已经发布，需要下载最新版本吗？", " 已經發布，需要下載最新版本嗎？")
+            szWhatsNew = L("象棋巫师 ", "象棋巫師") & sz & _
+                    L(" 已经发布，需要下载最新版本吗？", " 已經發布，需要下載最新版本嗎？")
         End If
         If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
@@ -184,13 +201,13 @@ Else
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.xqbase.com/xqwizard/download.htm"
             End If
-            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
         Else
             Gui_szUpgradeVer = sz
         End If
     Else
         If bManual Then
-            MsgBox ST("您的象棋巫师已经是最新版本了。", "您的象棋巫師已經是最新版本了。"), vbInformation
+            MsgBox L("您的象棋巫师已经是最新版本了。", "您的象棋巫師已經是最新版本了。"), vbInformation
         End If
     End If
 End If
@@ -222,7 +239,7 @@ End Sub
 ' 加载“名言”
 Public Sub LoadQuotes()
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
 
 Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
@@ -283,7 +300,7 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, 1)
+Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, LANGUAGE_MAX - 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)

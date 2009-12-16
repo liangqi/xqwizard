@@ -298,7 +298,7 @@ Private Sub Form_Load()
 
 Dim i As Integer
 cmbHash.Clear
-cmbHash.AddItem ST("自动", "自動"), 0
+cmbHash.AddItem L("自动", "自動"), 0
 cmbHash.AddItem "16MB", 1
 cmbHash.AddItem "32MB", 2
 cmbHash.AddItem "64MB", 3
@@ -307,25 +307,25 @@ cmbHash.AddItem "256MB", 5
 cmbHash.AddItem "512MB", 6
 cmbHash.AddItem "1024MB", 7
 cmbThreads.Clear
-cmbThreads.AddItem ST("自动", "自動"), 0
-cmbThreads.AddItem ST("低负荷", "低負荷"), 1
-cmbThreads.AddItem ST("中负荷", "中負荷"), 2
-cmbThreads.AddItem ST("高负荷", "高負荷"), 3
-cmbThreads.AddItem ST("满负荷", "滿負荷"), 4
-cmbThreads.AddItem ST("2线程", "2線程"), 5
-cmbThreads.AddItem ST("4线程", "4線程"), 6
-cmbThreads.AddItem ST("8线程", "8線程"), 7
-cmbThreads.AddItem ST("16线程", "16線程"), 8
-cmbThreads.AddItem ST("32线程", "32線程"), 9
+cmbThreads.AddItem L("自动", "自動"), 0
+cmbThreads.AddItem L("低负荷", "低負荷"), 1
+cmbThreads.AddItem L("中负荷", "中負荷"), 2
+cmbThreads.AddItem L("高负荷", "高負荷"), 3
+cmbThreads.AddItem L("满负荷", "滿負荷"), 4
+cmbThreads.AddItem L("2线程", "2線程"), 5
+cmbThreads.AddItem L("4线程", "4線程"), 6
+cmbThreads.AddItem L("8线程", "8線程"), 7
+cmbThreads.AddItem L("16线程", "16線程"), 8
+cmbThreads.AddItem L("32线程", "32線程"), 9
 cmbRandomness.Clear
-cmbRandomness.AddItem ST("没有", "沒有"), 0
-cmbRandomness.AddItem ST("少量", "少量"), 1
-cmbRandomness.AddItem ST("适中", "適中"), 2
-cmbRandomness.AddItem ST("充分", "充分"), 3
+cmbRandomness.AddItem L("没有", "沒有"), 0
+cmbRandomness.AddItem L("少量", "少量"), 1
+cmbRandomness.AddItem L("适中", "適中"), 2
+cmbRandomness.AddItem L("充分", "充分"), 3
 cmbStyle.Clear
-cmbStyle.AddItem ST("保守", "保守"), 0
-cmbStyle.AddItem ST("均衡", "均衡"), 1
-cmbStyle.AddItem ST("冒进", "冒進"), 2
+cmbStyle.AddItem L("保守", "保守"), 0
+cmbStyle.AddItem L("均衡", "均衡"), 1
+cmbStyle.AddItem L("冒进", "冒進"), 2
 
 chkEngineLog.Value = IIf(Engine_bEngineLog, 1, 0)
 txtLogFile.Text = Engine_szLogFile
@@ -339,14 +339,14 @@ cmbRandomness.ListIndex = Engine_nRandomness
 cmbStyle.ListIndex = Engine_nStyle
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     chkSlaveRed.Value = IIf(Engine_bSlaveRed, 1, 0)
-    btnLoadSlave.Caption = ST("卸载副引擎", "卸載副引擎")
+    btnLoadSlave.Caption = L("卸载副引擎", "卸載副引擎")
 Else
     chkSlaveRed.Enabled = False
-    btnLoadSlave.Caption = ST("加载副引擎", "加載副引擎")
+    btnLoadSlave.Caption = L("加载副引擎", "加載副引擎")
 End If
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
@@ -412,7 +412,7 @@ End Sub
 Private Sub btnSelectLog_Click()
 
 Dim szFileName As String
-szFileName = FileDialog(ST("选择日志文件", "選擇日誌文件"), ST("HTM文件", "HTM文件"), "HTM", DefaultFileName)
+szFileName = FileDialog(L("选择日志文件", "選擇日誌文件"), L("HTM文件", "HTM文件"), "HTM", DefaultFileName)
 If szFileName <> "" Then
     txtLogFile.Text = szFileName
 End If
@@ -427,7 +427,7 @@ On Error GoTo lnErrorOpen
 Open txtLogFile.Text For Append As #nLogFileNo
 On Error GoTo 0
 Close #nLogFileNo
-ShellExecuteA 0, vbNullString, txtLogFile.Text, vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, txtLogFile.Text, vbNullString, vbNullString, vbNormalFocus
 Exit Sub
 
 lnErrorOpen:
@@ -443,7 +443,7 @@ If txtCommand.Text = vbNullString Then
     Exit Sub
 End If
 If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
-    MsgBox ST("别开这种玩笑！", "別開這種玩笑！"), vbExclamation
+    MsgBox L("别开这种玩笑！", "別開這種玩笑！"), vbExclamation
     Exit Sub
 End If
 SendEngine txtCommand.Text
@@ -495,7 +495,7 @@ End Sub
 Private Sub btnSelectFile_Click()
 
 Dim szFileName As String
-szFileName = FileDialog(ST("选择开局库", "選擇開局庫"), ST("开局库文件", "開局庫文件"), "DAT")
+szFileName = FileDialog(L("选择开局库", "選擇開局庫"), L("开局库文件", "開局庫文件"), "DAT")
 If szFileName <> "" Then
     txtBookFile.Text = szFileName
 End If
@@ -512,7 +512,7 @@ End Sub
 Private Sub btnSelectPath_Click()
 
 Dim szPathName As String
-szPathName = BrowseForFolder(ST("请选择残局库所在文件夹", "請選擇殘局庫所在文件夾"))
+szPathName = BrowseForFolder(L("请选择残局库所在文件夹", "請選擇殘局庫所在文件夾"))
 If szPathName <> "" Then
     txtEgtbPath.Text = szPathName
 End If
@@ -540,10 +540,10 @@ Private Sub btnLoadSlave_Click()
 OpenSlaveEngine
 If Engine_bSlaveBlack Then
     chkSlaveRed.Enabled = True
-    btnLoadSlave.Caption = ST("卸载副引擎", "卸載副引擎")
+    btnLoadSlave.Caption = L("卸载副引擎", "卸載副引擎")
 Else
     chkSlaveRed.Enabled = False
-    btnLoadSlave.Caption = ST("加载副引擎", "加載副引擎")
+    btnLoadSlave.Caption = L("加载副引擎", "加載副引擎")
 End If
 chkSlaveRed.Value = 0
 

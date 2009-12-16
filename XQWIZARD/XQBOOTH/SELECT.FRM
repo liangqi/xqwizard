@@ -5459,9 +5459,10 @@ Dim i As Integer, nCurr As Integer
 For i = 0 To 7
     nCurr = hsb.Value * BOARD_NUM + i
     If nCurr < nSelLast Then
-        imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, frmHide.imgBoardMini.Picture, frmHide.imgUnavailable.Picture)
+        imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, _
+                frmHide2.imgBoardMini.Picture, frmHide2.imgUnavailable.Picture)
         DrawBoard i, App_szEndgames(nCurr)
-        lblTag(i).Caption = ST("第 ", "第 ") & (nCurr + 1) & ST(" 关", " 關")
+        lblTag(i).Caption = L("第 ", "第 ") & (nCurr + 1) & L(" 关", " 關")
     Else
         imgBoard(i).Picture = Nothing
         DrawBoard i
@@ -5484,7 +5485,7 @@ hsb.Value = Gui_nCurr \ BOARD_NUM
 nSelected = Gui_nCurr Mod BOARD_NUM
 Reset
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
@@ -5543,13 +5544,13 @@ Dim nCurr As Integer
 nCurr = hsb.Value * BOARD_NUM + nSelected
 If nCurr <= Gui_nLast And nCurr < App_nEndgames Then
     If Gui_nCurr <> nCurr Then
-        App_frmMain.ClearHint
+        ClearHint
     End If
     Gui_nCurr = nCurr
-    App_frmMain.LoadGame
+    LoadGame
     Unload Me
 Else
-    MsgBox "您尚未闯到这一关。", vbExclamation
+    MsgBox L("您尚未闯到这一关。", "您尚未闖到這一關。"), vbExclamation
 End If
 
 End Sub

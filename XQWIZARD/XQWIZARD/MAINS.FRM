@@ -1955,12 +1955,12 @@ Option Explicit
 Private Sub Form_Load()
 
 lstMoveText.Clear
-lstMoveText.AddItem ST("===开始===", "===開始==="), 0
-cmbFormat.AddItem ST("炮二平五", "炮二平五"), 0
+lstMoveText.AddItem L("===开始===", "===開始==="), 0
+cmbFormat.AddItem L("炮二平五", "炮二平五"), 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 mnOptionsBoard(0).Caption = "櫟木(&A)"
@@ -2058,7 +2058,8 @@ End Sub
 Private Sub mnFilePgn_Click()
 
 WriteFile WRITE_TEMP_FILE
-ShellExecuteA 0, vbNullString, App_szPath & ST(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & L(TEMP_FILE_NAME_S, TEMP_FILE_NAME_T), _
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2083,8 +2084,8 @@ End Sub
 Private Sub mnMoveDel_Click()
 
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox(ST("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & _
-            ST("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
+    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & _
+            L("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
         Exit Sub
     End If
 End If
@@ -2137,89 +2138,13 @@ End Sub
 
 Private Sub mnMoveImport_Click()
 
-Dim nFileNo As Integer, i As Integer, szFileName As String
-Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
-szFileName = FileDialog(ST("从文本文件导入", "從文本文件導入"), ST("文本文件", "文本文件"), "TXT")
-If szFileName = "" Then
-    Exit Sub
-End If
-nFileNo = FreeFile
-On Error GoTo lnErrorOpen
-Open szFileName For Input As #nFileNo
-On Error GoTo 0
-Do While Game_nCurrMove < Game_nMaxMove
-    MoveForward
-Loop
-szLineStr = ""
-szRemStr = ""
-nRemLevel = 0
-' 第一行，检测{$fen ... }标志
-Line Input #nFileNo, szLineStr
-If Left(szLineStr, 6) = "{$fen " Then
-    i = InStr(szLineStr, "}")
-    If i > 0 Then
-        If CancelSave Then
-            Exit Sub
-        End If
-        LoadFenStr Mid(szLineStr, 7, i - 7)
-    End If
-End If
-' 读下面的行
-Do While Not (EOF(nFileNo) And szRemStr = "")
-    If szLineStr = "" Then
-        Line Input #nFileNo, szLineStr
-    End If
-    ImportLine szLineStr, szRemStr, nRemLevel
-Loop
-Close #nFileNo
-MoveFlush
-FileUpdated
-
-Exit Sub
-lnErrorOpen:
-On Error GoTo 0
-ErrorOpen szFileName
+ImportFromTextFile
 
 End Sub
 
 Private Sub mnMovePaste_Click()
 
-Dim i As Integer, szClipStr As String
-Dim szLineStr As String, szRemStr As String, nRemLevel As Integer
-Do While Game_nCurrMove < Game_nMaxMove
-    MoveForward
-Loop
-szClipStr = Clipboard.GetText
-szLineStr = ""
-szRemStr = ""
-nRemLevel = 0
-' 检测{$fen ... }标志
-If Left(szClipStr, 6) = "{$fen " Then
-    i = InStr(szClipStr, "}")
-    If i > 0 Then
-        If CancelSave Then
-            Exit Sub
-        End If
-        LoadFenStr Mid(szClipStr, 7, i - 7)
-        szClipStr = Mid(szClipStr, 8)
-    End If
-End If
-' 读下面的行
-Do While Not (szClipStr = "" And szLineStr = "")
-    If szLineStr = "" Then
-        i = InStr(szClipStr, vbCrLf)
-        If i = 0 Then
-            szLineStr = szClipStr
-            szClipStr = ""
-        Else
-            szLineStr = Left(szClipStr, i - 1)
-            szClipStr = Mid(szClipStr, i + 2)
-        End If
-    End If
-    ImportLine szLineStr, szRemStr, nRemLevel
-Loop
-MoveFlush
-FileUpdated
+ImportFromClipboard
 
 End Sub
 
@@ -2277,7 +2202,7 @@ Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
 Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
-MsgBox ST("FEN串已复制到剪贴板。", "FEN串已復製到剪貼板"), vbInformation
+MsgBox L("FEN串已复制到剪贴板。", "FEN串已復製到剪貼板"), vbInformation
 
 End Sub
 
@@ -2296,7 +2221,7 @@ Dim szFileName As String
 If CancelSave Then
     Exit Sub
 End If
-szFileName = FileDialog(ST("从FEN文件导入", "從FEN文件導入"), ST("象棋局面文件", "象棋局面文件"), "FEN")
+szFileName = FileDialog(L("从FEN文件导入", "從FEN文件導入"), L("象棋局面文件", "象棋局面文件"), "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -2306,8 +2231,8 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog(ST("导出到FEN文件", "導出到FEN文件"), _
-        ST("象棋局面文件", "象棋局面文件"), "FEN", DefaultFileName)
+szFileName = FileDialog(L("导出到FEN文件", "導出到FEN文件"), _
+        L("象棋局面文件", "象棋局面文件"), "FEN", DefaultFileName)
 If szFileName <> "" Then
     nFileNo = FreeFile
     On Error GoTo lnErrorOpen
@@ -2352,7 +2277,7 @@ Private Sub mnSearchOpening_Click()
 
 If Game_szEcco <> "" Then
     ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?ecco=" & Game_szEcco, _
-            vbNullString, vbNullString, SW_SHOWNORMAL
+            vbNullString, vbNullString, vbNormalFocus
 End If
 
 End Sub
@@ -2362,7 +2287,7 @@ Private Sub mnSearchPosition_Click()
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?position=" & UrlEncode(szFen), _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2371,7 +2296,7 @@ Private Sub mnSearchEndgame_Click()
 Dim szFen As String
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & UrlEncode(szFen), _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2395,7 +2320,7 @@ Private Sub mnEndgamesFunny_Click()
 If CancelSave Then
     Exit Sub
 End If
-LoadEndgames "FUNNY", ST("趣味象棋", "趣味象棋")
+LoadEndgames "FUNNY", L("趣味象棋", "趣味象棋")
 
 End Sub
 
@@ -2406,7 +2331,7 @@ If CancelSave Then
     Exit Sub
 End If
 szEpdName = "_" & Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", _
             "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
             "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
@@ -2434,7 +2359,7 @@ End Sub
 Private Sub mnEngineLoad_Click()
 
 Dim szFileName As String
-szFileName = FileDialog(ST("加载引擎", "加載引擎"), ST("引擎文件", "引擎文件"), "EXE")
+szFileName = FileDialog(L("加载引擎", "加載引擎"), L("引擎文件", "引擎文件"), "EXE")
 If szFileName = "" Then
     Exit Sub
 End If
@@ -2442,7 +2367,7 @@ If GetAppType(szFileName) = IMAGE_SUBSYSTEM_WINDOWS_CUI Then
     Engine_szFile = szFileName
     OpenEngine LOAD_WITH_INFO
 Else
-    MsgBox szFileName & ST(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
+    MsgBox szFileName & L(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
 End If
 
 End Sub
@@ -2550,15 +2475,15 @@ If Engine_bDraw Then
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST
-    EndGame "DRAW", IIf(Game_sdMax = 0, ST("红方接受提和。", "紅方接受提和。"), _
-            ST("黑方接受提和。", "黑方接受提和。"))
+    EndGame "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+            L("黑方接受提和。", "黑方接受提和。"))
 Else
     If mnEngineDraw.Checked Then
-        MsgBox ST("放弃提和。", "放棄提和。"), vbInformation
+        MsgBox L("放弃提和。", "放棄提和。"), vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox ST("请走一着棋，然后等待电脑接受或拒绝提和。", "請走一著棋，然後等待電腦接受或拒絕提和。") & _
-                vbCrLf & ST("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
+        MsgBox L("请走一着棋，然后等待电脑接受或拒绝提和。", "請走一著棋，然後等待電腦接受或拒絕提和。") & _
+                vbCrLf & L("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
                 "如果電腦拒絕提和，則不會理睬，而是繼續走棋。"), vbInformation
         mnEngineDraw.Checked = True
     End If
@@ -2604,45 +2529,49 @@ SetWindowPos hWnd, IIf(Options_bTopMost, HWND_TOPMOST, HWND_NOTOPMOST), 0, 0, 0,
 
 End Sub
 
-Private Sub mnOptionsLanguage_Click(Index As Integer)
+Private Sub mnOptionsLanguage_Click(nIndex As Integer)
 
-If Not mnOptionsLanguage(Index).Checked Then
-    mnOptionsLanguage(Index).Checked = True
-    mnOptionsLanguage(1 - Index).Checked = False
-    SaveSetting "XQWizard", "Options", "Language", Index
-    MsgBox ST("语言已经更改，重新启动程序后才能生效。", "語言已經更改，重新啟動程序後才能生效。"), vbInformation
+Dim i As Integer
+If mnOptionsLanguage(nIndex).Checked Then
+    Exit Sub
 End If
+For i = 0 To LANGUAGE_MAX - 1
+    mnOptionsLanguage(i).Checked = False
+Next
+mnOptionsLanguage(nIndex).Checked = True
+SaveSetting "XQWizard", "Options", "Language", nIndex
+MsgBox L("语言已经更改，重新启动程序后才能生效。", "語言已經更改，重新啟動程序後才能生效。"), vbInformation
 
 End Sub
 
 Private Sub mnToolBooth_Click()
 
 WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath & "XQBOOTH.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "XQBOOTH.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnToolPgns2Jar_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath & "PGNS2JAR.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "PGNS2JAR.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnToolConvert_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath & "MXQFCONV.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "MXQFCONV.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnToolBook_Click()
 
-ShellExecuteA 0, vbNullString, App_szPath & "MAKEBOOK.EXE", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, App_szPath & "MAKEBOOK.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnHelpContents_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2660,25 +2589,25 @@ End Sub
 
 Private Sub mnHelpHome_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnHelpBase_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnHelpLeague_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/league.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/league.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnHelpUpdate_Click()
 
-CheckUpdate MANUAL_UPDATE
+CheckUpdate "xqwizard", MANUAL_UPDATE
 
 End Sub
 
@@ -2756,31 +2685,7 @@ End Sub
 
 Private Sub imgSquares_MouseDown(nIndex As Integer, nButton As Integer, nShift As Integer, x As Single, y As Single)
 
-Dim sq As Integer, pc As Integer, bCanPromote As Boolean, mv As Long
-sq = IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)
-pc = Game_posIrrev(Game_nCurrIrrev).ucpcSquares(sq)
-If (pc And (16 + Game_sdCurr * 16)) <> 0 Then
-    If App_sqSelected > 0 Then
-        DrawSquare App_sqSelected
-    End If
-    App_sqSelected = sq
-    DrawSquare App_sqSelected, DRAW_SELECTED
-    If Game_nCurrMove > 0 Then
-        DrawSquare Src(Game_mvMove(Game_nCurrMove))
-        DrawSquare Dst(Game_mvMove(Game_nCurrMove))
-    End If
-    PlayWavSound "CLICK"
-    bCanPromote = (CchessCanPromote(Game_posIrrev(Game_nCurrIrrev), sq) <> 0)
-    App_frmMain.mnMovePromote.Enabled = bCanPromote
-    App_frmMain.tlb.Buttons("MovePromote").Enabled = bCanPromote
-Else
-    If App_sqSelected > 0 Then
-        mv = mdlCChess.Move(App_sqSelected, sq)
-        If AddMove(mv, MOVE_WITH_ECHO) Then
-            FileUpdated
-        End If
-    End If
-End If
+ClickSquare IIf(App_bFlipped, (12 - nIndex \ 9) * 16 + 11 - nIndex Mod 9, (nIndex \ 9 + 3) * 16 + nIndex Mod 9 + 3)
 
 End Sub
 

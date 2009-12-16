@@ -1,74 +1,49 @@
-《象棋巫师》源程序常见问题解答
+象棋巫师源程序常见问题解答
 
-《象棋巫师》开发团队(webmaster@elephantbase.net)　2009年5月
+象棋巫师开发团队(webmaster@xqbase.com)　2010年1月
 
-1. 哪里能下载到《象棋巫师》的源程序？
+1. 哪里能下载到象棋巫师的源程序？
 
-　　《象棋巫师》是自由软件，你可以遵照自由软件基金会出版的GNU通用公共许可证条款来修改和重新发布这一程序。源程序已发布在 SourceForge 网站上，下载页面是：
+　　象棋巫师是自由软件，你可以遵照自由软件基金会出版的GNU通用公共许可证条款来修改和重新发布这一程序。源程序已发布在 SourceForge 网站上，下载页面是：
 　　　　http://sourceforge.net/projects/xqwizard/
-　　《象棋巫师》的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
+　　象棋巫师的版本改进，实时同步地发布在 SourceForge 的SVN站点上，获取地址是：
 　　　　https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/
 　　你可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 　　　　http://sourceforge.net/projects/tortoisesvn/
 
-2. 《象棋巫师》是用什么语言开发的？
+2. 象棋巫师是用什么语言开发的？
 
-　　《象棋巫师》是用 Visual Basic 6.0 开发的。
-　　VB6是 Visual Studio 98 的一个组件，安装 Visual Studio 98 后，"XQWSIMP.VBP"和"XQWTRAD.VBP"即被关联为VB6的工程文件。双击VBP文件即可进入VB6的集成开发环境，执行VBP文件右键菜单中的Make，即可编译成《象棋巫师》执行程序(XQWIZARD.EXE)了。
-　　《象棋巫师》的工程文件也可以用VB5打开，但是代码需要作适当的修改，例如 InStrRev() 函数需要自定义。但《象棋巫师》的源程序不适用于 VB.NET 。
+　　象棋巫师是用 Visual Basic 6.0 开发的。
+　　VB6是 Visual Studio 98 的一个组件，安装 Visual Studio 98 后，"XQWIZARD.VBP"即被关联为VB6的工程文件。双击VBP文件即可进入VB6的集成开发环境，执行VBP文件右键菜单中的Make，即可编译成象棋巫师执行程序(XQWIZARD.EXE)了。
+　　象棋巫师的工程文件也可以用VB5打开，但是代码需要作适当的修改，例如 InStrRev() 函数需要自定义。但象棋巫师的源程序不适用于 VB.NET 。
 
-3. 简体版和繁体版是如何区分的？
+3. 源程序由哪些文件构成？
 
-　　简体版的工程文件是"XQWSIMP.VBP"，繁体版的工程文件是"XQWTRAD.VBP"，两个文件都位于主目录下。
-　　简体版和繁体版的公共源程序都放在主目录下，简体版专有的源程序放在"XQWSIMP"目录下，繁体版专有的源程序放在"XQWTRAD"目录下。
+　　用VB6打开工程文件，象棋巫师是"XQWIZARD.VBP"，象棋巫师魔法学校是"XQBOOTH.VBP"，就可以知道源程序由哪些文件构成了。
 
-4. 源程序由哪些文件构成？
+4. 为什么会找不到DLL文件？
 
-　　用VB6打开工程文件，就可以知道源程序由哪些文件构成了。
+　　如果源程序在VB6的集成开发环境下运行，那么可能会遇到找不到DLL文件的问题，只要将主目录下的"PIPE.DLL"、"ECCO.DLL"、"CCHESS.DLL"、"APPTYPE.DLL"和"MXQFCONV.DLL"复制到"WINDOWS"或"SYSTEM32"目录下即可。
+　　如果运行编译后的执行程序(XQWIZARD.EXE)，那么只要保证上述5个DLL文件与"XQWIZARD.EXE"在同一目录下即可正常运行。
 
-5. 繁体版的源程序是如何生成并用来编译的？
+5. 主目录中的EXE和DLL文件有源程序吗？
 
-　　繁体版的源程序全部放在"XQWTRAD"目录下，与简体版的源程序(放在"XQWSIMP"目录下)一一对应。
-　　已发布的繁体版源程序只适用于简体中文版的 Windows，直接编译"XQWTRAD.VBP"即可生成繁体版的《象棋巫师》执行程序(XQWIZARD.EXE)了。
-　　简体版的源程序转换为繁体版比较烦琐，窗体设计部分(FRM文件"Attribute"以上的部分)的代码需要转化成BIG5码，而程序部分(FRM文件"Attribute"以下的部分，以及BAS文件)的繁体文字需要用GB/HZ码表示。转换完成后，还需要改动一些地方：
-　　　　(1) 字体属性中，"Charset"设成136(简体版是134)；
-　　　　(2) 窗体设计部分中如果使用OCX控件(如"MSComctlLib.Toolbar"控件)，那么属性中的文字需要用GB/HZ码表示。
-　　　　(3) "XQWMAIN.BAS"中，"CchessInit"和"EccoInitOpenVar"后面都要跟参数"CCHESS_TRADITIONAL"，URL中的"...simp..."替换成"...trad..."。
-　　推荐使用"google-api-translate"把简体转换成繁体。
-　　注意：尽量不要在VB6的集成开发环境中编辑"XQWTRAD.VBP"工程文件及其包含的其他文件，因为它会破坏某些设置(如字体属性)。
+　　主目录中的EXE和DLL文件(包括上述5个执行程序需要调用的DLL文件)的源程序都可以在 ElephantEye 子项目(SVN的"ELEEYE"目录)中找到。
 
-6. 为什么会找不到DLL文件？
-
-　　如果源程序在VB6的集成开发环境下运行，那么可能会遇到找不到DLL文件的问题，只要将主目录下的"PIPE.DLL"、"ECCO.DLL"和"CCHESS.DLL"复制到"WINDOWS"或"SYSTEM32"目录下即可。
-　　如果运行编译后的执行程序(XQWIZARD.EXE)，那么只要保证上述3个DLL文件与"XQWIZARD.EXE"在同一目录下即可正常运行。
-
-7. 主目录中的EXE和DLL文件有源程序吗？
-
-　　主目录中的EXE和DLL文件(包括上述3个执行程序需要调用的DLL文件)都源于 SourceForge 的 ElephantEye 项目，可参阅"ELEEYE.TXT"。
-
-8. 如何修改资源文件？
+6. 如何修改资源文件？
 
 　　工程文件中引用了资源文件"XQWIZARD.RES"，它是由另一个资源文件"XQWIZARD.RC"编译而成的。
 　　如需修改执行程序中的图标，那么首先修改"RES"目录下的ICO文件，然后用VC6的"RC"命令把"XQWIZARD.RC"编译为"XQWIZARD.RES"就可以了。
 
-9. 如何制作安装包？
+7. 如何制作安装包？
 
-　　《象棋巫师》的安装包是由 Inno Setup 制作的。由于安装向导用中文语言，所以 Inno Setup 必须附带中文语言文件(简体和繁体各一个)，在 Inno Setup 的官方网站上可以获得：
+　　象棋巫师的安装包是由 Inno Setup 制作的。由于安装向导用中文语言，所以 Inno Setup 必须附带中文语言文件(简体和繁体各一个)，在 Inno Setup 的官方网站上可以获得：
 　　　　http://www.jrsoftware.org/
 
-10. 简体版和繁体版的安装包选择的文件有哪些不同？
-
-　　"XQWSIMP.ISS"和"XQWTRAD.ISS"分别是简体版和繁体版的安装脚本，除了文字编码有区别外(分别是GB/HZ码和BIG5码)，选择的文件也有所不同，主要区别有：
-　　　　(1) 简体版的图片棋盘取自"BMPBOARD"目录，繁体版取自"BMPBOART"目录(安装目标目录仍旧为"BMPBOARD")；
-　　　　(2) 简体版的印刷棋盘取自"PRINTBRD"目录，繁体版取自"PRINTBRT"目录(安装目标目录仍旧为"PRINTBRD")；
-　　　　(3) 简体版的Web棋盘图片取自"JSBOARD"目录，繁体版取自"JSBOART"目录(安装目标目录仍旧为"JSBOARD")；
-　　　　(4) 简体版的挑战棋谱取自"ENDGAMES"目录，繁体版取自"ENDGAMET"目录(安装目标目录仍旧为"ENDGAMES")。
-　　在制作安装包前，必须先生成执行程序(XQWIZARD.EXE)，即用"XQWSIMP.ISS"制作安装包前，必须用"XQWSIMP.VBP"生成执行程序，用"XQWTRAD.ISS"制作安装包前，必须用"XQWTRAD.VBP"生成执行程序。
-
-11. Visual Basic 提示未找到 ieframe.dll\1：
+8. Visual Basic 提示未找到 ieframe.dll\1：
 
 　　可能是安装高版本IE的缘故，可导入注册表"IEFRAME.REG"解决此问题。
 
-12. 关于"总在最前面"：
+9. 关于"总在最前面"：
 
 　　特别注意：每个模态对话框的"Form_Load"事件里都必须加上"SetTopMost hWnd"这条语句，否则在开启"总在最前面"功能时会导致程序死锁。

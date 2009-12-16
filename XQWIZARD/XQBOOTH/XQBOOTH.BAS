@@ -21,148 +21,813 @@ Attribute VB_Name = "mdlXQBooth"
 
 Option Explicit
 
-' 全局常量
-Public Const STRING_VERSION     As String = "4.5"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
-Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
-Public Const ICON_QUOTE         As Integer = 2      ' 名言图标
+' 全局常量——象棋巫师参数
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
-Public Const ENGINE_FILE        As String = "ELEEYE.EXE"    ' 引擎文件
-Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
-' 全局常量——棋盘(小)设置选项
-Public Const BOARD_S_WOOD       As Integer = 0
-Public Const BOARD_S_GREEN      As Integer = 1
-Public Const BOARD_S_WHITE      As Integer = 2
-Public Const BOARD_S_SHEET      As Integer = 3
-Public Const BOARD_S_CANVAS     As Integer = 4
-Public Const BOARD_S_DROPS      As Integer = 5
-Public Const BOARD_S_CLOUDS     As Integer = 6
-Public Const BOARD_S_XQSTUDIO   As Integer = 7
-Public Const BOARD_S_MOVESKY    As Integer = 8
-Public Const BOARD_S_MRSJ       As Integer = 9
-Public Const BOARD_S_ZMBL       As Integer = 10
-Public Const BOARD_S_QIANHONG   As Integer = 11
-Public Const BOARD_S_MAX        As Integer = 12
-' 全局常量——棋子(小)设置选项
-Public Const PIECES_S_WOOD      As Integer = 0
-Public Const PIECES_S_DELICATE  As Integer = 1
-Public Const PIECES_S_POLISH    As Integer = 2
-Public Const PIECES_S_XQSTUDIO  As Integer = 3
-Public Const PIECES_S_MOVESKY   As Integer = 4
-Public Const PIECES_S_MRSJ      As Integer = 5
-Public Const PIECES_S_ZMBL      As Integer = 6
-Public Const PIECES_S_MAX       As Integer = 7
-' 全局常量——棋盘(大)设置选项
-Public Const BOARD_L_WOOD       As Integer = 0
-Public Const BOARD_L_GREEN      As Integer = 1
-Public Const BOARD_L_WHITE      As Integer = 2
-Public Const BOARD_L_SHEET      As Integer = 3
-Public Const BOARD_L_CANVAS     As Integer = 4
-Public Const BOARD_L_DROPS      As Integer = 5
-Public Const BOARD_L_QIANHONG   As Integer = 6
-Public Const BOARD_L_MAX        As Integer = 7
-' 全局常量——棋子(大)设置选项
-Public Const PIECES_L_WOOD      As Integer = 0
-Public Const PIECES_L_DELICATE  As Integer = 1
-Public Const PIECES_L_POLISH    As Integer = 2
-Public Const PIECES_L_MAX       As Integer = 3
-' 全局常量——发布图片大小
-Public Const PUB_SIZE_MINI      As Integer = 0
-Public Const PUB_SIZE_PRINT     As Integer = 1
-Public Const PUB_SIZE_SMALL     As Integer = 2
-Public Const PUB_SIZE_LARGE     As Integer = 3
-Public Const PUB_SIZE_MAX       As Integer = 4
-' 全局常量——发布站点
-Public Const PUB_LOCATION_ZHIDAO As Integer = 0
-Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_HOME  As Integer = 2
-Public Const PUB_LOCATION_SINA  As Integer = 3
-Public Const PUB_LOCATION_QZONE As Integer = 4
-Public Const PUB_LOCATION_OTHER As Integer = 5
-Public Const PUB_LOCATION_MAX   As Integer = 6
-' 全局常量——发布格式
-Public Const PUB_FORMAT_TEXT    As Integer = 0
-Public Const PUB_FORMAT_ANSI    As Integer = 1
-Public Const PUB_FORMAT_UBB     As Integer = 2
-Public Const PUB_FORMAT_HTML    As Integer = 3
-Public Const PUB_FORMAT_WEB     As Integer = 4
-Public Const PUB_FORMAT_MAX     As Integer = 5
-' 全局常量——排名类型
-Public Const RANK_WEEK          As Integer = 0
-Public Const RANK_MONTH         As Integer = 1
-Public Const RANK_QUARTER       As Integer = 2
+Public Const ENGINE_FILE        As String = "ELEEYE.EXE"            ' 引擎文件
+Public Const USERS_URL          As String = "http://www.xqbase.com/xqbooth/"    ' 用户中心地址
+' 全局常量——可选参数
+Public Const DRAW_SELECTED      As Boolean = True
+Public Const DRAW_MATE          As Boolean = True
+Public Const DRAW_REFRESH       As Boolean = True
+' 全局常量——闯关阶段
+Public Const PHASE_READY        As Integer = 0
+Public Const PHASE_BUSY         As Integer = 1
+Public Const PHASE_WIN          As Integer = 2
+Public Const PHASE_LOSS         As Integer = 3
+' 全局常量——提示状态
+Public Const HINT_NONE          As Integer = 0
+Public Const HINT_RESTART       As Integer = 1
+Public Const HINT_RETRY         As Integer = 2
+' 全局常量——用户中心事件
+Public Const USERS_SAVE         As Integer = 0
+Public Const USERS_LOAD         As Integer = 1
+Public Const USERS_RANK         As Integer = 2
+Public Const USERS_HINT         As Integer = 3
+Public Const USERS_RETRACT      As Integer = 4
+Public Const USERS_POINTS       As Integer = 5
 
-' 全局变量
+' 全局变量——程序
+Public App_frmMain              As Form     ' 主窗口对象引用
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
 Public App_bRunning             As Boolean  ' 程序运行标志，启动时设成True，如果是False，则跳出事件检测循环
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String  ' 读入的残局
-Public App_frmMain              As Form     ' 主窗体
-Public Options_nLanguage        As Integer  ' 语言
-Public Options_bLargeGui        As Boolean  ' 大界面
-Public Options_bSounds          As Boolean  ' 声音
-Public Options_nBoardS          As Integer  ' 小界面的棋盘
-Public Options_nPiecesS         As Integer  ' 小界面的棋子
-Public Options_nBoardL          As Integer  ' 大界面的棋盘
-Public Options_nPiecesL         As Integer  ' 大界面的棋子
-Public Gui_szUpgradeVer         As String   ' 检查升级的版本
-Public Gui_szUpgradeDate        As String   ' 检查升级的日期
+Public App_pos                  As PositionStruct   ' 棋局
+Public App_mvLast               As Long     ' 最新的一个着法，棋盘上有标记
+Public App_sqSelected           As Integer  ' 鼠标选中的棋子
+Public App_nPhase               As Integer  ' 闯关阶段
+Public App_nPhaseSaved          As Integer  ' 待恢复的闯关阶段
+Public App_nUsersEvent          As Integer  ' 用户中心事件
+Public App_nHint                As Integer  ' 提示状态
+Public App_dfHintTime           As Double   ' 提示允许时间
+' 全局变量——进度
 Public Gui_nCurr                As Integer  ' 当前残局的条目序号
 Public Gui_nLast                As Integer  ' 最后残局的条目序号
-Public Gui_szAdvertDate         As String   ' 检查广告的日期
-Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
-Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
-Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
-Public Publish_nSize            As Integer  ' 图片类型
-Public Publish_bTrad            As Boolean  ' 是否繁体(简单/印刷)
-Public Publish_nBoardS          As Integer  ' 棋盘类型(小)
-Public Publish_nPiecesS         As Integer  ' 棋子类型(小)
-Public Publish_nBoardL          As Integer  ' 棋盘类型(小)
-Public Publish_nPiecesL         As Integer  ' 棋子类型(大)
-Public Publish_bContent         As Boolean  ' 是否只发布当前局面
-Public Publish_nLocation        As Integer  ' 发布站点
-Public Publish_nFormat          As Integer  ' 发布格式
+' 全局变量——登录
 Public Login_szTitle            As String   ' 登录框标题
 Public Login_szPrompt           As String   ' 登录框提示
 Public Login_bCancel            As Boolean  ' 登录是否取消
 Public Login_szUserName         As String   ' 登录用户名
 Public Login_szPassword         As String   ' 登录密码
 Public Login_bRemember          As Boolean  ' 记住密码
+' 全局变量——排名
 Public Rank_nScore              As Integer  ' 排名成绩
 Public Rank_nToday              As Long     ' 今日排名
 Public Rank_nYesterday          As Long     ' 昨日排名
 Public Rank_szList              As String   ' 排名列表
-Public Engine_pipe          As PipeStruct   ' 引擎管道
+' 全局变量——引擎
+Public Engine_pipe              As PipeStruct ' 引擎管道
 
-' 简繁选择，0选简体，1选繁体
-Public Function ST(ByVal szSimp As String, ByVal szTrad As String) As String
+' 播放声音
+Public Sub PlayWavSound(ByVal szSoundFile As String)
 
-ST = Choose(Options_nLanguage + 1, szSimp, szTrad)
+If Options_bSounds Then
+    PlaySoundA App_szPath & "SOUNDS\" & szSoundFile & ".WAV", 0, _
+            SND_ASYNC + SND_NOWAIT + SND_FILENAME
+End If
+
+End Sub
+
+' 清除提示
+Public Sub ClearHint()
+
+App_nHint = HINT_NONE
+App_dfHintTime = Timer
+
+End Sub
+
+' 加载棋局
+Public Sub LoadGame()
+
+Dim bNext As Boolean
+App_frmMain.mnGameXQWizard.Enabled = False
+App_frmMain.btnNext.Visible = True
+App_frmMain.btnRestart.Visible = False
+bNext = Gui_nCurr < Gui_nLast And Gui_nCurr < App_nEndgames - 1
+App_frmMain.mnGameNext.Enabled = bNext
+App_frmMain.btnNext.Enabled = bNext
+App_frmMain.mnGameHint.Enabled = True
+App_frmMain.btnHint.Enabled = True
+App_frmMain.mnGameRetract.Enabled = False
+App_frmMain.btnRetract.Enabled = False
+App_frmMain.Caption = L("第 ", "第 ") & (Gui_nCurr + 1) & L(" 关 - 象棋巫师魔法学校", " 關 - 象棋巫師魔法學校")
+CchessFen2Board App_pos, App_szEndgames(Gui_nCurr)
+BoardFlush
+App_sqSelected = 0
+App_mvLast = 0
+App_nPhase = PHASE_READY
+If App_nHint = HINT_RETRY Then
+    App_nHint = HINT_RESTART
+End If
+
+End Sub
+
+' 在棋盘上显示棋子，如果指定"DRAW_SELECTED"参数，则再显示一个标记框
+Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
+        Optional ByVal bMate As Boolean = False, Optional ByVal bRefresh As Boolean = False)
+
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
+pc = App_pos.ucpcSquares(sq)
+If pc = 0 Then
+    nPicId = 0
+Else
+    nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
+End If
+nPicId = nPicId + IIf(bSelected, 15, 0)
+Set img = App_frmMain.imgSquares((sq \ 16 - 3) * 9 + sq Mod 16 - 3)
+If bMate Then
+    nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
+    img.ZOrder
+    x = img.Left
+    y = img.Top
+    For i = 5 To 1 Step -1
+        img.Move x + i * 20, y
+        img.Refresh
+        Sleep 50
+        img.Move x - i * 20, y
+        img.Refresh
+        Sleep 50
+    Next
+    img.Move x, y
+End If
+If Options_bLargeGui Then
+    img.Picture = frmHide.imgPiecesLarge(nPicId).Picture
+Else
+    img.Picture = frmHide.imgPiecesSmall(nPicId).Picture
+End If
+If bRefresh Then
+    img.Refresh
+End If
+
+End Sub
+
+' 刷新棋盘
+Public Sub BoardFlush()
+
+Dim i As Integer, j As Integer
+For i = 3 To 12
+    For j = 3 To 11
+        DrawSquare i * 16 + j
+    Next
+Next
+
+End Sub
+
+' 点击棋盘
+Public Sub ClickSquare(ByVal sq As Integer)
+
+Dim pc As Integer, mv As Long, nStatus As Long
+
+pc = App_pos.ucpcSquares(sq)
+If (pc And (16 + App_pos.sdPlayer * 16)) <> 0 Then
+    If App_sqSelected > 0 Then
+        DrawSquare App_sqSelected
+    End If
+    App_sqSelected = sq
+    DrawSquare App_sqSelected, DRAW_SELECTED
+    If App_mvLast > 0 Then
+        DrawSquare Src(App_mvLast)
+        DrawSquare Dst(App_mvLast)
+    End If
+    PlayWavSound "CLICK"
+ElseIf App_sqSelected > 0 Then
+    mv = Move(App_sqSelected, sq)
+    If CchessTryMove(App_pos, nStatus, mv) Then
+        DrawSquare Src(mv), DRAW_SELECTED
+        DrawSquare Dst(mv), DRAW_SELECTED
+        App_mvLast = mv
+        App_sqSelected = 0
+        App_nPhase = GetResult(nStatus)
+        If App_nPhase = PHASE_READY Then
+            App_nPhase = PHASE_BUSY
+            App_frmMain.MousePointer = vbHourglass
+            mv = GetBestMove
+            If App_mvLast > 0 Then
+                DrawSquare Src(App_mvLast)
+                DrawSquare Dst(App_mvLast)
+            End If
+            CchessTryMove App_pos, nStatus, mv
+            DrawSquare Src(mv), DRAW_SELECTED
+            DrawSquare Dst(mv), DRAW_SELECTED
+            App_mvLast = mv
+            App_nPhase = GetResult(nStatus)
+            App_frmMain.MousePointer = vbDefault
+        End If
+        If App_nPhase = PHASE_WIN And App_nHint = HINT_RETRY Then
+            If MsgBox(L("您是使用提示功能通过本关的，是否不用提示再试一次？", _
+                    "您是使用提示功能通過本關的，是否不用提示再試一次？"), vbQuestion + vbYesNo) = vbYes Then
+                LoadGame
+            End If
+        End If
+    ElseIf (nStatus And MOVE_INCHECK) <> 0 Then
+        PlayWavSound "ILLEGAL"
+    End If
+End If
+
+End Sub
+
+' 获得闯关结果
+Public Function GetResult(ByVal nStatus As Long) As Integer
+
+Dim sqMate As Integer
+App_frmMain.btnNext.Visible = False
+App_frmMain.btnRestart.Visible = True
+App_frmMain.mnGameRetract.Enabled = True
+App_frmMain.btnRetract.Enabled = True
+If (nStatus And MOVE_MATE) <> 0 Then
+    App_frmMain.mnGameHint.Enabled = False
+    App_frmMain.btnHint.Enabled = False
+    If App_pos.sdPlayer = 0 Then
+        PlayWavSound "PROMOTE2"
+        If App_pos.ucsqPieces(16) > 0 Then
+            DrawSquare App_pos.ucsqPieces(16), , DRAW_MATE
+        End If
+        MsgBoxMute L("请再接再厉！", "請再接再厲！"), vbInformation
+        GetResult = PHASE_LOSS
+    Else
+        App_frmMain.mnGameXQWizard.Enabled = True
+        App_frmMain.btnRestart.Visible = False
+        App_frmMain.btnNext.Visible = True
+        If Gui_nCurr < App_nEndgames - 1 Then
+            App_frmMain.mnGameNext.Enabled = True
+            App_frmMain.btnNext.Enabled = True
+        End If
+        PlayWavSound "PROMOTE"
+        If App_pos.ucsqPieces(32) > 0 Then
+            DrawSquare App_pos.ucsqPieces(32), , DRAW_MATE
+        End If
+        If Gui_nCurr = App_nEndgames - 1 Then
+            MsgBoxMute L("恭喜你闯过所有关卡！", "恭喜你闖過所有關卡！"), vbInformation
+        Else
+            MsgBoxMute L("恭喜你过关！", "恭喜你過關！"), vbInformation
+        End If
+        If Gui_nCurr = Gui_nLast Then
+            Gui_nLast = Gui_nLast + 1
+        End If
+        GetResult = PHASE_WIN
+    End If
+    Exit Function
+End If
+If (nStatus And MOVE_PERPETUAL) <> 0 Then
+    App_frmMain.mnGameHint.Enabled = False
+    App_frmMain.btnHint.Enabled = False
+    PlayWavSound "PROMOTE2"
+    MsgBoxMute L("请不要气馁！", "請不要氣餒！"), vbInformation
+    GetResult = PHASE_LOSS
+    Exit Function
+End If
+' 由于"position fen ..."使用EPD文件中的初始局面，所以即便吃子也不能置pos为不可逆
+If (nStatus And MOVE_CHECK) <> 0 Then
+    PlayWavSound "CHECK" & IIf(App_pos.sdPlayer = 0, "2", "")
+ElseIf (nStatus And MOVE_CAPTURE) <> 0 Then
+    PlayWavSound "CAPTURE" & IIf(App_pos.sdPlayer = 0, "2", "")
+Else
+    PlayWavSound "MOVE" & IIf(App_pos.sdPlayer = 0, "2", "")
+End If
+GetResult = PHASE_READY
 
 End Function
 
-' 无法打开文件提示
-Public Sub ErrorOpen(ByVal szFileName As String)
+' 获得最佳走法
+Public Function GetBestMove() As Long
 
-MsgBox ST("无法打开文件 ", "無法打開文件 ") & szFileName, vbExclamation
+Dim lpStr As Long, mv As Long, nStatus As Long
+Dim i As Integer, sz As String
+sz = "position fen " & App_szEndgames(Gui_nCurr)
+If App_pos.nMoveNum > 1 Then
+    sz = sz & " moves"
+    For i = 1 To App_pos.nMoveNum - 1
+        sz = sz & " " & Move2Coord(App_pos.rbsList(i).mvs And &HFFFF&)
+    Next
+End If
+PipeLineOutput Engine_pipe, sz
+PipeLineOutput Engine_pipe, "go time 15000"
+mv = 0
+Do While mv = 0
+    lpStr = PipeLineInput(Engine_pipe)
+    If lpStr = 0 Then
+        DoEvents
+        Sleep 1
+    Else
+        sz = AllocString(lpStr)
+        If Left(sz, 9) = "bestmove " Then
+            mv = Coord2Move(Mid(sz, 10, 4))
+        End If
+    End If
+Loop
+GetBestMove = mv
+
+End Function
+
+' 提示
+Public Sub DoHint()
+
+Dim mv As Long, i As Integer
+
+App_nHint = HINT_RETRY
+mv = GetBestMove
+App_frmMain.MousePointer = vbDefault
+If App_sqSelected > 0 Then
+    DrawSquare App_sqSelected
+ElseIf App_mvLast > 0 Then
+    DrawSquare Src(App_mvLast)
+    DrawSquare Dst(App_mvLast)
+End If
+For i = 1 To 5
+    DrawSquare Src(mv), DRAW_SELECTED, , DRAW_REFRESH
+    Sleep 250
+    DrawSquare Dst(mv), DRAW_SELECTED, , DRAW_REFRESH
+    DrawSquare Src(mv), , , DRAW_REFRESH
+    Sleep 250
+    DrawSquare Dst(mv), , , DRAW_REFRESH
+Next
+If App_sqSelected > 0 Then
+    DrawSquare App_sqSelected, DRAW_SELECTED
+ElseIf App_mvLast > 0 Then
+    DrawSquare Src(App_mvLast), DRAW_SELECTED
+    DrawSquare Dst(App_mvLast), DRAW_SELECTED
+End If
+
+End Sub
+
+' 悔棋
+Public Sub DoRetract()
+
+If App_pos.nDistance = 0 Then
+    MsgBox L("悔棋失败。", "悔棋失敗。"), vbInformation
+    Exit Sub
+End If
+If App_pos.nDistance Mod 2 = 0 Then
+    CchessUndoMove App_pos
+End If
+CchessUndoMove App_pos
+BoardFlush
+App_sqSelected = 0
+App_mvLast = 0
+' DoRetract 都是在 EnterBusy 后调用的，所以要修改 nPhaseSaved 而不是 nPhase
+App_nPhaseSaved = PHASE_READY
+If App_pos.nDistance = 0 Then
+    App_frmMain.mnGameRetract.Enabled = False
+    App_frmMain.btnRetract.Enabled = False
+End If
+App_frmMain.mnGameHint.Enabled = True
+App_frmMain.btnHint.Enabled = True
+
+End Sub
+
+' 等待用户中心响应开始
+Public Sub EnterBusy()
+
+App_nPhaseSaved = App_nPhase
+App_nPhase = PHASE_BUSY
+App_frmMain.MousePointer = vbHourglass
+
+End Sub
+
+' 等待用户中心响应结束
+Public Sub LeaveBusy()
+
+App_nPhase = App_nPhaseSaved
+App_frmMain.MousePointer = vbDefault
+
+End Sub
+
+' 尝试提交
+Public Sub TrySave()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szTitle = L("提交成绩", "提交成績")
+Login_szPrompt = ""
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_SAVE
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "save", _
+        "POST", "score=" & Gui_nLast, _
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试获取
+Public Sub TryLoad()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szTitle = L("获取成绩", "獲取成績")
+Login_szPrompt = ""
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_LOAD
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "queryscore", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+MsgBox Err
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试提示
+Public Sub TryHint()
+
+Dim dfThinkTime As Double
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+dfThinkTime = Timer
+dfThinkTime = dfThinkTime + IIf(dfThinkTime < App_dfHintTime, 86400#, 0#) - App_dfHintTime
+If dfThinkTime / 60 < 1 + Gui_nCurr \ 1000 Then
+    MsgBox L("您只思考了不到", "您只思考了不到") & Int(1 + dfThinkTime / 60) & _
+            L("分钟，请再多想想吧。", "分鐘，請再多想想吧。"), vbExclamation
+    Exit Sub
+End If
+
+If App_nHint <> HINT_NONE Or Gui_nCurr < 200 Then
+    EnterBusy
+    DoHint
+    LeaveBusy
+    Exit Sub
+End If
+
+Login_szTitle = L("提示", "提示")
+If Gui_nCurr < 500 Then
+    Login_szPrompt = L("200关以后需要登录用户中心", "200關以後需要登錄用戶中心")
+Else
+    Login_szPrompt = L("提示需要消耗点数10点", "提示需要消耗點數10點")
+End If
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_HINT
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "hint", _
+        "POST", "stage=" & Gui_nCurr, _
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试悔棋
+Public Sub TryRetract()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+If Gui_nCurr < 200 Then
+    EnterBusy
+    DoRetract
+    LeaveBusy
+    Exit Sub
+End If
+
+Login_szTitle = L("悔棋", "悔棋")
+If Gui_nCurr < 500 Then
+    Login_szPrompt = L("200关以后需要登录用户中心", "200關以後需要登錄用戶中心")
+Else
+    Login_szPrompt = L("悔棋需要消耗点数1点", "悔棋需要消耗點數1點")
+End If
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_RETRACT
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "retract", _
+        "POST", "stage=" & Gui_nCurr, _
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试查询排名
+Public Sub TryRank()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szTitle = L("查询排名", "查詢排名")
+Login_szPrompt = ""
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+Rank_szList = ""
+On Error Resume Next
+Rank_szList = frmHide.inet.OpenURL(USERS_URL & "ranklist")
+On Error GoTo 0
+If Rank_szList = "" Then
+    ConnError
+    LeaveBusy
+    Exit Sub
+End If
+
+App_nUsersEvent = USERS_RANK
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "queryrank", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试查询点数
+Public Sub TryPoints()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szTitle = L("查询点数", "查詢點數")
+Login_szPrompt = ""
+frmLogin.Show vbModal, App_frmMain
+If Login_bCancel Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_POINTS
+On Error GoTo lnError
+App_frmMain.inet.Execute USERS_URL & "querypoints", "GET", "", _
+        "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+MsgBox Err
+ConnError
+LeaveBusy
+
+End Sub
+
+' 连接错误提示
+Public Sub ConnError()
+
+MsgBox L("无法登录到象棋巫师用户中心，请稍后再试。", _
+        "無法登錄到像棋巫師用戶中心，請稍後再試。"), vbExclamation
+
+End Sub
+
+' 密码错误提示
+Public Sub LoginError()
+
+MsgBox L("用户名或密码不正确。", "用戶名或密碼不正確。"), vbExclamation
+
+End Sub
+
+' 禁止重试提示
+Public Sub NoRetryError()
+
+MsgBox L("您的密码已经连续5次输入错误，请过5分钟再做尝试。", _
+        "您的密碼已經連續5次輸入錯誤，請過5分鐘再做嘗試。"), vbExclamation
+
+End Sub
+
+' 点数不足提示
+Public Sub NoPointsError(ByVal nPoints As Integer)
+
+MsgBox L("您的点数不足", "您的點數不足") & nPoints & _
+        L("点，补充点数后才能使用此功能。", "點，補充點數後才能使用此功能。"), vbExclamation
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
+        vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+' 处理用户中心响应
+Public Sub DoUsersEvent()
+
+Dim szResult As String, nResult As Integer, bLoad As Boolean, szResults() As String
+
+Login_szPassword = App_frmMain.inet.GetHeader("Login-Cookie")
+szResult = App_frmMain.inet.GetHeader("Login-Result")
+Select Case App_nUsersEvent
+
+Case USERS_SAVE
+    ' 请求“提交”，处理响应
+    Select Case szResult
+    Case "ok"
+        MsgBox L("成绩提交成功。", "成績提交成功。"), vbInformation
+    Case "nosave"
+        MsgBox L("您以前提交的成绩比当前成绩好，当前成绩不予提交。", _
+                "您以前提交的成績比當前成績好，當前成績不予提交。"), vbInformation
+    Case "error"
+        LoginError
+        LeaveBusy
+        TrySave
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case Else
+        ConnError
+    End Select
+
+Case USERS_LOAD
+    ' 请求“获取”，处理响应
+    Select Case szResult
+    Case "error"
+        LoginError
+        LeaveBusy
+        TryLoad
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            nResult = Str2Int(Mid(szResult, 4), 0, App_nEndgames)
+            bLoad = False
+            If nResult > Gui_nLast Then
+                bLoad = True
+            ElseIf MsgBox(L("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
+                    "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
+                bLoad = True
+            End If
+            If bLoad Then
+                Gui_nLast = nResult
+                ClearHint
+                Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+                LoadGame
+                ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
+                App_nPhaseSaved = PHASE_READY
+                MsgBox L("成绩获取成功。", "成績獲取成功。"), vbInformation
+            End If
+        Else
+            ConnError
+        End If
+    End Select
+
+Case USERS_RANK
+    ' 请求“排名”，获取响应
+    Select Case szResult
+    Case "error"
+        LoginError
+        LeaveBusy
+        TryRank
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            szResults = Split(Mid(szResult, 4), "|")
+            If UBound(szResults) = 2 Then
+                Rank_nScore = Str2Int(szResults(0), 0, App_nEndgames)
+                Rank_nToday = Str2Lng(szResults(1))
+                Rank_nYesterday = Str2Lng(szResults(2))
+                frmRank.Show vbModal, App_frmMain
+            Else
+                ConnError
+            End If
+        Else
+            ConnError
+        End If
+    End Select
+
+Case USERS_HINT
+    ' 请求“提示”，获取响应
+    Select Case szResult
+    Case "ok"
+        DoHint
+    Case "error"
+        LoginError
+        LeaveBusy
+        TryHint
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case "nopoints"
+        NoPointsError IIf(Gui_nCurr > 1000, Gui_nCurr \ 100, 10)
+    Case Else
+        ConnError
+    End Select
+
+Case USERS_RETRACT
+    ' 请求“悔棋”，获取响应
+    Select Case szResult
+    Case "ok"
+        DoRetract
+    Case "error"
+        LoginError
+        LeaveBusy
+        TryRetract
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case "nopoints"
+        NoPointsError 1
+    Case Else
+        ConnError
+    End Select
+
+Case USERS_POINTS
+    ' 请求“查询点数”，处理响应
+    Select Case szResult
+    Case "error"
+        LoginError
+        LeaveBusy
+        App_frmMain.mnUsersPoints_Click
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            szResults = Split(Mid(szResult, 4), "|")
+            If UBound(szResults) = 1 Then
+                nResult = Str2Int(szResults(1))
+                If Options_nLanguage = LANGUAGE_ZH_CN Then
+                    MsgBox "您还有 " & szResults(0) & " 点可用。" & IIf(nResult < 2800, "", _
+                            vbCrLf & vbCrLf & "您是白金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
+                Else
+                    MsgBox "您還有 " & szResults(0) & " 點可用。" & IIf(nResult < 2800, "", _
+                            vbCrLf & vbCrLf & "您是白金會員用戶，可以無限次使用提示和悔棋功能。"), vbInformation
+                End If
+            Else
+                ConnError
+            End If
+        Else
+            ConnError
+        End If
+    End Select
+
+End Select
+LeaveBusy
 
 End Sub
 
 ' 用象棋巫师打开
-Public Sub OpenWithXQWizard(ByRef pos As PositionStruct)
+Public Sub OpenWithXQWizard()
 
 Dim nFileNo As Integer, i As Integer, szFile As String
 Dim nStatus As Long, mv As Long, dwFileStr As Long
 Dim posStart As PositionStruct
 
-szFile = ST("象棋巫师魔法学校.PGN", "象棋巫師魔法學校.PGN")
+szFile = L("象棋巫师魔法学校.PGN", "象棋巫師魔法學校.PGN")
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
 Open App_szPath & szFile For Output As #nFileNo
 On Error GoTo 0
 Print #nFileNo, "[Game ""Chinese Chess""]"
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Print #nFileNo, "[Event ""第 " & (Gui_nCurr + 1) & " 关 - 象棋巫师魔法学校""]"
 Else
     Print #nFileNo, "[Event ""第 " & (Gui_nCurr + 1) & " 關 - 象棋巫師魔法學校""]"
@@ -171,8 +836,8 @@ Print #nFileNo, "[Result ""1-0""]"
 Print #nFileNo, "[FEN """ & App_szEndgames(Gui_nCurr) & """]"
 
 CchessFen2Board posStart, App_szEndgames(Gui_nCurr)
-For i = 0 To pos.nMoveNum - 2
-    mv = pos.rbsList(i + 1).mvs And &HFFFF&
+For i = 0 To App_pos.nMoveNum - 2
+    mv = App_pos.rbsList(i + 1).mvs And &HFFFF&
     dwFileStr = CchessMove2File(mv, posStart)
     If i Mod 2 = 0 Then ' 红
         Print #nFileNo, " " & (i \ 2 + 1) & ". " & MkC(CchessFile2Chin(dwFileStr, 0));
@@ -183,8 +848,8 @@ For i = 0 To pos.nMoveNum - 2
 Next
 Print #nFileNo, " 1-0"
 Print #nFileNo, "======================"
-Print #nFileNo, ST("欢迎访问象棋百科全书网", "歡迎訪問象棋百科全書網")
-Print #nFileNo, ST("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
+Print #nFileNo, L("欢迎访问象棋百科全书网", "歡迎訪問象棋百科全書網")
+Print #nFileNo, L("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
 Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 
@@ -205,211 +870,31 @@ bLargeGui = App_frmMain.mnOptionsGuiSmall.Checked
 App_frmMain.mnOptionsGuiSmall.Checked = Not bLargeGui
 App_frmMain.mnOptionsGuiLarge.Checked = bLargeGui
 SaveSetting "XQWizard", "Options", "LargeGui", IIf(bLargeGui, "1", "0")
-MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
-
-End Sub
-
-' 关于象棋巫师
-Public Sub AboutXQWizard()
-
-If Options_nLanguage = 0 Then
-    MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
-Else
-    MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本產品符合GNU通用公共許可協議", "關於象棋巫師"
-End If
-
-End Sub
-
-' 加载名言
-Public Sub LoadTips()
-
-If Options_nLanguage = 0 Then
-
-Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
-Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
-Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
-Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
-Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
-
-Else
-
-Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
-Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
-Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
-Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
-Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
-
-End If
+MsgBox L("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
 
 End Sub
 
 ' 从注册表加载参数
-Public Sub LoadRegs()
+Public Sub LoadRegs2()
 
-Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, 1)
-Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
-Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
-Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
-Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
-Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
-Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
-Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
-Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
-Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
 Gui_nLast = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
 Gui_nCurr = Str2Int(GetSetting("XQBooth", "Gui", "Curr", "0"), 0, MAX_ENDGAMES - 1)
-Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
-Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
-Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
-Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
-Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
-Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
-Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
-Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
-Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Login_szUserName = GetSetting("XQBooth", "Gui", "UserName", "")
-Login_szPassword = SimpleDecrypt(GetSetting("XQBooth", "Gui", "Password", ""))
+Login_szPassword = GetSetting("XQBooth", "Gui", "Password", "")
 Login_bRemember = GetSetting("XQBooth", "Gui", "Remember", "0") <> "0"
 
 End Sub
 
 ' 保存参数到注册表
-Public Sub SaveRegs()
+Public Sub SaveRegs2()
 
-SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
-SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
-SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
-SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
-SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
-SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
-SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
-SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
-SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
-SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
-SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
-SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
-SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
-SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
-SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
 SaveSetting "XQBooth", "Gui", "Last", Gui_nLast
 SaveSetting "XQBooth", "Gui", "Curr", Gui_nCurr
 SaveSetting "XQBooth", "Gui", "UserName", Login_szUserName
-SaveSetting "XQBooth", "Gui", "Password", SimpleEncrypt(Login_szPassword)
+' 只有32的位密码才是Cookie密码，可以保存在注册表
+SaveSetting "XQBooth", "Gui", "Password", IIf(Login_bRemember And _
+        Len(Login_szPassword) = 32, Login_szPassword, "")
 SaveSetting "XQBooth", "Gui", "Remember", IIf(Login_bRemember, "1", "0")
-
-End Sub
-
-' 检查更新
-Public Sub CheckUpdate(Optional ByVal bManual As Boolean = False)
-
-Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
-Dim dwCounter(0 To 1) As Long
-
-sz = ""
-QueryPerformanceCounter VarPtr(dwCounter(0))
-szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
-On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=xqbooth&version=" & _
-        STRING_VERSION & "&userid=" & szUserID)
-On Error GoTo 0
-If sz = "" Then
-    If bManual Then
-        MsgBox ST("无法访问 www.xqbase.com，请稍后再试。", "無法訪問 www.xqbase.com，請稍後再試。"), vbExclamation
-    End If
-Else
-    Gui_szUpgradeDate = Date ' 如果访问升级信息成功，那么当天就不再访问升级信息
-    SaveSetting "XQWizard", "Gui", "UpgradeDate", Gui_szUpgradeDate ' 立即写注册表，避免重开窗口导致的重复访问
-    SaveSetting "XQWizard", "Gui", "UserID", szUserID               ' 同上
-    If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
-        szWhatsNew = ""
-        On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & ST("simp.txt", "trad.txt"))
-        On Error GoTo 0
-        If szWhatsNew = "" Then
-            szWhatsNew = ST("象棋巫师 ", "象棋巫師") & sz & _
-                    ST(" 已经发布，需要下载最新版本吗？", " 已經發布，需要下載最新版本嗎？")
-        End If
-        If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
-            szUrl = ""
-            On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
-            On Error GoTo 0
-            If Left(szUrl, 7) <> "http://" Then
-                szUrl = "http://www.xqbase.com/xqwizard/download.htm"
-            End If
-            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
-        Else
-            Gui_szUpgradeVer = sz
-        End If
-    Else
-        If bManual Then
-            MsgBox ST("您的象棋巫师已经是最新版本了。", "您的象棋巫師已經是最新版本了。"), vbInformation
-        End If
-    End If
-End If
-
-End Sub
-
-' 退弹
-Public Sub ExitPopup()
-
-Dim dfThisTime As Double, dfLastTime As Double
-' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
-If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
-    Exit Sub
-End If
-' 如果退弹成功，那么当天就不再退弹了
-SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.xqbase.com/advert/popup.htm"
-' 退弹调用了frmHide.web，为保证成功，等待1秒钟
-dfLastTime = Timer
-Do
-    DoEvents
-    Sleep 1
-    dfThisTime = Timer
-    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-Loop Until dfThisTime > dfLastTime + 5#
 
 End Sub
 
@@ -417,7 +902,7 @@ End Sub
 Public Sub SetLang()
 
 Dim i As Integer
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 App.Title = "象棋巫師魔法學校"
@@ -429,34 +914,32 @@ For i = 0 To App_frmMain.Controls.Count - 1
 Next
 On Error GoTo 0
 ' 菜单
-frmMainSmall.mnGame.Caption = "游戲(&G)"
-frmMainSmall.mnGameSelect.Caption = "選關(&O)"
-frmMainSmall.mnGameNext.Caption = "下一關(&N)"
-frmMainSmall.mnGameRestart.Caption = "再試一次(&R)"
-frmMainSmall.mnGameXQWizard.Caption = "用象棋巫師打開(&X)"
-frmMainSmall.mnGameHint.Caption = "提示(&H)"
-frmMainSmall.mnGameRetract.Caption = "悔棋(&T)"
-frmMainSmall.mnGameExit.Caption = "离開(&X)"
+App_frmMain.mnGame.Caption = "游戲(&G)"
+App_frmMain.mnGameSelect.Caption = "選關(&O)"
+App_frmMain.mnGameNext.Caption = "下一關(&N)"
+App_frmMain.mnGameRestart.Caption = "再試一次(&R)"
+App_frmMain.mnGameXQWizard.Caption = "用象棋巫師打開(&X)"
+App_frmMain.mnGameHint.Caption = "提示(&H)"
+App_frmMain.mnGameRetract.Caption = "悔棋(&T)"
+App_frmMain.mnGameExit.Caption = "离開(&X)"
 
-frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
-frmMainSmall.mnUsersSave.Caption = "提交成績(&S)"
-frmMainSmall.mnUsersLoad.Caption = "獲取成績(&L)"
-frmMainSmall.mnUsersHint.Caption = "提示(&H)"
-frmMainSmall.mnUsersRetract.Caption = "悔棋(&T)"
-frmMainSmall.mnUsersRank.Caption = "排名(&R)"
-frmMainSmall.mnUsersPoints.Caption = "查詢點數(&P)"
-frmMainSmall.mnUsersCenter.Caption = "用戶中心首頁(&C)"
-frmMainSmall.mnUsersHelp.Caption = "求助(&E)"
-frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
-frmMainSmall.mnUsers.Caption = "用戶中心(&U)"
+App_frmMain.mnUsers.Caption = "用戶中心(&U)"
+App_frmMain.mnUsersSave.Caption = "提交成績(&S)"
+App_frmMain.mnUsersLoad.Caption = "獲取成績(&L)"
+App_frmMain.mnUsersRank.Caption = "排名(&R)"
+App_frmMain.mnUsersPoints.Caption = "查詢點數(&P)"
+App_frmMain.mnUsersCenter.Caption = "用戶中心首頁(&C)"
+App_frmMain.mnUsersHelp.Caption = "求助(&E)"
+App_frmMain.mnUsers.Caption = "用戶中心(&U)"
+App_frmMain.mnUsers.Caption = "用戶中心(&U)"
 
-frmMainSmall.mnOptions.Caption = "選項(&O)"
-frmMainSmall.mnOptionsGui.Caption = "界面(&G)"
-frmMainSmall.mnOptionsGuiSmall.Caption = "小(&S)"
-frmMainSmall.mnOptionsGuiLarge.Caption = "大(&L)"
-frmMainSmall.mnOptionsBoard_.Caption = "棋盤(&B)"
-frmMainSmall.mnOptionsPieces_.Caption = "棋子(&P)"
-frmMainSmall.mnOptionsSounds.Caption = "音效(&S)"
+App_frmMain.mnOptions.Caption = "選項(&O)"
+App_frmMain.mnOptionsGui.Caption = "界面(&G)"
+App_frmMain.mnOptionsGuiSmall.Caption = "小(&S)"
+App_frmMain.mnOptionsGuiLarge.Caption = "大(&L)"
+App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
+App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
+App_frmMain.mnOptionsSounds.Caption = "音效(&S)"
 App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
 App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
 App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
@@ -468,11 +951,11 @@ App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
 App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
 
 ' 按钮
-frmMainSmall.btnRetract.Caption = "悔棋"
-frmMainSmall.btnHint.Caption = "提示"
-frmMainSmall.btnSave.Caption = "提交成績"
-frmMainSmall.btnRestart.Caption = "再試一次"
-frmMainSmall.btnNext.Caption = "下一關"
+App_frmMain.btnRetract.Caption = "悔棋"
+App_frmMain.btnHint.Caption = "提示"
+App_frmMain.btnSave.Caption = "提交成績"
+App_frmMain.btnRestart.Caption = "再試一次"
+App_frmMain.btnNext.Caption = "下一關"
 
 End Sub
 
@@ -489,7 +972,8 @@ frmStartup.Show
 frmStartup.Refresh
 CchessInit
 LoadRegs
-LoadTips
+LoadRegs2
+LoadQuotes
 
 ' 加载残局
 nFileNo = FreeFile
@@ -548,7 +1032,7 @@ If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
     Unload frmStartup
-    MsgBox ST("无法加载引擎 ", "無法加載引擎 ") & App_szPath & ENGINE_FILE, vbExclamation
+    MsgBox L("无法加载引擎 ", "無法加載引擎 ") & App_szPath & ENGINE_FILE, vbExclamation
     Exit Sub
 End If
 ' 电脑执黑，不能只考虑将军走法
@@ -574,7 +1058,7 @@ End If
 frmHide.web.Navigate "about:blank"
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
 If Gui_szUpgradeDate <> Date Then
-    CheckUpdate
+    CheckUpdate "xqbooth"
 End If
 
 If Options_bLargeGui Then
@@ -587,11 +1071,12 @@ SetLang
 App_frmMain.Show
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
+App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
 Unload frmStartup
 
 ' 提示建立存档
 If Login_szUserName = "" Then
-    If Options_nLanguage = 0 Then
+    If Options_nLanguage = LANGUAGE_ZH_CN Then
         dwResult = MsgBox("　　建立象棋巫师魔法学校的闯关存档，就可以随时随地提交和获取闯关成绩，" & _
                 "并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。" & vbCrLf & vbCrLf & _
                 "　　是否现在就建立闯关存档？", vbQuestion + vbYesNo)
@@ -602,7 +1087,7 @@ If Login_szUserName = "" Then
     End If
     If dwResult = vbYes Then
         ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=register", _
-                vbNullString, vbNullString, SW_SHOWNORMAL
+                vbNullString, vbNullString, vbNormalFocus
     End If
 End If
 
@@ -652,16 +1137,18 @@ Do While bLoaded
 Loop
 PipeClose Engine_pipe
 If bLoaded Then
-    MsgBox ST("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
+    MsgBox L("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
 End If
 ' 退出
 If Not Login_bRemember Then
     Login_szPassword = ""
 End If
 SaveRegs
+SaveRegs2
 PlaySoundA vbNullString, 0, 0
 ExitPopup
 Unload frmHide
+Unload frmHide2
 
 Exit Sub
 lnErrorOpen:

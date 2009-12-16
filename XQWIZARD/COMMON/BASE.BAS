@@ -3,15 +3,6 @@ Option Explicit
 
 ' === Begin Windows APIs ===
 
-Public Const SW_SHOWNORMAL      As Long = 1         ' ShellExecuteA
-Public Const MB_ICONSTOP        As Long = 16        ' MessageBeep
-Public Const MB_ICONHAND        As Long = 16        ' MessageBeep
-Public Const MB_ICONERROR       As Long = 16        ' MessageBeep
-Public Const MB_ICONQUESTION    As Long = 32        ' MessageBeep
-Public Const MB_ICONEXCLAMATION As Long = 48        ' MessageBeep
-Public Const MB_ICONWARNING     As Long = 48        ' MessageBeep
-Public Const MB_ICONINFORMATION As Long = 64        ' MessageBeep
-Public Const MB_ICONASTERISK    As Long = 64        ' MessageBeep
 Public Const IDI_APPLICATION    As Long = 32512     ' LoadIconA
 Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
 Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
@@ -308,7 +299,7 @@ End If
 If hIcon = 0 Then
     MsgBox szPrompt, vbInformation, szTitle
 Else
-    MessageBeep MB_ICONINFORMATION
+    MessageBeep vbInformation
     mbp.cbSize = Len(mbp)
     mbp.hwndOwner = 0
     On Error Resume Next

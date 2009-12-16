@@ -250,7 +250,7 @@ chkNoComputer.Value = IIf(Options_nEnginePlay = ENGINE_PLAY_NONE, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136

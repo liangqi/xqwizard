@@ -339,11 +339,11 @@ Private Sub Form_Load()
 Dim i As Integer
 
 cmbEnginePlay.Clear
-cmbEnginePlay.AddItem ST("不启用电脑", "不啟用電腦。"), 0
-cmbEnginePlay.AddItem ST("电脑执红", "電腦執紅"), 1
-cmbEnginePlay.AddItem ST("电脑执黑", "電腦執黑"), 2
-cmbEnginePlay.AddItem ST("红黑轮流", "紅黑輪流"), 3
-cmbEnginePlay.AddItem ST("红黑随机", "紅黑隨機"), 4
+cmbEnginePlay.AddItem L("不启用电脑", "不啟用電腦。"), 0
+cmbEnginePlay.AddItem L("电脑执红", "電腦執紅"), 1
+cmbEnginePlay.AddItem L("电脑执黑", "電腦執黑"), 2
+cmbEnginePlay.AddItem L("红黑轮流", "紅黑輪流"), 3
+cmbEnginePlay.AddItem L("红黑随机", "紅黑隨機"), 4
 
 optSmallGui.Value = Not Options_bLargeGui
 optLargeGui.Value = Options_bLargeGui
@@ -366,7 +366,7 @@ chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
@@ -428,7 +428,7 @@ Private Sub btnConfirm_Click()
 
 If Options_bLargeGui <> optLargeGui.Value Then
     SaveSetting "XQWizard", "Options", "LargeGui", IIf(optLargeGui.Value, "1", "0")
-    MsgBox ST("显示模式已经更改，重新启动程序后才能生效。", _
+    MsgBox L("显示模式已经更改，重新启动程序后才能生效。", _
             "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
 End If
 Options_bSounds = (chkSounds.Value = 1)

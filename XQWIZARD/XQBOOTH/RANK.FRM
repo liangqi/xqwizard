@@ -22,7 +22,7 @@ Begin VB.Form frmRank
    ScaleWidth      =   3090
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
-   Begin VB.CommandButton btnOK 
+   Begin VB.CommandButton btnConfirm 
       Cancel          =   -1  'True
       Caption         =   "确定"
       Default         =   -1  'True
@@ -462,17 +462,23 @@ End Sub
 
 Private Sub Form_Load()
 
+Dim i As Integer
 If Rank_nToday = 0 Then
     lblRankSelf.Caption = "-"
-    SetTip "您在近两周内没有排名"
+    SetTip L("您在近两周内没有排名", "您在近兩週內沒有排名")
 Else
     lblRankSelf.Caption = Rank_nToday
     If Rank_nYesterday > 0 Then
         If Rank_nToday = Rank_nYesterday Then
-            SetTip "排名没有变化"
+            SetTip L("排名没有变化", "排名沒有變化")
         Else
-            SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
-                    Abs(Rank_nToday - Rank_nYesterday) & "位"
+            If Options_nLanguage = LANGUAGE_ZH_CN Then
+                SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
+                        Abs(Rank_nToday - Rank_nYesterday) & "位"
+            Else
+                SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
+                        Abs(Rank_nToday - Rank_nYesterday) & "位"
+            End If
         End If
     End If
 End If
@@ -483,6 +489,23 @@ szRankList = Split(Rank_szList, vbCrLf)
 nLastRank = UBound(szRankList)
 vs.Max = IIf(nLastRank > 10, nLastRank - 10, 0)
 vs_Change
+
+If Options_nLanguage = LANGUAGE_ZH_CN Then
+    Exit Sub
+End If
+Font.Charset = 136
+Font.Name = "細明體"
+On Error Resume Next
+For i = 0 To Controls.Count - 1
+    Controls(i).Font = Font
+Next
+On Error GoTo 0
+Caption = "近兩週排名"
+lblRankHeader.Caption = "排名"
+lblUserNameHeader.Caption = "選手"
+lblScoreHeader.Caption = "成績"
+lblMessage.Caption = "(今天的成績將反映在明天的排名中)"
+btnConfirm.Caption = "確定"
 
 End Sub
 
@@ -497,7 +520,7 @@ For i = 0 To 9
         lblUserName(i).Caption = Mid(szRankList(nRank), j + 1)
         nScore = Str2Int(szRankList(nRank), 0, App_nEndgames)
         If nScore > 900 And nScore > Rank_nScore + 100 Then
-            lblScore(i).Caption = "未知"
+            lblScore(i).Caption = L("未知", "未知")
         Else
             lblScore(i).Caption = nScore
         End If
@@ -514,7 +537,7 @@ Next
 
 End Sub
 
-Private Sub btnOK_Click()
+Private Sub btnConfirm_Click()
 
 Unload Me
 

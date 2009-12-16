@@ -299,27 +299,27 @@ optContent(IIf(Publish_bContent, 1, 0)).Value = True
 
 ' 发布格式
 cmbFormat.Clear
-cmbFormat.AddItem ST("纯文本", "純文本"), 0
-cmbFormat.AddItem ST("ANSI文本", "ANSI文本"), 1
-cmbFormat.AddItem ST("UBB文本", "UBB文本"), 2
-cmbFormat.AddItem ST("HTML文本", "HTML文本"), 3
-cmbFormat.AddItem ST("HTML内容", "HTML內容"), 4
+cmbFormat.AddItem L("纯文本", "純文本"), 0
+cmbFormat.AddItem L("ANSI文本", "ANSI文本"), 1
+cmbFormat.AddItem L("UBB文本", "UBB文本"), 2
+cmbFormat.AddItem L("HTML文本", "HTML文本"), 3
+cmbFormat.AddItem L("HTML内容", "HTML內容"), 4
 cmbFormat.ListIndex = Publish_nFormat
 
 ' 注意：先有发布格式，再有发布站点！
 ' 发布站点
 cmbLocation.Clear
-cmbLocation.AddItem ST("百度知道", "百度知道"), 0
-cmbLocation.AddItem ST("百度贴吧象棋吧", "百度貼吧象棋吧"), 1
-cmbLocation.AddItem ST("象棋家园", "象棋家園"), 2
-cmbLocation.AddItem ST("新浪博客", "新浪博客"), 3
-cmbLocation.AddItem ST("QQ空间", "QQ空間"), 4
-cmbLocation.AddItem ST("(其他)", "(其他)"), 5
+cmbLocation.AddItem L("百度知道", "百度知道"), 0
+cmbLocation.AddItem L("百度贴吧象棋吧", "百度貼吧象棋吧"), 1
+cmbLocation.AddItem L("象棋家园", "象棋家園"), 2
+cmbLocation.AddItem L("新浪博客", "新浪博客"), 3
+cmbLocation.AddItem L("QQ空间", "QQ空間"), 4
+cmbLocation.AddItem L("(其他)", "(其他)"), 5
 cmbLocation.ListIndex = Publish_nLocation
 
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
@@ -383,45 +383,45 @@ cmbBoard.Clear
 cmbPieces.Clear
 Select Case nIndex
 Case PUB_SIZE_MINI, PUB_SIZE_PRINT
-    cmbBoard.AddItem ST("默认", "默認"), 0
+    cmbBoard.AddItem L("默认", "默認"), 0
     cmbBoard.ListIndex = 0
-    cmbPieces.AddItem ST("简体", "簡體"), 0
-    cmbPieces.AddItem ST("繁体", "繁體"), 1
+    cmbPieces.AddItem L("简体", "簡體"), 0
+    cmbPieces.AddItem L("繁体", "繁體"), 1
     cmbPieces.ListIndex = IIf(Publish_bTrad, 1, 0)
 Case PUB_SIZE_SMALL
-    cmbBoard.AddItem ST("栎木", "櫟木"), 0
-    cmbBoard.AddItem ST("绿色大理石", "綠色大理石"), 1
-    cmbBoard.AddItem ST("白色大理石", "白色大理石"), 2
-    cmbBoard.AddItem ST("再生纸", "再生紙"), 3
-    cmbBoard.AddItem ST("画布", "畫布"), 4
-    cmbBoard.AddItem ST("水滴", "水滴"), 5
-    cmbBoard.AddItem ST("蓝天白云石", "藍天白雲"), 6
-    cmbBoard.AddItem ST("象棋演播室", "象棋演播室"), 7
-    cmbBoard.AddItem ST("弈天棋缘", "弈天棋緣"), 8
-    cmbBoard.AddItem ST("梦入神机", "夢入神機"), 9
-    cmbBoard.AddItem ST("纵马奔流", "縱馬奔流"), 10
-    cmbBoard.AddItem ST("浅红象棋", "淺紅象棋"), 11
+    cmbBoard.AddItem L("栎木", "櫟木"), 0
+    cmbBoard.AddItem L("绿色大理石", "綠色大理石"), 1
+    cmbBoard.AddItem L("白色大理石", "白色大理石"), 2
+    cmbBoard.AddItem L("再生纸", "再生紙"), 3
+    cmbBoard.AddItem L("画布", "畫布"), 4
+    cmbBoard.AddItem L("水滴", "水滴"), 5
+    cmbBoard.AddItem L("蓝天白云石", "藍天白雲"), 6
+    cmbBoard.AddItem L("象棋演播室", "象棋演播室"), 7
+    cmbBoard.AddItem L("弈天棋缘", "弈天棋緣"), 8
+    cmbBoard.AddItem L("梦入神机", "夢入神機"), 9
+    cmbBoard.AddItem L("纵马奔流", "縱馬奔流"), 10
+    cmbBoard.AddItem L("浅红象棋", "淺紅象棋"), 11
     cmbBoard.ListIndex = Publish_nBoardS
-    cmbPieces.AddItem ST("木刻", "木刻"), 0
-    cmbPieces.AddItem ST("精致", "精緻"), 1
-    cmbPieces.AddItem ST("光泽", "光澤"), 2
-    cmbPieces.AddItem ST("象棋演播室", "象棋演播室"), 3
-    cmbPieces.AddItem ST("弈天棋缘", "弈天棋緣"), 4
-    cmbPieces.AddItem ST("梦入神机", "夢入神機"), 5
-    cmbPieces.AddItem ST("纵马奔流", "縱馬奔流"), 6
+    cmbPieces.AddItem L("木刻", "木刻"), 0
+    cmbPieces.AddItem L("精致", "精緻"), 1
+    cmbPieces.AddItem L("光泽", "光澤"), 2
+    cmbPieces.AddItem L("象棋演播室", "象棋演播室"), 3
+    cmbPieces.AddItem L("弈天棋缘", "弈天棋緣"), 4
+    cmbPieces.AddItem L("梦入神机", "夢入神機"), 5
+    cmbPieces.AddItem L("纵马奔流", "縱馬奔流"), 6
     cmbPieces.ListIndex = Publish_nPiecesS
 Case PUB_SIZE_LARGE
-    cmbBoard.AddItem ST("栎木", "櫟木"), 0
-    cmbBoard.AddItem ST("绿色大理石", "綠色大理石"), 1
-    cmbBoard.AddItem ST("白色大理石", "白色大理石"), 2
-    cmbBoard.AddItem ST("再生纸", "再生紙"), 3
-    cmbBoard.AddItem ST("画布", "畫布"), 4
-    cmbBoard.AddItem ST("水滴", "水滴"), 5
-    cmbBoard.AddItem ST("浅红象棋", "淺紅象棋"), 6
+    cmbBoard.AddItem L("栎木", "櫟木"), 0
+    cmbBoard.AddItem L("绿色大理石", "綠色大理石"), 1
+    cmbBoard.AddItem L("白色大理石", "白色大理石"), 2
+    cmbBoard.AddItem L("再生纸", "再生紙"), 3
+    cmbBoard.AddItem L("画布", "畫布"), 4
+    cmbBoard.AddItem L("水滴", "水滴"), 5
+    cmbBoard.AddItem L("浅红象棋", "淺紅象棋"), 6
     cmbBoard.ListIndex = Publish_nBoardL
-    cmbPieces.AddItem ST("木刻", "木刻"), 0
-    cmbPieces.AddItem ST("精致", "精緻"), 1
-    cmbPieces.AddItem ST("光泽", "光澤"), 2
+    cmbPieces.AddItem L("木刻", "木刻"), 0
+    cmbPieces.AddItem L("精致", "精緻"), 1
+    cmbPieces.AddItem L("光泽", "光澤"), 2
     cmbPieces.ListIndex = Publish_nPiecesL
 End Select
 
@@ -461,8 +461,8 @@ End Sub
 
 Private Sub btnHelp_Click()
 
-ShellExecuteA 0, vbNullString, _
-        "http://www.xqbase.com/xqwizard/publish.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm", _
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -488,8 +488,8 @@ End If
 If OpenString <> "" Then
     szCopy = szCopy & OpenString & szBr
 End If
-szSt1 = ST("# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面", "# 在瀏覽器中打開下面的鏈接，就能直接用象棋巫師打開盤面")
-szSt2 = ST("用象棋巫师打开盘面", "用象棋巫師打開盤面")
+szSt1 = L("# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面", "# 在瀏覽器中打開下面的鏈接，就能直接用象棋巫師打開盤面")
+szSt2 = L("用象棋巫师打开盘面", "用象棋巫師打開盤面")
 If Publish_bContent Then
     ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
     szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
@@ -540,7 +540,7 @@ Else
         ' szCopy = szCopy & "# http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy & "# [url=http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & _
-                ST("]播放棋谱[/url]", "]播放棋譜[/url]") & szBr
+                L("]播放棋谱[/url]", "]播放棋譜[/url]") & szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
                 "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
@@ -549,7 +549,7 @@ Else
     End Select
     ' 显示文本棋谱
     ' 以下是供复制粘贴的文本棋谱
-    szCopy = szCopy & ST("=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
+    szCopy = szCopy & L("=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
             "=== 選中以下文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
     ' 润色字体
     Select Case Publish_nFormat
@@ -602,13 +602,13 @@ Else
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "</font>"
     End Select
-    szCopy = szCopy & ST("=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
+    szCopy = szCopy & L("=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
             "=== 選中以上文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
     ' 以上是供复制粘贴的文本棋谱
 End If
 ' 给象棋巫师做个广告
-szSt1 = ST("下载象棋巫师", "下載象棋巫師")
-szSt2 = ST("象棋百科全书", "象棋百科全書")
+szSt1 = L("下载象棋巫师", "下載象棋巫師")
+szSt2 = L("象棋百科全书", "象棋百科全書")
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
     szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
@@ -635,17 +635,22 @@ End If
 ' 打开要发布的网页
 Select Case Publish_nLocation
 Case PUB_LOCATION_ZHIDAO
-    ShellExecuteA 0, vbNullString, "http://zhidao.baidu.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://zhidao.baidu.com/", _
+            vbNullString, vbNullString, vbNormalFocus
 Case PUB_LOCATION_TIEBA
-    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", _
+            vbNullString, vbNullString, vbNormalFocus
 Case PUB_LOCATION_HOME
-    ShellExecuteA 0, vbNullString, "http://home.xqbase.com/cp.php?ac=blog", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://home.xqbase.com/cp.php?ac=blog", _
+            vbNullString, vbNullString, vbNormalFocus
 Case PUB_LOCATION_SINA
-    ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", _
+            vbNullString, vbNullString, vbNormalFocus
 Case PUB_LOCATION_QZONE
-    ShellExecuteA 0, vbNullString, "http://user.qzone.qq.com/", vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, "http://user.qzone.qq.com/", _
+            vbNullString, vbNullString, vbNormalFocus
 End Select
-MsgBox ST("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
+MsgBox L("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
         "棋譜已復製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。"), vbInformation
 
 End Sub
@@ -690,21 +695,21 @@ End Sub
 
 Private Sub lblViewBoard_Click()
 
-ShellExecuteA 0, vbNullString, txtBoardUrl.Text, vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, txtBoardUrl.Text, vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub lblLocation_Click()
 
-ShellExecuteA 0, vbNullString, _
-        "http://www.xqbase.com/xqwizard/publish.htm#location", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm#location", _
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub lblFormat_Click()
 
-ShellExecuteA 0, vbNullString, _
-        "http://www.xqbase.com/xqwizard/publish.htm#format", vbNullString, vbNullString, SW_SHOWNORMAL
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm#format", _
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -725,7 +730,7 @@ If Publish_nFormat = PUB_FORMAT_ANSI Then
     sz = AllocString(CchessBoardText(pos, CCHESS_ANSI_TEXT))
 Else
     sz = AllocString(CchessBoardText(pos))
-    sz = Replace(sz, "  ", ST("‐", "．"))
+    sz = Replace(sz, "  ", L("‐", "．"))
     sz = Replace(sz, "--", "—")
 End If
 GetBoardText = sz

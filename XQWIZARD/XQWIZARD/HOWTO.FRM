@@ -154,14 +154,14 @@ Dim i As Integer
 chkShowHowTo.Value = IIf(Gui_bShowHowTo, 1, 0)
 txtTips.Text = Gui_szTips(Gui_nTipIndex)
 If App_bPromotion Then
-    If MsgBox(ST(PROMOTION_S, PROMOTION_T), vbQuestion + vbYesNo, _
-            ST("关于仕(士)相(象)升变成兵(卒)的规则", "關於仕(士)相(象)升變成兵(卒)的規則")) = vbYes Then
-        ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/promotion.htm", vbNullString, vbNullString, SW_SHOWNORMAL
+    If MsgBox(L(PROMOTION_S, PROMOTION_T), vbQuestion + vbYesNo, _
+            L("关于仕(士)相(象)升变成兵(卒)的规则", "關於仕(士)相(象)升變成兵(卒)的規則")) = vbYes Then
+        ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/promotion.htm", vbNullString, vbNullString, vbNormalFocus
     End If
 End If
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136

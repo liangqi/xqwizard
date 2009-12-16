@@ -30,7 +30,7 @@ Begin VB.Form frmLogin
       Top             =   1440
       Width           =   855
    End
-   Begin VB.CommandButton btnOK 
+   Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
       Default         =   -1  'True
       Height          =   375
@@ -191,7 +191,7 @@ If Login_bRemember Then
     chkRemember.Value = 1
 End If
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
@@ -218,28 +218,28 @@ End Sub
 Private Sub lblRegister_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=register", _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub lblGetPassword_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=getpassword", _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub lblCharge_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
-        vbNullString, vbNullString, SW_SHOWNORMAL
+        vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
-Private Sub btnOK_Click()
+Private Sub btnConfirm_Click()
 
 If Len(txtUserName.Text) = 0 Or Len(txtPassword.Text) = 0 Then
-    MsgBox ST("用户名和密码不能为空", "用戶名和密碼不能為空"), vbExclamation
+    MsgBox L("用户名和密码不能为空", "用戶名和密碼不能為空"), vbExclamation
     Exit Sub
 End If
 Login_bCancel = False

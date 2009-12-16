@@ -315,7 +315,7 @@ chkAutoEcco.Value = IIf(App_bAutoEcco, 1, 0)
 chkAutoEcco.Enabled = Game_bStartPos
 SetTopMost hWnd
 
-If Options_nLanguage = 0 Then
+If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 Font.Charset = 136
