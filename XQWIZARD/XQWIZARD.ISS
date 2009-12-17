@@ -2,50 +2,64 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Languages]
-Name: "simp"; MessagesFile: "compiler:Languages\ChineseSimp.isl"; InfoBeforeFile: "GPL.TXT"
-Name: "trad"; MessagesFile: "compiler:Languages\ChineseTrad.isl"; InfoBeforeFile: "GPL.TXT"
+Name: "cn"; MessagesFile: "compiler:Languages\ChineseSimp.isl"
+Name: "tw"; MessagesFile: "compiler:Languages\ChineseTrad.isl"
+
+[LangOptions]
+cn.LanguageName=<7B80><4F53><4E2D><6587>
+tw.LanguageName=<7E41><9AD4><4E2d><6587>
 
 [CustomMessages]
 Quot="
-
-[Code]
-function AppName(Param: String): String;
-begin
-  if (ExpandConstant('{language}') = 'trad') then
-    Result := '禜囱畍'
-  else 
-    Result := '象棋巫师';
-end;
+cn.AppName=象棋巫师
+tw.AppName=禜囱畍
+cn.MenuOpen=打开(&O)
+tw.MenuOpen=ゴ秨(&O)
+cn.MenuEdit=编辑(&E)
+tw.MenuEdit=絪胯(&E)
+cn.Custom=自定义设置
+tw.Custom=﹚竡砞竚
 
 [Setup]
-AppName={code:AppName}
-AppVerName={code:AppName} 4.5
-AppPublisher=www.elephantbase.net
-AppPublisherURL=http://www.elephantbase.net/
-AppSupportURL=http://www.elephantbase.net/
-AppUpdatesURL=http://www.elephantbase.net/
+AppName={cm:AppName}
+AppVerName={cm:AppName} 4.5
+AppPublisher=www.xqbase.com
+AppPublisherURL=http://www.xqbase.com/
+AppSupportURL=http://www.xqbase.com/
+AppUpdatesURL=http://www.xqbase.com/
 DefaultDirName={pf}\XQWizard
-DefaultGroupName={code:AppName}
+DefaultGroupName={cm:AppName}
 OutputBaseFilename=xqwizard_setup
 OutputDir=.
 Compression=lzma
 SolidCompression=yes
 SetupIconFile=RES\XQWSETUP.ICO
-AppCopyright=(C) 2004-2009 www.elephantbase.net
+AppCopyright=(C) 2004-2010 www.xqbase.com
+ShowUndisplayableLanguages=yes
 
 [Types]
-Name: "default"; Description: "缺省设置"
-Name: "custom"; Description: "自定义设置"; Flags: iscustom
+Name: "default"; Description: "缺省设置"; Languages: cn
+Name: "default"; Description: "砞竚"; Languages: tw
+Name: "custom"; Description: "{cm:Custom}"; Flags: iscustom
 
 [Components]
-Name: "pgn"; Description: "关联可移植棋谱文件(*.PGN)"; Types: default
-Name: "fen"; Description: "关联局面文件(*.FEN)"; Types: default
-Name: "xqf"; Description: "关联象棋演播室棋谱文件(*.XQF)"; Types: default
-Name: "mxq"; Description: "关联弈天棋谱文件(*.MXQ)"; Types: default
-Name: "che"; Description: "关联QQ象棋棋谱文件(*.CHE)"; Types: default
-Name: "chn"; Description: "关联联众象棋棋谱文件(*.CHN)"; Types: default
-Name: "ccm"; Description: "关联中游象棋棋谱文件(*.CCM)"; Types: default
-Name: "eleeye"; Description: "加载 ElephantEye 引擎"; Types: default
+Name: "pgn"; Description: "关联可移植棋谱文件(*.PGN)"; Types: default; Languages: cn
+Name: "fen"; Description: "关联局面文件(*.FEN)"; Types: default; Languages: cn
+Name: "xqf"; Description: "关联象棋演播室棋谱文件(*.XQF)"; Types: default; Languages: cn
+Name: "mxq"; Description: "关联弈天棋谱文件(*.MXQ)"; Types: default; Languages: cn
+Name: "che"; Description: "关联QQ象棋棋谱文件(*.CHE)"; Types: default; Languages: cn
+Name: "chn"; Description: "关联联众象棋棋谱文件(*.CHN)"; Types: default; Languages: cn
+Name: "ccm"; Description: "关联中游象棋棋谱文件(*.CCM)"; Types: default; Languages: cn
+Name: "eleeye"; Description: "加载 ElephantEye 引擎"; Types: default; Languages: cn
+
+Name: "pgn"; Description: "闽羛簿从囱眯ゅン(*.PGN)"; Types: default; Languages: tw
+Name: "fen"; Description: "闽羛Ыゅン(*.FEN)"; Types: default; Languages: tw
+Name: "xqf"; Description: "闽羛禜囱簍冀囱眯ゅン(*.XQF)"; Types: default; Languages: tw
+Name: "mxq"; Description: "闽羛ぱ囱眯ゅン(*.MXQ)"; Types: default; Languages: tw
+Name: "che"; Description: "闽羛QQ禜囱囱眯ゅン(*.CHE)"; Types: default; Languages: tw
+Name: "chn"; Description: "闽羛羛渤禜囱囱眯ゅン(*.CHN)"; Types: default; Languages: tw
+Name: "ccm"; Description: "闽羛い村禜囱囱眯ゅン(*.CCM)"; Types: default; Languages: tw
+Name: "eleeye"; Description: "更 ElephantEye ま篮"; Types: default; Languages: tw
 
 [Files]
 ; 系统文件
@@ -69,35 +83,48 @@ Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PGNS2JAR.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ZIP32Z64.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
-Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SAMPLE_S.PGN"; DestDir: "{app}"; DestName: "SAMPLE.PGN"; Flags: ignoreversion; Languages: cn
+Source: "SAMPLE_T.PGN"; DestDir: "{app}"; DestName: "SAMPLE.PGN"; Flags: ignoreversion; Languages: tw
 Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
-Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "README_S.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: cn
+Source: "README_T.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: tw
 Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
 ; 残局文件
-Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
+Source: "ENDGAMET\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMET\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
 Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\elephantbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\elephantbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -559,123 +586,148 @@ Source: "PGNS2JAR\images\large\bb.png"; DestDir: "{app}\PGNS2JAR\images\large"; 
 Source: "PGNS2JAR\images\large\ba.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
 Source: "PGNS2JAR\META-INF\MANIFEST.MF_"; DestDir: "{app}\PGNS2JAR\META-INF"; Flags: ignoreversion
 ; 橘中秘
-Source: "橘中秘\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-16.大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
-Source: "橘中秘\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion
+Source: "橘中秘\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-16.大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
+Source: "橘中秘\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Languages: cn
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
 Root: HKCR; Subkey: ".pgn"; ValueType: string; ValueData: "XQWizard.PGN"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "可移植棋谱"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "可移植棋谱"; Flags: uninsdeletekey; Components: pgn; Languages: cn
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "簿从囱眯"; Flags: uninsdeletekey; Components: pgn; Languages: tw
 Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "{cm:MenuEdit}"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: ".fen"; ValueType: string; ValueData: "XQWizard.FEN"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "象棋局面文件"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "象棋局面文件"; Flags: uninsdeletekey; Components: fen; Languages: cn
+Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "禜囱Ыゅン"; Flags: uninsdeletekey; Components: fen; Languages: tw
 Root: HKCR; Subkey: "XQWizard.FEN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,2"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /F {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "编辑(&E)"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "{cm:MenuEdit}"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey; Components: xqf
-Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "象棋演播室棋谱"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "象棋演播室棋谱"; Flags: uninsdeletekey; Components: xqf; Languages: cn
+Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "禜囱簍冀囱眯"; Flags: uninsdeletekey; Components: xqf; Languages: tw
 Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey; Components: xqf
-Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey; Components: mxq
-Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "弈天棋谱"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "弈天棋谱"; Flags: uninsdeletekey; Components: mxq; Languages: cn
+Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "ぱ囱眯"; Flags: uninsdeletekey; Components: mxq; Languages: tw
 Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey; Components: mxq
-Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: ".che"; ValueType: string; ValueData: "XQWizard.CHE"; Flags: uninsdeletekey; Components: che
-Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ象棋棋谱"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ象棋棋谱"; Flags: uninsdeletekey; Components: che; Languages: cn
+Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ禜囱囱眯"; Flags: uninsdeletekey; Components: che; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CHE\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,5"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell"; Flags: uninsdeletekey; Components: che
-Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: ".chn"; ValueType: string; ValueData: "XQWizard.CHN"; Flags: uninsdeletekey; Components: chn
-Root: HKCR; Subkey: "XQWizard.CHN"; ValueType: string; ValueData: "联众象棋棋谱"; Flags: uninsdeletekey; Components: chn
+Root: HKCR; Subkey: "XQWizard.CHN"; ValueType: string; ValueData: "联众象棋棋谱"; Flags: uninsdeletekey; Components: chn; Languages: cn
+Root: HKCR; Subkey: "XQWizard.CHN"; ValueType: string; ValueData: "羛渤禜囱囱眯"; Flags: uninsdeletekey; Components: chn; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CHN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,8"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: "XQWizard.CHN\Shell"; Flags: uninsdeletekey; Components: chn
-Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: chn
+Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: ".ccm"; ValueType: string; ValueData: "XQWizard.CCM"; Flags: uninsdeletekey; Components: ccm
-Root: HKCR; Subkey: "XQWizard.CCM"; ValueType: string; ValueData: "中游象棋棋谱"; Flags: uninsdeletekey; Components: ccm
+Root: HKCR; Subkey: "XQWizard.CCM"; ValueType: string; ValueData: "中游象棋棋谱"; Flags: uninsdeletekey; Components: ccm; Languages: cn
+Root: HKCR; Subkey: "XQWizard.CCM"; ValueType: string; ValueData: "い村禜囱囱眯"; Flags: uninsdeletekey; Components: ccm; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CCM\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,9"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell"; Flags: uninsdeletekey; Components: ccm
-Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "打开(&O)"; Flags: uninsdeletekey; Components: ccm
+Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: ccm
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Options"; ValueType: string; ValueName: "Language"; ValueData: "0"; Languages: cn
+Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Options"; ValueType: string; ValueName: "Language"; ValueData: "1"; Languages: tw
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
-Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"
-Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
-Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
-Name: "{group}\象棋巫师帮助主题"; Filename: "http://www.elephantbase.net/xqwizard/help.htm"
-Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"
-Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"
-Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"
-Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"
-Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"
-Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6
+Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn
+Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
+Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
+Name: "{group}\象棋巫师帮助主题"; Filename: "http://www.xqbase.com/xqwizard/help.htm"; Languages: cn
+Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
+Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
+Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
+Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"; Languages: cn
+Name: "{userdesktop}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn
+Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
+Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
+
+Name: "{group}\禜囱畍臸猭厩"; Filename: "{app}\XQBOOTH.EXE"; Languages: tw
+Name: "{group}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
+Name: "{group}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
+Name: "{group}\禜囱畍腊肈"; Filename: "http://www.xqbase.com/xqwizard/help.htm"; Languages: tw
+Name: "{group}\も审囱眯ㄣ"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
+Name: "{group}\囱眯у秖锣传ㄣ"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
+Name: "{group}\秨Ы畐恨瞶ㄣ"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
+Name: "{group}\更禜囱畍"; Filename: "{uninstallexe}"; Languages: tw
+Name: "{userdesktop}\禜囱畍臸猭厩"; Filename: "{app}\XQBOOTH.EXE"; Languages: tw
+Name: "{userdesktop}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
+Name: "{userdesktop}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
 
 [Run]
-Filename: "{app}\XQBOOTH.EXE"; Description: "开始闯关"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked
-Filename: "http://www.elephantbase.net/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked
+Filename: "{app}\XQBOOTH.EXE"; Description: "开始闯关"; Flags: nowait postinstall skipifsilent; Languages: cn
+Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked; Languages: cn
+Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: cn
+
+Filename: "{app}\XQBOOTH.EXE"; Description: "秨﹍卖闽"; Flags: nowait postinstall skipifsilent; Languages: tw
+Filename: "{app}\XQWIZARD.EXE"; Description: "秨﹍癸Ы"; Flags: nowait postinstall skipifsilent unchecked; Languages: tw
+Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "ㄏノ"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
