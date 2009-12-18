@@ -1,6 +1,6 @@
 /*
 PGNS2JAR - a XQBoss Jar Making Program
-Designed by Morning Yellow, Version: 1.3, Last Modified: May 2009
+Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
 Copyright (C) 2004-2009 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -25,21 +25,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "zip.h"
 
 const int MAX_CHAR = 1024;
-const char *const cszMidletVersion = "1.30";
+const char *const cszMidletVersion = "1.31";
 
 // 棋谱信息
 static struct {
+  BOOL bBig5;                 // 是否繁体
   char szTitle[MAX_CHAR];     // 棋谱标题
   char szSrcFolder[MAX_CHAR]; // 棋谱来源文件夹
   char szDstFolder[MAX_CHAR]; // 棋谱目标文件夹
   char szJarFile[MAX_CHAR];   // 手机棋谱程序文件
 } Pgns2Jar;
 
+inline const char *CnTw(const char *szCn, const char *szTw) {
+  return Pgns2Jar.bBig5 ? szCn : szTw;
+}
+
 // 打开文件错误时终止程序
 static void ErrorOpen(const char *szFile) {
   char szMsg[MAX_CHAR];
-  sprintf(szMsg, "无法打开文件 %s", szFile);
-  MessageBox(NULL, szMsg, "手机棋谱制作工具", MB_ICONSTOP);
+  sprintf(szMsg, CnTw("无法打开文件 %s", ""), szFile);
+  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", ""), MB_ICONSTOP);
   ExitProcess(0);
 }
 
@@ -64,7 +69,7 @@ static bool ChooseSourceFolder(void) {
   bi.hwndOwner = NULL;
   bi.pidlRoot = NULL;
   bi.pszDisplayName = NULL;
-  bi.lpszTitle = "请选择象棋棋谱(*.PGN)所在的文件夹";
+  bi.lpszTitle = CnTw("请选择象棋棋谱(*.PGN)所在的文件夹", "");
   bi.ulFlags = BIF_RETURNONLYFSDIRS;
   bi.lpfn = NULL;
   bi.lParam = NULL;
@@ -77,7 +82,7 @@ static bool ChooseSourceFolder(void) {
   // 获取棋谱标题
   lpBackSlash = strrchr(Pgns2Jar.szSrcFolder, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
-    strcpy(Pgns2Jar.szTitle, "无标题");
+    strcpy(Pgns2Jar.szTitle, CnTw("无标题", ""));
   } else {
     strcpy(Pgns2Jar.szTitle, lpBackSlash + 1);
   }
@@ -95,10 +100,10 @@ static bool ChooseJarFile(void) {
   strcat(Pgns2Jar.szJarFile, ".jar");
   memset(&ofn, 0, sizeof(OPENFILENAME));
   ofn.lStructSize = sizeof(OPENFILENAME);
-  ofn.lpstrFilter = "手机应用程序 (*.jar)\0*.jar\0所有文件 (*.*)\0*.*\0";
+  ofn.lpstrFilter = CnTw("手机应用程序 (*.jar)\0*.jar\0所有文件 (*.*)\0*.*\0", "");
   ofn.lpstrFile = Pgns2Jar.szJarFile;
   ofn.nMaxFile = MAX_PATH;
-  ofn.lpstrTitle = "请指定要生成的手机棋谱程序";
+  ofn.lpstrTitle = CnTw("请指定要生成的手机棋谱程序", "");
   ofn.lpstrDefExt = "jar";
   ofn.Flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT;
 
@@ -111,7 +116,8 @@ static bool ChooseJarFile(void) {
     lpFileName = strrchr(Pgns2Jar.szJarFile, '\\');
     lpFileName = (lpFileName == NULL ? Pgns2Jar.szJarFile : lpFileName + 1);
     if (MultiByteToWideChar(CP_ACP, 0, lpFileName, -1, NULL, 0) < (int) strlen(lpFileName)) {
-      if (MessageBox(NULL, "含有中文的JAR文件名在某些手机上无法使用，是否继续？", "手机棋谱制作工具", MB_OKCANCEL + MB_ICONWARNING) == IDCANCEL) {
+      if (MessageBox(NULL, CnTw("含有中文的JAR文件名在某些手机上无法使用，是否继续？", ""),
+           CnTw("手机棋谱制作工具", ""), MB_OKCANCEL + MB_ICONWARNING) == IDCANCEL) {
         continue;
       }
     }
@@ -145,7 +151,7 @@ static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nInde
   // 获取文件标题
   lpBackSlash = strrchr(szSrcFile, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
-    strcpy(szTitle, "无标题");
+    strcpy(szTitle, CnTw("无标题", ""));
   } else {
     strcpy(szTitle, lpBackSlash + 1);
   }
@@ -249,7 +255,7 @@ static void CreateManifest(void) {
   char szTitle[MAX_CHAR], szDescript[MAX_CHAR], szManifest[MAX_CHAR];
 
   Ansi2Utf8(szTitle, Pgns2Jar.szTitle);
-  Ansi2Utf8(szDescript, "象棋小巫师手机棋谱");
+  Ansi2Utf8(szDescript, CnTw("象棋小巫师手机棋谱", ""));
   strcpy(szManifest, Pgns2Jar.szDstFolder);
   strcat(szManifest, "\\META-INF\\MANIFEST.MF");
   fpManifest = fopen(szManifest, "wt");
@@ -265,6 +271,9 @@ static void CreateManifest(void) {
   fprintf(fpManifest, "MIDlet-Info-URL: http://www.elephantbase.net/\n");
   fprintf(fpManifest, "MIDlet-Icon: /images/xqboss.png\n");
   fprintf(fpManifest, "MIDlet-Version: %s\n", cszMidletVersion);
+  if (Pgns2Jar.bBig5) {
+    fprintf(fpManifest, "XQBoss-Big5: true\n");
+  }
   fprintf(fpManifest, "MicroEdition-Configuration: CLDC-1.0\n");
   fprintf(fpManifest, "MicroEdition-Profile: MIDP-2.0\n");
 
@@ -344,6 +353,9 @@ void CreateJarFile(void) {
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
   char szPgnFolder[MAX_CHAR], szMsg[MAX_CHAR];
 
+  // 确定当前操作系统字符集
+  Pgns2Jar.bBig5 = GetOEMCP() == 950;
+
   // 定位棋谱目标文件夹
   LocateDestFolder();
   // 让用户选择棋谱来源文件夹
@@ -367,7 +379,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   SearchFolderToDelete(szPgnFolder);
   RemoveDirectory(szPgnFolder);
 
-  sprintf(szMsg, "手机棋谱 %s(.jad) 制作成功。", Pgns2Jar.szJarFile);
-  MessageBox(NULL, szMsg, "手机棋谱制作工具", MB_ICONINFORMATION);
+  sprintf(szMsg, CnTw("手机棋谱 %s(.jad) 制作成功。", ""), Pgns2Jar.szJarFile);
+  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", ""), MB_ICONINFORMATION);
   return 0;
 }

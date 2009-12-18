@@ -48,7 +48,7 @@ class PgnFile {
 	private Vector lstSquares = new Vector();
 	private Vector lstComment = new Vector();
 
-	PgnFile(GBLineInputStream in) {
+	PgnFile(LineInputStream in) {
 		SimplePos pos = new SimplePos();
 		pos.fromFen(SimplePos.STARTUP_FEN);
 		boolean returned = false, detail = false;

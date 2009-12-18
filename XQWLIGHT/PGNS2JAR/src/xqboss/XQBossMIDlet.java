@@ -2,7 +2,7 @@
 XQBossMIDlet.java - Source Code for XiangQi Boss Advanced, Part V
 
 XiangQi Boss Advanced - a Chinese Chess PGN File Reader for Java ME
-Designed by Morning Yellow, Version: 1.0, Last Modified: Aug. 2008
+Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This program is free software; you can redistribute it and/or modify
@@ -48,18 +48,15 @@ public class XQBossMIDlet extends MIDlet {
 
 	private XQBossCanvas canvas = new XQBossCanvas(this);
 	private boolean started = false;
+	private boolean big5 = false;
 
 	String currDir = "";
 
 	void open(String file, String title) {
-		GBLineInputStream in = new GBLineInputStream(getClass().
-				getResourceAsStream("/PGNS" + currDir + "/" + file));
+		LineInputStream in = new LineInputStream(getClass().
+				getResourceAsStream("/PGNS" + currDir + "/" + file), big5);
 		PgnFile pgn = new PgnFile(in);
-		try {
-			in.close();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		in.close();
 		canvas.load(pgn, title);
 		Display.getDisplay(this).setCurrent(canvas);
 	}
@@ -75,8 +72,8 @@ public class XQBossMIDlet extends MIDlet {
 		lstDir.addCommand(currDir.length() == 0 ? cmdExit : cmdBack);
 		lstDir.setTicker(ticker);
 
-		GBLineInputStream in = new GBLineInputStream(getClass().
-				getResourceAsStream("/PGNS" + currDir + "/FILELIST"));
+		LineInputStream in = new LineInputStream(getClass().
+				getResourceAsStream("/PGNS" + currDir + "/FILELIST"), big5);
 		String s = in.readLine();
 		while (s != null) {
 			int i = s.indexOf('=');
@@ -84,11 +81,7 @@ public class XQBossMIDlet extends MIDlet {
 			vctDir.addElement(s.substring(0, i));
 			s = in.readLine();
 		}
-		try {
-			in.close();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		in.close();
 		lstDir.setSelectCommand(cmdOpen);
 		lstDir.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
@@ -120,6 +113,10 @@ public class XQBossMIDlet extends MIDlet {
 			return;
 		}
 		started = true;
+		String strBig5 = getAppProperty("XQBoss-Big5");
+		if (strBig5 != null && strBig5.toLowerCase().equals("true")) {
+			big5 = true;
+		}
 		list();
 	}
 

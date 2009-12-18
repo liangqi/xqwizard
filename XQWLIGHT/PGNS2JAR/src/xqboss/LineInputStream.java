@@ -1,32 +1,39 @@
 package xqboss;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-class GBLineInputStream {
+class LineInputStream {
 	private static char[] gbCharTab = new char[32768];
+	private static char[] big5CharTab = new char[32768];
 
 	static {
 		try {
-			InputStream inGB = new GBLineInputStream().getClass().
-					getResourceAsStream("GB.DAT");
+			Class clazz = new LineInputStream().getClass();
+			InputStream in = clazz.getResourceAsStream("GB.DAT");
 			for (int i = 0; i < 32768; i ++) {
-				gbCharTab[i] = (char) (inGB.read() << 8 | inGB.read());
+				gbCharTab[i] = (char) (in.read() << 8 | in.read());
 			}
-			inGB.close();
+			in.close();
+			in = clazz.getResourceAsStream("BIG5.DAT");
+			for (int i = 0; i < 32768; i ++) {
+				gbCharTab[i] = (char) (in.read() << 8 | in.read());
+			}
+			in.close();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
 
 	private InputStream in;
+	private char[] charTab;
 
-	private GBLineInputStream() {
+	private LineInputStream() {
 		// Do Nothing
 	}
 
-	GBLineInputStream(InputStream in) {
+	LineInputStream(InputStream in, boolean big5) {
 		this.in = in;
+		charTab = big5 ? big5CharTab : gbCharTab;
 	}
 
 	String readLine() {
@@ -51,7 +58,7 @@ class GBLineInputStream {
 					sb.append((char) b);
 					break;
 				}
-				sb.append(gbCharTab[((b - 128) << 8) + b2]);
+				sb.append(charTab[((b - 128) << 8) + b2]);
 			} else if (b != '\r') {
 				sb.append((char) b);
 			}
@@ -64,7 +71,11 @@ class GBLineInputStream {
 		return sb.length() == 0 ? null : sb.toString();
 	}
 
-	void close() throws IOException {
-		in.close();
+	void close() {
+		try {
+			in.close();
+		} catch (Exception e) {
+			// Ignored
+		}
 	}
 }
