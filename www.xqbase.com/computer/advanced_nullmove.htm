@@ -1,0 +1,302 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>高级搜索方法——空着裁剪</title>
+</head>
+
+<body background="../background.gif">
+
+<dl dir="ltr">
+    <div align="center"><center>
+    <dt><font size="3">《对弈程序基本技术》专题</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">空着向前裁剪</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Bruce Moreland / </font>文</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt><font size="5" face="楷体_GB2312"><strong>没有副作用即可获得额外的速度</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　空着向前裁剪<font face="Times New Roman">(Null-Move
+        Forward Pruning)</font>，运用可能忽视重要路线的冒险策略，使得国际象棋的分枝因子锐减，它导致搜索深度的显著提高，因为大多数情况下它明显降低了搜索的数量。它的工作原理是裁剪大量无用着法而只保留好的。</dt>
+    <dt>　　这个技术在很多刊物上报道过，但是使得大家都来关注空着的，则是由<font
+        face="Times New Roman">Chrilly Donniger</font>发表在<font
+        face="Times New Roman">1993</font>年<font
+        face="Times New Roman">9</font>月的<font
+        face="Times New Roman">ICCA</font>杂志上的一篇文章。</dt>
+    <dt>　　试想国际象棋搜索树中的某个局面，你的程序将以<font
+        face="Times New Roman"><em>D</em></font>层搜索这个局面的每个着法。如果其中任何一个着法的分数超过<font
+        face="Times New Roman">Beta</font>，你就会马上返回<font
+        face="Times New Roman">Beta</font>。如果任何一个超过<font
+        face="Times New Roman">Alpha</font>，但是没有超过<font
+        face="Times New Roman">Beta</font>，你就要记住着法和分值，因为这有可能是主要变例的一部分。如果它们全部小于或等于<font
+        face="Times New Roman">Alpha</font>，你就要返回<font
+        face="Times New Roman">Alpha</font>。</dt>
+    <dt>　　空着向前裁剪是你搜索任何着法之前要做的事。你要问一个问题：“如果我在这里什么都不做，对手能做什么？”</dt>
+    <dt>　　记得在刚才，你没有问这个问题。你只是去找最佳的着法去打击对手。问对手是否会打击你，这个问题却有所不同。</dt>
+    <dt>　　但是事实证明很多情况下对手无法打击你。比如说你送了一个车，而其他棋子都没有作用，在这种情况下，对手随便走哪步你都吃亏，因为你丢了一个车。空着向前裁剪的要点，就是简单地去掉那些没用的着法，而不要在这上面多花时间。</dt>
+    <dt>　　这就好比像打架时，根据自己的能力给对手一个出击的机会，来增加自己的信心。如果任凭对手攻击也无法击倒你，那么你攻击他的时候他会输掉。</dt>
+    <dt>　　我们不讨论这个策略了，现在来谈它是如何运用在电脑国际象棋中的。在你搜索着法以前<font
+        face="Times New Roman">(</font>事实上在你生成着法以前<font
+        face="Times New Roman">)</font>，你做一个减少深度的搜索，让对手先走，如果这个搜索的结果大于或等于<font
+        face="Times New Roman">Beta</font>，那么你简单地返回<font
+        face="Times New Roman">Beta</font>而不需要搜索任何着法。</dt>
+    <dt>　　这个思想就给了对手出击的机会，如果你的局面仍然好到超过<font
+        face="Times New Roman">Beta</font>的程度，你就假设如果你搜索了所有的着法也会超过<font
+        face="Times New Roman">Beta</font>。</dt>
+    <dt>　　这个方法能节省时间的原因是，开始时用了减少深度的搜索。深度减少因子称为<font
+        face="Times New Roman"><em>R</em></font>，因此跟你用深度<font
+        face="Times New Roman"><em>D</em></font>搜索所有的着法相比，现在你是先以<font
+        face="Times New Roman"><em>D</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman"> <em>R</em></font>搜索对手的着法。一个比较好<font
+        face="Times New Roman"><em>R</em></font>是<font
+        face="Times New Roman">2</font>，如果你要对所有的着法搜索<font
+        face="Times New Roman">6</font>层，你最终只对对手所有的着法搜索了<font
+        face="Times New Roman">4</font>层。<font
+        color="#0000FF">【译注：因为放弃着法后层数应该减1，所以实际在对手上面搜索的层数是</font><font
+        color="#0000FF" face="Times New Roman"><em>D</em> </font><font
+        color="#0000FF" face="Symbol">-</font><font
+        color="#0000FF" face="Times New Roman"> 1 </font><font
+        color="#0000FF" face="Symbol">-</font><font
+        color="#0000FF" face="Times New Roman"> <em>R</em></font><font
+        color="#0000FF">。】</font></dt>
+    <dt>　　这就使得很多时间节约下来了，实践证明可以使搜索增加一到两层。效果真的非常可观！</dt>
+    <dt>　　代码如下，醒目的文字是在<font
+        face="Times New Roman">Alpha-Beta</font>搜索的基础上增加的部分：</dt>
+    <dd>　</dd>
+    <dd><font color="#FF0000" face="宋体">#define R 2</font></dd>
+    <dd><font face="宋体">int AlphaBeta(int depth, int alpha,
+        int beta) {</font></dd>
+    <dd><font face="宋体">　if (depth == 0) {</font></dd>
+    <dd><font face="宋体">　　return Evaluate();</font></dd>
+    <dd>　}</dd>
+    <dd><font color="#FF0000" face="宋体">　MakeNullMove();</font></dd>
+    <dd><font color="#FF0000" face="宋体">　val = -AlphaBeta(depth
+        - 1 - R, -beta, -beta + 1);</font></dd>
+    <dd><font color="#FF0000" face="宋体">　UnmakeNullMove();</font></dd>
+    <dd><font color="#FF0000" face="宋体">　if (val &gt;= beta)
+        {</font></dd>
+    <dd><font color="#FF0000" face="宋体">　　return beta;</font></dd>
+    <dd><font color="#FF0000">　}</font></dd>
+    <dd><font face="宋体">　GenerateLegalMoves();</font></dd>
+    <dd><font face="宋体">　while (MovesLeft()) {</font></dd>
+    <dd><font face="宋体">　　MakeNextMove();</font></dd>
+    <dd><font face="宋体">　　val = -AlphaBeta(depth - 1, -beta,
+        -alpha);</font></dd>
+    <dd><font face="宋体">　　UnmakeMove();</font></dd>
+    <dd><font face="宋体">　　if (val &gt;= beta) { // </font>把这部分去掉，就用纯粹的最小-最大代替了Alpha-Beta。</dd>
+    <dd><font face="宋体">　　　return beta;</font></dd>
+    <dd><font face="宋体">　　</font>}</dd>
+    <dd><font face="宋体">　　if (val &gt; alpha) {</font></dd>
+    <dd><font face="宋体">　　　alpha = val;</font></dd>
+    <dd><font face="宋体">　　}</font></dd>
+    <dd><font face="宋体">　</font>}</dd>
+    <dd><font face="宋体">　return alpha;</font></dd>
+    <dd><font face="宋体">}</font></dd>
+    <dt>　</dt>
+    <dt>　　在这个代码中我用了一个诀窍。我需要知道空着搜索的值是否是<font
+        face="Times New Roman">Beta</font>或更好，如果还不如<font
+        face="Times New Roman">Beta</font>，我不关心它到底比<font
+        face="Times New Roman">Beta</font>有多糟，因此我用了极小窗口，试图让裁剪做得更快。实际上我用<font
+        face="Times New Roman">(Beta </font><font face="Symbol">-</font><font
+        face="Times New Roman"> 1, Beta)</font>调用了搜索，但是由于递归时必须把<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>颠倒并取负数，这就变成源代码中的样子了。</dt>
+    <dt>　　不用说，这个代码在一方被将军时不能发挥作用<font
+        face="Times New Roman">(</font>因为对手立刻把王吃掉了<font
+        face="Times New Roman">)</font>。什么地方允许调用空着向前裁剪，必须掌握好分寸，因为如果你允许一次连续地这么做，那么搜索将退化成什么都不做了。一个很简单的尝试，就是当中没有间隔一个实在着法的时候，不要让两个空着搜索连在一起。另一个思想是在一个实在着法之前，允许连续两个空着裁剪。实践证明这两个方法都做得很好。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>嗯，还是有副作用的</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　不幸的是，空着向前裁剪在某些地方不能正常运行。我们作了一个重要的假定——假定走了一步棋会比不走棋有更高的分值。不幸的是，这个假定在很多典型的局面上并不成立，这些局面非常普遍，并且有一个名称——无等着局面<font
+        face="Times New Roman">(Zugzwang)</font>。无等着局面指的是，如果你不走棋，局势会好些，但是你被强迫走子，这使得你的局势会崩溃。下面是个典型的例子：</dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt><img src="advanced_nullmove1.gif" width="256"
+        height="256"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　在这个局面里，如果白方被迫走子，他走
+        <font face="Times New Roman">Kb2</font>，而黑走 <font
+        face="Times New Roman">Kd2 </font>助兵变后。如果白方不走棋，那么黑的走
+        <font face="Times New Roman">Kc3</font>，局面就是和棋。<font
+        face="Times New Roman">(</font>事实上这是一个互相的无等着局面，因为双方都被先走棋所困扰，这个问题不在我们的讨论范围内。<font
+        face="Times New Roman">)</font></dt>
+    <dt>　　如果到达这个局面，而且试图用空着向前裁剪，那么可能会认为黑方没有威胁白方，因为现在黑方确实没威胁白方。而现在黑方在等待白方毁掉局势，这就完全不同了。</dt>
+    <dt>　　由于这个原因，空着向前裁剪不能在残局中使用，或者至少不能直接地使用。如果你试图在残局中用，则会出现很糟糕的事情。</dt>
+    <dt>　　有一个更困扰人的例子，是这样的：</dt>
+    <div align="left">
+    <dt>　</dt>
+    </div><div align="center"><center>
+    <dt><img src="advanced_nullmove2.gif" width="256"
+        height="256"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　这个局面选自<font face="Times New Roman">Goetsch</font>和<font
+        face="Times New Roman">Campbell</font>的《空着启发的试验》<font
+        face="Times New Roman">(<em>Experiments with the Null-Move
+        Heuristic</em>)</font>一文，发表在《电脑、象棋与认知》<font
+        face="Times New Roman">(<em>Computers, Chess and
+        Cognition</em>)(ISBN 0-387-97415-6)</font>一书中。</dt>
+    <dt>　　这个局面轮到白方走，白的下一步就被将死了，而且无能为力。对这个局面做两层的搜索，毫无疑问：<font
+        face="Times New Roman">1. &lt;</font>任何着法<font
+        face="Times New Roman">&gt; Qg2#</font>。</dt>
+    <dt>　　如果你在这里试图用空着向前裁剪，那么不幸发生了。我们原来打算做两层的完全搜索，现在要做的是对对方做零层搜索，并试图找到威胁。在零层搜索中，黑方不走子，所以调用“评价”函数，由于白方领先一个车而返回
+        <font face="Times New Roman">+5 </font>左右。这或许会大于<font
+        face="Times New Roman">Beta</font>，因此搜索返回<font
+        face="Times New Roman">Beta</font>。</dt>
+    <dt>　　这是我们不希望发生的！搜索应该返回一个很小的值，表示白方被杀。</dt>
+    <dt>　　我们这里看到的是一种水平线效应，经常发生在启用空着向前裁剪的时候。没有空着向前裁剪时，白方走了一步没用的着法，然后有足够的搜索深度<font
+        face="Times New Roman">(</font>在这个例子中只需要一层<font
+        face="Times New Roman">)</font>让黑杀掉白。用了空着向前裁剪并且用一个足够高的<font
+        face="Times New Roman"><em>R</em></font>值<font
+        face="Times New Roman">(</font>例如<font
+        face="Times New Roman"><em>R</em> = 2)</font>，白方不做任何事情，但是黑方也没有足够深度来看到胜利了。</dt>
+    <dt>　　这个例子或许让你感到奇怪，或许它只会在很浅的搜索中才发生，但是有很多例子在足够的搜索深度下仍然会发生这样的事，即用正常的搜索可以看到的棋，用了空着向前裁剪后就被忽视了。实际上，这个黑后在<font
+        face="Times New Roman">h3</font>格并且黑兵在<font
+        face="Times New Roman">f3</font>格的棋型，对于国际象棋程序来说都是很危险的。<font
+        color="#0000FF">【原作者的意思是，如果程序遇到这种棋型，应该考虑适当延伸搜索深度，或者用更小的</font><font
+        color="#0000FF" face="Times New Roman"><em>R</em></font><font
+        color="#0000FF">值做空着裁剪。】</font></dt>
+    <dt>　　空着向前裁剪的另一个问题在于它会导致“<a
+        href="advanced_instability.htm" target="_blank">搜索的不稳定性</a>”。空着搜索的成功与否取决于<font
+        face="Times New Roman">Beta</font>的值。这个结点下次访问时，<font
+        face="Times New Roman">Beta</font>可能不同，因此搜索会有不同的值，这是很不合理的。你可能在传递窗口<font
+        face="Times New Roman">(7, 30)</font>时搜索高出边界，但是传递<font
+        face="Times New Roman">(7, 50)</font>时，却低出边界。</dt>
+    <dt>　　在实战中，比起遇到偶然的对策错误，以及搜索不稳定性的增加来说，搜索速度的加快重要得多。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>一些思想</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　尝试调整一个不同于<font
+        face="Times New Roman">2</font>的<font
+        face="Times New Roman"><em>R</em></font>值，这是非常有趣的事。你可以试试<font
+        face="Times New Roman">1</font>、<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>或更大的数，或者根据搜索深度、棋盘上的子力等等因素改变。我从来没有得到比直接用<font
+        face="Times New Roman"><em>R</em> = 2</font>更好的结果，但是一些研究表明其他值或许会更好，而且有些人至少在搜索树的部分结点上用<font
+        face="Times New Roman"><em>R</em> = 3</font>的。</dt>
+    <dt>　　通过一些验证式的搜索，我们也可以试图找到残局中使用空着向前裁剪的方法。如果你的空着搜索高出边界，你就减少深度来做常规搜索，看它是否也高出边界。我觉得这看上去有些破费，但是还是值得尝试的。</dt>
+    <dt>　　还有其他的改进方法值得尝试，但是我不想把它们一一列举出来。你可以去看<font
+        face="Times New Roman">Donninger</font>的文章，看《电脑、象棋与认知》<font
+        face="Times New Roman">(<em>Computers, Chess and
+        Cognition</em>)</font>的文章，或者看<font
+        face="Times New Roman">Ernst Heinz</font>的跟空着向前裁剪有关的文章。</dt>
+    <dt><font color="#0000FF">　　【译者有必要在这里介绍一下这两个思想：</font></dt>
+    <dt>　</dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">(1) </font><font color="#0000FF">根据不同情况来调整</font><font
+        color="#0000FF" face="Times New Roman"><em>R</em></font><font
+        color="#0000FF">值的做法，称为“适应性空着裁剪”</font><font
+        color="#0000FF" face="Times New Roman">(Adaptive Null-Move
+        Pruning)</font><font color="#0000FF">，它首先由</font><font
+        color="#0000FF" face="Times New Roman">Ernst Heinz</font><font
+        color="#0000FF">发表在</font><font color="#0000FF"
+        face="Times New Roman">1999</font><font color="#0000FF">年的</font><font
+        color="#0000FF" face="Times New Roman">ICCA</font><font
+        color="#0000FF">杂志上。其内容可以概括为：</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">a. </font><font color="#0000FF">深度小于或等于</font><font
+        color="#0000FF" face="Times New Roman">6</font><font
+        color="#0000FF">时，用</font><font color="#0000FF"
+        face="Times New Roman"><em>R</em> = 2</font><font
+        color="#0000FF">的空着裁剪进行搜索；</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">b. </font><font color="#0000FF">深度大于</font><font
+        color="#0000FF" face="Times New Roman">8</font><font
+        color="#0000FF">时，用</font><font color="#0000FF"
+        face="Times New Roman"><em>R</em> = 3</font><font
+        color="#0000FF">；</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">c. </font><font color="#0000FF">深度是</font><font
+        color="#0000FF" face="Times New Roman">6</font><font
+        color="#0000FF">或</font><font color="#0000FF"
+        face="Times New Roman">7</font><font color="#0000FF">时，如果每方棋子都大于或等于</font><font
+        color="#0000FF" face="Times New Roman">3</font><font
+        color="#0000FF">个</font><font color="#0000FF"
+        face="Times New Roman">(</font><font color="#0000FF">译者没注意到是否包括王</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">，则用 </font><font color="#0000FF"
+        face="Times New Roman"><em>R</em> = 3</font><font
+        color="#0000FF">，否则用 </font><font color="#0000FF"
+        face="Times New Roman"><em>R</em> = 2</font><font
+        color="#0000FF">。</font></dt>
+    <dt><font color="#0000FF">　　参阅：</font><font
+        color="#0000FF" face="Times New Roman">Heinz EA: <em><strong>Adaptive
+        Null-Move Pruning</strong></em><em>, ICCA J.</em> 22 (3):
+        123-132, <strong>1999</strong></font></dt>
+    <dt>　</dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">(2) </font><font color="#0000FF">验证空着裁剪是否安全的做法，称为“带验证的空着裁剪”</font><font
+        color="#0000FF" face="Times New Roman">(Verified Null-Move
+        Pruning)</font><font color="#0000FF">，它首先由</font><font
+        color="#0000FF" face="Times New Roman">Tabibi</font><font
+        color="#0000FF">发表在</font><font color="#0000FF"
+        face="Times New Roman">2002</font><font color="#0000FF">年的</font><font
+        color="#0000FF" face="Times New Roman">ICGA(</font><font
+        color="#0000FF">原</font><font color="#0000FF"
+        face="Times New Roman">ICCA)</font><font color="#0000FF">杂志上。其内容可以概括为：</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">a. </font><font color="#0000FF">用</font><font
+        color="#0000FF" face="Times New Roman"><em>R</em> = 3</font><font
+        color="#0000FF">的空着裁剪进行搜索；</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">b. </font><font color="#0000FF">如果高出边界，那么做浅一层的搜索</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">这就意味着一层的搜索是无法做带验证的空着裁剪的</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">；</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">c. </font><font color="#0000FF">做浅一层的搜索时，子结点用</font><font
+        color="#0000FF" face="Times New Roman"><em>R</em> = 3</font><font
+        color="#0000FF">的不带验证的空着裁剪；</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">d. </font><font color="#0000FF">如果浅一层的搜索高出边界，那么带验证的空着裁剪是成功的，否则必须重新做完全的搜索。</font></dt>
+    <dt><font color="#0000FF">　　参阅：</font><font
+        color="#0000FF" face="Times New Roman">Tabibi OD,
+        Netanyahu NS: <em><strong>Verified Null-Move Pruning</strong></em><em>,
+        ICGA J.</em> 25 (3): 153-161, <strong>2002</strong></font><font
+        color="#0000FF">】</font></dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.seanet.com/~brucemo/topics/nullmove.htm"
+        target="_blank"><font face="Times New Roman">http://www.seanet.com/~brucemo/topics/nullmove.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="advanced_quiescent.htm">高级搜索方法——静态搜索</a></li>
+    <li>下一篇　<a href="advanced_aspiration.htm">高级搜索方法——期望窗口</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

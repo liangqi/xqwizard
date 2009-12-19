@@ -1,0 +1,163 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>高级搜索方法——主要变例搜索</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题 </dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">主要变例搜索</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Bruce Moreland / </font>文</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt><font size="5" face="楷体_GB2312"><strong>对</strong></font><font
+        size="5" face="Arial"><strong>Alpha-Beta</strong></font><font
+        size="5" face="楷体_GB2312"><strong>的改进</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　主要变例搜索<font face="Times New Roman">(PVS,
+        Principal Variation Search)</font>是提高“<a
+        href="search_alphabeta.htm" target="_blank"><font
+        face="Times New Roman">Alpha-Beta</font></a>”算法效率的一种方法。</dt>
+    <dt>　　在<font face="Times New Roman">Alpha-Beta</font>搜索中，任何结点都属于以下三种类型：</dt>
+    <dt>　　<font face="Times New Roman">1. Alpha</font>结点。每个搜索都会得到一个小于或等于<font
+        face="Times New Roman">Alpha</font>的值，这就意味着这里没有一个着法是好的，可能是因为这个局面对于要走的一方太坏了。</dt>
+    <dt>　　<font face="Times New Roman">2. Beta</font>结点。至少一个着法会返回大于或等于<font
+        face="Times New Roman">Beta</font>的值。</dt>
+    <dt>　　<font face="Times New Roman">3. </font>主要变例<font
+        face="Times New Roman">(PV)</font>结点。有一个或多个着法会返回大于或等于<font
+        face="Times New Roman">Alpha</font>的值<font
+        face="Times New Roman">(</font>即<font
+        face="Times New Roman">PV</font>着法<font
+        face="Times New Roman">)</font>，但是没有着法会返回大于或等于<font
+        face="Times New Roman">Beta</font>的值。</dt>
+    <dt>　　有些时候你可以很早地判断出你要处理的是哪类结点。如果你搜索的第一个着法高出边界<font
+        face="Times New Roman">(</font>返回一个大于或等于<font
+        face="Times New Roman">Beta</font>的值<font
+        face="Times New Roman">)</font>，那么很明显你得到<font
+        face="Times New Roman">Beta</font>结点。如果低出边界<font
+        face="Times New Roman">(</font>返回一个小于或等于<font
+        face="Times New Roman">Alpha</font>的值<font
+        face="Times New Roman">)</font>，假设你的着法顺序非常好，那么你有可能得到<font
+        face="Times New Roman">Alpha</font>结点。如果返回值在<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>之间，你可能得到<font
+        face="Times New Roman">PV</font>结点。</dt>
+    <dt>　　当然，有两种情况你可能会判断错误。当你高出边界时，你返回<font
+        face="Times New Roman">Beta</font>，因此你不会犯错误，但是如果第一个着法低出边界或者是<font
+        face="Times New Roman">PV</font>着法时，仍然有可能在下一个着法得到更高的值。</dt>
+    <dt>　　主要变例搜索作了假设，如果你在搜索一个结点时找到一个<font
+        face="Times New Roman">PV</font>着法，那么你就得到<font
+        face="Times New Roman">PV</font>结点。也就是说假设你的着法排序已经足够好了，使得你不必在其余的着法中找更好的<font
+        face="Times New Roman">PV</font>着法或者高出边界的着法<font
+        face="Times New Roman">(</font>这就会使结点变成<font
+        face="Times New Roman">Beta</font>结点<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　你找到一个着法其值在<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>之间，那么对其余的着法，搜索的目标就是证明他们都是坏的。跟要搜索出更好的着法相比，这种搜索也许要快一些。</dt>
+    <dt>　　如果这个算法发现判断是错的，即其中一个后续着法比第一个<font
+        face="Times New Roman">PV</font>着法好，那么它会被再一次搜索，这次使用正常的<font
+        face="Times New Roman">Alpha-Beta</font>搜索方法。这种情况有时会发生，这样就浪费时间了，但是这些时间通常不会超过面所说的“证明是坏着法”所节约下来的时间。</dt>
+    <dt>　　算法如下，是从<font face="Times New Roman">Alpha-Beta</font>算法改过来的，改过的地方用醒目的字标出：</dt>
+    <dd>　</dd>
+    <dd>int AlphaBeta(int depth, int alpha, int beta) {</dd>
+    <dd><font color="#FF0000">　BOOL fFoundPv = FALSE;</font></dd>
+    <dd>　if (depth == 0) {</dd>
+    <dd>　　return Evaluate();</dd>
+    <dd>　}</dd>
+    <dd>　GenerateLegalMoves();</dd>
+    <dd>　while (MovesLeft()) {</dd>
+    <dd>　　MakeNextMove();</dd>
+    <dd><font color="#FF0000">　　if (fFoundPv) {</font></dd>
+    <dd><font color="#FF0000">　　　val = -AlphaBeta(depth - 1,
+        -alpha - 1, -alpha);</font></dd>
+    <dd><font color="#FF0000">　　　if ((val &gt; alpha)
+        &amp;&amp; (val &lt; beta)) { // 检查失败</font></dd>
+    <dd><font color="#FF0000">　　　　val = -AlphaBeta(depth
+        - 1, -beta, -alpha);</font></dd>
+    <dd><font color="#FF0000">　　　}</font></dd>
+    <dd><font color="#FF0000">　　} else</font></dd>
+    <dd>　　　val = -AlphaBeta(depth - 1, -beta, -alpha);</dd>
+    <dd>　　}</dd>
+    <dd>　　UnmakeMove();</dd>
+    <dd>　　if (val &gt;= beta) {</dd>
+    <dd>　　　return beta;</dd>
+    <dd>　　}</dd>
+    <dd>　　if (val &gt; alpha) {</dd>
+    <dd>　　　alpha = val;</dd>
+    <dd><font color="#FF0000">　　　fFoundPv = TRUE;</font></dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　return alpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　算法的核心部分就是函数中间醒目的“<font
+        face="Times New Roman">if</font>”块中的内容。如果没有找到<font
+        face="Times New Roman">PV</font>结点，“<font
+        face="Times New Roman">AlphaBeta()</font>”函数就正常调用，如果找到了一个，那么情况就变了。不是用常规的窗口<font
+        face="Times New Roman">(Alpha, Beta)</font>，而是用<font
+        face="Times New Roman">(Alpha, Alpha + 1)</font>来搜索。这样做的前提是，搜索必须返回小于或等于<font
+        face="Times New Roman">Alpha</font>的值，如果确实这样，那么把窗口的上面部分去掉就会导致更多的截断。当然，如果前提是错的，返回值是<font
+        face="Times New Roman">Alpha + 1</font>或更高，那么搜索必须用宽的窗口重做。</dt>
+    <dt>　　据报道<font face="Times New Roman">PVS</font>可以提高<font
+        face="Times New Roman">10%</font>的效率。我没有试图检测<font
+        face="Times New Roman">PVS</font>用在我的程序里到底提高了多少，但是确实提高了，所以我用了这个算法。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>搜索不稳定性的问题</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　如果你用<font face="Times New Roman">(Alpha,
+        Alpha + 1)</font>这个窗口去做搜索，返回值超过了窗口<font
+        face="Times New Roman">(</font>但是没有超过<font
+        face="Times New Roman">Beta)</font>，你就必须重新搜索。你认为重新搜索的值必定在<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>之间，但是恐怕不一定是。这很有可能是由“<a
+        href="advanced_instability.htm" target="_blank">搜索的不稳定性</a>”引起的，我会在别的章节中讨论这个问题。</dt>
+    <dt>　　上面写的那个程序对这个情况作了防御，并对这种情况的发生作了正确的处理。如果你要使用这个程序并且作一些改动，就要特别当心你的搜索是否总是稳定的。如果你得到不期望得到的返回值，就必须采取措施避免让程序陷入故障。</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.seanet.com/~brucemo/topics/pvs.htm"
+        target="_blank"><font face="Times New Roman">http://www.seanet.com/~brucemo/topics/pvs.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="advanced_aspiration.htm">高级搜索方法——期望窗口</a></li>
+    <li>下一篇　<a href="advanced_instability.htm">高级搜索方法——搜索的不稳定性</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

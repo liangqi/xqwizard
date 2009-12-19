@@ -1,0 +1,326 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>国际象棋程序设计(五)：高级搜索方法</title>
+</head>
+
+<body background="../background.gif" link="#0000FF">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">国际象棋程序设计(五)：高级搜索方法</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e/</font>文</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　哇，看上去好像有很多人在看我的连载，我的脸都红了！</dt>
+    <dt>　　这是倒数第二篇文章，我们会介绍和搜索有关的高级技术，他们既能提高速度，又能增强棋力<font
+        face="Times New Roman">(</font>或者只有一个作用<font
+        face="Times New Roman">)</font>。他们中有很多，概念上<font
+        face="Times New Roman">(</font>程序代码可能不行<font
+        face="Times New Roman">)</font>可以运用到任何<font
+        face="Times New Roman">2</font>人游戏中，然而让它们用到一些具体问题上，对很多读者来说还需要加工。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>干吗要那么麻烦？</b></font></dt>
+    <dt>　</dt>
+    <dt>　　到此为止，我们知道的所有搜索算法，都把局面推演到固定的深度。但是这未必是件好事。例如，假设你的程序最多可以用迭代加深的<font
+        face="Times New Roman">Alpha-Beta</font>算法搜索到<font
+        face="Times New Roman">5</font>层，那么来看下这几个例子：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>沿着某条路线，你发现在第<font
+        face="Times New Roman">3</font>层有将死或逼和的局面。显然你不想再搜索下去了，因为游戏的最终目的达到了。搜索<font
+        face="Times New Roman">5</font>层不仅是浪费时间，而且可能会让电脑自己把自己引入不合理的状态。</dt>
+    <dt>　　<font face="Times New Roman">2. </font>现在假设在<font
+        face="Times New Roman">5</font>层你吃到了兵。程序可能会认为这个局面稍稍有利，并且会这么走下去。然而，如果你看得更深远些，可能会发现吃了兵以后你的后就处于被攻击的状态，完了！</dt>
+    <dt>　　<font face="Times New Roman">3. </font>最后，假设你的后被捉了，不管你怎么走，她会在第<font
+        face="Times New Roman">4</font>层被对手吃掉，但是有一条路线可以让她坚持到第<font
+        face="Times New Roman">6</font>层。如果你的搜索深度是<font
+        face="Times New Roman">5</font>，那么后在第<font
+        face="Times New Roman">4</font>层被吃掉的路线会被检测出来，这些情况会评估成灾难局面，但是唯一能使后在第<font
+        face="Times New Roman">6</font>层<font
+        face="Times New Roman">(</font>超出了搜索树<font
+        face="Times New Roman">)</font>捉到的那条路线，对于电脑来说被吃是不能被发现的，因此它会认为后很安全，从而打一个较高的分数。现在，为了让后被吃的情况排除在搜索树以外，唯一的办法就是调虎离山，这样做是很冒险的——牺牲一些局面，还是有可能让对手犯下错误让你的后溜掉的。那么如果你要通过牺牲一个车来延缓后的被吃呢？对电脑来说，在第<font
+        face="Times New Roman">4</font>层丢车要比丢后损失小，所以在这个搜索水平上，它情愿丢一个那么大的子，来推迟那个可怜的后的被吃了。<font
+        face="Times New Roman">(</font>当然在随后一回合里，电脑会发现无论怎么走，它的后会在第<font
+        face="Times New Roman">4</font>层被吃掉，并且车丢得莫名其妙。<font
+        face="Times New Roman">)</font>很早以前<font
+        face="Times New Roman">Hans Berliner</font>就把这个情况称为“水平线效应”，这在很大程度上可以通过后面即将介绍的“静态搜索”来改善。</dt>
+    <dt>　</dt>
+    <dt>　　最后要说一句：象棋中的很多局面<font
+        face="Times New Roman">(</font>其他游戏也一样<font
+        face="Times New Roman">)</font>太不可预测了，实在很难恰当地评估。评价函数只能在“安静”的局面下起作用，即这些局面在不久的将来不可能发生很大的变化。这将是我们介绍下一个内容。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>请安静！</b></font></dt>
+    <dt>　</dt>
+    <dt>　　有两种评估局面的办法——动态评估<font
+        face="Times New Roman">(</font>看局面会如何发展<font
+        face="Times New Roman">)</font>和静态评估<font
+        face="Times New Roman">(</font>看它像什么样子，不去管将来怎样<font
+        face="Times New Roman">)</font>。动态评估需要深入的搜索。我们刚刚提到，局面在不久的将来不可能发生很大的变化的情况下，静态评估才是可行的。这些相对稳定的局面称为“安静”<font
+        face="Times New Roman">(Quiet)</font>或“寂静”<font
+        face="Times New Roman">(Quiescent)</font>的局面，它们需要通过“静态搜索”<font
+        face="Times New Roman">(Quiescence Search)</font>来达到。</dt>
+    <dt>　　静态搜索的最基本的概念是指：当程序搜索到固定深度时<font
+        face="Times New Roman">(</font>比如<font
+        face="Times New Roman">6</font>层<font
+        face="Times New Roman">)</font>，我们选择性地继续各条路线，只搜索“非静态”的着法，直到找到静态着法为止，这样才开始评估。</dt>
+    <dt>　　找到静态局面是需要游戏知识的。例如，什么样的着法可能引起棋盘上子力平衡的巨大改变？对于象棋来说，子力平衡会导致局面的剧烈变化，所以任何改变子力的着法就是——吃<font
+        face="Times New Roman">(</font>特别是吃主要棋子<font
+        face="Times New Roman">)</font>、兵的升变都是，而将军也是值得一看的<font
+        face="Times New Roman">(</font>仅仅是能导致将死的将军<font
+        face="Times New Roman">)</font>。<font color="#0000FF">【译注：我认为任何将军都应该考虑进去，因为它会导致抽吃、长将等决定性局面的产生】</font>。在西洋棋里，吃子和升变<font
+        color="#0000FF">【西洋棋的棋子分兵棋</font><font
+        color="#0000FF" face="Times New Roman">(Man)</font><font
+        color="#0000FF">和王棋</font><font color="#0000FF"
+        face="Times New Roman">(King)</font><font color="#0000FF">，兵棋冲到底线就变成王棋，因此我断定它是国际象棋的前身】</font>都是选择。在黑白棋中，每一步都必须吃子，并且“子力平衡”<font
+        color="#0000FF">【仅仅指目前棋子的多少，它和最终棋子的多少没多大联系】</font>在短时间内翻覆无常，所以可以说它根本不存在“静态局面”！</dt>
+    <dt>　　我自己的程序用了简单的静态搜索，它只考虑所有带吃子着法的线路<font
+        face="Times New Roman">(</font>在<font
+        face="Times New Roman"><i>x</i></font>层完全搜索以后<font
+        face="Times New Roman">)</font>。由于通常局面下没有太多合理的吃子着法，所以静态搜索的分枝因子非常小<font
+        face="Times New Roman">(</font>平均在<font
+        face="Times New Roman">4-6</font>，双方在吃子后会迅速下降到<font
+        face="Times New Roman">0)</font>。但是，静态搜索算法要分析大量的局面，它可能会占用整个处理器一半以上的时间。当你的程序使用这个方案以前，你要确定你是否需要用它。</dt>
+    <dt>　　当没有吃子发生时，我的程序才开始评价局面。其结果就是将层数固定的搜索树作选择性的延伸，它能克服大多数由“水平线效应”产生的后果。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>重要的空着</b></font></dt>
+    <dt>　</dt>
+    <dt>　　有个加快象棋程序速度的有效方法，就是引入空着的概念。</dt>
+    <dt>　　简而言之，空着就是自己不走而让对手连走两次。大多数局面中，什么事都不做显然不是办法，你总是必须做点事情来改善局面。<font
+        face="Times New Roman">(</font>老实说，有一些“走也不是，不走也不是”的局面，空着确实是你的最佳选择，但不能走，这种
+        “被迫移动”<font face="Times New Roman">(Zugzwang)</font>局面是没有指望的，所以不必对电脑感到失望。<font
+        face="Times New Roman">)</font></dt>
+    <dt>　　在搜索中让电脑走空着，可以提高速度和准确性。例如：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>假设局面对你来说是压倒性优势，即便你什么都不走，对手也无法挽回。<font
+        face="Times New Roman">(</font>用程序的术语来说，你不走棋也可以产生<font
+        face="Times New Roman">Beta</font>截断。<font
+        face="Times New Roman">)</font>假设这个局面本来准备搜索<font
+        face="Times New Roman"><i>N</i></font>层，而空着取代了整个搜索树<font
+        face="Times New Roman">(</font>你的所有合理着法用空着取代了<font
+        face="Times New Roman">)</font>，并且你的分枝因子是<font
+        face="Times New Roman"><i>B</i></font>，那么搜索空着就相当于只搜索了一个<font
+        face="Times New Roman"><i>N</i>-1</font>层的分枝，而不是<font
+        face="Times New Roman"><i>B</i></font>个这样的分枝。在中局阶段通常<font
+        face="Times New Roman"><i>B</i>=35</font>，所以空着搜索只消耗了完整搜索所需的<font
+        face="Times New Roman">3%</font>的资源。如果空着搜索表明你已经强大到没有必要再走棋<font
+        face="Times New Roman">(</font>即会产生截断<font
+        face="Times New Roman">)</font>的地步，那么你少花了<font
+        face="Times New Roman">97%</font>的力气。如果没有，你就必须检查合理的着法，这只是多花了<font
+        face="Times New Roman">3%</font>的力气。平均来说，收益是巨大的。<font
+        color="#0000FF">【当然，空着搜索对于处理“被迫移动”局面还是有负面作用的，特别是在残局中，这个作用相当明显。可以参考《对弈程序基本技术》专题之《</font><a
+        href="advanced_nullmove.htm" target="_blank"><font
+        color="#0000FF">高级搜索方法——空着裁剪</font></a><font
+        color="#0000FF">》一文。】</font></dt>
+    <dt>　　<font face="Times New Roman">2. </font>假设在静态搜索中，你面对一个只有车吃兵一种吃子着法的局面，然而接下来对手就会走马吃车。你最好不去吃子而走其他不吃子的着法对吗？你可以在静态搜索中插入空着来模拟这种情况，如果在某个局面下空着比其他吃子着法有利，那么你继续吃子就是坏的选择。并且由于最佳着法是静态着法，所以这个局面就是评估函数可以作用的局面。</dt>
+    <dt>　</dt>
+    <dt>　　总的来说，空着启发会减少<font
+        face="Times New Roman">20%</font>到<font
+        face="Times New Roman">75%</font>的搜索时间。这当然值得，特别是当你把这个方法用在静态搜索算法上的时候，就像改变“走子的一方”这种代码一样简单，用不了十行就行了。</dt>
+    <dt><font color="#0000FF">　　【很多书上把“空着”这一技术称为“空着启发”</font><font
+        color="#0000FF" face="Times New Roman">(Null-Move
+        Heuristic)</font><font color="#0000FF">，本文就是这个意思，事实上在历史表、迭代加深等启发的作用下，空着启发已经意义不大了。现在绝大多数程序都使用了称为“空着的向前裁剪”</font><font
+        color="#0000FF" face="Times New Roman">(Null-Move Forward
+        Pruning)</font><font color="#0000FF">的搜索</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">它跟空着启发是有区别的</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">，尽管是一种不完全搜索，但它却是诸多向前裁剪的搜索中最有效的一个。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>期望搜索和</b></font><font
+        size="5" face="Arial"><b>MTD(</b><em><b>f</b></em><b>)</b></font></dt>
+    <dt>　</dt>
+    <dt>　　普通的老式<font face="Times New Roman">Alpha-Beta</font>搜索对某个局面最终的“最小<font
+        face="Times New Roman">-</font>最大”值没有假设。看上去它考虑到任何情况，无论有多反常。但是，如果你有一个非常好的主意<font
+        face="Times New Roman">(</font>例如由于你在做迭代加深，从而想到前一次的结果<font
+        face="Times New Roman">)</font>，你就会找出那些和你预期的差得远的路线，预先把它们截断。</dt>
+    <dt>　　例如，假设一个局面的值接近于<font
+        face="Times New Roman">0</font>，因为非常均衡。现在来假设对一个内部结点作先前的评价，它的值在<font
+        face="Times New Roman">+20,000</font><font
+        color="#0000FF">【这里的单位应该是“千分兵值”，
+        即</font><font color="#0000FF" face="Times New Roman">1000</font><font
+        color="#0000FF">相当于一个兵的价值，那么马和象等于</font><font
+        color="#0000FF" face="Times New Roman">3000</font><font
+        color="#0000FF">，车</font><font color="#0000FF"
+        face="Times New Roman">5000</font><font color="#0000FF">，后</font><font
+        color="#0000FF" face="Times New Roman">9000</font><font
+        color="#0000FF">，其他因素也折算成这个值，而</font><font
+        color="#0000FF" face="Times New Roman">UCI</font><font
+        color="#0000FF">协议中则用“百分兵值”，因为没有必要过于精确】</font>，那么你可以有充分信心对它截断。</dt>
+    <dt>　　这就是“期望搜索”<font
+        face="Times New Roman">(Aspiration Search)</font>背后的思想，一个<font
+        face="Times New Roman">Alpha-Beta</font>搜索的变种，开始时用从负无穷大到正无穷大来限定搜索范围，然后在期望值附近设置小的窗口。如果实际数值恰好落在窗口以内，那么你赢了，你会准确无误地找到路线，并且比其他的路线快<font
+        face="Times New Roman">(</font>因为很多路线都被截断了<font
+        face="Times New Roman">)</font>。如果没有，那么算法就失败了，但是这个错误是很容易被检测的<font
+        face="Times New Roman">(</font>因为“最小<font
+        face="Times New Roman">-</font>最大”值就是其中一条边界<font
+        face="Times New Roman">)</font>，你必须浪费一点时间，用一个更大的窗口重新搜索。如果前面的情况比后面的情况多，那么总体上你还是赢了。很明显，你预先猜的数值越好，这个技术的收效就越大。</dt>
+    <dt>　　在上世纪<font face="Times New Roman">90</font>年代中期，研究员<font
+        face="Times New Roman">Aske Plaat</font>把期望搜索拓展为一个逻辑问题：如果你把带期望的<font
+        face="Times New Roman">Alpha-Beta</font>搜索的窗口大小设定成<font
+        face="Times New Roman">0</font>，将会发生什么事？它当然永远不会成功。但是如果它成功了，那速度将是惊人的，因为它把几乎所有的路线全都截断了。现在，如果失败意味着实际数值低于你的估计，那么你用稍低点的宽度为零的窗口再试一次，重复下去。这样，你就等于用<font
+        face="Times New Roman">Alpha-Beta</font>搜索来做某个“最小<font
+        face="Times New Roman">-</font>最大”值的拆半查找<font
+        face="Times New Roman">(Binary Search)</font>，直到你最终找到那个宽度为零的窗口。</dt>
+    <dt>　　这个伟大的设想发表在一个网站上：<a
+        href="http://theory.lcs.mit.edu/~plaat/mtdf.html"
+        target="about:blank"><font face="Times New Roman">http://theory.lcs.mit.edu/~plaat/mtdf.html</font></a>，它的具体实现称为<font
+        face="Times New Roman">MTD(<em>f</em>)</font>搜索算法，只有十多行。加上<font
+        face="Times New Roman">Alpha-Beta</font>搜索和置换表的运用，<font
+        face="Times New Roman">MTD(<em>f</em>)</font>呈现出惊人的效率，还善于做并行计算。它在“粗糙”<font
+        face="Times New Roman">(</font>简单且快速<font
+        face="Times New Roman">)</font>的局面分析中运行得更好，很明显，如果局面评估的最小单位越大<font
+        face="Times New Roman">(</font>例如从<font
+        face="Times New Roman">0.001</font>个兵增加到<font
+        face="Times New Roman">0.1</font>个兵<font
+        face="Times New Roman">)</font>，它搜索的步数就越少。</dt>
+    <dt>　　在<font face="Times New Roman">Alpha-Beta</font>搜索的变种当中，还有很多具有广泛用途的算法<font
+        face="Times New Roman">(</font>例如名声狼藉的<font
+        face="Times New Roman">NegaScout</font>，我宁可给白痴讲广义相对论，也不想给你们讲这些<font
+        face="Times New Roman">)</font><font color="#0000FF">【之所以说</font><font
+        color="#0000FF" face="Times New Roman">NegaScout</font><font
+        color="#0000FF">名声狼藉，是因为它的发明者</font><font
+        color="#0000FF" face="Times New Roman">Reinefeld</font><font
+        color="#0000FF">首次发表该算法时，程序中有一个致命错误，导致搜索效率大幅度降低，甚至低于普通的</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索，如今这个算法更多地被</font><font
+        color="#0000FF" face="Times New Roman">PVS(</font><font
+        color="#0000FF">主要变例搜索</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">取代，因为它更容易理解】</font>，但是<font
+        face="Times New Roman">Plaat</font>坚持认为<font
+        face="Times New Roman">MTD(<em>f</em>)</font>是至今为止效率最高的算法。我就信了他的话，所以我的程序里用了<font
+        face="Times New Roman">MTD(<em>f</em>)</font>，你们可能会感叹这个算法是多么简短啊！</dt>
+    <dt><font color="#0000FF">　　【</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">在整个过程中只使用极小窗口，并且每次都从根结点开始的，这个过程极大程度地依赖于置换表，称为“用存储器增强的试探驱动器”</font><font
+        color="#0000FF" face="Times New Roman">(Memory-enhanced
+        Test Driver</font><font color="#0000FF">，简称</font><font
+        color="#0000FF" face="Times New Roman">MTD)</font><font
+        color="#0000FF">，它只需要传递两个参数</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">深度</font><font color="#0000FF"
+        face="Times New Roman"><em>n</em></font><font
+        color="#0000FF">和试探值</font><font color="#0000FF"
+        face="Times New Roman"><em>f</em>)</font><font
+        color="#0000FF">，故得名为</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>n</em>,<em>f</em>)</font><font
+        color="#0000FF">，缩写为</font><font color="#0000FF"
+        face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">。实际运作中</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">是以迭代的形式收敛的，而不是原作者所说的拆半查找。</font></dt>
+    <dt><font color="#0000FF">　　在</font><font
+        color="#0000FF" face="Times New Roman">Plaat</font><font
+        color="#0000FF">的文章中，</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">的代码有</font><font color="#0000FF"
+        face="Times New Roman">10</font><font color="#0000FF">行，而跟它异曲同工的算法</font><font
+        color="#0000FF" face="Times New Roman">PVS</font><font
+        color="#0000FF">，则只比普通的</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">多了</font><font color="#0000FF"
+        face="Times New Roman">5</font><font color="#0000FF">行左右，因此很奇怪原作者</font><font
+        color="#0000FF" face="Times New Roman">(Laram</font><font
+        color="#0000FF">&eacute;</font><font color="#0000FF"
+        face="Times New Roman">e)</font><font color="#0000FF">为什么如此看好</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">。</font><font color="#0000FF"
+        face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">在并行计算上确实比</font><font
+        color="#0000FF" face="Times New Roman">PVS</font><font
+        color="#0000FF">有优势，由于</font><font
+        color="#0000FF" face="Times New Roman">Plaat</font><font
+        color="#0000FF">等人拿</font><font color="#0000FF"
+        face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">和</font><font color="#0000FF"
+        face="Times New Roman">PVS</font><font color="#0000FF">算法的比较是在并行机上完成的，才得出</font><font
+        color="#0000FF" face="Times New Roman">MTD(<em>f</em>)</font><font
+        color="#0000FF">优于</font><font color="#0000FF"
+        face="Times New Roman">PVS</font><font color="#0000FF">的结论，而事实上大部分的程序用的都是</font><font
+        color="#0000FF" face="Times New Roman">PVS</font><font
+        color="#0000FF">。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>单步延伸</b></font></dt>
+    <dt>　</dt>
+    <dt>　　在我们结束这个主题以前，这是最后一个话题。在象棋中，有些着法明显比其他的好，这样就可能没必要搜索其他的变化了。</dt>
+    <dt>　　例如，假设你在迭代加深过程中正在做深度为<font
+        face="Times New Roman"><i>N</i></font><font face="Symbol">
+        -</font><font face="Times New Roman"> 1</font>的搜索，发现某步的评分为<font
+        face="Times New Roman">+9000(</font>即你吃了对方的后<font
+        face="Times New Roman">)</font>，而其他都低于<font
+        face="Times New Roman">0</font>。如果像比赛一样想节约时间，你会跳过前面的<font
+        face="Times New Roman"><i>N</i></font>层搜索而对这步进行<font
+        face="Times New Roman"><i>N</i></font>层搜索<font
+        color="#0000FF">【对于这步来说，搜索加深了一层，对于优势局面来说，优势应该是越来越大的，所以加深一层后评分应通常要高】</font>，如果这步额外搜索的评分不比预期的低，那么你可以假设这步棋会比其他着法都好，这样你就可以提前结束搜索了。<font
+        face="Times New Roman">(</font>记住，如果平均每层有<font
+        face="Times New Roman">35</font>种合理着法，那么你就可能节省<font
+        face="Times New Roman">97%</font>的时间！<font
+        face="Times New Roman">)</font></dt>
+    <dt>　　深蓝的小组发展了这个思想并提出了“单步延伸”<font
+        face="Times New Roman">(Singular Extension)</font>的概念。如果在搜索中某步看上去比其他变化好很多，它就会加深这步搜索以确认里边没有陷阱。<font
+        face="Times New Roman">(</font>实际过程远比这里说的要复杂，当然基本思想没变。<font
+        face="Times New Roman">)</font>单步延伸是耗费时间的，对一个结点增加一层搜索会使搜索树的大小翻一番，评估局面的计算量同时也翻一番。换句话说，只有深蓝那种硬件水平才吃得消它，我那笨拙的<font
+        face="Times New Roman">Java</font>代码肯定不行。但是它的成效是不可否认的，不是吗？<font
+        color="#0000FF">【原作者的意思可能是指，单步延伸技术会明显提高棋力，同时也会增加搜索时间。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>下一个月</b></font></dt>
+    <dt>　</dt>
+    <dt>　　在第六部分中，我们会着重讨论局面评估函数，它才真正告诉程序一个局面是好是坏。这个主题具有极其广泛的内容，可以花几年时间来改进评估方法<font
+        face="Times New Roman">(</font>也确实有人这样做<font
+        face="Times New Roman">)</font>，因此我们必须对这些内容进行彻底讨论，包括它们的可行性和重要程度。<font
+        color="#0000FF">【在这篇普及型的连载中，作者怎么可能给你们讲那么多呢？】</font>如果任何事情都按照计划进行，我就该用一些<font
+        face="Times New Roman">Java</font>代码来给你们填饱肚子，但是这很难办到，不是吗？</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e</font>，<font
+        face="Times New Roman">2000</font>年<font
+        face="Times New Roman">9</font>月</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.gamedev.net/reference/programming/features/chess5/"
+        target="_blank"><font face="Times New Roman">http://www.gamedev.net/reference/programming/features/chess5/</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="basic_search.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>四<font
+        face="Times New Roman">)</font>：基本搜索方法</a></li>
+    <li>下一篇　<a href="basic_evaluation.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>六<font
+        face="Times New Roman">)</font>：局面评估函数</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

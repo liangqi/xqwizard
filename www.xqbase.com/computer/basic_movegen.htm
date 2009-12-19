@@ -1,0 +1,252 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>国际象棋程序设计(三)：着法的产生</title>
+</head>
+
+<body background="../background.gif" link="#0000FF"
+vlink="#800080">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">国际象棋程序设计(三)：着法的产生</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e/</font>文</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　上个月，我完成了连载的第二部分，介绍了在着法产生的预处理中涉及的数据结构。现在我们把话题回到着法产生，详细介绍两种着法产生的策略，并解释一下在特定的情况下如何在这两个策略中作出选择。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>困境</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　不管你怎么对付象棋，它就是一个复杂的游戏，对于电脑来说就更是如此了。</dt>
+    <dt>　　在通常局面下，棋手要在<font
+        face="Times New Roman">30</font>多种着法中选择，有些是好的，有些则是自杀棋。对于受过训练的人来说，他能判断出大多数愚蠢和没有目的着法，甚至初学者都知道，后处于被吃的位置时该怎么逃跑。专家<font
+        face="Times New Roman">(</font>多数是通过直觉而非推理<font
+        face="Times New Roman">)</font>则知道哪几步棋会比较有力。</dt>
+    <dt>　　但是，把这些信息<font
+        face="Times New Roman">(</font>特别是无意识的那些<font
+        face="Times New Roman">)</font>编写到计算机里去，被证明是极端困难的，连那些最强的象棋程序<font
+        face="Times New Roman">(</font>除了个别程序以外，例如<font
+        face="Times New Roman">Hans Berliner</font>的<font
+        face="Times New Roman">Hitech</font>和它的姊妹程序<font
+        face="Times New Roman">)</font>都已经放弃这条路线了，取而代之的是“蛮力”——如果你能以足够快的速度分析所有的着法，并且足够深远地预测他们的结果，无论你是否有一个清晰的思路，你最终会走出一步好棋。所以，着法的产生和搜索必须越快越好，以减小蛮力方法的花费。</dt>
+    <dt>　　搜索技术将在连载的第四和第五部分介绍。这个月，我们会关注着法产生。历史上有以下三条主要的策略：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>选择生成：检测棋盘，找到一部分可能的着法，把其他的全不要；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>渐进生成：产生一些着法，希望沿着某个着法下去，可以证明这条路线好到<font
+        face="Times New Roman">(</font>或坏到<font
+        face="Times New Roman">)</font>足以中止搜索的程度<font
+        face="Times New Roman">(</font>而不必再去找其他的着法<font
+        face="Times New Roman">)</font><font color="#0000FF">【译注：即后面要提到的“截断”】</font>；</dt>
+    <dt>　　<font face="Times New Roman">3. </font>完全生成：产生所有的着法，希望置换表<font
+        face="Times New Roman">(</font>在第二部分曾讨论过<font
+        face="Times New Roman">)</font>会包含有关的信息，从而没有必要对这些着法进行搜索。</dt>
+    <dt>　</dt>
+    <dt>　　选择生成<font face="Times New Roman">(</font>由之衍生出的搜索技术称为“朝前裁剪”<font
+        face="Times New Roman">(Forward Pruning))</font>，上世纪<font
+        face="Times New Roman">70</font>年代中期以前，几乎所有的程序都这么做的，但是从那以后就突然消失了。另外两个方法代表了一枚硬币的两面——着法产生和搜索之间的权衡。对于那些着法产生简单并且有很多路线可以到达相同局面的游戏<font
+        face="Times New Roman">(</font>或者具备其中一个特征<font
+        face="Times New Roman">)</font>，例如黑白棋<font
+        face="Times New Roman">(Othello)</font>和五子棋<font
+        face="Times New Roman">(GoMoku)</font>，完全生成效率会更高些，而当着法产生的规则复杂的时候，渐进生成的速度会更快。不过两种策略都是很好的策略。</dt>
+    <dt><font color="#0000FF">　　【这里就黑白棋发挥几句。可能原作者认为，凡是只由黑白两子构成的游戏就一定具有这两个特征了，就像围棋和五子棋。但是我曾经做过黑白棋的程序并发现两个特点，一是着法产生并不像想象中的那么容易，它有点类似于中国象棋中的炮的着法，二是殊途同归的局面比起国际象棋来说少得多，原因就在于走一步棋最多会改变</font><font
+        color="#0000FF" face="Times New Roman">18</font><font
+        color="#0000FF">个格子的颜色，这与原作者的观点大相径庭。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>早期的策略：朝前裁剪</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　在<font face="Times New Roman">1949</font>年<font
+        face="Times New Roman">(</font>确实如此<font
+        face="Times New Roman">)</font>，<font
+        face="Times New Roman">Claude Shannon</font>提出了两个象棋程序的算法：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>着眼于对于所有的着法及其应对着法，循环下去；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>只检查“最好”的着法，这个着法由对局面的分析来确定，然后也只选择“最好”的应对着法，循环下去。</dt>
+    <dt>　</dt>
+    <dt>　　起初，第二种选择看上去成功的可能更大。毕竟人就是这么做的，从逻辑上说在每个结点上只考察某些着法，总比考虑所有的着法要快。不幸的是，这条理论被事实推翻了，用选择搜索的程序，棋下得并不怎么样。它们最好的也只能达到中等俱乐部棋手的水平，最坏的情况下还会犯低级错误。打败世界冠军<font
+        face="Times New Roman">(</font>现实一点，水平发挥得稳定一些<font
+        face="Times New Roman">)</font>是遥不可及的。</dt>
+    <dt>　　在上世纪<font face="Times New Roman">70</font>年代中期，著名的美国西北大学<font
+        face="Times New Roman">Slate</font>和<font
+        face="Times New Roman">Atkin</font>的小组决定放弃复杂的“最佳着法”生成办法，后来证明，他们绕过复杂分析所省下来的时间，足以进行全面的搜索<font
+        face="Times New Roman">(</font>检查所有的着法<font
+        face="Times New Roman">)</font>。无论怎么说，这项改革善意地把“朝前裁剪”埋葬了。</dt>
+    <dt>　　下面介绍一下鲍特维尼克的工作。</dt>
+    <dt>　　上世纪<font face="Times New Roman">70</font>年代到<font
+        face="Times New Roman">80</font>年代早期，在前世界冠军鲍特维尼克<font
+        face="Times New Roman">(Mikhail Botvinnik)</font>的领导下，苏联发展了一个特别的朝前裁剪的例子。鲍特维尼克认为，计算机要达到特级大师级水平，唯一的途径就是像特级大师一样，即只考虑少量着法，但是要足够深远足够细致。他的程序试图判定世界级选手才能掌握的局面，还要实现很高水平的作战计划。尽管这个过程中诞生了一些吸引人的著作，揭示了只有鲍特维尼克本人才具备的特级大师级思路，但是这项工作最终没有达到预期的目标。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>产生全部着法</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　自从朝前裁剪被淘汰以后，最直接的实现完全搜索的方法是：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>找到局面中所有合理的着法；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>对他们进行排列，想要提高搜索速度就必须选择最佳的顺序；</dt>
+    <dt>　　<font face="Times New Roman">3. </font>对他们逐一进行搜索，直到全部搜索完成或者被截断<font
+        color="#0000FF">【运用</font><font color="#0000FF"
+        face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">等搜索方法，可以在特定的情况提前中止搜索，以后的搜索就没有必要，这种情况就称为“截断”</font><font
+        color="#0000FF" face="Times New Roman">(Cut-off)</font><font
+        color="#0000FF">，连载的第四部分会介绍这类搜索方法】</font>。</dt>
+    <dt>　</dt>
+    <dt>　　早期的程序<font face="Times New Roman">(</font>例如<font
+        face="Times New Roman">Sargon)</font>每次都扫描棋盘的每个格子，找有没有可以移动的棋子，然后计算可能的着法。当时存储器是稀有矿产，额外花费<font
+        face="Times New Roman">CPU</font>的时间每次把着法重新计算一遍，是别无选择的蠢事。</dt>
+    <dt>　　如今，预处理的数据结构<font
+        face="Times New Roman">(</font>就像我上个月描述的那个<font
+        face="Times New Roman">)</font>可以避免大量计算，而复杂的代码会多花费几十<font
+        face="Times New Roman">KB</font>的空间。当这个超快的着法产生方法和置换表结合在一起的时候，程序员眼前又多了一条思路——如果某些着法已经被搜索过，它的价值<font
+        face="Times New Roman">(</font>保存在置换表中<font
+        face="Times New Roman">)</font>足以产生截断，那么根本就不需要搜索任何着法了。很明显，置换表越大，并且置换可能越多<font
+        face="Times New Roman">(</font>它由游戏规则决定<font
+        face="Times New Roman">)</font>，置换表的作用就越明显。</dt>
+    <dt>　　这个技术不仅在概念上简单，而且普遍适用于其他游戏<font
+        face="Times New Roman">(</font>但着法却不是普遍适用的，象棋着法可以分为吃子和不吃子，其他游戏像黑白棋就不那么容易分类了<font
+        face="Times New Roman">)</font>。因此，如果试图让你的程序不止能玩一种游戏，你应该尽可能地用这个技术来代替下面要介绍的一个技术。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>一次只产生一步棋</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　老牌的象棋程序<font face="Times New Roman">(</font>至少是<font
+        face="Times New Roman">CHESS 4.5</font>以前的<font
+        face="Times New Roman">)</font>则采取了相反的策略——一次产生少量着法，然后搜索，如果产生截断，就不需要产生剩下的着法了。</dt>
+    <dt>　　这种方法的流行是因为下列因素结合在一起了：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>搜索是不需要太大的存储器的。上世纪<font
+        face="Times New Roman">70</font>年代以前的程序只能处理很小的置换表，也没有预处理的数据结构，这些都限制了完全搜索方案<font
+        face="Times New Roman">(</font>就是上一节提到的方案<font
+        face="Times New Roman">)</font>的运用。</dt>
+    <dt>　　<font face="Times New Roman">2. </font>在象棋着法产生的预处理比其他游戏复杂得多，有上王车易位、吃过路兵，不同的棋子要区别对待。</dt>
+    <dt>　　<font face="Times New Roman">3. </font>通常，这个方案的说服力<font
+        face="Times New Roman">(</font>就是某步棋可以产生截断的例子<font
+        face="Times New Roman">)</font>在于吃子。例如，某棋手送吃他的后，对手就会毫不犹豫地吃掉它，棋局也因此结束了。因为一个局面中能吃子的着法不多，而且产生吃子着法相对要容易一些，所以计算吃子的着法有很多产生截断的机会。</dt>
+    <dt>　　<font face="Times New Roman">4. </font>吃子是静态搜索<font
+        face="Times New Roman">(Quiescence Search</font>，这个将在后面几部分提到<font
+        face="Times New Roman">)</font>中需要检查的着法<font
+        face="Times New Roman">(</font>不是唯一一类着法<font
+        color="#0000FF">【可能除了吃子以外就是将军了】</font><font
+        face="Times New Roman">)</font>，所以单独产生吃子的着法是非常有效的。</dt>
+    <dt>　</dt>
+    <dt>　　所以，很多程序都是先产生吃子的着法的，而且从吃最有价值的子开始，来找到最快的截断。有些技术是专门提高吃子着法的产生速度的，多数运用了位棋盘的技术：</dt>
+    <dt>　　<font face="Times New Roman">CHESS 4.5 </font>用了两个组<font
+        face="Times New Roman">64</font>个的位棋盘，棋盘上的每一格对应一个位棋盘。一组由
+        “这个格子上的子可以攻击的格子”的位棋盘组成，另一组正好相反，由“可以攻击这个格子的棋子所占的格子”的位棋盘组成。所以，如果程序去找吃黑后的着法，它先从基本位棋盘的数据库中找到黑后的位置，然后用这两组位棋盘来确定<font
+        color="#0000FF">【其实只要用后一组就可以了】</font>攻击后的棋子的位置，并且只产生这些子的着法。</dt>
+    <dt>　　每走一步都需要维护这些位棋盘，这就需要引进很多技术，有一个称为“旋转的位棋盘”<font
+        face="Times New Roman">(Rotated Bitboard)</font>的作用最显著。对于第一组位棋盘的产生办法，我见过的最好的论述是由<font
+        face="Times New Roman">James F. Swafford</font>写的，这篇文章是在网上找到的，网址是：<a
+        href="http://sr5.xoom.com/_XMCM/jswaff/chessprg/rotated.htm"><font
+        face="Times New Roman">http://sr5.xoom.com/_XMCM/jswaff/chessprg/rotated.htm</font></a>。</dt>
+    <dt>　　<font color="#0000FF">【可以参阅我从</font><font
+        color="#0000FF" face="Times New Roman">Allan Liu</font><font
+        color="#0000FF">那里整理的译文《对弈程序基本技术》专题之《</font><a
+        href="structure_rotation.htm" target="_blank"><font
+        color="#0000FF">数据结构</font><font color="#0000FF"
+        face="Times New Roman">(</font><font color="#0000FF">二</font><font
+        color="#0000FF" face="Times New Roman">) </font><font
+        color="#0000FF">——旋转的位棋盘</font></a><font
+        color="#0000FF">》，现在</font><font color="#0000FF"
+        face="Times New Roman">Swafford</font><font
+        color="#0000FF">教授的那个网站关了</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">这至少是</font><font color="#0000FF"
+        face="Times New Roman">5</font><font color="#0000FF">年以前的网站了</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">，但事实证明，他的那套方案并不那么有效，有误导之嫌。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>对着法排序以加快搜索速度</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我们下次要提到，搜索效率取决于搜索着法的顺序。着法排列的好坏直接影响到效率
+        好的排列方法可以产生很多的截断，大大减小搜索树的大小减小，其结点数只有用最坏的排列的搜索树的平方根那么多。</dt>
+    <dt>　　不幸的是，可以证明，最好的顺序应该从最佳着法开始。当然，如果你知道哪个着法是最佳的，你还有必要做搜索吗？不过仍旧有一些“猜”的方法能确定可能比较好的着法。例如，你可以从吃子、兵的升变<font
+        face="Times New Roman">(</font>它会大幅度改变子力平衡<font
+        face="Times New Roman">)</font>，或者是将军着法开始<font
+        face="Times New Roman">(</font>它的应对着法很少<font
+        face="Times New Roman">)</font>。紧接着是前面搜索过的在搜索树的同一层<font
+        color="#0000FF">【肯定是在搜索树的不同分枝上】</font>上产生截断的着法<font
+        face="Times New Roman">(</font>即所谓的“杀手着法”<font
+        face="Times New Roman">)</font>，然后是剩下的。这就是迭代加深<font
+        face="Times New Roman">(Iterative Deeping)</font>的<font
+        face="Times New Roman">Alpha-Beta</font>搜索<font
+        face="Times New Roman">(</font>下个月会详细讨论的<font
+        face="Times New Roman">)</font>和历史表<font
+        face="Times New Roman">(</font>上次讨论过了<font
+        face="Times New Roman">)</font>的原理。要注意的是，这些技巧区别于朝前裁减——所有的着法最终是被检测的，那些坏的着法只是排在后边，而不排除在考虑范围以外。</dt>
+    <dt>　　最后要注意的是，在象棋中，有些着法因为被将军而是非法的。但是这些状况毕竟是罕见情况，可以证明判断着法的合理性需要花费很多运算量。更有效的办法是所有的着法都搜索完了再来作检查，例如某步棋走完后有个吃王的应对着法，这时才来裁定这步棋为非法，搜索就此中止。很明显，如果搜索到这步棋以前，就产生截断了，那就不会对这步棋的合法性作出判断了<font
+        color="#0000FF">【这部分的时间不就省下来了吗】</font>。</dt>
+    <dt><font color="#0000FF">　　【这里就本节提到的“杀手”着法作一些发挥：大多数程序往往不是生成全部着法的，而是先判断杀手着法的合理性(判断着法合理性所做花的时间要比产生全部着法少得多)，如果是合理着法就先搜索这些着法。因为杀手着法是产生截断几率很高的着法，所以很有可能不需要生成着法了。</font></dt>
+    <dt><font color="#0000FF">　　另外，排序技术也非常有讲究，因为排序所花的时间可能会比着法产生的时间更多。排序的算法很多，常用的有冒泡排序、剥壳排序、快速排序等，我个人倾向于最慢的冒泡排序，原因是冒泡排序每扫描一趟会产生一个最大值，希望它能产生截断而没有必要对后面的着法再进行排序。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>我的选择</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　在我的象棋程序里，我选择产生所有的着法，只是因为以下几个原因：</dt>
+    <dt>　　<font face="Times New Roman">1. </font>我想让这个程序作为其他游戏的基础，这些游戏没有像象棋一样的吃子着法；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>我有足够的存储器来运行这个游戏；</dt>
+    <dt>　　<font face="Times New Roman">3. </font>这个技术需要的代码写起来比较容易，也比较看得懂；</dt>
+    <dt>　　<font face="Times New Roman">4. </font>已经有很多免费的程序，可以实现只产生吃子的着法，有兴趣的读者可以去看<font
+        face="Times New Roman">Crafty</font>的源程序，还有<font
+        face="Times New Roman">James Swafford</font>的<font
+        face="Times New Roman">Galahad</font>。</dt>
+    <dt>　</dt>
+    <dt>　　我的程序的整个表现似乎比别人的稍差了些<font
+        color="#0000FF">【我想可能就是受了</font><font
+        color="#0000FF" face="Times New Roman">James Swafford</font><font
+        color="#0000FF">的误导吧】</font>，我的程序<font
+        face="Times New Roman">(</font>是用<font
+        face="Times New Roman">Java</font>写的，没有用别的<font
+        face="Times New Roman">)</font>不想和深蓝去比，所以我感觉这并不算太坏。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>下一个月</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　现在我们准备探索象棋程序的核心部分——搜索技术了。这是一个很大的专题，需要两篇文章。我们从所有游戏最基本的搜索算法开始说起，然后才是最新发展起来的专门针对象棋的优化方法。</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e</font>，<font
+        face="Times New Roman">2000</font>年<font
+        face="Times New Roman">7</font>月</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.gamedev.net/reference/programming/features/chess3/"
+        target="_blank"><font face="Times New Roman">http://www.gamedev.net/reference/programming/features/chess3/</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="basic_struct.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>二<font
+        face="Times New Roman">)</font>：数据结构</a></li>
+    <li>下一篇　<a href="basic_search.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>四<font
+        face="Times New Roman">)</font>：基本搜索方法</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

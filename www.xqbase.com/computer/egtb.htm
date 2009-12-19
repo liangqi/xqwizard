@@ -1,0 +1,434 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>棋弈软件基础——残局库</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《<a href="http://www.chessit.net/" target="_blank">国际象棋译文苑</a>》文摘</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">残局库</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Aaron Tay</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　<font face="Arial"><strong>A1.</strong></font><font
+        face="Times New Roman"> </font><font face="黑体"><strong>什么叫残局库？</strong></font><font
+        face="Arial"><strong>(endgame tablebase</strong></font><font
+        face="黑体"><strong>，简称</strong></font><font
+        face="Arial"><strong>egtb)</strong></font></dt>
+    <dt>　　概述性地说残局数据库是储存了残局局面<font
+        face="Times New Roman">[</font>经回溯分析计算过<font
+        face="Times New Roman">]</font>的数据库文件，它使用在棋弈程序上，当进入残局时只要适合使用的残局数据库文件存在，程序将走得非常完美。</dt>
+    <dt>　　多数棋弈引擎并不一定要到达残局库所涵盖的局面时才使用残局库。例如，在到达如此局面之前几步，引擎计算<font
+        face="Times New Roman">(</font>但还没走棋<font
+        face="Times New Roman">)</font>一系列交换之后直接进入残局库里存有的局面。引擎于是搜索探查残局库并取得那个设想局面的结果。如此当然提高了棋力。</dt>
+    <dt>　　<font color="#000080">【译注：作者说他不熟悉残局数据库的技术细节；译者也不熟悉，那也需要一定数学和程序设计基础。但作者的解释未免也太过简单些了，不妨试着这样解释：残局库是经特别算法产生的特定格式的、储存各限定棋子数目的残局之所有局面及其估值的数据库文件集合。比如王</font><font
+        color="#000080" face="Times New Roman">+</font><font
+        color="#000080">车对王的最简单残局，其相应数据库文件就储存了由这三个棋子在棋盘上组成的一切可能局面及估值，所以当局面到达王</font><font
+        color="#000080" face="Times New Roman">+</font><font
+        color="#000080">车对王局面时，引擎就直接在数据库中搜索、对照局面并取出相应估值，这样它“想都不用想”就知道该如何走。因为制作残局库文件时，用回溯分析计算过所有局面，得出最佳结果，因此按残局库里的走法走相对应的残局是最正确最完美的</font><font
+        color="#000080" face="Times New Roman">(</font><font
+        color="#000080">这是对合格残局库的要求</font><font
+        color="#000080" face="Times New Roman">)</font><font
+        color="#000080">。所以使用残局库大大提高了引擎走末段残局的棋力</font><font
+        color="#000080" face="Times New Roman">--</font><font
+        color="#000080">几乎不花时间计算且又走出最准确的棋步。目前，棋子数目最大的是六子残局，即双方剩下棋子加起来一共六只，不管什么组合</font><font
+        color="#000080" face="Times New Roman">(</font><font
+        color="#000080">显而易见，双方各有一只王加起来就占了两子</font><font
+        color="#000080" face="Times New Roman">)</font><font
+        color="#000080">。】</font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Arial"><strong>A2.</strong></font><font
+        face="Times New Roman"><strong> </strong></font><font
+        face="黑体"><strong>有多少种残局库格式？彼此有什么不同？</strong></font></dt>
+    <dt>　　有各种各样的残局库格式，包括肯&middot;托普森式<font
+        face="Times New Roman">(Ken Thompson)</font>、史蒂文&middot;爱德华兹式<font
+        face="Times New Roman">(Steven J. Edwards)</font>、欧根尼&middot;纳利莫夫式<font
+        face="Times New Roman">(Eugene Nalimov)</font>以及<font
+        face="Times New Roman">Chessmaster9000</font>专用的<font
+        face="Times New Roman">EDGB</font>残局库格式。</dt>
+    <dt>　　不过总的来说它们划分为两种残局库类型：将杀步数<font
+        face="Times New Roman">(DTM)</font>类型和变换步数<font
+        face="Times New Roman">(DTC)</font>类型。粗略地以非专业语言来说，彼此之间区别如下：</dt>
+    <dt>　　将杀步数<font face="Times New Roman">(DTM)</font>类型：即<font
+        face="Times New Roman">Distance to mate</font>，这种类型的库为每一个局面储存最短的将杀可能<font
+        face="Times New Roman">(</font>以层，即<font
+        face="Times New Roman">ply</font>来计算，一层相当于半个回合<font
+        face="Times New Roman">)</font>。例如<font
+        face="Times New Roman">Nalimov</font>残局库。</dt>
+    <dt>　　变换步数<font face="Times New Roman">(DTC)</font>类型：即<font
+        face="Times New Roman">Distance to conversion</font>，这种类型的库储存每一个局面及其一个“转换”之间的最短层数。所谓一个转换，指或者是兵升变，或者某子被吃去，或者出现将杀。例如<font
+        face="Times New Roman">Thompson</font>残局库。</dt>
+    <dt>　　另外，无论是<font face="Times New Roman">DTM</font>还是<font
+        face="Times New Roman">DTC</font>类型的残局库，都不能识别<font
+        face="Times New Roman">50</font>回合自然限着规则。为了克服它们的缺点，已经提出了<font
+        face="Times New Roman">DTZ</font>和<font
+        face="Times New Roman">DTR</font>另外两种类型。但至今只停留在理论上。
+    </dt>
+    <dt>　　说到具体每种格式的区别，还不能简单就说得清楚的。<font
+        face="Times New Roman">Crafty</font>的作者于<font
+        face="Times New Roman">2000</font>年<font
+        face="Times New Roman">10</font>月在新闻组作过如下解释：</dt>
+    <dt>　　“<font face="Times New Roman">Edwards</font>式：属于将杀步数<font
+        face="Times New Roman">(DTM)</font>类型。<font
+        face="Times New Roman">Edwards</font>式的主要问题是这种残局库体积比其它的庞大。</dt>
+    <dt>　　“<font face="Times New Roman">Nalimov</font>式：也属于将杀步数<font
+        face="Times New Roman">(DTM)</font>类型，但<font
+        face="Times New Roman">Nalimov</font>式的残局库文件是压缩的，也可以以压缩形式使用而无不利之处。对于拥有全部<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>、<font
+        face="Times New Roman">5</font>子残局的残局库，别的格式其文件总数大小超过<font
+        face="Times New Roman">30G</font>，而使用这种格式的大约只有<font
+        face="Times New Roman">7.5G</font>。</dt>
+    <dt>　　“<font face="Times New Roman">Thompson</font>式：属于变换步数<font
+        face="Times New Roman">(DTC)</font>类型<font
+        face="Times New Roman">(</font>每当发生吃子，残局的‘级数’都变小<font
+        face="Times New Roman">)</font>。这种格式难以以压缩形式使用，相对于<font
+        face="Times New Roman">Nalimov</font>式，它提供的信息也不相同……比如，它告诉你一些信息，却没有区分是负还是和，而<font
+        face="Times New Roman">Nalimov</font>式对此则有区分。</dt>
+    <dt>　　“<font face="Times New Roman">Nalimov</font>式是最佳选择。几乎每个引擎都支持它……”</dt>
+    <dt>　　当然，他没有提及仅是<font
+        face="Times New Roman">Chessmaster9000</font>专用的<font
+        face="Times New Roman">EDGB</font>格式残局库，因为<font
+        face="Times New Roman">EDGB</font>是<font
+        face="Times New Roman">2002</font>年<font
+        face="Times New Roman">8</font>月才发布的。<font
+        face="Times New Roman">Nalimov</font>式仍然是最流行的在用残局库格式，因此我想再多谈一点这种格式。</dt>
+    <dt>　　<font face="Times New Roman">Nalimov</font>式几近“完美”，因为它把吃过路兵也考虑进去了。但是没把王车易位也考虑进去。只不过，大概只有排局迷才会对此计较。</dt>
+    <dt>　　总的来说，现代几乎所有的国际象棋程序包括大多数<font
+        face="Times New Roman">Winboard</font>引擎使用<font
+        face="Times New Roman">Nalimov</font>式残局库，一部分原因是它们不设版权，一部分原因它们更高效。现在<font
+        face="Times New Roman">Nalimov</font>式残局库已经出了部分<font
+        face="Times New Roman">6</font>子残局库。<font
+        face="Times New Roman">Nalimov</font>式残局库有两种形式，压缩的和非压缩的，压缩的以“<font
+        face="Times New Roman">emd</font>”为文件后缀。</dt>
+    <dt>　　多数现代棋弈程序能解压使用压缩的残局库，例如<font
+        face="Times New Roman">Crafty</font>从<font
+        face="Times New Roman">16.5</font>版本后就支持压缩的<font
+        face="Times New Roman">Nalimov</font>式残局库。我注意到有个<font
+        face="Times New Roman">Winboard</font>引擎<font
+        face="Times New Roman">Esc</font>只能用非压缩的。</dt>
+    <dt>　　残局库还有其它一些格式，但比较少见。比较著名的，商业性高级棋弈软件<font
+        face="Times New Roman">Nimzo8</font>使用它的<font
+        face="Times New Roman">Nimzo</font>残局库，这种残局库放入到内存中使用，因此读取比较快。一直没有公开发表但棋力不俗的<font
+        face="Times New Roman">Ferret</font>也使用它的专用残局库。我文章余下部分，除非特别说明，残局库都是指<font
+        face="Times New Roman">Nalimov</font>式。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A4.</strong></font><font
+        face="黑体"><strong>
+        常见棋弈程序是否支持、以及各支持什么格式的残局库？</strong></font></dt>
+    <dt>　　这里有一些：<font face="Times New Roman">Chessbase</font>出版发行的那些大名鼎鼎的高级软件比如<font
+        face="Times New Roman">(Deep)Fritz</font>、<font
+        face="Times New Roman">Junior</font>、<font
+        face="Times New Roman">HIARCS</font>、<font
+        face="Times New Roman">Shredder 5.0+</font>等都支持<font
+        face="Times New Roman">Nalimov</font>式；<font
+        face="Times New Roman">Shredder 5.0+</font>另支持<font
+        face="Times New Roman">Thompson</font>；<font
+        face="Times New Roman">Nimzo8+</font>另支持自身的<font
+        face="Times New Roman">Nimzo</font>残局库；<font
+        face="Times New Roman">Rebel Tiger 2.0</font>和<font
+        face="Times New Roman">Chess Tiger 14.0</font>也支持<font
+        face="Times New Roman">Nalimov</font>式<font
+        color="#000080">【</font><font color="#000080"
+        face="Times New Roman">CT15</font><font color="#000080">也是】</font>，早期<font
+        face="Times New Roman">Rebel</font>不支持任何残局库；<font
+        face="Times New Roman">Chessmaster 9000</font>及以后版本支持其专用的<font
+        face="Times New Roman">EDGB</font>残局库；<font
+        face="Times New Roman">Chess Genius 6.5</font>支持<font
+        face="Times New Roman">Thompson</font>式；绝大部分免费的<font
+        face="Times New Roman">Winboard</font>引擎都是支持<font
+        face="Times New Roman">Nalimov</font>式，其中<font
+        face="Times New Roman">Crafty</font>在<font
+        face="Times New Roman">15.21</font>版本之前使用<font
+        face="Times New Roman">Edwards</font>式，之后只支持<font
+        face="Times New Roman">Nalimov</font>式；<font
+        face="Times New Roman">16.5</font>版本之后可使用压缩的<font
+        face="Times New Roman">Nalimov</font>式残局库。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A5.</strong></font><font
+        face="黑体"><strong> 从哪里可得到残局库？</strong></font></dt>
+    <dt>　　如果你有<font face="Times New Roman">Chessbase</font>发行的软件比如<font
+        face="Times New Roman">Fritz</font>，你就同时拥有<font
+        face="Times New Roman">3-4</font>子压缩<font
+        face="Times New Roman">Nalimov</font>式残局库。但你可能觉得不够，有三种方法可得到更多：购买、下载、自造。如果你有<font
+        face="Times New Roman">Chessmaster9000</font>，<font
+        face="Times New Roman">CD</font>原盘上已附带所有<font
+        face="Times New Roman">4</font>子和部分<font
+        face="Times New Roman">5</font>子残局库。写作此文时，<font
+        face="Times New Roman">Chessmaster9000</font>专用的这种<font
+        face="Times New Roman">EDGB</font>残局库既还没有得出售、也没有地方下载。</dt>
+    <dt>　　<font face="Times New Roman">Chessbase</font>出版发行的<font
+        face="Times New Roman">The Chessbase Endgame Turbo CD</font>一共四张<font
+        face="Times New Roman">CD</font>，包含<font
+        face="Times New Roman">Nalimov</font>式全部<font
+        face="Times New Roman">3</font>和<font
+        face="Times New Roman">4</font>子、以及部分重要的<font
+        face="Times New Roman">5</font>子残局库，还可找得到一套<font
+        face="Times New Roman">9CD</font>的，包含更全。</dt>
+    <dt>　　关于下载，你可以到<font
+        face="Times New Roman">ftp://ftp.cis.uab.edu/pub/hyatt/TB</font>去下载所有<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>、<font
+        face="Times New Roman">5</font>和少部分<font
+        face="Times New Roman">6</font>子残局库<font
+        color="#000080">【译注：对于熟悉国际象棋软件的，这个</font><font
+        color="#000080" face="Times New Roman">FTP</font><font
+        color="#000080">站可说大大有名，既可以下载</font><font
+        color="#000080" face="Times New Roman">Nalimov</font><font
+        color="#000080">式残局库，也是提供各版本</font><font
+        color="#000080" face="Times New Roman">Crafty</font><font
+        color="#000080">下载的老家】</font>，要下载<font
+        face="Times New Roman">5</font>子以上的残局库，你需要较快的网上下载速度，因为它们很大。<font
+        color="#000080">【单单一个文件上百</font><font
+        color="#000080" face="Times New Roman">M</font><font
+        color="#000080">是很平常的，而且文件很多】</font></dt>
+    <dt>　　至于自造残局库，可使用<font
+        face="Times New Roman">tbgen.exe</font>这个工具，下载：</dt>
+    <dt><a href="ftp://ftp.cis.uab.edu/pub/hyatt/TB/tbexe.zip"><font
+        face="Times New Roman">ftp://ftp.cis.uab.edu/pub/hyatt/TB/tbexe.zip</font></a>，教程可在<a
+        href="http://moq.pythoz.com/WinBoard.htm" target="_blank"><font
+        face="Times New Roman">http://moq.pythoz.com/WinBoard.htm</font></a>找；<a
+        href="http://www.aarontay.per.sg/winboard/EndgameP.html"
+        target="_blank"><font face="Times New Roman">http://www.aarontay.per.sg/winboard/EndgameP.html</font></a>也有。但想自造<font
+        face="Times New Roman">5</font>子残局，需要很快的电脑和大量的内存。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A9.</strong></font><font
+        face="Times New Roman"><strong> </strong></font><font
+        face="黑体"><strong>残局库文件有多大？我需要完整的5子残局库吗？</strong></font></dt>
+    <dt>　　注意都是指<font face="Times New Roman">Nalimov</font>式。</dt>
+    <dt>　　安装残局库文件越多，程序的棋力就越强。可是，一套完整的<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>、<font
+        face="Times New Roman">5</font>子残局文件要占<font
+        face="Times New Roman">7.05GB</font>的硬盘空间！<font
+        color="#000080">【所以想下载的话有些心理准备】</font>注意你购买的很多号称“全版”的残局库<font
+        face="Times New Roman">CD</font>其实并不是完整的，有些不重要的残局库被剔除了，比如王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>车<font
+        face="Times New Roman">+</font>象对单王这样的<font
+        face="Times New Roman">5</font>子残局，引擎靠算完全足够了，没必要用残局库。人们多数都是下载完整的<font
+        face="Times New Roman">3</font>子和<font
+        face="Times New Roman">4</font>子库，然后选择一些<font
+        face="Times New Roman">5</font>子库来下载。由于残局中有车存在的情况较多，所以优先下载带车的残局库文件。</dt>
+    <dt>　　一般不同子数的残局库文件放在同一目录下，然后在引擎的设置文件中指明残局库的路径就可使用了。除非另有特别需求可有些放在子目录下，而且要检查一下你的引擎、或界面是否允许设置指向不同的残局库路径。<font
+        face="Times New Roman">Yace</font>的作者指出，几乎所有的引擎都支持同时指向不同的残局库路径。</dt>
+    <dt>　　使用残局库时，有个问题要注意处理好，否则可能出现啼笑皆非的情况。比如你有王<font
+        face="Times New Roman">+</font>车<font
+        face="Times New Roman">+</font>兵对王<font
+        face="Times New Roman">+</font>车的残局库文件<font
+        face="Times New Roman">(</font>假定你已有全套<font
+        face="Times New Roman">3</font>和<font
+        face="Times New Roman">4</font>子残局库<font
+        face="Times New Roman">)</font>，这种情况下你应同时还有王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>车对王<font
+        face="Times New Roman">+</font>车的残局库文件，因为要考虑兵升变为后的情况！</dt>
+    <dt>　　有些引擎很“笨”的，假如你缺少王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>车对王<font
+        face="Times New Roman">+</font>车的残局库文件，在某些强方可胜的王<font
+        face="Times New Roman">+</font>车<font
+        face="Times New Roman">+</font>兵对王<font
+        face="Times New Roman">+</font>车残局里，且兵可升变为后的情况下，它竟然不懂得升变的！为什么会这样呢？因为你有王<font
+        face="Times New Roman">+</font>车<font
+        face="Times New Roman">+</font>兵对王<font
+        face="Times New Roman">+</font>车的残局库文件，对于当前局面引擎通过查找残局库看到强方胜；而对于兵升变为后的局面，引擎找不到相应王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>车对王<font
+        face="Times New Roman">+</font>车残局库文件，虽然兵升变为后，引擎当然评价强方获得很高分的优势<font
+        face="Times New Roman">(</font>其实也是胜势<font
+        face="Times New Roman">)</font>，但也是只会定为“相对不确定”，也就是说很高分的优势还是不如已明确指出的胜利“更高分”！类似的情况还有，比方你有王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>兵对王<font
+        face="Times New Roman">+</font>后的残局库文件却没有王<font
+        face="Times New Roman">+</font>后<font
+        face="Times New Roman">+</font>后对王<font
+        face="Times New Roman">+</font>后文件，那么……</dt>
+    <dt>　　有些引擎比较“智能”，能避免这个问题，因此缺乏某些残局库文件也没关系；但有些比如<font
+        face="Times New Roman">Fritz</font>、<font
+        face="Times New Roman">Tiger</font>、<font
+        face="Times New Roman">Amy</font>、<font
+        face="Times New Roman">Comet</font>、<font
+        face="Times New Roman">Gandalf</font>就不会处理了。<font
+        color="#000080">【译注：原文如此，但他没说到哪个版本的</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">和</font><font color="#000080"
+        face="Times New Roman">Tiger</font><font color="#000080">都有这个问题】</font></dt>
+    <dt>　　当然，上述那个情况，如果是存在有快速将杀的可能，倒不一定出现这个问题。</dt>
+    <dt>　　注意，<font face="Times New Roman">Yace</font>目前还不支持<font
+        face="Times New Roman">4+1</font>的<font
+        face="Times New Roman">5</font>子残局库，即一方有王和随便三子<font
+        face="Times New Roman">/</font>兵，另一方单王；<font
+        color="#000080">【译注：</font><font color="#000080"
+        face="Times New Roman">4+1</font><font color="#000080">未必很好胜，甚至难胜的；原文提到，但没说什么，这种特殊情况，比如：王</font><font
+        color="#000080" face="Times New Roman">+</font><font
+        color="#000080">三只最边的兵叠在一起对处在这边上的单王……】</font></dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A10.</strong></font><font
+        face="Times New Roman"><strong> </strong></font><font
+        face="黑体"><strong>关于6子残局库</strong></font></dt>
+    <dt>　　就我所知，使用到<font
+        face="Times New Roman">6</font>子残局的引擎还不多，尽管从原理上让引擎使用<font
+        face="Times New Roman">6</font>子残局库很简单。</dt>
+    <dt>　　<font face="Times New Roman">6</font>子残局库的用法没什么变的，一样。能下载<font
+        face="Times New Roman">Nalimov</font>式<font
+        face="Times New Roman">6</font>子残局库的地方是<a
+        href="ftp://ftp.cis.uab.edu/pub/hyatt/TB/Six/"
+        target="_blank"><font face="Times New Roman">ftp://ftp.cis.uab.edu/pub/hyatt/TB/Six/</font></a>，目前还不多，而且一个文件就大于<font
+        face="Times New Roman">2G</font>，所以分成两部分供下载。</dt>
+    <dt>　　引擎使用查找<font face="Times New Roman">6</font>子残局库，对于系统还有一些严厉的技术要求，要求很高。</dt>
+    <dt>　　目前的<font face="Times New Roman">6</font>子残局库，不包含兵的几乎齐了，而包含兵的还没出现。估计全套的<font
+        face="Times New Roman">6</font>子残局库要占用<font
+        face="Times New Roman">1000G</font>的空间大小。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A11. </strong></font><font
+        face="黑体"><strong>关于残局库是否工作正常和是否出现内部错误。</strong></font></dt>
+    <dt>　　残局库的内部错误，是指下载下来或自己制作的残局库中的某个<font
+        face="Times New Roman">(</font>或某些<font
+        face="Times New Roman">)</font>文件内部出现“腐朽”，结果不但发挥不了效力，甚至可能导致某些使用它<font
+        face="Times New Roman">(</font>们<font
+        face="Times New Roman">)</font>的引擎启动不了。这当然是个问题，想想看残局库的文件有这么多啊，想抓出究竟是哪一个文件有内部错误很不容易。</dt>
+    <dt>　　不过要知道残局库是否工作正常并非没有办法，用引擎中分析局面时，特别是专门根据你所拥有的残局库而设定局面时，往往光凭观察就知道残局库是否在使用：引擎走棋或给出估值很迅速，“想都不想地”，而且给出的估值一般恒定不变<font
+        color="#000080">【译注：另外那些“一眼看出”数十步之后杀棋的肯定使用到了残局库】</font>。有些引擎在分析模式时会在思考变化上指出估值是来自残局库，例如<font
+        face="Times New Roman">Crafty</font>在主变后方会加上“<font
+        face="Times New Roman">&lt;EGTB&gt;</font>”字样。<font
+        color="#000080">【译注：也可以打开引擎的</font><font
+        color="#000080" face="Times New Roman">log</font><font
+        color="#000080">模式，分析后手工文本方式查看</font><font
+        color="#000080" face="Times New Roman">log</font><font
+        color="#000080">文件，往往有说残局库的使用情况，比如</font><font
+        color="#000080" face="Times New Roman">Ruffian</font><font
+        color="#000080">】</font></dt>
+    <dt>　　假如你使用<font face="Times New Roman">Nalimov</font>式残局库，要批量检查一大批文件有更简单办法：</dt>
+    <dd><font face="Times New Roman">1</font>、使用<font
+        face="Times New Roman">datacomp.exe</font>；</dd>
+    <dd><font face="Times New Roman">2</font>、下载残局库时会见到<font
+        face="Times New Roman">MD5</font>验证文件，可以使用之检查，见<a
+        href="http://www.aarontay.per.sg/Winboard/md5.html"
+        target="_blank"><font face="Times New Roman">http://www.aarontay.per.sg/Winboard/md5.html</font></a>；</dd>
+    <dt>　　这些需要做一些操作，供有兴趣者自行研究。另外译者还推荐你若有光盘刻录机，不妨刻录备份一到两套残局库，有什么问题覆盖回来就是了。不少人用了几年的残局库，也未出现过这种文件内部错误。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A13.
+        Crafty</strong></font><font face="黑体"><strong>怎么样使用残局库？</strong></font></dt>
+    <dt>　　<font face="Times New Roman">Winboard</font>下的引擎一般都要手工编辑引擎配置文件。编辑<font
+        face="Times New Roman">Crafty</font>的引擎配置文件<font
+        face="Times New Roman">Crafty.rc</font>，在里面加一行
+        <font face="Times New Roman">tbpath=</font>你的残局库硬盘实际路径。其它引擎的设置大同小异，只不过：<font
+        face="Times New Roman">1) </font>不同引擎的配置文件名称可能不同，比如<font
+        face="Times New Roman">yace</font>是<font
+        face="Times New Roman">yace.ini</font>，<font
+        face="Times New Roman">Ruffian</font>是<font
+        face="Times New Roman">ruffian.ctg </font>等等，都是文本方式打开；<font
+        face="Times New Roman">2) </font>参数写法不同，不过从字面上一般都可以看出是哪个。</dt>
+    <dt>　　假如你是用<font face="Times New Roman">Fritz</font>等商业程序，则是在<font
+        face="Times New Roman">option</font>项里的<font
+        face="Times New Roman">tablebase</font>标签设定，以<font
+        face="Times New Roman">Deep Fritz 7</font>为例如下：</dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt><img src="egtb.gif" width="349" height="367"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　可注意到它有三栏，如果你的残局库都放在同一个目录里，可以只在第一栏填或按选残局库路径，否则可填更多路径。残局库是可以分放在不同路径的，目的是可临时手工选择使用哪些。那里还可顺便设残局库缓存数目。</dt>
+    <dt>　　其它软件的残局库设定方法，一般在菜单中也不难找到。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A14.</strong></font><font
+        face="Times New Roman"><strong> </strong></font><font
+        face="黑体"><strong>残局库文件的成对性</strong></font></dt>
+    <dt>　　譬如残局库文件<font face="Times New Roman">kqkr</font>，即王<font
+        face="Times New Roman">+</font>后对王<font
+        face="Times New Roman">+</font>车，但哪方持后哪方持车呢？显然一个完整的残局库应该是白方黑方的情况都要考虑，即要对称考虑。</dt>
+    <dt>　　早期的<font face="Times New Roman">Nalimov</font>式残局库需要两个文件<font
+        face="Times New Roman">.nbw </font>和<font
+        face="Times New Roman">.nbb</font>来考虑这种对称性，上述例子就是分别有<font
+        face="Times New Roman">kqkr.nbw.emd</font>和<font
+        face="Times New Roman">kqkr.nbb.emd</font>两个文件。所有残局库文件都是这样成对出现的，下载时两个都要下载才构成一个完整的王<font
+        face="Times New Roman">+</font>后对王<font
+        face="Times New Roman">+</font>车残局库。最后的后缀<font
+        face="Times New Roman">.emd</font>表示这是经过压缩的残局库文件，不压缩的话体积大很多。现在大多数引擎能直接使用压缩的残局库。</dt>
+    <dt>　　但自从六子残局库开始出现之后，出现新的格式，某些残局库只需要一个文件就足够了。但同时也需要更新版本的引擎才支持只需一个文件的残局库，而且绝对对称的那些残局，比如<font
+        face="Times New Roman">krkr</font>等还是两个文件都要。这个以后再说。</dt>
+    <dt>　　目前为稳妥着想，最好还是成对文件都下载使用。</dt>
+    <dt>　　顺便说说，免费下载下来的<font
+        face="Times New Roman">Nalimov</font>残局文件是，比如<font
+        face="Times New Roman">kqkr.nbw.emd</font>，而<font
+        face="Times New Roman">Chessbase</font>发售的<font
+        face="Times New Roman">endgame turbo</font>光盘所带的则是，比如<font
+        face="Times New Roman">kqkrnbw.emd</font>，中间少了个圆点。但使用起来这两者看不出有什么区别，反正<font
+        face="Times New Roman">Fritz</font>两种都认。它们可以互换。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A15. </strong></font><font
+        face="黑体"><strong>救命！残局库还是用不了怎么办！</strong></font></dt>
+    <dt>　　原因可能有：</dt>
+    <dd><font face="Times New Roman">1</font>、残局库路径指向错误；</dd>
+    <dd><font face="Times New Roman">2</font>、文件内部错误<font
+        face="Times New Roman">(</font>“腐朽了”<font
+        face="Times New Roman">)</font>或文件名错误地改了；</dd>
+    <dd><font face="Times New Roman">3</font>、没有成对下载使用，<font
+        face="Times New Roman">.nbw </font>和<font
+        face="Times New Roman">.nbb</font>要一起有的；</dd>
+    <dd><font face="Times New Roman">4</font>、残局库规格不符合当前引擎要求。</dd>
+    <dt>　　第一个原因最常见，特别是改了路径却忘了改指向；文件“腐朽”有可能出现在下载过程中出错，也可能硬盘有错或其它软硬件操作错误导致<font
+        face="Times New Roman">(</font>断电、非法操作等有可能导致<font
+        face="Times New Roman">)</font>；第三个原因其实也经常出现，下载时一定要看清，尤其五子残局以上的由于太大，不少人都是选择只下载一部分；第四原因要先了解引擎是否只支持别的残局库，一般<font
+        face="Times New Roman">Nalimov</font>式最通用，但<font
+        face="Times New Roman">chessmaster</font>就不用它。</dt>
+    <dt>　　如果某些局面里，引擎奇怪地不愿意走最明显取胜的着法<font
+        face="Times New Roman">[</font>一般是升变为后<font
+        face="Times New Roman">]</font>，那就要怀疑是不是出现残局库不完整的问题<font
+        color="#000080">【不是前面说的文件内部错误】</font>，其它文章有说。当然前提是你要证实引擎是不是发现还有更明显的胜法。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Arial"><strong>A16. </strong></font><font
+        face="黑体"><strong>有什么图形界面工具可以更直观察看残局库？</strong></font></dt>
+    <dd><font face="Times New Roman">1</font>、有一个免费的数据库工具<font
+        face="Times New Roman">SCID </font><a
+        href="http://scid.sourceforge.net/" target="_blank"><font
+        face="Times New Roman">http://scid.sourceforge.net/</font></a>，它的作者说有这个功能；</dd>
+    <dd><font face="Times New Roman">2</font>、<font
+        face="Times New Roman">Shredder6</font>的“<font
+        face="Times New Roman">endgame oracle</font>”；</dd>
+    <dd><font face="Times New Roman">3</font>、一个叫<font
+        face="Times New Roman">Wihelm</font>的免费工具。</dd>
+    <dt>　</dt>
+    <dt>　　出处：<font face="Times New Roman">Aaron's
+        Winboard and Chess Engines FAQ</font></dt>
+    <dt>　　译者：<font face="Times New Roman">michael</font></dt>
+    <dt>　　类型：略有删节</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="book.htm">棋弈软件基础——开局库、哈希表</a></li>
+    <li>下一篇　<a href="egtbweak.htm">棋弈软件基础——残局库对引擎棋力的负面影响</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

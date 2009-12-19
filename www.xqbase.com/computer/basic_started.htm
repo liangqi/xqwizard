@@ -1,0 +1,211 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>国际象棋程序设计(一)：引言</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">国际象棋程序设计(一)：引言</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e/</font>文</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font face="宋体">　　这是国际象棋程序设计连载的第一部分，本连载共有六部分，他们不仅仅是针对象棋</font><font
+        color="#0000FF" face="宋体">【译注：</font><font
+        color="#0000FF">以后如不特别指出，都指国际象棋】</font>的，还可以运用到别的益智类游戏中。</dt>
+    <dt>　　在人工智能领域中，专家对象棋进行了大量卓有成效的研究，这其中就有电脑对抗卡斯帕罗夫等世界冠军的比赛。象棋在人工智能上的地位，就相当于果蝇在遗传学上的地位，举足轻重。我的连载将着重介绍人工智能的程序设计艺术，这其中包括“深蓝”<font
+        face="Times New Roman">(Deep Blue)</font>等著名程序。</dt>
+    <dt>　　我的连载从<font face="Times New Roman">2000</font>年<font
+        face="Times New Roman">4</font>月开始，每个月一次，到<font
+        face="Times New Roman">10</font>月结束的时候，我会用<font
+        face="Times New Roman">Java</font>写一个简单的程序来实现对弈。到时候你们可以从我的网站上随便下载，耐心地等吧。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>信息完备的游戏</b></font></dt>
+    <dt>　</dt>
+    <dt><font face="宋体">　　象棋是“信息完备”的游戏，因为游戏双方面对的局面是同一个局面，</font>任何一方所掌握的棋子及其位置的信息是一样的。除了象棋以外，西洋跳棋<font
+        face="Times New Roman">(Checkers)</font>、围棋<font
+        face="Times New Roman">(Go)</font>、五子棋<font
+        face="Times New Roman">(Go-Moku)</font>、西洋双陆棋<font
+        face="Times New Roman">(Backgammon)</font>、黑白棋<font
+        face="Times New Roman">(Othello)</font><font
+        color="#0000FF">【也有称</font><font color="#0000FF"
+        face="Times New Roman">Reversi</font><font
+        color="#0000FF">的，可译为“翻棋”】</font>可等也属于这一范畴。但是纸牌游戏却不是，因为你不知道对手手上的牌是什么<font
+        color="#0000FF">【在中国的棋类游戏中，陆站棋</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">起源于欧洲</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">和四国大战棋也不是】</font>。</dt>
+    <dt>　　我的连载中将提到各种算法，大多数算法对所有的信息完备的游戏都是有效的，只是细节上有所不同罢了。很明显，无论棋盘、着法、位置等因素有那些，搜索算法就是搜索算法，它不会因为游戏规则而改变。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>我们需要什么？</b></font></dt>
+    <dt>　</dt>
+    <dt>　　能下棋的电脑软件至少要包括下列组件：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>棋盘的表示方法，即局面在存储器中的存储方法，程序是根据它来分析局面的；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>掌握规则，即什么样的着法是合理的，如果程序连不合理的着法都不能检测出来，那么对手就可以利用这种着法来欺骗程序；</dt>
+    <dt>　　<font face="Times New Roman">3. </font>找出所有合理着法的算法，这样程序就可以从这些着法中找到最好的，而不是随便找一种着法；</dt>
+    <dt>　　<font face="Times New Roman">4. </font>比较方法，包括比较着法的方法和比较局面的方法，这样程序就可以选择最佳的着法；</dt>
+    <dt>　　<font face="Times New Roman">5. </font>用户界面。</dt>
+    <dt>　</dt>
+    <dt>　　本连载将涉及以上除了用户界面以外的所有内容，用户界面在所有二维棋类游戏中都是差不多的，这里就不作介绍了。接下来将对以上几个部分作逐一介绍，并且引出许多重要的概念。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>棋盘的表示方法</b></font></dt>
+    <dt>　</dt>
+    <dt>　　在早期的程序设计过程中，存储器是非常有限的<font
+        face="Times New Roman">(</font>有些程序只用<font
+        face="Times New Roman">8K</font>或更少的存储器<font
+        face="Times New Roman">)</font>，所以最简单、最节省的表示方法就是最有效的方法。一个典型的国际象棋棋盘可以用一个<font
+        face="Times New Roman">8x8</font>的数组表示，棋盘上的每个格子用一个字节表示——空的格子用<font
+        face="Times New Roman">0</font>，黑方的王用<font
+        face="Times New Roman">1</font>，等等。</dt>
+    <dt>　　如今，象棋程序可以在<font
+        face="Times New Roman">64</font>位计算机上运行了，精心设计的“位棋盘”表示诞生了。在<font
+        face="Times New Roman">60</font>年代后期，位棋盘在苏联诞生，一个位棋盘由一个<font
+        face="Times New Roman">64</font>位的字<font
+        color="#0000FF">【“字”是计算机中一次运算所涉及的存储单元，我认为当时还没有字长为</font><font
+        color="#0000FF" face="Times New Roman">64</font><font
+        color="#0000FF">位的计算机，所以一个位棋盘应该由多个较短的字来构成，如</font><font
+        color="#0000FF" face="Times New Roman">8</font><font
+        color="#0000FF">个</font><font color="#0000FF"
+        face="Times New Roman">8</font><font color="#0000FF">位的字或</font><font
+        color="#0000FF" face="Times New Roman">4</font><font
+        color="#0000FF">个</font><font color="#0000FF"
+        face="Times New Roman">16</font><font color="#0000FF">位的字，即便是现在的个人电脑上，一个位棋盘也必须由两个</font><font
+        color="#0000FF" face="Times New Roman">32</font><font
+        color="#0000FF">位的字构成】</font>来表示局面中的某个状态，一位代表一个格子。例如，一个位棋盘能表示“所有被黑兵占有的格子”，或者“处于<font
+        face="Times New Roman">e3</font>格的后可以走的格子”，或者“被黑马攻击的白子所处的格子”，等等。位棋盘用途广泛，并且具有很快的运算速度，因为局面分析时要做大量的逻辑运算<font
+        color="#0000FF">【就是“与或非”运算，也称布尔代数】</font>，而一个位棋盘的运算只需要一次操作就可以了。</dt>
+    <dt>　　这部分内容将在连载的第二部分作详细介绍。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>着法的产生</b></font></dt>
+    <dt>　</dt>
+    <dt>　　所谓棋类游戏的规则，指的就是某一方可以走哪些着法。某些游戏很容易就找到合理着法，例如在井字棋中<font
+        color="#0000FF">【</font><font color="#0000FF"
+        face="Times New Roman">Tic-Tac-Toe</font><font
+        color="#0000FF">，在</font><font color="#0000FF"
+        face="Times New Roman">3x3</font><font color="#0000FF">的棋盘上轮流占格子，先在同一条线</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">横线、纵线或斜线</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">上占有</font><font color="#0000FF"
+        face="Times New Roman">3</font><font color="#0000FF">枚棋子者得胜】</font>，所有空的格子都是合理着法。但是在象棋中，情况就有些复杂了，每个棋子都有它特定的着法，例如兵吃子时走斜线，而不吃子时走纵线，又例如把王走到被将军的格子是不允许的，还有诸如“吃过路兵”<font
+        color="#0000FF">【法语</font><font color="#0000FF"
+        face="Times New Roman">en passant</font><font
+        color="#0000FF">】</font>、兵的升变、王车易位等着法只有在特殊场合才是合理的。</dt>
+    <dt>　　事实上在象棋程序设计中，着法的产生已经被证实为最复杂和最费时的事。幸运的是，着法的产生有一些预处理的技巧，我还会介绍一些数据结构，它们能显著提高着法产生的速度。</dt>
+    <dt>　　这部分内容将在连载的第三部分作详细介绍。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>搜索技巧</b></font></dt>
+    <dt>　</dt>
+    <dt>　　对于计算机来说，判断一个着法是好的或坏的，并不是件容易的事。判断着法优劣的最佳办法，就是看它们的后续结果，只有推演以后一系列的着法，才能确定看那步是好的。在保证不犯错误的前提下，我们要设想对手会走出最好的应着。这一基本原理称为“最小<font
+        face="Times New Roman">-</font>最大”搜索算法，它是所有象棋程序的基础。</dt>
+    <dt>　　不幸的是，“最小<font
+        face="Times New Roman">-</font>最大”法的运算量是<font
+        face="Times New Roman">O(<i>b</i><sup><i>n</i></sup>)</font><font
+        color="#0000FF">【数学上指它和</font><font
+        color="#0000FF" face="Times New Roman"><i>b</i><sup><i>n</i></sup></font><font
+        color="#0000FF">是一个数量级的】</font>，<font
+        face="Times New Roman"><i>b</i>(</font>分支因子<font
+        face="Times New Roman">)</font>指平均每步的合理着法<font
+        color="#0000FF">【有研究表明，在国际象棋中这个值约为</font><font
+        color="#0000FF" face="Times New Roman">38</font><font
+        color="#0000FF">，中国象棋则更多些，为</font><font
+        color="#0000FF" face="Times New Roman">42(</font><font
+        color="#0000FF">这是中国象棋程序“七星大师”的作者赵德志的研究结果</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">】</font>，<font face="Times New Roman"><i>n</i>(</font>深度<font
+        face="Times New Roman">)</font>指思考的步数<font
+        face="Times New Roman">(</font>一回合有两步<font
+        face="Times New Roman">)</font>。所以当步数增长时，运算量以几何级数迅速增长，如果要思考得更深一些，就必须用更为合理的算法。其中，迭代加深的<font
+        face="Times New Roman">Alpha-Beta</font>搜索、<font
+        face="Times New Roman">NegaScout</font>搜索和<font
+        face="Times New Roman">MTD(f)</font>搜索是最基本的算法，这些会在连载的第四部分介绍。除此以外，还要依靠数据结构和启发式算法的帮助，启发式算法是增强棋力的算法，例如置换表<font
+        face="Times New Roman">(Transposition Tables)</font>、历史启发和将杀启发<font
+        face="Times New Roman">(History/Killer Heuristic)</font>等。</dt>
+    <dt>　　在象棋程序设计中，另一个头痛的问题是“水平线效应”<font
+        face="Times New Roman">(Horizon Effect)</font>，它首先由<font
+        face="Times New Roman">Hans Berliner</font>提出。假设你的程序的搜索深度是<font
+        face="Times New Roman">8</font>步，并且程序算出对手会在第六步捉死你的后。按照程序自己的设想，它会献出象来延缓后的捉死<font
+        face="Times New Roman">(</font>假定这样做可以让后在第<font
+        face="Times New Roman">10</font>步才被捉死<font
+        face="Times New Roman">)</font>，因为程序只能看到<font
+        face="Times New Roman">8</font>步。从程序的角度看，后是被“保住”了，因为在它的搜索范围内后没有被捉死，但事实上却多丢了一个象。从这个例子可以看出，要把程序的工作重心放置到位，并不是一件简单的事情<font
+        color="#0000FF">【意思是，某些变化没有必要搜索得太深，而关键的变化需要更深层次的搜索】</font>，如果把每条变化都搜索到同一深度，那么结果是自取灭亡。很多技术是用来克服水平线效应，在连载的第五部分关于高级搜索的阐述中，将要介绍静态搜索<font
+        face="Times New Roman">(Quiescence Search)</font>和深蓝<font
+        face="Times New Roman">(Deep Blue)</font>的单步延伸<font
+        face="Times New Roman">(Singular Extensions)</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>评价局面</b></font></dt>
+    <dt>　</dt>
+    <dt>　　最后，程序必须有一个估计局面<font
+        face="Times New Roman">(</font>占优或处于劣势<font
+        face="Times New Roman">)</font>的方法。局面估计方法完全取决于规则<font
+        face="Times New Roman">(</font>即子的走法<font
+        face="Times New Roman">)</font>——在象棋中，“子力平衡”<font
+        face="Times New Roman">(Material Balance)</font>是主导因素，因为一个小小的兵的领先就可能足以保证优势一方取得胜利<font
+        color="#0000FF">【而在中国象棋中，多一个兵算不了什么，这足以证明本节的观点——局面估计方法完全取决于规则】</font>，而在五子棋中却没什么影响，在黑白棋里，根据子力上的数值分析局面则完全会成为误导，你可能一直处于领先状态，但最后几步局面却翻了盘。</dt>
+    <dt>　　建立有效的局面评估方法，这常常会成为程序设计中的难点和焦点。连载的第六部分将详细阐述著名象棋程序的局面评估方法，其中包括<font
+        face="Times New Roman">Chess 4.5</font>、<font
+        face="Times New Roman">Cray Blitz</font>和<font
+        face="Times New Roman">Belle(</font>尤物<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>结论</b></font></dt>
+    <dt>　</dt>
+    <dt>　　我们已经找到了完成拼版的所需要的碎片，现在是开始动手做的时候了。下个月我将介绍最常用的棋盘表示方法，敬请关注。</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e</font>，<font
+        face="Times New Roman">2000</font>年<font
+        face="Times New Roman">4</font>月</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.gamedev.net/reference/programming/features/chess1/"
+        target="_blank"><font face="Times New Roman">http://www.gamedev.net/reference/programming/features/chess1/</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="egtbweak.htm">棋弈软件基础——残局库对引擎棋力的负面影响</a></li>
+    <li>下一篇　<a href="basic_struct.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>二<font
+        face="Times New Roman">)</font>：数据结构</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

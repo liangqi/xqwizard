@@ -1,0 +1,242 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>棋弈软件基础——残局库对引擎棋力的负面影响</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《<a href="http://www.chessit.net/" target="_blank">国际象棋译文苑</a>》文摘</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">残局库对引擎棋力的负面影响</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Aaron Tay</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　说<font face="Times New Roman">EGTB(</font>残局库<font
+        face="Times New Roman">)</font>有可能降低棋弈引擎的水平，这乍一听起来好像违反了常识。关于全套的<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>、<font
+        face="Times New Roman">5</font>子残局库究竟对引擎的水平有多大帮助大概是有争论，有些人认为能提高<font
+        face="Times New Roman">50</font>个等级分，有些人认为最多<font
+        face="Times New Roman">20</font>分，甚至有些人认为没有任何提高帮助<font
+        face="Times New Roman">(</font>曾有测试指出<font
+        face="Times New Roman">Crafty</font>用或不用残局库，棋力并没什么实质性不同<font
+        face="Times New Roman">)</font>。持最后一种意见的认为应取决于设计引擎时给它加入了多少残局知识，不过用上残局库也应该不会对引擎有妨碍。但读完此文你会发现，在有些局面里使用残局库的确会导致棋力水平的降低，或者使引擎为寻找最佳着法所花的时间更长。目前<font
+        face="Times New Roman">6</font>子残局库还不大采用，本文只研究<font
+        face="Times New Roman">5</font>子及以下的残局库。以后的随技术进步以后再说。<font
+        color="#000080">【译注：而且本文只主要说最常用的</font><font
+        color="#000080" face="Times New Roman">Nalimov</font><font
+        color="#000080">式残局库】</font></dt>
+    <dt>　　你可能认为那些局面很少出现而不以为意。要说明的是，我们认为残局库的使用能提高引擎棋力，是因为引擎不但在局面已经出现时、而且可能还在搜索时就能调用它们【译注：即哪怕当前局面虽然在残局库里没<font
+        color="#000080">有，但如果即将进入了，于是引擎在进行更深搜索时就已经可以预先探测调用相关残局库了；搜索</font><font
+        color="#000080" face="Times New Roman">(search)</font><font
+        color="#000080">指只凭引擎的算法进行棋步寻找计算；探测</font><font
+        color="#000080" face="Times New Roman">(probe)</font><font
+        color="#000080">指对残局数据库进行棋步寻找探查；至少在本译文中如此定义】</font>。但我也可以指出，这有些因素反而可能妨碍引擎，以致抵消甚至损害使用残局库的优越性。这里列出一些残局库如何降低棋力的可能性<font
+        face="Times New Roman">(</font>从最轻微的到最严重的<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Times New Roman"><strong>1) </strong></font><font
+        size="4" face="楷体_GB2312"><strong>不完整的残局库</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这是第一个可能性。已经“很著名”的了，避免办法也容易，要么使用完整的，要么在引擎设计时解决。之前的文章已谈到过这个问题。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Times New Roman"><strong>2) </strong></font><font
+        size="4" face="楷体_GB2312"><strong>残局库不考虑王车易位</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Nalimov</font>式残局库是不考虑王车易位的。</dt>
+    <dt>　　如图<font face="Times New Roman">1</font>局面，黑先，条件是后翼易位还可行<font
+        color="#000080">【译注：所以如果你在自己的软件上摆这个局面测试时，一定不要忘记设定易位可能】</font>。</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><img src="egtbweak1.gif" width="256" height="256"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　结果<font face="Times New Roman">Winboard</font>下的使用了有关<font
+        face="Times New Roman">3</font>、<font
+        face="Times New Roman">4</font>、<font
+        face="Times New Roman">5</font>子残局库的<font
+        face="Times New Roman">Crafty18.13</font>会走 <font
+        face="Times New Roman">1..Kxd7?</font>。非常奇怪，它认为
+        <font face="Times New Roman">2 0-0-0+ </font>之后白方<font
+        face="Times New Roman">17</font>步杀是当前局面的最佳路线！</dt>
+    <dt>　　假如去掉残局库，<font
+        face="Times New Roman">Crafty</font>会走 <font
+        face="Times New Roman">1.. Kd8</font>，然后白方面临<font
+        face="Times New Roman">h</font>兵的升变威胁，最苟延残喘的是
+        <font face="Times New Roman">2.Ra8+ Kxd7</font>，于是随后简单的<font
+        face="Times New Roman">15</font>步杀。结果事实上当前局面不是白方，而应该是黑方的<font
+        face="Times New Roman">17</font>步杀！</dt>
+    <dt>　　我认为这样的局面极罕见<font
+        face="Times New Roman">(</font>试问大家见过几次到如此残局了还保留易位权利的吗？<font
+        face="Times New Roman">)</font>，所以倒不必过于不安。另外引擎设计者也可以有所改动，加入检查易位权利以避免这个问题。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Times New Roman"><strong>3) </strong></font><font
+        size="4" face="楷体_GB2312"><strong>残局库不考虑50步自然限着</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我认为这个问题大得多。</dt>
+    <dt>　　如图<font face="Times New Roman">2</font>局面，白先。</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><img src="egtbweak2.gif" width="256" height="256"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　在短思考时限下，<font
+        face="Times New Roman">Crafty</font>要走 <font
+        face="Times New Roman">1.Rxf5 Rxf5</font>，然后根据王车象对王的残局库所示，是白方<font
+        face="Times New Roman">65</font>步杀。可惜根据<font
+        face="Times New Roman">FIDE</font>规则，黑方可根据<font
+        face="Times New Roman">50</font>步自然限着规则要求和棋的。对于所有需要超过<font
+        face="Times New Roman">50</font>步才能胜的残局库<font
+        face="Times New Roman">(</font>当然前提是期间没有吃子和没有走兵<font
+        face="Times New Roman">)</font>，这个问题都存在。过去<font
+        face="Times New Roman">FIDE</font>曾专为一些特殊的残局放宽过限制<font
+        face="Times New Roman">(</font>例如王双马对王兵<font
+        face="Times New Roman">)</font>，但后来又统一为都是<font
+        face="Times New Roman">50</font>步限着。</dt>
+    <dt>　　然而这个局面一定是和棋吗？事实上，如果你让<font
+        face="Times New Roman">Crafty</font>想得足够长时间，它就会发现先有<font
+        face="Times New Roman">48</font>步杀<font
+        face="Times New Roman">(1.Kd8)</font>，进而发现<font
+        face="Times New Roman">23</font>步就杀<font
+        face="Times New Roman">(1.Kd6)</font>；另一个引擎<font
+        face="Times New Roman">Gandalf</font>更发现 <font
+        face="Times New Roman">1.Kd6 </font>之后<font
+        face="Times New Roman">17</font>步杀，因此我们知道至少有<font
+        face="Times New Roman">17</font>步杀存在！主变是 <font
+        face="Times New Roman">1.Kd6 Kg7 2.Rf4! Rxf4 3.Bxf4</font>，然后……这是我见过的最短路线，尽管未必敢说没有更短的路线。
+    </dt>
+    <dt>　　要注意的是，尽管这个问题是因为<font
+        face="Times New Roman">Nalimov</font>式残局库属于<font
+        face="Times New Roman">DTM</font>类型的库。至于<font
+        face="Times New Roman">DTC</font>类型的残局库，虽然理论上应可解决这个问题，只需在同一个库里检查最终的杀棋没有突破<font
+        face="Times New Roman">50</font>步自然限着即可。然而，当前的托普森残局库也没考虑这一点。至于其它类型的残局库考虑了<font
+        face="Times New Roman">50</font>步自然限着，但又有它们自身的问题。</dt>
+    <dt>　　似乎除了让引擎懂得如果在残局库里找到了能杀但却是突破<font
+        face="Times New Roman">50</font>步自然限着的路线，就继续搜索，之外引擎作者还难以找到其它解决办法。别说这只是部分的解决，而且该法本身还有不少技术困难。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Times New Roman"><strong>4) </strong></font><font
+        size="4" face="楷体_GB2312"><strong>“懂得太多”的尴尬</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　由于有残局库，引擎有时会因为“懂得太多看得太远”了反而出现尴尬情况。比如，装有残局库的一方引擎在残局库里发现自己要输棋，它就可能过早投降；问题是对方<font
+        face="Times New Roman">(</font>人或者没有装残局库的引擎<font
+        face="Times New Roman">)</font>却不一定知道怎么杀的<font
+        color="#000080">【译注：比如要漫长几十步之后才能杀且很不好找到正着的那些局面】</font>。类似的尴尬还有，某个局面里假如走某个变化取胜的机会达到<font
+        face="Times New Roman">99%</font>，对方只有在最精确的防守下才能和棋<font
+        face="Times New Roman">(</font>如果没有残局库将非常困难<font
+        face="Times New Roman">)</font>；可是正因为残局库就是指示最精确的变化，结果持有利一方的引擎由于发现在这“最精确”的变化里必然成和，于是就会放弃这条有<font
+        face="Times New Roman">99%</font>取胜机会的路线。</dt>
+    <dt>　　不过严格来说，这也不好怪残局库，特别是你要追求<font
+        face="Times New Roman">100%</font>客观着法的时候。某些情况下，几乎所有引擎，不管用没用上残局库，都会由于看得太远而出这些“过于精确”的尴尬。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="Times New Roman"><strong>5) </strong></font><font
+        size="4" face="楷体_GB2312"><strong>残局库降低了搜索速度</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　由于要在残局数据库里探测，所以引擎的搜索速度下降。这个效应很难评估。我们知道探测数据库会降低引擎的每秒搜索速度，通常使单位时间内搜索的深度下降<font
+        color="#000080">【译注：残局数据库是存放在硬盘上的文件，搜硬盘当然比在</font><font
+        color="#000080" face="Times New Roman">CPU</font><font
+        color="#000080">和内存中运算慢很多；这主要是当前硬件技术决定的】</font>。有时搜索深度下降，但由于使用到了残局库，也能找到好棋。问题是在部分分支变化里找得到好棋一定能抵消搜索速度全面下降的负面影响吗？在还没探测到残局库末端的情况下搜索速度全面下降意味着引擎思考短浅得多；假如当前探测的其实是没有用的局面，根本不会发生的或者能避免的，这种时候搜索速度全面下降的负面影响就大了。
+    </dt>
+    <dt>　　这个问题如果在引擎－引擎之间对战情况，就只能通过专用测试局面来解决。曾经有一次残局能力测试，包括<font
+        face="Times New Roman">7</font>种商业引擎，使用了<font
+        face="Times New Roman">10</font>个专用残局测试局面。引擎<font
+        face="Times New Roman">(</font>轮流<font
+        face="Times New Roman">)</font>分成一方用残局库另一方不用，残局库包括全部<font
+        face="Times New Roman">5</font>子残局。测试结果，用残局库一方仅以<font
+        face="Times New Roman">1</font>分之微险胜不用残局库一方，<font
+        face="Times New Roman">70.5-69.5</font>。</dt>
+    <dt>　　但是，人们发现在其中某些局面里，不用的那一方表现得比用的那一方更好！把其中一个看来非常需要残局库的局面拿走<font
+        face="Times New Roman">(</font>在这个局面的测试里用的一方大胜<font
+        face="Times New Roman">)</font>，余下<font
+        face="Times New Roman">9</font>个局面的测试总结果，却是不用的那一方以<font
+        face="Times New Roman">66-60</font>大胜！</dt>
+    <dt>　　不用残局库的一方成绩最好的是图<font
+        face="Times New Roman">3</font>局面，黑先。</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><img src="egtbweak3.gif" width="256" height="256"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　当然我们可以看出，仅仅拿走一个测试局面就导致成绩逆转，可见测试局面的选择有很大关系。但这个测试仍然充分说明了对于某些引擎和某些局面来说，用上全套<font
+        face="Times New Roman">3</font>到<font
+        face="Times New Roman">5</font>子残局库的确降低了引擎的棋力水平，而不仅是有没有作用那么简单。</dt>
+    <dt>　　<font color="#000080">【译注：译者也曾在本站留言簿发过一个棋图局面，如图</font><font
+        color="#000080" face="Times New Roman">4</font><font
+        color="#000080">白先。</font></dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font color="#000080"><img src="egtbweak4.gif"
+        width="256" height="256"></font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font color="#000080">只要有些经验可以看出白方走哪步胜，高级的引擎也很快看出这步</font><font
+        color="#000080" face="Times New Roman">(</font><font
+        color="#000080">另一步</font><font color="#000080"
+        face="Times New Roman">1.Nf3</font><font color="#000080">也行</font><font
+        color="#000080" face="Times New Roman">)</font><font
+        color="#000080">，但前提是不要用残局库；如果给这些引擎挂了残局库，结果是哭笑不得的——虽然也不能说它们一定错。试试？】</font></dt>
+    <dt>　　我认为需要做更多的测试，测试更多的局面和使用更多的引擎。我无法细分每种引擎来说，所以如果有引擎设计调试得用上残局库全部都表现得好也不是不可能的。</dt>
+    <dt>　　另外，若用<font face="Times New Roman">5</font>子残局库，要注意优选做法可能是也装上其残局库子集。似乎使用<font
+        face="Times New Roman">4</font>子残局库很“安全”，另外再加上王车兵对王车残局库吧，它很常出现。<font
+        color="#000080">【译注：所谓“残局库子集”，是指上一级残局库演变而来的各种可能残局，典型的比如王兵对王兵，既然兵有可能升变为后、车、马、象，那么残局库子集就是王后对王兵、王车对王兵等等类推，由于</font><font
+        color="#000080" face="Times New Roman">Nalimov</font><font
+        color="#000080">残局库每一种残局文件总是一白方一黑方成对出现下载的，所以只要成对下载，究竟是哪一方升变就不用专门考虑了；否则若只有王兵对王兵残局库，却没有王后对王兵等子集，如其它文章说过，有些引擎到此会出现糊涂的；到译此文为止，不知道这个问题有多少引擎已解决了；大可一试】</font></dt>
+    <dt>　　有一个情况要注意，上面提到的残局库削弱引擎棋力水平的五种情况<font
+        face="Times New Roman">(</font>可能要除去第一种<font
+        face="Times New Roman">)</font>，只会是当引擎在搜索的同时又已经开始进行残局库探测的情况下，才会产生所说的负面影响。如果当前局面已经到达了你残局库里所拥有的局面，就不会出现上述负面问题。</dt>
+    <dt>　　有研究者提出的建议很有意义，如果引擎能够让使用者指定在引擎搜索过程中去探测哪些残局库<font
+        face="Times New Roman">(</font>最理想的是探测那些光靠引擎自己的常规搜索和内建知识还不能很好处理的局面<font
+        face="Times New Roman">)</font>，以及指定局面到了哪个阶段才去探测残局库<font
+        face="Times New Roman">(</font>其它的就不探测<font
+        face="Times New Roman">)</font>，那就太好了。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>结论</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我希望这篇文章不会吓得你不敢用残局库了。我个人认为，上述五点除了最后一点，其它的都不大可能有显著影响，即使是最后一点也还需要更多测试去说明。我自己还是会用全套的残局库。
+    </dt>
+    <dt>　</dt>
+    <dt>　　出处：<font face="Times New Roman">Aaron's
+        Winboard and Chess Engines FAQ</font></dt>
+    <dt>　　译者：<font face="Times New Roman">michael</font></dt>
+    <dt>　　类型：略有删节</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="egtb.htm">棋弈软件基础——残局库</a></li>
+    <li>下一篇　<a href="basic_started.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>一<font
+        face="Times New Roman">)</font>：引言</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

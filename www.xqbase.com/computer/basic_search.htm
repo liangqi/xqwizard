@@ -1,0 +1,410 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>国际象棋程序设计(四)：基本搜索方法</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">国际象棋程序设计(四)：基本搜索方法</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e/</font>文</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　这个烦琐、没有代码、像胶水一样的连载，已经进入第四部分了，你们还在看下去吗？如果是的，就写<font
+        face="Times New Roman">eMail</font>给我，我就可以找到写这些东西的理由了。</dt>
+    <dt>　　无论如何，这个月的主题是策略类游戏的敌对搜索<font
+        face="Times New Roman">(Two-Agent Search)</font><font
+        color="#0000FF">【译注：意思是站在两个立场上的搜索，我也不知道该用什么比较确切的术语】</font>，要了解它们有什么作用，如何来做，对电脑的程序意味着什么。我们要讨论的技术在所有的游戏中都很重要，但是仅仅靠它们是不足以下象棋的。下个月，我会介绍一些高级的技术，它们能显著增强棋力，同时提高搜索效率。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>为什么要搜索？</b></font></dt>
+    <dt>　</dt>
+    <dt>　　简单地说，因为我们还没有聪明到可以抛弃搜索的地步。</dt>
+    <dt>　　一个真正聪明的程序可以只依靠棋盘局面来确定，哪一方处于领先以及领先多少，并且制定作战计划让这个优势变为胜果。不幸的是，需要考虑的局面类型太多了，再加上那么多的规则和特例，就是再聪明的程序也不擅长做此类事情。而它们擅长的则是计算。因此对象棋程序来说，与其只根据棋盘的局面来决定好的着法，不如使用它们的蛮力——考虑每一种着法，然后为对手考虑这些着法的所有应对着法，循环下去，直到处理器吃不消为止。</dt>
+    <dt>　　比起掌握复杂的策略，深入的搜索是教电脑下棋的比较简单的方法。例如，考虑马的捉双问题，走一步棋就可以同时攻击两种棋子<font
+        face="Times New Roman">(</font>例如一个车和一个后<font
+        face="Times New Roman">)</font>。掌握这种类型的走法是需要花一些时间的，更复杂些，我们还要判断这个格子有没有保护。然而，一个愚钝的<font
+        face="Times New Roman">3</font>步的搜索就可以学会捉双了，程序最终会尝试让马走到捉双的格子，并探索对手对于捉双的回应，然后吃掉没有逃跑的那个棋子，从而改变了子力平衡。由于全面搜索可以看到每一步，所以不会错过任何机会。如果经过<font
+        face="Times New Roman">5</font>步棋后可以产生杀棋或捉死后<font
+        face="Times New Roman">(</font>无论怎样不容易看到<font
+        face="Times New Roman">)</font>，只要电脑的搜索得足够深，就会看到这个着法。因此，搜索得越深，电脑就会施展越复杂的作战计划。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>爷爷时代的“最小-最大”原理</b></font></dt>
+    <dt>　</dt>
+    <dt>　　所有双向搜索算法的最基本的思想都是“最小<font
+        face="Times New Roman">-</font>最大”<font
+        face="Times New Roman">(Minimax)</font>原理。它可以追溯到中世纪<font
+        face="Times New Roman">(Dark Ages)</font>，但我相信它最早是由冯<font
+        face="Times New Roman">-</font>诺依曼<font
+        face="Times New Roman">(Von Neumann)</font><font
+        color="#0000FF">【应该是</font><font color="#0000FF"
+        face="Times New Roman">John von Nuoma</font><font
+        color="#0000FF">，</font><font color="#0000FF"
+        face="Times New Roman">1903-1957</font><font
+        color="#0000FF">，美籍匈牙利数学家】</font>在<font
+        face="Times New Roman">60</font>年前完整描述的：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>假设有对局面评分的方法，来预测棋手甲<font
+        face="Times New Roman">(</font>我们称为最大者<font
+        face="Times New Roman">)</font>会赢，或者对手<font
+        face="Times New Roman">(</font>最小者<font
+        face="Times New Roman">)</font>会赢，或者是和棋。评分用数字表示，正数代表最大者领先，负数代表最小者领先，零代表谁也不占便宜；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>最大者的任务是增加棋盘局面的评分<font
+        face="Times New Roman">(</font>即尽量让评分最大<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　<font face="Times New Roman">3. </font>最小者的任务是减少棋盘局面的评分<font
+        face="Times New Roman">(</font>即尽量让评分最小<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　<font face="Times New Roman">4. </font>假设谁也不会犯错误，即他们都走能让使局面对自己最有利的着法。</dt>
+    <dt>　</dt>
+    <dt>　　那么这该怎么做呢？设想一个简单的游戏，每方只走一步，每步只有两种着法可供选择。评分函数只和最后棋盘的局面有关，即评分是最大者和最小者着法综合的结果。</dt>
+</dl>
+<div align="center"><center>
+
+<table border="1" cellpadding="7" cellspacing="1" width="303">
+    <tr>
+        <td align="center" valign="top" width="40%">最大者的着法</td>
+        <td align="center" valign="top" width="40%">最小者的着法</td>
+        <td align="center" valign="top" width="19%">评分</td>
+    </tr>
+    <tr>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">A</font></td>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">C</font></td>
+        <td align="center" valign="top" width="19%"><font
+        face="Times New Roman">12</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">A</font></td>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">D</font></td>
+        <td align="center" valign="top" width="19%"><font
+        face="Times New Roman">-2</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">B</font></td>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">C</font></td>
+        <td align="center" valign="top" width="19%"><font
+        face="Times New Roman">5</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">B</font></td>
+        <td align="center" valign="top" width="40%"><font
+        face="Times New Roman">D</font></td>
+        <td align="center" valign="top" width="19%"><font
+        face="Times New Roman">6</font></td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt>　　最大者假设最小者会下出最好的棋，因此他知道，如果他选择着法<font
+        face="Times New Roman">A</font>，那么他的对手会回应<font
+        face="Times New Roman">D</font>，使最终评分变成<font
+        face="Times New Roman">-2(</font>即获胜<font
+        face="Times New Roman">)</font>。但是，如果最大者走的着法<font
+        face="Times New Roman">B</font>，那么他就会获胜，因为最小者的最佳着法仍然是正数<font
+        face="Times New Roman">(5)</font>。所以按照“最小<font
+        face="Times New Roman">-</font>最大”算法，最大者会选择着法<font
+        face="Times New Roman">B</font>，即使他选择<font
+        face="Times New Roman">A</font>并且最小者走错时评分还会更高。</dt>
+    <dt>　　“最小<font face="Times New Roman">-</font>最大”原理有个弱点，从简单的例子中还不能明显地看出来——要检查的各种路线的数量是指数形式的，这就意味者工作量会以几何级数增长。</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>每方有多少种可能的着法，这个数称为分枝因子<font
+        face="Times New Roman">(Branch Factor)</font>，用<font
+        face="Times New Roman"><i>b</i></font>表示；</dt>
+    <dt>　　<font face="Times New Roman">2. </font>考虑的深度用<font
+        face="Times New Roman"><i>n</i></font>表示，通常说“<font
+        face="Times New Roman"><i>n</i></font>层”，<font
+        face="Times New Roman"><i>n</i></font>是整数，“层”<font
+        face="Times New Roman">(Ply)</font>表示一个棋手走的一步棋。例如在上面介绍的迷拟游戏中，搜索深度是<font
+        face="Times New Roman">2</font>层。每个棋手走<font
+        face="Times New Roman">1</font>步。</dt>
+    <dt>　</dt>
+    <dt>　　例如在象棋中，通常在中局阶段分枝因子大约为<font
+        face="Times New Roman">35</font>种着法，在黑白棋中大约为<font
+        face="Times New Roman">8</font>。由于“最小<font
+        face="Times New Roman">-</font>最大”算法的复杂度是<font
+        face="Times New Roman">O(<i>b</i><sup><i>n</i></sup>)</font>，所以对一个局面搜索<font
+        face="Times New Roman">4</font>层就需要检查<font
+        face="Times New Roman">150</font>万条路线，这是多大的工作量！再增加上去，<font
+        face="Times New Roman">5</font>层就会把搜索树膨胀到<font
+        face="Times New Roman">5000</font>万，<font
+        face="Times New Roman">6</font>层则达到<font
+        face="Times New Roman">18</font>亿！<font
+        color="#0000FF">【原作者这里写的是</font><font
+        color="#0000FF" face="Times New Roman">8</font><font
+        color="#0000FF">层</font><font color="#0000FF"
+        face="Times New Roman">150</font><font color="#0000FF">万、</font><font
+        color="#0000FF" face="Times New Roman">9</font><font
+        color="#0000FF">层</font><font color="#0000FF"
+        face="Times New Roman">5000</font><font color="#0000FF">万、</font><font
+        color="#0000FF" face="Times New Roman">10</font><font
+        color="#0000FF">层</font><font color="#0000FF"
+        face="Times New Roman">18</font><font color="#0000FF">亿，不知为何多算了</font><font
+        color="#0000FF" face="Times New Roman">4</font><font
+        color="#0000FF">层。】</font></dt>
+    <dt>　　幸运的是，有办法能在精确度不打折扣的情况下大幅度削减工作量。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><b>Alpha-Beta</b></font><font
+        size="5" face="楷体_GB2312"><b>搜索</b></font><font
+        size="5"><b>——</b></font><font size="5"
+        face="楷体_GB2312"><b>让“最小-最大”法成为现实(也只是有一点点现实)</b></font></dt>
+    <dt>　</dt>
+    <dt>　　设想你在迷拟游戏中已经搜索了着法<font
+        face="Times New Roman">B</font>，结果你知道最大者在整个游戏中最高得分是<font
+        face="Times New Roman">5</font>。</dt>
+    <dt>　　现在假设你开始搜索着法<font
+        face="Times New Roman">A</font>了，并且一开始寻找的路线是<font
+        face="Times New Roman">A-D</font>，这条线路的得分是<font
+        face="Times New Roman">-2</font>。对于最大者来说，这是非常糟糕的，如果他走了<font
+        face="Times New Roman">A</font>，那么结果肯定会是<font
+        face="Times New Roman">-2</font>，因为最小者总是走得最好的。这是因为，如果<font
+        face="Times New Roman">A-C</font>比<font
+        face="Times New Roman">A-D</font>更好，那么最小者会选择<font
+        face="Times New Roman">A-D</font>，如果<font
+        face="Times New Roman">A-C</font>更坏<font
+        face="Times New Roman">(</font>比如说<font
+        face="Times New Roman">-20)</font>，那么最小者就会选择这条路线。所以，没有必要再去看<font
+        face="Times New Roman">A-C</font>以及其他由<font
+        face="Times New Roman">A</font>产生的路线了——最大者必须走<font
+        face="Times New Roman">B</font>，因为到此位置的搜索已经能证明，无论如何<font
+        face="Times New Roman">A</font>是个更糟的选择。</dt>
+    <dt>　　这就是<font face="Times New Roman">Alpha-Beta</font>算法的基本思想——只要你有一步好的着法，你就能淘汰其他可能导致灾难的变化，而这样的变化是很多的。如果再跟前面介绍的置换表结合起来，当不同路线的局面发生重复时可以节省下分析局面的时间，那么<font
+        face="Times New Roman">Alpha-Beta</font>就能产生无限的能量——在最好的情况下，它处理的结点数是纯粹的“最小<font
+        face="Times New Roman">-</font>最大”搜索的平方根的两倍，从<font
+        face="Times New Roman">1500</font>万可以减少到<font
+        face="Times New Roman">2500</font>。</dt>
+    <dt><font color="#0000FF">　　【要说明</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索的结点数是死办法</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">即不用</font><font color="#0000FF"
+        face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索的办法</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">的平方根的两倍那么多，可以分别计算搜索树中两种类型的结点——</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点和</font><font color="#0000FF"
+        face="Times New Roman">Beta</font><font color="#0000FF">结点。</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索是完全搜索，如果某个结点是完全搜索的，那么这个结点称为</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点，显然根结点是</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点。那么</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点的分枝又是什么呢？至少有一个</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点，这是肯定的，最好的情况下，剩余的结点都可以产生截断，这些结点称为</font><font
+        color="#0000FF" face="Times New Roman">Beta</font><font
+        color="#0000FF">结点。</font><font color="#0000FF"
+        face="Times New Roman">Beta</font><font color="#0000FF">结点有个特点，只要它的分枝中有一个</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点产生作用，那么剩下的结点就没有搜索的必要了，我们还是取最好的情况，分枝中只有一个</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点。</font></dt>
+    <dt><font color="#0000FF">　　那么如何计算</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点的个数呢？一个</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点下面有</font><font
+        color="#0000FF" face="Times New Roman"><em>b </em></font><font
+        color="#0000FF" face="Symbol">-</font><font
+        color="#0000FF" face="Times New Roman"> 1</font><font
+        color="#0000FF">个</font><font color="#0000FF"
+        face="Times New Roman">Beta</font><font color="#0000FF">结点，每个</font><font
+        color="#0000FF" face="Times New Roman">Beta</font><font
+        color="#0000FF">结点下面又有</font><font
+        color="#0000FF" face="Times New Roman">1</font><font
+        color="#0000FF">个</font><font color="#0000FF"
+        face="Times New Roman">Alpha</font><font color="#0000FF">结点，这样深度每增加了两层结点数才扩大</font><font
+        color="#0000FF" face="Times New Roman"><em>b</em></font><font
+        color="#0000FF">倍，因此总的</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">结点数就是</font><font
+        color="#0000FF" face="Times New Roman"><em>b</em><sup><em>n</em>/2</sup></font><font
+        color="#0000FF">。同样道理，</font><font
+        color="#0000FF" face="Times New Roman">Beta</font><font
+        color="#0000FF">结点也这么计算，得到的结果也是</font><font
+        color="#0000FF" face="Times New Roman"><em>b</em><sup><em>n</em>/2</sup></font><font
+        color="#0000FF">，因此总结点数就是</font><font
+        color="#0000FF" face="Times New Roman">2<em>b</em><sup><em>n</em>/2</sup></font><font
+        color="#0000FF">。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>对着法排序来优化</b></font><font
+        size="5" face="Arial"><b>Alpha-Beta</b></font><font
+        size="5" face="楷体_GB2312"><b>搜索</b></font></dt>
+    <dt>　</dt>
+    <dt>　　可是，我们如何才能达到预期的效果呢？我们是否还需要做其他事情？</dt>
+    <dt>　　的确是的。只要<font face="Times New Roman">Alpha-Beta</font>搜索可以找到比其他着法好的着法，它就能对搜索树作出非常有效的裁减，这就意味着，关键在于首先搜索好的着法。当我们在搜索其他着法以前先搜索到最好的着法，那么最好的情况就发生了。然而最坏的情况，搜索着法的顺序是按评分递增的，即每次搜索到的着法都比曾经搜索的着法要好，那么这种情况下的<font
+        face="Times New Roman">Alpha-Beta</font>搜索就无法作出任何裁减，这种搜索将退化为极其浪费的“最小<font
+        face="Times New Roman">-</font>最大”搜索。<font
+        color="#0000FF">【这就是前一章的标题中写道“也只是有一点点现实”的原因。】</font></dt>
+    <dt>　　对搜索进行排序是相当重要的。让着法随便排列肯定不行，我们必须找到更聪明的办法。不幸的是，如果有简单的办法知道最好的着法，那还有搜索的必要吗？因此我们必须用“猜最好的着法”来对付。</dt>
+    <dt>　　有很多技术可以让着法的顺序排列成尽可能好的顺序：</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">1. </font>用评估函数对着法打分，然后排序。直觉上这会起到作用，评估函数越好，这个方法就越有效。不幸的是在象棋中它一点也不起作用，因为下个月我们将了解到，很多局面是不能准确评估的。</dt>
+    <dt>　　<font face="Times New Roman">2. </font>找到在置换表中已经存在的局面，如果它的数值足够好，就会产生截断，这样就不必再进行其他搜索了。</dt>
+    <dt>　　<font face="Times New Roman">3. </font>尝试特定类型的着法。例如，后被吃掉肯定是最坏的想法，所以先检查吃子的着法是行之有效的。</dt>
+    <dt>　　<font face="Times New Roman">4. </font>把这个思路进行拓展，关注已经在同一层深度产生过截断的着法。“杀手启发”<font
+        face="Times New Roman">(Killer Heuristic)</font>是建立在很多着法是次序无关的基础上的。如果你的后被攻击了，不管你把<font
+        face="Times New Roman">H2</font>兵挺一格还是两格，对手都会吃掉你的后。因此，如果在搜索<font
+        face="Times New Roman">H2-H3</font>着法时，“象吃掉后”的着法会产生截断，那么在搜索<font
+        face="Times New Roman">H2-H4</font>着法时，“象吃掉后”很有可能也产生截断，当然应该首先考虑“象吃掉后”这一步。</dt>
+    <dt>　　<font face="Times New Roman">5. </font>再把杀手启发拓展到历史表上。如果在前面几回合的搜索中，发现<font
+        face="Times New Roman">G2-E4</font>的着法很有效，那么很有可能现在仍然很有用<font
+        face="Times New Roman">(</font>即便原来的格子是象而现在变成了后<font
+        face="Times New Roman">)</font>，因为棋盘其他位置的情况不太可能有多少变化。历史启发的的实现非常简单，只需要一个<font
+        face="Times New Roman">64x64</font>的整数数组，它可以起到很可观的效果。</dt>
+    <dt>　　现在已经谈了所有宝贵的思想，然而最有效的方法却稍稍有背于人的直觉，这个方法称为“迭代加深”<font
+        face="Times New Roman">(Iterative Deepening)</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>迭代加深的</b></font><font
+        size="5" face="Arial"><b>Alpha-Beta</b></font><font
+        size="5" face="楷体_GB2312"><b>搜索</b></font></dt>
+    <dt>　</dt>
+    <dt>　　如果你正在搜索<font face="Times New Roman">6</font>层的局面，那么理想的着法顺序应该由同样层数搜索的结果来产生。既然这明显是不可能做到的，那么能否用稍浅的搜索<font
+        face="Times New Roman">(</font>比如说<font
+        face="Times New Roman">5</font>层<font
+        face="Times New Roman">)</font>来代替呢？</dt>
+    <dt>　　这就是迭代加深方法背后的思想——一开始搜索<font
+        face="Times New Roman">2</font>层，用这样种搜索产生的着法顺序来搜索<font
+        face="Times New Roman">3</font>层，反复如此，直到到达规定的深度。</dt>
+    <dt>　　这个技术会受到一般人的质疑——大量的努力是重复的<font
+        face="Times New Roman">(8</font>到<font
+        face="Times New Roman">10</font>次乃至更多<font
+        face="Times New Roman">)</font>，不是吗？</dt>
+    <dt>　　那么考虑一下搜索树的深度<font
+        face="Times New Roman"><i>n</i></font>和分枝因子<font
+        face="Times New Roman"><i>b</i></font>好了。搜索树在第<font
+        face="Times New Roman">1</font>层的结点数为<font
+        face="Times New Roman"><i>b</i></font>，第<font
+        face="Times New Roman">2</font>层是<font
+        face="Times New Roman"><i>b</i><sup>2</sup></font>，第三层是<font
+        face="Times New Roman"><i>b</i><sup>3</sup></font>，等等。如果<font
+        face="Times New Roman"><i>b</i></font>很大<font
+        face="Times New Roman">(</font>记住中局时在<font
+        face="Times New Roman">35</font>左右<font
+        face="Times New Roman">)</font>，那么绝大多数工作量取决于最后一层。重复搜索<font
+        face="Times New Roman">(<i>n - </i>1)</font>的深度其实是小事一桩，即便迭代加深一点也不起作用，它也只会多花<font
+        face="Times New Roman">4%</font>的时间<font
+        face="Times New Roman">(</font>在通常的局面上<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　但是，它的优势是非常可观的——由浅一层搜索的结果排列得到的顺序，在层数加深时可以大幅度增加截断率。因此，迭代加深的<font
+        face="Times New Roman">Alpha-Beta</font>搜索实际上找的结点数，会比直接的<font
+        face="Times New Roman">Alpha-Beta</font>搜索的少很多。在使用置换表后，它的收效就更可观了——重复搜索浅的部分就几乎不需要时间了，因为这些结果在置换表里都有，没有必要重新计算了。</dt>
+    <dt><font color="#0000FF">　　【需要指出的是，实际运用中通常只对根结点进行迭代加深，这样搜索的结点数是</font><font
+        color="#0000FF" face="Times New Roman">1 + <em>b</em> + </font><font
+        color="#0000FF">… </font><font color="#0000FF"
+        face="Times New Roman">+ <em>b</em><sup><em>n</em></sup></font><font
+        color="#0000FF">，比</font><font color="#0000FF"
+        face="Times New Roman"><em>b</em><sup><em>n</em></sup></font><font
+        color="#0000FF">大不了多少。如果每个结点都用迭代加深，则需要搜索的结点数就是</font><font
+        color="#0000FF" face="Times New Roman">(1 + <em>b</em>)<sup><em>n</em></sup></font><font
+        color="#0000FF">，刚才提到在最好的情况下分枝因子为合理着法数的平方根，即</font><font
+        color="#0000FF" face="Times New Roman"><em>b</em></font><font
+        color="#0000FF">在</font><font color="#0000FF"
+        face="Times New Roman">6</font><font color="#0000FF">左右，而</font><font
+        color="#0000FF" face="Times New Roman">6<sup><em>n</em></sup></font><font
+        color="#0000FF">和</font><font color="#0000FF"
+        face="Times New Roman">7<sup><em>n</em></sup></font><font
+        color="#0000FF">是有很大区别的。</font></dt>
+    <dt><font color="#0000FF">　　事实上，要在每个结点上都使用迭代加深，只要检查置换表就可以了，因为从根结点处做深一层的搜索时，除了新增加的一层结点以外，其他各层结点上都有最好的着法存储在置换表中了，这些着法应该优先考虑，绝大多数着法能产生裁剪，而不需要检查杀手表或者做产生产生。</font></dt>
+    <dt><font color="#0000FF">　　另外，迭代加深可以大幅度提高历史表的效率，在前一次</font><font
+        color="#0000FF" face="Times New Roman"><em>N</em></font><font
+        color="#0000FF">层的搜索中历史表已经有相当丰富的历史着法信息了，在做</font><font
+        color="#0000FF" face="Times New Roman"><em>N</em> + 1</font><font
+        color="#0000FF">层搜索时，这些历史信息可以让着法有更好的顺序。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>电脑下棋的风格</b></font></dt>
+    <dt>　</dt>
+    <dt>　　迭代加深的<font face="Times New Roman">Alpha-Beta</font>搜索和置换表<font
+        face="Times New Roman">(</font>并且在历史表的推动下<font
+        face="Times New Roman">)</font>能让计算机对局面搜索到相当的深度，并且可以下国际象棋了。应该这么说，它的祖先“最小<font
+        face="Times New Roman">-</font>最大”算法决定了那台电脑<font
+        face="Times New Roman">(</font>曾经在世界上有惊人之举的那台电脑<font
+        color="#0000FF">【即冯</font><font color="#0000FF"
+        face="Times New Roman">-</font><font color="#0000FF">诺依曼的</font><font
+        color="#0000FF" face="Times New Roman">ENIAC</font><font
+        color="#0000FF">】</font><font face="Times New Roman">)</font>下棋的风格。</dt>
+    <dt>　　例如，设想电脑能对一个局面搜索<font
+        face="Times New Roman">8</font>层，通常在考虑某一步时，这种让人不解的模式会让让它战胜对手。只有少数一些看不清的、复杂的、迷惑人、超出直觉局面，才能让对手抓住一线机会取得胜利，而对于人类棋手<font
+        face="Times New Roman">(</font>甚至大师<font
+        face="Times New Roman">)</font>来说，这样的局面陷阱已经可以写到书里去了。</dt>
+    <dt>　　然而，如果电脑找到了一个导致和棋的无聊着法，它就会绕过陷阱，因为它假设对手会作出正确的应对，无论那种可能性有多小，只要电脑认为平局是最高的期望。</dt>
+    <dt>　　结果你可能会说，电脑下棋会极端谨慎，就像对手都是世界冠军一样。如果考虑到电脑算不到出人类棋手布置的陷阱那个深度，人类就会绞尽脑汁布设陷阱，让电脑犯错误。<font
+        face="Times New Roman">(</font>人类棋手会研究对手的下棋风格，如果卡斯帕罗夫有机会和深蓝下一百盘棋，他可能会找到深蓝的弱点并且打败它。但是我们不知道有没有这种可能性。<font
+        color="#0000FF">【现在看来，卡斯帕罗夫战胜深蓝是不在话下的，因为近几年他一直在和水平更高的电脑较量。】</font><font
+        face="Times New Roman">)</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><b>下一个月</b></font></dt>
+    <dt>　</dt>
+    <dt>　　在第五部分，我们会讨论直接或改变深度的<font
+        face="Times New Roman">Alpha-Beta</font>搜索的局限。我们还会讨论如何利用一些技术，诸如空着启发<font
+        face="Times New Roman">(Null-Move Heuristic)</font>、静态搜索<font
+        face="Times New Roman">(Quiescence Search)</font>、期望搜索<font
+        face="Times New Roman">(Aspiration Search)</font>、<font
+        face="Times New Roman">MTD(<em>f</em>)</font>搜索，以及让深蓝名声显赫的“单步延伸”<font
+        face="Times New Roman">(Singular Extensions)</font>技术，它们会提高下棋水平。坚持住，我们快要结束了！</dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Fran</font>&ccedil;<font
+        face="Times New Roman">ois Dominic Laram</font>&eacute;<font
+        face="Times New Roman">e</font>，<font
+        face="Times New Roman">2000</font>年<font
+        face="Times New Roman">8</font>月</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.gamedev.net/reference/programming/features/chess4/"
+        target="_blank"><font face="Times New Roman">http://www.gamedev.net/reference/programming/features/chess4/</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="basic_movegen.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>三<font
+        face="Times New Roman">)</font>：着法的产生</a></li>
+    <li>下一篇　<a href="basic_advanced.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>五<font
+        face="Times New Roman">)</font>：高级搜索方法</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
