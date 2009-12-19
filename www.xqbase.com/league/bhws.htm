@@ -1,0 +1,574 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>中国象棋程序《兵河五四》</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书"><img src="bhws.gif"
+        width="32" height="32">中国象棋程序《兵河五四》</font><font
+        size="4" face="楷体_GB2312"><strong>版本：</strong></font><font
+        size="4" face="Arial"><strong>V0.72</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>作者：范德军</dt>
+    </center></div><div align="center"><center>
+    <dt>中国原子能科学研究院<font
+        face="Times New Roman">(</font>北京<font
+        face="Times New Roman">)</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　兵河五四，又名“冰河五四”，象征冰河时期刀光剑影正在厮杀的古战场。五四，横五纵四，指示中国象棋棋盘上中兵的位置。名称来源于一传说中的古谱，红棋先手兵五进一，中兵开路，奋不顾身，只为扫清中路的障碍。红棋车马炮全部从中路突破，只进不退，只攻不守。正像传说中的古战场有一只军队，名为“中花军”，后来演变成中华的先祖。中国象棋之兵河五四，象征了中华先祖中道行、不偏不倚、勇往直前的精神。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>一、简介</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　《兵河五四》是开源的中国象棋引擎，支持《中国象棋通用引擎协议》<font
+        face="Times New Roman">(Universal Chinese Chess Protocol</font>，简称<font
+        face="Times New Roman">UCCI)</font>，可以用支持<font
+        face="Times New Roman">UCCI</font>协议的界面程序加载。为了交流和促进象棋软件的发展，作者提供了的源代码，可以用于任何非商业目的。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>二、主要博弈技术</strong></font></dt>
+    <dt>　</dt>
+    <dt><b>　　</b><font face="Times New Roman"><b>1. </b></font><b>当前移动方</b>：</dt>
+    <dd>　</dd>
+    <dd>int Player;</dd>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Player=0</font>，为黑棋；<font
+        face="Times New Roman">Player=1</font>，为红棋。<font
+        face="Times New Roman">1-Player</font>，表示对方。</dt>
+    <dt>　</dt>
+    <dt><b>　　</b><font face="Times New Roman"><b>2. </b></font><b>棋盘数组</b>：</dt>
+    <dd>　</dd>
+    <dd>int Board[256];</dd>
+    <dt>　</dt>
+    <dt>　　其值为棋子序号，<font
+        face="Times New Roman">0</font>为无子，<font
+        face="Times New Roman">16~31</font>为黑子，<font
+        face="Times New Roman">32~47</font>为红子，顺序为：将车炮马象士兵。使用<font
+        face="Times New Roman">256(16</font>×<font
+        face="Times New Roman">16)</font>个格子的棋盘，黑上红下。</dt>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>00</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>01</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>02</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>03</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>04</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>05</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>06</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>07</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>08</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>09</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0a</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>0f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>10</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>11</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>12</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>13</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>14</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>15</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>16</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>17</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>18</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>19</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1a</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>1f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>20</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>21</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>22</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>23</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>24</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>25</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>26</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>27</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>28</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>29</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2a</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>2f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>30</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>31</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>32</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>33</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>34</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>35</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>36</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>37</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>38</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>39</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>3a</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>3b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>3c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>3d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>3e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>3f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>40</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>41</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>42</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>43</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>44</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>45</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>46</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>47</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>48</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>49</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>4a</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>4b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>4c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>4d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>4e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>4f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>50</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>51</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>52</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>53</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>54</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>55</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>56</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#0000FF" face="Arial"><strong>57</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>58</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>59</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>5a</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>5b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>5c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>5d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>5e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>5f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>60</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>61</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>62</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>63</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>64</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>65</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>66</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>67</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>68</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>69</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>6a</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>6b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>6c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>6d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>6e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>6f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>70</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>71</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>72</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>73</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>74</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>75</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>76</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>77</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>78</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font
+        color="#0000FF" face="Arial"><strong>79</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>7a</strong></font></td>
+        <td align="center" bgcolor="#C0C0C0"><font face="Arial"><strong>7b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>7c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>7d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>7e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>7f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>80</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>81</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>82</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>83</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>84</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>85</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>86</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>87</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>88</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>89</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>8a</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>8b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>8c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>8d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>8e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>8f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>90</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>91</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>92</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>93</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>94</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>95</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>96</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>97</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>98</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>99</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>9a</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>9b</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>9c</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>9d</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>9e</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>9f</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>a0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>a1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>a2</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>a3</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>a4</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>a5</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>a6</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#0000FF" face="Arial"><strong>a7</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>a8</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>a9</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>aa</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>ab</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ac</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ad</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ae</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>af</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>b0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>b1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>b2</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>b3</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>b4</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>b5</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>b6</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>b7</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>b8</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>b9</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>ba</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>bb</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>bc</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>bd</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>be</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>bf</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>c0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>c1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>c2</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>c3</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>c4</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>c5</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>c6</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font face="Arial"><strong>c7</strong></font></td>
+        <td align="center" bgcolor="#FFFF00"><font
+        color="#FF0000" face="Arial"><strong>c8</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font
+        color="#0000FF" face="Arial"><strong>c9</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>ca</strong></font></td>
+        <td align="center" bgcolor="#FFFFFF"><font face="Arial"><strong>cb</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>cc</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>cd</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ce</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>cf</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d2</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d3</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d4</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d5</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d6</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d7</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d8</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>d9</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>da</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>db</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>dc</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>dd</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>de</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>df</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e2</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e3</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e4</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e5</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e6</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e7</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e8</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>e9</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ea</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>eb</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ec</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ed</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ee</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ef</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f0</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f1</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f2</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f3</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f4</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f5</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f6</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f7</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f8</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>f9</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>fa</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>fb</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>fc</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>fd</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>fe</strong></font></td>
+        <td align="center" bgcolor="#FF00FF"><font face="Arial"><strong>ff</strong></font></td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt>　　</dt>
+    <dt><b>　　</b><font face="Times New Roman"><b>3. </b></font><b>棋子数组：</b></dt>
+    <dd>　</dd>
+    <dd>int Piece[48];</dd>
+    <dt>　</dt>
+    <dt>　　其值为棋盘坐标，<font
+        face="Times New Roman">0</font>表示不在棋盘上，非<font
+        face="Times New Roman">0</font>值对应棋盘的位置。</dt>
+    <dt>　</dt>
+    <dt><b>　　</b><font face="Times New Roman"><b>4. </b></font><b>着法数据结构：</b></dt>
+    <dd>　</dd>
+    <dd>unsigned long move;</dd>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>31</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>30</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>29</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>28</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>27</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>26</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>25</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>24</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>23</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>22</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>21</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>20</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>19</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>18</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>17</strong></font></td>
+        <td align="center"><font color="#FF0000"
+        face="Times New Roman"><strong>16</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>15</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>14</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>13</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>12</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>11</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>10</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>9</strong></font></td>
+        <td align="center"><font color="#008000"
+        face="Times New Roman"><strong>8</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>7</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>6</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>5</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>4</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>3</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>2</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>1</strong></font></td>
+        <td align="center"><font color="#0000FF"
+        face="Times New Roman"><strong>0</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" colspan="16"><font color="#FF0000"
+        face="Times New Roman"><strong>unsigned short
+        HistoryValue;</strong></font></td>
+        <td align="center" rowspan="2" colspan="8"><font
+        color="#008000" face="Times New Roman"><strong>unsigned
+        char nSrc;</strong></font></td>
+        <td align="center" rowspan="2" colspan="8"><font
+        color="#0000FF" face="Times New Roman"><strong>unsigned
+        char nDst;</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" colspan="8"><font color="#FF00FF"
+        face="Times New Roman"><strong>unsigned char
+        CheckingPiece;</strong></font></td>
+        <td align="center" colspan="8"><font color="#FF00FF"
+        face="Times New Roman"><strong>unsigned char
+        CapturedPiece;</strong></font></td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt><b>　　</b><font face="Times New Roman"><b>5. </b></font><b>位行与位列：</b></dt>
+    <dt>　</dt>
+    <dd>unsigned long xBitBoard[16], yBitBoard[16];</dd>
+    <dd>const int xBitMask[256], yBitMask[256];</dd>
+    <dt>　</dt>
+    <dt>　　位行与位列，代替了循环，非常精简而且高效。用于产生车炮的横向和纵向移动，车炮着法合法性校验，将军检测，计算炮架子的位置，以及车炮非吃子移动的自由度。</dt>
+    <dt>　</dt>
+    <dt><b>　　</b><font face="Times New Roman"><b>6. </b></font><b>着法预产生数组：</b></dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Times New Roman"><strong>7.
+        </strong></font><strong>置换表：</strong></dt>
+    <dt>　</dt>
+    <dt>　　采用<font face="Times New Roman">4</font>次探察技术，深度优先的原则，每次搜索无须清除<font
+        face="Times New Roman">Hash</font>表。</dt>
+    <dt>　</dt>
+    <dt><strong>　　</strong><font face="Times New Roman"><strong>8.
+        </strong></font><strong>搜索技术：</strong></dt>
+</dl>
+
+<dir>
+    <li>开局：使用开局库中的着法</li>
+    <li>中局：适应性空着裁剪<font
+        face="Times New Roman">(Adaptive Null-Move Pruning)</font></li>
+    <li>残局：带校验空着裁剪<font
+        face="Times New Roman">(Verified Null-Move Pruning)</font></li>
+    <li>迭代加深搜索<font face="Times New Roman">(Iterative
+        Deepening)</font></li>
+    <li>内部深度迭代<font face="Times New Roman">(Internal
+        Iterative Deepening)</font></li>
+    <li>历史裁减<font face="Times New Roman">(History Pruning)</font></li>
+    <li>寂静搜索<font face="Times New Roman">(Quiescence
+        Search)</font></li>
+</dir>
+
+<dl>
+    <dt>　　<font face="Times New Roman"><strong>9. </strong></font><strong>着法排序：</strong></dt>
+</dl>
+
+<dir>
+    <li>将军杀手</li>
+    <li><font face="Times New Roman">HashMove</font></li>
+    <li>好的吃子移动</li>
+    <li>杀手移动</li>
+    <li>非吃子移动以及剩余的吃子移动，使用历史启发</li>
+</dir>
+
+<dl>
+    <dt>　　遇到将军局面，跳过杀手移动和好的吃子移动，使用将军逃避产生器生成解将的着法。目前还未实现非完全解将，所以还不能实现但一应着延伸，但在很大程度上减少了将军判断的次数。</dt>
+    <dt>　</dt>
+    <dt>　　<strong>10. 估值函数：</strong></dt>
+    <dt>　</dt>
+    <dt>　　正在调试。</dt>
+    <dt>　</dt>
+    <dt>　　欢迎交流！</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>联系方式</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">QQ</font>：<font
+        face="Times New Roman">83021504</font></dt>
+    <dt>　　<font face="Times New Roman">eMail</font>：<font
+        face="Times New Roman">fan_de_jun&lt;at&gt;sina.com.cn</font></dt>
+    <dt>　</dt>
+    <dt>　　下载地址：<a
+        href="http://www.xqbase.com/league/bhws.7z"><font
+        face="Times New Roman">http://www.xqbase.com/league/bhws.7z</font></a></dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="anita.htm"><font
+        face="Times New Roman">UCCI</font>引擎——<font
+        face="Times New Roman">ANITA</font></a></li>
+    <li>下一篇　<a href="bitstronger.htm"><font
+        face="Times New Roman">UCCI</font>引擎——理治棋壮</a></li>
+    <li>返　回　<a href="../league.htm">象棋百科全书——电脑象棋联赛</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

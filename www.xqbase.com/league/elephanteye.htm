@@ -1,0 +1,626 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>中国象棋对弈程序ElephantEye(象眼)</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书"><img src="elephanteye.gif"
+        width="32" height="32">中国象棋对弈程序</font><font
+        size="6" face="Arial"><strong>ElephantEye(</strong></font><font
+        size="6" face="隶书">象眼</font><font size="6"
+        face="Arial"><strong>)</strong></font><font size="4"
+        face="楷体_GB2312"><strong>　版本：</strong></font><font
+        size="4" face="Arial"><strong>3.13</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>象棋百科全书网 <font face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font>　<font
+        face="Times New Roman">2008</font>年<font
+        face="Times New Roman">3</font>月</dt>
+    </center></div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>一、简介</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>是一款自由的中国象棋程序，在遵循《<font
+        face="Times New Roman">GNU</font>宽松通用公共许可协议》<font
+        face="Times New Roman">(GNU Lesser General Public Licence)</font>的前提下，广大象棋爱好者和程序设计师可以自由使用
+        <font face="Times New Roman">ElephantEye </font>及其源程序。</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>中文名称为“象眼”，它跟“马腿”和“炮架子”一起构成了中国象棋“棋盘上的第三维”。<font
+        face="Times New Roman">ElephantEye </font>通常与一个象棋棋谱编辑软件<font
+        face="Times New Roman">ElephantBoard </font>配合使用，寓意有板有眼<font
+        face="Times New Roman">(</font>英文 <font
+        face="Times New Roman">Board </font>的意思是“板”<font
+        face="Times New Roman">)</font>。<font
+        face="Times New Roman">(</font>注：现在 <font
+        face="Times New Roman">ElephantBoard </font>已更名为“象棋巫师”。<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>二、引擎协议</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>支持<font
+        face="Times New Roman">UCCI 3.0</font>，浅红象棋用户可通过<font
+        face="Times New Roman">UCCI</font>引擎适配器<font
+        face="Times New Roman">(UCCI2QH)</font>调用<font
+        face="Times New Roman">ElephantEye</font>引擎。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(1) </font>支持的<font
+        face="Times New Roman">UCCI</font>命令有：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ucci</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">setoption ...</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">position {fen &lt;fen_str&gt;
+        | startpos} [moves &lt;move_list&gt;]</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">banmoves &lt;move_list&gt;</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">go [ponder | draw] ...</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ponderhit [draw] |
+        stop</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">probe {fen &lt;fen_str&gt;
+        | startpos} [moves &lt;move_list&gt;]</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">quit</font></dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(2) </font>可以返回的<font
+        face="Times New Roman">UCCI</font>信息有：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">id {name &lt;engine_name&gt;
+        | version &lt;version_name&gt; | copyright &lt;copyright_info&gt;
+        | author &lt;author_name&gt; | user &lt;user_name&gt;}</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">option ...</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ucciok</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">info ...</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">pophash [bestmove &lt;best_move&gt;]
+        [lowerbound &lt;value&gt; depth &lt;depth&gt;] [upperbound
+        &lt;value&gt; depth &lt;depth&gt;]</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">{nobestmove | bestmove
+        &lt;best_move&gt; [ponder &lt;ponder_move&gt;] [draw |
+        resign]}</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">bye</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>三、参数设置</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>作为<font
+        face="Times New Roman">UCCI</font>引擎，有若干可以设置的参数<font
+        face="Times New Roman">(</font>可以直接在《象棋巫师》中设置<font
+        face="Times New Roman">)</font>。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(1) </font>开局库：</dt>
+    </div><div align="left">
+    <dt>　　默认的开局库为 <font face="Times New Roman">ElephantEye
+        </font>程序<font face="Times New Roman">(ELEEYE.EXE)</font>当前目录下的
+        <font face="Times New Roman">BOOK.DAT</font>，含有<font
+        face="Times New Roman">10,000</font>个对称局面的着法。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(2) </font>思考时间：</dt>
+    </div><div align="left">
+    <dt>　　限定思考深度通常不是很好的选择，建议给定限时让程序自动分配时间。而在解杀局或分析局面时，则可让程序无限制思考，并可随时中止思考。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(3) </font>置换表大小：</dt>
+    </div><div align="left">
+    <dt>　　尽管置换表大小对程序的运行速度影响不大，默认<font
+        face="Times New Roman">16MB</font>的设置已经足够，但<font
+        face="Times New Roman">ElephantEye </font>还是提供了设置置换表大小的功能。在内存允许的情况下，下慢棋时可以适当增加置换表的大小，但建议不要超过物理内存的一半。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(3) </font>裁剪程度：</dt>
+    </div><div align="left">
+    <dt>　　为加快程序的运算速度，<font
+        face="Times New Roman">ElephantEye </font>默认使用空着裁剪，并且产生负面影响的可能性很小。只有最低级别会禁用空着裁剪。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(4) </font>知识量：</dt>
+    </div><div align="left">
+    <dt>　　知识量和局面评价的准确性有关，在 <font
+        face="Times New Roman">ElephantEye </font>的知识量等级中，只有最低级别是不采用局面评价函数的<font
+        face="Times New Roman">(</font>只考虑子力价值<font
+        face="Times New Roman">)</font>，在解排局等不需要依靠审局知识来分析的局面时，可以尝试用这种设置。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(5) </font>随机性：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>设有<font
+        face="Times New Roman">4</font>级随机性。随机性越大，程序越有可能走出它认为不是最好的着法，但“不是最好的着法”并非一点好处也没有，尤其在没有启用开局库时，适当增大随机性，可以避免程序在相同的局面下走出一样的着法。</dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>四、规则</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　从<font face="Times New Roman">2.0</font>版开始，<font
+        face="Times New Roman">ElephantEye</font>除了支持“单方面长将判负”的规则外，还支持“长打判负”，“打”包括“将”和“捉”。由于程序复杂性方面的限制，只有以下三种情况被识别成“捉”：</dt>
+    </div><div align="left">
+    <dt>　　　　<font face="Times New Roman">A. </font>马捉车或有根的炮兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>；</dt>
+    </div><div align="left">
+    <dt>　　　　<font face="Times New Roman">B. </font>车捉有根的马炮兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>；</dt>
+    </div><div align="left">
+    <dt>　　　　<font face="Times New Roman">C. </font>炮捉车或有根的马兵<font
+        face="Times New Roman">(</font>卒<font
+        face="Times New Roman">)</font>。</dt>
+    </div><div align="left">
+    <dt>　　尽管 <font face="Times New Roman">ElephantEye </font>在复杂的情况可能无法正确识别长打，但由于支持<font
+        face="Times New Roman">UCCI</font>命令 <font
+        face="Times New Roman">banmoves ... </font>，一旦用户认为引擎走了“长打”的禁着，可以用《象棋巫师》的“设置禁着”功能让引擎强制变着。</dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>五、博弈算法</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>属于偏向蛮力的象棋程序，使用了严谨而有效的博弈算法：</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(1) </font>使用位行和位列的着法生成器：</dt>
+    </div><div align="left">
+    <dt>　　位行<font face="Times New Roman">(BitRanks)</font>和位列<font
+        face="Times New Roman">(BitFiles)</font>有利于滑动棋子<font
+        face="Times New Roman">(</font>车和炮<font
+        face="Times New Roman">)</font>的着法<font
+        face="Times New Roman">(</font>尤其是吃子着法<font
+        face="Times New Roman">)</font>生成，位行和位列可以用查表来代替在射线上做的循环运算。在<font
+        face="Times New Roman">ElephantEye </font>中，位行和位列的技术不仅用在着法生成器中，也用到了牵制的判断上。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(2) </font>静态局面搜索：</dt>
+    </div><div align="left">
+    <dt>　　在做静态搜索时，<font
+        face="Times New Roman">ElephantEye </font>搜索了吃子或解将的着法，在搜索吃子着法时，<font
+        face="Times New Roman">ElephantEye </font>过滤掉不重要的吃子，例如吃不过河的兵、吃不处于防守中的士象等着法，都不在静态搜索的范围之内。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(3) </font>循环着法和长将检测：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>可以识别循环着法，出现循环着法时可以判断哪方为长将，并且会利用禁止长将的规则来谋求优势，但目前
+        <font face="Times New Roman">ElephantEye </font>还无法识别长捉。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(4) </font>置换表：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>参考了中国象棋程序“纵马奔流”的设计思路，使用深度优先和始终覆盖的双层置换表，并采用低出<font
+        face="Times New Roman">(</font>高出<font
+        face="Times New Roman">)</font>边界修正的置换表更新策略。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(5) </font>带检验的空着裁剪：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>使用
+        <font face="Times New Roman">R=2 </font>的空着裁剪，在残局阶段使用带检验的空着裁剪。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(6) </font>迭代加深<font
+        face="Times New Roman">/</font>吃子着法<font
+        face="Times New Roman">/</font>杀手着法<font
+        face="Times New Roman">/</font>历史表启发：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>的着法排序非常简单清晰，依次是迭代加深着法、好的吃子着法、杀手着法和按历史表排序的生成着法。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(7) </font>将军<font
+        face="Times New Roman">/</font>唯一应将<font
+        face="Times New Roman">/</font>兑子延伸：</dt>
+    </div><div align="left">
+    <dt>　　在选择性延伸上，<font
+        face="Times New Roman">ElephantEye </font>采用了将军、唯一应将和兑子延伸。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(8) Alpha-Beta</font>主要变例搜索：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>使用传统意义上的递归式<font
+        face="Times New Roman">Alpha-Beta</font>主要变例搜索。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(9) </font>开局库：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>的开局库共包含了<font
+        face="Times New Roman">10,000</font>个对称着法，是从<font
+        face="Times New Roman">1990</font>年到<font
+        face="Times New Roman">2005</font>年全国象棋个人赛、团体赛、五羊杯、联赛等<font
+        face="Times New Roman">8,000</font>局顶尖比赛中提取的。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(10) </font>后台思考和时间分配策略：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>支持后台思考功能，同时提供了时段制和加时制两种时间分配策略，会自动合理分配时间。</dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>六、开局库</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">的开局库可由“</font><font
+        size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">开局库制作工具”制作。运行制作工具后，首先要选择</font><font
+        size="3" face="Times New Roman">PGN</font><font size="3">棋谱所在的文件夹，然后保存为开局库文件</font><font
+        size="3" face="Times New Roman">(</font><font size="3">通常是
+        </font><font size="3" face="Times New Roman">BOOK.DAT)</font><font
+        size="3">。通常，用来生成开局库的棋谱数量越多，生成的开局库文件就越大。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　为了使制作的开局库对 </font><font
+        size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">生效，只需要把生成的开局库文件替换掉
+        </font><font size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">目录下的 </font><font size="3"
+        face="Times New Roman">BOOK.DAT </font><font size="3">即可，也可以在《象棋巫师》的“引擎设置”对话框中指定开局库文件。</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>七、局面评价函数库</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">从</font><font
+        size="3" face="Times New Roman">2.1</font><font size="3">版开始，程序的搜索部分和局面评价部分就分离了，搜索部分通过调用</font><font
+        size="3" face="Times New Roman">API</font><font size="3">函数的形式与局面评价部分耦合。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　其他象棋程序设计师可以在
+        </font><font size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">的基础上更自由地发挥。根据</font><font
+        size="3" face="Times New Roman">LGPL</font><font size="3">协议，搜索和局面评价这两个部分都作为独立的程序库，运用其中任何一部分都只需要公开该部分的源程序即可。换句话说，如果局面评价部分没有使用任何开放代码，那么程序设计师就没有义务公开这部分的源程序，搜索部分也是如此。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">的局面评价</font><font
+        size="3" face="Times New Roman">API</font><font size="3">函数接口定义如下：</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><font size="3"
+        face="Times New Roman">A. </font><font size="3">局面评价引擎名称：</font><font
+        size="3" face="Times New Roman">const char *GetEngineName(void);</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><font size="3"
+        face="Times New Roman">B. </font><font size="3">局面预评价函数接口：</font><font
+        size="3" face="Times New Roman">void PreEvaluate(
+        PositionStruct *lppos, PreEvalStruct *lpPreEval);</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><font size="3"
+        face="Times New Roman">C. </font><font size="3">局面评价函数接口：</font><font
+        size="3" face="Times New Roman">int Evaluate(const
+        PositionStruct *lppos, int vlAlpha, int vlBeta);</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　其中 </font><font size="3"
+        face="Times New Roman">PositionStruct </font><font
+        size="3">和 </font><font size="3" face="Times New Roman">PreEvalStruct
+        </font><font size="3">必须分别符合 </font><font
+        size="3" face="Times New Roman">position.h </font><font
+        size="3">和 </font><font size="3" face="Times New Roman">pregen.h
+        </font><font size="3">中定义的结构。</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>八、源程序</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>的源程序包括<font
+        face="Times New Roman">9</font>个模块，内容大致为：</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(1) ucci.h/ucci.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">UCCI</font>命令解释模块，包括
+        <font face="Times New Roman">Windows </font>和 <font
+        face="Times New Roman">Unix </font>下的行输入接收程序；</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(2) pregen.h/pregen.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">Zobrist </font>数组和着法预置表的生成模块。<font
+        face="Times New Roman">ElephantEye </font>的预置表分两个部分，一是滑动棋子的着法预置表<font
+        face="Times New Roman">(</font>包括不吃子、车吃子、炮吃子和隔两子吃子<font
+        face="Times New Roman">)</font>，它是实现位行和位列技术的基础；二是其他棋子的着法预置表，使得着法生成时避免了烦琐的边界判断。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(3) position.h/position.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　主要描述着法和局面的数据结构及功能。局面的处理是本模块的重点，处理内容包括局面初始化、<font
+        face="Times New Roman">FEN</font>串导入、棋子移动、杀手着法的合理性判断、将军判断、长将和循环检测、子力价值分调整等过程，还包括<font
+        face="Times New Roman">5</font>个子力位置价值表。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(4) genmoves.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　着法生成器，包括生成吃子着法和生成不吃子着法的两个，但不能只生成解除将军的着法。在生成吃子着法的同时赋予每个着法以相应的<font
+        face="Times New Roman">MVV(LVA)(</font>或称准<font
+        face="Times New Roman">SEE)</font>值。该模块还有一个专门判断棋子是否有保护的函数，来计算<font
+        face="Times New Roman">MVV(LVA)</font>值，对于有保护的棋子，计算<font
+        face="Times New Roman">MVV-LVA</font>的值<font
+        face="Times New Roman">(</font>小于零不计<font
+        face="Times New Roman">)</font>，对于无保护的棋子，只计算<font
+        face="Times New Roman">MVV</font>的值。因此，判断棋子是否有根的程序也包括在本模块中。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(5) hash.h/hash.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　置换表、历史表和着法列表管理模块，包括置换表的分配和存取、主要变例获取等操作。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(6) book.h/book.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　开局库读取模块。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(7) movesort.h/movesort.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　着法列表排序模块。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(8) search.h/search.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　搜索模块，除了静态搜索、完全搜索和根结点搜索这三个主要过程外，还包括迭代加深控制、后台思考、时间分配、搜索参数统计和搜索信息输出等内容。该模块是整个程序的核心模块。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(9) eleeye.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　主程序<font face="Times New Roman">(</font>即 <font
+        face="Times New Roman">main </font>函数<font
+        face="Times New Roman">)</font>。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(10) preeval.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　子力位置数组预生成器，<font
+        face="Times New Roman">ElephantEye </font>根据“进攻<font
+        face="Times New Roman">/</font>防守”和“开局<font
+        face="Times New Roman">/</font>中局<font
+        face="Times New Roman">/</font>残局”两个参数线性调整子力位置数组。</dt>
+    </div><div align="left">
+    <dt><font face="Times New Roman">(11) evaluate.cpp</font></dt>
+    </div><div align="left">
+    <dt>　　局面评价函数，<font face="Times New Roman">ElephantEye
+        </font>采用了四级偷懒评价的机制，最粗的层次只评价特殊棋型，进一层次评价牵制，再进一层次评价车的灵活性，最高层次还评价马的阻碍。</dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>九、程序表现</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">的设计重点在搜索算法，但在知识上比较欠缺。在</font><font
+        size="3" face="Times New Roman">2.8GHz</font><font
+        size="3">的处理器上每秒可搜索约</font><font
+        size="3" face="Times New Roman">1,000,000</font><font
+        size="3">个结点</font><font size="3"
+        face="Times New Roman">(</font><font size="3">包括常规搜索和静态搜索</font><font
+        size="3" face="Times New Roman">)</font><font size="3">，一般的中局局面在</font><font
+        size="3" face="Times New Roman">1</font><font size="3">分钟内可搜索约</font><font
+        size="3" face="Times New Roman">11</font><font size="3">层。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　在棋力上，</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">和“棋隐”、</font><font
+        size="3" face="Times New Roman">SaoLa (</font><font
+        size="3">象棋挑战者</font><font size="3"
+        face="Times New Roman">)</font><font size="3">等程序具有同等水平，但由于局面评估函数上的缺陷，</font><font
+        size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">距离顶尖的商业象棋软件</font><font
+        size="3" face="Times New Roman">(</font><font size="3">谢谢大师、象棋世家、象棋奇兵、棋天大圣等</font><font
+        size="3" face="Times New Roman">)</font><font size="3">尚有一定的差距。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">在联众、弈天等象棋对弈网站上作过测试，用等级分来衡量，联众网的战绩在</font><font
+        size="3" face="Times New Roman">2500</font><font size="3">分左右，弈天网快棋的战绩在</font><font
+        size="3" face="Times New Roman">2000</font><font size="3">分左右，慢棋在</font><font
+        size="3" face="Times New Roman">1500</font><font size="3">分左右。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">2005</font><font size="3">年</font><font
+        size="3" face="Times New Roman">9</font><font size="3">月在台湾象棋软件爱好者施金山的帮助下，</font><font
+        size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">参加了在台北举行的第</font><font
+        size="3" face="Times New Roman">10</font><font size="3">届</font><font
+        size="3" face="Times New Roman">ICGA</font><font size="3">电脑奥林匹克大赛中国象棋组比赛，战绩是</font><font
+        size="3" face="Times New Roman">7</font><font size="3">胜</font><font
+        size="3" face="Times New Roman">5</font><font size="3">和</font><font
+        size="3" face="Times New Roman">14</font><font size="3">负，在</font><font
+        size="3" face="Times New Roman">14</font><font size="3">个程序中排名第</font><font
+        size="3" face="Times New Roman">11</font><font size="3">；</font><font
+        size="3" face="Times New Roman">2006</font><font size="3">年</font><font
+        size="3" face="Times New Roman">8</font><font size="3">月
+        </font><font size="3" face="Times New Roman">ElephantEye </font><font
+        size="3">参加了在北京举行的全国首届计算机博弈锦标赛，战绩是</font><font
+        size="3" face="Times New Roman">7</font><font size="3">胜</font><font
+        size="3" face="Times New Roman">2</font><font size="3">和</font><font
+        size="3" face="Times New Roman">11</font><font size="3">负，在</font><font
+        size="3" face="Times New Roman">18</font><font size="3">个程序中排名第</font><font
+        size="3" face="Times New Roman">7</font><font size="3">。</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="4" face="楷体_GB2312"><strong>十</strong></font><font
+        size="3">、</font><font size="4" face="楷体_GB2312"><strong>相关资源</strong></font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye</font><font size="3">的源程序发布在</font><font
+        size="3" face="Times New Roman">SourceForge</font><font
+        size="3">的</font><font size="3" face="Times New Roman">XiangQi
+        Wizard</font><font size="3">项目中，其页面是：</font>
+    </dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://sourceforge.net/projects/xqwizard/"
+        target="_blank"><font size="3" face="Times New Roman">http://sourceforge.net/projects/xqwizard/</font></a>
+    </dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye</font><font size="3">的版本改进，实时同步地发布在</font><font
+        size="3" face="Times New Roman">SourceForge</font><font
+        size="3">的</font><font size="3" face="Times New Roman">SVN</font><font
+        size="3">站点上，获取地址是：</font> </dt>
+    </div>
+    <dt><font size="3">　　　　</font><a
+        href="https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/"
+        target="_blank"><font size="3" face="Times New Roman">https://xqwizard.svn.sourceforge.net/svnroot/xqwizard/</font></a>
+    </dt>
+    <dt><font size="3">　　您可以使用 </font><font
+        size="3" face="Times New Roman">TortoiseSVN </font><font
+        size="3">等</font><font size="3" face="Times New Roman">SVN</font><font
+        size="3">客户端程序获取到最新的</font><font
+        size="3" face="Times New Roman">(</font><font size="3">跟开发者完全同步的</font><font
+        size="3" face="Times New Roman">)</font><font size="3">代码，</font><font
+        size="3" face="Times New Roman">TortoiseSVN </font><font
+        size="3">的使用介绍和下载地址是：</font></dt>
+    <div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://sourceforge.net/projects/tortoisesvn/"
+        target="_blank"><font size="3" face="Times New Roman">http://sourceforge.net/projects/tortoisesvn/</font></a></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">ElephantEye </font><font size="3">必须在支持</font><font
+        size="3" face="Times New Roman">UCCI(</font><font
+        size="3">如《象棋巫师》</font><font size="3"
+        face="Times New Roman">)</font><font size="3">的象棋程序下运行，《象棋巫师》安装程序包含了最近一个版本的
+        </font><font size="3" face="Times New Roman">ElephantEye</font><font
+        size="3">。</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　《象棋巫师》简体中文版可以到下列站点下载：</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://www.skycn.com/soft/24665.html"
+        target="_blank"><font size="3" face="Times New Roman">http://www.skycn.com/soft/24665.html</font></a><font
+        size="3" face="Times New Roman"> (</font><font size="3">天空软件站</font><font
+        size="3" face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://www.onlinedown.net/soft/38287.htm"
+        target="_blank"><font size="3" face="Times New Roman">http://www.onlinedown.net/soft/38287.htm</font></a><font
+        size="3" face="Times New Roman"> (</font><font size="3">华军软件园</font><font
+        size="3" face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　《象棋巫师》繁体中文版可以到下列站点下载：</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://www.skycn.com/soft/35392.html"
+        target="_blank"><font size="3" face="Times New Roman">http://www.skycn.com/soft/35392.html</font></a><font
+        size="3" face="Times New Roman"> (</font><font size="3">天空软件站</font><font
+        size="3" face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt><font size="3">　　　　</font><a
+        href="http://www.onlinedown.net/soft/47666.htm"
+        target="_blank"><font size="3" face="Times New Roman">http://www.onlinedown.net/soft/47666.htm</font></a><font
+        size="3" face="Times New Roman"> (</font><font size="3">华军软件园</font><font
+        size="3" face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">ElephantEye </font>的源程序包除了
+        <font face="Times New Roman">ElephantEye </font>本身的源程序外，还包括以下几个附加模块：</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(1) </font>通用低级接口<font
+        face="Times New Roman">(utility)</font>：提供了汇编指令、位棋盘、数值计算、<font
+        face="Times New Roman">Visual Basic </font>下的原子语句等功能；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(2) </font>中国象棋规则模块<font
+        face="Times New Roman">(cchess)</font>：为其他软件使用
+        <font face="Times New Roman">ElephantEye </font>代码提供了接口；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(3) </font>开局库制作模块<font
+        face="Times New Roman">(BOOK)</font>：制作开局库<font
+        face="Times New Roman">BOOK.DAT</font>的代码；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(4) UCCI</font>引擎联赛模拟器<font
+        face="Times New Roman">(LEAGUE)</font>：为<font
+        face="Times New Roman">UCCI</font>引擎测试和比赛提供了自动批量对局的平台；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(5) UCCI</font>引擎搜索树分析器<font
+        face="Times New Roman">(TREE)</font>：<font
+        face="Times New Roman">UCCI</font>引擎<font
+        face="Times New Roman">(</font>支持<font
+        face="Times New Roman">UCCI 2.2+)</font>的搜索路线分析工具；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(6) XQF</font>棋谱工具<font
+        face="Times New Roman">(XQFTOOLS)</font>：提供象棋演播室棋谱<font
+        face="Times New Roman">(*.XQF)</font>、弈天棋谱<font
+        face="Times New Roman">(*.MXQ)</font>和<font
+        face="Times New Roman">QQ</font>象棋棋谱<font
+        face="Times New Roman">(*.CHE)</font>转换为可移植棋谱<font
+        face="Times New Roman">(*.PGN)</font>的工具；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(7) </font>浅红象棋适配器<font
+        face="Times New Roman">(UCCI2QH)</font>：为浅红象棋调用<font
+        face="Times New Roman">UCCI</font>引擎提供了接口；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(8) </font>浅红象棋引擎支持<font
+        face="Times New Roman">UCCI</font>的适配器<font
+        face="Times New Roman">(QH2UCCI)</font>：为“梦入神蛋”浅红象棋加入<font
+        face="Times New Roman">UCCI</font>引擎测试提供了接口；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(9) BBS Chess(BBSCHESS)</font>：一个用
+        <font face="Times New Roman">Visual Basic </font>制作的国际象棋局面设置工具，可在各高校<font
+        face="Times New Roman">BBS</font>上粘贴彩色的国际象棋局面；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(10) </font>棋盘图片生成器<font
+        face="Times New Roman">(FEN2BMP)</font>：一个可以把国际象棋和中国象棋的<font
+        face="Times New Roman">FEN</font>文件转换成<font
+        face="Times New Roman">BMP</font>文件的实用工具；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(11) </font>其他工具<font
+        face="Times New Roman">(MISC)</font>：包括<font
+        face="Times New Roman">BASE64</font>转码、<font
+        face="Times New Roman">BIG5/GB</font>转码、<font
+        face="Times New Roman">UNIX</font>文本转码、简易网络通讯、管道测试等工具。</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(12) </font>说明文档<font
+        face="Times New Roman">(DOC)</font>：即《中国象棋程序设计探索》系列连载；</dt>
+    </div><div align="left">
+    <dt>　　<font face="Times New Roman">(13) </font>参赛棋谱<font
+        face="Times New Roman">(CCGC)</font>：<font
+        face="Times New Roman">ElephantEye </font>参加首届全国计算机博弈锦标赛<font
+        face="Times New Roman">(CCGC)</font>的全部棋谱。</dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　如果要获得关于 <font face="Times New Roman">ElephantEye
+        </font>的更加详细的信息，可登录象棋百科全书网：</dt>
+    </div><div align="left">
+    <dt>　　　　<a href="http://www.xqbase.com/"
+        target="_blank"><font face="Times New Roman">http://www.xqbase.com/</font></a></dt>
+    </div>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="coony.htm"><font
+        face="Times New Roman">UCCI</font>引擎——<font
+        face="Times New Roman">Coony</font></a></li>
+    <li>下一篇　<a href="eychessu.htm"><font
+        face="Times New Roman">UCCI</font>引擎——<font
+        face="Times New Roman">EyChessU</font></a></li>
+    <li>返　回　<a href="../league.htm">象棋百科全书——电脑象棋联赛</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

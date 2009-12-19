@@ -1,0 +1,126 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>“理治棋壮”中国象棋计算机博弈引擎简介</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书"><img src="bb.gif" width="32"
+        height="32">“理治棋壮”中国象棋计算机博弈引擎简介</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>“理治棋壮”中国象棋计算机博弈引擎开发小组</dt>
+    </center></div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>　　计算机博弈是人工智能领域公认的最具挑战性的科研课题之一。中国象棋是从两军对阵中抽象出来的一种智力游戏，是博弈的一个标准问题。正逢人工智能学科创立<font
+        face="Times New Roman">50</font>周年之际，由中国人工智能学会主办，东北大学、清华大学、北京理工大学联合承办的全国首届中国象棋计算机博弈锦标赛暨机器博弈学术研讨会将于<font
+        face="Times New Roman">2006</font>年<font
+        face="Times New Roman">8</font>月<font
+        face="Times New Roman">2</font>日<font
+        face="Times New Roman">~7</font>日在北京举行。我们“理治棋壮”小组将作为北京理工大学代表队参加本次比赛。</dt>
+    </div><div align="left">
+    <dt>　　我们此次开发的项目为一个基于中国象棋通用引擎协议<font
+        face="Times New Roman">(UCCI)</font>的中国象棋计算机博弈引擎。项目采用<font
+        face="Times New Roman">GNU C++</font>开发，遵循<font
+        face="Times New Roman">GPL </font>许可，综合体现面向对象思想和软件工程理论，培养团队合作精神和学习创新能力。</dt>
+    </div><div align="left">
+    <dt>　　本引擎通过标准输入和标准输出与支持<font
+        face="Times New Roman">UCCI </font>的中国象棋界面软件通讯，可实现跨平台及联网的人机、机机对战。博弈算法实现的关键技术包括：棋盘表示的数据结构、着法生成、局面评估；其策略核心在于棋局评估函数，核心方法是博弈树搜索。同时开局库和残局库的构建对算法的性能也有重要的影响。</dt>
+    </div><div align="left">
+    <dt>　　想让计算机下棋，首先必须解决的问题就是如何把棋盘状态和棋子分布编码到计算机，转化为计算机可以处理的数据格式。着法生成与棋盘数据结构密不可分，如何使两者协调工作，加速对博弈树的操作，尤其是如何在计算机博弈中找到最佳的途径，是博弈爱好者研究的重点。棋局评估就是给棋局打分。在较少的步数内，对局面进行量化，通过数值评判棋局的好坏。评估需要大量的象棋知识，仁者见仁，智者见智，是机器博弈中最为人性化的部分。另外，如果把中国象棋棋谱上一些公认为最佳的开局着法和残局着法存储在数据库中，在开局和残局时用查询取代搜索和评估，那么会大大提高计算机的对弈水平。</dt>
+    </div><div align="left">
+    <dt>　　我们的引擎除通讯协议采用标准的<font
+        face="Times New Roman">UCCI </font>模块外，主体部分将完全独立自主开发。核心算法在参考人工智能和中国象棋领域已有成熟算法的基础上将有所改进和创新，同时我们也将邀请我校一些象棋高手作为局面评估及开局、残局问题的顾问。报名参加本次锦标赛的，既有多位以往计算机博弈界的世界冠军，也有不少像我们一样的新手。预祝我们在比赛中取得良好的成绩！</dt>
+    </div>
+</dl>
+
+<hr>
+
+<dl>
+    <div align="left">
+    <dt>北京理工大学“理治棋壮”中国象棋计算机博弈引擎开发小组版权所有<font
+        face="Times New Roman">(2006.7</font>～<font
+        face="Times New Roman">2006.8)</font></dt>
+    </div><div align="left">
+    <dt>　</dt>
+    </div><div align="left">
+    <dt>项目主管：林　健<font face="Times New Roman">(</font>北京理工大学计算机科学技术学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>指导教师：黄　鸿<font face="Times New Roman">(</font>北京理工大学信息科学技术学院自动控制系系统工程研究所<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>技术顾问：赵陈翔<font face="Times New Roman">(</font>北京理工大学软件学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>开发人员：林　健<font face="Times New Roman">(</font>北京理工大学计算机科学技术学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　　　　　高　然<font face="Times New Roman">(</font>北京理工大学计算机科学技术学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　　　　　应张彬<font face="Times New Roman">(</font>北京理工大学软件学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　　　　　武　斌<font face="Times New Roman">(</font>北京理工大学软件学院<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>联系方式：<font face="Times New Roman">lj&lt;at&gt;linjian.cn(</font>林健<font
+        face="Times New Roman">)</font></dt>
+    </div><div align="left">
+    <dt>　　　　　<font face="Times New Roman">honghuang&lt;at&gt;bit.edu.cn(</font>黄鸿<font
+        face="Times New Roman">)</font></dt>
+    </div>
+</dl>
+
+<hr>
+
+<dl>
+    <dt>下载地址：<a
+        href="http://www.linjian.cn/files/c_cpp/bitstronger_0.06-win32-i386-bin_src_docs.rar"
+        target="_blank" onclick="onClickUnsafeLink(event);"><font
+        face="Times New Roman">http://www.linjian.cn/files/c_cpp/bitstronger_0.06-win32-i386-bin_src_docs.rar</font></a><font
+        face="Times New Roman"> (</font>“理治棋壮”开发小组<font
+        face="Times New Roman">)</font></dt>
+    <dt>　　　　　<a
+        href="http://www.xqbase.com/league/bitstronger.7z"><font
+        face="Times New Roman">http://www.xqbase.com/league/bitstronger.7z</font></a><font
+        face="Times New Roman"> (</font>象棋百科全书<font
+        face="Times New Roman">)</font></dt>
+    <dt>作者主页：<a href="http://blog.linjian.cn/"
+        target="_blank"><font face="Times New Roman">http://blog.linjian.cn/</font></a></dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="bhws.htm"><font
+        face="Times New Roman">UCCI</font>引擎——兵河五四</a></li>
+    <li>下一篇　<a href="blcx.htm"><font
+        face="Times New Roman">UCCI</font>引擎——兵临城下</a></li>
+    <li>返　回　<a href="../league.htm">象棋百科全书——电脑象棋联赛</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
