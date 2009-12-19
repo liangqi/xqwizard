@@ -1,0 +1,114 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta name="Microsoft Theme" content="zero-plus-one 110, default">
+<meta name="Microsoft Border" content="tlb, default">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>基本搜索方法——迭代加深</title>
+<link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+
+<body background="../background.gif">
+
+<dl dir="ltr">
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">迭代加深</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Bruce Moreland / </font>文</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>一个听起来不怎样的思想</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　如果你准备开始搜索一个国际象棋的局面了，你要搜索多深呢？事先预测搜索将进行多少时间，这有些困难，因为完成<font
+        face="Times New Roman"><em>D</em></font>层搜索所需要的时间取决于很多不确定的因素。在复杂的中局局面里，你可能不会搜索得很深，而在残局中你可能会搜索得非常深，在某些王兵残局里你可能会搜索<font
+        face="Times New Roman">100</font>多层<font
+        color="#0000FF">【译注：这也太夸张了点吧】</font>。</dt>
+    <dt>　　有一个思想，就是一开始只搜索一层，如果搜索的时间比分配的时间少，那么搜索两层，然后再搜索三层，等等，直到你用完时间为止。</dt>
+    <dt>　　这足以保证很好地运用时间了。如果你可以很快搜索到一个深度，那么你在接下来的时间可以搜索得更深，或许你可以完成。如果局面比你想象的复杂，那么你不必搜索得太深，但是至少有合理的着法可以走了，因为你不太可能连1层搜索也完不成。</dt>
+    <dt>　　这个思想称为“迭代加深”<font
+        face="Times New Roman">(Iterative Deepening)</font>，因为你在迭代搜索，每次都比一次前一次加深<font
+        face="Times New Roman">1</font>层<font
+        face="Times New Roman">(</font>多<font
+        face="Times New Roman">1</font>层没有什么奥妙的，当然你可以试试多两层，但是<font
+        face="Times New Roman">1</font>层比较好<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　代码如下：</dt>
+    <dt>　</dt>
+    <dd>for (depth = 1; ; depth ++) {</dd>
+    <dd>　val = AlphaBeta(depth, -INFINITY, INFINITY);</dd>
+    <dd>　if (TimedOut()) {</dd>
+    <dd>　　break;</dd>
+    <dd>　}</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　这是一个非常有效的搜索方法，你可能会感到吃惊。如果你能增强<font
+        face="Times New Roman">Alpha-Beta</font>使得它返回一条“<a
+        href="other_pvcollect.htm" target="_blank">主要变例</a>”，你可以用主要变例中的着法来做下一次迭代搜索。</dt>
+    <dt>　　例如，一层的搜索显示“<font
+        face="Times New Roman">1. e4</font>”是最好的着法，那么在做两层的搜索时你先搜索“<font
+        face="Times New Roman">1. e4</font>”。如果返回“<font
+        face="Times New Roman">1. e4 e5</font>”，那么你在做三层的搜索时仍旧先搜索这条路线。</dt>
+    <dt>　　这样做之所以有好的效果，是因为第一次搜索的线路通常是好的，而<font
+        face="Times New Roman">Alpha-Beta</font>对着法的顺序特别敏感。如果着法顺序很坏，那么在国际象棋中你的“<a
+        href="search_alphabeta.htm#branching factor"
+        target="_blank">分枝因子</a>”将接近<font
+        face="Times New Roman">35</font>。如果你的着法很好，那么分枝因子将接近于<font
+        face="Times New Roman">6</font>。前一次迭代的搜索函数得到的主要变例通常是非常好的着法。</dt>
+    <dt>　　迭代加深的思想给了你一个简单的方法，它可以在时间用完时中断搜索，并且会提高你的搜索效率。</dt>
+    <dt><font color="#0000FF">　　【有可能的话，你可以把检测超时的程序做到“</font><font
+        color="#0000FF" face="Times New Roman">AlphaBeta</font><font
+        color="#0000FF">”函数里去，而“</font><font
+        color="#0000FF" face="Times New Roman">TimeOut</font><font
+        color="#0000FF">”只是由“</font><font
+        color="#0000FF" face="Times New Roman">AlphaBeta</font><font
+        color="#0000FF">”函数返回的超时检测结果</font><font
+        color="#0000FF" face="Times New Roman">(</font><font
+        color="#0000FF">如果超时的话，就直接跳出函数体了</font><font
+        color="#0000FF" face="Times New Roman">)</font><font
+        color="#0000FF">。很多情况下，程序没有必要搜索整个一层才给出最佳着法。由于迭代加深的原因，新的一层搜索的第一个着法总是上一层搜索得到的最佳着法，如果新的一层可以搜索出另一个更好的着法，就已经很满意了，有时没有必要找到最好的着法。换句话说，即使你没有足够的时间把这一层搜索完，得到的着法至少不会比上一层最好着法要坏。】</font></dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.seanet.com/~brucemo/topics/iterative.htm"
+        target="_blank"><font face="Times New Roman">http://www.seanet.com/~brucemo/topics/iterative.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="search_alphabeta.htm">基本搜索方法——<font
+        face="Times New Roman">Alpha-Beta</font>搜索</a></li>
+    <li>下一篇　<a href="search_hashing.htm">基本搜索方法——置换表</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

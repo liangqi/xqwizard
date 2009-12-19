@@ -1,0 +1,250 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>数据结构——0x88着法产生方法</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="Arial"><strong>0x88</strong></font><font
+        size="6" face="隶书">着法产生方法</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Bruce Moreland / </font>文</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>历史</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我在<font face="Times New Roman">1995</font>年香港举行的世界电脑国际象棋锦标赛<font
+        face="Times New Roman">(WCCC)</font>上和 <font
+        face="Times New Roman">David Kittinger </font>交流时，他跟我说了这个着法产生的技术，当时我就把它忘了。如今回过头来看，我已经很多次提到这个技术了。由于当时我还不知道它的名称，我就给它起了别的名字。它名称应该是<font
+        face="Times New Roman">0x88</font>，即十六进制的<font
+        face="Times New Roman">88</font>。</dt>
+    <dt>　　之所以称为<font face="Times New Roman">0x88</font>，是因为<font
+        face="Times New Roman">0x88</font>概括了这个技术的要点。</dt>
+    <dt>　　<font face="Times New Roman">0x88</font>技术的优势在于：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>它很容易理解；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>代码非常短小，一点也不复杂；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>很容易检查棋子是否超出边界。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>棋盘表示和基本原理</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　通常的国际象棋棋盘是<font
+        face="Times New Roman">8x8</font>的格子，格子的“标准”编号应该从<font
+        face="Times New Roman">0</font>到<font
+        face="Times New Roman">63</font>，<font
+        face="Times New Roman">a1</font>格是<font
+        face="Times New Roman">0</font>，<font
+        face="Times New Roman">b1</font>格是<font
+        face="Times New Roman">1</font>，<font
+        face="Times New Roman">a2</font>格是<font
+        face="Times New Roman">8</font>，<font
+        face="Times New Roman">h8</font>格是<font
+        face="Times New Roman">63</font>，其余的格子由你自己填上。</dt>
+    <dt>　　<font face="Times New Roman">0x88</font>采用稍微不同的棋盘，它有<font
+        face="Times New Roman">128</font>个格子，<font
+        face="Times New Roman">a1</font>到<font
+        face="Times New Roman">h1</font>仍旧是<font
+        face="Times New Roman">0</font>到<font
+        face="Times New Roman">7</font>，但是在<font
+        face="Times New Roman">h</font>列右边还有从未用到的<font
+        face="Times New Roman">i</font>到<font
+        face="Times New Roman">p</font>列，简单地说就是把一个虚的棋盘放在实的棋盘的右边。</dt>
+    <dt>　　因此<font face="Times New Roman">a2</font>被编为<font
+        face="Times New Roman">16</font>，<font
+        face="Times New Roman">a8</font>是<font
+        face="Times New Roman">112</font>，<font
+        face="Times New Roman">h8</font>是<font
+        face="Times New Roman">119</font>。</dt>
+    <dt>　　任意一个格子都符合下面的公式：</dt>
+    <dd>　</dd>
+    <dd>指标 = 行号 x 16 + 列号</dd>
+    <dt>　</dt>
+    <dt>　　你可能会问为什么要这样做，其实有很多理由，这里我们只讨论最关键的。这个理由就是，这样做可以检查射线是否走到了棋盘的左边界或右边界。</dt>
+    <dt>　　你可能仍旧不明白。假设你仍然用<font
+        face="Times New Roman">8x8</font>的棋盘，并且考虑<font
+        face="Times New Roman">a3</font>格的车，在<font
+        face="Times New Roman">8x8</font>的棋盘上它的编号是<font
+        face="Times New Roman">16</font>。现在来产生这个车的目标格子，先从纵线上的着法开始。在纵线上前进一格，就增加<font
+        face="Times New Roman">8</font>，<font
+        face="Times New Roman">16</font>加上<font
+        face="Times New Roman">8</font>就得到<font
+        face="Times New Roman">24</font>。这个格子是否在棋盘上呢？在<font
+        face="Times New Roman">8x8</font>的棋盘上可以检查它是否小于<font
+        face="Times New Roman">64</font>。现在<font
+        face="Times New Roman">24</font>小于<font
+        face="Times New Roman">64</font>，所以它在棋盘上。下一个格子是<font
+        face="Times New Roman">32</font>，然后依次是<font
+        face="Times New Roman">40</font>、<font
+        face="Times New Roman">48</font>和<font
+        face="Times New Roman">64</font>，<font
+        face="Times New Roman">64</font>不小于<font
+        face="Times New Roman">64</font>，所以它在棋盘外边，我们就停了下来。</dt>
+    <dt>　　非常好，现在我们从<font
+        face="Times New Roman">a3</font>往下走。<font
+        face="Times New Roman">a3</font>是<font
+        face="Times New Roman">16</font>，减去<font
+        face="Times New Roman">8</font>得到<font
+        face="Times New Roman">8</font>，它在棋盘上吗？此时要检查它是否大于或等于零，而<font
+        face="Times New Roman">8</font>确实是的。再下一个格子是<font
+        face="Symbol">-</font><font face="Times New Roman">8</font>，因为小于零，所以不在棋盘上。</dt>
+    <dt>　　我们不厌其烦做了两次测试，如果只需要做一次测试那就更好了。现在测试棋子是否在棋盘上的代码是：</dt>
+    <dd>　</dd>
+    <dd>if ((index &lt; 0) || (index &gt;= 64))</dd>
+    <dt>　</dt>
+    <dt>　　其实这就包含了两次测试，我们远远没有满足，因为它完全可以只做一次测试：</dt>
+    <dd>　</dd>
+    <dd>if (!(index &amp; 0x40))</dd>
+    <dt>　</dt>
+    <dt>　　这就涵盖了判断棋子超出棋盘下边界和超出棋盘上边界的两种情况。超出棋盘上边界时，由于大于<font
+        face="Times New Roman">64</font>而<font
+        face="Times New Roman">0x40</font>置为<font
+        face="Times New Roman">1</font>，超出棋盘下边界时，用补码表示负数的机制使得<font
+        face="Times New Roman">0x40</font>也置为<font
+        face="Times New Roman">1</font>。</dt>
+    <dt>　　如果你还没有明白，那么你最好停下来别看下去了，否则下面要说的东西对你来说就是天书。</dt>
+    <dt>　　如果你留意一下，你会注意到我们只让车朝上朝下走，而没有让它朝左朝右走。我们之所以不让它朝左朝右走，是因为这套机制不允许这么做，它无法判断朝左或朝右的射线是否到达棋盘的边界。如果你从<font
+        face="Times New Roman">a3</font>开始朝右走，每走一格加<font
+        face="Times New Roman">1</font>直到<font
+        face="Times New Roman">h3</font>，此时你可以继续加<font
+        face="Times New Roman">1</font>到达<font
+        face="Times New Roman">a4</font>。<font
+        face="Times New Roman">a4</font>仍就在棋盘上，然而没有什么技巧可以让你判断是否超越了<font
+        face="Times New Roman">h</font>列。朝左走也一样，从<font
+        face="Times New Roman">a3</font>格开始减<font
+        face="Times New Roman">1</font>，就会到<font
+        face="Times New Roman">h2</font>，它仍然在棋盘上，但是国际象棋里没有哪个棋子能这么走。</dt>
+    <dt>　　而<font face="Times New Roman">0x88</font>机制恰恰可以解决这个问题。用一个<font
+        face="Times New Roman">16x8</font>的棋盘，就得到一个标志位，你就能知道棋子是否到了右边那个没用的棋盘上，因为在这个棋盘上<font
+        face="Times New Roman">0x08</font>位置为<font
+        face="Times New Roman">1</font>。例如<font
+        face="Times New Roman">h1</font>标号是<font
+        face="Times New Roman">7</font>，加<font
+        face="Times New Roman">1</font>后就是<font
+        face="Times New Roman">8</font>，而<font
+        face="Times New Roman">0x08</font>位变成了<font
+        face="Times New Roman">1</font>。左边的实棋盘上没有一格的<font
+        face="Times New Roman">0x08</font>位是<font
+        face="Times New Roman">1</font>，而右边的虚棋盘每个格子的<font
+        face="Times New Roman">0x08</font>位都是<font
+        face="Times New Roman">1</font>。如果你在<font
+        face="Times New Roman">a3</font>并且要朝左走，你会到达<font
+        face="Times New Roman">p2</font>，这是在虚棋盘上，<font
+        face="Times New Roman">0x08</font>位是<font
+        face="Times New Roman">1</font>。</dt>
+    <dt>　　可以把<font face="Times New Roman">0x08</font>的检测和<font
+        face="Times New Roman">0x80</font>的检测结合起来<font
+        face="Times New Roman">(</font>原来的<font
+        face="Times New Roman">0x40</font>变成了<font
+        face="Times New Roman">0x80</font>，因为现在棋盘变成<font
+        face="Times New Roman">128</font>个格子了<font
+        face="Times New Roman">)</font>，并且两次测试要同时完成。把<font
+        face="Times New Roman">0x80</font>和<font
+        face="Times New Roman">0x08</font>结合起来就是<font
+        face="Times New Roman">0x88</font>，这就是这套方案的名称。</dt>
+    <dt>　　如果你知道我在说什么，你就明白<font
+        face="Times New Roman">0x88</font>是怎样运作的。你的着法产生的循环就应该写成下面的样子：</dt>
+    <dd>　</dd>
+    <dd><font face="宋体">while (!(index &amp; 0x88)) {</font></dd>
+    <dd>　<font face="宋体">GenerateMove(index);</font></dd>
+    <dd>　<font face="宋体">index += delta;</font></dd>
+    <dd><font face="宋体">}</font></dd>
+    <dt>　</dt>
+    <dt>　　这就非常简洁了，你可以这么写：</dt>
+    <dd>　</dd>
+    <dd><font face="宋体">void GenerateMoves(int square, int *
+        ptab) {</font></dd>
+    <dd>　<font face="宋体">for (; *ptab; ptab++) {</font></dd>
+    <dd>　　<font face="宋体">int index;</font></dd>
+    <dd>　　<font face="宋体">for (index = square; !(index
+        &amp; 0x88); index += *ptab) {</font></dd>
+    <dd>　　　<font face="宋体">GenerateMove(index);</font></dd>
+    <dd>　　}</dd>
+    <dd>　<font face="宋体">}</font></dd>
+    <dd><font face="宋体">}</font></dd>
+    <dd><font face="宋体">int argdBishop[] = { 17, 15, -17, -15,
+        0 };</font></dd>
+    <dd><font face="宋体">void GenerateBishopMoves(int square)
+        {</font></dd>
+    <dd>　<font face="宋体">GenerateMove(square, argdBishop);</font></dd>
+    <dd><font face="宋体">}</font></dd>
+    <dt>　</dt>
+    <dt>　　这样写就非常快了，并且代码很短。车或者后跟象的区别只是表中的数据不同罢了，因此你可以花很短的时间把其他棋子的代码加上，而且不需要任何改动。</dt>
+    <dt>　　当然，你仍然需要为兵和王车易位另写代码，但每个体系都得如此。<font
+        face="Times New Roman">0x88</font>体系能给你一点帮助，可是代码写出来仍然很丑。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>奖励</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">0x88</font>体系还可以快速判断攻击，这就是要使用<font
+        face="Times New Roman">16x8</font>棋盘的另一个原因。如果你将两格子的号码相减，你会得到两个格子之间的关系。</dt>
+    <dt>　　例如，如果两个格子减下来是<font
+        face="Times New Roman">1</font>，那么第二个格子就在第一个格子的左边。如果减下来是<font
+        face="Times New Roman">16</font>，那么第二个格子就在第一个格子的上面。</dt>
+    <dt>　　这在<font face="Times New Roman">8x8</font>棋盘上是做不到的。<font
+        face="Times New Roman">d1 </font><font face="Symbol">-</font><font
+        face="Times New Roman"> c1 = 1</font>确实如此，但是<font
+        face="Times New Roman">a2 - h1</font>也是<font
+        face="Times New Roman">1</font>。这个“回圈”问题可以在<font
+        face="Times New Roman">128</font>个格子的棋盘上解决。</dt>
+    <dt>　　你在写判断将军或者一个子是否在捉另一个子的函数时，可以利用以上这个技巧。</dt>
+    <dt>　　你可以用一个大约<font
+        face="Times New Roman">257</font>个元素<font
+        face="Times New Roman">(</font><font face="Symbol">-</font><font
+        face="Times New Roman">128 ~ +128)</font>的数组，里面存放一些代表棋子的位域，来说明哪些棋子能在某两格间移动，而移动的增量就是数组的指标。你可以用少于<font
+        face="Times New Roman">257</font>个的元素，但是我没有尝试过。</dt>
+    <dt>　　例如在增量为<font face="Times New Roman">1</font>的元素里，应该有王、后、车的位置是置<font
+        face="Times New Roman">1</font>的。如果增量是<font
+        face="Times New Roman">17</font>，那么置<font
+        face="Times New Roman">1</font>的是王、后、象和白兵。</dt>
+    <dt>　　这样就可以写出比较快的检查将军的程序了。你把攻击子的格子和目标格子相减得到增量，加上<font
+        face="Times New Roman">128</font>以避免负的指标，然后去找预先计算好的攻击数组，看看是否符合这个攻击子的类型，以确认它有可能一步到达目标格。</dt>
+    <dt>　　如果你确认这个子可能到达目标格，那么你还要检查它是否是长兵器<font
+        face="Times New Roman">(</font>后、车或象<font
+        face="Times New Roman">)</font>。如果不是，那就完成判断了，否则你要沿着从攻击子到目标格的射线去找有没有阻挡的棋子。</dt>
+    <dt>　　我不想提供这个程序的代码，因为它很容易写。这个程序的速度是比较快的。</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.seanet.com/~brucemo/topics/0x88.htm"
+        target="_blank"><font face="Times New Roman">http://www.seanet.com/~brucemo/topics/0x88.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="struct_movegen.htm">数据结构——着法生成器</a></li>
+    <li>下一篇　<a href="struct_zobrist.htm">数据结构——<font
+        face="Times New Roman">Zobrist</font>键值</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>《对弈程序基本技术》专题——概述</title>
+<!-- This document was created from RTF source by rtftohtml version
+2.7.5 -->
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="3">《对弈程序基本技术》专题</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">概述</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>象棋百科全书网 <font face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font><font size="3">　</font><font
+        size="3" face="Times New Roman">2005</font><font size="3">年</font><font
+        size="3" face="Times New Roman">9</font><font size="3">月</font></dt>
+    </center></div><div align="left">
+    <dt>　</dt>
+    </div>
+    <dt>　　我花了大量时间翻译了<font
+        face="Times New Roman">F. D. Laram</font>&eacute;<font
+        face="Times New Roman">e</font>的《国际象棋程序设计》<font
+        face="Times New Roman">(Chess Programming)</font>连载，现在已经具备了设计象棋引擎的能力，但是还需要一些资料。为此，我查找了各个象棋程序设计的网站，收集了很多专题性的文章，并且整理成<font
+        face="Times New Roman">Laram</font>&eacute;<font
+        face="Times New Roman">e</font>写他的连载时形成的体系。</dt>
+    <dt>　　我整理的文章除了<font
+        face="Times New Roman">T. A. Marsland</font>的《<a
+        href="anatomy.htm" target="_blank">国际象棋程序剖析</a>》一文外，把它们分成四类，它们分别对应了<font
+        face="Times New Roman">Laram</font>&eacute;<font
+        face="Times New Roman">e</font>的连载的四个部分。由于是从不同的网站上收集的，作者也各不相同，他们分别是：</dt>
+</dl>
+
+<ul>
+    <li><font face="Times New Roman">D. Eppstein</font>，加州爱尔文大学<font
+        face="Times New Roman">(UC Irvine)</font>的计算机教授，我收录了他<font
+        face="Times New Roman">1997</font>到<font
+        face="Times New Roman">1999</font>年做专题讲座的<font
+        face="Times New Roman">9</font>篇文章，基本上是概述性的，也有细节上的东西，包括源代码<font
+        face="Times New Roman">(</font>这可能是读者最感兴趣的<font
+        face="Times New Roman">)</font>。</li>
+    <li><font face="Times New Roman">J. Swafford</font>，公开源代码的国际象棋引擎<font
+        face="Times New Roman">Galahad</font>的作者<font
+        face="Times New Roman">(Galahad</font>并不算很成功，现在已经销声匿迹的<font
+        face="Times New Roman">)</font>，<font
+        face="Times New Roman">Laram</font>&eacute;<font
+        face="Times New Roman">e</font>的连载中提到过他的文章，我收录的<font
+        face="Times New Roman">3</font>篇文章<font
+        face="Times New Roman">(</font>都是关于位棋盘的<font
+        face="Times New Roman">)</font>则是一个叫<font
+        face="Times New Roman">Allen Liu</font>的网友翻译的，其实肯定不止这<font
+        face="Times New Roman">3</font>篇。不过现在他的网站现在已经关闭了，因此没有他的原文，这点让我非常遗憾。</li>
+    <li><font face="Times New Roman">B. Moreland</font>，微软<font
+        face="Times New Roman">(Microsoft)</font>的程序设计师，业余从事国际象棋引擎<font
+        face="Times New Roman">Ferret</font>的开发，在电脑奥林匹克大赛国际象棋业余组里，它和著名的<font
+        face="Times New Roman">Crafty</font>一样处于领先水平。<font
+        face="Times New Roman">Moreland</font>的文章涵盖的范围最广<font
+        face="Times New Roman">(</font>除了局面评价以外都涉及到了<font
+        face="Times New Roman">)</font>，所以我收集得最多。</li>
+    <li><font face="Times New Roman">M. Fierz</font>，瑞士<font
+        face="Times New Roman">Aargau</font>学院的物理学家，国际象棋业余棋手，业余从事棋类程序的设计，作品有<font
+        face="Times New Roman">Muse(</font>国际象棋<font
+        face="Times New Roman">)</font>、<font
+        face="Times New Roman">Cake(</font>西洋跳棋<font
+        face="Times New Roman">)</font>等。我收录了<font
+        face="Times New Roman">Fierz</font>写的关于残局库、开局库等其他方面的译文，使得整个专题更为完整。</li>
+</ul>
+
+<dl>
+    <dt><font size="5" face="楷体_GB2312"><strong>一、数据结构</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这部分内容极其丰富，不仅包括棋盘的表示方法，还包括着法产生当中需要用到的数据结构。我把关于“着法产生”的文章也并入其中，因为这部分内容实在很难归为一类，因此它代表了<font
+        face="Times New Roman">Laram</font>&eacute;<font
+        face="Times New Roman">e</font>的连载的第二和第三部分。</dt>
+    <dt>　</dt>
+    <dt><font face="Times New Roman"><strong>1.1 </strong></font><a
+        href="struct_intro.htm" target="_blank"><strong>数据结构——简介</strong><font
+        face="Times New Roman"><strong>(D.Eppstein)</strong></font></a><strong>；</strong></dt>
+    <dt><font face="Times New Roman"><strong>1.2 </strong></font><a
+        href="struct_bitboard.htm" target="_blank"><strong>数据结构——位棋盘</strong><font
+        face="Times New Roman"><strong>(J.Swafford)</strong></font></a><strong>；</strong></dt>
+    <dt><font face="Times New Roman"><strong>1.3 </strong></font><a
+        href="struct_rotation.htm" target="_blank"><strong>数据结构——旋转的位棋盘</strong><font
+        face="Times New Roman"><strong>(J.Swarford)</strong></font></a><strong>；</strong></dt>
+    <dt><font face="Times New Roman"><strong>1.4 </strong></font><a
+        href="struct_movegen.htm" target="_blank"><strong>数据结构——着法生成器</strong><font
+        face="Times New Roman"><strong>(J.Swarford)</strong></font></a><strong>；</strong></dt>
+    <dt><font face="Times New Roman"><strong>1.5 </strong></font><a
+        href="struct_0x88.htm" target="_blank"><strong>数据结构——</strong><font
+        face="Times New Roman"><strong>0x88</strong></font><strong>着法产生方法</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a>；</dt>
+    <dt><font face="Times New Roman"><strong>1.6 </strong></font><a
+        href="struct_zobrist.htm" target="_blank"><strong>数据结构——</strong><font
+        face="Times New Roman"><strong>Zobrist</strong></font><strong>键值</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a><strong>。</strong></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>二、基本搜索方法</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　目前象棋程序的搜索算法，都是在“带置换表的启发式<font
+        face="Times New Roman">Alpha-Beta</font>搜索”基础上发展起来的，这就涵盖了最小<font
+        face="Times New Roman">-</font>最大搜索、<font
+        face="Times New Roman">Alpha-Beta</font>搜索、迭代加深和置换表四个内容，把他们归入基本搜索方法的范畴是非常恰当的。</dt>
+    <dt>　</dt>
+    <dt><font face="Times New Roman"><strong>2.1 </strong></font><a
+        href="search_intro1.htm" target="_blank"><strong>基本搜索方法——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>一</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.2 </strong></font><a
+        href="search_intro2.htm" target="_blank"><strong>基本搜索方法——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>二</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.3 </strong></font><a
+        href="search_intro3.htm" target="_blank"><strong>基本搜索方法——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>三</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.3 </strong></font><a
+        href="search_minimax.htm" target="_blank"><strong>基本搜索方法——“最小</strong><font
+        face="Times New Roman"><strong>-</strong></font><strong>最大”搜索</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.4 </strong></font><a
+        href="search_alphabeta.htm" target="_blank"><strong>基本搜索方法——</strong><font
+        face="Times New Roman"><strong>Alpha-Beta</strong></font><strong>搜索</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.5 </strong></font><a
+        href="search_iterative.htm" target="_blank"><strong>基本搜索方法——迭代加深</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>2.6 </strong></font><a
+        href="search_hashing.htm" target="_blank"><strong>基本搜索方法——换位表</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>三、高级搜索方法</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这些方法都是“带置换表的启发式<font
+        face="Times New Roman">Alpha-Beta</font>搜索”的扩展，其中静态搜索和空着裁剪是消除“水平线效应”的基本手段，而期望窗口、主要变例搜索<font
+        face="Times New Roman">(PVS)</font>和<font
+        face="Times New Roman">MTD(<em>f</em>)</font>都是<font
+        face="Times New Roman">Alpha-Beta</font>搜索的改进。并非所有的棋类游戏都会用到这些方法，而且使用起来会有一些负作用，因此归入高级搜索方法一点也不过分。</dt>
+    <dt>　</dt>
+    <dt><font face="Times New Roman"><strong>3.1 </strong></font><a
+        href="advanced_intro1.htm" target="_blank"><strong>高级搜索方法——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>一</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.2 </strong></font><a
+        href="advanced_intro2.htm" target="_blank"><strong>高级搜索方法——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>二</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.3 </strong></font><a
+        href="advanced_quiescent.htm" target="_blank"><strong>高级搜索方法——静态搜索</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.4 </strong></font><a
+        href="advanced_nullmove.htm" target="_blank"><strong>高级搜索方法——空着裁剪</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.5 </strong></font><a
+        href="advanced_aspiration.htm" target="_blank"><strong>高级搜索方法——期望窗口</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.6 </strong></font><a
+        href="advanced_pvs.htm" target="_blank"><strong>高级搜索方法——主要变例搜索</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>3.7 </strong></font><a
+        href="advanced_instability.htm" target="_blank"><strong>高级搜索方法——搜索的不稳定性</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>四、局面评估函数</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　局面评估函数是对弈程序的核心，很少有特别详细的报道，通常引擎的作者是不愿意公开的。</dt>
+    <dt>　</dt>
+    <dt><font face="Times New Roman"><strong>4.1 </strong></font><a
+        href="evalue_intro1.htm" target="_blank"><strong>局面评估函数——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>一</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>4.2 </strong></font><a
+        href="evalue_intro2.htm" target="_blank"><strong>局面评估函数——简介</strong><font
+        face="Times New Roman"><strong>(</strong></font><strong>二</strong><font
+        face="Times New Roman"><strong>)(D.Eppstein)</strong></font></a></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>五、其他策略</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这里包含的内容比较杂，除了后台思考<font
+        face="Times New Roman">(</font>属于时间控制的范畴<font
+        face="Times New Roman">)</font>以外，其他方法都不能提高引擎的效率，但能时程序更完善，这些方法主要是针对国际象棋的。</dt>
+    <dt>　</dt>
+    <dt><font face="Times New Roman"><strong>5.1 </strong></font><a
+        href="other_winning.htm" target="_blank"><strong>其他策略——获胜局面</strong><font
+        face="Times New Roman"><strong>(D.Eppstein)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.2 </strong></font><a
+        href="other_pvcollect.htm" target="_blank"><strong>其他策略——主要变例的获取</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.3 </strong></font><a
+        href="other_repetition.htm" target="_blank"><strong>其他策略——重复检测</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.4 </strong></font><a
+        href="other_contempt.htm" target="_blank"><strong>其他策略——藐视因子</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.5 </strong></font><a
+        href="other_ponder.htm" target="_blank"><strong>其他策略——后台思考</strong><font
+        face="Times New Roman"><strong>(B.Moreland)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.6 </strong></font><a
+        href="other_egtb.htm" target="_blank"><strong>其他策略——残局库</strong><font
+        face="Times New Roman"><strong>(M.Fierz)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.7 </strong></font><a
+        href="other_book.htm" target="_blank"><strong>其他策略——开局库</strong><font
+        face="Times New Roman"><strong>(M.Fierz)</strong></font></a></dt>
+    <dt><font face="Times New Roman"><strong>5.8 </strong></font><a
+        href="other_stragy.htm" target="_blank"><strong>其他策略——策略和技巧</strong><font
+        face="Times New Roman"><strong>(M.Fierz)</strong></font></a></dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="basic_evaluation.htm">国际象棋程序设计<font
+        face="Times New Roman">(</font>六<font
+        face="Times New Roman">)</font>：局面评估函数</a></li>
+    <li>下一篇　<a href="struct_intro.htm">数据结构——简介</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

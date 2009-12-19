@@ -1,0 +1,490 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>数据结构——位棋盘</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="3">《对弈程序基本技术》专题</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt><font size="6" face="隶书">位棋盘</font><font
+        size="6" face="Arial"><strong>(BitBoard)</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>作者：<font face="Times New Roman">James Swafford</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　本文将试图回答下面这些有关位棋盘的问题：</dt>
+    <dt>　</dt>
+    <dd>什么是位棋盘？</dd>
+    <dd>位棋盘派什么用？</dd>
+    <dd>对位棋盘的基本操作</dd>
+    <dd>如何初始化位棋盘？</dd>
+    <dd>如何更新位棋盘？</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>什么是位棋盘？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　位棋盘其实就是一个<font
+        face="Times New Roman">64</font>位长度的变量，用来记录国际象棋棋盘上的某些布尔值。因为棋盘上有<font
+        face="Times New Roman">64</font>格，所以<font
+        face="Times New Roman">64</font>位正好对应它的<font
+        face="Times New Roman">64</font>格。对于面向过程的编程语言例如<font
+        face="Times New Roman">C</font>，你可以象下面这样来定义这个变量类型：</dt>
+    <dt>　</dt>
+    <dd>typedef unsigned __int64 BitBoard;</dd>
+    <dt>　</dt>
+    <dt>　　对于某些别的<font face="Times New Roman">C</font>编译器，你可能需要使用例如“<font
+        face="Times New Roman">unsigned long long</font>”来定义它。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>位棋盘派什么用？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　位棋盘的全部作用就是记录国际象棋棋盘上的某些布尔条件。你可能会问：</dt>
+    <dt>　</dt>
+    <dd>那是什么类型的“条件”？</dd>
+    <dd>位棋盘是如何“描绘”这种“条件”的？</dd>
+    <dt>　</dt>
+    <dt>　　一旦你理解这些问题的答案，你就已经开了一个好头。</dt>
+    <dt>　　首先，那是什么类型的条件？嗯，就象上面提到的，就是布尔条件。换句话说，布尔条件就是“哪些格子上面符合
+        <font face="Times New Roman">_____ (</font>由你来填空<font
+        face="Times New Roman">)</font>的条件。”例如：</dt>
+    <dt>　</dt>
+    <dd>“哪些格子上面有棋子？”</dd>
+    <dd>“哪些格子上面有白棋棋子？”</dd>
+    <dd>“哪些格子上面有车？”</dd>
+    <dd>“哪些格子上面有象或皇后”</dd>
+    <dd>“哪些格子受到<font face="Times New Roman">F7</font>格上的棋子的攻击？”<font
+        face="Times New Roman">(</font>不用管格子上是否有棋子或是什么颜色的棋子，译者注。<font
+        face="Times New Roman">)</font></dd>
+    <dd>“如果有马在<font face="Times New Roman">F3</font>格上，哪些格子会受到它的攻击？”</dd>
+    <dd>　</dd>
+    <dt>　　你还可以列出许多许多这样的条件……</dt>
+    <dt>　　然后，位棋盘如何来“描绘”这种“条件”？就象上面说过的，“位棋盘”就是一个<font
+        face="Times New Roman">64</font>位的字。国际象棋棋盘上有<font
+        face="Times New Roman">64</font>格。这意味着棋盘上的每一格在位棋盘里都有对应的一位。</dt>
+    <dt>　　现在是关键部分——如果位棋盘中对应某一格的“位”是“<font
+        face="Times New Roman">1</font>”，那么这一格上的条件就是“真”；如果是“<font
+        face="Times New Roman">0</font>”，对应格上的条件就是假。我知道这句话可能让你困惑，让我说得更具体一些。</dt>
+    <dt>　　假如我们需要一个记录所有棋子位置的位棋盘“<font
+        face="Times New Roman">AllPieces</font>”。“<font
+        face="Times New Roman">AllPieces</font>”告诉我们棋盘上哪些格子有棋子，哪些没有。当棋子处于最初位置的时候，“<font
+        face="Times New Roman">AllPieces</font>”看上去是这个样子的：</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">11111111 11111111 00000000
+        00000000 00000000 00000000 11111111 11111111</font></dt>
+    </center></div>
+    <dt>　　其最高位对应第<font face="Times New Roman">63</font>格<font
+        face="Times New Roman">(H1</font>格<font
+        face="Times New Roman">)</font>，最低位对应第<font
+        face="Times New Roman">0</font>格<font
+        face="Times New Roman">(A8</font>格<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　这样显示位棋盘可能更形象一点：</dt>
+    <div align="center"><center>
+    <dt>白棋</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt>黑棋</dt>
+    </center></div>
+    <dt>　　那么记录白棋棋子初始位置的位棋盘“<font
+        face="Times New Roman">WhitePieces</font>”是什么样子的呢？</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">11111111</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div>
+    <dt>　　记录<font face="Times New Roman">(</font>包括黑棋和白棋的<font
+        face="Times New Roman">)</font>皇后和车的初始位置的位棋盘“<font
+        face="Times New Roman">RookQueens</font>”是什么样子的呢？</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">10001001</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">10001001</font></dt>
+    </center></div>
+    <dt>　　好了，在读后续内容之前你必须确定已经理解了上面所讲的东西。假如我们创建了一个位棋盘数组“<font
+        face="Times New Roman">knight[64]</font>”，那么“<font
+        face="Times New Roman">knight[0]</font>”位棋盘就记录了当马在<font
+        face="Times New Roman">0</font>格<font
+        face="Times New Roman">(</font>即<font
+        face="Times New Roman">A8</font>格<font
+        face="Times New Roman">)</font>时，棋盘上所有受到它攻击的格子；“<font
+        face="Times New Roman">knight[63]</font>”记录了当马在<font
+        face="Times New Roman">63</font>格<font
+        face="Times New Roman">(H1</font>格<font
+        face="Times New Roman">)</font>时，棋盘上所有受到它攻击的格子。</dt>
+    <dt>　　“<font face="Times New Roman">knight[0]</font>”是这个样子的：</dt>
+    <div align="center"><center>
+    <dt>白棋</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000010</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000100</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt>黑棋</dt>
+    </center></div>
+    <dt>　　正如你所看到的，当马在<font
+        face="Times New Roman">A8</font>格时它仅攻击两个格子：<font
+        face="Times New Roman">10</font>格<font
+        face="Times New Roman">(C7</font>格<font
+        face="Times New Roman">) </font>和<font
+        face="Times New Roman">17</font>格<font
+        face="Times New Roman">(B6</font>格<font
+        face="Times New Roman">)</font>。现在明白了吗？</dt>
+    <dt>　　你可能会发现建立全局数组 <font
+        face="Times New Roman">&quot;BitBoard mask[64]&quot; </font>会很有用，<font
+        face="Times New Roman">mask[0]</font>是这样的：</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000001</font></dt>
+    </center></div>
+    <dt>　　<font face="Times New Roman">mask[63] </font>是这样的：</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">10000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">00000000</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>对位棋盘的基本操作</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　要成功应用位棋盘你必须理解三种基本操作。他们是<font
+        face="Times New Roman">(1)</font>与，<font
+        face="Times New Roman">(2)</font>或，<font
+        face="Times New Roman">(3)</font>异或。关键是这些位操作的速度！回忆以下高中几何学……还记得原理表吗？</dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt>与<font face="Times New Roman">(&amp;)</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">0 1 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">1 0 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt>————</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">0 0 0 1</font></dt>
+    </center></div>
+    <dt>　　相“与”的两“位”必须都是<font
+        face="Times New Roman">1</font>，结果才是<font
+        face="Times New Roman">1</font>。</dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt>或<font face="Times New Roman">(|)</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">0 1 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">1 0 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt>————</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">1 1 0 1</font></dt>
+    </center></div>
+    <dt>　　相“或”的两“位”只要有一个是<font
+        face="Times New Roman">1</font>，结果就是<font
+        face="Times New Roman">1</font>；否则为<font
+        face="Times New Roman">0</font>。</dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt>异或<font face="Times New Roman">(^)</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">0 1 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">1 0 0 1</font></dt>
+    </center></div><div align="center"><center>
+    <dt>————</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">1 1 0 0</font></dt>
+    </center></div>
+    <dt>　　相“异或”的两“位”只要不同，结果就是<font
+        face="Times New Roman">1</font>；否则为<font
+        face="Times New Roman">0</font>。</dt>
+    <dt>　</dt>
+    <dt>　　好了，最后，即使不能算“位”操作，我仍然要把这个概念介绍给你。它就是“取补<font
+        face="Times New Roman">(~)</font>”，你只要记住：如果
+        <font face="Times New Roman">a = 0001</font>，那么 <font
+        face="Times New Roman">~a = 1110</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="楷体_GB2312"><strong>我该如何初始化位棋盘呢？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　某些位棋盘从程序开始运行到结束都不会改变。还记得那个位棋盘数组“<font
+        face="Times New Roman">knight[64]</font>”吗？<font
+        face="Times New Roman">(</font>他实际上记录了当马在任意格子上时，它下一步可以走的格子。<font
+        face="Times New Roman">)</font>这个数组将在程序开始执行的时候被初始化并且不再改变。其余的位棋盘将不断变化。例如“<font
+        face="Times New Roman">AllPieces</font>”位棋盘。当国际象棋棋盘变化时，它也跟着变化。然而，他们的初始化方式相同。</dt>
+    <dt>　　我是这样初始化位棋盘的……</dt>
+    <dt>　　还记得“<font face="Times New Roman">BitBoard
+        mask[64]</font>”数组吗？它应该被第一个初始化……</dt>
+    <dt>　</dt>
+    <dd>BitBoard b = 1;</dd>
+    <dd>for (int c = 0; c &lt; 64; c ++) {</dd>
+    <dd>　mask[c] = b &lt;&lt; c;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　注意不要掉入下面的陷阱<font
+        face="Times New Roman">!!!</font></dt>
+    <dt>　</dt>
+    <dd>for (int c = 0; c &lt; 64; c ++) {</dd>
+    <dd>　mask[c] = 1 &lt;&lt; c;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　这行不通<font face="Times New Roman">!!! </font>因为“<font
+        face="Times New Roman">1</font>”会被当作整型“<font
+        face="Times New Roman">int</font>”<font
+        face="Times New Roman">, </font>而它在大多数计算机上是<font
+        face="Times New Roman">32</font>位的<font
+        face="Times New Roman">!!!</font><font color="#0000FF">【编者注：不知道原作者有没有试过
+        </font><font color="#0000FF" face="Times New Roman">mask[c]
+        = (BitBoard) 1 &lt;&lt; c;</font><font color="#0000FF">。】</font></dt>
+    <dt>　　接下去……</dt>
+    <dt>　　我用一个叫 <font face="Times New Roman">CHESS_POSITION
+        </font>的结构记录棋盘上某一状态的所有有用信息。它包含了一个整型数组
+        <font face="Times New Roman">int piece_in_square[64]</font>。还包含了一些位棋盘。</dt>
+    <dt>　</dt>
+    <dd>/* chess position structure */</dd>
+    <dd>struct CHESS_POSITION {</dd>
+    <dd>　BitBoard transrefkey;</dd>
+    <dd>　int piece_in_square[64];</dd>
+    <dd>　int player;</dd>
+    <dd>　/* <font color="#0000FF">【编者注：“吃过路兵”的格子
+        】</font>*/</dd>
+    <dd>　int epsquare;</dd>
+    <dd>　/* “王车易位”标志<font color="#0000FF">【编者注：应该包含4位，即FEN格式串中的KQkq。】</font>*/</dd>
+    <dd>　int castles; </dd>
+    <dd>　int imbalance;</dd>
+    <dd>　/* 子力平衡，正数表示白方占优，负数表示黑方占优
+        */</dd>
+    <dd>　int wkingsq;</dd>
+    <dd>　int bkingsq;</dd>
+    <dd>　BitBoard whitepawns;　</dd>
+    <dd>　BitBoard blackpawns;</dd>
+    <dd>　BitBoard whiteknights;</dd>
+    <dd>　BitBoard blackknights;</dd>
+    <dd>　BitBoard bishopsqueens;</dd>
+    <dd>　BitBoard rooksqueens;</dd>
+    <dd>　BitBoard whitebishops;</dd>
+    <dd>　BitBoard blackbishops;</dd>
+    <dd>　BitBoard whiterooks;</dd>
+    <dd>　BitBoard blackrooks;</dd>
+    <dd>　BitBoard whitequeens;</dd>
+    <dd>　BitBoard blackqueens;</dd>
+    <dd>　BitBoard whitepieces;</dd>
+    <dd>　BitBoard blackpieces;</dd>
+    <dd>　BitBoard rotated90;</dd>
+    <dd>　BitBoard rotated45;</dd>
+    <dd>　BitBoard rotated315;</dd>
+    <dd>};</dd>
+    <dt>　</dt>
+    <dt>　　现在该初始化这个庞然大物了。不过这相当简单。首先，我初始化“<font
+        face="Times New Roman">piece_in_square[]</font>”数组。</dt>
+    <dt>　</dt>
+    <dd>piece_in_square[0] = -rook;</dd>
+    <dd>piece_in_square[1] = -bishop;</dd>
+    <dd>…</dd>
+    <dd>piece_in_square[63] = rook;</dd>
+    <dt>　</dt>
+    <dt>　　现在我们准备好初始化一些位棋盘了。</dt>
+    <dd>　</dd>
+    <dd>for (c = 0; c &lt; 64; c ++) {</dd>
+    <dd>　switch (piece_in_square[c]) {</dd>
+    <dd>　case -rook:</dd>
+    <dd>　　position.blackpieces |= mask[c];</dd>
+    <dd>　　position.blackrooks |= mask[c];</dd>
+    <dd>　　position.rooksqueens |= mask[c];</dd>
+    <dd>　　break;</dd>
+    <dd>　　…</dd>
+    <dd>　}</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　相当简单，对吗？确实简单。那么<font
+        face="Times New Roman">knight[64]</font>位棋盘数组是如何初始化的呢？</dt>
+    <dt>　</dt>
+    <dd>/* initialize knight move boards */</dd>
+    <dd>BitBoard temp;</dd>
+    <dd>int knightsq[8] = {-17, -15, -6, 10, 17, 15, 6, -10};</dd>
+    <dd>for(c = 0;c &lt; 64;c++) {</dd>
+    <dd>　temp = 0;</dd>
+    <dd>　for (k = 0; k &lt; 8; k++) {</dd>
+    <dd>　　if (c + knightsq[k] &gt;= 0 &amp;&amp; c + knightsq[k]
+        &lt; 64) {</dd>
+    <dd>　　　/* 马所在的格子的行数/列数与它下一步可以走的格子的行数/列数之间的差须小于3
+        */</dd>
+    <dd>　　　if (distance(c, c + knightsq[k]) &lt; 3) {</dd>
+    <dd>　　　　temp |= mask[c + knightsq[k]];</dd>
+    <dd>　　　}</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　knight[c] = temp;</dd>
+    <dd>}</dd>
+</dl>
+
+<dl>
+    <dt><font size="4" face="楷体_GB2312"><strong>如何更新位棋盘</strong></font><font
+        size="5" face="楷体_GB2312"><strong>？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　刚才说过，当棋盘变动后，某些位棋盘就需要被更新。例如记录白子所在位置的“<font
+        face="Times New Roman">WhitePieces</font>”位棋盘。假如我们把
+        <font face="Times New Roman">E1</font>格的白车移动到<font
+        face="Times New Roman">E4</font>格，吃掉黑棋的一个兵。</dt>
+    <dt>　　哪些位棋盘需要更新？嗯，我们来算一下……</dt>
+    <dt>　</dt>
+    <dd>whitepieces</dd>
+    <dd>whiterooks</dd>
+    <dd>rooksqueens</dd>
+    <dd>blackpieces</dd>
+    <dd>blackpawns</dd>
+    <dt>　</dt>
+    <dt>　　看上去有很多工作要做，其实并不多。首先，把<font
+        face="Times New Roman">whitepieces</font>，<font
+        face="Times New Roman">whiterooks</font>，和<font
+        face="Times New Roman">rooksqueens</font>位棋盘的“<font
+        face="Times New Roman">E1</font>”位清零，然后把他们的“<font
+        face="Times New Roman">E4</font>”位置<font
+        face="Times New Roman">1</font>。</dt>
+    <dt>　</dt>
+    <dd>/* clear a bit with the &quot;XOR&quot; operation */</dd>
+    <dd>position.whitepieces ^= mask[E1];</dd>
+    <dd>position.whiterooks ^= mask[E1];</dd>
+    <dd>position.rooksqueens ^= mask[E1];</dd>
+    <dd>/* set a bit with the &quot;OR&quot; operation */</dd>
+    <dd>position.whitepieces |= mask[E4];</dd>
+    <dd>position.whiterooks |= mask[E4];</dd>
+    <dd>position.rooksqueens |= mask[E4];</dd>
+    <dt>　</dt>
+    <dt>　　如果你想玩点花样，你可以仅用一步就完成清<font
+        face="Times New Roman">E1</font>位、置<font
+        face="Times New Roman">E4</font>位的工作<font
+        face="Times New Roman">!!! </font>回头看一下“异或”操作是怎么执行的……</dt>
+    <dd>　</dd>
+    <dd>/* clear and set with one operation */</dd>
+    <dd>BitBoard combo_board = mask[E1] | mask[E4];</dd>
+    <dd>position.whitepieces ^= combo_board;</dd>
+    <dd>position.whiterooks ^= combo_board;</dd>
+    <dd>position.rooksqueens ^= combo_board;</dd>
+    <dt>　</dt>
+    <dt>　　现在我们要将<font face="Times New Roman">blackpieces</font>和<font
+        face="Times New Roman">blackpawns</font>位棋盘的<font
+        face="Times New Roman">E4</font>位清除，因为那里的黑兵被吃掉了。</dt>
+    <dd>　</dd>
+    <dd>/* clear the captured piece */</dd>
+    <dd>position.blackpieces ^= mask[E4];</dd>
+    <dd>position.blackpawns ^= mask[E4];</dd>
+    <dt>　</dt>
+    <dt>　　出处：不详</dt>
+    <dt>　　译者：<font face="Times New Roman">Allen Liu (</font><a
+        href="http://lostboy.myrice.com/home.htm" target="_blank"><font
+        color="#0000FF" face="Times New Roman">http://lostboy.myrice.com/</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：不详</dt>
+    <dt>　　编辑：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="struct_intro.htm">数据结构——简介</a></li>
+    <li>下一篇　<a href="struct_rotation.htm">数据结构——旋转的位棋盘</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

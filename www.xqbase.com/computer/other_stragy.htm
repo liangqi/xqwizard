@@ -1,0 +1,246 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>其他策略——策略和技巧</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题 </dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">策略和技巧</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Martin Fierz */ </font>文</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">* </font>瑞士<font
+        face="Times New Roman">Windisch</font>应用科学学院<font
+        face="Times New Roman">(Aargau</font>学院<font
+        face="Times New Roman">)</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　我通过以下问题的讨论来结束这个棋类游戏程序设计的讲座。这些问题大都没有非常明确的答案，因此我作了比较深入的研究。我觉得这些问题非常有趣，希望你们也这么认为。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>速度的需求</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　棋类程序设计师们都对程序的速度非常关注，有些人会不顾孩子的出生而让程序再提高<font
+        face="Times New Roman">10%</font>的速度，这是何苦呢？原因是速度提高了几个百分点，棋就会下得不一样，事实上这个不一样的程度会超出你的想象。<font
+        face="Times New Roman">Ken Thompson</font>对他的国际象棋程序“尤物”<font
+        face="Times New Roman">(Belle)</font>做了很多试验后发现，搜索每多一层棋力就增加<font
+        face="Times New Roman">200</font>个<font
+        face="Times New Roman">ELO</font>等级分，换句话说当你的对手比你低<font
+        face="Times New Roman">200</font>分的时候，平均有<font
+        face="Times New Roman">75%</font>的棋局是你赢下的。很多人都在做这个试验，并且得到同样的结果。因此人们就开始预测搜索多少层才能成为世界冠军，并且预测“消亡转折”，即你在搜索到一定深度时，再多搜索一层时棋力不再有原先预计的增长。人们试图找过这个转折，但是找到它要比预期的困难得多。我用自己早期设计的西洋跳棋程序<font
+        face="Times New Roman">Cake++</font>来寻找这个转折点，指定固定的搜索深度，如<font
+        face="Times New Roman">5</font>层、<font
+        face="Times New Roman">7</font>层、<font
+        face="Times New Roman">9</font>层等等，和少搜索两层的程序比赛。以下就是试验结果，很明显可以看到消亡转折。我用<font
+        face="Times New Roman">Chinook</font>做了类似的试验来作比较，由于对局数太少，数字不太确切。一些在国际象棋中很难找到的规律，在西洋跳棋里就很容易找到，因为西洋跳棋的搜索深度要多得多。</dt>
+    <dt>　　<font color="#0000FF">【译注：消亡转折有着重大的理论和实际意义，它可以用来估计电脑程序能够到达的极限。因为随着计算机速度的不断提高(目前仍旧以每一年半翻一番的速度在提高)，电脑可以计算的深度也越来越深(估计每两年就可多搜索一层)。而随着消亡转折的到来，即使电脑搜索得再深，棋力也不会有太大的长进，这就可能是电脑棋力的极限了。】</font></dt>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center"><strong>搜索深度</strong></td>
+        <td align="center"><strong>胜</strong><font
+        face="Times New Roman"><strong>:</strong></font><strong>和</strong><font
+        face="Times New Roman"><strong>:</strong></font><strong>负</strong><font
+        face="Times New Roman"><strong>(Cake++) </strong></font></td>
+        <td align="center"><strong>胜率</strong></td>
+        <td align="center"><strong>偏差</strong></td>
+        <td align="center"><strong>胜率</strong><font
+        face="Times New Roman"><strong>(Chinook)</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">5:3</font></td>
+        <td align="center"><font face="Times New Roman">196:53:33</font></td>
+        <td align="center"><font face="Times New Roman">78.9%</font></td>
+        <td align="center"><font face="Times New Roman">2.1%</font></td>
+        <td align="center"><font face="Times New Roman">-</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">7:5</font></td>
+        <td align="center"><font face="Times New Roman">153:100:29</font></td>
+        <td align="center"><font face="Times New Roman">72.0%</font></td>
+        <td align="center"><font face="Times New Roman">2.0%</font></td>
+        <td align="center"><font face="Times New Roman">77.5%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">9:7</font></td>
+        <td align="center"><font face="Times New Roman">181:75:26</font></td>
+        <td align="center"><font face="Times New Roman">77.5%</font></td>
+        <td align="center"><font face="Times New Roman">2.0%</font></td>
+        <td align="center"><font face="Times New Roman">65.0%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">11:9</font></td>
+        <td align="center"><font face="Times New Roman">130:111:41</font></td>
+        <td align="center"><font face="Times New Roman">65.8%</font></td>
+        <td align="center"><font face="Times New Roman">2.1%</font></td>
+        <td align="center"><font face="Times New Roman">72.5%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">13:11</font></td>
+        <td align="center"><font face="Times New Roman">134:116:32</font></td>
+        <td align="center"><font face="Times New Roman">68.1%</font></td>
+        <td align="center"><font face="Times New Roman">2.0%</font></td>
+        <td align="center"><font face="Times New Roman">58.8%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">15:13</font></td>
+        <td align="center"><font face="Times New Roman">119:136:27
+        </font></td>
+        <td align="center"><font face="Times New Roman">66.3%</font></td>
+        <td align="center"><font face="Times New Roman">1.9%</font></td>
+        <td align="center"><font face="Times New Roman">58.8%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">17:15</font></td>
+        <td align="center"><font face="Times New Roman">89:165:28</font></td>
+        <td align="center"><font face="Times New Roman">60.8%</font></td>
+        <td align="center"><font face="Times New Roman">1.8%</font></td>
+        <td align="center"><font face="Times New Roman">61.3%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">19:17</font></td>
+        <td align="center"><font face="Times New Roman">78:176:28</font></td>
+        <td align="center"><font face="Times New Roman">58.9%</font></td>
+        <td align="center"><font face="Times New Roman">1.8%</font></td>
+        <td align="center"><font face="Times New Roman">57.5%</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">21:19</font></td>
+        <td align="center"><font face="Times New Roman">60:189:33</font></td>
+        <td align="center"><font face="Times New Roman">54.8%</font></td>
+        <td align="center"><font face="Times New Roman">1.7%</font></td>
+        <td align="center"><font face="Times New Roman">57.5%</font></td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt><font size="5" face="楷体_GB2312"><strong>又笨又快还是又好又慢？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　跟消亡转折类似的问题是：程序能否通过速度来补偿知识的不足？对于这个问题，<font
+        face="Times New Roman">Hans Berliner</font>做过一个很有名的试验，用他的国际象棋程序<font
+        face="Times New Roman">Hitech</font>很好地回答了这个问题。他去掉了程序中大量的局面评价函数，由此产生了另一个程序，命名为<font
+        face="Times New Roman">Lotech</font>。然后他用<font
+        face="Times New Roman">Lotech</font>对阵<font
+        face="Times New Roman">Hitech</font>，并且给<font
+        face="Times New Roman">Lotech</font>多搜索一层的优势。一个令人惊奇的结果是：<font
+        face="Times New Roman">Lotech</font>总是能赢<font
+        face="Times New Roman">Hitech</font>。因此，有人认为一定存在一个转折点，使得<font
+        face="Times New Roman">Hitech</font>能打败<font
+        face="Times New Roman">Lotech</font>。在国际象棋中，这个转折点很难找到。我曾经用自己的西洋跳棋程序来找这个转折点，但是当时我发现<font
+        face="Times New Roman">Lotech-Cake</font>总是能赢<font
+        face="Times New Roman">Hitech-Cake</font>。</dt>
+    <dt><font color="#0000FF">　　【如果计算同样深度，</font><font
+        color="#0000FF" face="Times New Roman">Hitech</font><font
+        color="#0000FF">棋力比</font><font color="#0000FF"
+        face="Times New Roman">Lotech</font><font color="#0000FF">高</font><font
+        color="#0000FF" face="Times New Roman">100</font><font
+        color="#0000FF">分的话，但由于多搜索一层使得</font><font
+        color="#0000FF" face="Times New Roman">Lotech</font><font
+        color="#0000FF">增加了</font><font color="#0000FF"
+        face="Times New Roman">200</font><font color="#0000FF">分，所以棋力反而比</font><font
+        color="#0000FF" face="Times New Roman">Hitech</font><font
+        color="#0000FF">强。根据消亡转折来推断的，超过某个深度以后，多搜索一层使得程序的棋力没有太大长进，只要长进低于</font><font
+        color="#0000FF" face="Times New Roman">100</font><font
+        color="#0000FF">分，那么这个时候</font><font
+        color="#0000FF" face="Times New Roman">Hitech</font><font
+        color="#0000FF">就能击败</font><font color="#0000FF"
+        face="Times New Roman">Lotech</font><font color="#0000FF">了。如今电脑思考得越来越深，导致的结果就是：程序设计师们对知识的重视程度增加了。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>机器学习</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　机器学习是一个很吸引人的主题。计算机程序利用前人经验的方法有很多，其中很多方法被程序作者称为“学习”<font
+        face="Times New Roman">(Learning)</font>，我将在这里总体介绍一下。最普遍的学习是机械学习，当你的程序输掉一局棋时，它就把这局棋记住了。这个方法可以在开局库的学习中实现，你的程序会把一个开局库着法标记为劣着，如果这个着法会输棋，那么下一盘棋它就选择别的着法。这个方法也可以用一个小的置换表来实现，输掉的棋局里的局面都以输的局面存储起来，这样，程序就不会走到这些局面里去。但是，这种学习的形式实在是太具体了，你的西洋跳棋程序会认为某个具体的局面是坏的，类似典型的局面也是坏的，你的程序却视而不见。在西洋跳棋中“牵制”<font
+        face="Times New Roman">(Holds)</font>非常重要，例如你的<font
+        face="Times New Roman">3</font>个兵被对手的<font
+        face="Times New Roman">2</font>个兵牵制住，如果不考虑棋盘上的其他棋子，那么对手将要获胜<font
+        face="Times New Roman">(</font>至少获胜的机会很大<font
+        face="Times New Roman">)</font>，因为它很有可能要升变了。你用最基本的机械学习会知道这种牵制的其中一种局面会输，但是还有成千上万种类似的局面呢，遇到跟这个局面有微小差别的其他局面，再下一盘还是会输。这种类型的学习不是真正意义上的学习，把这些程序称为“智能”<font
+        face="Times New Roman">(Intelligent)</font>或“吃一堑长一智”<font
+        face="Times New Roman">(Learning from Mistakes)</font>纯粹是糊弄人的。</dt>
+    <dt>　　另一种类型的机器学习用来自动调整评价函数的权重，这属于遗传算法<font
+        face="Times New Roman">(Genetic Algorithms)</font>的范畴，把遗传算法作用在评价理论上，就自然地得到了最适合的程序。以下就是这种算法的工作原理，你产生一个评价函数<font
+        face="Times New Roman">(</font>典型的评价函数是线性的<font
+        face="Times New Roman">)</font>，每一项都有一个权重，因此有：</dt>
+    <dd>　</dd>
+    <dd>eval = w_1 * f_1 + w_2 * f_2 + ... + w_n * f_n</dd>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman"><em>f</em><sub><em>i</em></sub></font>就是局面的各个因素，例如在西洋跳棋中，你可以把<font
+        face="Times New Roman"><em>f</em><sub>1</sub></font>定义为黑方有强大的底线，因此<font
+        face="Times New Roman"><em>w</em><sub>1</sub></font>越大，你的程序就越会试图让底线留下棋子。因此当你选择这些因素时，就必须顺便优化相应的权重。遗传算法在一开始时使用一些随机产生的程序，然后通过它们之间的对阵来找出哪些是好的哪些是坏的。一些坏的程序被筛选掉了，合适的程序幸存下来并得到繁衍——或者是在两个好的程序之间作交换<font
+        face="Times New Roman">(</font>随机地在两个好的程序中选择<font
+        face="Times New Roman"><em>w</em><sub><em>i</em></sub>)</font>，或者随机改变一个好的程序。现在你只管继续这样的工作，指望最终能得到一个好的权重的组合。这就是上世纪<font
+        face="Times New Roman">50</font>年代<font
+        face="Times New Roman">Arthur Samuel</font>在他著名的西洋跳棋程序里用的方法。另外还有其他调节权重的方法，深蓝<font
+        face="Times New Roman">(Deep Blue)</font>的小组用了大量特级大师的对局，然后让程序吻合这些局面。他们对程序和特级大师走出一样着法的频率作出统计，然后修改了权重再作尝试。如果程序能解决更多的局面，那么他们就保留这个修改，否则就重新修改。最近我知道的调整权重的办法，是<font
+        face="Times New Roman">Michael Buro</font>在他的黑白棋<font
+        face="Times New Roman">(Othello)</font>世界冠军程序<font
+        face="Times New Roman">Logistello</font>中用到的。他建立了一个巨大的局面数据库，用来储存对局结果，然后他把评价函数作用在每个局面上，通过优化评价函数使得产生的分数尽可能地准确。</dt>
+    <dt>　　所有这些方法都比机械学习更有效。如果某个程序有对西洋跳棋中类似牵制战术的评价，那么你在评价函数中提高这项的权重，会让程序认为所有类似情形的局面都是坏的，并且会避免这些局面。那么这样说来，我们是否已经学到了知识了？我认为还没有。如果你的程序本身就不包括这个评价呢？即便再怎样调节权重，也是不会有效果的。因此我们将涉及到下面的学习：</dt>
+    <dt>　　神经网络<font face="Times New Roman">(Neural
+        Networks)</font>能够发明一些评价模式，而不需要有人告诉它，它能对局面作出评价，并且结合到棋类程序中。神经网络由很多输入口，一些隐含的层次结构，以及一个出口组成。这些连接着入口和出口的层次，实际上由很多结点组成，结点有连接上一层的入口和连接下一层的出口。每个结点都可以和其他层有连接，每个连接是有强有弱的。如果同时改变连接及其强度，你就能得到一些评价模式，并确定他们的权重。</dt>
+    <dt>　　把有评分的局面告诉神经网络，它就会得到训练，而在结合了遗传算法后，神经网络也会自我学习。有个西洋跳棋程序<font
+        face="Times New Roman">Blondie24</font>，就是用这种方法实现了自我学习的，并且下得还不错。我认为这才是真正的学习，它和人类的思考很接近。<font
+        face="Times New Roman">Blondie</font>的作者把他们的程序吹嘘得很过分，但对于目前大多数研究者来说，事实上就是如此，你必须大造声势来获得资金。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>改进你的程序</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　你花了无数时间来写你的程序，它现在下得是否还像初学者？这是很正常的现象，但是请不要失望，我会告诉你一些技巧。首先并且最重要的是，很多问题来源于代码中的错误。<font
+        face="Times New Roman">Alpha-Beta</font>算法是最容易藏匿错误的，你的程序评价了成千上万个局面，而你只得到一个着法，即使<font
+        face="Times New Roman">10%</font>的局面是随机评价的，你的程序仍然在大多数时间内可以走得正确。因此，你需要你需要做一些额外检查，以确认程序的每个部分都正常工作。一个最典型的技巧就是检验评价的对称性，如果同样的局面黑白交换后，你的评价函数没有返回同样的值，那么肯定有什么地方错了。如果棋盘有其他的对称性<font
+        face="Times New Roman">(</font>在国际象棋的中局里你可以按<font
+        face="Times New Roman">d</font>列和<font
+        face="Times New Roman">e</font>列作左右镜像操作<font
+        face="Times New Roman">)</font>，你也可以利用这样的对称性。代码要尽可能地写得清晰，优化不要操之过急，否则就得不偿失了。在程序用<font
+        face="Times New Roman">Alpha-Beta</font>算法走第一盘棋之前，不要加任何锦上添花的代码。只有当你根除了错误，才可以着手对程序进行调整。它是否太慢了？你可以用<font
+        face="Times New Roman">AMD CodeAnalyst</font>这样的分析测试软件来考察程序的关键部分，并加以改进。让程序和别的程序下棋，这是个改进程序的非常有效的办法。程序下了几百盘棋以后，所有的统计数字就都有了，对你的代码修改一些地方<font
+        face="Times New Roman">(</font>搜索算法，评价函数等等<font
+        face="Times New Roman">)</font>，然后再打很多比赛来确认你改得是否有效。如果你改变的只是着法顺序，就可以用一组对比测试来代替长时间的比赛，看看花的时间是否减少了，就知道着法顺序是否改进了。</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.fierz.ch/strategy5.htm" target="_blank"><font
+        face="Times New Roman">http://www.fierz.ch/strategy5.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="other_book.htm">其他策略——开局库</a></li>
+    <li>下一篇　<a href="anatomy.htm">结语——国际象棋程序剖析</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

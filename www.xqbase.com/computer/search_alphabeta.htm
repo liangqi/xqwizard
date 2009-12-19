@@ -1,0 +1,193 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>基本搜索方法——Alpha-Beta搜索</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="Arial"><strong>Alpha-Beta</strong></font><font
+        size="6" face="隶书">搜索</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt><font face="Times New Roman">Bruce Moreland / </font>文</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>最小</strong></font><font
+        size="5" face="Arial"><strong>-</strong></font><font
+        size="5" face="楷体_GB2312"><strong>最大的问题</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Alpha-Beta </font>同“<a
+        href="search_minimax.htm" target="_blank">最小<font
+        face="Times New Roman">-</font>最大</a>”非常相似，事实上只多了一条额外的语句。最小最大运行时要检查整个博弈树，然后尽可能选择最好的线路。这是非常好理解的，但效率非常低。每次搜索更深一层时，树的大小就呈指数式增长。</dt>
+    <dt>　　通常一个国际象棋局面都有<font
+        face="Times New Roman">35</font>个左右的合理着法，所以用最小<font
+        face="Times New Roman">-</font>最大搜索来搜索一层深度，就有<font
+        face="Times New Roman">35</font>个局面要检查，如果用这个函数来搜索两层，就有<font
+        face="Times New Roman">35<sup>2</sup></font>个局面要搜索。这就已经上千了，看上去还不怎样，但是数字增长得非常迅速，例如六层的搜索就接近是二十亿，而十层的搜索就超过两千万亿了。</dt>
+    <dt>　　要想通过检查搜索树的前面几层，并且在叶子结点上用启发式的评价，那么做尽可能深的搜索是很重要的。最小<font
+        face="Times New Roman">-</font>最大搜索无法做到很深的搜索，因为有效的分枝因子实在太大了。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>口袋的例子</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　幸运的是我们有办法来减小分枝因子，这个办法非常可靠，实际上这样做绝对没有坏处，纯粹是个有益的办法。这个方法是建立在一个思想上的，如果你已经有一个不太坏的选择了，那么当你要作别的选择并知道它不会更好时，你没有必要确切地知道它有多坏。有了最好的选择，任何不比它更好的选择就是足够坏的，因此你可以撇开它而不需要完全了解它。只要你能证明它不比最好的选择更好，你就可以完全抛弃它。</dt>
+    <dt>　　你可能仍旧不明白，那么我就举个例子。比如你的死敌面前有很多口袋，他和你打赌赌输了，因此他必须从中给你一样东西，而挑选规则却非常奇怪：</dt>
+    <dt>　　每个口袋里有几件物品，你能取其中的一件，你来挑这件物品所在的口袋，而他来挑这个口袋里的物品。你要赶紧挑出口袋并离开，因为你不愿意一直做在那里翻口袋而让你的死敌盯着你。</dt>
+    <dt>　　假设你一次只能找一只口袋，在找口袋时一次只能从里面摸出一样东西。</dt>
+    <dt>　　很显然，当你挑出口袋时，你的死敌会把口袋里最糟糕的物品给你，因此你的目标是挑出“诸多最糟的物品当中是最好的”那个口袋。</dt>
+    <dt>　　你很容易把最小<font face="Times New Roman">-</font>最大原理运用到这个问题上。你是最大一方棋手，你将挑出最好的口袋。而你的死敌是最小一方棋手，他将挑出最好的口袋里尽可能差的物品。运用最小<font
+        face="Times New Roman">-</font>最大原理，你需要做的就是挑一个有“最好的最差的”物品的口袋。</dt>
+    <dt>　　假设你可以估计口袋里每个物品的准确价值的话，最小<font
+        face="Times New Roman">-</font>最大原理可以让你作出正确的选择。我们讨论的话题中，准确评价并不重要，因为它同最小<font
+        face="Times New Roman">-</font>最大或<font
+        face="Times New Roman">Alpha-Beta</font>的工作原理没有关系。现在我们假设你可以正确地评价物品。</dt>
+    <dt>　　最小<font face="Times New Roman">-</font>最大原理刚才讨论过，它的问题是效率太低。你必须看每个口袋里的每件物品，这就需要花很多时间。</dt>
+    <dt>　　那么怎样才能做得比最小<font
+        face="Times New Roman">-</font>最大更高效呢？</dt>
+    <dt>　　我们从第一个口袋开始，看每一件物品，并对口袋作出评价。比方说口袋里有一只花生黄油三明治和一辆新汽车的钥匙。你知道三明治更糟，因此如果你挑了这只口袋就会得到三明治。事实上只要我们假设对手也会跟我们一样正确评价物品，那么口袋里的汽车钥匙就是无关紧要的了。</dt>
+    <dt>　　现在你开始翻第二个口袋，这次你采取的方案就和最小<font
+        face="Times New Roman">-</font>最大方案不同了。你每次看一件物品，并跟你能得到的最好的那件物品<font
+        face="Times New Roman">(</font>三明治<font
+        face="Times New Roman">)</font>去比较。只要物品比三明治更好，那么你就按照最小<font
+        face="Times New Roman">-</font>最大方案来办——去找最糟的，或许最糟的要比三明治更好，那么你就可以挑这个口袋，它比装有三明治的那个口袋好。</dt>
+    <dt>　　比方这个口袋里的第一件物品是一张<font
+        face="Times New Roman">20</font>美元的钞票，它比三明治好。如果包里其他东西都没比这个更糟了，那么如果你选了这个口袋，它就是对手必须给你的物品，这个口袋就成了你的选择。</dt>
+    <dt>　　这个口袋里的下一件物品是六合装的流行唱片。你认为它比三明治好，但比<font
+        face="Times New Roman">20</font>美元差，那么这个口袋仍旧可以选择。再下一件物品是一条烂鱼，这回比三明治差了。于是你就说“不谢了”，把口袋放回去，不再考虑它了。</dt>
+    <dt>　　无论口袋里还有什么东西，或许还有另一辆汽车的钥匙，也没有用了，因为你会得到那条烂鱼。或许还有比烂鱼更糟的东西<font
+        face="Times New Roman">(</font>那么你看着办吧<font
+        face="Times New Roman">)</font>。无论如何烂鱼已经够糟的了，而你知道挑那个有三明治的口袋肯定会更好。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>算法</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Alpha-Beta</font>就是这么工作的，并且只能用递归来实现。稍后我们再来谈最小一方的策略，我希望这样可以更明白些。</dt>
+    <dt>　　这个思想是在搜索中传递两个值，第一个值是<font
+        face="Times New Roman">Alpha</font>，即搜索到的最好值，任何比它更小的值就没用了，因为策略就是知道<font
+        face="Times New Roman">Alpha</font>的值，任何小于或等于<font
+        face="Times New Roman">Alpha</font>的值都不会有所提高。</dt>
+    <dt>　　第二个值是<font face="Times New Roman">Beta</font>，即对于对手来说最坏的值。这是对手所能承受的最坏的结果，因为我们知道在对手看来，他总是会找到一个对策不比<font
+        face="Times New Roman">Beta</font>更坏的。如果搜索过程中返回<font
+        face="Times New Roman">Beta</font>或比<font
+        face="Times New Roman">Beta</font>更好的值，那就够好的了，走棋的一方就没有机会使用这种策略了。</dt>
+    <dt>　　在搜索着法时，每个搜索过的着法都返回跟<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>有关的值，它们之间的关系非常重要，或许意味着搜索可以停止并返回。</dt>
+    <dt>　　如果某个着法的结果小于或等于<font
+        face="Times New Roman">Alpha</font>，那么它就是很差的着法，因此可以抛弃。因为我前面说过，在这个策略中，局面对走棋的一方来说是以<font
+        face="Times New Roman">Alpha</font>为评价的。</dt>
+    <dt>　　如果某个着法的结果大于或等于<font
+        face="Times New Roman">Beta</font>，那么整个结点就作废了，因为对手不希望走到这个局面，而它有别的着法可以避免到达这个局面。因此如果我们找到的评价大于或等于<font
+        face="Times New Roman">Beta</font>，就证明了这个结点是不会发生的，因此剩下的合理着法没有必要再搜索。</dt>
+    <dt>　　如果某个着法的结果大于<font
+        face="Times New Roman">Alpha</font>但小于<font
+        face="Times New Roman">Beta</font>，那么这个着法就是走棋一方可以考虑走的，除非以后有所变化。因此<font
+        face="Times New Roman">Alpha</font>会不断增加以反映新的情况。有时候可能一个合理着法也不超过<font
+        face="Times New Roman">Alpha</font>，这在实战中是经常发生的，此时这种局面是不予考虑的，因此为了避免这样的局面，我们必须在博弈树的上一个层局面选择另外一个着法。</dt>
+    <dt>　　在第二个口袋里找到烂鱼就相当于超过了<font
+        face="Times New Roman">Beta</font>，如果口袋里没有烂鱼，那么考虑六盒装流行唱片的口袋会比三明治的口袋好，这就相当于超过了<font
+        face="Times New Roman">Alpha(</font>在上一层<font
+        face="Times New Roman">)</font>。算法如下，醒目的部分是在最小<font
+        face="Times New Roman">-</font>最大算法上改过的：</dt>
+    <dd>　</dd>
+    <dd>int <font color="#FF0000">AlphaBeta</font>(int depth<font
+        color="#FF0000">, int alpha, int beta</font>) {</dd>
+    <dd>　if (depth == 0) {</dd>
+    <dd>　　return Evaluate();</dd>
+    <dd>　}</dd>
+    <dd>　GenerateLegalMoves();</dd>
+    <dd>　while (MovesLeft()) {</dd>
+    <dd>　　MakeNextMove();</dd>
+    <dd>　　val = -<font color="#FF0000">AlphaBeta</font>(depth
+        - 1<font color="#FF0000">, -beta, -alpha</font>);</dd>
+    <dd>　　UnmakeMove();</dd>
+    <dd><font color="#FF0000">　　if (val &gt;= beta) {</font></dd>
+    <dd><font color="#FF0000">　　　return beta;</font></dd>
+    <dd><font color="#FF0000">　　}</font></dd>
+    <dd>　　if (val &gt; alpha) {</dd>
+    <dd>　　　alpha = val;</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　return alpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　把醒目的部分去掉，剩下的就是最小-最大函数。可以看出现在的算法没有太多的改变。</dt>
+    <dt>　　这个函数需要传递的参数有：需要搜索的深度，负无穷大即<font
+        face="Times New Roman">Alpha</font>，以及正无穷大即<font
+        face="Times New Roman">Beta</font>：</dt>
+    <dd>　</dd>
+    <dd>val = AlphaBeta(5, -INFINITY, INFINITY);</dd>
+    <dt>　</dt>
+    <dt>　　这样就完成了<font face="Times New Roman">5</font>层的搜索。我在写最小<font
+        face="Times New Roman">-</font>最大函数时，用了一个诀窍来避免用了“<font
+        face="Times New Roman">Min</font>”还用“<font
+        face="Times New Roman">Max</font>”函数。在那个算法中，我从递归中返回时简单地对返回值取了负数。这样就使函数值在每一次递归中改变评价的角度，以反映双方棋手的交替着子，并且它们的目标是对立的。</dt>
+    <dt>　　在<font face="Times New Roman">Alpha-Beta</font>函数中我们做了同样的处理。唯一使算法感到复杂的是，<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>是不断互换的。当函数递归时，<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>不但取负数而且位置交换了，这就使得情况比口袋的例子复杂，但是可以证明它只是比最小<font
+        face="Times New Roman">-</font>最大算法更好而已。</dt>
+    <dt>　　最终出现的情况是，在搜索树的很多地方，<font
+        face="Times New Roman">Beta</font>是很容易超过的，因此很多工作都免去了。</dt>
+    <dt>　</dt>
+    <dt><a name="branching factor"></a><font size="5"
+        face="楷体_GB2312"><strong>可能的弱点</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这个算法严重依赖于着法的寻找顺序。如果你总是先去搜索最坏的着法，那么<font
+        face="Times New Roman">Beta</font>截断就不会发生，因此该算法就如同最小<font
+        face="Times New Roman">-</font>最大一样，效率非常低。该算法最终会找遍整个博弈树，就像最小<font
+        face="Times New Roman">-</font>最大算法一样。</dt>
+    <dt>　　如果程序总是能挑最好的着法来首先搜索，那么数学上有效分枝因子就接近于实际分枝因子的平方根。这是<font
+        face="Times New Roman">Alpha-Beta</font>算法可能达到的最好的情况。</dt>
+    <dt>　　由于国际象棋的分枝因子在<font
+        face="Times New Roman">35</font>左右，这就意味着<font
+        face="Times New Roman">Alpha-Beta</font>算法能使国际象棋搜索树的分枝因子变成<font
+        face="Times New Roman">6</font>。</dt>
+    <dt>　　这是很大的改进，在搜索结点数一样的情况下，可以使你的搜索深度达到原来的两倍。这就是为什么使用<font
+        face="Times New Roman">Alpha-Beta</font>搜索时，着法顺序至关重要的原因。</dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.seanet.com/~brucemo/topics/alphabeta.htm"
+        target="_blank"><font face="Times New Roman">http://www.seanet.com/~brucemo/topics/alphabeta.htm</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="search_minimax.htm">基本搜索方法——最小<font
+        face="Times New Roman">-</font>最大搜索</a></li>
+    <li>下一篇　<a href="search_iterative.htm">基本搜索方法——迭代加深</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

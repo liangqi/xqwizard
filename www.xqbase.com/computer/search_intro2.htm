@@ -1,0 +1,312 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="Owner" content>
+<meta name="Reply-To" content>
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>基本搜索方法——简介(二)</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《对弈程序基本技术》专题</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="Arial"><strong>Alpha-Beta</strong></font><font
+        size="6" face="隶书">搜索</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">David Eppstein */</font>文</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">* </font>加州爱尔文大学<font
+        face="Times New Roman">(UC Irvine)</font>信息与计算机科学系</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>浅的裁剪</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　假设你用最小<font face="Times New Roman">-</font>最大搜索<font
+        face="Times New Roman">(</font>前面讲到的<font
+        face="Times New Roman">)</font>来搜索下面的树：</dt>
+    <dd>　</dd>
+    <div align="center"><center>
+    <dt><img src="search_intro2.gif" width="346" height="285"> </dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　你搜索到<font face="Times New Roman">F</font>，发现子结点的评价分别是<font
+        face="Times New Roman">11</font>、<font
+        face="Times New Roman">12</font>、<font
+        face="Times New Roman">7</font>和<font
+        face="Times New Roman">9</font>，在这层是棋手甲走，我们希望他选择最好的值，即<font
+        face="Times New Roman">12</font>。所以，<font
+        face="Times New Roman">F</font>的最小<font
+        face="Times New Roman">-</font>最大值是<font
+        face="Times New Roman">12</font>。</dt>
+    <dt>　　现在你开始搜索<font face="Times New Roman">G</font>，并且第一个子结点就返回<font
+        face="Times New Roman">15</font>。一旦如此，你就知道<font
+        face="Times New Roman">G</font>的值至少是<font
+        face="Times New Roman">15</font>，可能更高<font
+        face="Times New Roman">(</font>如果另一个子结点比<font
+        face="Times New Roman">G</font>更好<font
+        face="Times New Roman">)</font>。这就意味着我们不指望棋手乙走<font
+        face="Times New Roman">G</font>这步了，因为就棋手乙看来，<font
+        face="Times New Roman">F</font>的评价<font
+        face="Times New Roman">12</font>要比<font
+        face="Times New Roman">G</font>的<font
+        face="Times New Roman">15(</font>或更高<font
+        face="Times New Roman">)</font>好，因此我们知道<font
+        face="Times New Roman">G</font>不在主要变例上。我们可以裁剪<font
+        face="Times New Roman">(Prune)</font>结点<font
+        face="Times New Roman">G</font>下面的其他子结点，而不要对它们作出评价，并且立即从<font
+        face="Times New Roman">G</font>返回，因为对<font
+        face="Times New Roman">G</font>作更好的评价只是浪费时间。</dt>
+    <dt>　　一般来说，像<font face="Times New Roman">G</font>一样只要有一个子结点返回比<font
+        face="Times New Roman">G</font>的兄弟结点更好的值<font
+        face="Times New Roman">(</font>对于结点<font
+        face="Times New Roman">G</font>要走棋的一方而言<font
+        face="Times New Roman">)</font>，就可以进行裁剪。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>深的裁剪</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我们来讨论更复杂的可能裁剪的情况。例如在同一棵搜索树中，我们评价的<font
+        face="Times New Roman">G</font>、<font
+        face="Times New Roman">H</font>和<font
+        face="Times New Roman">I</font>都比<font
+        face="Times New Roman">12</font>好，因此<font
+        face="Times New Roman">12</font>就是结点<font
+        face="Times New Roman">B</font>的评价。现在我们来搜索结点<font
+        face="Times New Roman">C</font>，在下面两层我们找到了评价为<font
+        face="Times New Roman">10</font>的结点<font
+        face="Times New Roman">N</font>：</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><img src="search_intro3.gif" width="373" height="370"> </dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　我们能用更为复杂的路线来作裁剪。我们知道<font
+        face="Times New Roman">N</font>会返回<font
+        face="Times New Roman">10</font>或更小<font
+        face="Times New Roman">(</font>轮到棋手乙走棋，需要挑最小的<font
+        face="Times New Roman">)</font>。我们不知道<font
+        face="Times New Roman">J</font>能否返回<font
+        face="Times New Roman">10</font>或更小，也不知道<font
+        face="Times New Roman">J</font>的哪个子结点会更好。如果从<font
+        face="Times New Roman">J</font>返回到<font
+        face="Times New Roman">C</font>的是<font
+        face="Times New Roman">10</font>或者更小的值，那么我们可以在结点<font
+        face="Times New Roman">C</font>上作裁剪，因为它有更好的兄弟结点B。因此在这种情况下，继续找<font
+        face="Times New Roman">N</font>的子结点就毫无意义。考虑其他情况，<font
+        face="Times New Roman">J</font>的其他子结点返回比<font
+        face="Times New Roman">10</font>更好的值，此时搜索<font
+        face="Times New Roman">N</font>也是毫无意义的。所以我们只要看到<font
+        face="Times New Roman">10</font>，就可以放心地从<font
+        face="Times New Roman">N</font>返回。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><strong>Alpha-Beta</strong></font><font
+        size="5" face="楷体_GB2312"><strong>的伪代码</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　一般来说，如果返回值比偶数层的兄弟结点好，我们就可以立即返回。如果我们在搜索过程中，把这些兄弟结点的最小值<font
+        face="Times New Roman">Beta</font>作为参数来传递，我们就可以进行非常有效的裁剪。我们还用另一个参数<font
+        face="Times New Roman">Alpha</font>来保存奇数层的结点。用这两个参数来进行裁剪是非常有效的，代码就写在下边。像上次一样，我们用负值最大<font
+        face="Times New Roman">(Negamax)</font>的形式，即搜索树的层数改变时取负值。</dt>
+    <dt>　</dt>
+    <dd>double alphabeta(int depth, double alpha, double beta) {</dd>
+    <dd>　if (depth &lt;= 0 || 棋局结束) {</dd>
+    <dd>　　return evaluation();</dd>
+    <dd>　}</dd>
+    <dd>　就当前局面，生成并排序一系列着法;</dd>
+    <dd>　for (每个着法 m) {</dd>
+    <dd>　　执行着法 m;</dd>
+    <dd>　　double val = -alphabeta(depth - 1, -beta, -alpha);</dd>
+    <dd>　　撤消着法 m;</dd>
+    <dd>　　if (val &gt;= beta) {</dd>
+    <dd>　　　return val;</dd>
+    <dd>　　}</dd>
+    <dd>　　if (val &gt; alpha) {</dd>
+    <dd>　　　alpha = val;</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　return alpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt>　　下次我们会解释为什么排序这一步是很重要的。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>期望搜索</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　在根结点上我们如何为<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>设定初值？</dt>
+    <dt>　　<font face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>定义了一个评价的实数区间<font
+        face="Times New Roman">(Alpha, Beta)</font>，这个区间是我们“感兴趣的”。如果某值比<font
+        face="Times New Roman">Beta</font>大我们就会做裁剪并立即返回，因为我们知道它不是主要变例的一部分，我们对它的准确值不感兴趣，只需要知道它比<font
+        face="Times New Roman">Beta</font>大。如果某值比<font
+        face="Times New Roman">Alpha</font>小，我们不作裁剪，但是仍然对它不感兴趣，因为我们知道搜索树里肯定有一个着法会更好。</dt>
+    <dt>　　但是在搜索树的根结点，我们不知道感兴趣的评价是在哪个范围内，如果我们要保证不会因为意外而裁剪掉重要的部分，我们就设<font
+        face="Times New Roman">Alpha = </font><font face="Symbol">-</font><font
+        face="Times New Roman">Infinity</font>，<font
+        face="Times New Roman">Beta = Infinity(</font>无穷大<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　但是，如果我们使用迭代加深，就可能有办法知道主要变例是怎么样的。假设我们猜其值为<font
+        face="Times New Roman"><em>x</em>(</font>例如<font
+        face="Times New Roman"><em>x</em></font>就是前一次搜索到<font
+        face="Times New Roman"><em>D</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">1</font>深度时的值<font
+        face="Times New Roman">)</font>，并设<font
+        face="Times New Roman">Epsilon</font>为一个很小的值，它代表从<font
+        face="Times New Roman"><em>D</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">1</font>深度到<font
+        face="Times New Roman"><em>D</em></font>深度搜索评价的期望变化范围。我们可以尝试调用<font
+        face="Times New Roman">alphabeta(<em>D</em>, <em>x</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">
+        Epsilon, <em>x</em> + Epsilon)</font>，那么可能发生三种情况：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>搜索的返回值会落在区间<font
+        face="Times New Roman">(<em>x</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">
+        Epsilon, <em>x</em> + Epsilon)</font>内。这种情况下，我们知道它返回的是正确值，我们就能放心地选择这个着法，在搜索树中这个着法指向具有返回值的那个结点。</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>搜索会返回一个值<font
+        face="Times New Roman"><em>v</em> <u>&gt;</u></font>&nbsp;<font
+        face="Times New Roman"><em>x</em> + Epsilon</font>。这种情况下，我们知道搜索结果也至少是&nbsp;<font
+        face="Times New Roman"><em>x</em> + Epsilon</font>，但是我们不知道它到底是几<font
+        face="Times New Roman">(</font>正确的主要变例可能被裁剪掉了，因为我们看到有别的着法的值大于<font
+        face="Times New Roman">Beta)</font>。我们必须把我们所猜的值<font
+        face="Times New Roman"><em>x</em></font>调整得更高，然后再试一次<font
+        face="Times New Roman">(</font>可能还要用更大的<font
+        face="Times New Roman">Epsilon)</font>。这种情况称为“高出边界”<font
+        face="Times New Roman">(Fail High)</font>。</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>搜索会返回一个值<font
+        face="Times New Roman"><em>v</em> <u>&lt;</u></font>&nbsp;<font
+        face="Times New Roman"><em>x</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">
+        Epsilon</font>。这种情况下，我们知道搜索结果也最多是&nbsp;<font
+        face="Times New Roman"><em>x</em> + Epsilon</font>，但是我们不知道它到底是几。我们必须把我们所猜的值<font
+        face="Times New Roman"><em>x</em></font>调整得更低，然后再试一次<font
+        face="Times New Roman">(</font>可能还要用更大的<font
+        face="Times New Roman">Epsilon)</font>。这种情况称为“低出边界”<font
+        face="Times New Roman">(Fail Low)</font>。</dt>
+    <dt>　　即便有两种可能失败的情况，使用期望搜索<font
+        face="Times New Roman">(</font>用一个比<font
+        face="Times New Roman">(</font><font face="Symbol">-</font><font
+        face="Times New Roman">Infinity, Infinity)</font>更小的区间<font
+        face="Times New Roman">(Alpha, Beta))</font>总体来说效率会有所提高，因为它作了更多的裁剪。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>分析</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　让我们对<font face="Times New Roman">Alpha-Beta</font>搜索作一下分析，来知道它为什么是个很有用的算法。跟普通的算法不同，我们采用“<font
+        face="Times New Roman">Beta</font>情况的分析”，即假设任何可能的情况下都会发生<font
+        face="Times New Roman">Alpha-Beta</font>裁剪。下一次我们会知道如何让<font
+        face="Times New Roman">Alpha-Beta</font>搜索接近我们的所分析的情况。在这里我只考虑浅的裁剪，因为它会让分析变得更加简单。</dt>
+    <dt>　　在最好的情况下，除了主要变例上的结点不会裁剪外<font
+        face="Times New Roman">(</font>如果这个结点也被裁剪了，那么整个算法会高出边界或低出边界，这当然不是最好的情况<font
+        face="Times New Roman">)</font>，在裁剪前，深<font
+        face="Times New Roman"><em>D </em></font><font
+        face="Symbol">-</font><font face="Times New Roman">1</font>层的每个结点只会搜索一个深<font
+        face="Times New Roman"><em>D</em></font>层的子结点。</dt>
+    <dt>　　但是在深<font face="Times New Roman"><em>D </em></font><font
+        face="Symbol">-</font><font face="Times New Roman">2</font>层时，谁也没有被裁剪，因为所有的子结点都返回大于或等于<font
+        face="Times New Roman">Beta</font>的值，而<font
+        face="Times New Roman"><em>D</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">2</font>层是要取负数，因此它们都小于或等于<font
+        face="Times New Roman">Alpha</font>。</dt>
+    <dt>　　继续朝树根走，<font face="Times New Roman"><em>D
+        </em></font><font face="Symbol">-</font><font
+        face="Times New Roman">3</font>层的每个结点<font
+        face="Times New Roman">(</font>除了主要变例外<font
+        face="Times New Roman">)</font>都被裁剪，而<font
+        face="Times New Roman"><em>D</em> </font><font
+        face="Symbol">-</font><font face="Times New Roman">4</font>层谁也没被裁剪，等等。</dt>
+    <dt>　　因此，如果搜索树的分枝因子是<font
+        face="Times New Roman"><em>B</em></font>，那么在搜索树一半的深度上，结点以因子<font
+        face="Times New Roman">B</font>作增长，而在另一半的深度上则保持不变<font
+        face="Times New Roman">(</font>我们忽略了主要变例<font
+        face="Times New Roman">)</font>。所以这个搜索树所有要搜索的结点数，粗略地写成<font
+        face="Times New Roman"><em>B</em><sup><em>D</em>/2</sup></font>&nbsp;<font
+        face="Times New Roman">=</font>&nbsp;<font
+        face="Times New Roman">sqrt(<em>B</em>)<sup><em>D</em></sup></font>。因此<font
+        face="Times New Roman">Alpha-Beta</font>搜索最终可以将分枝因子减少为原来的平方根那么多，因此它可以让我们搜索原来两倍的深度。正因为这个原因，它是所有基于最小<font
+        face="Times New Roman">-</font>最大策略的棋类对弈程序的最重要的算法。</dt>
+    <dt><font color="#0000FF">　　【译注：原作者一开始提到的“浅的裁剪”和“深的裁剪”这两个概念，实际上包含了</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索的两个层次，前者只是用过传递参数</font><font
+        color="#0000FF" face="Times New Roman">Beta</font><font
+        color="#0000FF">对搜索树作了部分裁剪，可以称为</font><font
+        color="#0000FF" face="Times New Roman">Beta</font><font
+        color="#0000FF">搜索，而后者增加一个传递参数</font><font
+        color="#0000FF" face="Times New Roman">Alpha</font><font
+        color="#0000FF">，使得裁剪更加充分，这就形成了</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索。</font></dt>
+    <dt><font color="#0000FF">　　</font><font color="#0000FF"
+        face="Times New Roman">Beta</font><font color="#0000FF">搜索的伪代码是：</font></dt>
+    <dd>　</dd>
+    <dd><font color="#FF0000">double alphabeta(int depth, double
+        beta) {</font></dd>
+    <dd><font color="#0000FF">　if (depth &lt;= 0 ||
+        棋局结束) {</font></dd>
+    <dd><font color="#0000FF">　　return evaluation();</font></dd>
+    <dd><font color="#0000FF">　}</font></dd>
+    <dd><font color="#0000FF">　就当前局面，生成并排序一系列着法;</font></dd>
+    <dd><font color="#FF0000">　double alpha = -infty;</font></dd>
+    <dd><font color="#0000FF">　for (每个着法 m) {</font></dd>
+    <dd><font color="#0000FF">　　执行着法 m;</font></dd>
+    <dd><font color="#FF0000">　　double val = -alphabeta(depth
+        - 1, -alpha);</font></dd>
+    <dd><font color="#0000FF">　　撤消着法 m;</font></dd>
+    <dd><font color="#0000FF">　　if (val &gt;= beta) {</font></dd>
+    <dd><font color="#0000FF">　　　return val;</font></dd>
+    <dd><font color="#0000FF">　　}</font></dd>
+    <dd><font color="#0000FF">　　if (val &gt; alpha) {</font></dd>
+    <dd><font color="#0000FF">　　　alpha = val;</font></dd>
+    <dd><font color="#0000FF">　　}</font></dd>
+    <dd><font color="#0000FF">　}</font></dd>
+    <dd><font color="#0000FF">　return alpha;</font></dd>
+    <dd><font color="#0000FF">}</font></dd>
+    <dt>　</dt>
+    <dt><font color="#0000FF">对红色部分加一些改进，就变成</font><font
+        color="#0000FF" face="Times New Roman">Alpha-Beta</font><font
+        color="#0000FF">搜索的伪代码了。】</font></dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.ics.uci.edu/~eppstein/180a/970422.html"
+        target="_blank"><font face="Times New Roman">http://www.ics.uci.edu/~eppstein/180a/970422.html</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="search_intro1.htm">基本搜索方法——简介<font
+        face="Times New Roman">(</font>一<font
+        face="Times New Roman">)</font></a></li>
+    <li>下一篇　<a href="search_intro3.htm">基本搜索方法——简介<font
+        face="Times New Roman">(</font>三<font
+        face="Times New Roman">)</font></a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

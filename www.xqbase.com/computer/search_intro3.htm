@@ -1,0 +1,243 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="Owner" content>
+<meta name="Reply-To" content>
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>基本搜索方法——简介(三)</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="3">《对弈程序基本技术》专题</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">散列技术和着法排序</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">David Eppstein */</font>文 </dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">* </font>加州爱尔文大学<font
+        face="Times New Roman">(UC Irvine)</font>信息与计算机科学系
+    </dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　我还没有讲完<font face="Times New Roman">Alpha-Beta</font>呢，因为我的伪代码里包含神秘的“排序着法”还没有解释，暂时先扔在一边，在讲完散列技术后，我将继续这部分内容。</dt>
+    <dt>　　散列技术的思想非常简单，很多棋类会出现“置换”的着法，即着法顺序的不同会导致相同的局面。例如在国际象棋中，开局走“<font
+        face="Times New Roman">1. d4 Nf6 2. c4</font>”和“<font
+        face="Times New Roman">1. c4 Nf6 2. d4</font>”都会导致一样的局面<font
+        face="Times New Roman">(</font>称为印度防御<font
+        face="Times New Roman">)</font>，白方两次进兵可以按不同的顺序走。再看一个更加复杂置换：“<font
+        face="Times New Roman">1. e4 c6 2. d4 d5 3. ed Qxd5 4. Nc3
+        Qd6</font>”<font face="Times New Roman">(</font>卡罗<font
+        face="Times New Roman">-</font>卡恩防御<font
+        face="Times New Roman">)</font>，“<font
+        face="Times New Roman">1. e4 d5 2. ed Qxd5 3. Nc3 Qd6 4.
+        d4 c6</font>”<font face="Times New Roman">(</font>斯堪的那维亚防御<font
+        face="Times New Roman">)</font>，以及“<font
+        face="Times New Roman">1. e4 Nf6 2. e5 Ng8 3. d4 d6 4. ed
+        Qxd6 5.Nc3 c6</font>”<font face="Times New Roman">(</font>阿廖欣防御<font
+        face="Times New Roman">)</font>都会在走不同的步数后到达相同的局面。</dt>
+    <dt>　　因为换位，相同的局面能在<font
+        face="Times New Roman">Alpha-Beta</font>搜索树的很多位置上找到。如果有一种数据结构能够保存以前找过的每一个位置，那么我们不必重新搜索，取而代之的是查找局面。但是有两个困难摆在面前，一是我们没有足够的存储器来存放所有搜索过的局面，二是查找速度要足够快以至于超过搜索的时间。幸运的是，找不到已经搜索过的局面也没关系，再搜索一遍就是了，因为毕竟这种情况不会经常发生。</dt>
+    <dt>　　这种数据结构就是“散列表”<font
+        face="Times New Roman">(Hash Tables)</font>，一个很大的数组，大到不超出物理存储器为止<font
+        face="Times New Roman">(</font>不要扩展到虚拟存储器，否则会非常慢的<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　</dt>
+    <dd>struct {</dd>
+    <dd>　long checksum; // long long 可能会更好</dd>
+    <dd>　int depth;</dd>
+    <dd>　enum { exact, lower_bound, upper_bound } entry_type;</dd>
+    <dd>　double eval;</dd>
+    <dd>} hashtable[HASH_TABLE_SIZE]; //<font color="#0000FF">【译注：完整的散列表还应记录最佳着法。】</font></dd>
+    <dt>　</dt>
+    <dt>　　对于每一个需要搜索的局面，先计算散列值<font
+        face="Times New Roman"><em>x</em></font>作为散列表的指标，另计算散列值<font
+        face="Times New Roman"><em>y</em></font>来检查这个局面是否是所要找的局面。</dt>
+    <dt>　　在搜索一个局面前，先去找 <font
+        face="Times New Roman">hashtable[<em>x</em>]</font>，如果
+        <font face="Times New Roman">hashtable[<em>x</em>].checksum
+        == <em>y</em></font>，<font face="Times New Roman">hashtable[<em>x</em>].entry_type
+        == exact</font>，并且 <font face="Times New Roman">hashtable[<em>x</em>].depth
+        </font>不比现在需要搜索的深度浅，那么就可以返回
+        <font face="Times New Roman">hashtable[<em>x</em>].eval</font>。</dt>
+    <dt>　　每搜索完一个局面，就把散列值<font
+        face="Times New Roman"><em>y</em></font>、当前搜索的深度和搜索的评分保存到
+        <font face="Times New Roman">hashtable[<em>x</em>] </font>里。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>如何计算散列值？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Zobrist </font>散列技术<font
+        face="Times New Roman">(</font>已经在“重复检测”这个话题中探讨过了<font
+        face="Times New Roman">)</font>是指：在下棋以前<font
+        face="Times New Roman">(</font>但在程序里<font
+        face="Times New Roman">)</font>产生随机数组<font
+        face="Times New Roman">Z[square, piecetype]</font>。棋盘的散列值就是棋盘上各个棋子的<font
+        face="Times New Roman">Z[s, p]</font>相加，再加上一些额外的信息如是否能王车易位等。通常求和被“异或”运算所代替，因为它操作方便且快速，但算术加法会更好些。走完一步棋后，不要把散列值整个都算一遍，只要减去原来位置的棋子和格子值，并加上新位置的棋子和格子值，就实现了散列值的更新。这个技术同时适用于散列值<font
+        face="Times New Roman"><em>x</em></font>和校验值<font
+        face="Times New Roman"><em>y</em>(</font>但要使用不同的随机数表<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　在散列技术中，另有一些十分有用的诀窍：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>在走完一步后，不要把散列表清空，这样不但浪费时间，而且原来的内容或许对后面的走法有用。<font
+        color="#0000FF">【这里指的是电脑完成整个局面的搜索，走完一步后不需要清空散列表，电脑进行下一回合时，上一回合留下的信息或许有用。当然，是否清空散列表不能一概而论，还要取决于散列表的覆盖策略，以后的文章将谈到这个问题。】</font></dt>
+    <dt>　　<font face="Times New Roman">(2) </font>如果相同的局面出现在搜索树的不同深度中<font
+        face="Times New Roman">(</font>例如上面讲到置换时的第二个例子<font
+        face="Times New Roman">)</font>，那么你可能得到比预期更深的搜索结果，这样会非常好。<font
+        color="#0000FF">【译者把这个现象称为“搜索树的迁移式延伸”，当这种情况出现在残局时反而不是好事，因为你有可能找到一步杀棋，而它却不是最短路线，你就停止了搜索。后面的文章会说明一个问题，当你搜索到杀棋时，如果你的着法不是最短路线，那么在实战中可能明知杀棋但怎么也杀不了。】</font></dt>
+    <dt>　　<font face="Times New Roman">(3) </font>不要在搜索树靠近叶子的局面上用散列技术，因为这些局面太多了<font
+        face="Times New Roman">(</font>它们可能取代别的更重要的局面<font
+        face="Times New Roman">)</font>，并且不去搜索这些局面也不会省掉很多时间。<font
+        color="#0000FF">【如果把搜索分为完全搜索和静态搜索两个阶段，那么静态搜索的结果是肯定不写入散列表的，因为静态搜索的分枝因子非常小(只考虑吃子着法)，所以查找散列表的时间或许比搜索的时间还长。在完全搜索中，这条法则是就“始终覆盖”这一策略而言的，若使用“深度优先”策略则无所谓。】</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>散列技术如何跟</strong></font><font
+        size="5" face="Arial"><strong>Alpha-Beta</strong></font><font
+        size="5" face="楷体_GB2312"><strong>联系起来？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　国际象棋程序中很多的错误都跟散列技术有关，原因是它们要跟<font
+        face="Times New Roman">Alpha-Beta</font>搜索联系起来，但你无法绕开这个话题，因为散列技术和<font
+        face="Times New Roman">Alpha-Beta</font>都是非常有效的搜索方法。现在重新来看<font
+        face="Times New Roman">Alpha-Beta</font>，当你在一个局面中调用
+        <font face="Times New Roman">alphabeta(depth, alpha, beta)
+        </font>时，可能有三种情况发生：<font
+        face="Times New Roman">(1) </font>高出边界<font
+        face="Times New Roman">(Fail High)</font>，即返回评分至少是<font
+        face="Times New Roman">Beta</font>，但到底多少却不知道；<font
+        face="Times New Roman">(2) </font>低出边界<font
+        face="Times New Roman">(Fail Low)</font>，即返回评分最多是<font
+        face="Times New Roman">Alpha</font>，但到底多少也不知道；<font
+        face="Times New Roman">(3) </font>准确值，即返回评分在<font
+        face="Times New Roman">Alpha</font>和<font
+        face="Times New Roman">Beta</font>之间。如果我们知道准确结果，那么散列表中只记录准确评分，但是高出边界和低出边界的情况，仍然在以后的裁剪中有用。可以跟记录准确评分一样，散列表中也可以记录这两种情况的评分，“下界标志”<font
+        face="Times New Roman">(lower_bound)</font>代表评分至少是<font
+        face="Times New Roman">Beta</font>，“上界标志”<font
+        face="Times New Roman">(up_bound)</font>代表评分最多是<font
+        face="Times New Roman">Alpha</font>，我们用 <font
+        face="Times New Roman">entry_type </font>这个域来表示评分属于哪个类型。如果搜索散列表时返回这两个类型，那么我们需要看它是否在搜索结点之前发生裁剪，如果能发生裁剪，那么直接返回该评分，否则继续搜索。下面是用散列技术的<font
+        face="Times New Roman">Alpha-Beta</font>搜索的伪代码，散列表的索引值<font
+        face="Times New Roman"><em>x</em></font>和校验值<font
+        face="Times New Roman"><em>y</em></font>是全局变量，并且在执行着法和撤消着法的时候更新。</dt>
+    <dd>　</dd>
+    <dd>double alphabeta(int depth, double alpha, double beta) {</dd>
+    <dd>　if (depth &lt;= 0 || 棋局结束) {</dd>
+    <dd>　　return evaluation();</dd>
+    <dd>　}</dd>
+    <dd>　if (hashtable[x].checksum == y &amp;&amp; hashtable[x].depth
+        &gt;= depth) {</dd>
+    <dd>　　switch (hashtable[x].entry_type) {</dd>
+    <dd>　　case exact: //<font color="#0000FF">【就C语言的语法而言是错的，应该写成“case
+        hashtable[x].exact:”，下同】</font></dd>
+    <dd>　　　return hashtable[x].eval;</dd>
+    <dd>　　case lower_bound:</dd>
+    <dd>　　　if (hashtable[x].eval &gt;= beta) {</dd>
+    <dd>　　　　return (hashtable[x].eval);</dd>
+    <dd>　　　}</dd>
+    <dd>　　　break;</dd>
+    <dd>　　case upper_bound:</dd>
+    <dd>　　　if (hashtable[x].eval &lt;= alpha) {</dd>
+    <dd>　　　　return (hashtable[x].eval);</dd>
+    <dd>　　　}</dd>
+    <dd>　　　break;</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　int eval_is_exact = 0;</dd>
+    <dd>　就当前局面，生成并排序一系列着法;</dd>
+    <dd>　for (每个着法 m) {</dd>
+    <dd>　　执行着法 m;</dd>
+    <dd>　　double val = -alphabeta(depth - 1, -beta, -alpha);</dd>
+    <dd>　　撤消着法 m;</dd>
+    <dd>　　if (val &gt;= beta) {</dd>
+    <dd>　　　hashtable[x].checksum = y;</dd>
+    <dd>　　　hashtable[x].depth = depth;</dd>
+    <dd>　　　hashtable[x].entry_type = lower_bound;</dd>
+    <dd>　　　hashtable[x].eval = val; //<font color="#0000FF">【译者认为
+        eval = beta 更加合理。】</font></dd>
+    <dd>　　　return val;</dd>
+    <dd>　　}</dd>
+    <dd>　　if (val &gt; alpha) {</dd>
+    <dd>　　　alpha = val;</dd>
+    <dd>　　　eval_is_exact = 1;</dd>
+    <dd>　　}</dd>
+    <dd>　}</dd>
+    <dd>　hashtable[x].checksum = y;</dd>
+    <dd>　hashtable[x].depth = depth;</dd>
+    <dd>　if (eval_is_exact) {</dd>
+    <dd>　　hashtable[x].entry_type = exact;</dd>
+    <dd>　} else {</dd>
+    <dd>　　hashtable[x].entry_type = upper_bound;</dd>
+    <dd>　}</dd>
+    <dd>　hashtable[x].eval = alpha;</dd>
+    <dd>　return alpha;</dd>
+    <dd>}</dd>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><strong>Alpha-beta</strong></font><font
+        size="5" face="楷体_GB2312"><strong>和着法顺序</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　我们现在就回到<font face="Times New Roman">Alpha-Beta</font>。上次我们的分析指出，在最乐观的情况下，如果能裁剪的地方都裁剪了，那么搜索深度将增加一倍。“能裁剪的地方都裁剪了”这个条件说得再简单一些，就是好的着法在坏的着法之前搜索。着法没有必要完全排序好，但是最好的着法必须首先搜索，或者最好的几个着法必须在比较前面的几个位置搜索。如果不这样做，就不会有裁剪并且不会搜索得很深。</dt>
+    <dt>　　我们把结点分为<font face="Times New Roman">A</font>型<font
+        face="Times New Roman">(</font>所有的子结点都搜索过<font
+        face="Times New Roman">)</font>和<font
+        face="Times New Roman">B</font>型<font
+        face="Times New Roman">(</font>在搜索到好的子结点后即裁剪掉了<font
+        face="Times New Roman">)</font>，那么着法的顺序对两种结点都很重要：在<font
+        face="Times New Roman">B</font>型结点中，需要从最好的子结点开始，以裁剪掉剩余的节点；而在<font
+        face="Times New Roman">A</font>型结点中，需要找到足够好的结点，来告诉其他结点，它们都是<font
+        face="Times New Roman">B</font>型的。</dt>
+    <dt>　　找到最好的着法当然是很难的，这就是我们需要进行搜索的原因。<font
+        color="#0000FF">【言下之意，要在搜索之前找到最好的着法，理论上是不可能的。】</font>但是我们可以根据以下线索来找：<font
+        face="Times New Roman">(1) </font>迭代加深时，散列表会记录前面一次搜索过的结点，散列表中的值可以用来作近似<font
+        face="Times New Roman">(</font>因为这是相同局面浅一些的搜索<font
+        face="Times New Roman">)</font>；<font color="#0000FF">【原作者在散列表中没有记录最佳着法，其实这个着法最应该被首先搜索。】</font><font
+        face="Times New Roman">(2) </font>针对特定的棋类游戏，我们需要一些知识，例如在国际象棋中，吃子的着法往往是好的着法，应该首先尝试；<font
+        face="Times New Roman">(3) </font>杀手启发：如果相邻结点有好的着法，并且在现在的结点上该着法也合理，那么应该首先尝试。</dt>
+    <dt>　　因此在搜索子结点之前要加上一步：按照着法的质量来排序，然后按照这个顺序来搜索。<font
+        face="Times New Roman">(</font>有时你们可以直接修改着法生成器，让它进行粗略的排序，比如先生成吃子的着法，从而节省下重新排序的时间。<font
+        face="Times New Roman">)</font></dt>
+    <dt>　　还有一个诀窍：如果你希望发生裁剪，那么你不必对所有着法排序，只要排序前面很少几个着法就可以了。那么你应该用这样的搜索算法，最佳着法可以一个一个地挑出，然后早早地停止排序，例如选择排序和堆排序。<font
+        color="#0000FF">【译者认为冒泡排序是最符合原作者的意图的，因为排序时每扫描一趟即可找到一个最佳着法，在扫描第二趟之前先搜索这个着法。而几乎没有程序是用堆排序的，尽管它的复杂度是所有排序算法中最低的，并且不消耗额外的存储器，但是对</font><font
+        color="#0000FF" face="Times New Roman">100</font><font
+        color="#0000FF">个以下的数进行排序，它的速度是非常缓慢的。】</font></dt>
+    <dt>　</dt>
+    <dt>　　原文：<a
+        href="http://www.ics.uci.edu/~eppstein/180a/970424.html"
+        target="_blank"><font face="Times New Roman">http://www.ics.uci.edu/~eppstein/180a/970424.html</font></a></dt>
+    <dt>　　译者：象棋百科全书网 <font
+        face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    <dt>　　类型：全译加译注</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="search_intro2.htm">基本搜索方法——简介<font
+        face="Times New Roman">(</font>二<font
+        face="Times New Roman">)</font></a></li>
+    <li>下一篇　<a href="search_minimax.htm">基本搜索方法——最小<font
+        face="Times New Roman">-</font>最大搜索</a></li>
+    <li>返　回　<a href="../computer.htm">象棋百科全书——电脑象棋</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
