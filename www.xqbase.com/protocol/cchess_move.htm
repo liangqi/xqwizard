@@ -1,0 +1,614 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>中国象棋电脑应用规范(二)：着法表示</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font size="3">中国象棋电脑应用规范</font><font
+        size="3" face="Times New Roman">(</font><font size="3">二</font><font
+        size="3" face="Times New Roman">)</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">着法表示</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>象棋百科全书网 <font face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font></dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">2004</font>年11月初稿，<font
+        face="Times New Roman">2006</font>年<font
+        face="Times New Roman">2</font>月修订</dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>一、棋盘的标记</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　象棋的着法表示，简而言之就是某个棋子从什么位置走到什么位置。通常，表示方法可以分为“纵线方式”和“坐标方式”两种，现在作简要说明：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>纵线方式，它是中国象棋常用的表示方法，即棋子从棋盘的哪条线走到哪条线。中国象棋规定，对于红方来说的纵线从右到左依次用“一”到“九”表示，黑方则是“１”到“９”<font
+        face="Times New Roman">(</font>如图一所示<font
+        face="Times New Roman">)</font>，这种表示方式体现了古代中国象棋研究者的智慧。</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>坐标方式，它是国际象棋常用的表示方法，把每个格子按坐标编号<font
+        face="Times New Roman">(</font>如图二所示<font
+        face="Times New Roman">)</font>，只要知道起始格子和到达格子，就确定了着法，这种表示方式更方便也更合理，而且还可以移植到其他棋类游戏中。中国象棋也可以用这种方法来表示，按照国际象棋的规则，纵线从左到右<font
+        face="Times New Roman">(</font>红方<font
+        face="Times New Roman">)</font>依次为<font
+        face="Times New Roman">a b c d e f g h i</font>，横线从下到上<font
+        face="Times New Roman">(</font>红方<font
+        face="Times New Roman">)</font>依次为<font
+        face="Times New Roman">0 1 2 3 4 5 6 7 8 9(</font>如图三所示<font
+        face="Times New Roman">)</font>。</dt>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center"><table border="0">
+            <tr>
+                <td align="center">１</td>
+                <td align="center">２</td>
+                <td align="center">３</td>
+                <td align="center">４</td>
+                <td align="center">５</td>
+                <td align="center">６</td>
+                <td align="center">７</td>
+                <td align="center">８</td>
+                <td align="center">９</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="9"><img
+                src="cchess_move1.gif" width="210" height="234"></td>
+            </tr>
+            <tr>
+                <td align="center">九</td>
+                <td align="center">八</td>
+                <td align="center">七</td>
+                <td align="center">六</td>
+                <td align="center">五</td>
+                <td align="center">四</td>
+                <td align="center">三</td>
+                <td align="center">二</td>
+                <td align="center">一</td>
+            </tr>
+        </table>
+        </td>
+        <td align="center"><table border="0">
+            <tr>
+                <td align="center">　</td>
+                <td align="center"><font face="Times New Roman">a</font></td>
+                <td align="center"><font face="Times New Roman">b</font></td>
+                <td align="center"><font face="Times New Roman">c</font></td>
+                <td align="center"><font face="Times New Roman">d</font></td>
+                <td align="center"><font face="Times New Roman">e</font></td>
+                <td align="center"><font face="Times New Roman">f</font></td>
+                <td align="center"><font face="Times New Roman">g</font></td>
+                <td align="center"><font face="Times New Roman">h</font></td>
+                <td align="center">　</td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">8</font></td>
+                <td align="center" rowspan="8" colspan="8"><font
+                face="Times New Roman"><img
+                src="cchess_move2.gif" width="256" height="256"></font></td>
+                <td align="center"><font face="Times New Roman">8</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">7</font></td>
+                <td align="center"><font face="Times New Roman">7</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">6</font></td>
+                <td align="center"><font face="Times New Roman">6</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">5</font></td>
+                <td align="center"><font face="Times New Roman">5</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">4</font></td>
+                <td align="center"><font face="Times New Roman">4</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">3</font></td>
+                <td align="center"><font face="Times New Roman">3</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">2</font></td>
+                <td align="center"><font face="Times New Roman">2</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">1</font></td>
+                <td align="center"><font face="Times New Roman">1</font></td>
+            </tr>
+            <tr>
+                <td align="center">　</td>
+                <td align="center"><font face="Times New Roman">a</font></td>
+                <td align="center"><font face="Times New Roman">b</font></td>
+                <td align="center"><font face="Times New Roman">c</font></td>
+                <td align="center"><font face="Times New Roman">d</font></td>
+                <td align="center"><font face="Times New Roman">e</font></td>
+                <td align="center"><font face="Times New Roman">f</font></td>
+                <td align="center"><font face="Times New Roman">g</font></td>
+                <td align="center"><font face="Times New Roman">h</font></td>
+                <td align="center">　</td>
+            </tr>
+        </table>
+        </td>
+        <td align="center"><table border="0">
+            <tr>
+                <td align="center">　</td>
+                <td align="center"><font face="Times New Roman">a</font></td>
+                <td align="center"><font face="Times New Roman">b</font></td>
+                <td align="center"><font face="Times New Roman">c</font></td>
+                <td align="center"><font face="Times New Roman">d</font></td>
+                <td align="center"><font face="Times New Roman">e</font></td>
+                <td align="center"><font face="Times New Roman">f</font></td>
+                <td align="center"><font face="Times New Roman">g</font></td>
+                <td align="center"><font face="Times New Roman">h</font></td>
+                <td align="center"><font face="Times New Roman">i</font></td>
+                <td align="center">　</td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">9</font></td>
+                <td align="center" rowspan="10" colspan="9"><font
+                face="Times New Roman"><img
+                src="cchess_move1.gif" width="210" height="234"></font></td>
+                <td align="center"><font face="Times New Roman">9</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">8</font></td>
+                <td align="center"><font face="Times New Roman">8</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">7</font></td>
+                <td align="center"><font face="Times New Roman">7</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">6</font></td>
+                <td align="center"><font face="Times New Roman">6</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">5</font></td>
+                <td align="center"><font face="Times New Roman">5</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">4</font></td>
+                <td align="center"><font face="Times New Roman">4</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">3</font></td>
+                <td align="center"><font face="Times New Roman">3</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">2</font></td>
+                <td align="center"><font face="Times New Roman">2</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">1</font></td>
+                <td align="center"><font face="Times New Roman">1</font></td>
+            </tr>
+            <tr>
+                <td align="center"><font face="Times New Roman">0</font></td>
+                <td align="center"><font face="Times New Roman">0</font></td>
+            </tr>
+            <tr>
+                <td align="center">　</td>
+                <td align="center"><font face="Times New Roman">a</font></td>
+                <td align="center"><font face="Times New Roman">b</font></td>
+                <td align="center"><font face="Times New Roman">c</font></td>
+                <td align="center"><font face="Times New Roman">d</font></td>
+                <td align="center"><font face="Times New Roman">e</font></td>
+                <td align="center"><font face="Times New Roman">f</font></td>
+                <td align="center"><font face="Times New Roman">g</font></td>
+                <td align="center"><font face="Times New Roman">h</font></td>
+                <td align="center"><font face="Times New Roman">i</font></td>
+                <td align="center">　</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">图一</td>
+        <td align="center">图二</td>
+        <td align="center">图三</td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt><font size="5" face="楷体_GB2312"><strong>二、棋子的名称</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　为方便表示，中国象棋的棋子名称除了用汉字以外，还可以用字母，字母可从国际象棋中稍加改动得到，而数字是为了方便棋谱的输入<font
+        face="Times New Roman">(</font>以便用在数字小键盘上<font
+        face="Times New Roman">)(</font>见表一<font
+        face="Times New Roman">)</font>：</dt>
+</dl>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td align="center"><table border="1">
+            <tr>
+                <td align="center" valign="top" height="18">红方</td>
+                <td align="center" valign="top" height="18">黑方</td>
+                <td align="center" valign="top" height="18">字母</td>
+                <td align="center" valign="top" height="18">相当于国际象棋中的棋子</td>
+                <td align="center">数字</td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">帅</td>
+                <td align="center" valign="top">将</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">K</font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">King(</font>王<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">1</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">仕</td>
+                <td align="center" valign="top">士</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">A</font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Advisor(</font>没有可比较的棋子<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">2</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">相</td>
+                <td align="center" valign="top">象</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">B<sup>[1]</sup></font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Bishop(</font>象<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">3</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">马</td>
+                <td align="center" valign="top">马</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">N<sup>[2]</sup></font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Knight(</font>马<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">4</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">车</td>
+                <td align="center" valign="top">车</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">R</font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Rook(</font>车<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">5</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">炮</td>
+                <td align="center" valign="top">炮</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">C</font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Cannon(</font>没有可比较的棋子<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">6</font></td>
+            </tr>
+            <tr>
+                <td align="center" valign="top">兵</td>
+                <td align="center" valign="top">卒</td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">P</font></td>
+                <td align="center" valign="top"><font
+                face="Times New Roman">Pawn(</font>兵<font
+                face="Times New Roman">)</font></td>
+                <td align="center"><font face="Times New Roman">7</font></td>
+            </tr>
+        </table>
+        <table border="0">
+            <tr>
+                <td align="center">表一　中国象棋棋子代号</td>
+            </tr>
+            <tr>
+                <td align="center"><p align="left"><font
+                face="Times New Roman">[1] </font>世界象棋联合会推荐的字母代号为<font
+                face="Times New Roman">E(Elephant)</font></p>
+                </td>
+            </tr>
+            <tr>
+                <td align="center"><p align="left"><font
+                face="Times New Roman">[2] </font>世界象棋联合会推荐的字母代号为<font
+                face="Times New Roman">H(Horse)</font></p>
+                </td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</center></div>
+
+<p><font size="5" face="楷体_GB2312"><strong>三、</strong></font><font
+size="5" face="Arial"><strong>ICCS</strong></font><font size="5"
+face="楷体_GB2312"><strong>坐标格式</strong></font></p>
+
+<table border="0" width="100%">
+    <tr>
+        <td valign="top"><dl>
+            <dt>　　<font face="Times New Roman">ICCS</font>是中国象棋互联网服务器<font
+                face="Times New Roman">(Internet Chinese Chess
+                Server)</font>的缩写。在网络对弈服务器处理着法时，把着法表示成起点和终点的坐标是最方便的</dt>
+            <dt>，因此这种格式最早在计算机上使用。</dt>
+            <dd>　<table border="0">
+                    <tr>
+                        <td><font face="Times New Roman">1. H2-E2</font></td>
+                        <td><font face="Times New Roman">(</font>炮二平五<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td><font face="Times New Roman">H7-E7</font></td>
+                        <td><font face="Times New Roman">(</font>炮８平５<font
+                        face="Times New Roman">)</font></td>
+                    </tr>
+                    <tr>
+                        <td><font face="Times New Roman">2. E2-E6</font></td>
+                        <td><font face="Times New Roman">(</font>炮五进四<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td><font face="Times New Roman">D9-E8</font></td>
+                        <td><font face="Times New Roman">(</font>士４进５<font
+                        face="Times New Roman">)</font></td>
+                    </tr>
+                    <tr>
+                        <td><font face="Times New Roman">3. H0-G2</font></td>
+                        <td><font face="Times New Roman">(</font>马二进三<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td><font face="Times New Roman">H9-G7</font></td>
+                        <td><font face="Times New Roman">(</font>马８进７<font
+                        face="Times New Roman">)</font></td>
+                    </tr>
+                    <tr>
+                        <td><font face="Times New Roman">4. B2-E2</font></td>
+                        <td><font face="Times New Roman">(</font>炮八平五<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td><font face="Times New Roman">B9-C7</font></td>
+                        <td><font face="Times New Roman">(</font>马２进３<font
+                        face="Times New Roman">)</font></td>
+                    </tr>
+                    <tr>
+                        <td><font face="Times New Roman">5. E6-E4</font></td>
+                        <td><font face="Times New Roman">(</font>前炮退二<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td><font face="Times New Roman">I9-H9</font></td>
+                        <td><font face="Times New Roman">(</font>车９平８<font
+                        face="Times New Roman">)</font></td>
+                    </tr>
+                    <tr>
+                        <td><font face="Times New Roman">6. </font>……</td>
+                        <td><font face="Times New Roman">(</font>如右图<font
+                        face="Times New Roman">)</font></td>
+                        <td>　</td>
+                        <td>　</td>
+                        <td>　</td>
+                    </tr>
+                </table>
+            </dd>
+            <dt>　</dt>
+            <dt>　　在“<a href="cchess_ucci.htm"
+                target="_blank">中国象棋通用引擎协议</a>”<font
+                face="Times New Roman">(UCCI</font>协议<font
+                face="Times New Roman">)</font>中，坐标格式得到进一步简化，例如<font
+                face="Times New Roman">H2-E2</font>记作<font
+                face="Times New Roman">h2e2</font>，把符号限制在一个<font
+                face="Times New Roman">32</font>位数据中，处理起来速度更快。</dt>
+        </dl>
+        </td>
+        <td align="center"><img src="cchess_move3.gif"
+        width="210" height="234"></td>
+    </tr>
+</table>
+
+<dl>
+    <dt><font size="5" face="楷体_GB2312"><strong>四、中文纵线格式</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　这种格式对于广大象棋爱好者来说再熟悉不过了，但是这里还是要说明两个重要的细节。</dt>
+    <dt>　　一、仕<font face="Times New Roman">(</font>士<font
+        face="Times New Roman">)</font>和相<font
+        face="Times New Roman">(</font>象<font
+        face="Times New Roman">)</font>如果在同一纵线上，不用“前”和“后”区别，因为能退的一定在前，能进的一定在后。</dt>
+    <dt>　　二、兵要按情况讨论：</dt>
+    <dt>　　<font face="Times New Roman">(1) </font>三个兵在一条纵线上：用“前”、“中”和“后”来区别；</dt>
+    <dt>　　<font face="Times New Roman">(2) </font>三个以上兵在一条纵线上：最前面的兵用“一”代替“前”，以后依次是“二”、“三”、“四”和“五”；</dt>
+    <dt>　　<font face="Times New Roman">(3) </font>在有两条纵线，每条纵线上都有一个以上的兵：按照“先从右到左，再从前到后”<font
+        face="Times New Roman">(</font>即先看最左边一列，从前到后依次标记为“一”和“二”，可能还有“三”，再看右边一列<font
+        face="Times New Roman">)</font>的顺序，把这些兵的位置标依次标记为“一”、“二”、“三”、“四”和“五”，不在这两条纵线上的兵不参与标记。</dt>
+    <dt>　　如右图局面，四个兵分别位于四线和六线，下表列举了几种走法的坐标格式和纵线格式。</dt>
+</dl>
+
+<table border="0" width="100%">
+    <tr>
+        <td align="center"><table border="1">
+            <tr>
+                <td align="center">中文纵线格式</td>
+                <td align="center">数字纵线格式</td>
+                <td align="center">坐标格式</td>
+            </tr>
+            <tr>
+                <td align="center">一兵平五</td>
+                <td align="center"><font face="Times New Roman">Pa.5</font></td>
+                <td align="center"><font face="Times New Roman">F8-E8</font></td>
+            </tr>
+            <tr>
+                <td align="center">二兵平五</td>
+                <td align="center"><font face="Times New Roman">Pb.5</font></td>
+                <td align="center"><font face="Times New Roman">F6-E6</font></td>
+            </tr>
+            <tr>
+                <td align="center">兵五进一</td>
+                <td align="center"><font face="Times New Roman">P5+1</font></td>
+                <td align="center"><font face="Times New Roman">E7-E8</font></td>
+            </tr>
+            <tr>
+                <td align="center">三兵平五</td>
+                <td align="center"><font face="Times New Roman">Pc.5</font></td>
+                <td align="center"><font face="Times New Roman">D8-E8</font></td>
+            </tr>
+            <tr>
+                <td align="center">四兵平五</td>
+                <td align="center"><font face="Times New Roman">Pd.5</font></td>
+                <td align="center"><font face="Times New Roman">D6-E6</font></td>
+            </tr>
+        </table>
+        </td>
+        <td align="center"><font face="Times New Roman"><img
+        src="cchess_move4.gif" width="210" height="234"></font></td>
+    </tr>
+</table>
+
+<dl>
+    <dt><font size="3">　　另外需要注意的是：</font></dt>
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">(1) </font><font size="3">如果黑方出现数字，不管数字代表纵线标号还是前进或后退的格数，都用阿拉伯数字表示，在计算机中显示全角的数字。但是代表同一纵线上不同兵的“一二三四五”</font><font
+        size="3" face="Times New Roman">(</font><font size="3">它们类似于“前中后”的作用</font><font
+        size="3" face="Times New Roman">)</font><font size="3">例外，例如例局面红黑互换，那么某步着法就应该写成“一卒平５”。</font></dt>
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">(2) </font><font size="3">在传统的象棋记谱中，如果发生以上这种情况，通常用五个字来表示，例如“前兵四平五”等，在计算机处理过程中就比较麻烦，因为</font><font
+        size="3" face="Times New Roman">4</font><font size="3">个汉字</font><font
+        size="3" face="Times New Roman">(</font><font size="3">一个汉字占</font><font
+        size="3" face="Times New Roman">16</font><font size="3">位</font><font
+        size="3" face="Times New Roman">)</font><font size="3">的着法可以储存在一个</font><font
+        size="3" face="Times New Roman">64</font><font size="3">位的字当中</font><font
+        size="3" face="Times New Roman">(</font><font size="3">在</font><font
+        size="3" face="Times New Roman">C</font><font size="3">语言中数据类型为</font><font
+        size="3" face="Times New Roman">__int64</font><font
+        size="3">或</font><font size="3" face="Times New Roman">long
+        long)</font><font size="3">，而增加到</font><font
+        size="3" face="Times New Roman">5</font><font size="3">个汉字就比较麻烦了。黑方用全角的数字是同一个道理。</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>五、</strong></font><font
+        size="5" face="Arial"><strong>WXF</strong></font><font
+        size="5" face="楷体_GB2312"><strong>纵线格式</strong></font></dt>
+    <dt>　</dt>
+    <dt><font size="3">　　</font><font size="3"
+        face="Times New Roman">WXF</font><font size="3">是世界象棋联合会</font><font
+        size="3" face="Times New Roman">(World XiangQi Federation)</font><font
+        size="3">的缩写，在该组织建议的记谱方式中，汉字被字母和数字所代替，即“进”、“退”和“平”分别用符号“</font><font
+        size="3" face="Times New Roman">+</font><font size="3">”、“</font><font
+        size="3" face="Times New Roman">-</font><font size="3">”和“</font><font
+        size="3" face="Times New Roman">.</font><font size="3">”表示，“前”、“中”和“后”也分别用符号“</font><font
+        size="3" face="Times New Roman">+</font><font size="3">”、“</font><font
+        size="3" face="Times New Roman">-</font><font size="3">”和“</font><font
+        size="3" face="Times New Roman">.</font><font size="3">”表示，并且写在棋子的后面</font><font
+        size="3" face="Times New Roman">(</font><font size="3">例如“前炮退二”写成“</font><font
+        size="3" face="Times New Roman">C+-2</font><font size="3">”而不是“</font><font
+        size="3" face="Times New Roman">+C-2</font><font size="3">”</font><font
+        size="3" face="Times New Roman">)</font><font size="3">，多个兵位于一条纵线时，代替“前中后”的“一二三四五”分别用“</font><font
+        size="3" face="Times New Roman">abcde</font><font
+        size="3">”表示</font><font size="3"
+        face="Times New Roman">(</font><font size="3">这种情况极少发生</font><font
+        size="3" face="Times New Roman">)</font><font size="3">。</font></dt>
+    <dt>　　另外，代表棋子名称的第一个字母，还可以用数字<font
+        face="Times New Roman">1</font>到<font
+        face="Times New Roman">7</font>表示，这是为了方便数字小键盘的输入，例如“炮二平五”可以记作“<font
+        face="Times New Roman">62.5</font>“<font
+        face="Times New Roman">(6</font>代表炮<font
+        face="Times New Roman">)</font>选用符号<font size="3">“</font><font
+        size="3" face="Times New Roman">+</font><font size="3">”、“</font><font
+        size="3" face="Times New Roman">-</font><font size="3">”和“</font><font
+        size="3" face="Times New Roman">.</font><font size="3">”也是出于这个考虑。</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>六、棋子代号问题</strong></font></dt>
+    <dt>　</dt>
+    <dt><font size="3">　　符号纵线格式是世界象棋联合会</font><font
+        size="3" face="Times New Roman">(WXF)</font><font
+        size="3">推荐的记谱格式，但是现在棋子的字母代号用法不一，主要问题集中在仕</font><font
+        size="3" face="Times New Roman">(</font><font size="3">士</font><font
+        size="3" face="Times New Roman">)</font><font size="3">、相</font><font
+        size="3" face="Times New Roman">(</font><font size="3">象</font><font
+        size="3" face="Times New Roman">)</font><font size="3">和马的翻译上。仕</font><font
+        size="3" face="Times New Roman">(</font><font size="3">士</font><font
+        size="3" face="Times New Roman">)</font><font size="3">译成</font><font
+        size="3" face="Times New Roman">Advisor</font><font
+        size="3">、</font><font size="3" face="Times New Roman">Bachelor</font><font
+        size="3">、</font><font size="3" face="Times New Roman">Guard</font><font
+        size="3">等，相</font><font size="3"
+        face="Times New Roman">(</font><font size="3">象</font><font
+        size="3" face="Times New Roman">)</font><font size="3">译成</font><font
+        size="3" face="Times New Roman">Bishop</font><font
+        size="3">、</font><font size="3" face="Times New Roman">Elephant</font><font
+        size="3">、</font><font size="3" face="Times New Roman">Minister</font><font
+        size="3">等，马译成</font><font size="3"
+        face="Times New Roman">Horse</font><font size="3">或</font><font
+        size="3" face="Times New Roman">Knight</font><font
+        size="3">。</font></dt>
+    <dt><font size="3">　　出于这点考虑，很多象棋软件都能识别不同的代号，例如</font><font
+        size="3" face="Times New Roman">ElephantBoard</font><font
+        size="3">将</font><font size="3" face="Times New Roman">B</font><font
+        size="3">和</font><font size="3" face="Times New Roman">E</font><font
+        size="3">都解释为相</font><font size="3"
+        face="Times New Roman">(</font><font size="3">象</font><font
+        size="3" face="Times New Roman">)</font><font size="3">，</font><font
+        size="3" face="Times New Roman">H</font><font size="3">和</font><font
+        size="3" face="Times New Roman">N</font><font size="3">都解释为马，</font><font
+        size="3" face="Times New Roman">SaoLa</font><font
+        size="3">则可以由用户自定义字母代号，等等。</font></dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>七、简体和繁体的识别问题</strong></font></dt>
+    <dt>　</dt>
+    <dt><font size="3">　　无论采取哪种格式记谱，棋谱最终应该被象棋软件所识别。通常象棋软件都应支持以上三种格式，除“中文纵线格式”以外，其他两种格式都用英文和数字表示，不涉及中文字符，所以处理起来比较容易。而中文格式却非常麻烦，除了涉及到简体还是繁体外，还有字符集的问题。</font></dt>
+    <dt><font size="3">　　象棋软件应该充分考虑这个问题，例如</font><font
+        size="3" face="Times New Roman">ElephantBoard</font><font
+        size="3">在这个问题上就考虑得十分周到。在</font><font
+        size="3" face="Times New Roman">GB</font><font size="3">字符集</font><font
+        size="3" face="Times New Roman">(</font><font size="3">大陆地区</font><font
+        size="3" face="Times New Roman">)</font><font size="3">里，可识别简体和繁体字符，而在</font><font
+        size="3" face="Times New Roman">Big5</font><font size="3">字符集</font><font
+        size="3" face="Times New Roman">(</font><font size="3">港台地区</font><font
+        size="3" face="Times New Roman">)</font><font size="3">里，由字符集转换引起的问题也考虑进去了——表示棋子位置的“后”，由</font><font
+        size="3" face="Times New Roman">GB</font><font size="3">字符转换为</font><font
+        size="3" face="Times New Roman">Big5</font><font size="3">字符时，仍然写为“后”，但正确的写法是“後”，无论如何这两个“后</font><font
+        size="3" face="Times New Roman">(</font><font size="3">後</font><font
+        size="3" face="Times New Roman">)</font><font size="3">”都会被</font><font
+        size="3" face="Times New Roman">ElephantBoard</font><font
+        size="3">认可。</font></dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="cchess_intro.htm">中国象棋电脑应用规范<font
+        face="Times New Roman">(</font>一<font
+        face="Times New Roman">)</font>：引言</a></li>
+    <li>下一篇　<a href="cchess_fen.htm">中国象棋电脑应用规范<font
+        face="Times New Roman">(</font>三<font
+        face="Times New Roman">)</font>：<font
+        face="Times New Roman">FEN</font>文件格式</a></li>
+    <li>返　回　<a href="../protocol.htm">象棋百科全书——规则与协议</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>国际象棋引擎：穿越困惑</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt>《<a href="http://www.chessit.net/" target="_blank">国际象棋译文苑</a>》文摘</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">国际象棋引擎：穿越困惑</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font face="Times New Roman">Aaron Tay</font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>前言</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　过去，购买能下棋的国际象棋软件是简单事情，你买下它，它是一套能下国际象棋的程序，就是那样了。不过在今天，棋弈程序<font
+        face="Times New Roman">(</font>或者，我应该称之为引擎<font
+        face="Times New Roman">)</font>是高度“可移植的”。</dt>
+    <dt>　　随着越来越多的棋弈程序遵从如<font
+        face="Times New Roman">Winboard</font>和<font
+        face="Times New Roman">UCI</font>协议等各种协议，它们不再被限定于一个软件或界面了。用户现在可以把一个棋弈程序<font
+        face="Times New Roman">(</font>引擎<font
+        face="Times New Roman">)</font>从一个他们所购买的软件<font
+        face="Times New Roman">/</font>界面中“输出”到另一个<font
+        face="Times New Roman">[</font>软件<font
+        face="Times New Roman">/</font>界面<font
+        face="Times New Roman">]</font>。</dt>
+    <dt>　　如果你还一点都不了解<font
+        face="Times New Roman">Winboard</font>和<font
+        face="Times New Roman">UCI</font>，本系列文章正适合你。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>棋弈引擎所走的棋</strong></font></dt>
+</dl>
+
+<table border="0">
+    <tr>
+        <td><dl>
+            <dt><img src="protocol1.jpg" width="151" height="158"></dt>
+        </dl>
+        </td>
+        <td><dl>
+            <dt>　　首先让我们来定义几条术语。当我们谈论起你所购买的一套常规软件时，比方说<font
+                face="Times New Roman">Chessmaster </font>，你可能以为整个软件包就是完整的一个整体。实际上，我们可以把这套软件分开成彼此很不相同的两个组成部分来看待。第一部分是我所说的用户界面或者图形用户界面<font
+                face="Times New Roman">(GUI)</font>，而另一部分就是棋弈引擎<font
+                face="Times New Roman">(Chess engine)</font>。<font
+                color="#000080">【译注：往往分别简称界面和引擎】</font></dt>
+            <dt>　　关于用户界面，我指的是与用户有交互操作功能的软件部分。这可以是程序中显示棋盘、让用户走动棋子，以及棋局数据库搜索过滤器或实现<font
+                face="Times New Roman">ICS</font>客户端在线功能的任何功能部分，等等。用户界面要与棋弈引擎区分开来，棋弈引擎是指实际决定或计算该走哪步棋的程序部分。</dt>
+        </dl>
+        </td>
+    </tr>
+</table>
+
+<dl>
+    <dt>　　那么对于<font face="Times New Roman">Chessmaster</font>来说，虽然整个包装被命名为<font
+        face="Times New Roman">Chessmaster</font>，但实际上它可被视作由两部分所组成：<font
+        face="Times New Roman">Chessmaster</font>界面和名字叫“<font
+        face="Times New Roman">The King</font>”<font
+        face="Times New Roman">(</font>国王<font
+        face="Times New Roman">)</font>的棋弈引擎，引擎的作者是<font
+        face="Times New Roman">Johan de Koning</font>。这两部分，常常是由同一人所写，但也不一定这样。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>灵与肉</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　通过这样把国际象棋软件分开成两个组成部分，现在你可知，一个棋弈引擎有可能在不止一个界面下都能够良好地运行。</dt>
+    <dt>　　思考一下这种情况：你可以把比如<font
+        face="Times New Roman">Crafty(</font>著名的免费棋弈引擎<font
+        face="Times New Roman">)</font>“输入”到<font
+        face="Times New Roman">Winboard</font>，<font
+        face="Times New Roman">Fritz</font>，<font
+        face="Times New Roman">Chess assistant</font>等或者其它任何界面中去，令<font
+        face="Times New Roman">Crafty</font>运行，这个事实暗示了肯定存在某些方法让<font
+        face="Times New Roman">Crafty</font>与软件之间建立联络。这也暗示了有两个程序在工作着，“大脑”或者说是引擎部分命令该走哪步棋，同时用户界面<font
+        face="Times New Roman">(</font>也称作<font
+        face="Times New Roman">GUI</font>，即图形用户界面<font
+        face="Times New Roman">)</font>处理棋步显示的工作以及与用户建立互动交流。</dt>
+    <dt>　　所有工作是同时地、无间隙地进行着的，你看上去就象只有一个程序在运行。不过如果你观察任务管理器里的程序运行情况，你就可以清楚看见有两个程序在工作着。作个粗略比喻，可认为界面就是“肉体”；而棋弈引擎就是“灵魂”，是它在作决定。上述例子中，<font
+        face="Times New Roman">Crafty</font>充当灵魂，它在任何一个能忠实地反映由<font
+        face="Times New Roman">Crafty</font>所决定全部棋步的“肉体”<font
+        face="Times New Roman">/</font>界面中都能工作得同样的好。</dt>
+    <dt>　　显然，每当提及一个国际象棋软件包的时候，我们必须小心指明我们是在说它的界面还是引擎，特别是当这两者顶着同一个名字时<font
+        color="#000080">【译注：比如说起</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">，必要时必须分清是指</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">界面还是</font><font color="#000080"
+        face="Times New Roman">Fritz</font><font color="#000080">引擎，还是指整套</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">软件。后面还有进一步说明】</font>。不是所有的棋弈引擎都能运行在全部用户界面中的。对于能良好运行在某用户界面<font
+        face="Times New Roman">(Fritz, Chess assistant, Winboard</font>等<font
+        face="Times New Roman">)</font>的某棋弈引擎，它们两者必须通过共享一种通用的通讯协议或“语言”来进行交流。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>协议为什么重要？</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　前面已经讲过了，当所有引擎和界面共享同样的协议时，你就可以在同一界面里切换引擎以及它们彼此之间对战了！为什么要这样做？原有界面默认所带的那一个难道还不足够了吗？原因可以有以下这几点：</dt>
+    <dt>　　&middot;你弄得到外部的引擎，它们很多是免费的；</dt>
+    <dt>　　&middot;很多免费的棋弈引擎比你能买得到的商业性产品水平要低，所以免费的作为训练对手可能正合适，因为它们的水平与你相近。当然，你可以使用“降格”功能<font
+        face="Times New Roman">(</font>比如<font
+        face="Times New Roman">Fritz</font>里的<font
+        face="Times New Roman">Friend mode</font>，即友好模式<font
+        face="Times New Roman">)</font>，多数现代程序都有这个功能，但是据我的经验，这样做经常导致不真实的棋。</dt>
+    <dt>　　&middot;你可以把引擎迎合转到你最喜欢的界面上。</dt>
+    <dt>　　&middot;你能够从风格不同的棋弈引擎的宽广范围里得到分析结果。你可以视之为寻找“第二选择”，毕竟每种引擎都有其长处和短处。这可以通过比较分析来做到，甚至就让两个引擎之间进行比试！</dt>
+    <dt>　　&middot;至于你属于那些对电脑与电脑之间进行对战以决出哪个引擎实力更强甚感兴趣的，现在可以了，因为现在是每个引擎轮流走棋。</dt>
+    <dt>　　注意尽管这是可行的，但只有在棋弈引擎和界面都使用同一协议的情况下才能做到。倘若你所用的引擎不支持任何一种主流协议，那基本上没办法。目前有两大开放协议和一个主要的非开放协议。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>“语言”</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　到目前为止最通行的协议或者说所使用的语言，是<font
+        face="Times New Roman">Tim Mann</font>所提出的<font
+        face="Times New Roman">Winboard</font>通讯协议<font
+        color="#000080">【译注：</font><font color="#000080"
+        face="Times New Roman">Tim Mann</font><font
+        color="#000080">同时也是</font><font color="#000080"
+        face="Times New Roman">Winboard</font><font
+        color="#000080">这个工具的主要作者】</font>。现在至少有<font
+        face="Times New Roman">120</font>种免费的国际象棋棋弈引擎支持这个协议。另一个是<font
+        face="Times New Roman">Shredder</font>的作者<font
+        face="Times New Roman">Stefan Meyer-Kahlen</font>和<font
+        face="Times New Roman">SOS</font>的作者<font
+        face="Times New Roman">Rudolf Huber</font>所提出的通用国际象棋界面协议<font
+        face="Times New Roman">(UCI)</font>，到写这篇文章的时候，它有大约<font
+        face="Times New Roman">20</font>种引擎支持。</dt>
+    <div align="center"><center>
+    <dt><img src="protocol2.gif" width="275" height="159"></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font size="5" face="Arial"><strong>Winboard</strong></font><font
+        size="5" face="楷体_GB2312"><strong>协议</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Winboard(</font>以及它的<font
+        face="Times New Roman">Linux</font>版兄弟<font
+        face="Times New Roman">Xboard)</font>可能作为连上网下棋的软件客户端更为著名些。但严格来说我们有必要把它的界面本身和它的协议进行区分。</dt>
+    <dt>　　<font face="Times New Roman">Winboard</font>协议最初是随<font
+        face="Times New Roman">Winboard</font>的出现而出现，但<font
+        face="Times New Roman">Winboard(</font>指用户界面<font
+        face="Times New Roman">)</font>不是唯一支持<font
+        face="Times New Roman">Winboard</font>协议的界面。事实上，<font
+        face="Times New Roman">Winboard</font>作为支配标准，它被多数商业性和很多免费的界面<font
+        face="Times New Roman">(</font>包括数据库、棋弈程序<font
+        face="Times New Roman">)</font>所支持。简单列几个包括<font
+        face="Times New Roman">Chessbase GUI(</font>通过适配器，在系列第二部分再谈及<font
+        face="Times New Roman">)</font>、<font
+        face="Times New Roman">Chessmaster 8000</font>、 <font
+        face="Times New Roman">Chess Assistant</font>、<font
+        face="Times New Roman">Chess Academy</font>、<font
+        face="Times New Roman">Chess Partner</font>以及更多。</dt>
+    <dt>　</dt>
+    <dt><font size="5" face="楷体_GB2312"><strong>国际象棋通用界面</strong></font><font
+        size="5" face="Arial"><strong>(UCI)</strong></font></dt>
+</dl>
+
+<table border="0">
+    <tr>
+        <td><dl>
+            <dt><font face="Times New Roman"><img
+                src="protocol3.jpg" width="102" height="142"></font></dt>
+        </dl>
+        </td>
+        <td><dl>
+            <dt>　　正得到普及的另一开放性协议是国际象棋通用界面协议<font
+                face="Times New Roman">(UCI)</font>。第一个支持<font
+                face="Times New Roman">UCI</font>协议的界面是商业性的<font
+                face="Times New Roman">Shredder 5</font>，它的作者也是<font
+                face="Times New Roman">UCI</font>的提出者。最近，其它界面已开始支持它了，包括<font
+                face="Times New Roman">Chess Assistant 6</font>、
+                <font face="Times New Roman">Chess Partner </font>和
+                <font face="Times New Roman">Fritz 7</font>。<font
+                color="#000080">【译注：因此自从</font><font
+                color="#000080" face="Times New Roman">Fritz 7</font><font
+                color="#000080">之后，支持</font><font
+                color="#000080" face="Times New Roman">UCI</font><font
+                color="#000080">的引擎都能够在</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">界面下使用——注意又再次提出这两个</font><font
+                color="#000080" face="Times New Roman">(</font><font
+                color="#000080">甚至该说是三个</font><font
+                color="#000080" face="Times New Roman">)</font><font
+                color="#000080">概念的区分，一般说的</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">是指这整套软件；</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">有它独特的界面和显示、功能选单和操作，这就是</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">界面；而负责棋步计算的核心，即引擎，在商业上也叫</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">引擎，但在技术上，它有别的名字，如</font><font
+                color="#000080" face="Times New Roman">Quest</font><font
+                color="#000080">。使用过</font><font
+                color="#000080" face="Times New Roman">Fritz</font><font
+                color="#000080">的人都知道，除了</font><font
+                color="#000080" face="Times New Roman">&quot;Fritz&quot;</font><font
+                color="#000080">这个引擎外，它还带有别的其它引擎，而且可以添加。这样就很容易理解什么叫引擎、什么叫界面、又什么叫整个</font><font
+                color="#000080" face="Times New Roman">(</font><font
+                color="#000080">套</font><font color="#000080"
+                face="Times New Roman">)</font><font
+                color="#000080">会下棋的软件。】</font></dt>
+        </dl>
+        </td>
+    </tr>
+</table>
+
+<dl>
+    <dt><font size="5" face="楷体_GB2312"><strong>开放与非开放协议</strong></font></dt>
+    <dt>　</dt>
+    <dt>　　<font face="Times New Roman">Winboard</font>和<font
+        face="Times New Roman">UCI</font>都是开放性协议的例子。意思是协议自由公开，任何程序员都可以<font
+        face="Times New Roman">(</font>如果愿意<font
+        face="Times New Roman">)</font>设计使他们的程序适应其标准。这与非公开协议相反，后者的标准不公开，既包括私有的不打算让别的引擎理解的界面；另一方面也指秘密<font
+        face="Times New Roman">/</font>版权协议，它只被属于同一家公司的引擎、或付了许可费用而有权使用该协议的作者所写的引擎理解。<font
+        face="Times New Roman">Chessbase</font>协议可能就是最出名的一个。<font
+        color="#000080">【译注：作为国际象棋数据库的那套</font><font
+        color="#000080" face="Times New Roman">chessbase</font><font
+        color="#000080">工具，知道的人应该比较多；但说起“</font><font
+        color="#000080" face="Times New Roman">chessbase</font><font
+        color="#000080">”，要注意可能指：</font><font
+        color="#000080" face="Times New Roman">1) chessbase</font><font
+        color="#000080">协议，正是本段所述；</font><font
+        color="#000080" face="Times New Roman">2) chessbase</font><font
+        color="#000080">所出版的那些软件的统一界面或典型界面，以</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">的最典型；</font><font
+        color="#000080" face="Times New Roman">3) </font><font
+        color="#000080">名字就叫</font><font color="#000080"
+        face="Times New Roman">chessbase</font><font
+        color="#000080">的那套国际象棋数据库工具；</font><font
+        color="#000080" face="Times New Roman">4) chessbase</font><font
+        color="#000080">这间公司，或者它的网站；等等】</font></dt>
+    <dt>　　一般而言非开放协议不太令人感兴趣，因为它们只支持一小部分的棋弈引擎。而<font
+        face="Times New Roman">Chessbase</font>协议受人关注是因为一些当世最强的棋弈引擎在使用它。这个系列包括<font
+        face="Times New Roman">Fritz</font>、<font
+        face="Times New Roman">Junior</font>、<font
+        face="Times New Roman">Nimzo</font>、<font
+        face="Times New Roman">HIARCS </font>和<font
+        face="Times New Roman">(</font>最近的<font
+        face="Times New Roman">) Tiger</font>以及<font
+        face="Times New Roman">Shredder</font>，当然它们都是商业性的。不过除了个别例外，一般没有外人能知道<font
+        face="Times New Roman">Chessbase</font>通讯协议标准是如何工作的，或怎么样去使自己的引擎去遵照这些标准。</dt>
+    <dt>　　例如，最著名的自由引擎<font
+        face="Times New Roman">Crafty</font>也可作为<font
+        face="Times New Roman">Chessbase</font>引擎。但是<font
+        face="Times New Roman">Crafty</font>的作者<font
+        face="Times New Roman">Robert Hyatt</font>博士爽快地承认他自己不知道怎么样写作<font
+        face="Times New Roman">Chessbase</font>引擎，因为<font
+        face="Times New Roman">Chessbase</font>版本的<font
+        face="Times New Roman">Crafty</font>遵从<font
+        face="Times New Roman">Chessbase</font>的人员。对于多数你能够自由下载的<font
+        face="Times New Roman">Chessbase</font>本地引擎也是如此。</dt>
+    <dt>　　虽说<font face="Times New Roman">Chessbase</font>界面也可支持<font
+        face="Times New Roman">Winboard</font>协议，但这样的引擎在可以运行于<font
+        face="Times New Roman">Chessbase</font>前必须进行“适应化”。而经过这样的适应，<font
+        face="Times New Roman">Winboard</font>引擎相对于使用<font
+        face="Times New Roman">Chessbase</font>秘密通讯协议的“本地”棋弈引擎，棋力大大下降了<font
+        face="Times New Roman">(</font>第二部分再详述<font
+        face="Times New Roman">)</font>。</dt>
+    <dt>　　上述协议还不是全部，还有被例如<font
+        face="Times New Roman">Shredder 3/4</font>、<font
+        face="Times New Roman">Zarkov 5</font>、<font
+        face="Times New Roman">WChess2000</font>和<font
+        face="Times New Roman">Genius 6.5</font>所支持的世纪国际象棋系统<font
+        face="Times New Roman">(MCS)</font>。但是我提到的上面三个是大家最可能遇到的。</dt>
+    <dt>　　以后几篇我再和大家简单说关于各种协议的历史及区别、引擎和界面使用的问题，还要简单说各种协议在<font
+        face="Times New Roman">ICS</font>支持上的情况。现在我列一个表格，里面包括常用界面和它们所支持的协议。</dt>
+    <dt>　</dt>
+    <dt>　　<font color="#000080">【译后注：原文写于</font><font
+        color="#000080" face="Times New Roman">2002</font><font
+        color="#000080">年</font><font color="#000080"
+        face="Times New Roman">3</font><font color="#000080">月，译文几经修订，最新订于</font><font
+        color="#000080" face="Times New Roman">2003</font><font
+        color="#000080">年</font><font color="#000080"
+        face="Times New Roman">2</font><font color="#000080">月。此时</font><font
+        color="#000080" face="Times New Roman">Arena</font><font
+        color="#000080">已经推出</font><font color="#000080"
+        face="Times New Roman">0.921</font><font color="#000080">版；</font><font
+        color="#000080" face="Times New Roman">Fritz</font><font
+        color="#000080">发展到</font><font color="#000080"
+        face="Times New Roman">Fritz8</font><font color="#000080">，它和</font><font
+        color="#000080" face="Times New Roman">Deep Fritz7</font><font
+        color="#000080">不用打补丁也直接支持</font><font
+        color="#000080" face="Times New Roman">UCI</font><font
+        color="#000080">了；</font><font color="#000080"
+        face="Times New Roman">Shredder</font><font
+        color="#000080">发展到</font><font color="#000080"
+        face="Times New Roman">Shredder7</font><font
+        color="#000080">；</font><font color="#000080"
+        face="Times New Roman">Chessmaster</font><font
+        color="#000080">发展到</font><font color="#000080"
+        face="Times New Roman">9000</font><font color="#000080">版；</font><font
+        color="#000080" face="Times New Roman">Chess Partner</font><font
+        color="#000080">发展到</font><font color="#000080"
+        face="Times New Roman">5.2</font><font color="#000080">版。没有特别说明的各协议支持情况和表中一样】</font></dt>
+</dl>
+<div align="center"><center>
+
+<table border="1" cellspacing="1" width="678">
+    <tr>
+        <td align="center" width="19%"><font face="楷体_GB2312"><strong>名称</strong></font></td>
+        <td align="center" width="21%"><font face="Arial"><strong>Winboard</strong></font><font
+        face="楷体_GB2312"><strong>协议</strong></font></td>
+        <td align="center" width="14%"><font face="Arial"><strong>UCI</strong></font><font
+        face="楷体_GB2312"><strong>协议</strong></font></td>
+        <td align="center" width="12%"><font face="Arial"><strong>Chessbase</strong></font><font
+        face="楷体_GB2312"><strong>协议</strong></font></td>
+        <td align="center" width="34%"><font face="楷体_GB2312"><strong>备注</strong></font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Arena</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">Arena</font>是一个将要发布的新界面</td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Bookup</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1</font></td>
+        <td align="center" width="14%">不支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">NA</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chess Academy 6</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1</font></td>
+        <td align="center" width="14%">版本<font
+        face="Times New Roman">7</font>支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%">也支持<font
+        face="Times New Roman">Millennium Chess System (MCS)</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chess Assistant 6</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">支持，但不包括简化版</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%">也支持<font
+        face="Times New Roman">Millennium Chess System (MCS)</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chessbase GUI like Fritz, Junior,
+        Hiarcs, Shredder</font></td>
+        <td align="center" width="21%">支持，要带适配器</td>
+        <td align="center" width="14%">打上补丁的<font
+        face="Times New Roman">Fritz7</font>支持</td>
+        <td align="center" width="12%">支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">Shredder 5.32</font>只有<font
+        face="Times New Roman">CB GUI</font>，<font
+        face="Times New Roman">Shredder 6 </font>有两个不同的界面，一个<font
+        face="Times New Roman">CB</font>的和一个<font
+        face="Times New Roman">UCI</font>的</td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chessmaster 8000</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1</font></td>
+        <td align="center" width="14%">不支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">Chessmaster 8000</font>是一<font
+        face="Times New Roman">winboard</font>引擎</td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chess Partner 5.0.0.4</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">NA</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Chess Vision</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">不支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">NA</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Gandalf 5.1</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%">由<font
+        face="Times New Roman">Rebel</font>发售<font
+        face="Times New Roman">, Gandalf 5.1(</font>引擎<font
+        face="Times New Roman">) </font>只适用于<font
+        face="Times New Roman">Winboard</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">SCID</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">不支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">SCID</font>是一免费的国际象棋数据库</td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Shredder 5</font></td>
+        <td align="center" width="21%">支持，带适配器</td>
+        <td align="center" width="14%">支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%"><font
+        face="Times New Roman">Shredder 3</font>到<font
+        face="Times New Roman">5 </font>也支持<font
+        face="Times New Roman">Millennium Chess System (MCS)</font></td>
+    </tr>
+    <tr>
+        <td align="center" width="19%"><font
+        face="Times New Roman">Winboard</font></td>
+        <td align="center" width="21%">协议 <font
+        face="Times New Roman">1 &amp; 2</font></td>
+        <td align="center" width="14%">不支持</td>
+        <td align="center" width="12%">不支持</td>
+        <td align="center" width="34%">最早支持<font
+        face="Times New Roman">Winboard</font>协议的界面</td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt>　　出处：<font face="Times New Roman">Aaron</font>的国际象棋引擎<font
+        face="Times New Roman">FAQ</font>主页</dt>
+    <dt>　　译者：<font face="Times New Roman">Michael</font></dt>
+    <dt>　　类型：摘译</dt>
+</dl>
+
+<dir>
+    <li>上一篇　<a href="pgnfen2.htm">关于<font
+        face="Times New Roman">PGN</font>和<font
+        face="Times New Roman">FEN</font>记谱规范<font
+        face="Times New Roman">(</font>下<font
+        face="Times New Roman">)(</font>转载自《国际象棋译文苑》<font
+        face="Times New Roman">)</font></a></li>
+    <li>下一篇　<a href="protocol2.htm">国际象棋引擎协议历史<font
+        face="Times New Roman">(</font>转载自《国际象棋译文苑》<font
+        face="Times New Roman">)</font></a></li>
+    <li>返　回　<a href="../protocol.htm">象棋百科全书——规则与协议</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

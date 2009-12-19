@@ -1,0 +1,286 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>ELO等级分计算公式</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><script language="JavaScript"><!--
+function CalcElo() {
+  if (Result[0].checked) {
+    Res_W = 1.0;
+  } else if (Result(1).checked) {
+    Res_W = 0.5;
+  } else if (Result(2).checked) {
+    Res_W = 0.0;
+  }
+  We = 1 / (1 + Math.exp((Ro_Black.value * 1.0 - Ro_Red.value * 1.0 - R0.value * 1.0) / 400 * Math.LN2));
+  Rn_Red.value = Math.round(Ro_Red.value * 1.0 + K_Red.value * (Res_W - We));
+  Rn_Black.value = Math.round(Ro_Black.value * 1.0 - K_Black.value * (Res_W - We));
+}
+
+function NewGame_onClick() {
+  Ro_Red.value = Rn_Red.value
+  Ro_Black.value = Rn_Black.value
+  CalcElo();
+}
+--></script><font size="6"
+        face="Arial"><strong>ELO</strong></font><font size="6"
+        face="隶书">等级分计算公式详解</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>象棋百科全书网 <font face="Times New Roman">(</font><a
+        href="mailto:webmaster@xqbase.com"><font
+        face="Times New Roman">webmaster@xqbase.com</font></a><font
+        face="Times New Roman">)</font>　<font
+        face="Times New Roman">2005</font>年<font
+        face="Times New Roman">1</font>月</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　下面对等级分计算公式 <font
+        face="Times New Roman">Rn=Ro+K*(W-We) </font>作如下解释：</dt>
+    <dt>　　<font face="Times New Roman">(1) Rn</font>和<font
+        face="Times New Roman">Ro</font>：分别代表比赛前和比赛后的等级分，即一局比赛后，等级分增长<font
+        face="Times New Roman">K*(W-We)</font>。等级分的增长是可正可负的，通常比赛获胜等级分会增加，比赛落败会减少。</dt>
+    <dt>　　<font face="Times New Roman">(2) W</font>：比赛结果，胜为<font
+        face="Times New Roman">1.0</font>，平为<font
+        face="Times New Roman">0.5</font>，负为<font
+        face="Times New Roman">0.0</font>。为了鼓励选手积极比赛，不提倡平局，这个值也可以设成胜<font
+        face="Times New Roman">1.0</font>，平<font
+        face="Times New Roman">0.3</font>，负<font
+        face="Times New Roman">0.0</font>，就如同足球比赛中的三分制。</dt>
+    <dt>　　<font face="Times New Roman">(3) We</font>：预期结果，由赛前双方等级分的差而决定，预期值的计算稍后会作详细讨论。</dt>
+    <dt>　　<font face="Times New Roman">(4) K</font>：浮动系数，这个值应该视选手的资力而定。资力越深，参加的比赛应该越多，因此<font
+        face="Times New Roman">K</font>值应该越低。通常业余选手为<font
+        face="Times New Roman">30</font>，专业棋手为<font
+        face="Times New Roman">15</font>，大师为<font
+        face="Times New Roman">10</font>，特级大师为<font
+        face="Times New Roman">5</font>。</dt>
+    <dt>　</dt>
+    <dt>　　期望值<font face="Times New Roman">We</font>的计算公式通常为：</dt>
+    <div align="center"><center>
+    <dt><img src="elostat.gif" width="129" height="53"></dt>
+    </center></div>
+    <dt>　　其中R<font face="Times New Roman"><sub>0</sub></font>是先行权优势，通常是0。<font
+        face="Times New Roman">R<sub>1</sub></font>是本人的等级分，<font
+        face="Times New Roman">R<sub>2</sub></font>是对手的等级分。显而易见，同对手平分时，期望值是<font
+        face="Times New Roman">0.5</font>，对手等级分越高，期望值越小，获胜得分越多；对手等级分越低，期望值越大，获胜得分越少。</dt>
+    <dt>　　由于<font face="Times New Roman">We</font>的计算非常复杂，所以通常是通过查表来换算的。</dt>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center">分差</td>
+        <td align="center">期望值</td>
+        <td align="center">分差</td>
+        <td align="center">期望值</td>
+        <td align="center">分差</td>
+        <td align="center">期望值</td>
+        <td align="center">分差</td>
+        <td align="center">期望值</td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">0</font></td>
+        <td align="center"><font face="Times New Roman">0.500</font></td>
+        <td align="center"><font face="Times New Roman">100</font></td>
+        <td align="center"><font face="Times New Roman">0.640</font></td>
+        <td align="center"><font face="Times New Roman">200</font></td>
+        <td align="center"><font face="Times New Roman">0.760</font></td>
+        <td align="center"><font face="Times New Roman">300</font></td>
+        <td align="center"><font face="Times New Roman">0.849</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">10</font></td>
+        <td align="center"><font face="Times New Roman">0.514</font></td>
+        <td align="center"><font face="Times New Roman">110</font></td>
+        <td align="center"><font face="Times New Roman">0.653</font></td>
+        <td align="center"><font face="Times New Roman">210</font></td>
+        <td align="center"><font face="Times New Roman">0.770</font></td>
+        <td align="center"><font face="Times New Roman">310</font></td>
+        <td align="center"><font face="Times New Roman">0.856</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">20</font></td>
+        <td align="center"><font face="Times New Roman">0.529</font></td>
+        <td align="center"><font face="Times New Roman">120</font></td>
+        <td align="center"><font face="Times New Roman">0.666</font></td>
+        <td align="center"><font face="Times New Roman">220</font></td>
+        <td align="center"><font face="Times New Roman">0.780</font></td>
+        <td align="center"><font face="Times New Roman">320</font></td>
+        <td align="center"><font face="Times New Roman">0.863</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">30</font></td>
+        <td align="center"><font face="Times New Roman">0.543</font></td>
+        <td align="center"><font face="Times New Roman">130</font></td>
+        <td align="center"><font face="Times New Roman">0.679</font></td>
+        <td align="center"><font face="Times New Roman">230</font></td>
+        <td align="center"><font face="Times New Roman">0.790</font></td>
+        <td align="center"><font face="Times New Roman">330</font></td>
+        <td align="center"><font face="Times New Roman">0.870</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">40</font></td>
+        <td align="center"><font face="Times New Roman">0.557</font></td>
+        <td align="center"><font face="Times New Roman">140</font></td>
+        <td align="center"><font face="Times New Roman">0.691</font></td>
+        <td align="center"><font face="Times New Roman">240</font></td>
+        <td align="center"><font face="Times New Roman">0.799</font></td>
+        <td align="center"><font face="Times New Roman">340</font></td>
+        <td align="center"><font face="Times New Roman">0.876</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">50</font></td>
+        <td align="center"><font face="Times New Roman">0.571</font></td>
+        <td align="center"><font face="Times New Roman">150</font></td>
+        <td align="center"><font face="Times New Roman">0.703</font></td>
+        <td align="center"><font face="Times New Roman">250</font></td>
+        <td align="center"><font face="Times New Roman">0.808</font></td>
+        <td align="center"><font face="Times New Roman">350</font></td>
+        <td align="center"><font face="Times New Roman">0.882</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">60</font></td>
+        <td align="center"><font face="Times New Roman">0.585</font></td>
+        <td align="center"><font face="Times New Roman">160</font></td>
+        <td align="center"><font face="Times New Roman">0.715</font></td>
+        <td align="center"><font face="Times New Roman">260</font></td>
+        <td align="center"><font face="Times New Roman">0.817</font></td>
+        <td align="center"><font face="Times New Roman">360</font></td>
+        <td align="center"><font face="Times New Roman">0.888</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">70</font></td>
+        <td align="center"><font face="Times New Roman">0.599</font></td>
+        <td align="center"><font face="Times New Roman">170</font></td>
+        <td align="center"><font face="Times New Roman">0.727</font></td>
+        <td align="center"><font face="Times New Roman">270</font></td>
+        <td align="center"><font face="Times New Roman">0.826</font></td>
+        <td align="center"><font face="Times New Roman">370</font></td>
+        <td align="center"><font face="Times New Roman">0.894</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">80</font></td>
+        <td align="center"><font face="Times New Roman">0.613</font></td>
+        <td align="center"><font face="Times New Roman">180</font></td>
+        <td align="center"><font face="Times New Roman">0.738</font></td>
+        <td align="center"><font face="Times New Roman">280</font></td>
+        <td align="center"><font face="Times New Roman">0.834</font></td>
+        <td align="center"><font face="Times New Roman">380</font></td>
+        <td align="center"><font face="Times New Roman">0.899</font></td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">90</font></td>
+        <td align="center"><font face="Times New Roman">0.627</font></td>
+        <td align="center"><font face="Times New Roman">190</font></td>
+        <td align="center"><font face="Times New Roman">0.749</font></td>
+        <td align="center"><font face="Times New Roman">290</font></td>
+        <td align="center"><font face="Times New Roman">0.841</font></td>
+        <td align="center"><font face="Times New Roman">390</font></td>
+        <td align="center"><font face="Times New Roman">0.904</font></td>
+    </tr>
+</table>
+</center></div>
+
+<dl>
+    <dt>　　如果考虑先行权优势，那么期望值更应该偏向于先行一方，只要把<font
+        face="Times New Roman">R<sub>0</sub></font>设成适当的值就可以了。中国象棋先行方的胜、平、负比例为<font
+        face="Times New Roman">37%:37%:26%</font>，期望值为<font
+        face="Times New Roman">1.0 x 37% + 0.5 x 37% + 0.0 x 26%
+        = 0.555</font>，可根据这个数值换算成先行权优势，查表得<font
+        face="Times New Roman">40</font>。所以先行方<font
+        face="Times New Roman">R<sub>0</sub></font>可设为<font
+        face="Times New Roman">40</font>，后行方为<font
+        face="Times New Roman">-40</font>。</dt>
+    <dt>　</dt>
+    <dt>　　下面给出了计算等级分的计算程序：</dt>
+</dl>
+<div align="center"><center>
+
+<table border="1">
+    <tr>
+        <td align="center">　</td>
+        <td align="center">红方</td>
+        <td align="center">　</td>
+        <td align="center">黑方</td>
+    </tr>
+    <tr>
+        <td align="center"><font face="Times New Roman">K</font>值</td>
+        <td align="center"><input type="text" size="2"
+        name="K_Red" value="32" onchange="JavaScript:CalcElo()"></td>
+        <td align="center">　</td>
+        <td align="center"><input type="text" size="2"
+        name="K_Black" value="32" onchange="JavaScript:CalcElo()"></td>
+    </tr>
+    <tr>
+        <td align="center">对局前</td>
+        <td align="center"><input type="text" size="4"
+        name="Ro_Red" value="1500"
+        onchange="JavaScript:CalcElo()"></td>
+        <td align="center">　</td>
+        <td align="center"><input type="text" size="4"
+        name="Ro_Black" value="1500"
+        onchange="JavaScript:CalcElo()"></td>
+    </tr>
+    <tr>
+        <td align="center">结果</td>
+        <td align="center"><input type="radio" name="Result"
+        value="1.0" onclick="JavaScript:CalcElo()">红胜</td>
+        <td align="center"><input type="radio" checked
+        name="Result" value="0.5" onclick="JavaScript:CalcElo()">和局</td>
+        <td align="center"><input type="radio" name="Result"
+        value="0.0" onclick="JavaScript:CalcElo()">黑胜</td>
+    </tr>
+    <tr>
+        <td align="center">对局后</td>
+        <td align="center"><input type="text" size="4"
+        name="Rn_Red" value="1500"
+        onchange="JavaScript:CalcElo()"></td>
+        <td align="center">　</td>
+        <td align="center"><input type="text" size="4"
+        name="Rn_Black" value="1500"
+        onchange="JavaScript:CalcElo()"></td>
+    </tr>
+    <tr>
+        <td align="center">先行权</td>
+        <td align="center"><input type="text" size="2" name="R0"
+        value="0" onchange="JavaScript:CalcElo()"></td>
+        <td align="center"><input type="submit" name="NewGame"
+        value="新局" onclick="JavaScript:NewGame_onClick()"></td>
+        <td align="center">　</td>
+    </tr>
+</table>
+</center></div>
+
+<dir>
+    <li>上一篇　<a href="fen2bmp.htm">实用工具——棋盘图片生成器</a></li>
+    <li>下一篇</li>
+    <li>返　回　<a href="../protocol.htm">象棋百科全书——规则与协议</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>

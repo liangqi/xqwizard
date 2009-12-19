@@ -1,0 +1,400 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=gb_2312-80">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>关于PGN和FEN记谱规范(上)</title>
+</head>
+
+<body background="../background.gif">
+
+<dl>
+    <div align="center"><center>
+    <dt><font face="宋体">《</font><a
+        href="http://www.chessit.net/" target="_blank"><font
+        face="宋体">国际象棋译文苑</font></a><font
+        face="宋体">》文摘</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="6" face="隶书">关于</font><font size="6"
+        face="Arial">PGN</font><font size="6" face="隶书">和</font><font
+        size="6" face="Arial">FEN</font><font size="6"
+        face="隶书">记谱规范(上)</font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt>来源：<font face="Times New Roman">rec.games.chess</font>新闻组</dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>序言</strong></font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt><font face="宋体">　　主说，“看哪，他们成为一样的人民，都说同一种言语，如今既做起这事来，以后他们所要做的，就没有不成功的了。”　　——《圣经》创世纪第十一章,
+        第六条</font></dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>1、介绍</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　<font face="Times New Roman">PGN</font>就是“可移植式棋局记号法”<font
+        face="Times New Roman">(Portable Game Notation)</font>，是一种以<font
+        face="Times New Roman">ASCII</font>文本文件表示国际象棋棋局数据的标准设定。<font
+        face="Times New Roman">PGN</font>设计成使人们很容易进行阅读和编写，电脑程序很容易进行解析和产生。定义和传播<font
+        face="Times New Roman">PGN</font>的目的，是为了促进公开对局数据的共享交流，包括来自全世界的棋手<font
+        face="Times New Roman">(</font>不管有无组织<font
+        face="Times New Roman">)</font>、出版人和电脑国际象棋研究的。</dt>
+    <dt>　　<font face="Times New Roman">PGN</font>不是万能；也没有什么标准无所不能。它被希望作为数据交换的一种通用可移植式表示法，就是给予国际象棋应用群体能够从<font
+        face="Times New Roman">PGN</font>本身导入导出来快速方便地处理对局数据的。对它的要求是：简洁明了、可在不同平台工作、多数人们和多种处理程序都能理解运用和产生，也就是说“同一种语言”、公开而不加密、易于扩展和升级、国际化、以及具有继承性。<font
+        color="#000080">【译注：因为是编译，所以译文的小标题编号与原文并不对应了，以下均是】</font></dt>
+    <dt>　</dt>
+    <div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>2、一个标准的PGN对局</strong></font></dt>
+    </center></div>
+    <dt>　</dt>
+    <dt>　　虽然初看上去它似乎比较冗长，但实际上<font
+        face="Times New Roman">PGN</font>相当简单。以下是一个范例，而它具有的重要特征将在后文中展开描述：</dt>
+    <dd>　</dd>
+    <dd><font face="宋体">[Event &quot;F/S Return Match&quot;]</font></dd>
+    <dd><font face="宋体">[Site &quot;Belgrade, Serbia JUG&quot;]</font></dd>
+    <dd><font face="宋体">[Date &quot;1992.11.04&quot;]</font></dd>
+    <dd><font face="宋体">[Round &quot;29&quot;]</font></dd>
+    <dd><font face="宋体">[White &quot;Fischer, Robert J.&quot;]</font></dd>
+    <dd><font face="宋体">[Black &quot;Spassky, Boris V.&quot;]</font></dd>
+    <dd><font face="宋体">[Result &quot;1/2-1/2&quot;]</font></dd>
+    <dd><font face="宋体">1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4
+        Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10.
+        d4 Nbd7 11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15.
+        Nb1 h6 16. Bh4 c5 17. dxe5 Nxe4 18. Bxe7 Qxe7 19. exd6 Qf6
+        20. Nbd2 Nxd6 21. Nc4 Nxc4 22. Bxc4 Nb6 23. Ne5 Rae8 24.
+        Bxf7+ Rxf7 25. Nxf7 Rxe1+ 26. Qxe1 Kxf7 27. Qe3 Qg5 28.
+        Qxg5 hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5
+        33. f3 Bc8 34. Kf2 Bf5 35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4
+        38. g3 Nxh3 39. Kd2 Kb5 40. Rd6 Kc5 41. Ra6 Nf2 42. g4 Bd3
+        43. Re6 1/2-1/2</font></dd>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>3、结构</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　一个<font face="Times New Roman">PGN</font>数据文件是从零到很多盘<font
+        face="Times New Roman">PGN</font>棋局的顺序性集合。空文件也是合法的<font
+        face="Times New Roman">PGN</font>数据文件，虽然有点不太常规。</dt>
+    <dt>　　一个<font face="Times New Roman">PGN</font>棋局由两部分组成。第一是“标签对部分”，第二是“棋谱部分”。标签对部分用于识别棋局，有着标准的参数；棋谱则用“标准代数记谱法”表示，也将在后文加以描述。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>3-1 标签对部分</strong></font></dt>
+    <dt>　　标签对部分由一系列空的或更多的“标签对”组成。而标签对则由左右方括号、象征符号、字符串符号组成。象征符号是标签的名字，而字符串符号就是如之一起的标签值，它们的表示法都有一定标准。在一个标签对部分里不能出现同一个标签名多于一次以上。标签名是分大小写的，所有用于档案储存的标签名都是以大写字母开头<font
+        color="#000080">【译注：一时不熟悉</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">的不要被这些术语名词吓倒，相对于十分详尽的原文，译文已尽量大大简略了。实际只要对照上面那个标准</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">棋局看下去，看到那些方括号了吧？就是标签对部分，很容易明白的】</font>。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>七个标签项</strong></font></dt>
+    <dt>　　这是最基本七个标签项目，实际上输入时，顺序不一定这样严格，而且还可能根据需要进行扩展和增加。这七个基本标签项依顺序是：<font
+        color="#000080">【译注：注意</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">规范不支持中文字符，下面“</font><font
+        color="#000080" face="Times New Roman">//</font><font
+        color="#000080">”之后的中文只是本文加的解释说明】</font></dt>
+    <dt><font face="Times New Roman">1) Event </font>比赛名。比如：</dt>
+    <dd>[Event &quot;FIDE World Championship&quot;] 　//国际棋联世界锦标赛</dd>
+    <dd>[Event &quot;Casual Game&quot;]　 　　　　　　//即兴比赛</dd>
+    <dd>[Event &quot;?&quot;]
+        　　　　　　　　　　　　//比赛名不详</dd>
+    <dt><font face="Times New Roman">2) Site </font>比赛地点。比如：</dt>
+    <dd>[Site &quot;New York City, NY USA&quot;] 　//美国纽约</dd>
+    <dd>[Site &quot;Beijing, China&quot;] 　　　　 //中国北京</dd>
+    <dt><font face="Times New Roman">3) Date </font>该局开始时日期，使用当地时间。比如：</dt>
+    <dd>[Date &quot;2001.01.01&quot;] 　//一看就懂了吧！</dd>
+    <dd>[Date &quot;1993.??.??&quot;] 　//1993年但月、日不详</dd>
+    <dt>注意日期的格式是：年<font
+        face="Times New Roman">.</font>月<font
+        face="Times New Roman">.</font>日 </dt>
+    <dt><font face="Times New Roman">4) Round </font>该局在比赛中的轮次。比如：</dt>
+    <dd>[Round &quot;1&quot;] </dd>
+    <dd>[Round &quot;3.1&quot;] 　//第3大轮的第1小轮
+        ，以“.”分开；有更小的轮次则类似表示下去</dd>
+    <dd>[Round &quot;?&quot;] 　　//轮次不详</dd>
+    <dt><font face="Times New Roman">5) White </font>白方棋手名字。有一定的书写规则，不同民族的人的姓名不好一概而论，但至少看懂是不难的。电脑棋手则在名字后加上版本信息。比如：</dt>
+    <dd>[White &quot;Tal, Mikhail N.&quot;]　 //米哈依尔<font
+        face="宋体">&middot;</font>N<font face="宋体">&middot;</font>塔尔</dd>
+    <dd>[White &quot;Kasparov, Garry&quot;] 　//加里<font
+        face="宋体">&middot;</font>卡斯帕罗夫</dd>
+    <dt><font face="Times New Roman">6) Black </font>黑方棋手名字，与白方的规则没有区别。</dt>
+    <dt><font face="Times New Roman">7) Result </font>该局结果。比如：</dt>
+    <dd>[Result &quot;0-1&quot;]　 　　//黑胜</dd>
+    <dd>[Result &quot;1-0&quot;] 　　　//白胜</dd>
+    <dd>[Result &quot;1/2-1/2&quot;] 　//和棋</dd>
+    <dd>[Result &quot;*&quot;]　 　　　//可能还在进行，可能该局作废，可能其它原因，反正结果不详</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>3-2 棋谱部分</strong></font></dt>
+    <dt>　　包括棋步、回合数、可选的评注、以及棋局终止符。不合法的棋步不能出现在棋谱部分中，不过可以出现在注释中。</dt>
+    <dt>　　使用“标准代数记谱法”，以一个大写英文字母表示棋子：<font
+        face="Times New Roman">P=</font>兵，<font
+        face="Times New Roman">N=</font>马，<font
+        face="Times New Roman">B=</font>象，<font
+        face="Times New Roman">R=</font>车，<font
+        face="Times New Roman">Q=</font>后，<font
+        face="Times New Roman">K=</font>王
+        。但兵往往不需要用字母表示，一般省略。以小写字母“<font
+        face="Times New Roman">x</font>”表示吃子，兵吃子与其他棋子吃子的表示法有少许区别。注意某方假如有不止一只棋子可以走到特定某一格的话，为了区别究竟是哪一只在走，有一套规定的表示法，但这与通常见到的书上的棋谱表示法类似……</dt>
+    <dt>　　短王车易位以“<font face="Times New Roman">O-O</font>”、长易位以“<font
+        face="Times New Roman">O-O-O</font>”表示，注意这里是大写字母“<font
+        face="Times New Roman">O</font>”，而不是数字“零”。</dt>
+    <dt>　　吃过路兵没有什么特殊表示法。至于兵的升变，以“<font
+        face="Times New Roman">=</font>”后面紧接升变棋子的符号来表示。</dt>
+    <dt>　　一步棋带将军的就在后面加个“<font
+        face="Times New Roman">+</font>”，将死就是用“<font
+        face="Times New Roman">#</font>”表示。举个复杂点的棋谱写法，比如：<font
+        face="Times New Roman">fxg1=Q#</font>，意思就是黑方<font
+        face="Times New Roman">f2</font>上的兵吃掉<font
+        face="Times New Roman">g1</font>格的某白子，升变为后，并且将死白方。</dt>
+    <dt>　　表示某着棋质量的有六种后缀：<font
+        face="Times New Roman">&quot;!&quot;, &quot;?&quot;,
+        &quot;!!&quot;, &quot;!?&quot;, &quot;?!&quot;, </font>以及
+        <font face="Times New Roman">&quot;??&quot; </font>，意思都跟书上棋谱的默认意义类似。</dt>
+    <dt>　　必须要有一个棋局结束标记，那就是总是在棋谱最后的那个：<font
+        face="Times New Roman">1-0</font>、或<font
+        face="Times New Roman">0-1</font>、或<font
+        face="Times New Roman">1/2-1/2</font>，表示结果，注意是数字“零”而不是字母“<font
+        face="Times New Roman">O</font>”；如果结果不详则注个星号<font
+        face="Times New Roman">* </font>。这里的棋局结束标记必须要与前面<font
+        face="Times New Roman">Result</font>标签对符合，但注意棋局结束标记不用引号引起来。<font
+        color="#000080">【译注：如果要严格详细定义</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">标签和棋谱的规范表示法，那真是可以写成一篇很长很“罗嗦”的文章，其实如果不是有心钻研甚至有心于程序设计，那么只要找几个</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">文件看看，基本上就了解学会了。】</font></dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>4、补充标签项</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　补充标签项不是必须的，实际上来自不同地方的<font
+        face="Times New Roman">PGN</font>棋谱往往不一样。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-1
+        棋手相关信息</strong></font></dt>
+    <dd><font face="Times New Roman">1) WhiteTitle </font>白方头衔，例如<font
+        face="Times New Roman">FM</font>、<font
+        face="Times New Roman">IM</font>、<font
+        face="Times New Roman">GM </font></dd>
+    <dd><font face="Times New Roman">2) WhiteElo </font>白方国际等级分，指国际棋联的<font
+        face="Times New Roman">ELO</font>等级分</dd>
+    <dd><font face="Times New Roman">3) WhiteNA </font>白方<font
+        face="Times New Roman">email</font>或其它网上地址</dd>
+    <dd><font face="Times New Roman">4) WhiteType </font>白方类型，<font
+        face="Times New Roman">human</font>指人类；<font
+        face="Times New Roman">program</font>指软件<font
+        face="Times New Roman">(</font>电脑<font
+        face="Times New Roman">)</font></dd>
+    <dt>　　黑方写法雷同；如果这些补充信息欠奉，则用“<font
+        face="Times New Roman">-</font>”表示。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-2
+        赛事相关信息</strong></font></dt>
+    <dd><font face="Times New Roman">1) EventDate </font>赛事开始日子，与标签对里的<font
+        face="Times New Roman">Date</font>不同，这是指整个赛事的开始日</dd>
+    <dd><font face="Times New Roman">2) EventSponsor </font>赛事赞助者</dd>
+    <dd><font face="Times New Roman">3) Section </font>区域，比如公开还是保留</dd>
+    <dd><font face="Times New Roman">4) Stage </font>阶段，比如预赛还是决赛</dd>
+    <dd><font face="Times New Roman">5) Board </font>台数，也就是表示团体赛或车轮战中的第几台<font
+        face="Times New Roman">(</font>盘<font
+        face="Times New Roman">)</font></dd>
+    <dd><font face="Times New Roman">6) Time </font>以“小时：分钟：秒钟”表示该局开始的当地时间</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-3 开局信息</strong></font></dt>
+    <dd><font face="Times New Roman">1) Opening </font>以字符串表示传统的开局名称</dd>
+    <dd><font face="Times New Roman">2) Variation </font>变例名，以后将有提炼</dd>
+    <dd><font face="Times New Roman">3) SubVariation </font>分支变例名</dd>
+    <dd><font face="Times New Roman">4) ECO </font>“开局百科”<font
+        face="Times New Roman">(Encyclopedia of Chess Openings)</font>里定义的开局编号</dd>
+    <dd><font face="Times New Roman">5) NIC </font>著名的“<font
+        face="Times New Roman">New in Chess</font>”数据库里定义的开局编号</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-4 时限</strong></font></dt>
+    <dt>　　以<font face="Times New Roman">TimeControl</font>作为标签名，有<font
+        face="Times New Roman">6</font>种不同表示，举例：</dt>
+    <dd><font face="Times New Roman">1) [TimeControl &quot;?&quot;]
+        </font>　<font face="Times New Roman">//</font>时限不知道</dd>
+    <dd><font face="Times New Roman">2) [TimeControl
+        &quot;-&quot;] </font>　<font face="Times New Roman">//</font>无限时</dd>
+    <dd><font face="Times New Roman">3) [TimeControl &quot;40/9000&quot;]
+        </font>　<font face="Times New Roman">//9000</font>秒内<font
+        face="Times New Roman">(</font>即<font
+        face="Times New Roman">2</font>个半小时<font
+        face="Times New Roman">)</font>走满<font
+        face="Times New Roman">40</font>步</dd>
+    <dd><font face="Times New Roman">4) [TimeControl &quot;300&quot;]
+        </font>　<font face="Times New Roman">//</font>每方<font
+        face="Times New Roman">300</font>秒包时制对局，也就是<font
+        face="Times New Roman">5</font>分钟快棋</dd>
+    <dd><font face="Times New Roman">5) [TimeControl &quot;4500+60&quot;]
+        </font>　<font face="Times New Roman">//</font>用于“加时制”对局，这里是<font
+        face="Times New Roman">4500</font>秒<font
+        face="Times New Roman">(90</font>分钟<font
+        face="Times New Roman">)</font>基础时限，然后每走一步往加<font
+        face="Times New Roman">60</font>秒</dd>
+    <dd><font face="Times New Roman">6) [TimeControl &quot;*180&quot;]
+        </font>　<font face="Times New Roman">//</font>每步限时的“沙漏制”时限，这里星号后面的数字是秒数，即每一步都要在<font
+        face="Times New Roman">180</font>秒之内走完</dd>
+    <dt>　　其实还可以定义额外的时限表示法。</dt>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-5 开始局面</strong></font></dt>
+    <dt>　　默认的开始局面，当然就是对局最初的原始局面。不过假如对局规定是从某一局面开始的，就会用到如下标签项。</dt>
+    <dd><font face="Times New Roman">1) SetUp </font>如果数值是<font
+        face="Times New Roman">1</font>，表示该局开始局面是“摆”出来的</dd>
+    <dd><font face="Times New Roman">2) FEN </font>以“福斯夫<font
+        face="Times New Roman">-</font>爱德华兹记号法”<font
+        face="Times New Roman">(Forsyth-Edwards Notation) </font>表示开始局面，关于<font
+        face="Times New Roman">FEN</font>的表示法，下一篇再来解释</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-6 对局结论</strong></font></dt>
+    <dt>　　以<font face="Times New Roman">Termination</font>标签名表示<font
+        face="Times New Roman">Result</font>标签项没有能披露的额外信息</dt>
+    <dd>1) [Termination &quot;abandoned&quot;]　 　　　 //该局放弃</dd>
+    <dd>2) [Termination &quot;adjudication&quot;] 　　　//结果由第三方宣判</dd>
+    <dd>3) [Termination &quot;death&quot;] 　　　　　　 //哦……</dd>
+    <dd>4) [Termination &quot;emergency&quot;]　 　　　 //出现无法预料的情况</dd>
+    <dd>5) [Termination &quot;normal&quot;]　 　　　　　//常规结束</dd>
+    <dd>6) [Termination &quot;rules infraction&quot;] 　//失利方违规</dd>
+    <dd>7) [Termination &quot;time forfeit&quot;]　 　　//失利方超时</dd>
+    <dd>8) [Termination &quot;unterminated&quot;]　 　　//没有结束</dd>
+    <dt>　</dt>
+    <dt><font size="4" face="黑体"><strong>4-7 其它</strong></font></dt>
+    <dt>　　这是不好归入以上各类的标签项。</dt>
+    <dd><font face="Times New Roman">1) Annotator </font>评注者<font
+        face="Times New Roman">(</font>们<font
+        face="Times New Roman">)</font>的名字</dd>
+    <dd><font face="Times New Roman">2) Mode </font>这是下该局的方式，比如<font
+        face="Times New Roman">OTB</font>代表棋盘上，<font
+        face="Times New Roman">PM</font>代表通过书面邮件，<font
+        face="Times New Roman">EM</font>代表通过电子邮件，<font
+        face="Times New Roman">ICS</font>指在网上站点下的，<font
+        face="Times New Roman">TC</font>代表通过通常的长途电讯</dd>
+    <dd><font face="Times New Roman">3) PlyCount </font>表示该局的步数，严格来说是指“半”步数</dd>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>5、文件名和目录</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt>　　就是以“<font face="Times New Roman">.pgn</font>”作为文件后缀，例如：<font
+        face="Times New Roman">worldcup.pgn</font>。</dt>
+    <dt>　　至于文件名和目录，如果要以严格档案式命名法来命名，可以有很多清规戒律，不过一般用途就不用那么严格了，只要好记好理解，按一般电脑文件命名的方法就行了，只是要注意在不同操作系统平台上尽量通用。总之如果是个人或小范围用途的就很随意，只有后缀是规定的。</dt>
+    <div align="center"><center>
+    <dt>　</dt>
+    </center></div><div align="center"><center>
+    <dt><font size="5" face="黑体"><strong>6、PGN软件</strong></font></dt>
+    </center></div><div align="center"><center>
+    <dt>　</dt>
+    </center></div>
+    <dt><font color="#000080">　　编译注：这个……不用译了，因为原文写作时间比较早，所举的处理</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">文件的软件都很“古老”了，实际上今天免费的工具</font><font
+        color="#000080" face="Times New Roman">winboard</font><font
+        color="#000080">就很好用，而且不用太细节关注</font><font
+        color="#000080" face="Times New Roman">PGN</font><font
+        color="#000080">的严格语法。关于</font><font
+        color="#000080" face="Times New Roman">winboard</font><font
+        color="#000080">的英文帮助文件和使用教程，以后有机会再译。</font></dt>
+    <dt>　　原文根本上是一篇关于<font
+        face="Times New Roman">PGN</font>及相关技术的严格定义规范性手册或者指南，本译文只是抽取它的最重要部分进行编译。如果一般了解运用<font
+        face="Times New Roman">PGN</font>，特别对于仅是用来打谱、收集和交流棋局的，足够了。不过知道上述一些定义，使用起来会得心应手得多。</dt>
+    <dt>　　但是，想写程序的，则就要认真去读原文了。</dt>
+    <dt>　　还有关于<font face="Times New Roman">FEN</font>等国际象棋记谱格式，也很常用到，将在下一篇继续编译。</dt>
+    <dt>　　最后，放一个标准<font
+        face="Times New Roman">PGN</font>格式的单文件内容，对照来看，一看就会。<font
+        face="Times New Roman">PGN</font>文件不兼容中文字体，“<font
+        face="Times New Roman">//</font>”后面的中文实际上是加上去的注释说明，原文件里没有的。<font
+        face="Times New Roman">PGN</font>实际上就是文本文件，可以用记事本或其它字处理工具直接打开，打开单个文件就是如下这样的。远不是所有提到的标签项都包括，但那七个基本标签都有：</dt>
+    <dd>　</dd>
+    <dd>[Event &quot;CHN-RUS Summit Men&quot;]　　　　　　//赛事名，中国-俄罗斯最高对抗赛男子组</dd>
+    <dd>[Site &quot;Shanghai&quot;]
+        　　　　　　　　　　　//地点，上海</dd>
+    <dd>[Date &quot;2001.09.10&quot;]
+        　　　　　　　　　　//该局日期</dd>
+    <dd>[Round &quot;4&quot;]
+        　　　　　　　　　　　　　　//第4轮</dd>
+    <dd>[White &quot;Ye Jiangchuan&quot;]
+        　　　　　　　　//白方叶江川</dd>
+    <dd>[Black &quot;Dreev, Alexey&quot;]
+        　　　　　　　　//黑方A&middot;德里耶夫</dd>
+    <dd>[Result &quot;1-0&quot;]
+        　　　　　　　　　　　　 //对局结果白胜</dd>
+    <dd>[Opening &quot;Caro-Kann: classical, 6.h4&quot;]　//开局名，卡罗-卡恩防御：经典变例，6.h4</dd>
+    <dd>[ECO &quot;B19&quot;]
+        　　　　　　　　　　　　　　//ECO开局编号为B19</dd>
+    <dd>[NIC &quot;CK.11&quot;]
+        　　　　　　　　　　　　　//&quot;New In
+        Chess&quot;编号</dd>
+    <dd>[WhiteElo &quot;2677&quot;]
+        　　　　　　　　　　　//白方国际ELO等级分</dd>
+    <dd>[BlackElo &quot;2690&quot;]
+        　　　　　　　　　　　//黑方国际ELO等级分</dd>
+    <dd>[PlyCount &quot;75&quot;]
+        　　　　　　　　　　　　//双方共走了75步(不是回合)</dd>
+    <dd>[EventDate &quot;2001.09.07&quot;] 　　　　　　　
+        //赛事开始日期</dd>
+    <dd>1. e4 c6 2. d4 d5 3. Nd2 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4
+        h6 7. Nf3 e6 8. Ne5</dd>
+    <dd>Bh7 9. Bd3 Bxd3 10. Qxd3 Nd7 11. f4 c5 12. Be3 Qa5+ 13.
+        Bd2 Qa4 14. d5 Ne7 15.</dd>
+    <dd>dxe6 Nxe5 16. fxe5 fxe6 17. Bc3 Rd8 18. Qe2 h5 19. O-O a6
+        20. Ne4 Nf5 21. Nd6+</dd>
+    <dd>Nxd6 22. exd6 Qg4 23. Qf2 Qg6 24. Be5 Bxd6 25. Bxd6 Rxd6
+        26. Qxc5 Rc6 27. Qa7</dd>
+    <dd>Qxc2 28. Qxb7 Qc5+ 29. Kh1 Rc7 30. Qb8+ Rc8 31. Qg3 g5 32.
+        Rae1 Rh6 33. Qf3 Qe7</dd>
+    <dd>34. hxg5 Rh8 35. Qb3 Rc6 36. Rd1 Qc7 37. Qd3 Rg8 38. Qf3
+        1-0</dd>
+    <dt>　</dt>
+    <dt>　　如果是包含不止一个对局的<font
+        face="Times New Roman">PGN</font>文件，实际上就是单个完整这样的<font
+        face="Times New Roman">PGN</font>棋局以文本方式顺序隔行写在同一个<font
+        face="Times New Roman">PGN</font>文件里。</dt>
+    <dt>　</dt>
+    <dt>　　出处：<font face="Times New Roman">Chess world </font>的
+        <font face="Times New Roman">PGN Archive</font></dt>
+    <dt>　　译者：<font face="Times New Roman">michael</font></dt>
+    <dt>　　类型：编译</dt>
+</dl>
+
+<dir>
+    <li>上一篇</li>
+    <li>下一篇　<a href="pgnfen2.htm">关于<font
+        face="Times New Roman">PGN</font>和<font
+        face="Times New Roman">FEN</font>记谱规范<font
+        face="Times New Roman">(</font>下<font
+        face="Times New Roman">)(</font>转载自《国际象棋译文苑》<font
+        face="Times New Roman">)</font></a></li>
+    <li>返　回　<a href="../protocol.htm">象棋百科全书——规则与协议</a></li>
+</dir>
+<div align="center"><center>
+
+<table border="0">
+    <tr>
+        <td><p align="center"><a
+        href="http://www.xqbase.com/" target="_blank"><img
+        src="../xqbase.gif" border="0" width="88"
+        height="31"></a></p>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.xqbase.com/"
+        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+    </tr>
+</table>
+</center></div>
+</body>
+</html>
