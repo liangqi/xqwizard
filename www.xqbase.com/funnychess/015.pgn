@@ -1,0 +1,21 @@
+[Game "Chinese Chess"]
+[Event "《趣味象棋》连载"]
+[Round "第15局：五关斩将"]
+[Date ""]
+[Site ""]
+[RedTeam ""]
+[Red ""]
+[BlackTeam ""]
+[Black ""]
+[Result "1-0"]
+[ECCO ""]
+[Opening ""]
+[Variation ""]
+[FEN "3aka3/3P5/7R1/4r2C1/6C2/6R2/9/3p1n3/4p4/3K5 w - - 0 1"]
+{　　着法：红先胜；题型：连杀；战术：腾挪；难度：简单}
+  1. 炮三平五 车５进１
+  2. 车二平五 车５退２
+  3. 炮二进三 士６进５
+  4. 车三进五 士５退６
+  5. 兵六平五 将５进１
+  6. 车三退一 1-0

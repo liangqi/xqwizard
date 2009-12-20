@@ -1,0 +1,20 @@
+[Game "Chinese Chess"]
+[Event "《趣味象棋》解答"]
+[Round "第53局：曹操逼宫"]
+[Date ""]
+[Site ""]
+[RedTeam ""]
+[Red ""]
+[BlackTeam ""]
+[Black ""]
+[Result "1-0"]
+[ECCO ""]
+[Opening ""]
+[Variation ""]
+[FEN "3a1a3/3k2P2/9/9/9/3Nr4/9/7C1/4A2c1/1crRKA3 w - - 0 1"]
+{　　着法：红先胜；题型：连杀；难度：简单}
+  1. 马六进五 将４平５
+  2. 马五进三 将５退１
+  3. 炮二进七 士６进５
+  4. 兵三进一 士５退６
+  5. 兵三平四 1-0

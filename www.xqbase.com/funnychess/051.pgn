@@ -1,0 +1,22 @@
+[Game "Chinese Chess"]
+[Event "《趣味象棋》连载"]
+[Round "第51局：虎帐谈兵"]
+[Date ""]
+[Site ""]
+[RedTeam ""]
+[Red ""]
+[BlackTeam ""]
+[Black ""]
+[Result "1-0"]
+[ECCO ""]
+[Opening ""]
+[Variation ""]
+[FEN "3ak4/2PPa4/b3b4/2p1C1N2/3c5/1rB6/9/3p5/4p2p1/1CB2K3 w - - 0 1"]
+{　　着法：红先胜；题型：做杀；难度：中等}
+  1. 马三进二 炮４退２
+  2. 马二进四 车２进４
+{　　若走车２退５，则马四退五，黑方无解。}
+  3. 兵六进一 将５平４
+  4. 兵七平六 将４平５
+  5. 兵六平五 将５平４
+  6. 兵五平六 1-0

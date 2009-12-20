@@ -1,0 +1,21 @@
+[Game "Chinese Chess"]
+[Event "《趣味象棋》连载"]
+[Round "第14局：循循善诱"]
+[Date ""]
+[Site ""]
+[RedTeam ""]
+[Red ""]
+[BlackTeam ""]
+[Black ""]
+[Result "1-0"]
+[ECCO ""]
+[Opening ""]
+[Variation ""]
+[FEN "9/1P2k4/3a1a3/4P4/8r/9/2R6/3n5/4p4/5K3 w - - 0 1"]
+{　　着法：红先胜；题型：连杀；难度：简单}
+  1. 兵五进一 将５平６
+  2. 兵五平四 将６平５
+  3. 兵四进一 将５平４
+  4. 车七进五 将４退１
+  5. 车七进一 将４进１
+  6. 兵八平七 1-0
