@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmHide 
    BorderStyle     =   3  'Fixed Dialog
@@ -48,7 +48,7 @@ Begin VB.Form frmHide
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
       Location        =   ""
    End
-   Begin InetCtlsObjects.Inet inet 
+   Begin InetCtlsObjects.Inet Inet 
       Left            =   0
       Top             =   0
       _ExtentX        =   1005

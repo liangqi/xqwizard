@@ -419,7 +419,7 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_SAVE
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "save", _
+App_frmMain.Inet.Execute USERS_URL & "save", _
         "POST", "score=" & Gui_nLast, _
         "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
@@ -449,7 +449,7 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_LOAD
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "queryscore", "GET", "", LoginHeaders
+App_frmMain.Inet.Execute USERS_URL & "queryscore", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -498,9 +498,9 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_HINT
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "hint", _
+App_frmMain.Inet.Execute USERS_URL & "hint", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" & LoginHeaders
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -539,9 +539,9 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_RETRACT
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "retract", _
+App_frmMain.Inet.Execute USERS_URL & "retract", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" & LoginHeaders
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -569,7 +569,7 @@ End If
 EnterBusy
 Rank_szList = ""
 On Error Resume Next
-Rank_szList = frmHide.inet.OpenURL(USERS_URL & "ranklist?encoding=" & L("GBK", "BIG5"))
+Rank_szList = frmHide.Inet.OpenURL(USERS_URL & "ranklist?encoding=" & L("GBK", "BIG5"))
 On Error GoTo 0
 If Rank_szList = "" Then
     ConnError
@@ -579,7 +579,7 @@ End If
 
 App_nUsersEvent = USERS_RANK
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "queryrank", "GET", "", LoginHeaders
+App_frmMain.Inet.Execute USERS_URL & "queryrank", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -607,7 +607,7 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_POINTS
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "querypoints", "GET", "", LoginHeaders
+App_frmMain.Inet.Execute USERS_URL & "querypoints", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -657,8 +657,8 @@ Public Sub DoUsersEvent()
 
 Dim szResult As String, nResult As Integer, bLoad As Boolean, szResults() As String
 
-Login_szPassword = App_frmMain.inet.GetHeader("Login-Cookie")
-szResult = App_frmMain.inet.GetHeader("Login-Result")
+Login_szPassword = App_frmMain.Inet.GetHeader("Login-Cookie")
+szResult = App_frmMain.Inet.GetHeader("Login-Result")
 Select Case App_nUsersEvent
 
 Case USERS_SAVE
