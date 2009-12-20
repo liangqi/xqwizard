@@ -41,8 +41,8 @@ bottommargin="0" rightmargin="0">
                             </tr>
                             <tr>
                                 <td><p align="right"><img
-                                src="../xqbase.gif"
-                                width="88" height="31"></p>
+                                src="../xqbase.gif" width="88"
+                                height="31"></p>
                                 </td>
                             </tr>
                             <tr>
@@ -125,14 +125,9 @@ bottommargin="0" rightmargin="0">
                         face="Times New Roman">(</font>免安装版<font
                         face="Times New Roman">)</font>已发布，下载地址是：</dt>
                     <dt>　　　　<a
-                        href="http://homepage.fudan.edu.cn/~auntyellow/download/xqwizard_simp.7z"><font
-                        face="Times New Roman">http://homepage.fudan.edu.cn/~auntyellow/download/xqwizard_simp.7z</font></a><font
-                        face="Times New Roman"> (</font>简体版<font
-                        face="Times New Roman">)</font></dt>
-                    <dt>　　　　<a
-                        href="http://homepage.fudan.edu.cn/~auntyellow/download/xqwizard_trad.7z"><font
-                        face="Times New Roman">http://homepage.fudan.edu.cn/~auntyellow/download/xqwizard_trad.7z</font></a><font
-                        face="Times New Roman"> (</font>繁体版<font
+                        href="http://www.xqbase.com/download/xqwizard_portable.7z"><font
+                        face="Times New Roman">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
+                        face="Times New Roman"> (</font>简繁通用<font
                         face="Times New Roman">)</font></dt>
                     <dt>　　注：<font face="Times New Roman">.7z</font>或<font
                         face="Times New Roman">.z</font>文件可用<a
@@ -223,8 +218,8 @@ try {
                 href="mailto:webmaster@xqbase.com?subject=%D2%E2%BC%FB%B7%B4%C0%A1"><font
                 color="#000060" size="2">意见反馈</font></a><font
                 color="#000060" size="2"> </font><a
-                href="http://www.xqbase.com/"
-                target="_blank"><font color="#000060" size="2">象棋百科全书
+                href="http://www.xqbase.com/" target="_blank"><font
+                color="#000060" size="2">象棋百科全书
                 荣誉出品</font></a></p>
                 </td>
             </tr>

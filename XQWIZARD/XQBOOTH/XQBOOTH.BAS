@@ -393,6 +393,15 @@ App_frmMain.MousePointer = vbDefault
 
 End Sub
 
+' 生成HTTP登录头信息
+Public Function LoginHeaders() As String
+
+LoginHeaders = "Login-UserName: " & Login_szUserName & vbCrLf & _
+        "Login-Password: " & Login_szPassword & vbCrLf & _
+        "Login-Charset: " & IIf(Options_nLanguage = LANGUAGE_ZH_CN, "GBK", "BIG5") & vbCrLf
+
+End Function
+
 ' 尝试提交
 Public Sub TrySave()
 
@@ -412,9 +421,7 @@ App_nUsersEvent = USERS_SAVE
 On Error GoTo lnError
 App_frmMain.inet.Execute USERS_URL & "save", _
         "POST", "score=" & Gui_nLast, _
-        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -442,9 +449,7 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_LOAD
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "queryscore", "GET", "", _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+App_frmMain.inet.Execute USERS_URL & "queryscore", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -495,9 +500,7 @@ App_nUsersEvent = USERS_HINT
 On Error GoTo lnError
 App_frmMain.inet.Execute USERS_URL & "hint", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -538,9 +541,7 @@ App_nUsersEvent = USERS_RETRACT
 On Error GoTo lnError
 App_frmMain.inet.Execute USERS_URL & "retract", _
         "POST", "stage=" & Gui_nCurr, _
-        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+        "Content-Type: application/x-www-form-urlencoded" & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -578,9 +579,7 @@ End If
 
 App_nUsersEvent = USERS_RANK
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "queryrank", "GET", "", _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+App_frmMain.inet.Execute USERS_URL & "queryrank", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -608,9 +607,7 @@ End If
 EnterBusy
 App_nUsersEvent = USERS_POINTS
 On Error GoTo lnError
-App_frmMain.inet.Execute USERS_URL & "querypoints", "GET", "", _
-        "Login-UserName: " & Login_szUserName & vbCrLf & _
-        "Login-Password: " & Login_szPassword & vbCrLf
+App_frmMain.inet.Execute USERS_URL & "querypoints", "GET", "", LoginHeaders
 On Error GoTo 0
 
 Exit Sub

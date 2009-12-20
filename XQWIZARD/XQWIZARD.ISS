@@ -84,41 +84,28 @@ Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PGNS2JAR.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ZIP32Z64.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "SAMPLE_S.PGN"; DestDir: "{app}"; DestName: "SAMPLE.PGN"; Flags: ignoreversion; Languages: cn
-Source: "SAMPLE_T.PGN"; DestDir: "{app}"; DestName: "SAMPLE.PGN"; Flags: ignoreversion; Languages: tw
+Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
-Source: "README_S.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: cn
-Source: "README_T.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: tw
+Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
 Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
 ; 残局文件
-Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: cn
-Source: "ENDGAMET\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
-Source: "ENDGAMET\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion; Languages: tw
+Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_B.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_C.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_D.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_E.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_F.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_G.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_H.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -694,8 +681,6 @@ Root: HKCR; Subkey: "XQWizard.CCM\DefaultIcon"; ValueType: string; ValueData: "{
 Root: HKCR; Subkey: "XQWizard.CCM\Shell"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: ccm
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Options"; ValueType: string; ValueName: "Language"; ValueData: "0"; Languages: cn
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Options"; ValueType: string; ValueName: "Language"; ValueData: "1"; Languages: tw
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
 Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
@@ -732,3 +717,12 @@ Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Fl
 Filename: "{app}\XQBOOTH.EXE"; Description: "秨﹍卖闽"; Flags: nowait postinstall skipifsilent; Languages: tw
 Filename: "{app}\XQWIZARD.EXE"; Description: "秨﹍癸Ы"; Flags: nowait postinstall skipifsilent unchecked; Languages: tw
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "ㄏノ"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
+
+[Code]
+
+procedure DeinitializeUninstall();
+var
+  ErrorCode: Integer;
+begin
+  ShellExec('', 'http://www.xqbase.com/xqwizard/uninstall.htm', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;

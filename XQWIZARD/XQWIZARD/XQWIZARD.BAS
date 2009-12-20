@@ -131,6 +131,7 @@ Public App_bPlay                As Integer  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 红黑轮流标志
 Public App_bPromotion           As Boolean  ' 是否允许升变
 Public App_bPrevInstance        As Boolean  ' 是否再一次启动
+Public App_bEndgame             As Boolean  ' 残局模式
 Public App_nEndgames            As Integer  ' 读入的残局数量
 Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 读入的残局
 ' 全局变量——选项
@@ -999,7 +1000,7 @@ EngineNewGame
 End Sub
 
 ' 结束一局对局
-Public Sub EndGame(ByVal szSound As String, ByVal szPrompt As String)
+Public Sub GameOver(ByVal szSound As String, ByVal szPrompt As String)
 
 Dim mbp As MsgBoxParams, dwResult As Long
 
@@ -1027,7 +1028,11 @@ End If
 
 If dwResult = vbYes Then
     If Not CancelSave Then
-        NewGame
+        If App_bEndgame Then
+            LoadEndgames Gui_szEpdName, Gui_szEpdTitle
+        Else
+            NewGame
+        End If
     End If
 End If
 
@@ -1105,6 +1110,7 @@ Timer_nMoveLeft(1) = Timer_nIncMove
 Timer_dfLastTime = Timer
 Timer_bEnabled = False
 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+App_bEndgame = False
 
 End Sub
 
@@ -1494,7 +1500,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
             szResult = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-            EndGame szResult, IIf(Game_sdCurr = 1, L("红胜。", "紅勝。"), L("黑胜。", "黑勝。"))
+            GameOver szResult, IIf(Game_sdCurr = 1, L("红胜。", "紅勝。"), L("黑胜。", "黑勝。"))
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1513,7 +1519,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
             If bEcho Then
-                EndGame "DRAW", L("自然作和。", "自然作和。")
+                GameOver "DRAW", L("自然作和。", "自然作和。")
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1538,9 +1544,9 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                     szResult = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
                 End If
                 If Options_nLanguage = LANGUAGE_ZH_CN Then
-                    EndGame szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
+                    GameOver szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
                 Else
-                    EndGame szResult, Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！")
+                    GameOver szResult, Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！")
                 End If
             End If
             App_frmMain.lblResult = ResultString
@@ -1562,12 +1568,12 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                EndGame "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
+                GameOver "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                EndGame "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+                GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
                         L("黑方接受提和。", "黑方接受提和。"))
             Else
                 Engine_nStatus = IDLE_READY
@@ -2008,7 +2014,7 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                EndGame "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
+                GameOver "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
@@ -2016,7 +2022,7 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                EndGame "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+                GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
                         L("黑方接受提和。", "黑方接受提和。"))
             ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
                 App_frmMain.SetFocus
@@ -2712,7 +2718,7 @@ End Sub
 ' 加载残局
 Public Sub LoadEndgames(ByVal szEpdName As String, ByVal szTitle As String)
 
-Dim nFileNo As Integer, i As Integer, sz As String
+Dim nFileNo As Integer, i As Integer, sz As String, szs() As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
 Open App_szPath & "ENDGAMES\" & szEpdName & ".EPD" For Input As #nFileNo
@@ -2720,10 +2726,15 @@ On Error GoTo 0
 App_nEndgames = 0
 Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
     Line Input #nFileNo, sz
-    i = InStr(sz, ";")
+    i = InStr(sz, "; ")
     If i > 0 Then
         App_szEndgames(App_nEndgames) = RTrim(Left(sz, i - 1))
-        frmEndgames.lstGames.AddItem LTrim(Mid(sz, i + 1))
+        szs = Split(LTrim(Mid(sz, i + 1)), "|")
+        If UBound(szs) < Options_nLanguage Then
+            frmEndgames.lstGames.AddItem szs(0)
+        Else
+            frmEndgames.lstGames.AddItem szs(Options_nLanguage)
+        End If
         App_nEndgames = App_nEndgames + 1
     End If
 Loop
@@ -3033,8 +3044,8 @@ End Sub
 
 ' 以下是主函数例程
 
-' 用户事件
-Public Sub DoEvent()
+' 空闲事件
+Public Sub DoIdleEvents()
 
 Dim dfThisTime As Double
 ' 依次检测以下几个事件
@@ -3263,8 +3274,12 @@ End If
 App_bRunning = True
 Do While App_bRunning
     ' 始终把接收引擎的事件放在第一位(高优先级)
-    If Not ReceiveEngine Then
-        DoEvent
+    If ReceiveEngine Then
+        ' 即使接收引擎繁忙，也要即时处理用户事件
+        DoEvents
+    Else
+        ' 引擎空闲，可以处理其他事件
+        DoIdleEvents
     End If
 Loop
 ' 退出前下载广告列表

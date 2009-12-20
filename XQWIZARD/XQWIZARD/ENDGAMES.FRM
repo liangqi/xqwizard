@@ -789,6 +789,7 @@ Private Sub btnConfirm_Click()
 
 LoadFenStr App_szEndgames(Gui_nEndgamesIndex)
 EngineNewGame ENGINE_PLAY_BLACK
+App_bEndgame = True
 Game_szEvent = Caption
 Game_szRound = lstGames.List(Gui_nEndgamesIndex)
 LabelFlush

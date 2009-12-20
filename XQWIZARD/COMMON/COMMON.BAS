@@ -20,6 +20,8 @@ Attribute VB_Name = "mdlCommon"
 ' with this program; if not, write to the Free Software Foundation, Inc.,
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+Private Declare Function GetACP Lib "KERNEL32.DLL" () As Long
+
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "4.5"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
@@ -173,7 +175,7 @@ sz = ""
 QueryPerformanceCounter VarPtr(dwCounter(0))
 szUserID = GetSetting("XQWizard", "Gui", "UserID", Hex(dwCounter(0)) & Hex(dwCounter(1)))
 On Error Resume Next
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=" & szReferer & "&version=" & _
+sz = frmHide.Inet.OpenURL("http://www.xqbase.com/xqwizard/version.php?referer=" & szReferer & "&version=" & _
         STRING_VERSION & "&userid=" & szUserID)
 On Error GoTo 0
 If sz = "" Then
@@ -187,7 +189,7 @@ Else
     If Val(sz) > Val(STRING_VERSION) + 0.005 And (bManual Or Val(sz) > Val(Gui_szUpgradeVer) + 0.005) Then
         szWhatsNew = ""
         On Error Resume Next
-        szWhatsNew = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & L("simp.txt", "trad.txt"))
+        szWhatsNew = frmHide.Inet.OpenURL("http://www.xqbase.com/xqwizard/whatsnew_" & L("simp.txt", "trad.txt"))
         On Error GoTo 0
         If szWhatsNew = "" Then
             szWhatsNew = L("象棋巫师 ", "象棋巫師") & sz & _
@@ -196,7 +198,7 @@ Else
         If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
             szUrl = ""
             On Error Resume Next
-            szUrl = frmHide.inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
+            szUrl = frmHide.Inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
             On Error GoTo 0
             If Left(szUrl, 7) <> "http://" Then
                 szUrl = "http://www.xqbase.com/xqwizard/download.htm"
@@ -300,7 +302,7 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", "0"), 0, LANGUAGE_MAX - 1)
+Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", IIf(GetACP = 950, "1", "0")), 0, LANGUAGE_MAX - 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "SHDOCVW.DLL"
+Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
@@ -2430,7 +2430,7 @@ If Engine_bDraw Then
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
     Engine_nStatus = IDLE_REST
-    EndGame "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+    GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
             L("黑方接受提和。", "黑方接受提和。"))
 Else
     If mnEngineDraw.Checked Then
