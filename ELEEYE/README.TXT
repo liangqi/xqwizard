@@ -1,7 +1,7 @@
-中国象棋对弈程序ElephantEye(象眼)　版本：3.13
+中国象棋对弈程序ElephantEye(象眼)　版本：3.15
 
-黄晨 *　2008年3月
-( * 联系地址：上海计算机博弈研究所，eMail：webmaster@elephantbase.net)
+象棋百科全书网 *　2008年3月
+(* Email: webmaster@xqbase.com)
 
 一、简介
 
@@ -31,7 +31,7 @@
 
 三、参数设置
 
-　　ElephantEye 作为UCCI引擎，有若干可以设置的参数(可以直接在《象棋巫师》中设置)。
+　　ElephantEye 作为UCCI引擎，有若干可以设置的参数(可以直接在<象棋巫师>中设置)。
 (1) 开局库：
 　　默认的开局库为 ElephantEye 程序(ELEEYE.EXE)当前目录下的 BOOK.DAT，含有10,000个对称局面的着法。
 (2) 思考时间：
@@ -51,7 +51,7 @@
 　　　　A. 马捉车或有根的炮兵(卒)；
 　　　　B. 车捉有根的马炮兵(卒)；
 　　　　C. 炮捉车或有根的马兵(卒)。
-　　尽管 ElephantEye 在复杂的情况可能无法正确识别长打，但由于支持UCCI命令 banmoves ... ，一旦用户认为引擎走了“长打”的禁着，可以用《象棋巫师》的“设置禁着”功能让引擎强制变着。
+　　尽管 ElephantEye 在复杂的情况可能无法正确识别长打，但由于支持UCCI命令 banmoves ... ，一旦用户认为引擎走了“长打”的禁着，可以用<象棋巫师>的“设置禁着”功能让引擎强制变着。
 
 五、博弈算法
 
@@ -80,7 +80,7 @@
 六、开局库
 
 　　ElephantEye 的开局库可由“ElephantEye 开局库制作工具”制作。运行制作工具后，首先要选择PGN棋谱所在的文件夹，然后保存为开局库文件(通常是 BOOK.DAT)。通常，用来生成开局库的棋谱数量越多，生成的开局库文件就越大。
-　　为了使制作的开局库对 ElephantEye 生效，只需要把生成的开局库文件替换掉 ElephantEye 目录下的 BOOK.DAT 即可，也可以在《象棋巫师》的“引擎设置”对话框中指定开局库文件。
+　　为了使制作的开局库对 ElephantEye 生效，只需要把生成的开局库文件替换掉 ElephantEye 目录下的 BOOK.DAT 即可，也可以在<象棋巫师>的“引擎设置”对话框中指定开局库文件。
 
 七、局面评价函数库
 
@@ -134,28 +134,26 @@
 　　您可以使用 TortoiseSVN 等SVN客户端程序获取到最新的(跟开发者完全同步的)代码，TortoiseSVN 的使用介绍和下载地址是：
 　　　　http://sourceforge.net/projects/tortoisesvn/
 
-　　ElephantEye 必须在支持UCCI(如《象棋巫师》)的象棋程序下运行，《象棋巫师》安装程序包含了最近一个版本的 ElephantEye。
-　　《象棋巫师》简体中文版可以到下列站点下载：
+　　ElephantEye 必须在支持UCCI(如<象棋巫师>)的象棋程序下运行，<象棋巫师>安装程序包含了最近一个版本的 ElephantEye。
+　　<象棋巫师>可到下列站点下载：
 　　　　http://www.skycn.com/soft/24665.html (天空软件站) 
 　　　　http://www.onlinedown.net/soft/38287.htm (华军软件园) 
-　　《象棋巫师》繁体中文版可以到下列站点下载：
-　　　　http://www.skycn.com/soft/35392.html (天空软件站) 
-　　　　http://www.onlinedown.net/soft/47666.htm (华军软件园) 
 
 　　ElephantEye 的源程序包除了 ElephantEye 本身的源程序外，还包括以下几个附加模块：
-　　(1) 通用低级接口(utility)：提供了汇编指令、位棋盘、数值计算、Visual Basic 下的原子语句等功能；
+　　(1) 基础代码(base)：提供了汇编指令、系统函数调用等功能；
 　　(2) 中国象棋规则模块(cchess)：为其他软件使用 ElephantEye 代码提供了接口；
 　　(3) 开局库制作模块(BOOK)：制作开局库BOOK.DAT的代码；
 　　(4) UCCI引擎联赛模拟器(LEAGUE)：为UCCI引擎测试和比赛提供了自动批量对局的平台；
 　　(5) UCCI引擎搜索树分析器(TREE)：UCCI引擎(支持UCCI 2.2+)的搜索路线分析工具；
-　　(6) XQF棋谱工具(XQFTOOLS)：提供象棋演播室棋谱(*.XQF)、弈天棋谱(*.MXQ)和QQ象棋棋谱(*.CHE)转换为可移植棋谱(*.PGN)的工具；
+　　(6) XQF棋谱工具(XQFTOOLS)：提供XQF等多种棋谱转换为PGN的工具；
 　　(7) 浅红象棋适配器(UCCI2QH)：为浅红象棋调用UCCI引擎提供了接口；
 　　(8) 浅红象棋引擎支持UCCI的适配器(QH2UCCI)：为“梦入神蛋”浅红象棋加入UCCI引擎测试提供了接口；
 　　(9) BBS Chess(BBSCHESS)：一个用 Visual Basic 制作的国际象棋局面设置工具，可在各高校BBS上粘贴彩色的国际象棋局面；
 　　(10) 棋盘图片生成器(FEN2BMP)：一个可以把国际象棋和中国象棋的FEN文件转换成BMP文件的实用工具；
-　　(11) 其他工具(MISC)：包括BASE64转码、BIG5/GB转码、UNIX文本转码、简易网络通讯、管道测试等工具。
-　　(12) 说明文档(DOC)：即《中国象棋程序设计探索》系列连载；
-　　(13) 参赛棋谱(CCGC)：ElephantEye 参加首届全国计算机博弈锦标赛(CCGC)的全部棋谱。
+　　(11) 编码转换(codec)，包括简繁转码、UNIX文本转码、Base64转码等；
+　　(12) 其他工具(MISC)：包括简易网络通讯、管道测试等工具；
+　　(13) 说明文档(DOC)：即《中国象棋程序设计探索》系列连载；
+　　(14) 参赛棋谱(CCGC)：ElephantEye 参加首届全国计算机博弈锦标赛(CCGC)的全部棋谱。
 
 　　如果要获得关于 ElephantEye 的更加详细的信息，可登录象棋百科全书网：
-　　　　http://www.elephantbase.net/
+　　　　http://www.xqbase.com/

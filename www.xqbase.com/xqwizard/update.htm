@@ -80,45 +80,18 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <dt>　　象棋巫师<font
-                        face="Times New Roman">3</font>系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家使用象棋巫师<font
-                        face="Times New Roman">4</font>系列，下载地址是：</dt>
-                    <div align="left">
-                    <dt>　</dt>
-                    </div><div align="left">
-                    <dt>　　<font face="Times New Roman">(1) </font>《象棋巫师》简体中文版</dt>
-                    </div>
+                        face="Times New Roman">3</font>系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家花一分钟时间将象棋巫师升级为<font
+                        face="Times New Roman">4</font>系列，安装包下载地址是：</dt>
                     <dt>　　　　<a
-                        href="http://www.skycn.com/soft/24665.html"
-                        target="_blank"><font
-                        face="Times New Roman">http://www.skycn.com/soft/24665.html</font></a><font
-                        face="Times New Roman"> (</font>天空软件站<font
+                        href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
+                        face="Times New Roman">http://www.xqbase.com/download/xqwizard_setup.exe</font></a><font
+                        face="Times New Roman"> (</font>简繁通用<font
                         face="Times New Roman">)</font></dt>
-                    <dt>　　　　<a
-                        href="http://www.onlinedown.net/soft/38287.htm"
-                        target="_blank"><font
-                        face="Times New Roman">http://www.onlinedown.net/soft/38287.htm</font></a><font
-                        face="Times New Roman"> (</font>华军软件园<font
-                        face="Times New Roman">)</font></dt>
-                    <div align="left">
-                    <dt><font size="3">　　</font><font
-                        size="3" face="Times New Roman">(2) </font>《象棋巫师》繁体中文版</dt>
-                    </div>
-                    <dt>　　　　<a
-                        href="http://www.skycn.com/soft/35392.html"
-                        target="_blank"><font
-                        face="Times New Roman">http://www.skycn.com/soft/35392.html</font></a><font
-                        face="Times New Roman"> (</font>天空软件站<font
-                        face="Times New Roman">)</font></dt>
-                    <dt>　　　　<a
-                        href="http://www.onlinedown.net/soft/47666.htm"
-                        target="_blank"><font
-                        face="Times New Roman">http://www.onlinedown.net/soft/47666.htm</font></a><font
-                        face="Times New Roman"> (</font>华军软件园<font
-                        face="Times New Roman">)</font></dt>
+                    <dt>　　注：下载完毕后，请先退出象棋巫师，再运行安装程序。</dt>
                     <dt>　</dt>
                     <dt>　　<font color="#0000FF"><strong>象棋巫师</strong></font><font
                         color="#0000FF" face="Times New Roman"><strong>4</strong></font><font
-                        color="#0000FF"><strong>系列仍旧完全免费，安装完成后本页面将不再弹出。</strong></font>因版本更新给广大象棋爱好者带来不便，敬请谅解。</dt>
+                        color="#0000FF"><strong>系列仍旧完全免费，升级完成后本页面将不再弹出。</strong></font>因版本更新给广大象棋爱好者带来不便，敬请谅解。</dt>
                     <dt>　</dt>
                     <dt><font color="#0000FF"><strong>　　</strong></font>象棋巫师<font
                         face="Times New Roman">4</font>系列绿色版<font
@@ -161,14 +134,8 @@ bottommargin="0" rightmargin="0">
                     </div>
                     <dt>　</dt>
                     <dt>　　智能超强的象棋巫师引擎<font
-                        color="#0000FF"><strong>虫虫象棋</strong></font><font
-                        color="#0000FF" face="Times New Roman"><strong>(BugChess)</strong></font>联众<font
-                        face="Times New Roman">3000</font>分以上，<font
-                        face="Times New Roman">12</font>月开始内测。白金会员可免费索取<font
-                        face="Times New Roman">(</font>用淘宝旺旺联系象棋巫师客服<font
-                        face="Times New Roman">)</font>。<a
-                        href="wangwang.htm" target="_blank"><font
-                        size="3">如何跟象棋巫师客服联系？</font></a></dt>
+                        color="#0000FF"><strong>虫虫象棋(BugChess)</strong></font>联众3000分以上，12月开始内测。象棋巫师注册用户可免费索取(用淘宝旺旺联系<a
+                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名)。</dt>
                     <div align="left">
                     <dt>　</dt>
                     </div><div align="left">

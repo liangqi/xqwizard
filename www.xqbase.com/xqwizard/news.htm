@@ -41,8 +41,8 @@ bottommargin="0" rightmargin="0">
                             </tr>
                             <tr>
                                 <td><p align="right"><img
-                                src="../xqbase.gif"
-                                width="88" height="31"></p>
+                                src="../xqbase.gif" width="88"
+                                height="31"></p>
                                 </td>
                             </tr>
                             <tr>
@@ -92,7 +92,7 @@ bottommargin="0" rightmargin="0">
                     </div><div align="left">
                     <dt>　　智能超强的象棋巫师引擎<font
                         color="#0000FF"><strong>虫虫象棋(BugChess)</strong></font>联众3000分以上，12月开始内测。象棋巫师注册用户可免费索取(用淘宝旺旺联系<a
-                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师帐号名称)。</dt>
+                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名)。</dt>
                     </div>
                 </dl>
                 </td>
@@ -127,9 +127,9 @@ bottommargin="0" rightmargin="0">
                     <dt>　　最新版象棋巫师的下载地址是：</dt>
                     </div><div align="left">
                     <dt>　　　　<a
-                        href="http://www.skycn.com/soft/24665.html"
-                        target="_blank"><font
-                        face="Times New Roman">http://www.skycn.com/soft/24665.html</font></a></dt>
+                        href="http://www.onlinedown.net/soft/38287.htm"
+                        target="_blank">http://www.onlinedown.net/soft/38287.htm</a>
+                        (简繁通用)</dt>
                     </div>
                     <dt>　</dt>
                     <dt>　　<font color="#0000FF"><strong>挑战</strong></font>题目解不出时，可以用工具栏里的<font
@@ -184,8 +184,8 @@ try {
                 href="mailto:webmaster@xqbase.com?subject=%D2%E2%BC%FB%B7%B4%C0%A1"><font
                 color="#000060" size="2">意见反馈</font></a><font
                 color="#000060" size="2"> </font><a
-                href="http://www.xqbase.com/"
-                target="_blank"><font color="#000060" size="2">象棋百科全书
+                href="http://www.xqbase.com/" target="_blank"><font
+                color="#000060" size="2">象棋百科全书
                 荣誉出品</font></a></p>
                 </td>
             </tr>
