@@ -37,14 +37,14 @@ static struct {
 } Pgns2Jar;
 
 inline const char *CnTw(const char *szCn, const char *szTw) {
-  return Pgns2Jar.bBig5 ? szCn : szTw;
+  return Pgns2Jar.bBig5 ? szTw : szCn;
 }
 
 // 打开文件错误时终止程序
 static void ErrorOpen(const char *szFile) {
   char szMsg[MAX_CHAR];
-  sprintf(szMsg, CnTw("无法打开文件 %s", ""), szFile);
-  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", ""), MB_ICONSTOP);
+  sprintf(szMsg, CnTw("无法打开文件 %s", "礚猭ゴ秨ゅン %s"), szFile);
+  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", "も诀囱眯籹ㄣ"), MB_ICONSTOP);
   ExitProcess(0);
 }
 
@@ -69,7 +69,7 @@ static bool ChooseSourceFolder(void) {
   bi.hwndOwner = NULL;
   bi.pidlRoot = NULL;
   bi.pszDisplayName = NULL;
-  bi.lpszTitle = CnTw("请选择象棋棋谱(*.PGN)所在的文件夹", "");
+  bi.lpszTitle = CnTw("请选择象棋棋谱(*.PGN)所在的文件夹", "叫匡拒禜囱囱眯(*.PGN)┮ゅンЖ");
   bi.ulFlags = BIF_RETURNONLYFSDIRS;
   bi.lpfn = NULL;
   bi.lParam = NULL;
@@ -82,7 +82,7 @@ static bool ChooseSourceFolder(void) {
   // 获取棋谱标题
   lpBackSlash = strrchr(Pgns2Jar.szSrcFolder, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
-    strcpy(Pgns2Jar.szTitle, CnTw("无标题", ""));
+    strcpy(Pgns2Jar.szTitle, CnTw("无标题", "礚夹肈"));
   } else {
     strcpy(Pgns2Jar.szTitle, lpBackSlash + 1);
   }
@@ -100,10 +100,11 @@ static bool ChooseJarFile(void) {
   strcat(Pgns2Jar.szJarFile, ".jar");
   memset(&ofn, 0, sizeof(OPENFILENAME));
   ofn.lStructSize = sizeof(OPENFILENAME);
-  ofn.lpstrFilter = CnTw("手机应用程序 (*.jar)\0*.jar\0所有文件 (*.*)\0*.*\0", "");
+  ofn.lpstrFilter = CnTw("手机应用程序 (*.jar)\0*.jar\0所有文件 (*.*)\0*.*\0",
+      "も诀莱ノ祘(*.jar)\0*.jar\0┮Τゅン(*.*)\0*.*\0");
   ofn.lpstrFile = Pgns2Jar.szJarFile;
   ofn.nMaxFile = MAX_PATH;
-  ofn.lpstrTitle = CnTw("请指定要生成的手机棋谱程序", "");
+  ofn.lpstrTitle = CnTw("请指定要生成的手机棋谱程序", "叫﹚璶ネΘも诀囱眯祘");
   ofn.lpstrDefExt = "jar";
   ofn.Flags = OFN_PATHMUSTEXIST + OFN_HIDEREADONLY + OFN_OVERWRITEPROMPT;
 
@@ -116,8 +117,9 @@ static bool ChooseJarFile(void) {
     lpFileName = strrchr(Pgns2Jar.szJarFile, '\\');
     lpFileName = (lpFileName == NULL ? Pgns2Jar.szJarFile : lpFileName + 1);
     if (MultiByteToWideChar(CP_ACP, 0, lpFileName, -1, NULL, 0) < (int) strlen(lpFileName)) {
-      if (MessageBox(NULL, CnTw("含有中文的JAR文件名在某些手机上无法使用，是否继续？", ""),
-           CnTw("手机棋谱制作工具", ""), MB_OKCANCEL + MB_ICONWARNING) == IDCANCEL) {
+      if (MessageBox(NULL, CnTw("含有中文的JAR文件名在某些手机上无法使用，是否继续？",
+          "ΤいゅJARゅン琘ㄇも诀礚猭ㄏノ琌膥尿"),
+          CnTw("手机棋谱制作工具", "も诀囱眯籹ㄣ"), MB_OKCANCEL + MB_ICONWARNING) == IDCANCEL) {
         continue;
       }
     }
@@ -151,7 +153,7 @@ static void SearchFile(const char *szSrcFile, const char *szDstFolder, int nInde
   // 获取文件标题
   lpBackSlash = strrchr(szSrcFile, '\\');
   if (lpBackSlash == NULL || lpBackSlash[1] == '\0') {
-    strcpy(szTitle, CnTw("无标题", ""));
+    strcpy(szTitle, CnTw("无标题", "礚夹肈"));
   } else {
     strcpy(szTitle, lpBackSlash + 1);
   }
@@ -255,7 +257,7 @@ static void CreateManifest(void) {
   char szTitle[MAX_CHAR], szDescript[MAX_CHAR], szManifest[MAX_CHAR];
 
   Ansi2Utf8(szTitle, Pgns2Jar.szTitle);
-  Ansi2Utf8(szDescript, CnTw("象棋小巫师手机棋谱", ""));
+  Ansi2Utf8(szDescript, CnTw("象棋小巫师手机棋谱", "禜囱畍も诀囱眯"));
   strcpy(szManifest, Pgns2Jar.szDstFolder);
   strcat(szManifest, "\\META-INF\\MANIFEST.MF");
   fpManifest = fopen(szManifest, "wt");
@@ -379,7 +381,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   SearchFolderToDelete(szPgnFolder);
   RemoveDirectory(szPgnFolder);
 
-  sprintf(szMsg, CnTw("手机棋谱 %s(.jad) 制作成功。", ""), Pgns2Jar.szJarFile);
-  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", ""), MB_ICONINFORMATION);
+  sprintf(szMsg, CnTw("手机棋谱 %s(.jad) 制作成功。", "も诀囱眯%s(.jad)籹Θ"), Pgns2Jar.szJarFile);
+  MessageBox(NULL, szMsg, CnTw("手机棋谱制作工具", "も诀囱眯籹ㄣ"), MB_ICONINFORMATION);
   return 0;
 }
