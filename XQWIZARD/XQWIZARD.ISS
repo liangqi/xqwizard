@@ -33,7 +33,7 @@ OutputBaseFilename=xqwizard_setup
 OutputDir=.
 Compression=lzma
 SolidCompression=yes
-SetupIconFile=RES\XQWSETUP.ICO
+SetupIconFile=RES\ICONS\XQWSETUP.ICO
 AppCopyright=(C) 2004-2010 www.xqbase.com
 ShowUndisplayableLanguages=yes
 
@@ -64,10 +64,10 @@ Name: "eleeye"; Description: "更 ElephantEye ま篮"; Types: default; Languages:
 
 [Files]
 ; 系统文件
-Source: "MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "COMCT232.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
+Source: "SYSTEM\MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
+Source: "SYSTEM\COMCT232.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
+Source: "SYSTEM\MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
+Source: "SYSTEM\MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
@@ -84,14 +84,14 @@ Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PGNS2JAR.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ZIP32Z64.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
-Source: "SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
-Source: "XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
-Source: "XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
-Source: "README_S.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "README_T.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ELEEYE.TXT"; DestDir: "{app}"; Flags: ignoreversion
-Source: "GPL.TXT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "EXAMPLES\SAMPLE_S.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
+Source: "EXAMPLES\SAMPLE_T.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
+Source: "EXAMPLES\XQFEXAMA.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
+Source: "EXAMPLES\XQFEXAMB.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
+Source: "DOC\README_S.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
+Source: "DOC\README_T.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
+Source: "DOC\ELEEYE.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
+Source: "DOC\GPL.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
 ; 残局文件
 Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion

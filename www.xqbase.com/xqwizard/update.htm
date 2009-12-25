@@ -102,8 +102,7 @@ bottommargin="0" rightmargin="0">
                         face="Times New Roman">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
                         face="Times New Roman"> (</font>简繁通用<font
                         face="Times New Roman">)</font></dt>
-                    <dt>　　注：<font face="Times New Roman">.7z</font>或<font
-                        face="Times New Roman">.z</font>文件可用<a
+                    <dt>　　注：<font face="Times New Roman">.7z</font>文件可用<a
                         href="http://www.7-zip.org/"
                         target="_blank"><font size="3"
                         face="Times New Roman">7-Zip</font></a><font
@@ -134,8 +133,13 @@ bottommargin="0" rightmargin="0">
                     </div>
                     <dt>　</dt>
                     <dt>　　智能超强的象棋巫师引擎<font
-                        color="#0000FF"><strong>虫虫象棋(BugChess)</strong></font>联众3000分以上，12月开始内测。象棋巫师注册用户可免费索取(用淘宝旺旺联系<a
-                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名)。</dt>
+                        color="#0000FF"><strong>虫虫象棋</strong></font><font
+                        color="#0000FF" face="Times New Roman"><strong>(BugChess)</strong></font>联众<font
+                        face="Times New Roman">3000</font>分以上，<font
+                        face="Times New Roman">12</font>月开始内测。象棋巫师注册用户可免费索取<font
+                        face="Times New Roman">(</font>用淘宝旺旺联系<a
+                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名<font
+                        face="Times New Roman">)</font>。</dt>
                     <div align="left">
                     <dt>　</dt>
                     </div><div align="left">

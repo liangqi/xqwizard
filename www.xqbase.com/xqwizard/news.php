@@ -124,12 +124,26 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　最新版象棋巫师的下载地址是：</dt>
+                    <dt>　　象棋巫师简体版与繁体版已合并，下载链接有：</dt>
                     </div><div align="left">
                     <dt>　　　　<a
+                        href="http://www.skycn.com/soft/24665.html"
+                        target="_blank"><font size="3">天空软件站下载</font></a><font
+                        size="3"> </font><a
                         href="http://www.onlinedown.net/soft/38287.htm"
-                        target="_blank">http://www.onlinedown.net/soft/38287.htm</a>
-                        (简繁通用)</dt>
+                        target="_blank"><font size="3">华军软件园下载</font></a><font
+                        size="3"> </font><a
+                        href="../download/xqwizard_setup.exe"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">安装包</font><font size="3"
+                        face="Times New Roman">)</font></a><font
+                        size="3" face="Times New Roman"> </font><a
+                        href="../download/xqwizard_portable.7z"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">绿色版</font><font size="3"
+                        face="Times New Roman">)</font></a></dt>
                     </div>
                     <dt>　</dt>
                     <dt>　　<font color="#0000FF"><strong>挑战</strong></font>题目解不出时，可以用工具栏里的<font
