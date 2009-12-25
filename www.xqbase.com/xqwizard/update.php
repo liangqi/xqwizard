@@ -2,9 +2,9 @@
 
 <head>
 <meta http-equiv="Content-Type"
-content="text/html; charset=gb_2312-80">
+content="text/html; charset=utf-8">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>������ʦ���¹���</title>
+<title>象棋巫师更新公告</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -12,7 +12,7 @@ bottommargin="0" rightmargin="0">
 
 <table border="0" cellpadding="8" cellspacing="0" width="100%">
     <tr>
-        <td>��</td>
+        <td>　</td>
         <td width="750" bgcolor="#FFFFFF" nowrap><table
         border="0" cellspacing="0" width="100%">
             <tr>
@@ -28,7 +28,7 @@ bottommargin="0" rightmargin="0">
                                 bot="HTMLMarkup" startspan -->&nbsp;<!--webbot
                                 bot="HTMLMarkup" endspan --><font
                                 color="#FFFFFF" size="6"
-                                face="����">������ʦ���¹���</font></td>
+                                face="黑体">象棋巫师更新公告</font></td>
                             </tr>
                         </table>
                         </td>
@@ -36,7 +36,7 @@ bottommargin="0" rightmargin="0">
                         border="0">
                             <tr>
                                 <td><p align="right"><font
-                                size="5">����</font></p>
+                                size="5">　　</font></p>
                                 </td>
                             </tr>
                             <tr>
@@ -58,7 +58,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td>��</td>
+                <td>　</td>
             </tr>
         </table>
         <table border="0" cellpadding="4" cellspacing="0"
@@ -68,9 +68,9 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><font size="3"><strong>���¹���</strong></font></td>
+                        <td><font size="3"><strong>更新公告</strong></font></td>
                         <td><p align="right"><!--webbot
-                        bot="HTMLMarkup" startspan --><font size="2"><?php echo date("Y��m��d��"); ?></font><!--webbot
+                        bot="HTMLMarkup" startspan --><font size="2"><?php echo date("Y年m月d日"); ?></font><!--webbot
                         bot="HTMLMarkup" endspan --></p>
                         </td>
                     </tr>
@@ -79,96 +79,165 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt>����������ʦ<font
-                        face="Times New Roman">3</font>ϵ��������д��ڴ���ȱ�ݣ�Ŀǰ��ֹͣ�û�����ͼ���֧�֡�������ʦ�����Ŷ�ǿ�ҽ����һ�һ����ʱ�佫������ʦ����Ϊ<font
-                        face="Times New Roman">4</font>ϵ�У���װ�����ص�ַ�ǣ�</dt>
-                    <dt>��������<a
+                    <dt>　　象棋巫师<font
+                        face="Times New Roman">3</font>系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家花一分钟时间将象棋巫师升级为<font
+                        face="Times New Roman">4</font>系列，安装包下载地址是：</dt>
+                    <dt>　　　　<a
                         href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                         face="Times New Roman">http://www.xqbase.com/download/xqwizard_setup.exe</font></a><font
-                        face="Times New Roman"> (</font>��ͨ��<font
+                        face="Times New Roman"> (</font>简繁通用<font
                         face="Times New Roman">)</font></dt>
-                    <dt>����ע��������Ϻ������˳�������ʦ�������а�װ����</dt>
-                    <dt>��</dt>
-                    <dt>����<font color="#0000FF"><strong>������ʦ</strong></font><font
+                    <dt>　　注：下载完毕后，请先退出象棋巫师，再运行安装程序。</dt>
+                    <dt>　</dt>
+                    <dt>　　<font color="#0000FF"><strong>象棋巫师</strong></font><font
                         color="#0000FF" face="Times New Roman"><strong>4</strong></font><font
-                        color="#0000FF"><strong>ϵ���Ծ���ȫ��ѣ�������ɺ�ҳ�潫���ٵ�����</strong></font>��汾���¸�������尮���ߴ������㣬�����½⡣</dt>
-                    <dt>��</dt>
-                    <dt><font color="#0000FF"><strong>����</strong></font>������ʦ<font
-                        face="Times New Roman">4</font>ϵ����ɫ��<font
-                        face="Times New Roman">(</font>�ⰲװ��<font
-                        face="Times New Roman">)</font>�ѷ��������ص�ַ�ǣ�</dt>
-                    <dt>��������<a
+                        color="#0000FF"><strong>系列仍旧完全免费，升级完成后本页面将不再弹出。</strong></font>因版本更新给广大象棋爱好者带来不便，敬请谅解。</dt>
+                    <dt>　</dt>
+                    <dt><font color="#0000FF"><strong>　　</strong></font>象棋巫师<font
+                        face="Times New Roman">4</font>系列绿色版<font
+                        face="Times New Roman">(</font>免安装版<font
+                        face="Times New Roman">)</font>已发布，下载地址是：</dt>
+                    <dt>　　　　<a
                         href="http://www.xqbase.com/download/xqwizard_portable.7z"><font
                         face="Times New Roman">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
-                        face="Times New Roman"> (</font>��ͨ��<font
+                        face="Times New Roman"> (</font>简繁通用<font
                         face="Times New Roman">)</font></dt>
-                    <dt>����ע��<font face="Times New Roman">.7z</font>�ļ�����<a
+                    <dt>　　注：<font face="Times New Roman">.7z</font>文件可用<a
                         href="http://www.7-zip.org/"
                         target="_blank"><font size="3"
                         face="Times New Roman">7-Zip</font></a><font
-                        size="3">��</font><a
+                        size="3">或</font><a
                         href="http://www.rarlab.com/"
                         target="_blank"><font size="3"
                         face="Times New Roman">WinRAR</font></a><font
                         size="3" face="Times New Roman">(3.4+)</font><font
-                        size="3">�򿪡�</font></dt>
+                        size="3">打开。</font></dt>
                 </dl>
                 </td>
             </tr>
             <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>����������ʦ</strong></font><font
+                <td background="../headerbg.gif"><font size="3"><strong>调查问卷</strong></font></td>
+            </tr>
+            <tr>
+                <td><form
+                action="http://www.xqbase.com/questionnaire/"
+                method="POST">
+                    <input type="hidden" name="qnid" value="2"><dl>
+                        <dd>您不愿意升级象棋巫师的原因是：</dd>
+                        <dd><input type="radio" name="a1"
+                            value="1">愿意试一下新版<a
+                            href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
+                            size="2">【这里下载】</font></a></dd>
+                        <dd><input type="radio" name="a1"
+                            value="2">不愿意花时间下载和安装</dd>
+                        <dd><input type="radio" name="a1"
+                            value="4">新版的棋下得更糟了</dd>
+                        <dd><input type="radio" name="a1"
+                            value="6">新版要收费<a
+                            href="javascript:alert('只有闯关中的提示和悔棋才需要收费，我们希望用这种方式鼓励玩家通过自己的努力提高棋艺。');"><font
+                            size="2">【听谁说的？】</font></a></dd>
+                        <dd><input type="radio" name="a1"
+                            value="7">对新增的功能不感兴趣<a
+                            href="#whatsnew"><font size="2">【新版有哪些功能？】</font></a></dd>
+                        <dd><input type="radio" name="a1"
+                            value="8">新版会不断弹出窗口<a
+                            href="javascript:alert('升级后，本页面将不再弹出。');"><font
+                            size="2">【听谁说的？】</font></a></dd>
+                        <dd><input type="radio" name="a1"
+                            value="9">新版程序经常出故障<font
+                            face="Times New Roman">(</font>建议补充说明<font
+                            face="Times New Roman">)</font></dd>
+                        <dd><font face="Times New Roman"><input
+                            type="radio" name="a1" value="10"></font>我的电脑无法运行新版象棋巫师<font
+                            face="Times New Roman">(</font>建议补充说明<font
+                            face="Times New Roman">)</font><a
+                            href="http://www.xqbase.com/xqwizard/help_faq.htm#office"
+                            target="_blank"><font size="2">【是这个原因吗？】</font></a></dd>
+                        <dd><input type="radio" name="a1"
+                            value="11">升级后导致其他软件无法使用<font
+                            face="Times New Roman">(</font>建议补充说明<font
+                            face="Times New Roman">)</font></dd>
+                        <dd><font face="Times New Roman"><input
+                            type="radio" checked name="a1"
+                            value="0"></font>其他原因<font
+                            face="Times New Roman">(</font>请写在下面的框中<font
+                            face="Times New Roman">)</font></dd>
+                        <dd>　</dd>
+                        <dd>如果您对上面的原因有所补充，也请写在这里<font
+                            face="Times New Roman">(120</font>字以内<font
+                            face="Times New Roman">)</font>：</dd>
+                        <dd><textarea name="comment" rows="5"
+                            cols="50"></textarea></dd>
+                        <dd>　</dd>
+                        <dd>如果愿意，请留下您的<font
+                            face="Times New Roman">Email</font>地址：<input
+                            type="text" size="20" name="email"
+                            value="@"></dd>
+                    </dl>
+                    <p align="center"><input type="submit"
+                    value="提交"></p>
+                </form>
+                </td>
+            </tr>
+            <tr>
+                <td background="../headerbg.gif"><a
+                name="whatsnew"></a><font size="3"><strong>关于象棋巫师</strong></font><font
                 size="3" face="Times New Roman"><strong>4</strong></font><font
-                size="3"><strong>ϵ��</strong></font></td>
+                size="3"><strong>系列</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>����<a
+                    <dt>　　<a
                         href="http://www.xqbase.com/xqbase/"
-                        target="_blank"><font color="#FF0000"><strong>������ʦ���ײֿ�</strong></font></a>���������������������ҵ�<font
-                        face="Times New Roman">1990</font>�굽<font
-                        face="Times New Roman">2008</font>����ڶ����������<font
-                        face="Times New Roman">(</font>��������������������������<font
-                        face="Times New Roman">)</font>�����ס�</dt>
+                        target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
+                        face="Times New Roman">1990</font>年到<font
+                        face="Times New Roman">2008</font>年国内顶级象棋比赛<font
+                        face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
+                        face="Times New Roman">)</font>的棋谱。</dt>
                     </div>
-                    <dt>��</dt>
-                    <dt>�������ܳ�ǿ��������ʦ����<font
-                        color="#0000FF"><strong>�������</strong></font><font
-                        color="#0000FF" face="Times New Roman"><strong>(BugChess)</strong></font>����<font
-                        face="Times New Roman">3000</font>�����ϣ�<font
-                        face="Times New Roman">12</font>�¿�ʼ�ڲ⡣������ʦע���û��������ȡ<font
-                        face="Times New Roman">(</font>���Ա�������ϵ<a
-                        href="wangwang.htm" target="_blank">������ʦ�ͷ�</a>�Ա㴫���ļ�����Ҫ��װ�ļ�ʱ���ȸ�֪������ʦħ��ѧУ�浵�ʺ��û���<font
-                        face="Times New Roman">)</font>��</dt>
+                    <dt>　</dt>
+                    <dt>　　智能超强的象棋巫师引擎<font
+                        color="#0000FF"><strong>虫虫象棋</strong></font><font
+                        color="#0000FF" face="Times New Roman"><strong>(BugChess)</strong></font>联众<font
+                        face="Times New Roman">3000</font>分以上，<font
+                        face="Times New Roman">12</font>月开始内测。象棋巫师注册用户可免费索取<font
+                        face="Times New Roman">(</font>用淘宝旺旺联系<a
+                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名<font
+                        face="Times New Roman">)</font>。</dt>
                     <div align="left">
-                    <dt>��</dt>
+                    <dt>　</dt>
                     </div><div align="left">
-                    <dt>����<font color="#008000"><strong>������ʦ</strong></font><font
-                        color="#008000" face="Times New Roman"><strong>4.4</strong></font>������<a
+                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
+                        color="#008000" face="Times New Roman"><strong>4.4</strong></font>新增了<a
                         href="publish.htm" target="_blank"><font
-                        color="#FF0000"><strong>���ٷ�������</strong></font></a>���ܣ�<font
-                        face="Times New Roman">15</font>���Ӽ����ڸ���������վ�Ϸ������׻���������
+                        color="#FF0000"><strong>快速发布棋谱</strong></font></a>功能，<font
+                        face="Times New Roman">15</font>秒钟即可在各大象棋网站上发布棋谱或发起求助。
                     </dt>
                     </div><div align="left">
-                    <dt>����<font color="#008000"><strong>������ʦ</strong></font><font
-                        color="#008000" face="Times New Roman"><strong>4.3</strong></font>������<a
+                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
+                        color="#008000" face="Times New Roman"><strong>4.3</strong></font>新增了<a
                         href="pgns2jar.htm" target="_blank"><font
-                        color="#FF0000"><strong>�����ֻ�����</strong></font></a>���ܣ�<font
-                        face="Times New Roman">30</font>���Ӽ��ɰѵ����������ת�Ƶ��ֻ������Ķ���</dt>
+                        color="#FF0000"><strong>制作手机棋谱</strong></font></a>功能，<font
+                        face="Times New Roman">30</font>秒钟即可把电脑里的棋谱转移到手机上来阅读。</dt>
+                    </div><div align="left">
+                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
+                        color="#008000" face="Times New Roman"><strong>4.0</strong></font>推出了<font
+                        color="#FF0000"><strong>象棋巫师魔法学校</strong></font>，内置上千盘杀局习题，提供存档、排名、指导等功能。</dt>
                     </div>
                 </dl>
                 </td>
             </tr>
             <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>��ѯ����</strong></font></td>
+                <td background="../headerbg.gif"><font size="3"><strong>咨询热线</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>�������κ����⡢����ͽ����뼰ʱ��������ʦ�����Ŷ���ϵ��<font
-                        face="Times New Roman">Email</font>��<a
+                    <dt>　　有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
+                        face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
-                        face="Times New Roman">webmaster@xqbase.com</font></a>��</dt>
+                        face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
                     </div>
                 </dl>
                 </td>
@@ -187,16 +256,16 @@ try {
 }
 // --></script><a
                 href="mailto:webmaster@xqbase.com?subject=%D2%E2%BC%FB%B7%B4%C0%A1"><font
-                color="#000060" size="2">�������</font></a><font
+                color="#000060" size="2">意见反馈</font></a><font
                 color="#000060" size="2"> </font><a
                 href="http://www.xqbase.com/" target="_blank"><font
-                color="#000060" size="2">����ٿ�ȫ��
-                ������Ʒ</font></a></p>
+                color="#000060" size="2">象棋百科全书
+                荣誉出品</font></a></p>
                 </td>
             </tr>
         </table>
         </td>
-        <td>��</td>
+        <td>　</td>
     </tr>
 </table>
 </body>
