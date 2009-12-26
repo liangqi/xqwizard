@@ -123,42 +123,66 @@ bottommargin="0" rightmargin="0">
                 action="http://www.xqbase.com/questionnaire/"
                 method="POST">
                     <input type="hidden" name="qnid" value="2"><dl>
-                        <dd>您不愿意升级象棋巫师的原因是：</dd>
+                        <dd>您目前使用的象棋巫师版本是：</dd>
                         <dd><input type="radio" name="a1"
+                            value="1">3.1或更低</dd>
+                        <dd><input type="radio" name="a1"
+                            value="2">3.2</dd>
+                        <dd><input type="radio" name="a1"
+                            value="3">3.3</dd>
+                        <dd><input type="radio" name="a1"
+                            value="4">3.4</dd>
+                        <dd><input type="radio" name="a1"
+                            value="5">3.5</dd>
+                        <dd><input type="radio" name="a1"
+                            value="6">3.6</dd>
+                        <dd><input type="radio" name="a1"
+                            value="7">3.7</dd>
+                        <dd><input type="radio" name="a1"
+                            value="8">3.8</dd>
+                        <dd><input type="radio" name="a1"
+                            value="9">3.9</dd>
+                        <dd><input type="radio" name="a1"
+                            value="10">4.0或更高</dd>
+                        <dd><input type="radio" checked name="a1"
+                            value="0">不知道</dd>
+                        <dd>　</dd>
+                        <dd>您不愿意升级象棋巫师的原因是：</dd>
+                        <dd><input type="radio" name="a2"
                             value="1">愿意试一下新版<a
                             href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                             size="2">【这里下载】</font></a></dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="2">不愿意花时间下载和安装</dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="4">新版的棋下得更糟了</dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="6">新版要收费<a
                             href="javascript:alert('只有闯关中的提示和悔棋才需要收费，我们希望用这种方式鼓励玩家通过自己的努力提高棋艺。');"><font
                             size="2">【听谁说的？】</font></a></dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="7">对新增的功能不感兴趣<a
                             href="#whatsnew"><font size="2">【新版有哪些功能？】</font></a></dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="8">新版会不断弹出窗口<a
                             href="javascript:alert('升级后，本页面将不再弹出。');"><font
                             size="2">【听谁说的？】</font></a></dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="9">新版程序经常出故障<font
                             face="Times New Roman">(</font>建议补充说明<font
                             face="Times New Roman">)</font></dd>
                         <dd><font face="Times New Roman"><input
-                            type="radio" name="a1" value="10"></font>我的电脑无法运行新版象棋巫师<font
+                            type="radio" name="a2" value="10"></font>我的电脑无法运行新版象棋巫师<font
                             face="Times New Roman">(</font>建议补充说明<font
                             face="Times New Roman">)</font><a
                             href="http://www.xqbase.com/xqwizard/help_faq.htm#office"
                             target="_blank"><font size="2">【是这个原因吗？】</font></a></dd>
-                        <dd><input type="radio" name="a1"
+                        <dd><input type="radio" name="a2"
                             value="11">升级后导致其他软件无法使用<font
                             face="Times New Roman">(</font>建议补充说明<font
                             face="Times New Roman">)</font></dd>
                         <dd><font face="Times New Roman"><input
-                            type="radio" checked name="a1"
+                            type="radio" checked name="a2"
                             value="0"></font>其他原因<font
                             face="Times New Roman">(</font>请写在下面的框中<font
                             face="Times New Roman">)</font></dd>
@@ -195,17 +219,7 @@ bottommargin="0" rightmargin="0">
                         face="Times New Roman">2008</font>年国内顶级象棋比赛<font
                         face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
                         face="Times New Roman">)</font>的棋谱。</dt>
-                    </div>
-                    <dt>　</dt>
-                    <dt>　　智能超强的象棋巫师引擎<font
-                        color="#0000FF"><strong>虫虫象棋</strong></font><font
-                        color="#0000FF" face="Times New Roman"><strong>(BugChess)</strong></font>联众<font
-                        face="Times New Roman">3000</font>分以上，<font
-                        face="Times New Roman">12</font>月开始内测。象棋巫师注册用户可免费索取<font
-                        face="Times New Roman">(</font>用淘宝旺旺联系<a
-                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名<font
-                        face="Times New Roman">)</font>。</dt>
-                    <div align="left">
+                    </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
                     <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font

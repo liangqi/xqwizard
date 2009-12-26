@@ -68,7 +68,7 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><font size="3"><strong>最新推出</strong></font></td>
+                        <td><font size="3"><strong>重要公告</strong></font></td>
                         <td><p align="right"><!--webbot
                         bot="HTMLMarkup" startspan --><font size="2"><?php echo date("Y年m月d日"); ?></font><!--webbot
                         bot="HTMLMarkup" endspan --></p>
@@ -76,6 +76,22 @@ bottommargin="0" rightmargin="0">
                     </tr>
                 </table>
                 </td>
+            </tr>
+            <tr>
+                <td><dl>
+                    <div align="left">
+                    <dt>　　运行象棋巫师时，如遇到弹出<font
+                        face="Times New Roman">Office 2003</font>的安装提示，请参考以下帮助：</dt>
+                    </div><div align="left">
+                    <dt>　　<a href="help_faq.htm#office"
+                        target="_blank">【为什么总是弹出<font
+                        face="Times New Roman">Office 2003</font>的安装提示】</a></dt>
+                    </div>
+                </dl>
+                </td>
+            </tr>
+            <tr>
+                <td background="../headerbg.gif"><font size="3"><strong>最新推出</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
@@ -90,41 +106,7 @@ bottommargin="0" rightmargin="0">
                     </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
-                    <dt>　　智能超强的象棋巫师引擎<font
-                        color="#0000FF"><strong>虫虫象棋(BugChess)</strong></font>联众3000分以上，12月开始内测。象棋巫师注册用户可免费索取(用淘宝旺旺联系<a
-                        href="wangwang.htm" target="_blank">象棋巫师客服</a>以便传输文件，索要安装文件时请先告知象棋巫师魔法学校存档帐号用户名)。</dt>
-                    </div>
-                </dl>
-                </td>
-            </tr>
-            <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>重要公告</strong></font></td>
-            </tr>
-            <tr>
-                <td><dl>
-                    <div align="left">
-                    <dt>　　<a href="wangwang.htm"
-                        target="_blank"><font color="#0000FF"><strong>象棋巫师客服</strong></font></a>(淘宝旺旺)重新上岗啦！</dt>
-                    </div><div align="left">
-                    <dt>　</dt>
-                    </div><div align="left">
-                    <dt>　　运行象棋巫师时，如遇到弹出<font
-                        face="Times New Roman">Office 2003</font>的安装提示，请参考以下帮助：</dt>
-                    </div><div align="left">
-                    <dt>　　<a href="help_faq.htm#office"
-                        target="_blank">【为什么总是弹出<font
-                        face="Times New Roman">Office 2003</font>的安装提示】</a></dt>
-                    </div>
-                </dl>
-                </td>
-            </tr>
-            <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>使用技巧</strong></font></td>
-            </tr>
-            <tr>
-                <td><dl>
-                    <div align="left">
-                    <dt>　　象棋巫师简体版与繁体版已合并，下载链接有：</dt>
+                    <dt>　　<font color="#008000"><strong>象棋巫师4.5</strong></font>简体版与繁体版已合并，下载链接有：</dt>
                     </div><div align="left">
                     <dt>　　　　<a
                         href="http://www.skycn.com/soft/24665.html"
@@ -145,7 +127,14 @@ bottommargin="0" rightmargin="0">
                         size="3">绿色版</font><font size="3"
                         face="Times New Roman">)</font></a></dt>
                     </div>
-                    <dt>　</dt>
+                </dl>
+                </td>
+            </tr>
+            <tr>
+                <td background="../headerbg.gif"><font size="3"><strong>使用技巧</strong></font></td>
+            </tr>
+            <tr>
+                <td><dl>
                     <dt>　　<font color="#0000FF"><strong>挑战</strong></font>题目解不出时，可以用工具栏里的<font
                         color="#0000FF"><strong>发布棋谱</strong></font>按钮，到以下几个网站发起求助：</dt>
                     <dt>　　<a href="publish_zhidao.htm"
@@ -177,7 +166,7 @@ bottommargin="0" rightmargin="0">
                     <dt>　　有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
                         face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
-                        face="Times New Roman">webmaster@xqbase.com</font></a>，淘宝旺旺：象棋百科全书。</dt>
+                        face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
                     </div>
                 </dl>
                 </td>
