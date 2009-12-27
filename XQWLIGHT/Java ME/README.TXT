@@ -10,4 +10,4 @@
 ★ 象棋小巫师是自由软件，你可以遵照自由软件基金会出版的GNU通用公共许可证条款来传播这款软件。该软件首先发布在 SourceForge 网站上，下载页面是：
 　　http://sourceforge.net/projects/xqwizard/
 
-欢迎登录 www.elephantbase.net 免费下载PC版 象棋巫师
+欢迎登录 www.xqbase.com 免费下载PC版 象棋巫师

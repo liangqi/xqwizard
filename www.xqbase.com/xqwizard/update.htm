@@ -125,27 +125,31 @@ bottommargin="0" rightmargin="0">
                     <input type="hidden" name="qnid" value="2"><dl>
                         <dd>您目前使用的象棋巫师版本是：</dd>
                         <dd><input type="radio" name="a1"
-                            value="1">3.1或更低</dd>
+                            value="1">3.1x或更低</dd>
                         <dd><input type="radio" name="a1"
-                            value="2">3.2</dd>
+                            value="2">3.2x　<input type="radio"
+                            name="a1" value="3">3.3x　<input
+                            type="radio" name="a1" value="4">3.4x　<input
+                            type="radio" name="a1" value="5">3.5x　<input
+                            type="radio" name="a1" value="6">3.6x　<input
+                            type="radio" name="a1" value="7">3.7x　<input
+                            type="radio" name="a1" value="8">3.8x　<input
+                            type="radio" name="a1" value="9">3.9x</dd>
                         <dd><input type="radio" name="a1"
-                            value="3">3.3</dd>
+                            value="10">4.0x　<input type="radio"
+                            name="a1" value="11">4.1x　<input
+                            type="radio" name="a1" value="12">4.2x　<input
+                            type="radio" name="a1" value="13">4.3x　<input
+                            type="radio" name="a1" value="14">4.4x　<input
+                            type="radio" name="a1" value="15">4.5x　<input
+                            type="radio" name="a1" value="16">4.6x　<input
+                            type="radio" name="a1" value="17">4.7x</dd>
                         <dd><input type="radio" name="a1"
-                            value="4">3.4</dd>
-                        <dd><input type="radio" name="a1"
-                            value="5">3.5</dd>
-                        <dd><input type="radio" name="a1"
-                            value="6">3.6</dd>
-                        <dd><input type="radio" name="a1"
-                            value="7">3.7</dd>
-                        <dd><input type="radio" name="a1"
-                            value="8">3.8</dd>
-                        <dd><input type="radio" name="a1"
-                            value="9">3.9</dd>
-                        <dd><input type="radio" name="a1"
-                            value="10">4.0或更高</dd>
+                            value="18">4.8或更高</dd>
                         <dd><input type="radio" checked name="a1"
-                            value="0">不知道</dd>
+                            value="0">不知道<a
+                            href="javascript:alert('使用“帮助”菜单的“关于象棋巫师”功能。');"><font
+                            size="2">【如何查询版本？】</font></a></dd>
                         <dd>　</dd>
                         <dd>您不愿意升级象棋巫师的原因是：</dd>
                         <dd><input type="radio" name="a2"
@@ -153,7 +157,9 @@ bottommargin="0" rightmargin="0">
                             href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                             size="2">【这里下载】</font></a></dd>
                         <dd><input type="radio" name="a2"
-                            value="2">不愿意花时间下载和安装</dd>
+                            value="2">不愿意花时间下载和安装<a
+                            href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
+                            size="2">【只需要一分钟】</font></a></dd>
                         <dd><input type="radio" name="a2"
                             value="4">新版的棋下得更糟了</dd>
                         <dd><input type="radio" name="a2"

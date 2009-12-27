@@ -3,20 +3,14 @@ package xqboss;
 import java.io.InputStream;
 
 class LineInputStream {
-	private static char[] gbCharTab = new char[32768];
-	private static char[] big5CharTab = new char[32768];
+	private static char[] charTab = new char[32768];
 
 	static {
 		try {
 			Class clazz = new LineInputStream().getClass();
-			InputStream in = clazz.getResourceAsStream("GB.DAT");
+			InputStream in = clazz.getResourceAsStream("CHARTAB.DAT");
 			for (int i = 0; i < 32768; i ++) {
-				gbCharTab[i] = (char) (in.read() << 8 | in.read());
-			}
-			in.close();
-			in = clazz.getResourceAsStream("BIG5.DAT");
-			for (int i = 0; i < 32768; i ++) {
-				gbCharTab[i] = (char) (in.read() << 8 | in.read());
+				charTab[i] = (char) (in.read() << 8 | in.read());
 			}
 			in.close();
 		} catch (Exception e) {
@@ -25,15 +19,13 @@ class LineInputStream {
 	}
 
 	private InputStream in;
-	private char[] charTab;
 
 	private LineInputStream() {
 		// Do Nothing
 	}
 
-	LineInputStream(InputStream in, boolean big5) {
+	LineInputStream(InputStream in) {
 		this.in = in;
-		charTab = big5 ? big5CharTab : gbCharTab;
 	}
 
 	String readLine() {

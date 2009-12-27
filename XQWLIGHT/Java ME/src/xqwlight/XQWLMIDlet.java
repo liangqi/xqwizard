@@ -2,8 +2,8 @@
 XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.24, Last Modified: Mar. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ public class XQWLMIDlet extends MIDlet {
 		form.append(gMusic);
 		form.addCommand(cmdStart);
 		form.addCommand(cmdExit);
-		form.setTicker(new Ticker("»¶Ó­µÇÂ¼ www.elephantbase.net Ãâ·ÑÏÂÔØPC°æ ÏóÆåÎ×Ê¦"));
+		form.setTicker(new Ticker("»¶Ó­µÇÂ¼ www.xqbase.com Ãâ·ÑÏÂÔØPC°æ ÏóÆåÎ×Ê¦"));
 
 		form.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {

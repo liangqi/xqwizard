@@ -3,7 +3,7 @@ XQBossMIDlet.java - Source Code for XiangQi Boss Advanced, Part V
 
 XiangQi Boss Advanced - a Chinese Chess PGN File Reader for Java ME
 Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
-Copyright (C) 2004-2008 www.elephantbase.net
+Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import javax.microedition.lcdui.Ticker;
 import javax.microedition.midlet.MIDlet;
 
 public class XQBossMIDlet extends MIDlet {
-	private static Ticker ticker = new Ticker("»¶Ó­µÇÂ¼ www.elephantbase.net Ãâ·ÑÏÂÔØPC°æ ÏóÆåÎ×Ê¦");
+	private static Ticker ticker = new Ticker("»¶Ó­µÇÂ¼ www.xqbase.com Ãâ·ÑÏÂÔØPC°æ ÏóÆåÎ×Ê¦");
 	private static Image imgFolder, imgFile;
 
 	static {
@@ -48,13 +48,12 @@ public class XQBossMIDlet extends MIDlet {
 
 	private XQBossCanvas canvas = new XQBossCanvas(this);
 	private boolean started = false;
-	private boolean big5 = false;
 
 	String currDir = "";
 
 	void open(String file, String title) {
 		LineInputStream in = new LineInputStream(getClass().
-				getResourceAsStream("/PGNS" + currDir + "/" + file), big5);
+				getResourceAsStream("/PGNS" + currDir + "/" + file));
 		PgnFile pgn = new PgnFile(in);
 		in.close();
 		canvas.load(pgn, title);
@@ -73,7 +72,7 @@ public class XQBossMIDlet extends MIDlet {
 		lstDir.setTicker(ticker);
 
 		LineInputStream in = new LineInputStream(getClass().
-				getResourceAsStream("/PGNS" + currDir + "/FILELIST"), big5);
+				getResourceAsStream("/PGNS" + currDir + "/FILELIST"));
 		String s = in.readLine();
 		while (s != null) {
 			int i = s.indexOf('=');
@@ -113,10 +112,6 @@ public class XQBossMIDlet extends MIDlet {
 			return;
 		}
 		started = true;
-		String strBig5 = getAppProperty("XQBoss-Big5");
-		if (strBig5 != null && strBig5.toLowerCase().equals("true")) {
-			big5 = true;
-		}
 		list();
 	}
 

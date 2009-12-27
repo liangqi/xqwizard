@@ -1,7 +1,7 @@
 /*
 PGNS2JAR - a XQBoss Jar Making Program
 Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
-Copyright (C) 2004-2009 www.elephantbase.net
+Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,8 +88,6 @@ static bool ChooseSourceFolder(void) {
   }
   return true;
 }
-
-// 
 
 // 选择要生成的手机棋谱文件
 static bool ChooseJarFile(void) {
@@ -269,13 +267,10 @@ static void CreateManifest(void) {
   fprintf(fpManifest, "MIDlet-1: %s, /images/xqboss.png, xqboss.XQBossMIDlet\n", szTitle);
   fprintf(fpManifest, "MIDlet-Name: %s\n", szTitle);
   fprintf(fpManifest, "MIDlet-Description: %s - %s\n", szTitle, szDescript);
-  fprintf(fpManifest, "MIDlet-Vendor: www.elephantbase.net\n");
-  fprintf(fpManifest, "MIDlet-Info-URL: http://www.elephantbase.net/\n");
+  fprintf(fpManifest, "MIDlet-Vendor: www.xqbase.com\n");
+  fprintf(fpManifest, "MIDlet-Info-URL: http://www.xqbase.com/\n");
   fprintf(fpManifest, "MIDlet-Icon: /images/xqboss.png\n");
   fprintf(fpManifest, "MIDlet-Version: %s\n", cszMidletVersion);
-  if (Pgns2Jar.bBig5) {
-    fprintf(fpManifest, "XQBoss-Big5: true\n");
-  }
   fprintf(fpManifest, "MicroEdition-Configuration: CLDC-1.0\n");
   fprintf(fpManifest, "MicroEdition-Profile: MIDP-2.0\n");
 
@@ -353,7 +348,7 @@ void CreateJarFile(void) {
 
 // 主程序
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-  char szPgnFolder[MAX_CHAR], szMsg[MAX_CHAR];
+  char szPgnFolder[MAX_CHAR], szSrcCharTab[MAX_CHAR], szDstCharTab[MAX_CHAR], szMsg[MAX_CHAR];
 
   // 确定当前操作系统字符集
   Pgns2Jar.bBig5 = GetOEMCP() == 950;
@@ -373,6 +368,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
   strcat(szPgnFolder, "\\PGNS");
   CreateDirectory(szPgnFolder, NULL);
   SearchFolder(Pgns2Jar.szSrcFolder, szPgnFolder);
+  // 复制码表
+  strcpy(szSrcCharTab, Pgns2Jar.szDstFolder);
+  strcat(szSrcCharTab, CnTw(".DAT\\GB.DAT", ".DAT\\BIG5.DAT"));
+  strcpy(szDstCharTab, Pgns2Jar.szDstFolder);
+  strcat(szDstCharTab, "\\xqboss\\CHARTAB.DAT");
+  CopyFile(szSrcCharTab, szDstCharTab, FALSE);
   // 生成MANIFEST.MF、JAR文件和JAD文件
   CreateManifest();
   CreateJarFile();
