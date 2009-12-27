@@ -11,9 +11,7 @@ public class ClassPath extends File {
 	private static String getPath(Class<? extends ClassPath> cls) {
 		try {
 			String path = URLDecoder.decode(cls.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-			if (false) {
-				// Code Style
-			} else if (path.endsWith(".jar")) {
+			if (path.endsWith(".jar")) {
 				path += separator + "..";
 			} else if (path.endsWith(".class")) {
 				int nParent = ClassPath.class.getPackage().getName().split("\\.").length + 1;

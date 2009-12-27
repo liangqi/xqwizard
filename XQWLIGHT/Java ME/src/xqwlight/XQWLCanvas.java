@@ -140,9 +140,7 @@ class XQWLCanvas extends Canvas {
 		setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
 				if (phase == PHASE_WAITING || phase == PHASE_EXITTING) {
-					if (false) {
-						// Code Style
-					} else if (c == cmdBack) {
+					if (c == cmdBack) {
 						back();
 					} else if (c == cmdRetract) {
 						retract();
@@ -216,9 +214,7 @@ class XQWLCanvas extends Canvas {
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
 				squareSize = Math.min(width / 9, height / 10);
-				if (false) {
-					// Code Style
-				} else if (squareSize >= 36) {
+				if (squareSize >= 36) {
 					squareSize = 36;
 					imagePath += "large/";
 				} else if (squareSize >= 26) {

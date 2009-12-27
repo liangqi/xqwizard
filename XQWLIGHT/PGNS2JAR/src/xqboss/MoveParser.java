@@ -134,9 +134,7 @@ public class MoveParser {
 	}
 
 	private static int word2Piece(int w) {
-		if (false) {
-			// Code Style
-		} else if (w == 'Ž›' || w == 'Œ¢') {
+		if (w == 'Ž›' || w == 'Œ¢') {
 			return 0;
 		} else if (w == 'ñR' || w == '‚Ø' || w == 'ØX') { // ØX[‚Ø]
 			return 3;

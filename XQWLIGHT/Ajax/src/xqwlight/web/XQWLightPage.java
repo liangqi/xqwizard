@@ -273,7 +273,7 @@ public class XQWLightPage extends WebPage {
 	private int getCookieValue(String name, int min, int max, int defaultValue) {
 		Cookie cookie = ((WebRequest) getRequest()).getCookie(name);
 		int value = (cookie == null ? defaultValue :
-				Integers.parseInt(cookie.getValue(), defaultValue));
+				Integers.parse(cookie.getValue(), defaultValue));
 		return Integers.minMax(min, value, max);
 	}
 

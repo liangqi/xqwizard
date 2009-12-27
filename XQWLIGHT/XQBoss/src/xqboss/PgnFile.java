@@ -166,9 +166,7 @@ class PgnFile {
 					returned = true;
 				} else if (s.charAt(0) == '[') {
 					String value;
-					if (false) {
-						// Code Style
-					} else if ((value = getLabel(s, "EVENT")) != null) {
+					if ((value = getLabel(s, "EVENT")) != null) {
 						event = value;
 					} else if ((value = getLabel(s, "ROUND")) != null) {
 						round = value;

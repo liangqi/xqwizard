@@ -113,9 +113,7 @@ class XQBossCanvas extends Canvas {
 				// "width" and "height" are Full-Screen values
 				String imagePath = "/images/";
 				squareSize = Math.min(width / 9, height / 10);
-				if (false) {
-					// Code Style
-				} else if (squareSize >= 36) {
+				if (squareSize >= 36) {
 					squareSize = 36;
 					imagePath += "large/";
 				} else if (squareSize >= 26) {
@@ -177,9 +175,7 @@ class XQBossCanvas extends Canvas {
 
 	protected void keyPressed(int code) {
 		int action = getGameAction(code);
-		if (false) {
-			// Code Style
-		} else if (action == UP || action == LEFT || code == KEY_NUM2 || code == KEY_NUM4) {
+		if (action == UP || action == LEFT || code == KEY_NUM2 || code == KEY_NUM4) {
 			prev();
 		} else if (action == FIRE || code == KEY_NUM5) {
 			comment();

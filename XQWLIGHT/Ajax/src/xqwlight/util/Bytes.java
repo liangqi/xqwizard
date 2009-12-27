@@ -1,7 +1,9 @@
 package xqwlight.util;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Bytes {
@@ -288,8 +290,9 @@ public class Bytes {
 
 	private static final byte[] HEX_CHAR = "0123456789ABCDEF".getBytes();
 
-	private static void dumpLine(PrintStream out, byte[] b, int offDiv16, int begin, int end) {
-		byte[] lpLine = "                                                                             ".getBytes();
+	private static String dumpLine(byte[] b, int offDiv16, int begin, int end) {
+		byte[] lpLine = new byte[77];
+		Arrays.fill(lpLine, (byte) ' ');
 		lpLine[0] = HEX_CHAR[(offDiv16 >>> 24) & 0xf];
 		lpLine[1] = HEX_CHAR[(offDiv16 >>> 20) & 0xf];
 		lpLine[2] = HEX_CHAR[(offDiv16 >>> 16) & 0xf];
@@ -314,7 +317,7 @@ public class Bytes {
 		if (begin < 8 && end > 8) {
 			lpLine[34] = '-';
 		}
-		out.println(new String(lpLine));
+		return new String(lpLine);
 	}
 
 	public static void dump(PrintStream out, byte[] b, int off, int len) {
@@ -322,19 +325,40 @@ public class Bytes {
 		int offDiv16 = off / 16;
 		int endDiv16 = end / 16;
 		if (offDiv16 == endDiv16) {
-			dumpLine(out, b, offDiv16, off % 16, end % 16);
+			out.println(dumpLine(b, offDiv16, off % 16, end % 16));
 		} else {
-			dumpLine(out, b, offDiv16, off % 16, 16);
+			out.println(dumpLine(b, offDiv16, off % 16, 16));
 			for (int i = offDiv16 + 1; i < endDiv16; i ++) {
-				dumpLine(out, b, i, 0, 16);
+				out.println(dumpLine(b, i, 0, 16));
 			}
 			if (end % 16 > 0) {
-				dumpLine(out, b, endDiv16, 0, end % 16);
+				out.println(dumpLine(b, endDiv16, 0, end % 16));
 			}
 		}
 	}
 
 	public static void dump(PrintStream out, byte[] b) {
+		dump(out, b, 0, b.length);
+	}
+
+	public static void dump(PrintWriter out, byte[] b, int off, int len) {
+		int end = off + len;
+		int offDiv16 = off / 16;
+		int endDiv16 = end / 16;
+		if (offDiv16 == endDiv16) {
+			out.println(dumpLine(b, offDiv16, off % 16, end % 16));
+		} else {
+			out.println(dumpLine(b, offDiv16, off % 16, 16));
+			for (int i = offDiv16 + 1; i < endDiv16; i ++) {
+				out.println(dumpLine(b, i, 0, 16));
+			}
+			if (end % 16 > 0) {
+				out.println(dumpLine(b, endDiv16, 0, end % 16));
+			}
+		}
+	}
+
+	public static void dump(PrintWriter out, byte[] b) {
 		dump(out, b, 0, b.length);
 	}
 

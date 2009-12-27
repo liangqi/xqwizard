@@ -1,11 +1,11 @@
 package xqwlight.util;
 
 public class Integers {
-	public static int parseInt(String s) {
-		return parseInt(s, 0);
+	public static int parse(String s) {
+		return parse(s, 0);
 	}
 
-	public static int parseInt(String s, int i) {
+	public static int parse(String s, int i) {
 		int n = i;
 		try {
 			n = Integer.parseInt(s);

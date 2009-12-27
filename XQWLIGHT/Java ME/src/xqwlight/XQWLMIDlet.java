@@ -91,9 +91,7 @@ public class XQWLMIDlet extends MIDlet {
 
 		form.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
-				if (false) {
-					// Code Style
-				} else if (c == cmdStart) {
+				if (c == cmdStart) {
 					flipped = cgToMove.isSelected(1);
 					handicap = cgHandicap.getSelectedIndex();
 					level = cgLevel.getSelectedIndex();
@@ -111,9 +109,7 @@ public class XQWLMIDlet extends MIDlet {
 
 		form.setItemStateListener(new ItemStateListener() {
 			public void itemStateChanged(Item i) {
-				if (false) {
-					// Code Style
-				} else if (i == gSound) {
+				if (i == gSound) {
 					sound = gSound.getValue();
 					playSound(0);
 				} else if (i == gMusic) {

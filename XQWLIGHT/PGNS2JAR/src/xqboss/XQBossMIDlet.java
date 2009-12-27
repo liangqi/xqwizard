@@ -84,9 +84,7 @@ public class XQBossMIDlet extends MIDlet {
 		lstDir.setSelectCommand(cmdOpen);
 		lstDir.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
-				if (false) {
-					// Code Style
-				} else if (c == cmdOpen) {
+				if (c == cmdOpen) {
 					int i = lstDir.getSelectedIndex();
 					String selDir = (String) vctDir.elementAt(i);
 					if (selDir.charAt(0) == '/') {
