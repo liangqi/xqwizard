@@ -163,14 +163,14 @@ bottommargin="0" rightmargin="0">
                         <dd><input type="radio" name="a2"
                             value="4">新版的棋下得更糟了</dd>
                         <dd><input type="radio" name="a2"
-                            value="6">新版要收费<a
+                            value="6">听说新版要收费<a
                             href="javascript:alert('只有闯关中的提示和悔棋才需要收费，我们希望用这种方式鼓励玩家通过自己的努力提高棋艺。');"><font
                             size="2">【听谁说的？】</font></a></dd>
                         <dd><input type="radio" name="a2"
                             value="7">对新增的功能不感兴趣<a
                             href="#whatsnew"><font size="2">【新版有哪些功能？】</font></a></dd>
                         <dd><input type="radio" name="a2"
-                            value="8">新版会不断弹出窗口<a
+                            value="8">听说新版会不断弹出窗口<a
                             href="javascript:alert('升级后，本页面将不再弹出。');"><font
                             size="2">【听谁说的？】</font></a></dd>
                         <dd><input type="radio" name="a2"

@@ -86,6 +86,11 @@ bottommargin="0" rightmargin="0">
                     <dt>　　<a href="help_faq.htm#office"
                         target="_blank">【为什么总是弹出<font
                         face="Times New Roman">Office 2003</font>的安装提示】</a></dt>
+                    </div><div align="left">
+                    <dt>　</dt>
+                    </div><div align="left">
+                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷将在4.51版修正。
+                    </dt>
                     </div>
                 </dl>
                 </td>

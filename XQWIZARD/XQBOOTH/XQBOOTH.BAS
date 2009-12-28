@@ -782,7 +782,7 @@ Case USERS_POINTS
     Case "error"
         LoginError
         LeaveBusy
-        App_frmMain.mnUsersPoints_Click
+        TryPoints
         Exit Sub
     Case "noretry"
         NoRetryError
