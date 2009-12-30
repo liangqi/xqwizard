@@ -50,7 +50,6 @@ Name: "mxq"; Description: "关联弈天棋谱文件(*.MXQ)"; Types: default; Languages: 
 Name: "che"; Description: "关联QQ象棋棋谱文件(*.CHE)"; Types: default; Languages: cn
 Name: "chn"; Description: "关联联众象棋棋谱文件(*.CHN)"; Types: default; Languages: cn
 Name: "ccm"; Description: "关联中游象棋棋谱文件(*.CCM)"; Types: default; Languages: cn
-Name: "eleeye"; Description: "加载 ElephantEye 引擎"; Types: default; Languages: cn
 Name: "orange"; Description: "安装《橘中秘》棋谱"; Types: default; Languages: cn
 
 Name: "pgn"; Description: "闽羛簿从囱眯ゅン(*.PGN)"; Types: default; Languages: tw
@@ -60,7 +59,6 @@ Name: "mxq"; Description: "闽羛ぱ囱眯ゅン(*.MXQ)"; Types: default; Languages: 
 Name: "che"; Description: "闽羛QQ禜囱囱眯ゅン(*.CHE)"; Types: default; Languages: tw
 Name: "chn"; Description: "闽羛羛渤禜囱囱眯ゅン(*.CHN)"; Types: default; Languages: tw
 Name: "ccm"; Description: "闽羛い村禜囱囱眯ゅン(*.CCM)"; Types: default; Languages: tw
-Name: "eleeye"; Description: "更 ElephantEye ま篮"; Types: default; Languages: tw
 Name: "orange"; Description: "杆撅い囱眯"; Types: default; Languages: tw
 
 [Files]
@@ -735,8 +733,6 @@ Root: HKCR; Subkey: "XQWizard.CCM\DefaultIcon"; ValueType: string; ValueData: "{
 Root: HKCR; Subkey: "XQWizard.CCM\Shell"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: ccm
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "FileName"; ValueData: "{app}\ELEEYE.EXE"; Components: eleeye
-Root: HKCU; Subkey: "Software\VB and VBA Program Settings\XQWizard\Engine"; ValueType: string; ValueName: "BookFiles"; ValueData: "{app}\BOOK.DAT"; Components: eleeye
 
 [Icons]
 Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn

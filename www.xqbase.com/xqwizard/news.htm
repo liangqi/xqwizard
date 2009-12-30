@@ -80,6 +80,10 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
+                    <dt><font color="#FF0000"><strong>　　象棋百科全书新域名www.xqbase.com正在备案中，暂时无法对外提供服务，请访问www.elephantbase.net，敬请谅解。</strong></font></dt>
+                    </div><div align="left">
+                    <dt>　</dt>
+                    </div><div align="left">
                     <dt>　　运行象棋巫师时，如遇到弹出<font
                         face="Times New Roman">Office 2003</font>的安装提示，请参考以下帮助：</dt>
                     </div><div align="left">
