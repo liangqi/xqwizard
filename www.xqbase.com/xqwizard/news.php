@@ -80,7 +80,9 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt><font color="#FF0000"><strong>　　象棋百科全书新域名www.xqbase.com正在备案中，暂时无法对外提供服务，请访问www.elephantbase.net，敬请谅解。</strong></font></dt>
+                    <dt>　　象棋百科全书新域名xqbase.com正在备案中，暂时无法对外提供服务，请访问<a
+                        href="http://www.elephantbase.net/"
+                        target="_blank">www.elephantbase.net</a>，敬请谅解。</dt>
                     </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">

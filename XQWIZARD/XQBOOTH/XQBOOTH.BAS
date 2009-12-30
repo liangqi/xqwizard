@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.51, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -655,9 +655,13 @@ End Sub
 ' 处理用户中心响应
 Public Sub DoUsersEvent()
 
-Dim szResult As String, nResult As Integer, bLoad As Boolean, szResults() As String
+Dim szResult As String, szPassword As String
+Dim nResult As Integer, bLoad As Boolean, szResults() As String
 
-Login_szPassword = App_frmMain.Inet.GetHeader("Login-Cookie")
+szPassword = App_frmMain.Inet.GetHeader("Login-Cookie")
+If szPassword <> "" Then
+    Login_szPassword = szPassword
+End If
 szResult = App_frmMain.Inet.GetHeader("Login-Result")
 Select Case App_nUsersEvent
 
