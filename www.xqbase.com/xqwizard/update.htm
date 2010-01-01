@@ -120,7 +120,7 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><form
-                action="http://www.xqbase.com/questionnaire/"
+                action="http://www.elephantbase.net/questionnaire/"
                 method="POST">
                     <input type="hidden" name="qnid" value="2"><dl>
                         <dd>您目前使用的象棋巫师版本是：</dd>
@@ -254,7 +254,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
+                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
                         face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
                         face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>

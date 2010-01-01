@@ -84,6 +84,8 @@ bottommargin="0" rightmargin="0">
                         href="http://www.elephantbase.net/"
                         target="_blank">www.elephantbase.net</a>，敬请谅解。</dt>
                     </div><div align="left">
+                    <dt>　　部分用户无法提交成绩的问题(因域名关闭引起)现在已经解决，祝大家新年里玩得开心。</dt>
+                    </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
                     <dt>　　运行象棋巫师时，如遇到弹出<font
@@ -95,8 +97,21 @@ bottommargin="0" rightmargin="0">
                     </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
-                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷将在4.51版修正。
-                    </dt>
+                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷已在4.51版中修正。
+                        下载链接有：</dt>
+                    </div><div align="left">
+                    <dt>　　　　<a
+                        href="../download/xqwizard_setup.exe"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">安装包</font><font size="3"
+                        face="Times New Roman">)</font></a><font
+                        size="3" face="Times New Roman"> </font><a
+                        href="../download/xqwizard_portable.7z"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">绿色版</font><font size="3"
+                        face="Times New Roman">)</font></a></dt>
                     </div>
                 </dl>
                 </td>
@@ -174,7 +189,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
+                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
                         face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
                         face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
