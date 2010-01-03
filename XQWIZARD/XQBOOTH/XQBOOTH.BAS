@@ -1004,7 +1004,7 @@ If App_nEndgames = 0 Then
 End If
 ' Last的范围是[0, Endgames]
 Gui_nLast = IIf(Gui_nLast > App_nEndgames, App_nEndgames, Gui_nLast)
-' Curr的范围是[0, Max(Last, Endgames - 1)]
+' Curr的范围是[0, Min(Last, Endgames - 1)]
 Gui_nCurr = IIf(Gui_nCurr > Gui_nLast, Gui_nLast, Gui_nCurr)
 Gui_nCurr = IIf(Gui_nCurr > App_nEndgames - 1, App_nEndgames - 1, Gui_nCurr)
 
