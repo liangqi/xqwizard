@@ -159,7 +159,7 @@ public class Search implements Serializable {
 				}
 				pos.undoMakeMove();
 				mvs[moves] = mv;
-				vls[moves] = historyTable[pos.historyIndex(mv)];
+				vls[moves] = mv == mvHash ? Integer.MAX_VALUE : historyTable[pos.historyIndex(mv)];
 				moves ++;
 			}
 			Util.shellSort(mvs, vls, 0, moves);
