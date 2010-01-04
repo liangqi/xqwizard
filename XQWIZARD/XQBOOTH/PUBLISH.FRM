@@ -428,7 +428,7 @@ End Sub
 Private Sub btnPublish_Click()
 
 Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
-Dim szSt1 As String, szSt2 As String
+Dim szSt1 As String, szSt2 As String, szSt3 As String
 Dim pos As PositionStruct
 
 szBr = IIf(Publish_nFormat >= PUB_FORMAT_HTML, "<br>" & vbCrLf, vbCrLf)
@@ -455,18 +455,22 @@ Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
             UrlEncode(szFen) & """>" & szSt2 & "</a>" & szBr
 End Select
 ' 给象棋巫师做个广告
-szSt1 = L("下载象棋巫师", "下載象棋巫師")
-szSt2 = L("象棋百科全书", "象棋百科全書")
+szSt1 = L("象棋巫师魔法学校手机版", "象棋巫師魔法學校手機版")
+szSt2 = L("下载象棋巫师", "下載象棋巫師")
+szSt3 = L("象棋百科全书", "象棋百科全書")
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-    szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
-    szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/"
+    szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqblight.php" & szBr
+    szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
+    szCopy = szCopy & "# " & szSt3 & " http://www.xqbase.com/"
 Case PUB_FORMAT_UBB
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt1 & "[/url]" & szBr
-    szCopy = szCopy & "[url=http://www.xqbase.com/pub/]" & szSt2 & "[/url]"
+    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqblight.php]" & szSt1 & "[/url]" & szBr
+    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt2 & "[/url]" & szBr
+    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/]" & szSt3 & "[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt2 & "</a>"
+    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqblight.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
+    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt2 & "</a>" & szBr
+    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt3 & "</a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then

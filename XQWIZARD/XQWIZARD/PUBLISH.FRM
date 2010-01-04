@@ -615,7 +615,7 @@ Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
     szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/"
 Case PUB_FORMAT_UBB
     szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt1 & "[/url]" & szBr
-    szCopy = szCopy & "[url=http://www.xqbase.com/pub/]" & szSt2 & "[/url]"
+    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/]" & szSt2 & "[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
     szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
     szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt2 & "</a>"
