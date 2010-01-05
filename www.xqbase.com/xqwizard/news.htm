@@ -97,8 +97,7 @@ bottommargin="0" rightmargin="0">
                     </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
-                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷已在4.51版中修正。
-                        下载链接有：</dt>
+                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷已在4.51版中修正。下载链接有：</dt>
                     </div><div align="left">
                     <dt>　　　　<a
                         href="../download/xqwizard_setup.exe"
@@ -189,7 +188,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
+                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，<font
                         face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
                         face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>

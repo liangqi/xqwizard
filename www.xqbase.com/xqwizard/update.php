@@ -254,7 +254,7 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师开发团队联系，<font
+                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，<font
                         face="Times New Roman">Email</font>：<a
                         href="mailto:webmaster@xqbase.com"><font
                         face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
