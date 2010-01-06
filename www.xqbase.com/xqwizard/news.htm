@@ -68,7 +68,7 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><font size="3"><strong>重要公告</strong></font></td>
+                        <td><font size="3"><strong>最新推出</strong></font></td>
                         <td><p align="right"><!--webbot
                         bot="HTMLMarkup" startspan --><font size="2"><?php echo date("Y年m月d日"); ?></font><!--webbot
                         bot="HTMLMarkup" endspan --></p>
@@ -79,12 +79,55 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
+                    <dt>　　<a href="xqblight.htm"
+                        target="_blank"><font color="#FF0000"><strong>象棋巫师魔法学校手机版</strong></font></a>开始发售！象棋巫师白金会员可直接获得高级版许可证。</dt>
+                    <dt>　　　　<a
+                        href="http://www.xqbase.com/download/xqwlight_release.zip">本站下载</a>　<a
+                        href="http://www.xqbase.com/users/?act=xqblight"
+                        target="_blank">获得许可证</a></dt>
+                    <div align="left">
+                    <dt>　</dt>
+                    </div><div align="left">
+                    <dt>　　<a
+                        href="http://www.xqbase.com/xqbase/"
+                        target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
+                        face="Times New Roman">1990</font>年到<font
+                        face="Times New Roman">2008</font>年国内顶级象棋比赛<font
+                        face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
+                        face="Times New Roman">)</font>的棋谱。</dt>
+                    </div><div align="left">
+                    <dt>　</dt>
+                    </div><div align="left">
+                    <dt>　　<font color="#008000"><strong>象棋巫师4.5</strong></font>简体版与繁体版已合并，下载链接有：</dt>
+                    </div><div align="left">
+                    <dt>　　　　<a
+                        href="http://www.skycn.com/soft/24665.html"
+                        target="_blank"><font size="3">天空软件站下载</font></a>　<a
+                        href="http://www.onlinedown.net/soft/38287.htm"
+                        target="_blank"><font size="3">华军软件园下载</font></a>　<a
+                        href="../download/xqwizard_setup.exe"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">安装包</font><font size="3"
+                        face="Times New Roman">)</font></a>　<a
+                        href="../download/xqwizard_portable.7z"
+                        target="_blank"><font size="3">本站下载</font><font
+                        size="3" face="Times New Roman">(</font><font
+                        size="3">绿色版</font><font size="3"
+                        face="Times New Roman">)</font></a></dt>
+                    </div>
+                </dl>
+                </td>
+            </tr>
+            <tr>
+                <td background="../headerbg.gif"><font size="3"><strong>重要公告</strong></font></td>
+            </tr>
+            <tr>
+                <td><dl>
                     <div align="left">
                     <dt>　　象棋百科全书新域名xqbase.com正在备案中，暂时无法对外提供服务，请访问<a
                         href="http://www.elephantbase.net/"
                         target="_blank">www.elephantbase.net</a>，敬请谅解。</dt>
-                    </div><div align="left">
-                    <dt>　　部分用户无法提交成绩的问题(因域名关闭引起)现在已经解决，祝大家新年里玩得开心。</dt>
                     </div><div align="left">
                     <dt>　</dt>
                     </div><div align="left">
@@ -104,48 +147,7 @@ bottommargin="0" rightmargin="0">
                         target="_blank"><font size="3">本站下载</font><font
                         size="3" face="Times New Roman">(</font><font
                         size="3">安装包</font><font size="3"
-                        face="Times New Roman">)</font></a><font
-                        size="3" face="Times New Roman"> </font><a
-                        href="../download/xqwizard_portable.7z"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">绿色版</font><font size="3"
-                        face="Times New Roman">)</font></a></dt>
-                    </div>
-                </dl>
-                </td>
-            </tr>
-            <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>最新推出</strong></font></td>
-            </tr>
-            <tr>
-                <td><dl>
-                    <div align="left">
-                    <dt>　　<a
-                        href="http://www.xqbase.com/xqbase/"
-                        target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
-                        face="Times New Roman">1990</font>年到<font
-                        face="Times New Roman">2008</font>年国内顶级象棋比赛<font
-                        face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
-                        face="Times New Roman">)</font>的棋谱。</dt>
-                    </div><div align="left">
-                    <dt>　</dt>
-                    </div><div align="left">
-                    <dt>　　<font color="#008000"><strong>象棋巫师4.5</strong></font>简体版与繁体版已合并，下载链接有：</dt>
-                    </div><div align="left">
-                    <dt>　　　　<a
-                        href="http://www.skycn.com/soft/24665.html"
-                        target="_blank"><font size="3">天空软件站下载</font></a><font
-                        size="3"> </font><a
-                        href="http://www.onlinedown.net/soft/38287.htm"
-                        target="_blank"><font size="3">华军软件园下载</font></a><font
-                        size="3"> </font><a
-                        href="../download/xqwizard_setup.exe"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">安装包</font><font size="3"
-                        face="Times New Roman">)</font></a><font
-                        size="3" face="Times New Roman"> </font><a
+                        face="Times New Roman">)</font></a>　<a
                         href="../download/xqwizard_portable.7z"
                         target="_blank"><font size="3">本站下载</font><font
                         size="3" face="Times New Roman">(</font><font

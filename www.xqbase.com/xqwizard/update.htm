@@ -217,7 +217,15 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
+                    <dt>　　<a href="xqblight.htm"
+                        target="_blank"><font color="#FF0000"><strong>象棋巫师魔法学校手机版</strong></font></a>开始发售！象棋巫师白金会员可直接获得高级版许可证。</dt>
+                    <dt>　　　　<a
+                        href="http://www.xqbase.com/download/xqwlight_release.zip">本站下载</a>　<a
+                        href="http://www.xqbase.com/users/?act=xqblight"
+                        target="_blank">获得许可证</a></dt>
                     <div align="left">
+                    <dt>　</dt>
+                    </div><div align="left">
                     <dt>　　<a
                         href="http://www.xqbase.com/xqbase/"
                         target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
