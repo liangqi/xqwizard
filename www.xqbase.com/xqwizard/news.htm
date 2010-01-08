@@ -79,46 +79,55 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt>　　<a href="xqblight.htm"
-                        target="_blank"><font color="#FF0000"><strong>象棋巫师魔法学校手机版</strong></font></a>开始发售！象棋巫师白金会员可直接获得高级版许可证。</dt>
-                    <dt>　　　　<a
+                    <dt><font size="2">　　</font><a
+                        href="xqblight.htm" target="_blank"><font
+                        color="#FF0000" size="2"><strong>象棋巫师魔法学校手机版</strong></font></a><font
+                        size="2">开始发售！</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　象棋巫师白金会员可直接获得高级版许可证！</font></dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwlight_release.zip"><font
-                        size="3">下载</font></a><font size="3">　</font><a
+                        size="2">下载</font></a></dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/users/?act=xqblight"
-                        target="_blank"><font size="3">获得许可证</font></a><font
-                        size="3">　</font><a href="wangwang.htm"
-                        target="_blank"><font size="3">向象棋巫师淘宝客服咨询</font></a><font
-                        size="3">(淘宝旺旺：象棋百科全书)</font></dt>
+                        target="_blank"><font size="2">获得许可证</font></a></dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="wangwang.htm" target="_blank"><font
+                        size="2">向象棋巫师淘宝客服咨询</font></a><font
+                        size="2">(淘宝旺旺：象棋百科全书)</font></dt>
                     <div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　<a
+                    <dt><font size="2">　　</font><a
                         href="http://www.xqbase.com/xqbase/"
-                        target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
-                        face="Times New Roman">1990</font>年到<font
-                        face="Times New Roman">2008</font>年国内顶级象棋比赛<font
-                        face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
-                        face="Times New Roman">)</font>的棋谱。</dt>
+                        target="_blank"><font color="#FF0000"
+                        size="2"><strong>象棋巫师棋谱仓库</strong></font></a><font
+                        size="2">上线啦！</font></dt>
                     </div><div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　<font color="#008000"><strong>象棋巫师4.5</strong></font>简体版与繁体版已合并，下载链接有：</dt>
+                    <dt><font size="2">　　　　在这里您可以找到1990年到2008年国内顶级象棋比赛(个人赛、团体赛、联赛、五羊杯)的棋谱。</font></dt>
                     </div><div align="left">
-                    <dt>　　　　<a
+                    <dt><font size="2"></font>　</dt>
+                    </div><div align="left">
+                    <dt><font size="2">　　</font><font
+                        color="#008000" size="2"><strong>象棋巫师4.5</strong></font><font
+                        size="2">简体版与繁体版已合并，下载链接有：</font></dt>
+                    </div><div align="left">
+                    <dt><font size="2"></font>　</dt>
+                    </div><div align="left">
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.skycn.com/soft/24665.html"
-                        target="_blank"><font size="3">天空软件站下载</font></a>　<a
+                        target="_blank"><font size="2">天空软件站下载</font></a><font
+                        size="2">　</font><a
                         href="http://www.onlinedown.net/soft/38287.htm"
-                        target="_blank"><font size="3">华军软件园下载</font></a>　<a
+                        target="_blank"><font size="2">华军软件园下载</font></a><font
+                        size="2">　</font><a
                         href="../download/xqwizard_setup.exe"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">安装包</font><font size="3"
-                        face="Times New Roman">)</font></a>　<a
+                        target="_blank"><font size="2">本站下载(安装包)</font></a><font
+                        size="2">　</font><a
                         href="../download/xqwizard_portable.7z"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">绿色版</font><font size="3"
-                        face="Times New Roman">)</font></a></dt>
+                        target="_blank"><font size="2">本站下载(绿色版)</font></a></dt>
                     </div>
                 </dl>
                 </td>
@@ -129,34 +138,35 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　象棋百科全书新域名xqbase.com正在备案中，暂时无法对外提供服务，请访问<a
+                    <dt><font size="2">　　象棋百科全书新域名xqbase.com正在备案中，暂时无法对外提供服务，请访问</font><a
                         href="http://www.elephantbase.net/"
-                        target="_blank">www.elephantbase.net</a>，敬请谅解。</dt>
+                        target="_blank"><font size="2">www.elephantbase.net</font></a><font
+                        size="2">，敬请谅解。</font></dt>
                     </div><div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　运行象棋巫师时，如遇到弹出<font
-                        face="Times New Roman">Office 2003</font>的安装提示，请参考以下帮助：</dt>
+                    <dt><font size="2">　　运行象棋巫师时，如遇到弹出Office
+                        2003的安装提示，请参考以下帮助：</font></dt>
                     </div><div align="left">
-                    <dt>　　<a href="help_faq.htm#office"
-                        target="_blank">【为什么总是弹出<font
-                        face="Times New Roman">Office 2003</font>的安装提示】</a></dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="help_faq.htm#office"
+                        target="_blank"><font size="2">为什么总是弹出Office
+                        2003的安装提示</font></a></dt>
                     </div><div align="left">
-                    <dt>　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷已在4.51版中修正。下载链接有：</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　　　<a
+                    <dt><font size="2">　　另外，象棋巫师魔法学校=&gt;用户中心=&gt;查询点数，当密码输入错误时，程序会报告438错误并退出，这个缺陷已在4.51版中修正。下载链接有：</font></dt>
+                    </div><div align="left">
+                    <dt><font size="2"></font>　</dt>
+                    </div><div align="left">
+                    <dt><font size="2">　　　　</font><a
                         href="../download/xqwizard_setup.exe"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">安装包</font><font size="3"
-                        face="Times New Roman">)</font></a>　<a
+                        target="_blank"><font size="2">本站下载(安装包)</font></a><font
+                        size="2">　</font><a
                         href="../download/xqwizard_portable.7z"
-                        target="_blank"><font size="3">本站下载</font><font
-                        size="3" face="Times New Roman">(</font><font
-                        size="3">绿色版</font><font size="3"
-                        face="Times New Roman">)</font></a></dt>
+                        target="_blank"><font size="2">本站下载(绿色版)</font></a></dt>
                     </div>
                 </dl>
                 </td>
@@ -166,25 +176,39 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt>　　<font color="#0000FF"><strong>挑战</strong></font>题目解不出时，可以用工具栏里的<font
-                        color="#0000FF"><strong>发布棋谱</strong></font>按钮，到以下几个网站发起求助：</dt>
-                    <dt>　　<a href="publish_zhidao.htm"
-                        target="_blank">【向百度知道求助】</a></dt>
-                    <dt>　　<a href="publish_tieba.htm"
-                        target="_blank">【向百度贴吧象棋吧求助】</a></dt>
-                    <dt>　　<a href="publish_home.htm"
-                        target="_blank">【向象棋家园求助】</a></dt>
-                    <dt>　</dt>
-                    <dt>　　旧版的<font color="#0000FF"><strong>图片棋盘</strong></font>和<font
-                        color="#0000FF"><strong>印刷棋盘</strong></font>功能，新版都集成到<font
-                        color="#0000FF"><strong>发布棋谱</strong></font>功能里了，请参考：</dt>
-                    <dt>　　<a href="publish.htm#bitmap"
-                        target="_blank">【如何在<font
-                        face="Times New Roman">Word</font>或博客中粘贴图片棋盘】</a></dt>
-                    <dt>　</dt>
-                    <dt>　　更多参考：</dt>
-                    <dt>　　<a href="pgns2jar.htm"
-                        target="_blank">【如何制作手机棋谱】</a></dt>
+                    <dt><font size="2">　　</font><font
+                        color="#0000FF" size="2"><strong>挑战</strong></font><font
+                        size="2">题目解不出时，可以用工具栏里的</font><font
+                        color="#0000FF" size="2"><strong>发布棋谱</strong></font><font
+                        size="2">按钮，到以下几个网站发起求助：</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="publish_zhidao.htm" target="_blank"><font
+                        size="2">向百度知道求助</font></a><font
+                        size="2">　</font><a
+                        href="publish_tieba.htm" target="_blank"><font
+                        size="2">向百度贴吧象棋吧求助</font></a><font
+                        size="2">　</font><a
+                        href="publish_home.htm" target="_blank"><font
+                        size="2">向象棋家园求助</font></a></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　旧版的</font><font
+                        color="#0000FF" size="2"><strong>图片棋盘</strong></font><font
+                        size="2">和</font><font color="#0000FF"
+                        size="2"><strong>印刷棋盘</strong></font><font
+                        size="2">功能，新版都集成到</font><font
+                        color="#0000FF" size="2"><strong>发布棋谱</strong></font><font
+                        size="2">功能里了，请参考：</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="publish.htm#bitmap" target="_blank"><font
+                        size="2">如何在Word或博客中粘贴图片棋盘</font></a></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　更多参考：</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="pgns2jar.htm" target="_blank"><font
+                        size="2">如何制作手机棋谱</font></a></dt>
                 </dl>
                 </td>
             </tr>
@@ -194,10 +218,10 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，<font
-                        face="Times New Roman">Email</font>：<a
+                    <dt><font size="2">　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，Email：</font><a
                         href="mailto:webmaster@xqbase.com"><font
-                        face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
+                        size="2">webmaster@xqbase.com</font></a><font
+                        size="1">。</font></dt>
                     </div>
                 </dl>
                 </td>
@@ -215,8 +239,8 @@ try {
   // Do Nothing
 }
 // --></script><a
-                href="mailto:webmaster@xqbase.com?subject=%D2%E2%BC%FB%B7%B4%C0%A1"><font
-                color="#000060" size="2">意见反馈</font></a><font
+                href="http://www.xqbase.com/users/?act=suggest"
+                target="_blank"><font color="#000060" size="2">意见反馈</font></a><font
                 color="#000060" size="2"> </font><a
                 href="http://www.xqbase.com/" target="_blank"><font
                 color="#000060" size="2">象棋百科全书

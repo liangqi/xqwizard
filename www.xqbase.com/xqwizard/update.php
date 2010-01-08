@@ -79,39 +79,34 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt>　　象棋巫师<font
-                        face="Times New Roman">3</font>系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家花一分钟时间将象棋巫师升级为<font
-                        face="Times New Roman">4</font>系列，安装包下载地址是：</dt>
-                    <dt>　　　　<a
+                    <dt><font size="2">　　象棋巫师3系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家花一分钟时间将象棋巫师升级为4系列，安装包下载地址是：</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
-                        face="Times New Roman">http://www.xqbase.com/download/xqwizard_setup.exe</font></a><font
-                        face="Times New Roman"> (</font>简繁通用<font
-                        face="Times New Roman">)</font></dt>
-                    <dt>　　注：下载完毕后，请先退出象棋巫师，再运行安装程序。</dt>
-                    <dt>　</dt>
-                    <dt>　　<font color="#0000FF"><strong>象棋巫师</strong></font><font
-                        color="#0000FF" face="Times New Roman"><strong>4</strong></font><font
-                        color="#0000FF"><strong>系列仍旧完全免费，升级完成后本页面将不再弹出。</strong></font>因版本更新给广大象棋爱好者带来不便，敬请谅解。</dt>
-                    <dt>　</dt>
-                    <dt><font color="#0000FF"><strong>　　</strong></font>象棋巫师<font
-                        face="Times New Roman">4</font>系列绿色版<font
-                        face="Times New Roman">(</font>免安装版<font
-                        face="Times New Roman">)</font>已发布，下载地址是：</dt>
-                    <dt>　　　　<a
+                        size="2">http://www.xqbase.com/download/xqwizard_setup.exe</font></a><font
+                        size="2"> (简繁通用)</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　注：下载完毕后，请先退出象棋巫师，再运行安装程序。</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　</font><font
+                        color="#0000FF" size="2"><strong>象棋巫师4系列仍旧完全免费，升级完成后本页面将不再弹出。</strong></font><font
+                        size="2">因版本更新给广大象棋爱好者带来不便，敬请谅解。</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font color="#0000FF" size="2"><strong>　　</strong></font><font
+                        size="2">象棋巫师4系列绿色版(免安装版)已发布，下载地址是：</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwizard_portable.7z"><font
-                        face="Times New Roman">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
-                        face="Times New Roman"> (</font>简繁通用<font
-                        face="Times New Roman">)</font></dt>
-                    <dt>　　注：<font face="Times New Roman">.7z</font>文件可用<a
+                        size="2">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
+                        size="2"> (简繁通用)</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　注：.7z文件可用</font><a
                         href="http://www.7-zip.org/"
-                        target="_blank"><font size="3"
-                        face="Times New Roman">7-Zip</font></a><font
-                        size="3">或</font><a
+                        target="_blank"><font size="2">7-Zip</font></a><font
+                        size="2">或</font><a
                         href="http://www.rarlab.com/"
-                        target="_blank"><font size="3"
-                        face="Times New Roman">WinRAR</font></a><font
-                        size="3" face="Times New Roman">(3.4+)</font><font
-                        size="3">打开。</font></dt>
+                        target="_blank"><font size="2">WinRAR</font></a><font
+                        size="2">(3.4+)打开。</font></dt>
                 </dl>
                 </td>
             </tr>
@@ -123,89 +118,77 @@ bottommargin="0" rightmargin="0">
                 action="http://www.elephantbase.net/questionnaire/"
                 method="POST">
                     <input type="hidden" name="qnid" value="2"><dl>
-                        <dd>您目前使用的象棋巫师版本是：</dd>
-                        <dd><input type="radio" name="a1"
-                            value="1">3.1x或更低</dd>
-                        <dd><input type="radio" name="a1"
-                            value="2">3.2x　<input type="radio"
-                            name="a1" value="3">3.3x　<input
+                        <dd><font size="2">您目前使用的象棋巫师版本是：</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a1" value="1">3.1x或更低</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a1" value="2">3.2x　<input
+                            type="radio" name="a1" value="3">3.3x　<input
                             type="radio" name="a1" value="4">3.4x　<input
                             type="radio" name="a1" value="5">3.5x　<input
                             type="radio" name="a1" value="6">3.6x　<input
                             type="radio" name="a1" value="7">3.7x　<input
                             type="radio" name="a1" value="8">3.8x　<input
-                            type="radio" name="a1" value="9">3.9x</dd>
-                        <dd><input type="radio" name="a1"
-                            value="10">4.0x　<input type="radio"
-                            name="a1" value="11">4.1x　<input
+                            type="radio" name="a1" value="9">3.9x</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a1" value="10">4.0x　<input
+                            type="radio" name="a1" value="11">4.1x　<input
                             type="radio" name="a1" value="12">4.2x　<input
                             type="radio" name="a1" value="13">4.3x　<input
                             type="radio" name="a1" value="14">4.4x　<input
                             type="radio" name="a1" value="15">4.5x　<input
                             type="radio" name="a1" value="16">4.6x　<input
-                            type="radio" name="a1" value="17">4.7x</dd>
-                        <dd><input type="radio" name="a1"
-                            value="18">4.8或更高</dd>
-                        <dd><input type="radio" checked name="a1"
-                            value="0">不知道<a
+                            type="radio" name="a1" value="17">4.7x</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a1" value="18">4.8或更高</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            checked name="a1" value="0">不知道</font><a
                             href="javascript:alert('使用“帮助”菜单的“关于象棋巫师”功能。');"><font
                             size="2">【如何查询版本？】</font></a></dd>
-                        <dd>　</dd>
-                        <dd>您不愿意升级象棋巫师的原因是：</dd>
-                        <dd><input type="radio" name="a2"
-                            value="1">愿意试一下新版<a
+                        <dd><font size="2"></font>　</dd>
+                        <dd><font size="2">您不愿意升级象棋巫师的原因是：</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="1">愿意试一下新版</font><a
                             href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                             size="2">【这里下载】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="2">不愿意花时间下载和安装<a
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="2">不愿意花时间下载和安装</font><a
                             href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                             size="2">【只需要一分钟】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="4">新版的棋下得更糟了</dd>
-                        <dd><input type="radio" name="a2"
-                            value="6">听说新版要收费<a
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="4">新版的棋下得更糟了</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="6">听说新版要收费</font><a
                             href="javascript:alert('只有闯关中的提示和悔棋才需要收费，我们希望用这种方式鼓励玩家通过自己的努力提高棋艺。');"><font
                             size="2">【听谁说的？】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="7">对新增的功能不感兴趣<a
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="7">对新增的功能不感兴趣</font><a
                             href="#whatsnew"><font size="2">【新版有哪些功能？】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="8">听说新版会不断弹出窗口<a
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="8">听说新版会不断弹出窗口</font><a
                             href="javascript:alert('升级后，本页面将不再弹出。');"><font
                             size="2">【听谁说的？】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="9">新版程序经常出故障<font
-                            face="Times New Roman">(</font>建议补充说明<font
-                            face="Times New Roman">)</font></dd>
-                        <dd><font face="Times New Roman"><input
-                            type="radio" name="a2" value="10"></font>我的电脑无法运行新版象棋巫师<font
-                            face="Times New Roman">(</font>建议补充说明<font
-                            face="Times New Roman">)</font><a
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="9">新版程序经常出故障(建议补充说明)</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="10">我的电脑无法运行新版象棋巫师(建议补充说明)</font><a
                             href="http://www.xqbase.com/xqwizard/help_faq.htm#office"
                             target="_blank"><font size="2">【是这个原因吗？】</font></a></dd>
-                        <dd><input type="radio" name="a2"
-                            value="11">升级后导致其他软件无法使用<font
-                            face="Times New Roman">(</font>建议补充说明<font
-                            face="Times New Roman">)</font></dd>
-                        <dd><font face="Times New Roman"><input
-                            type="radio" checked name="a2"
-                            value="0"></font>其他原因<font
-                            face="Times New Roman">(</font>请写在下面的框中<font
-                            face="Times New Roman">)</font></dd>
-                        <dd>　</dd>
-                        <dd>如果您对上面的原因有所补充，也请写在这里<font
-                            face="Times New Roman">(120</font>字以内<font
-                            face="Times New Roman">)</font>：</dd>
-                        <dd><textarea name="comment" rows="5"
-                            cols="50"></textarea></dd>
-                        <dd>　</dd>
-                        <dd>如果愿意，请留下您的<font
-                            face="Times New Roman">Email</font>地址：<input
+                        <dd><font size="2"><input type="radio"
+                            name="a2" value="11">升级后导致其他软件无法使用(建议补充说明)</font></dd>
+                        <dd><font size="2"><input type="radio"
+                            checked name="a2" value="0">其他原因(请写在下面的框中)</font></dd>
+                        <dd><font size="2"></font>　</dd>
+                        <dd><font size="2">如果您对上面的原因有所补充，也请写在这里(120字以内)：</font></dd>
+                        <dd><font size="2"><textarea
+                            name="comment" rows="5" cols="50"></textarea></font></dd>
+                        <dd><font size="2"></font>　</dd>
+                        <dd><font size="2">如果愿意，请留下您的Email地址：<input
                             type="text" size="20" name="email"
-                            value="@"></dd>
+                            value="@"></font></dd>
                     </dl>
-                    <p align="center"><input type="submit"
-                    value="提交"></p>
+                    <p align="center"><font size="2"><input
+                    type="submit" value="提交"></font></p>
                 </form>
                 </td>
             </tr>
@@ -217,45 +200,57 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt>　　<a href="xqblight.htm"
-                        target="_blank"><font color="#FF0000"><strong>象棋巫师魔法学校手机版</strong></font></a>开始发售！象棋巫师白金会员可直接获得高级版许可证。</dt>
-                    <dt>　　　　<a
+                    <dt><font size="2">　　</font><a
+                        href="xqblight.htm" target="_blank"><font
+                        color="#FF0000" size="2"><strong>象棋巫师魔法学校手机版</strong></font></a><font
+                        size="2">开始发售！</font></dt>
+                    <dt><font size="2"></font>　</dt>
+                    <dt><font size="2">　　　　象棋巫师白金会员可直接获得高级版许可证！</font></dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwlight_release.zip"><font
-                        size="3">下载</font></a><font size="3">　</font><a
+                        size="2">下载</font></a></dt>
+                    <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/users/?act=xqblight"
-                        target="_blank"><font size="3">获得许可证</font></a><font
-                        size="3">　</font><a href="wangwang.htm"
-                        target="_blank"><font size="3">向象棋巫师淘宝客服咨询</font></a><font
-                        size="3">(淘宝旺旺：象棋百科全书)</font></dt>
+                        target="_blank"><font size="2">获得许可证</font></a></dt>
+                    <dt><font size="2">　　　　</font><a
+                        href="wangwang.htm" target="_blank"><font
+                        size="2">向象棋巫师淘宝客服咨询</font></a><font
+                        size="2">(淘宝旺旺：象棋百科全书)</font></dt>
                     <div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　<a
+                    <dt><font size="2">　　</font><a
                         href="http://www.xqbase.com/xqbase/"
-                        target="_blank"><font color="#FF0000"><strong>象棋巫师棋谱仓库</strong></font></a>上线啦！在这里您可以找到<font
-                        face="Times New Roman">1990</font>年到<font
-                        face="Times New Roman">2008</font>年国内顶级象棋比赛<font
-                        face="Times New Roman">(</font>个人赛、团体赛、联赛、五羊杯<font
-                        face="Times New Roman">)</font>的棋谱。</dt>
+                        target="_blank"><font color="#FF0000"
+                        size="2"><strong>象棋巫师棋谱仓库</strong></font></a><font
+                        size="2">上线啦！</font></dt>
                     </div><div align="left">
-                    <dt>　</dt>
+                    <dt><font size="2"></font>　</dt>
                     </div><div align="left">
-                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
-                        color="#008000" face="Times New Roman"><strong>4.4</strong></font>新增了<a
+                    <dt><font size="2">　　　　在这里您可以找到1990年到2008年国内顶级象棋比赛(个人赛、团体赛、联赛、五羊杯)的棋谱。</font></dt>
+                    </div><div align="left">
+                    <dt><font size="2"></font>　</dt>
+                    </div><div align="left">
+                    <dt><font size="2">　　</font><font
+                        color="#008000" size="2"><strong>象棋巫师4.4</strong></font><font
+                        size="2">新增了</font><a
                         href="publish.htm" target="_blank"><font
-                        color="#FF0000"><strong>快速发布棋谱</strong></font></a>功能，<font
-                        face="Times New Roman">15</font>秒钟即可在各大象棋网站上发布棋谱或发起求助。
-                    </dt>
+                        color="#FF0000" size="2"><strong>快速发布棋谱</strong></font></a><font
+                        size="2">功能，15秒钟即可在各大象棋网站上发布棋谱或发起求助。
+                        </font></dt>
                     </div><div align="left">
-                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
-                        color="#008000" face="Times New Roman"><strong>4.3</strong></font>新增了<a
+                    <dt><font size="2">　　</font><font
+                        color="#008000" size="2"><strong>象棋巫师4.3</strong></font><font
+                        size="2">新增了</font><a
                         href="pgns2jar.htm" target="_blank"><font
-                        color="#FF0000"><strong>制作手机棋谱</strong></font></a>功能，<font
-                        face="Times New Roman">30</font>秒钟即可把电脑里的棋谱转移到手机上来阅读。</dt>
+                        color="#FF0000" size="2"><strong>制作手机棋谱</strong></font></a><font
+                        size="2">功能，30秒钟即可把电脑里的棋谱转移到手机上来阅读。</font></dt>
                     </div><div align="left">
-                    <dt>　　<font color="#008000"><strong>象棋巫师</strong></font><font
-                        color="#008000" face="Times New Roman"><strong>4.0</strong></font>推出了<font
-                        color="#FF0000"><strong>象棋巫师魔法学校</strong></font>，内置上千盘杀局习题，提供存档、排名、指导等功能。</dt>
+                    <dt><font size="2">　　</font><font
+                        color="#008000" size="2"><strong>象棋巫师4.0</strong></font><font
+                        size="2">推出了</font><font
+                        color="#FF0000" size="2"><strong>象棋巫师魔法学校</strong></font><font
+                        size="2">，内置上千盘杀局习题，提供存档、排名、指导等功能。</font></dt>
                     </div>
                 </dl>
                 </td>
@@ -266,10 +261,10 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt>　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，<font
-                        face="Times New Roman">Email</font>：<a
+                    <dt><font size="2">　　如有任何问题、意见和建议请及时与象棋巫师运营团队联系，Email：</font><a
                         href="mailto:webmaster@xqbase.com"><font
-                        face="Times New Roman">webmaster@xqbase.com</font></a>。</dt>
+                        size="2">webmaster@xqbase.com</font></a><font
+                        size="2">。</font></dt>
                     </div>
                 </dl>
                 </td>
@@ -287,8 +282,8 @@ try {
   // Do Nothing
 }
 // --></script><a
-                href="mailto:webmaster@xqbase.com?subject=%D2%E2%BC%FB%B7%B4%C0%A1"><font
-                color="#000060" size="2">意见反馈</font></a><font
+                href="http://www.xqbase.com/users/?act=suggest"
+                target="_blank"><font color="#000060" size="2">意见反馈</font></a><font
                 color="#000060" size="2"> </font><a
                 href="http://www.xqbase.com/" target="_blank"><font
                 color="#000060" size="2">象棋百科全书
