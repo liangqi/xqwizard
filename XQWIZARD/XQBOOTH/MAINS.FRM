@@ -59,7 +59,7 @@ Begin VB.Form frmMainSmall
       Width           =   975
    End
    Begin VB.CommandButton btnSave 
-      Caption         =   "提交成绩"
+      Caption         =   "提交存档"
       Height          =   495
       Left            =   4680
       TabIndex        =   2
@@ -99,7 +99,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -877,11 +877,11 @@ Begin VB.Form frmMainSmall
    Begin VB.Menu mnUsers 
       Caption         =   "用户中心(&U)"
       Begin VB.Menu mnUsersSave 
-         Caption         =   "提交成绩(&S)"
+         Caption         =   "提交存档(&S)"
          Shortcut        =   ^S
       End
       Begin VB.Menu mnUsersLoad 
-         Caption         =   "获取成绩(&L)"
+         Caption         =   "获取存档(&L)"
       End
       Begin VB.Menu mnUsersSep1 
          Caption         =   "-"
@@ -900,6 +900,24 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnUsersHelp 
          Caption         =   "求助(&E)"
+      End
+   End
+   Begin VB.Menu mnMobile 
+      Caption         =   "手机版(&M)"
+      Begin VB.Menu mnMobileSave 
+         Caption         =   "提交存档到手机(&S)"
+      End
+      Begin VB.Menu mnMobileLoad 
+         Caption         =   "从手机获取存档(&L)"
+      End
+      Begin VB.Menu mnMobileSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnMobileDownload 
+         Caption         =   "下载手机版(&D)"
+      End
+      Begin VB.Menu mnMobileRegister 
+         Caption         =   "获得许可证(&R)"
       End
    End
    Begin VB.Menu mnOptions 
@@ -1027,6 +1045,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnHelpSuggest 
+         Caption         =   "意见反馈(&S)"
+      End
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋巫师的网站(&H)"
       End
@@ -1049,7 +1070,7 @@ Attribute VB_Exposed = False
 ' MAINS.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1214,6 +1235,31 @@ frmPublish.Show vbModal, Me
 
 End Sub
 
+Private Sub mnMobileSave_Click()
+
+TryGetCode
+
+End Sub
+
+Private Sub mnMobileLoad_Click()
+
+TryPutCode
+
+End Sub
+
+
+Private Sub mnMobileDownload_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/xqblight.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnMobileRegister_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=xqblight", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
 Private Sub mnOptionsGuiSmall_Click()
 
 If Not mnOptionsGuiSmall.Checked Then
@@ -1289,6 +1335,12 @@ End Sub
 Private Sub mnHelpQuote_Click()
 
 MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), L("名言", "名言"), , ICON_QUOTE
+
+End Sub
+
+Private Sub mnHelpSuggest_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 

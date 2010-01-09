@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -1702,6 +1702,9 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnEngineDraw 
          Caption         =   "提和/接受提和(&D)"
       End
+      Begin VB.Menu mnEngineResign 
+         Caption         =   "认输(&G)"
+      End
       Begin VB.Menu mnEngineSep4 
          Caption         =   "-"
       End
@@ -1866,6 +1869,9 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnHelpSuggest 
+         Caption         =   "意见反馈(&S)"
+      End
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋巫师的网站(&H)"
       End
@@ -1897,7 +1903,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2429,7 +2435,9 @@ Private Sub mnEngineDraw_Click()
 If Engine_bDraw Then
     Game_nResult = RESULT_DRAW
     lblResult = ResultString
-    Engine_nStatus = IDLE_REST
+    Timer_bEnabled = False
+    mnEngineLevel.Checked = False
+    tlb.Buttons("EngineLevel").Value = tbrUnpressed
     GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
             L("黑方接受提和。", "黑方接受提和。"))
 Else
@@ -2443,6 +2451,20 @@ Else
         mnEngineDraw.Checked = True
     End If
 End If
+
+End Sub
+
+Private Sub mnEngineResign_Click()
+
+If MsgBox(L("真的要认输吗？", "真的要認輸嗎？"), vbQuestion + vbYesNo) <> vbYes Then
+    Exit Sub
+End If
+Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+lblResult = ResultString
+Timer_bEnabled = False
+mnEngineLevel.Checked = False
+tlb.Buttons("EngineLevel").Value = tbrUnpressed
+GameOver "LOSS", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
 
 End Sub
 
@@ -2539,6 +2561,12 @@ End Sub
 Private Sub mnHelpQuote_Click()
 
 MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "名言", , ICON_QUOTE
+
+End Sub
+
+Private Sub mnHelpSuggest_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 

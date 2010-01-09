@@ -80,26 +80,26 @@ bottommargin="0" rightmargin="0">
             <tr>
                 <td><dl>
                     <dt><font size="2">　　象棋巫师3系列在设计中存在大量缺陷，目前已停止用户服务和技术支持。象棋巫师开发团队强烈建议大家花一分钟时间将象棋巫师升级为4系列，安装包下载地址是：</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwizard_setup.exe"><font
                         size="2">http://www.xqbase.com/download/xqwizard_setup.exe</font></a><font
                         size="2"> (简繁通用)</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　注：下载完毕后，请先退出象棋巫师，再运行安装程序。</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　</font><font
                         color="#0000FF" size="2"><strong>象棋巫师4系列仍旧完全免费，升级完成后本页面将不再弹出。</strong></font><font
                         size="2">因版本更新给广大象棋爱好者带来不便，敬请谅解。</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font color="#0000FF" size="2"><strong>　　</strong></font><font
                         size="2">象棋巫师4系列绿色版(免安装版)已发布，下载地址是：</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwizard_portable.7z"><font
                         size="2">http://www.xqbase.com/download/xqwizard_portable.7z</font></a><font
                         size="2"> (简繁通用)</font></dt>
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　注：.7z文件可用</font><a
                         href="http://www.7-zip.org/"
                         target="_blank"><font size="2">7-Zip</font></a><font
@@ -145,7 +145,7 @@ bottommargin="0" rightmargin="0">
                             checked name="a1" value="0">不知道</font><a
                             href="javascript:alert('使用“帮助”菜单的“关于象棋巫师”功能。');"><font
                             size="2">【如何查询版本？】</font></a></dd>
-                        <dd><font size="2"></font>　</dd>
+                        <dd>　</dd>
                         <dd><font size="2">您不愿意升级象棋巫师的原因是：</font></dd>
                         <dd><font size="2"><input type="radio"
                             name="a2" value="1">愿意试一下新版</font><a
@@ -178,11 +178,11 @@ bottommargin="0" rightmargin="0">
                             name="a2" value="11">升级后导致其他软件无法使用(建议补充说明)</font></dd>
                         <dd><font size="2"><input type="radio"
                             checked name="a2" value="0">其他原因(请写在下面的框中)</font></dd>
-                        <dd><font size="2"></font>　</dd>
+                        <dd>　</dd>
                         <dd><font size="2">如果您对上面的原因有所补充，也请写在这里(120字以内)：</font></dd>
                         <dd><font size="2"><textarea
                             name="comment" rows="5" cols="50"></textarea></font></dd>
-                        <dd><font size="2"></font>　</dd>
+                        <dd>　</dd>
                         <dd><font size="2">如果愿意，请留下您的Email地址：<input
                             type="text" size="20" name="email"
                             value="@"></font></dd>
@@ -204,32 +204,38 @@ bottommargin="0" rightmargin="0">
                         href="xqblight.htm" target="_blank"><font
                         color="#FF0000" size="2"><strong>象棋巫师魔法学校手机版</strong></font></a><font
                         size="2">开始发售！</font></dt>
-                    <dt><font size="2"></font>　</dt>
-                    <dt><font size="2">　　　　象棋巫师白金会员可直接获得高级版许可证！</font></dt>
+                    <dt>　</dt>
+                    <dt><font size="2">　　★
+                        无需从第一关开始，可接着已提交的进度继续闯关</font></dt>
+                    <dt><font size="2">　　★
+                        象棋巫师白金会员可直接获得高级版许可证</font></dt>
+                    <dt>　</dt>
                     <dt><font size="2">　　　　</font><a
                         href="http://www.xqbase.com/download/xqwlight_release.zip"><font
-                        size="2">下载</font></a></dt>
-                    <dt><font size="2">　　　　</font><a
+                        size="2">下载</font></a><font size="2">　</font><a
                         href="http://www.xqbase.com/users/?act=xqblight"
                         target="_blank"><font size="2">获得许可证</font></a></dt>
                     <dt><font size="2">　　　　</font><a
                         href="wangwang.htm" target="_blank"><font
-                        size="2">向象棋巫师淘宝客服咨询</font></a><font
-                        size="2">(淘宝旺旺：象棋百科全书)</font></dt>
+                        size="2">向象棋巫师淘宝客服咨询</font></a><a
+                        href="http://amos1.taobao.com/msg.ww?v=2&amp;uid=象棋百科全书"
+                        target="_blank"><font size="2"><img
+                        src="wangwang_button.gif" border="0"
+                        width="67" height="20"></font></a></dt>
                     <div align="left">
-                    <dt><font size="2"></font>　</dt>
+                    <dt>　</dt>
                     </div><div align="left">
                     <dt><font size="2">　　</font><a
                         href="http://www.xqbase.com/xqbase/"
                         target="_blank"><font color="#FF0000"
                         size="2"><strong>象棋巫师棋谱仓库</strong></font></a><font
                         size="2">上线啦！</font></dt>
-                    </div><div align="left">
-                    <dt><font size="2"></font>　</dt>
-                    </div><div align="left">
-                    <dt><font size="2">　　　　在这里您可以找到1990年到2008年国内顶级象棋比赛(个人赛、团体赛、联赛、五羊杯)的棋谱。</font></dt>
-                    </div><div align="left">
-                    <dt><font size="2"></font>　</dt>
+                    </div>
+                    <dt>　</dt>
+                    <dt><font size="2">　　★
+                        在这里您可以找到1990年到2008年国内顶级象棋比赛(个人赛、团体赛、联赛、五羊杯)的棋谱</font></dt>
+                    <div align="left">
+                    <dt>　</dt>
                     </div><div align="left">
                     <dt><font size="2">　　</font><font
                         color="#008000" size="2"><strong>象棋巫师4.4</strong></font><font

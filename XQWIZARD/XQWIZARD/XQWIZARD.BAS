@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.51, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1517,7 +1517,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 PlayWavSound "MOVE" & IIf(bEngine, "2", "")
             End If
         End If
-        If (nMoveStatus And MOVE_CONSECUTIVE) <> 0 Then
+        If (nMoveStatus And MOVE_DRAW) <> 0 Then
             If bEcho Then
                 GameOver "DRAW", L("自然作和。", "自然作和。")
             End If
@@ -1704,6 +1704,10 @@ App_frmMain.mnEndgames_.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
 App_frmMain.mnEngineSet.Enabled = Not bBusy
+App_frmMain.mnEngineRetract.Enabled = Not bBusy
+App_frmMain.mnEngineBan.Enabled = Not bBusy
+App_frmMain.mnEngineDraw.Enabled = Not bBusy
+App_frmMain.mnEngineResign.Enabled = Not bBusy
 App_frmMain.mnEngineStop.Enabled = bBusy
 App_frmMain.tlb.Buttons("EngineStop").Enabled = bBusy
 If bBusy And App_bPlay Then

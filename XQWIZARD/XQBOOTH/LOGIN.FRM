@@ -179,13 +179,10 @@ Private Sub Form_Load()
 
 Dim i As Integer
 
-Login_bCancel = True
+Login_bSuccess = False
 Caption = Login_szTitle
 lblPrompt.Caption = Login_szPrompt
 txtUserName.Text = Login_szUserName
-If Login_szPrompt = "" Or Gui_nCurr < 200 Then
-    lblCharge.Visible = False
-End If
 If Login_bRemember Then
     txtPassword.Text = Login_szPassword
     chkRemember.Value = 1
@@ -242,7 +239,7 @@ If Len(txtUserName.Text) = 0 Or Len(txtPassword.Text) = 0 Then
     MsgBox L("用户名和密码不能为空", "用戶名和密碼不能為空"), vbExclamation
     Exit Sub
 End If
-Login_bCancel = False
+Login_bSuccess = True
 Login_szUserName = txtUserName.Text
 Login_szPassword = txtPassword.Text
 Login_bRemember = chkRemember.Value <> 0

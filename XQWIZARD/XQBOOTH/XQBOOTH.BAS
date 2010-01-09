@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.51, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,7 @@ Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"            ' 引擎文件
 Public Const USERS_URL          As String = "http://www.xqbase.com/xqbooth/"    ' 用户中心地址
+' Public Const USERS_URL          As String = "http://localhost:8080/xqbooth/"    ' 用户中心地址(调试用)
 ' 全局常量——可选参数
 Public Const DRAW_SELECTED      As Boolean = True
 Public Const DRAW_MATE          As Boolean = True
@@ -46,6 +47,8 @@ Public Const USERS_RANK         As Integer = 2
 Public Const USERS_HINT         As Integer = 3
 Public Const USERS_RETRACT      As Integer = 4
 Public Const USERS_POINTS       As Integer = 5
+Public Const USERS_GETCODE      As Integer = 6
+Public Const USERS_PUTCODE      As Integer = 7
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
@@ -67,10 +70,11 @@ Public Gui_nLast                As Integer  ' 最后残局的条目序号
 ' 全局变量——登录
 Public Login_szTitle            As String   ' 登录框标题
 Public Login_szPrompt           As String   ' 登录框提示
-Public Login_bCancel            As Boolean  ' 登录是否取消
+Public Login_bSuccess           As Boolean  ' 登录是否成功
 Public Login_szUserName         As String   ' 登录用户名
 Public Login_szPassword         As String   ' 登录密码
 Public Login_bRemember          As Boolean  ' 记住密码
+Public Login_szCode             As String   ' 手机存档码
 ' 全局变量——排名
 Public Rank_nScore              As Integer  ' 排名成绩
 Public Rank_nToday              As Long     ' 今日排名
@@ -269,7 +273,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
     End If
     Exit Function
 End If
-If (nStatus And MOVE_PERPETUAL) <> 0 Then
+If (nStatus And (MOVE_PERPETUAL Or MOVE_DRAW)) <> 0 Then
     App_frmMain.mnGameHint.Enabled = False
     App_frmMain.btnHint.Enabled = False
     PlayWavSound "PROMOTE2"
@@ -376,6 +380,29 @@ App_frmMain.btnHint.Enabled = True
 
 End Sub
 
+' 获取存档
+Public Sub DoLoad(ByVal nScore As Integer)
+
+Dim bLoad As Boolean
+bLoad = False
+If nScore > Gui_nLast Then
+    bLoad = True
+ElseIf MsgBox(L("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
+        "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
+    bLoad = True
+End If
+If bLoad Then
+    Gui_nLast = nScore
+    ClearHint
+    Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+    LoadGame
+    ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
+    App_nPhaseSaved = PHASE_READY
+    MsgBox L("存档获取成功。", "存檔獲取成功。"), vbInformation
+End If
+
+End Sub
+
 ' 等待用户中心响应开始
 Public Sub EnterBusy()
 
@@ -409,10 +436,12 @@ If App_nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = L("提交成绩", "提交成績")
+Login_szTitle = L("提交存档", "提交存檔")
 Login_szPrompt = ""
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
@@ -439,10 +468,12 @@ If App_nPhase = PHASE_BUSY Then
     Exit Sub
 End If
 
-Login_szTitle = L("获取成绩", "獲取成績")
+Login_szTitle = L("获取存档", "獲取存檔")
 Login_szPrompt = ""
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
@@ -490,16 +521,17 @@ If Gui_nCurr < 500 Then
 Else
     Login_szPrompt = L("提示需要消耗点数10点", "提示需要消耗點數10點")
 End If
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
 EnterBusy
 App_nUsersEvent = USERS_HINT
 On Error GoTo lnError
-App_frmMain.Inet.Execute USERS_URL & "hint", _
-        "POST", "stage=" & Gui_nCurr, _
+App_frmMain.Inet.Execute USERS_URL & "hint", "POST", "stage=" & Gui_nCurr, _
         "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
@@ -531,16 +563,17 @@ If Gui_nCurr < 500 Then
 Else
     Login_szPrompt = L("悔棋需要消耗点数1点", "悔棋需要消耗點數1點")
 End If
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
 EnterBusy
 App_nUsersEvent = USERS_RETRACT
 On Error GoTo lnError
-App_frmMain.Inet.Execute USERS_URL & "retract", _
-        "POST", "stage=" & Gui_nCurr, _
+App_frmMain.Inet.Execute USERS_URL & "retract", "POST", "stage=" & Gui_nCurr, _
         "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
@@ -561,8 +594,10 @@ End If
 
 Login_szTitle = L("查询排名", "查詢排名")
 Login_szPrompt = ""
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
@@ -599,8 +634,10 @@ End If
 
 Login_szTitle = L("查询点数", "查詢點數")
 Login_szPrompt = ""
-frmLogin.Show vbModal, App_frmMain
-If Login_bCancel Then
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
     Exit Sub
 End If
 
@@ -608,6 +645,85 @@ EnterBusy
 App_nUsersEvent = USERS_POINTS
 On Error GoTo lnError
 App_frmMain.Inet.Execute USERS_URL & "querypoints", "GET", "", LoginHeaders
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+MsgBox Err
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试提交存档到手机
+Public Sub TryGetCode()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szTitle = L("提交存档到手机", "提交存檔到手機")
+Login_szPrompt = ""
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_GETCODE
+On Error GoTo lnError
+App_frmMain.Inet.Execute USERS_URL & "getcode", _
+        "POST", "score=" & Gui_nLast, _
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
+On Error GoTo 0
+
+Exit Sub
+lnError:
+On Error GoTo 0
+MsgBox Err
+ConnError
+LeaveBusy
+
+End Sub
+
+' 尝试提交存档到手机
+Public Sub TryPutCode()
+
+If App_nPhase = PHASE_BUSY Then
+    Exit Sub
+End If
+
+Login_szCode = ""
+Do
+    Login_szCode = InputBox(L("请输入手机上显示的8位存档码：", "請輸入手機上顯示的8位存檔碼："), _
+            L("从手机获取存档", "從手機獲取存檔"), Login_szCode)
+    If Login_szCode = "" Then
+        Exit Sub
+    End If
+    If Len(Login_szCode) = 8 Then
+        Exit Do
+    End If
+    MsgBox L("存档码必须是8位数字", "存檔碼必須是8位數字"), vbExclamation
+Loop
+
+Login_szTitle = L("从手机获取存档", "從手機獲取存檔")
+Login_szPrompt = ""
+If Not Login_bSuccess Then
+    frmLogin.Show vbModal, App_frmMain
+End If
+If Not Login_bSuccess Then
+    Exit Sub
+End If
+
+EnterBusy
+App_nUsersEvent = USERS_PUTCODE
+On Error GoTo lnError
+App_frmMain.Inet.Execute USERS_URL & "putcode", _
+        "POST", "code=" & Login_szCode, _
+        "Content-Type: application/x-www-form-urlencoded" & vbCrLf & LoginHeaders
 On Error GoTo 0
 
 Exit Sub
@@ -631,6 +747,7 @@ End Sub
 Public Sub LoginError()
 
 MsgBox L("用户名或密码不正确。", "用戶名或密碼不正確。"), vbExclamation
+Login_bSuccess = False
 
 End Sub
 
@@ -639,6 +756,7 @@ Public Sub NoRetryError()
 
 MsgBox L("您的密码已经连续5次输入错误，请过5分钟再做尝试。", _
         "您的密碼已經連續5次輸入錯誤，請過5分鐘再做嘗試。"), vbExclamation
+Login_bSuccess = False
 
 End Sub
 
@@ -652,11 +770,21 @@ ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
 
 End Sub
 
+' 是否登录用户中心
+Public Sub NoRegError(ByVal szPrompt As String)
+
+If MsgBox(szPrompt, vbQuestion + vbYesNo) = vbYes Then
+    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=xqblight", _
+            vbNullString, vbNullString, vbNormalFocus
+End If
+
+End Sub
+
 ' 处理用户中心响应
 Public Sub DoUsersEvent()
 
 Dim szResult As String, szPassword As String
-Dim nResult As Integer, bLoad As Boolean, szResults() As String
+Dim nResult As Integer, szResults() As String
 
 szPassword = App_frmMain.Inet.GetHeader("Login-Cookie")
 If szPassword <> "" Then
@@ -669,7 +797,7 @@ Case USERS_SAVE
     ' 请求“提交”，处理响应
     Select Case szResult
     Case "ok"
-        MsgBox L("成绩提交成功。", "成績提交成功。"), vbInformation
+        MsgBox L("存档提交成功。", "存檔提交成功。"), vbInformation
     Case "nosave"
         MsgBox L("您以前提交的成绩比当前成绩好，当前成绩不予提交。", _
                 "您以前提交的成績比當前成績好，當前成績不予提交。"), vbInformation
@@ -696,23 +824,7 @@ Case USERS_LOAD
         NoRetryError
     Case Else
         If (Left(szResult, 3) = "ok ") Then
-            nResult = Str2Int(Mid(szResult, 4), 0, App_nEndgames)
-            bLoad = False
-            If nResult > Gui_nLast Then
-                bLoad = True
-            ElseIf MsgBox(L("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
-                    "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
-                bLoad = True
-            End If
-            If bLoad Then
-                Gui_nLast = nResult
-                ClearHint
-                Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
-                LoadGame
-                ' 这里在 LeaveBusy 前，所以要修改 nPhaseSaved 重置状态
-                App_nPhaseSaved = PHASE_READY
-                MsgBox L("成绩获取成功。", "成績獲取成功。"), vbInformation
-            End If
+            DoLoad Str2Int(Mid(szResult, 4), 0, App_nEndgames)
         Else
             ConnError
         End If
@@ -804,6 +916,41 @@ Case USERS_POINTS
                 End If
             Else
                 ConnError
+            End If
+        Else
+            ConnError
+        End If
+    End Select
+
+Case USERS_GETCODE, USERS_PUTCODE
+    ' 请求“提交存档到手机”和“从手机获取存档”，获取响应
+    Select Case szResult
+    Case "error"
+        LoginError
+        LeaveBusy
+        TryGetCode
+        Exit Sub
+    Case "noretry"
+        NoRetryError
+    Case "incorrrect"
+        MsgBox L("存档码错误，请仔细核对手机上显示的8位存档码。", _
+                "存檔碼錯誤，請仔細核對手機上顯示的8位存檔碼。"), vbExclamation
+    Case "trial"
+        NoRegError L("您尚未获得手机版许可证，无法使用同步存档功能。" & vbCrLf & "是否现在就去获得许可证？", _
+                "您尚未獲得手機版許可證，無法使用同步存檔功能。" & vbCrLf & "是否現在就去獲得許可證？")
+    Case "basic"
+        NoRegError L("只有高级版许可证才能使用同步存档功能。" & vbCrLf & "是否现在就把许可证升级到高级版？", _
+                "只有高級版許可證才能使用同步存檔功能。" & vbCrLf & "是否現在就把許可證升級到高級版？")
+    Case "noreg"
+        NoRegError L("您的许可证尚未在手机上生效。" & vbCrLf & "是否现在就去生效许可证？", _
+                "您的許可證尚未在手機上生效。" & vbCrLf & "是否現在就去生效許可證？")
+    Case Else
+        If (Left(szResult, 3) = "ok ") Then
+            If App_nUsersEvent = USERS_GETCODE Then
+                MsgBox L("存档码是[", "存檔碼是[") & Mid(szResult, 4) & _
+                        L("]，请将这8位数字输入到手机。", "]，請將這8位數字輸入到手機。"), vbInformation
+            Else
+                DoLoad Str2Int(Mid(szResult, 4), 0, App_nEndgames)
             End If
         Else
             ConnError
@@ -925,14 +1072,20 @@ App_frmMain.mnGameRetract.Caption = "悔棋(&T)"
 App_frmMain.mnGameExit.Caption = "离開(&X)"
 
 App_frmMain.mnUsers.Caption = "用戶中心(&U)"
-App_frmMain.mnUsersSave.Caption = "提交成績(&S)"
-App_frmMain.mnUsersLoad.Caption = "獲取成績(&L)"
+App_frmMain.mnUsersSave.Caption = "提交存檔(&S)"
+App_frmMain.mnUsersLoad.Caption = "獲取存檔(&L)"
 App_frmMain.mnUsersRank.Caption = "排名(&R)"
 App_frmMain.mnUsersPoints.Caption = "查詢點數(&P)"
 App_frmMain.mnUsersCenter.Caption = "用戶中心首頁(&C)"
 App_frmMain.mnUsersHelp.Caption = "求助(&E)"
 App_frmMain.mnUsers.Caption = "用戶中心(&U)"
 App_frmMain.mnUsers.Caption = "用戶中心(&U)"
+
+App_frmMain.mnMobile.Caption = "手機版(&M)"
+App_frmMain.mnMobileSave.Caption = "提交存檔到手機(&S)"
+App_frmMain.mnMobileLoad.Caption = "從手機獲取存檔(&L)"
+App_frmMain.mnMobileDownload.Caption = "下載手機版(&D)"
+App_frmMain.mnMobileRegister.Caption = "獲得許可證(&R)"
 
 App_frmMain.mnOptions.Caption = "選項(&O)"
 App_frmMain.mnOptionsGui.Caption = "界面(&G)"
@@ -954,7 +1107,7 @@ App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
 ' 按钮
 App_frmMain.btnRetract.Caption = "悔棋"
 App_frmMain.btnHint.Caption = "提示"
-App_frmMain.btnSave.Caption = "提交成績"
+App_frmMain.btnSave.Caption = "提交存檔"
 App_frmMain.btnRestart.Caption = "再試一次"
 App_frmMain.btnNext.Caption = "下一關"
 
@@ -968,7 +1121,7 @@ Dim sz As String, lpStr As Long, dwResult As Long
 Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
-App_szPath = App.Path + IIf(Right(App.Path, 1) = "\", "", "\")
+App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 frmStartup.Show
 frmStartup.Refresh
 CchessInit
@@ -979,7 +1132,7 @@ LoadQuotes
 ' 加载残局
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-Open App_szPath + ENDGAME_FILE For Input As #nFileNo
+Open App_szPath & ENDGAME_FILE For Input As #nFileNo
 On Error GoTo 0
 App_nEndgames = 0
 Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
@@ -1078,11 +1231,11 @@ Unload frmStartup
 ' 提示建立存档
 If Login_szUserName = "" Then
     If Options_nLanguage = LANGUAGE_ZH_CN Then
-        dwResult = MsgBox("　　建立象棋巫师魔法学校的闯关存档，就可以随时随地提交和获取闯关成绩，" & _
+        dwResult = MsgBox("　　建立象棋巫师魔法学校的闯关存档，就可以随时随地提交和获取闯关存档，" & _
                 "并跟众多玩家一起参与闯关排名，充分享受提高棋艺的乐趣。" & vbCrLf & vbCrLf & _
                 "　　是否现在就建立闯关存档？", vbQuestion + vbYesNo)
     Else
-        dwResult = MsgBox("　　建立像棋巫師魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關成績，" & _
+        dwResult = MsgBox("　　建立像棋巫師魔法學校的闖關存檔，就可以隨時隨地提交和獲取闖關存檔，" & _
                 "並跟眾多玩家一起參與闖關排名，充分享受提高棋藝的樂趣。" & vbCrLf & vbCrLf & _
                 "　　是否現在就建立闖關存檔？", vbQuestion + vbYesNo)
     End If
@@ -1093,6 +1246,7 @@ If Login_szUserName = "" Then
 End If
 
 ' 主循环
+Login_bSuccess = False
 App_bRunning = True
 Do While App_bRunning
     ' 播放广告可以跟引擎和播放棋局同时进行，所以不能用 Timer_dfLastTime，而是用 Gui_dfLastTime
