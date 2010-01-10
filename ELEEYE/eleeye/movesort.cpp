@@ -46,7 +46,7 @@ void MoveSortStruct::SetHistory(void) {
   }
 }
 
-// 剥壳排序法，这里用"1, 4, 13, 40 ..."的序列，这样要比"1, 2, 4, 8, ..."好
+// Shell排序法，这里用"1, 4, 13, 40 ..."的序列，这样要比"1, 2, 4, 8, ..."好
 static const int cnShellStep[8] = {0, 1, 4, 13, 40, 121, 364, 1093};
 
 void MoveSortStruct::ShellSort(void) {

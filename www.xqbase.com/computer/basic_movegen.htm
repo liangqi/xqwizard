@@ -181,7 +181,9 @@ vlink="#800080">
     <dt>　　最后要注意的是，在象棋中，有些着法因为被将军而是非法的。但是这些状况毕竟是罕见情况，可以证明判断着法的合理性需要花费很多运算量。更有效的办法是所有的着法都搜索完了再来作检查，例如某步棋走完后有个吃王的应对着法，这时才来裁定这步棋为非法，搜索就此中止。很明显，如果搜索到这步棋以前，就产生截断了，那就不会对这步棋的合法性作出判断了<font
         color="#0000FF">【这部分的时间不就省下来了吗】</font>。</dt>
     <dt><font color="#0000FF">　　【这里就本节提到的“杀手”着法作一些发挥：大多数程序往往不是生成全部着法的，而是先判断杀手着法的合理性(判断着法合理性所做花的时间要比产生全部着法少得多)，如果是合理着法就先搜索这些着法。因为杀手着法是产生截断几率很高的着法，所以很有可能不需要生成着法了。</font></dt>
-    <dt><font color="#0000FF">　　另外，排序技术也非常有讲究，因为排序所花的时间可能会比着法产生的时间更多。排序的算法很多，常用的有冒泡排序、剥壳排序、快速排序等，我个人倾向于最慢的冒泡排序，原因是冒泡排序每扫描一趟会产生一个最大值，希望它能产生截断而没有必要对后面的着法再进行排序。】</font></dt>
+    <dt><font color="#0000FF">　　另外，排序技术也非常有讲究，因为排序所花的时间可能会比着法产生的时间更多。排序的算法很多，常用的有冒泡排序、</font><font
+        color="#0000FF" face="Times New Roman">Shell</font><font
+        color="#0000FF">排序、快速排序等，我个人倾向于最慢的冒泡排序，原因是冒泡排序每扫描一趟会产生一个最大值，希望它能产生截断而没有必要对后面的着法再进行排序。】</font></dt>
     <dt>　</dt>
     <dt><font size="5" face="楷体_GB2312"><strong>我的选择</strong></font></dt>
     <dt>　</dt>
@@ -236,15 +238,14 @@ vlink="#800080">
 
 <table border="0">
     <tr>
-        <td><p align="center"><a
-        href="http://www.xqbase.com/" target="_blank"><img
-        src="../xqbase.gif" border="0" width="88"
-        height="31"></a></p>
+        <td><p align="center"><a href="http://www.xqbase.com/"
+        target="_blank"><img src="../xqbase.gif" border="0"
+        width="88" height="31"></a></p>
         </td>
     </tr>
     <tr>
-        <td><a href="http://www.xqbase.com/"
-        target="_blank"><font size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
+        <td><a href="http://www.xqbase.com/" target="_blank"><font
+        size="2" face="Arial"><strong>www.xqbase.com</strong></font></a></td>
     </tr>
 </table>
 </center></div>
