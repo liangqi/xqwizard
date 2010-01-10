@@ -30,6 +30,7 @@ AppUpdatesURL=http://www.xqbase.com/
 DefaultDirName={pf}\XQWizard
 DefaultGroupName={cm:AppName}
 OutputBaseFilename=xqwizard_setup
+SourceDir=..
 OutputDir=.
 Compression=lzma
 SolidCompression=yes

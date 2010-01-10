@@ -1100,6 +1100,7 @@ App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
 
 App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
+App_frmMain.mnHelpSuggest.Caption = "意見反饋(&S)"
 App_frmMain.mnHelpHome.Caption = "象棋巫師的網站(&H)"
 App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
 App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
