@@ -1,7 +1,7 @@
 Attribute VB_Name = "mdlVBChat"
 Option Explicit
 
-Public Const MAX_CLIENTS As Integer = 256
+Public Const MAX_CLIENTS As Integer = 4096
 Public Const BUFFER_LEN As Long = 65536
 
 Public App_sServer As Long, App_sClients(1 To MAX_CLIENTS) As Long, App_nNext As Integer
