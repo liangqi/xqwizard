@@ -219,22 +219,20 @@ End Sub
 ' 退弹
 Public Sub ExitPopup()
 
-Dim dfThisTime As Double, dfLastTime As Double
+Dim szUrl As String
 ' 用到时才读注册表，避免重开窗口导致的重复访问。这里的做法与Gui_szAdvertDate相反，但达到的目的是一样的。
 If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
     Exit Sub
 End If
 ' 如果退弹成功，那么当天就不再退弹了
 SaveSetting "XQWizard", "Gui", "PopupDate", Date
-frmHide.web.Navigate "http://www.xqbase.com/advert/popup.htm"
-' 退弹调用了frmHide.web，为保证成功，等待1秒钟
-dfLastTime = Timer
-Do
-    DoEvents
-    Sleep 1
-    dfThisTime = Timer
-    dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-Loop Until dfThisTime > dfLastTime + 5#
+zUrl = ""
+On Error Resume Next
+szUrl = frmHide.Inet.OpenURL("http://www.xqbase.com/advert/popup.txt")
+On Error GoTo 0
+If Left(szUrl, 7) = "http://" Then
+    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+End If
 
 End Sub
 
