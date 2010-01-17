@@ -2,9 +2,9 @@
 
 <head>
 <meta http-equiv="Content-Type"
-content="text/html; charset=utf-8">
+content="text/html; charset=gb_2312-80">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>è±¡æ£‹å·«å¸ˆæœ€æ–°åŠ¨æ€</title>
+<title>ÏóÆåÎ×Ê¦×îÐÂ¶¯Ì¬</title>
 </head>
 
 <body bgcolor="#3869B6" topmargin="0" leftmargin="0"
@@ -12,7 +12,7 @@ bottommargin="0" rightmargin="0">
 
 <table border="0" cellpadding="8" cellspacing="0" width="100%">
     <tr>
-        <td>ã€€</td>
+        <td>¡¡</td>
         <td width="750" bgcolor="#FFFFFF" nowrap><table
         border="0" cellspacing="0" width="100%">
             <tr>
@@ -28,7 +28,7 @@ bottommargin="0" rightmargin="0">
                                 bot="HTMLMarkup" startspan -->&nbsp;<!--webbot
                                 bot="HTMLMarkup" endspan --><font
                                 color="#FFFFFF" size="6"
-                                face="é»‘ä½“">è±¡æ£‹å·«å¸ˆæœ€æ–°åŠ¨æ€</font></td>
+                                face="ºÚÌå">ÏóÆåÎ×Ê¦×îÐÂ¶¯Ì¬</font></td>
                             </tr>
                         </table>
                         </td>
@@ -36,7 +36,7 @@ bottommargin="0" rightmargin="0">
                         border="0">
                             <tr>
                                 <td><p align="right"><font
-                                size="5">ã€€ã€€</font></p>
+                                size="5">¡¡¡¡</font></p>
                                 </td>
                             </tr>
                             <tr>
@@ -58,7 +58,7 @@ bottommargin="0" rightmargin="0">
                 </td>
             </tr>
             <tr>
-                <td>ã€€</td>
+                <td>¡¡</td>
             </tr>
         </table>
         <table border="0" cellpadding="4" cellspacing="0"
@@ -68,9 +68,9 @@ bottommargin="0" rightmargin="0">
                 border="0" cellpadding="0" cellspacing="0"
                 width="100%">
                     <tr>
-                        <td><font size="3"><strong>æœ€æ–°æŽ¨å‡º</strong></font></td>
+                        <td><font size="3"><strong>×îÐÂÍÆ³ö</strong></font></td>
                         <td><p align="right"><!--webbot
-                        bot="HTMLMarkup" startspan --><font size="2"><?php echo date("Yå¹´mæœˆdæ—¥"); ?></font><!--webbot
+                        bot="HTMLMarkup" startspan --><font size="2"><?php echo date("YÄêmÔÂdÈÕ"); ?></font><!--webbot
                         bot="HTMLMarkup" endspan --></p>
                         </td>
                     </tr>
@@ -79,155 +79,155 @@ bottommargin="0" rightmargin="0">
             </tr>
             <tr>
                 <td><dl>
-                    <dt><font size="2">ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡</font><a
                         href="xqblight.htm" target="_blank"><font
-                        color="#FF0000" size="2"><strong>è±¡æ£‹å·«å¸ˆé­”æ³•å­¦æ ¡æ‰‹æœºç‰ˆ</strong></font></a><font
-                        size="2">å¼€å§‹å‘å”®ï¼</font></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€â˜…
-                        æ— éœ€ä»Žç¬¬ä¸€å…³å¼€å§‹ï¼Œå¯æŽ¥ç€å·²æäº¤çš„è¿›åº¦ç»§ç»­é—¯å…³</font></dt>
-                    <dt><font size="2">ã€€ã€€â˜…
-                        è±¡æ£‹å·«å¸ˆç™½é‡‘ä¼šå‘˜å¯ç›´æŽ¥èŽ·å¾—é«˜çº§ç‰ˆè®¸å¯è¯</font></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                        color="#FF0000" size="2"><strong>ÏóÆåÎ×Ê¦Ä§·¨Ñ§Ð£ÊÖ»ú°æ</strong></font></a><font
+                        size="2">¿ªÊ¼·¢ÊÛ£¡</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡ï
+                        ÎÞÐè´ÓµÚÒ»¹Ø¿ªÊ¼£¬¿É½Ó×ÅÒÑÌá½»µÄ½ø¶È¼ÌÐø´³¹Ø</font></dt>
+                    <dt><font size="2">¡¡¡¡¡ï
+                        ÏóÆåÎ×Ê¦°×½ð»áÔ±¿ÉÖ±½Ó»ñµÃ¸ß¼¶°æÐí¿ÉÖ¤</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="http://www.xqbase.com/download/xqwlight_release.zip"><font
-                        size="2">ä¸‹è½½</font></a><font size="2">ã€€</font><a
+                        size="2">ÏÂÔØ</font></a><font size="2">¡¡</font><a
                         href="http://www.xqbase.com/users/?act=xqblight"
-                        target="_blank"><font size="2">èŽ·å¾—è®¸å¯è¯</font></a></dt>
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                        target="_blank"><font size="2">»ñµÃÐí¿ÉÖ¤</font></a></dt>
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="wangwang.htm" target="_blank"><font
-                        size="2">å‘è±¡æ£‹å·«å¸ˆæ·˜å®å®¢æœå’¨è¯¢</font></a><a
-                        href="http://amos1.taobao.com/msg.ww?v=2&amp;uid=è±¡æ£‹ç™¾ç§‘å…¨ä¹¦"
+                        size="2">ÏòÏóÆåÎ×Ê¦ÌÔ±¦¿Í·þ×ÉÑ¯</font></a><a
+                        href="http://amos1.taobao.com/msg.ww?v=2&amp;uid=ÏóÆå°Ù¿ÆÈ«Êé"
                         target="_blank"><font size="2"><img
                         src="wangwang_button.gif" border="0"
                         width="67" height="20"></font></a></dt>
                     <div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡</font><a
                         href="http://www.xqbase.com/xqbase/"
                         target="_blank"><font color="#FF0000"
-                        size="2"><strong>è±¡æ£‹å·«å¸ˆæ£‹è°±ä»“åº“</strong></font></a><font
-                        size="2">ä¸Šçº¿å•¦ï¼</font></dt>
+                        size="2"><strong>ÏóÆåÎ×Ê¦ÆåÆ×²Ö¿â</strong></font></a><font
+                        size="2">ÉÏÏßÀ²£¡</font></dt>
                     </div>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€â˜…
-                        åœ¨è¿™é‡Œæ‚¨å¯ä»¥æ‰¾åˆ°1990å¹´åˆ°2008å¹´å›½å†…é¡¶çº§è±¡æ£‹æ¯”èµ›(ä¸ªäººèµ›ã€å›¢ä½“èµ›ã€è”èµ›ã€äº”ç¾Šæ¯)çš„æ£‹è°±</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡ï
+                        ÔÚÕâÀïÄú¿ÉÒÔÕÒµ½1990Äêµ½2008Äê¹úÄÚ¶¥¼¶ÏóÆå±ÈÈü(¸öÈËÈü¡¢ÍÅÌåÈü¡¢ÁªÈü¡¢ÎåÑò±­)µÄÆåÆ×</font></dt>
                     <div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€</font><font
-                        color="#008000" size="2"><strong>è±¡æ£‹å·«å¸ˆ4.5</strong></font><font
-                        size="2">ç®€ä½“ç‰ˆä¸Žç¹ä½“ç‰ˆå·²åˆå¹¶ï¼Œä¸‹è½½é“¾æŽ¥æœ‰ï¼š</font></dt>
+                    <dt><font size="2">¡¡¡¡</font><font
+                        color="#008000" size="2"><strong>ÏóÆåÎ×Ê¦4.5</strong></font><font
+                        size="2">¼òÌå°æÓë·±Ìå°æÒÑºÏ²¢£¬ÏÂÔØÁ´½ÓÓÐ£º</font></dt>
                     </div><div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="http://www.skycn.com/soft/24665.html"
-                        target="_blank"><font size="2">å¤©ç©ºè½¯ä»¶ç«™ä¸‹è½½</font></a><font
-                        size="2">ã€€</font><a
+                        target="_blank"><font size="2">Ìì¿ÕÈí¼þÕ¾ÏÂÔØ</font></a><font
+                        size="2">¡¡</font><a
                         href="http://www.onlinedown.net/soft/38287.htm"
-                        target="_blank"><font size="2">åŽå†›è½¯ä»¶å›­ä¸‹è½½</font></a><font
-                        size="2">ã€€</font><a
+                        target="_blank"><font size="2">»ª¾üÈí¼þÔ°ÏÂÔØ</font></a><font
+                        size="2">¡¡</font><a
                         href="../download/xqwizard_setup.exe"
-                        target="_blank"><font size="2">æœ¬ç«™ä¸‹è½½(å®‰è£…åŒ…)</font></a><font
-                        size="2">ã€€</font><a
+                        target="_blank"><font size="2">±¾Õ¾ÏÂÔØ(°²×°°ü)</font></a><font
+                        size="2">¡¡</font><a
                         href="../download/xqwizard_portable.7z"
-                        target="_blank"><font size="2">æœ¬ç«™ä¸‹è½½(ç»¿è‰²ç‰ˆ)</font></a></dt>
+                        target="_blank"><font size="2">±¾Õ¾ÏÂÔØ(ÂÌÉ«°æ)</font></a></dt>
                     </div>
                 </dl>
                 </td>
             </tr>
             <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>é‡è¦å…¬å‘Š</strong></font></td>
+                <td background="../headerbg.gif"><font size="3"><strong>ÖØÒª¹«¸æ</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt><font size="2">ã€€ã€€è±¡æ£‹ç™¾ç§‘å…¨ä¹¦æ–°åŸŸåxqbase.comæ­£åœ¨å¤‡æ¡ˆä¸­ï¼Œæš‚æ—¶æ— æ³•å¯¹å¤–æä¾›æœåŠ¡ï¼Œè¯·è®¿é—®</font><a
+                    <dt><font size="2">¡¡¡¡ÏóÆå°Ù¿ÆÈ«ÊéÐÂÓòÃûxqbase.comÕýÔÚ±¸°¸ÖÐ£¬ÔÝÊ±ÎÞ·¨¶ÔÍâÌá¹©·þÎñ£¬Çë·ÃÎÊ</font><a
                         href="http://www.elephantbase.net/"
                         target="_blank"><font size="2">www.elephantbase.net</font></a><font
-                        size="2">ï¼Œæ•¬è¯·è°…è§£ã€‚</font></dt>
+                        size="2">£¬¾´ÇëÁÂ½â¡£</font></dt>
                     </div><div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€è¿è¡Œè±¡æ£‹å·«å¸ˆæ—¶ï¼Œå¦‚é‡åˆ°å¼¹å‡ºOffice
-                        2003çš„å®‰è£…æç¤ºï¼Œè¯·å‚è€ƒä»¥ä¸‹å¸®åŠ©ï¼š</font></dt>
+                    <dt><font size="2">¡¡¡¡ÔËÐÐÏóÆåÎ×Ê¦Ê±£¬ÈçÓöµ½µ¯³öOffice
+                        2003µÄ°²×°ÌáÊ¾£¬Çë²Î¿¼ÒÔÏÂ°ïÖú£º</font></dt>
                     </div><div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="help_faq.htm#office"
-                        target="_blank"><font size="2">ä¸ºä»€ä¹ˆæ€»æ˜¯å¼¹å‡ºOffice
-                        2003çš„å®‰è£…æç¤º</font></a></dt>
+                        target="_blank"><font size="2">ÎªÊ²Ã´×ÜÊÇµ¯³öOffice
+                        2003µÄ°²×°ÌáÊ¾</font></a></dt>
                     </div><div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€å¦å¤–ï¼Œè±¡æ£‹å·«å¸ˆé­”æ³•å­¦æ ¡=&gt;ç”¨æˆ·ä¸­å¿ƒ=&gt;æŸ¥è¯¢ç‚¹æ•°ï¼Œå½“å¯†ç è¾“å…¥é”™è¯¯æ—¶ï¼Œç¨‹åºä¼šæŠ¥å‘Š438é”™è¯¯å¹¶é€€å‡ºï¼Œè¿™ä¸ªç¼ºé™·å·²åœ¨4.51ç‰ˆä¸­ä¿®æ­£ã€‚ä¸‹è½½é“¾æŽ¥æœ‰ï¼š</font></dt>
+                    <dt><font size="2">¡¡¡¡ÁíÍâ£¬ÏóÆåÎ×Ê¦Ä§·¨Ñ§Ð£=&gt;ÓÃ»§ÖÐÐÄ=&gt;²éÑ¯µãÊý£¬µ±ÃÜÂëÊäÈë´íÎóÊ±£¬³ÌÐò»á±¨¸æ438´íÎó²¢ÍË³ö£¬Õâ¸öÈ±ÏÝÒÑÔÚ4.51°æÖÐÐÞÕý¡£ÏÂÔØÁ´½ÓÓÐ£º</font></dt>
                     </div><div align="left">
-                    <dt>ã€€</dt>
+                    <dt>¡¡</dt>
                     </div><div align="left">
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="../download/xqwizard_setup.exe"
-                        target="_blank"><font size="2">æœ¬ç«™ä¸‹è½½(å®‰è£…åŒ…)</font></a><font
-                        size="2">ã€€</font><a
+                        target="_blank"><font size="2">±¾Õ¾ÏÂÔØ(°²×°°ü)</font></a><font
+                        size="2">¡¡</font><a
                         href="../download/xqwizard_portable.7z"
-                        target="_blank"><font size="2">æœ¬ç«™ä¸‹è½½(ç»¿è‰²ç‰ˆ)</font></a></dt>
+                        target="_blank"><font size="2">±¾Õ¾ÏÂÔØ(ÂÌÉ«°æ)</font></a></dt>
                     </div>
                 </dl>
                 </td>
             </tr>
             <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>ä½¿ç”¨æŠ€å·§</strong></font></td>
+                <td background="../headerbg.gif"><font size="3"><strong>Ê¹ÓÃ¼¼ÇÉ</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
-                    <dt><font size="2">ã€€ã€€</font><font
-                        color="#0000FF" size="2"><strong>æŒ‘æˆ˜</strong></font><font
-                        size="2">é¢˜ç›®è§£ä¸å‡ºæ—¶ï¼Œå¯ä»¥ç”¨å·¥å…·æ é‡Œçš„</font><font
-                        color="#0000FF" size="2"><strong>å‘å¸ƒæ£‹è°±</strong></font><font
-                        size="2">æŒ‰é’®ï¼Œåˆ°ä»¥ä¸‹å‡ ä¸ªç½‘ç«™å‘èµ·æ±‚åŠ©ï¼š</font></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                    <dt><font size="2">¡¡¡¡</font><font
+                        color="#0000FF" size="2"><strong>ÌôÕ½</strong></font><font
+                        size="2">ÌâÄ¿½â²»³öÊ±£¬¿ÉÒÔÓÃ¹¤¾ßÀ¸ÀïµÄ</font><font
+                        color="#0000FF" size="2"><strong>·¢²¼ÆåÆ×</strong></font><font
+                        size="2">°´Å¥£¬µ½ÒÔÏÂ¼¸¸öÍøÕ¾·¢ÆðÇóÖú£º</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="publish_zhidao.htm" target="_blank"><font
-                        size="2">å‘ç™¾åº¦çŸ¥é“æ±‚åŠ©</font></a><font
-                        size="2">ã€€</font><a
+                        size="2">Ïò°Ù¶ÈÖªµÀÇóÖú</font></a><font
+                        size="2">¡¡</font><a
                         href="publish_tieba.htm" target="_blank"><font
-                        size="2">å‘ç™¾åº¦è´´å§è±¡æ£‹å§æ±‚åŠ©</font></a><font
-                        size="2">ã€€</font><a
+                        size="2">Ïò°Ù¶ÈÌù°ÉÏóÆå°ÉÇóÖú</font></a><font
+                        size="2">¡¡</font><a
                         href="publish_home.htm" target="_blank"><font
-                        size="2">å‘è±¡æ£‹å®¶å›­æ±‚åŠ©</font></a></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€æ—§ç‰ˆçš„</font><font
-                        color="#0000FF" size="2"><strong>å›¾ç‰‡æ£‹ç›˜</strong></font><font
-                        size="2">å’Œ</font><font color="#0000FF"
-                        size="2"><strong>å°åˆ·æ£‹ç›˜</strong></font><font
-                        size="2">åŠŸèƒ½ï¼Œæ–°ç‰ˆéƒ½é›†æˆåˆ°</font><font
-                        color="#0000FF" size="2"><strong>å‘å¸ƒæ£‹è°±</strong></font><font
-                        size="2">åŠŸèƒ½é‡Œäº†ï¼Œè¯·å‚è€ƒï¼š</font></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                        size="2">ÏòÏóÆå¼ÒÔ°ÇóÖú</font></a></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¾É°æµÄ</font><font
+                        color="#0000FF" size="2"><strong>Í¼Æ¬ÆåÅÌ</strong></font><font
+                        size="2">ºÍ</font><font color="#0000FF"
+                        size="2"><strong>Ó¡Ë¢ÆåÅÌ</strong></font><font
+                        size="2">¹¦ÄÜ£¬ÐÂ°æ¶¼¼¯³Éµ½</font><font
+                        color="#0000FF" size="2"><strong>·¢²¼ÆåÆ×</strong></font><font
+                        size="2">¹¦ÄÜÀïÁË£¬Çë²Î¿¼£º</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="publish.htm#bitmap" target="_blank"><font
-                        size="2">å¦‚ä½•åœ¨Wordæˆ–åšå®¢ä¸­ç²˜è´´å›¾ç‰‡æ£‹ç›˜</font></a></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€æ›´å¤šå‚è€ƒï¼š</font></dt>
-                    <dt>ã€€</dt>
-                    <dt><font size="2">ã€€ã€€ã€€ã€€</font><a
+                        size="2">ÈçºÎÔÚWord»ò²©¿ÍÖÐÕ³ÌùÍ¼Æ¬ÆåÅÌ</font></a></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¸ü¶à²Î¿¼£º</font></dt>
+                    <dt>¡¡</dt>
+                    <dt><font size="2">¡¡¡¡¡¡¡¡</font><a
                         href="pgns2jar.htm" target="_blank"><font
-                        size="2">å¦‚ä½•åˆ¶ä½œæ‰‹æœºæ£‹è°±</font></a></dt>
+                        size="2">ÈçºÎÖÆ×÷ÊÖ»úÆåÆ×</font></a></dt>
                 </dl>
                 </td>
             </tr>
             <tr>
-                <td background="../headerbg.gif"><font size="3"><strong>å’¨è¯¢çƒ­çº¿</strong></font></td>
+                <td background="../headerbg.gif"><font size="3"><strong>×ÉÑ¯ÈÈÏß</strong></font></td>
             </tr>
             <tr>
                 <td><dl>
                     <div align="left">
-                    <dt><font size="2">ã€€ã€€å¦‚æœ‰ä»»ä½•é—®é¢˜ã€æ„è§å’Œå»ºè®®è¯·åŠæ—¶ä¸Žè±¡æ£‹å·«å¸ˆè¿è¥å›¢é˜Ÿè”ç³»ï¼ŒEmailï¼š</font><a
+                    <dt><font size="2">¡¡¡¡ÈçÓÐÈÎºÎÎÊÌâ¡¢Òâ¼ûºÍ½¨ÒéÇë¼°Ê±ÓëÏóÆåÎ×Ê¦ÔËÓªÍÅ¶ÓÁªÏµ£¬Email£º</font><a
                         href="mailto:webmaster@xqbase.com"><font
                         size="2">webmaster@xqbase.com</font></a><font
-                        size="1">ã€‚</font></dt>
+                        size="1">¡£</font></dt>
                     </div>
                 </dl>
                 </td>
@@ -246,16 +246,16 @@ try {
 }
 // --></script><a
                 href="http://www.xqbase.com/users/?act=suggest"
-                target="_blank"><font color="#000060" size="2">æ„è§åé¦ˆ</font></a><font
+                target="_blank"><font color="#000060" size="2">Òâ¼û·´À¡</font></a><font
                 color="#000060" size="2"> </font><a
                 href="http://www.xqbase.com/" target="_blank"><font
-                color="#000060" size="2">è±¡æ£‹ç™¾ç§‘å…¨ä¹¦
-                è£èª‰å‡ºå“</font></a></p>
+                color="#000060" size="2">ÏóÆå°Ù¿ÆÈ«Êé
+                ÈÙÓþ³öÆ·</font></a></p>
                 </td>
             </tr>
         </table>
         </td>
-        <td>ã€€</td>
+        <td>¡¡</td>
     </tr>
 </table>
 </body>
