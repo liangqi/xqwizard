@@ -22,7 +22,7 @@ tw.Custom=自定義設置
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.6
+AppVerName={cm:AppName} 4.61
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/

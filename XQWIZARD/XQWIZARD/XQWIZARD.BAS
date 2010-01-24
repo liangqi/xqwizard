@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.61, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -151,6 +151,7 @@ Public Options_bPromptSave      As Boolean  ' 提示保存
 Public Options_bAutoSave        As Boolean  ' 自动保存
 Public Options_szUser           As String   ' 人机对弈用户
 Public Options_bShowNew         As Boolean  ' 启动时显示“开始对局”对话框
+Public Options_bTryAgain        As Boolean  ' 棋局结束后提示“再来一局”
 ' 全局变量——界面(杂项)
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
@@ -1008,6 +1009,11 @@ PlayWavSound szSound
 If App_sqMate > 0 Then
     DrawSquare App_sqMate, , DRAW_MATE
 End If
+If Not Options_bTryAgain Then
+    MsgBoxMute szPrompt, vbInformation
+    Exit Sub
+End If
+
 mbp.cbSize = Len(mbp)
 mbp.hwndOwner = App_frmMain.hWnd
 mbp.hInstance = 0
@@ -2792,6 +2798,7 @@ Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
 Options_szUser = GetSetting("XQWizard", "Options", "User", L("象棋巫师测试团队", "象棋巫師測試團隊"))
 Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <> 0)
+Options_bTryAgain = (Str2Int(GetSetting("XQWizard", "Options", "TryAgain", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
@@ -2838,6 +2845,7 @@ SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
 SaveSetting "XQWizard", "Options", "User", Options_szUser
 SaveSetting "XQWizard", "Options", "ShowNew", IIf(Options_bShowNew, "1", "0")
+SaveSetting "XQWizard", "Options", "TryAgain", IIf(Options_bTryAgain, "1", "0")
 SaveSetting "XQWizard", "Gui", "Left", Gui_nLeft
 SaveSetting "XQWizard", "Gui", "Top", Gui_nTop
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", Gui_nEndgamesIndex

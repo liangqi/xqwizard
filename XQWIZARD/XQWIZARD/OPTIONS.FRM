@@ -3,7 +3,7 @@ Object = "{FE0065C0-1B7B-11CF-9D53-00AA003C9CB6}#1.1#0"; "COMCT232.OCX"
 Begin VB.Form frmOptions 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "选项设置"
-   ClientHeight    =   3120
+   ClientHeight    =   3480
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6840
@@ -19,31 +19,39 @@ Begin VB.Form frmOptions
    Icon            =   "OPTIONS.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3120
+   ScaleHeight     =   3480
    ScaleWidth      =   6840
    ShowInTaskbar   =   0   'False
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame frmMisc 
       Caption         =   "其他"
-      Height          =   975
+      Height          =   1335
       Left            =   120
       TabIndex        =   11
       Top             =   1560
       Width           =   3255
+      Begin VB.CheckBox chkTryAgain 
+         Caption         =   "棋局结束后提示“再来一局”"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   13
+         Top             =   600
+         Width           =   3015
+      End
       Begin VB.CheckBox chkAutoSave 
          Caption         =   "自动保存棋局"
          Height          =   255
          Left            =   1680
-         TabIndex        =   14
-         Top             =   600
+         TabIndex        =   15
+         Top             =   960
          Width           =   1455
       End
       Begin VB.CheckBox chkPromptSave 
          Caption         =   "提示保存棋局"
          Height          =   255
          Left            =   120
-         TabIndex        =   13
-         Top             =   600
+         TabIndex        =   14
+         Top             =   960
          Width           =   1455
       End
       Begin VB.CheckBox chkShowNew 
@@ -57,22 +65,22 @@ Begin VB.Form frmOptions
    End
    Begin VB.Frame frmEngine 
       Caption         =   "电脑"
-      Height          =   2415
+      Height          =   2775
       Left            =   3480
-      TabIndex        =   15
+      TabIndex        =   16
       Top             =   120
       Width           =   3255
       Begin VB.TextBox txtMoveDelay 
          Height          =   285
          Left            =   960
-         TabIndex        =   17
+         TabIndex        =   18
          Top             =   240
          Width           =   360
       End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   29
+         TabIndex        =   30
          Top             =   2040
          Width           =   1215
       End
@@ -80,7 +88,7 @@ Begin VB.Form frmOptions
          Caption         =   "输出到状态栏"
          Height          =   255
          Left            =   1680
-         TabIndex        =   25
+         TabIndex        =   26
          Top             =   1320
          Width           =   1455
       End
@@ -88,7 +96,7 @@ Begin VB.Form frmOptions
          Caption         =   "显示思考时间"
          Height          =   255
          Left            =   120
-         TabIndex        =   24
+         TabIndex        =   25
          Top             =   1320
          Width           =   1455
       End
@@ -96,7 +104,7 @@ Begin VB.Form frmOptions
          Caption         =   "允许提和认输"
          Height          =   255
          Left            =   1680
-         TabIndex        =   23
+         TabIndex        =   24
          Top             =   960
          Width           =   1455
       End
@@ -104,7 +112,7 @@ Begin VB.Form frmOptions
          Caption         =   "启用后台思考"
          Height          =   255
          Left            =   120
-         TabIndex        =   22
+         TabIndex        =   23
          Top             =   960
          Width           =   1455
       End
@@ -112,7 +120,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   27
+         TabIndex        =   28
          Top             =   1680
          Width           =   1215
       End
@@ -120,7 +128,7 @@ Begin VB.Form frmOptions
          Caption         =   "自动翻转棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   20
+         TabIndex        =   21
          Top             =   600
          Width           =   1455
       End
@@ -128,14 +136,14 @@ Begin VB.Form frmOptions
          Caption         =   "显示引擎名称"
          Height          =   255
          Left            =   1680
-         TabIndex        =   21
+         TabIndex        =   22
          Top             =   600
          Width           =   1455
       End
       Begin ComCtl2.UpDown updnMoveDelay 
          Height          =   285
          Left            =   1320
-         TabIndex        =   18
+         TabIndex        =   19
          Top             =   240
          Width           =   195
          _ExtentX        =   344
@@ -157,7 +165,7 @@ Begin VB.Form frmOptions
          Caption         =   "秒"
          Height          =   255
          Left            =   1560
-         TabIndex        =   19
+         TabIndex        =   20
          Top             =   240
          Width           =   255
       End
@@ -165,7 +173,7 @@ Begin VB.Form frmOptions
          Caption         =   "走子延时"
          Height          =   255
          Left            =   120
-         TabIndex        =   16
+         TabIndex        =   17
          Top             =   240
          Width           =   735
       End
@@ -173,7 +181,7 @@ Begin VB.Form frmOptions
          Caption         =   "人机对弈用户"
          Height          =   255
          Left            =   480
-         TabIndex        =   28
+         TabIndex        =   29
          Top             =   2040
          Width           =   1095
       End
@@ -181,7 +189,7 @@ Begin VB.Form frmOptions
          Caption         =   "新局电脑状态"
          Height          =   255
          Left            =   480
-         TabIndex        =   26
+         TabIndex        =   27
          Top             =   1680
          Width           =   1095
       End
@@ -191,8 +199,8 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3720
-      TabIndex        =   31
-      Top             =   2640
+      TabIndex        =   32
+      Top             =   3000
       Width           =   975
    End
    Begin VB.CommandButton btnConfirm 
@@ -200,8 +208,8 @@ Begin VB.Form frmOptions
       Default         =   -1  'True
       Height          =   375
       Left            =   2040
-      TabIndex        =   30
-      Top             =   2640
+      TabIndex        =   31
+      Top             =   3000
       Width           =   975
    End
    Begin VB.Frame frmGui 
@@ -313,7 +321,7 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.61, Last Modified: Jan. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -364,6 +372,7 @@ txtUser.Text = Options_szUser
 chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
 chkAutoSave.Value = IIf(Options_bAutoSave, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
+chkTryAgain.Value = IIf(Options_bTryAgain, 1, 0)
 SetTopMost hWnd
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
@@ -388,6 +397,7 @@ lblPlayIntv.Caption = "播放延時"
 lblIntvSec.Caption = "秒"
 frmMisc.Caption = "其他"
 chkShowNew.Caption = "啟動時顯示“開始對局”對話框"
+chkTryAgain.Caption = "棋局結束後提示“再來一局”"
 chkPromptSave.Caption = "提示保存棋局"
 chkAutoSave.Caption = "自動保存棋局"
 frmEngine.Caption = "電腦"
@@ -446,6 +456,7 @@ Options_szUser = txtUser.Text
 Options_bPromptSave = (chkPromptSave.Value = 1)
 Options_bAutoSave = (chkAutoSave.Value = 1)
 Options_bShowNew = (chkShowNew.Value = 1)
+Options_bTryAgain = (chkTryAgain.Value = 1)
 Unload Me
 
 End Sub
