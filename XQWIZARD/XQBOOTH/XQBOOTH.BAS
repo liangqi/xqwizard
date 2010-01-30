@@ -765,7 +765,7 @@ Public Sub NoPointsError(ByVal nPoints As Integer)
 
 MsgBox L("您的点数不足", "您的點數不足") & nPoints & _
         L("点，补充点数后才能使用此功能。", "點，補充點數後才能使用此功能。"), vbExclamation
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/charge.htm", _
         vbNullString, vbNullString, vbNormalFocus
 
 End Sub

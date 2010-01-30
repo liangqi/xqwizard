@@ -2,5 +2,3 @@ www.xqbase.com Advert List
 xqbase,30,453,5389
 xqbase2,30,461,9007
 xqwlight_ad,30,472,17943
-landlord_ad,30,472,11183
-mobilechess,30,471,10963

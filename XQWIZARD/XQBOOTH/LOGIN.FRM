@@ -228,7 +228,7 @@ End Sub
 
 Private Sub lblCharge_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/charge/index.htm", _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/charge.htm", _
         vbNullString, vbNullString, vbNormalFocus
 
 End Sub
