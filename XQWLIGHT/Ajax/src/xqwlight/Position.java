@@ -447,7 +447,7 @@ public class Position implements Serializable {
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
+				// Ignored
 			}
 		}
 	}

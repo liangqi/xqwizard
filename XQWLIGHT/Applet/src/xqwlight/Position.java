@@ -444,7 +444,7 @@ public class Position {
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
+				// Ignored
 			}
 		}
 	}
