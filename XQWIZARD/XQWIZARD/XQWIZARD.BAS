@@ -2034,32 +2034,34 @@ Else
                 Engine_nStatus = IDLE_REST
                 GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
                         L("黑方接受提和。", "黑方接受提和。"))
-            ElseIf AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
-                App_frmMain.SetFocus
-                If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
-                    Engine_bDraw = True
-                    If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        If Options_nLanguage = LANGUAGE_ZH_CN Then
-                            MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") & vbCrLf & _
-                                    "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" & vbCrLf & _
-                                    "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
-                        Else
-                            MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") & vbCrLf & _
-                                    "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" & vbCrLf & _
-                                    "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
+            Else
+                Engine_nStatus = IDLE_READY
+                ' 一定要在 IDLE_READY 的时候 AddMove
+                If AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
+                    App_frmMain.SetFocus
+                    If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
+                        Engine_bDraw = True
+                        If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
+                            If Options_nLanguage = LANGUAGE_ZH_CN Then
+                                MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") & vbCrLf & _
+                                        "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" & vbCrLf & _
+                                        "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
+                            Else
+                                MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") & vbCrLf & _
+                                        "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" & vbCrLf & _
+                                        "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
+                            End If
                         End If
                     End If
-                End If
-                If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
-                    Engine_mvPonder = Coord2Move(Mid(szReceived, 22, 4))
-                    Engine_nStatus = BUSY_PONDER
-                    RunEngine
+                    If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
+                        Engine_mvPonder = Coord2Move(Mid(szReceived, 22, 4))
+                        Engine_nStatus = BUSY_PONDER
+                        RunEngine
+                    End If
                 Else
-                    Engine_nStatus = IDLE_READY
+                    ' 走棋没有成功，则不让引擎思考
+                    Engine_nStatus = IDLE_REST
                 End If
-            Else
-                ' 走棋没有成功，也停止引擎
-                Engine_nStatus = IDLE_REST
             End If
         Case Else
             MsgBox L("不该接收到引擎的信息：", "不該接收到引擎的信息：") & szReceived, vbExclamation
