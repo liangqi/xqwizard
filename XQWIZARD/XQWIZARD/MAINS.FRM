@@ -1905,20 +1905,23 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnHelpSuggest 
-         Caption         =   "意见反馈(&S)"
+      Begin VB.Menu mnHelpUpdate 
+         Caption         =   "检查最新版本(&P)"
       End
       Begin VB.Menu mnHelpHome 
-         Caption         =   "象棋巫师的网站(&H)"
-      End
-      Begin VB.Menu mnHelpBase 
-         Caption         =   "棋谱仓库(&B)"
+         Caption         =   "象棋百科全书(&H)"
       End
       Begin VB.Menu mnHelpLeague 
          Caption         =   "获取UCCI引擎(&G)"
       End
-      Begin VB.Menu mnHelpUpdate 
-         Caption         =   "检查最新版本(&P)"
+      Begin VB.Menu mnHelpXQWLight 
+         Caption         =   "手机象棋(&L)"
+      End
+      Begin VB.Menu mnHelpBase 
+         Caption         =   "棋谱仓库(&B)"
+      End
+      Begin VB.Menu mnHelpSuggest 
+         Caption         =   "意见反馈(&S)"
       End
       Begin VB.Menu mnHelpSep2 
          Caption         =   "-"
@@ -2609,9 +2612,9 @@ MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "名言", , ICON_QUOTE
 
 End Sub
 
-Private Sub mnHelpSuggest_Click()
+Private Sub mnHelpUpdate_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest", vbNullString, vbNullString, vbNormalFocus
+CheckUpdate "xqwizard", MANUAL_UPDATE
 
 End Sub
 
@@ -2621,21 +2624,27 @@ ShellExecuteA 0, vbNullString, "http://www.xqbase.com/", vbNullString, vbNullStr
 
 End Sub
 
-Private Sub mnHelpBase_Click()
-
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
 Private Sub mnHelpLeague_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/league.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
-Private Sub mnHelpUpdate_Click()
+Private Sub mnHelpXQWLight_Click()
 
-CheckUpdate "xqwizard", MANUAL_UPDATE
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/xqwlight.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpBase_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpSuggest_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 

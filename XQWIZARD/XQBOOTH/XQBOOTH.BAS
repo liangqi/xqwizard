@@ -1187,7 +1187,12 @@ If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
     Unload frmStartup
-    MsgBox L("无法加载引擎 ", "無法加載引擎 ") & App_szPath & ENGINE_FILE, vbExclamation
+    If (MsgBox(L("无法加载引擎：", "無法加載引擎：") & App_szPath & ENGINE_FILE & vbCrLf & _
+            L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
+            vbQuestion + vbYesNo)) = vbYes Then
+        ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#load", _
+                vbNullString, vbNullString, vbNormalFocus
+    End If
     Exit Sub
 End If
 ' 电脑执黑，不能只考虑将军走法

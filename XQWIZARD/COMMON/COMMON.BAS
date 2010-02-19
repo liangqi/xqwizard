@@ -20,10 +20,12 @@ Attribute VB_Name = "mdlCommon"
 ' with this program; if not, write to the Free Software Foundation, Inc.,
 ' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+Option Explicit
+
 Private Declare Function GetACP Lib "KERNEL32.DLL" () As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.61"
+Public Const STRING_VERSION     As String = "4.62"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
@@ -226,12 +228,12 @@ If GetSetting("XQWizard", "Gui", "PopupDate", "") = Date Then
 End If
 ' 如果退弹成功，那么当天就不再退弹了
 SaveSetting "XQWizard", "Gui", "PopupDate", Date
-zUrl = ""
+szUrl = ""
 On Error Resume Next
 szUrl = frmHide.Inet.OpenURL("http://www.xqbase.com/advert/popup.txt")
 On Error GoTo 0
 If Left(szUrl, 7) = "http://" Then
-    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, SW_SHOWNORMAL
+    ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
 End If
 
 End Sub

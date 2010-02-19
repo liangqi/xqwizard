@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.61, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.62, Last Modified: Feb. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2064,7 +2064,12 @@ Else
                 End If
             End If
         Case Else
-            MsgBox L("不该接收到引擎的信息：", "不該接收到引擎的信息：") & szReceived, vbExclamation
+            If (MsgBox(L("不该接收到的引擎信息：", "不該接收到的引擎信息：") & szReceived & vbCrLf & _
+                    L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
+                    vbQuestion + vbYesNo)) = vbYes Then
+                ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#receive", _
+                        vbNullString, vbNullString, vbNormalFocus
+            End If
         End Select
         If Options_bStatusBar Then
             App_frmMain.stb.Panels("Curr").Text = ""
@@ -2258,6 +2263,22 @@ End If
 
 End Sub
 
+' 加载引擎失败
+Public Sub ErrorOpenEngine()
+
+Engine_szFile = ""
+EngineLoaded False
+SetTitle
+If (MsgBox(L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & _
+        L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
+        vbQuestion + vbYesNo)) = vbYes Then
+    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#load", _
+            vbNullString, vbNullString, vbNormalFocus
+End If
+
+End Sub
+
+
 ' 打开引擎
 Public Sub OpenEngine(Optional ByVal bInfo As Boolean = False)
 
@@ -2271,20 +2292,6 @@ If Engine_szFile = "" Then
     EngineLoaded False
     SetTitle
     Exit Sub
-End If
-If GetAppType(Engine_szFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-    If bInfo Then
-        EngineLoaded False
-        SetTitle
-        Exit Sub
-    End If
-    Engine_szFile = App_szPath & "ELEEYE.EXE"
-    Engine_szBookFiles = ""
-    If GetAppType(Engine_szFile) <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-        EngineLoaded False
-        SetTitle
-        Exit Sub
-    End If
 End If
 
 PipeOpen Engine_pipe, Engine_szFile
@@ -2340,11 +2347,7 @@ If Engine_nStatus > IDLE_UNLOAD Then
 Else
     SendEngine "quit"
     PipeClose Engine_pipe
-    If bInfo Then
-        MsgBox Engine_szFile & L(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
-        Engine_szFile = ""
-    End If
-    EngineLoaded False
+    ErrorOpenEngine
 End If
 SetTitle
 
@@ -3013,11 +3016,12 @@ App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
 App_frmMain.mnHelpHowTo.Caption = "日積月累(&W)..."
 App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
-App_frmMain.mnHelpSuggest.Caption = "意見反饋(&S)"
-App_frmMain.mnHelpHome.Caption = "象棋巫師的網站(&H)"
-App_frmMain.mnHelpBase.Caption = "棋譜倉庫(&B)"
-App_frmMain.mnHelpLeague.Caption = "獲取UCCI引擎(&G)"
 App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
+App_frmMain.mnHelpHome.Caption = "象棋百科全書(&H)"
+App_frmMain.mnHelpLeague.Caption = "獲取UCCI引擎(&G)"
+App_frmMain.mnHelpXQWLight.Caption = "手機象棋(&L)"
+App_frmMain.mnHelpBase.Caption = "棋譜倉庫(&B)"
+App_frmMain.mnHelpSuggest.Caption = "意見反饋(&S)"
 App_frmMain.mnHelpEngine.Caption = "關于&UCCI引擎..."
 App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
 
@@ -3210,7 +3214,18 @@ If Engine_bEngineLog And Engine_szLogFile <> "" Then
     Close #nLogFileNo
     On Error GoTo 0
 End If
-OpenEngine
+If GetAppType(Engine_szFile) = IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+    OpenEngine
+Else
+    Engine_szFile = App_szPath & "ELEEYE.EXE"
+    Engine_szBookFiles = ""
+    If GetAppType(Engine_szFile) = IMAGE_SUBSYSTEM_WINDOWS_CUI Then
+        OpenEngine
+    Else
+        ErrorOpenEngine
+    End If
+End If
+
 App_bRedTurn = False
 bNewGame = False
 If sz = "" Then
