@@ -425,7 +425,7 @@ Public Function LoginHeaders() As String
 
 LoginHeaders = "Login-UserName: " & Login_szUserName & vbCrLf & _
         "Login-Password: " & Login_szPassword & vbCrLf & _
-        "Login-Charset: " & IIf(Options_nLanguage = LANGUAGE_ZH_CN, "GBK", "BIG5") & vbCrLf
+        "Login-Charset: " & L("GBK", "BIG5") & vbCrLf
 
 End Function
 

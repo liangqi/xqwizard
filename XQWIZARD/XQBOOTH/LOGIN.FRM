@@ -153,7 +153,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part IV
+' LOGIN.FRM - Source Code for XiangQi Witchcraft School, Part IV
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
