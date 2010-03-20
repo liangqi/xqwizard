@@ -19,31 +19,6 @@ inline uint64_t MAKE_LONG_LONG(uint32_t LowLong, uint32_t HighLong) {
 
 #pragma warning(disable: 4035)
 
-__forceinline int Exchange(volatile int *Target, int Value) {
-  __asm {
-    mov ebx, Target;
-    mov eax, Value;
-    xchg [ebx], eax;
-  }
-}
-
-__forceinline int CompareExchange(volatile int *Destination, int Exchange, int Comperand) {
-  __asm {
-    mov ebx, Destination;
-    mov edx, Exchange;
-    mov eax, Comperand;
-    cmpxchg [ebx], edx;
-  }
-}
-
-__forceinline int ExchangeAdd(volatile int *Addend, int Increment) {
-  __asm {
-    mov ebx, Addend;
-    mov eax, Increment;
-    xadd [ebx], eax;
-  }
-}
-
 __forceinline int Bsf(uint32_t Operand) {
   __asm {
     bsf eax, Operand;
@@ -131,36 +106,6 @@ __forceinline uint32_t Shrd(uint32_t LowLong, uint32_t HighLong, uint32_t Count)
 #pragma warning(default: 4035)
 
 #else
-
-static __inline__ int Exchange(volatile int *Target, int Value) {
-  int eax, ebx;
-  asm __volatile__ (
-    "xchgl %0, (%1)" "\n\t"
-    : "=a" (eax), "=b" (ebx)
-    : "0" (Value), "1" (Target)
-  );
-  return eax;
-}
-
-static __inline__ int CompareExchange(volatile int *Destination, int Exchange, int Comperand) {
-  int eax, ebx, edx;
-    asm __volatile__ (
-    "cmpxchgl %2, (%1)" "\n\t"
-    : "=a" (eax), "=b" (ebx), "=d" (edx)
-    : "0" (Comperand), "1" (Destination), "2" (Exchange)
-  );
-  return eax;
-}
-
-static __inline__ int ExchangeAdd(volatile int *Addend, int Increment) {
-  int eax, ebx;
-  asm __volatile__ (
-    "xaddl %0, (%1)" "\n\t"
-    : "=a" (eax), "=b" (ebx)
-    : "0" (Increment), "1" (Addend)
-  );
-  return eax;
-}
 
 static __inline__ int Bsf(uint32_t Operand) {
   int eax;
