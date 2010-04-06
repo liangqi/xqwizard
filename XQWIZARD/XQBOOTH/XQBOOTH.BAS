@@ -1001,7 +1001,9 @@ Print #nFileNo, L("推荐用象棋巫师观赏棋谱", "推荐用象棋巫師觀賞棋譜")
 Print #nFileNo, "http://www.xqbase.com/"
 Close #nFileNo
 
+On Error GoTo lnErrorOpen
 Shell App_szPath & "XQWIZARD.EXE """ & App_szPath & szFile & """", vbNormalFocus
+On Error GoTo 0
 
 Exit Sub
 lnErrorOpen:

@@ -770,7 +770,6 @@ Filename: "{app}\XQWIZARD.EXE"; Description: "開始對局"; Flags: nowait postinsta
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
 
 [Code]
-
 procedure DeinitializeUninstall();
 var
   ErrorCode: Integer;
