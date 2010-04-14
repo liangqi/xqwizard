@@ -168,19 +168,19 @@ public class Echo {
 				byte[] b = new byte[BUFFER_SIZE];
 				source.start();
 				while (running) {
-					boolean written = false;
+					int bytesRead = 0;
 					synchronized (baq) {
 						if (baq.length() > BUFFER_SIZE * 5 * delay) {
+							bytesRead = Math.min(baq.length(), BUFFER_SIZE);
 							baq.remove(b, 0, BUFFER_SIZE);
-							written = true;
 						}
 					}
-					if (written) {
-						source.write(b, 0, BUFFER_SIZE);
-					} else {
+					if (bytesRead == 0) {
 						try {
 							Thread.sleep(10);
 						} catch (InterruptedException e) {/**/}
+					} else {
+						source.write(b, 0, bytesRead);
 					}
 				}
 				source.stop();
