@@ -151,44 +151,41 @@ public class Echo {
 		final Runnable input = new Runnable() {
 			@Override
 			public void run() {
-				try {
-					target.start();
-					byte[] b = new byte[BUFFER_SIZE];
-					while (running) {
-						int bytesRead = target.read(b, 0, BUFFER_SIZE);
-						synchronized (baq) {
-							baq.add(b, 0, bytesRead);
-						}
+				byte[] b = new byte[BUFFER_SIZE];
+				target.start();
+				while (running) {
+					int bytesRead = target.read(b, 0, BUFFER_SIZE);
+					synchronized (baq) {
+						baq.add(b, 0, bytesRead);
 					}
-					target.stop();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
 				}
+				target.stop();
 			}
 		};
 		final Runnable output = new Runnable() {			
 			@Override
 			public void run() {
-				try {
-					source.start();
-					byte[] b = new byte[BUFFER_SIZE];
-					while (running) {
-						boolean written = false;
-						synchronized (baq) {
-							if (baq.length() > BUFFER_SIZE * 5 * delay) {
-								baq.remove(b, 0, BUFFER_SIZE);
-								written = true;
-							}
-						}
-						if (written) {
-							source.write(b, 0, BUFFER_SIZE);
-						} else {
-							Thread.sleep(10);
+				byte[] b = new byte[BUFFER_SIZE];
+				source.start();
+				while (running) {
+					boolean written = false;
+					synchronized (baq) {
+						if (baq.length() > BUFFER_SIZE * 5 * delay) {
+							baq.remove(b, 0, BUFFER_SIZE);
+							written = true;
 						}
 					}
-					source.stop();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
+					if (written) {
+						source.write(b, 0, BUFFER_SIZE);
+					} else {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {/**/}
+					}
+				}
+				source.stop();
+				synchronized (baq) {
+					baq.clear();
 				}
 			}
 		};
