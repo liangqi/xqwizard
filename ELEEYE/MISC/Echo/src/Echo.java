@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -121,10 +120,6 @@ class ByteArrayQueue {
 		};
 	}
 
-	public ByteBuffer getByteBuffer() {
-		return ByteBuffer.wrap(array, offset, length);
-	}
-
 	@Override
 	public String toString() {
 		return new String(array, offset, length);
@@ -143,15 +138,18 @@ public class Echo {
 
 	public static void main(String[] args) throws Exception {
 		final ByteArrayQueue baq = new ByteArrayQueue();
-		AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
-		final TargetDataLine target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
-		final SourceDataLine source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
-		source.open();
-		target.open();
+		final AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
 		final Runnable input = new Runnable() {
 			@Override
 			public void run() {
 				byte[] b = new byte[BUFFER_SIZE];
+				TargetDataLine target;
+				try {
+					target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
+					target.open();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 				target.start();
 				while (running) {
 					int bytesRead = target.read(b, 0, BUFFER_SIZE);
@@ -160,12 +158,23 @@ public class Echo {
 					}
 				}
 				target.stop();
+				target.close();
+				synchronized (baq) {
+					baq.clear();
+				}
 			}
 		};
 		final Runnable output = new Runnable() {			
 			@Override
 			public void run() {
 				byte[] b = new byte[BUFFER_SIZE];
+				SourceDataLine source;
+				try {
+					source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
+					source.open();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 				source.start();
 				while (running) {
 					int bytesRead = 0;
@@ -184,9 +193,7 @@ public class Echo {
 					}
 				}
 				source.stop();
-				synchronized (baq) {
-					baq.clear();
-				}
+				source.close();
 			}
 		};
 
