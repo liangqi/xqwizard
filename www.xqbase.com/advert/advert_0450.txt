@@ -1,4 +1,10 @@
 www.xqbase.com Advert List
 xqbase,30,453,5389
-xqbase2,30,461,9007
 xqwlight_ad,30,472,17943
+xqblight,30,1027,1000
+xqbase2,30,461,9007
+360,30,445,4746
+contact,30,1320,1000
+xqwlight_ad,30,472,17943
+xqbase2,30,461,9007
+xqblight,30,1027,1000
