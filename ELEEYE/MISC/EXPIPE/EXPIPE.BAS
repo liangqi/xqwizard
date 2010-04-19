@@ -1,10 +1,11 @@
 Attribute VB_Name = "mdlExPipe"
+' Run "LINK /EDIT /SUBSYSTEM:CONSOLE EXPIPE.EXE" After Make
+
 Option Explicit
 
 Sub Main()
 
 Dim lpsz As Long, sz As String, pipe As PipeStruct
-StdioOpen
 PipeOpen pipe
 Do
     lpsz = PipeLineInput(pipe)
@@ -19,6 +20,5 @@ Do
         End If
     End If
 Loop
-StdioClose
 
 End Sub
