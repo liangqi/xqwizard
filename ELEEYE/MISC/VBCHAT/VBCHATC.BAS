@@ -36,7 +36,7 @@ Do While bRunning
             frmVBChat.txtRecv.Text = frmVBChat.txtRecv.Text + SysAllocStringByteLen(VarPtr(ucBuffer(0)), nLen)
             frmVBChat.txtRecv.SelStart = Len(frmVBChat.txtRecv.Text)
             If frmVBChat.chkQuiet.Value = 0 Then
-                MessageBeep MB_ICONINFORMATION
+                MessageBeep vbInformation
                 frmVBChat.SetFocus
             End If
         End If
