@@ -233,8 +233,8 @@ public class Echo {
 
 		JPanel panel = new JPanel();
 		panel.add(layout);
-        final JFrame frame = new JFrame("Echo");
-        frame.setResizable(false);
+		final JFrame frame = new JFrame("Echo");
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(panel);
 		frame.pack();
