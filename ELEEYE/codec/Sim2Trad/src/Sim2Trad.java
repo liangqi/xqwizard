@@ -45,6 +45,7 @@ public class Sim2Trad {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Font font = new Font("宋体", Font.PLAIN, 12);
+		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -60,7 +61,7 @@ public class Sim2Trad {
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		spLeft.setBounds(10, 10, 100, 200);
+		spLeft.setBounds(5, 5, 220, 100);
 
 		final JTextArea txtRight = new JTextArea();
 		txtRight.setFont(font);
@@ -69,12 +70,12 @@ public class Sim2Trad {
 		JScrollPane spRight = new JScrollPane(txtRight,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		spRight.setBounds(210, 10, 100, 200);
+		spRight.setBounds(5, 110, 220, 100);
 
 		JButton btnTrad = new JButton("繁体");
-		btnTrad.setMargin(new Insets(0, 0, 0, 0));
-		btnTrad.setBounds(120, 10, 80, 30);
+		btnTrad.setBounds(230, 5, 80, 30);
 		btnTrad.setFont(font);
+		btnTrad.setMargin(insets);
 		btnTrad.addKeyListener(ka);
 		btnTrad.addActionListener(new ActionListener() {
 			@Override
@@ -89,9 +90,9 @@ public class Sim2Trad {
 		});
 
 		JButton btnBig5 = new JButton("BIG5");
-		btnBig5.setMargin(new Insets(0, 0, 0, 0));
-		btnBig5.setBounds(120, 50, 80, 30);
+		btnBig5.setBounds(230, 45, 80, 30);
 		btnBig5.setFont(font);
+		btnBig5.setMargin(insets);
 		btnBig5.addKeyListener(ka);
 		btnBig5.addActionListener(new ActionListener() {
 			@Override
@@ -106,9 +107,9 @@ public class Sim2Trad {
 		});
 
 		JButton btnTradBig5 = new JButton("繁体BIG5");
-		btnTradBig5.setMargin(new Insets(0, 0, 0, 0));
+		btnTradBig5.setBounds(230, 85, 80, 30);
 		btnTradBig5.setFont(font);
-		btnTradBig5.setBounds(120, 90, 80, 30);
+		btnTradBig5.setMargin(insets);
 		btnTradBig5.addKeyListener(ka);
 		btnTradBig5.addActionListener(new ActionListener() {
 			@Override
@@ -123,9 +124,9 @@ public class Sim2Trad {
 		});
 
 		JButton btnExit = new JButton("退出");
-		btnExit.setMargin(new Insets(0, 0, 0, 0));
+		btnExit.setBounds(230, 180, 80, 30);
 		btnExit.setFont(font);
-		btnExit.setBounds(120, 180, 80, 30);
+		btnExit.setMargin(insets);
 		btnExit.addKeyListener(ka);
 		btnExit.addActionListener(new ActionListener() {
 			@Override

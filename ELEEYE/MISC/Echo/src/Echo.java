@@ -1,5 +1,11 @@
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -199,11 +205,39 @@ public class Echo {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
+		final JFrame frame = new JFrame("Echo");
+		frame.setSize(320, 60);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				running = false;
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				running = false;
+			}
+		});
+
+		Font font = new Font("MS Sans Serif", Font.PLAIN, 12);
+		Insets insets = new Insets(0, 0, 0, 0);
+		KeyAdapter ka = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					frame.dispose();
+				}
+			}
+		};
+
 		final JLabel label = new JLabel("Delay 1 Second(s)");
-		label.setBounds(100, 10, 100, 30);
+		label.setBounds(100, 5, 110, 25);
+		label.setFont(font);
 
 		final JSlider slider = new JSlider(0, 8, 0);
-		slider.setBounds(10, 10, 100, 20);
+		slider.setBounds(5, 5, 90, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
@@ -212,34 +246,47 @@ public class Echo {
 				label.setText("Delay " + (delay + 1) + " Second(s)");
 			}
 		});
+		slider.addKeyListener(ka);
 
-		final JButton button = new JButton("Start");
-		button.setBounds(10, 150, 50, 30);
-		button.addActionListener(new ActionListener() {
+		final JButton btnStart = new JButton("Start");
+		btnStart.setBounds(205, 5, 50, 25);
+		btnStart.setFont(font);
+		btnStart.setMargin(insets);
+		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				running = !running;
 				if (running) {
 					new Thread(input).start();
 					new Thread(output).start();
-					button.setText("Stop");
+					btnStart.setText("Stop");
 				} else {
-					button.setText("Start");
+					btnStart.setText("Start");
 				}
 				slider.setEnabled(!running);
 			}
 		});
+		btnStart.addKeyListener(ka);
+
+		final JButton btnExit = new JButton("Exit");
+		btnExit.setBounds(260, 5, 50, 25);
+		btnExit.setFont(font);
+		btnExit.setMargin(insets);
+		btnExit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+			}
+		});
+		btnExit.addKeyListener(ka);
 
 		final JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.add(slider);
 		panel.add(label);
-		panel.add(button);
+		panel.add(btnStart);
+		panel.add(btnExit);
 
-		JFrame frame = new JFrame("Echo");
-		frame.setSize(320, 60);
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(panel);
 		frame.setVisible(true);
 	}
