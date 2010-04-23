@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -197,9 +197,13 @@ public class Echo {
 			}
 		};
 
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
 		final JLabel label = new JLabel("Delay 1 Second(s)");
+		label.setBounds(100, 10, 100, 30);
 
 		final JSlider slider = new JSlider(0, 8, 0);
+		slider.setBounds(10, 10, 100, 20);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
@@ -210,6 +214,7 @@ public class Echo {
 		});
 
 		final JButton button = new JButton("Start");
+		button.setBounds(10, 150, 50, 30);
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -225,19 +230,17 @@ public class Echo {
 			}
 		});
 
-		JPanel layout = new JPanel();
-		layout.setLayout(new BorderLayout());
-		layout.add(slider, BorderLayout.WEST);
-		layout.add(label, BorderLayout.CENTER);
-		layout.add(button, BorderLayout.EAST);
+		final JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.add(slider);
+		panel.add(label);
+		panel.add(button);
 
-		JPanel panel = new JPanel();
-		panel.add(layout);
-		final JFrame frame = new JFrame("Echo");
+		JFrame frame = new JFrame("Echo");
+		frame.setSize(320, 60);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(panel);
-		frame.pack();
+		frame.setContentPane(panel);
 		frame.setVisible(true);
 	}
 }

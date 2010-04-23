@@ -1,7 +1,9 @@
-import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 
 import com.google.api.translate.Language;
 import com.google.api.translate.Translate;
@@ -34,43 +37,45 @@ public class Sim2Trad {
 
 	public static void main(String[] args) throws Exception {
 		Translate.setHttpReferrer("http://code.google.com/p/google-api-translate-java/");
-
-		Font font = new Font("宋体", Font.PLAIN, 14);
-
-		final JTextArea txtLeft = new JTextArea(20, 40);
-		txtLeft.setFont(font);
-
-		final JTextArea txtRight = new JTextArea(20, 40);
-		txtRight.setFont(font);
-		txtRight.setEditable(false);
-
-		JButton btnTrad = new JButton("转换为繁体");
-		JButton btnBig5 = new JButton("转换为BIG5");
-		JButton btnTradBig5 = new JButton("转换为繁体BIG5");
-
-		JPanel panel = new JPanel();
-		panel.add(new JScrollPane(txtLeft,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS));
-
-		JPanel panelButtons = new JPanel();
-		panelButtons.setLayout(new BorderLayout());
-		panelButtons.add(btnTrad, BorderLayout.NORTH);
-		panelButtons.add(btnBig5, BorderLayout.CENTER);
-		panelButtons.add(btnTradBig5, BorderLayout.SOUTH);
-		panel.add(panelButtons);
-
-		panel.add(new JScrollPane(txtRight,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS));
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         final JFrame frame = new JFrame("简繁转换");
+		frame.setSize(320, 240);
         frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(panel);
-		frame.pack();
-		frame.setVisible(true);
 
+		Font font = new Font("宋体", Font.PLAIN, 12);
+		KeyAdapter ka = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					frame.dispose();
+				}
+			}
+		};
+
+		final JTextArea txtLeft = new JTextArea();
+		txtLeft.setFont(font);
+		txtLeft.addKeyListener(ka);
+		JScrollPane spLeft = new JScrollPane(txtLeft,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		spLeft.setBounds(10, 10, 100, 200);
+
+		final JTextArea txtRight = new JTextArea();
+		txtRight.setFont(font);
+		txtRight.setEditable(false);
+		txtRight.addKeyListener(ka);
+		JScrollPane spRight = new JScrollPane(txtRight,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		spRight.setBounds(210, 10, 100, 200);
+
+		JButton btnTrad = new JButton("繁体");
+		btnTrad.setMargin(new Insets(0, 0, 0, 0));
+		btnTrad.setBounds(120, 10, 80, 30);
+		btnTrad.setFont(font);
+		btnTrad.addKeyListener(ka);
 		btnTrad.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -83,6 +88,11 @@ public class Sim2Trad {
 			}
 		});
 
+		JButton btnBig5 = new JButton("BIG5");
+		btnBig5.setMargin(new Insets(0, 0, 0, 0));
+		btnBig5.setBounds(120, 50, 80, 30);
+		btnBig5.setFont(font);
+		btnBig5.addKeyListener(ka);
 		btnBig5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -95,6 +105,11 @@ public class Sim2Trad {
 			}
 		});
 
+		JButton btnTradBig5 = new JButton("繁体BIG5");
+		btnTradBig5.setMargin(new Insets(0, 0, 0, 0));
+		btnTradBig5.setFont(font);
+		btnTradBig5.setBounds(120, 90, 80, 30);
+		btnTradBig5.addKeyListener(ka);
 		btnTradBig5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,5 +121,29 @@ public class Sim2Trad {
 				}
 			}
 		});
+
+		JButton btnExit = new JButton("退出");
+		btnExit.setMargin(new Insets(0, 0, 0, 0));
+		btnExit.setFont(font);
+		btnExit.setBounds(120, 180, 80, 30);
+		btnExit.addKeyListener(ka);
+		btnExit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+			}
+		});
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.add(spLeft);
+		panel.add(spRight);
+		panel.add(btnTrad);
+		panel.add(btnBig5);
+		panel.add(btnTradBig5);
+		panel.add(btnExit);
+
+		frame.setContentPane(panel);
+		frame.setVisible(true);
 	}
 }

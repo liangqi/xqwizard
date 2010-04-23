@@ -43,7 +43,9 @@ If frmRedirect.selDump.ListIndex = 0 Then
 End If
 If Not App_bConsole Then
     App_bConsole = True
-    StdioOpen
+    With frmRedirect
+        StdioOpen .txtClientPort.Text + "->" + .txtServerHost.Text + ":" + .txtServerPort.Text
+    End With
 End If
 nNameLen = Len(name)
 getpeername s, name, nNameLen
@@ -93,6 +95,10 @@ For i = 1 To MAX_CLIENTS
         WSBDisconnect App_sClients(i)
     End If
 Next
+If App_bConsole Then
+    App_bConsole = False
+    StdioClose
+End If
 WSBCloseServer App_sServer
 App_sServer = INVALID_SOCKET
 
@@ -173,9 +179,6 @@ Do While App_bRunning
         DoEvents
     End If
 Loop
-If App_bConsole Then
-    StdioClose
-End If
 If App_sServer <> INVALID_SOCKET Then
     StopServer
 End If

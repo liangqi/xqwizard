@@ -490,9 +490,9 @@ CtrlHandlerRoutine = 1
 
 End Function
 
-Public Sub StdioOpen()
+Public Sub StdioOpen(Optional ByVal szTitle As String = "")
 
-Dim hWnd As Long, hMenu As Long, szTitle As String
+Dim hWnd As Long, hMenu As Long, szTempTitle As String
 
 GetStartupInfoA Stdio_si
 If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) <> 0 Then
@@ -500,14 +500,14 @@ If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) <> 0 Then
 End If
 AllocConsole
 SetConsoleCtrlHandler AddressOf CtrlHandlerRoutine, 1
-szTitle = "Console " & App.hInstance & " " & App.ThreadID
-SetConsoleTitleA szTitle
+szTempTitle = "Console " & App.hInstance & " " & App.ThreadID
+SetConsoleTitleA szTempTitle
 hWnd = 0
 Do While hWnd = 0
     Sleep 1
-    hWnd = FindWindowA(, szTitle)
+    hWnd = FindWindowA(, szTempTitle)
 Loop
-SetConsoleTitleA App.Title
+SetConsoleTitleA IIf(szTitle = "", App.Title, szTitle)
 hMenu = GetSystemMenu(hWnd)
 DeleteMenu hMenu, SC_CLOSE
 Stdio_si.hStdInput = GetStdHandle(STD_INPUT_HANDLE)
