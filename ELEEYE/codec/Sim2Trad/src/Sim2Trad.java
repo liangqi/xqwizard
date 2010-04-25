@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,7 +44,12 @@ public class Sim2Trad {
         final JFrame frame = new JFrame("¼ò·±×ª»»");
 		frame.setSize(320, 240);
         frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frame.dispose();
+			}
+		});
 
 		Font font = new Font("ËÎÌå", Font.PLAIN, 12);
 		Insets insets = new Insets(0, 0, 0, 0);

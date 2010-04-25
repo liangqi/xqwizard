@@ -208,11 +208,10 @@ public class Echo {
 		final JFrame frame = new JFrame("Echo");
 		frame.setSize(320, 60);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				running = false;
+				frame.dispose();
 			}
 
 			@Override
