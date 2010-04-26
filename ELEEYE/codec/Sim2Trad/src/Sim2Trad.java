@@ -70,7 +70,6 @@ public class Sim2Trad {
 			throw new RuntimeException(e);
 		}
 
-		// Font font = new Font("ËÎÌו", Font.PLAIN, 12);
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
@@ -82,6 +81,7 @@ public class Sim2Trad {
 		};
 
 		final JTextArea txtLeft = new JTextArea();
+		txtLeft.enableInputMethods(false);
 		txtLeft.addKeyListener(ka);
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
