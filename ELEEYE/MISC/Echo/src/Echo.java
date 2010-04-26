@@ -239,19 +239,28 @@ public class Echo {
 		slider.setEnabled(!running);
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		final JFrame frame = new JFrame("Echo");
 		frame.setSize(320, 60);
 		frame.setResizable(false);
 
-		MenuItem miExit = new MenuItem("Exit");
+		MenuItem miOpen = new MenuItem("Open"), miExit = new MenuItem("Exit");
+		Font font = btnStart.getFont();
+		miOpen.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
+		miStart.setFont(font);
+		miExit.setFont(font);
         PopupMenu popup = new PopupMenu();
+        popup.add(miOpen);
         popup.add(miStart);
 		popup.add(miExit);
 		final TrayIcon tray;
 		InputStream in = Echo.class.getResourceAsStream("/EchoIcon16.gif");
-		tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
-		in.close();
+		try {
+			tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
+			in.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		tray.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -263,6 +272,14 @@ public class Echo {
 			}
 		});
 
+		miOpen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SystemTray.getSystemTray().remove(tray);
+				frame.setVisible(true);		
+				frame.setState(Frame.NORMAL);
+			}
+		});
 		miStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -303,13 +320,16 @@ public class Echo {
 		InputStream in16 = Echo.class.getResourceAsStream("/EchoIcon16.gif");
 		InputStream in32 = Echo.class.getResourceAsStream("/EchoIcon32.gif");
 		InputStream in48 = Echo.class.getResourceAsStream("/EchoIcon48.gif");
-		frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
-				ImageIO.read(in32), ImageIO.read(in48)}));
-		in16.close();
-		in32.close();
-		in48.close();
+		try {
+			frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
+					ImageIO.read(in32), ImageIO.read(in48)}));
+			in16.close();
+			in32.close();
+			in48.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
-		Font font = new Font("MS Sans Serif", Font.PLAIN, 12);
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
@@ -322,8 +342,6 @@ public class Echo {
 
 		final JLabel label = new JLabel("Delay 1 Second(s)");
 		label.setBounds(100, 5, 110, 25);
-		label.setFont(font);
-
 		slider.setBounds(5, 5, 90, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
@@ -336,7 +354,6 @@ public class Echo {
 		slider.addKeyListener(ka);
 
 		btnStart.setBounds(205, 5, 50, 25);
-		btnStart.setFont(font);
 		btnStart.setMargin(insets);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
@@ -347,7 +364,6 @@ public class Echo {
 		btnStart.addKeyListener(ka);
 
 		btnExit.setBounds(260, 5, 50, 25);
-		btnExit.setFont(font);
 		btnExit.setMargin(insets);
 		btnExit.addActionListener(new ActionListener() {
 			@Override

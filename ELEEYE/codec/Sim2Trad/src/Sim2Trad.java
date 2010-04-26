@@ -1,4 +1,3 @@
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -41,9 +40,13 @@ public class Sim2Trad {
 		return new String(gb.getBytes("BIG5"));
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		Translate.setHttpReferrer("http://code.google.com/p/google-api-translate-java/");
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         final JFrame frame = new JFrame("简繁转换");
 		frame.setSize(320, 240);
@@ -57,13 +60,17 @@ public class Sim2Trad {
 		InputStream in16 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon16.gif");
 		InputStream in32 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon32.gif");
 		InputStream in48 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon48.gif");
-		frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
-				ImageIO.read(in32), ImageIO.read(in48)}));
-		in16.close();
-		in32.close();
-		in48.close();
+		try {
+			frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
+					ImageIO.read(in32), ImageIO.read(in48)}));
+			in16.close();
+			in32.close();
+			in48.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
-		Font font = new Font("宋体", Font.PLAIN, 12);
+		// Font font = new Font("宋体", Font.PLAIN, 12);
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
@@ -75,7 +82,6 @@ public class Sim2Trad {
 		};
 
 		final JTextArea txtLeft = new JTextArea();
-		txtLeft.setFont(font);
 		txtLeft.addKeyListener(ka);
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -83,7 +89,6 @@ public class Sim2Trad {
 		spLeft.setBounds(5, 5, 220, 100);
 
 		final JTextArea txtRight = new JTextArea();
-		txtRight.setFont(font);
 		txtRight.setEditable(false);
 		txtRight.addKeyListener(ka);
 		JScrollPane spRight = new JScrollPane(txtRight,
@@ -93,7 +98,6 @@ public class Sim2Trad {
 
 		JButton btnTrad = new JButton("繁体");
 		btnTrad.setBounds(230, 5, 80, 30);
-		btnTrad.setFont(font);
 		btnTrad.setMargin(insets);
 		btnTrad.addKeyListener(ka);
 		btnTrad.addActionListener(new ActionListener() {
@@ -110,7 +114,6 @@ public class Sim2Trad {
 
 		JButton btnBig5 = new JButton("BIG5");
 		btnBig5.setBounds(230, 45, 80, 30);
-		btnBig5.setFont(font);
 		btnBig5.setMargin(insets);
 		btnBig5.addKeyListener(ka);
 		btnBig5.addActionListener(new ActionListener() {
@@ -127,7 +130,6 @@ public class Sim2Trad {
 
 		JButton btnTradBig5 = new JButton("繁体BIG5");
 		btnTradBig5.setBounds(230, 85, 80, 30);
-		btnTradBig5.setFont(font);
 		btnTradBig5.setMargin(insets);
 		btnTradBig5.addKeyListener(ka);
 		btnTradBig5.addActionListener(new ActionListener() {
@@ -144,7 +146,6 @@ public class Sim2Trad {
 
 		JButton btnExit = new JButton("退出");
 		btnExit.setBounds(230, 180, 80, 30);
-		btnExit.setFont(font);
 		btnExit.setMargin(insets);
 		btnExit.addKeyListener(ka);
 		btnExit.addActionListener(new ActionListener() {
