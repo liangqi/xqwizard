@@ -1,16 +1,26 @@
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
@@ -139,76 +149,147 @@ class ByteArrayQueue {
 public class Echo {
 	private static final int BUFFER_SIZE = 32768;
 
+	static {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	static volatile boolean running = false;
 	static int delay = 0;
 
-	public static void main(String[] args) throws Exception {
-		final ByteArrayQueue baq = new ByteArrayQueue();
-		final AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
-		final Runnable input = new Runnable() {
-			@Override
-			public void run() {
-				byte[] b = new byte[BUFFER_SIZE];
-				TargetDataLine target;
-				try {
-					target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
-					target.open();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				target.start();
-				while (running) {
-					int bytesRead = target.read(b, 0, BUFFER_SIZE);
-					synchronized (baq) {
-						baq.add(b, 0, bytesRead);
-					}
-				}
-				target.stop();
-				target.close();
+	static ByteArrayQueue baq = new ByteArrayQueue();
+	static AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
+	static Runnable input = new Runnable() {
+		@Override
+		public void run() {
+			byte[] b = new byte[BUFFER_SIZE];
+			TargetDataLine target;
+			try {
+				target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
+				target.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			target.start();
+			while (running) {
+				int bytesRead = target.read(b, 0, BUFFER_SIZE);
 				synchronized (baq) {
-					baq.clear();
+					baq.add(b, 0, bytesRead);
 				}
 			}
-		};
-		final Runnable output = new Runnable() {			
-			@Override
-			public void run() {
-				byte[] b = new byte[BUFFER_SIZE];
-				SourceDataLine source;
-				try {
-					source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
-					source.open();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				source.start();
-				while (running) {
-					int bytesRead = 0;
-					synchronized (baq) {
-						if (baq.length() > BUFFER_SIZE * 5 * delay) {
-							bytesRead = Math.min(baq.length(), BUFFER_SIZE);
-							baq.remove(b, 0, BUFFER_SIZE);
-						}
-					}
-					if (bytesRead == 0) {
-						try {
-							Thread.sleep(10);
-						} catch (InterruptedException e) {/**/}
-					} else {
-						source.write(b, 0, bytesRead);
-					}
-				}
-				source.stop();
-				source.close();
+			target.stop();
+			target.close();
+			synchronized (baq) {
+				baq.clear();
 			}
-		};
+		}
+	};
+	static Runnable output = new Runnable() {			
+		@Override
+		public void run() {
+			byte[] b = new byte[BUFFER_SIZE];
+			SourceDataLine source;
+			try {
+				source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
+				source.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			source.start();
+			while (running) {
+				int bytesRead = 0;
+				synchronized (baq) {
+					if (baq.length() > BUFFER_SIZE * 5 * delay) {
+						bytesRead = Math.min(baq.length(), BUFFER_SIZE);
+						baq.remove(b, 0, BUFFER_SIZE);
+					}
+				}
+				if (bytesRead == 0) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {/**/}
+				} else {
+					source.write(b, 0, bytesRead);
+				}
+			}
+			source.stop();
+			source.close();
+		}
+	};
 
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	static MenuItem miStart = new MenuItem("Start");
+	static JButton btnStart = new JButton("Start");
+	static JButton btnExit = new JButton("Exit");
+	static JSlider slider = new JSlider(0, 8, 0);
 
+	static void start() {
+		running = !running;
+		if (running) {
+			new Thread(input).start();
+			new Thread(output).start();
+			miStart.setLabel("Stop");
+			btnStart.setText("Stop");
+		} else {
+			miStart.setLabel("Start");
+			btnStart.setText("Start");
+		}
+		slider.setEnabled(!running);
+	}
+
+	public static void main(String[] args) throws Exception {
 		final JFrame frame = new JFrame("Echo");
 		frame.setSize(320, 60);
 		frame.setResizable(false);
-		frame.addWindowListener(new WindowAdapter() {
+
+		MenuItem miExit = new MenuItem("Exit");
+        PopupMenu popup = new PopupMenu();
+        popup.add(miStart);
+		popup.add(miExit);
+		final TrayIcon tray;
+		InputStream in = Echo.class.getResourceAsStream("/EchoIcon16.gif");
+		tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
+		in.close();
+		tray.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					SystemTray.getSystemTray().remove(tray);
+					frame.setVisible(true);		
+					frame.setState(Frame.NORMAL);
+				}
+			}
+		});
+
+		miStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				start();
+			}
+		});
+        miExit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SystemTray.getSystemTray().remove(tray);
+				frame.dispose();
+			}
+		});
+
+        frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowIconified(WindowEvent e) {
+				if (SystemTray.isSupported()) {
+					frame.setVisible(false);
+					try {
+						SystemTray.getSystemTray().add(tray);
+					} catch (Exception ex) {
+						throw new RuntimeException(ex);
+					}
+				}
+			}
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				frame.dispose();
@@ -219,6 +300,14 @@ public class Echo {
 				running = false;
 			}
 		});
+		InputStream in16 = Echo.class.getResourceAsStream("/EchoIcon16.gif");
+		InputStream in32 = Echo.class.getResourceAsStream("/EchoIcon32.gif");
+		InputStream in48 = Echo.class.getResourceAsStream("/EchoIcon48.gif");
+		frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
+				ImageIO.read(in32), ImageIO.read(in48)}));
+		in16.close();
+		in32.close();
+		in48.close();
 
 		Font font = new Font("MS Sans Serif", Font.PLAIN, 12);
 		Insets insets = new Insets(0, 0, 0, 0);
@@ -235,7 +324,6 @@ public class Echo {
 		label.setBounds(100, 5, 110, 25);
 		label.setFont(font);
 
-		final JSlider slider = new JSlider(0, 8, 0);
 		slider.setBounds(5, 5, 90, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
@@ -247,27 +335,17 @@ public class Echo {
 		});
 		slider.addKeyListener(ka);
 
-		final JButton btnStart = new JButton("Start");
 		btnStart.setBounds(205, 5, 50, 25);
 		btnStart.setFont(font);
 		btnStart.setMargin(insets);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				running = !running;
-				if (running) {
-					new Thread(input).start();
-					new Thread(output).start();
-					btnStart.setText("Stop");
-				} else {
-					btnStart.setText("Start");
-				}
-				slider.setEnabled(!running);
+				start();
 			}
 		});
 		btnStart.addKeyListener(ka);
 
-		final JButton btnExit = new JButton("Exit");
 		btnExit.setBounds(260, 5, 50, 25);
 		btnExit.setFont(font);
 		btnExit.setMargin(insets);
