@@ -29,7 +29,6 @@ import javax.sound.sampled.DataLine.Info;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -250,8 +249,10 @@ public class EchoFrame extends JFrame {
 
 	public EchoFrame() {
 		super("Echo");
-		setSize(320, 60);
+		setLayout(null);
 		setResizable(false);
+		setSize(320, 60);
+
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
@@ -262,7 +263,7 @@ public class EchoFrame extends JFrame {
 			}
 		};
 
-		label.setBounds(100, 5, 110, 25);
+
 		slider.setBounds(5, 5, 90, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
@@ -274,6 +275,10 @@ public class EchoFrame extends JFrame {
 			}
 		});
 		slider.addKeyListener(ka);
+		add(slider);
+
+		label.setBounds(100, 5, 110, 25);
+		add(label);
 
 		btnStart.setBounds(205, 5, 50, 25);
 		btnStart.setMargin(insets);
@@ -288,6 +293,7 @@ public class EchoFrame extends JFrame {
 			}
 		});
 		btnStart.addKeyListener(ka);
+		add(btnStart);
 
 		btnExit.setBounds(260, 5, 50, 25);
 		btnExit.setMargin(insets);
@@ -298,14 +304,7 @@ public class EchoFrame extends JFrame {
 			}
 		});
 		btnExit.addKeyListener(ka);
-
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.add(slider);
-		panel.add(label);
-		panel.add(btnStart);
-		panel.add(btnExit);
-		setContentPane(panel);
+		add(btnExit);
 
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -330,6 +329,7 @@ public class EchoFrame extends JFrame {
 				running = false;
 			}
 		});
+
 		Class<EchoFrame> clazz = EchoFrame.class;
 		InputStream in16 = clazz.getResourceAsStream("EchoIcon16.gif");
 		InputStream in32 = clazz.getResourceAsStream("EchoIcon32.gif");

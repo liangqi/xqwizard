@@ -1,3 +1,4 @@
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -13,7 +14,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
@@ -44,8 +44,9 @@ public class Sim2TradFrame extends JFrame {
 
 	public Sim2TradFrame() {
 		super("简繁转换");
-		setSize(320, 240);
+		setLayout(null);
 		setResizable(false);
+		setSize(320, 240);
 
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
@@ -58,12 +59,13 @@ public class Sim2TradFrame extends JFrame {
 		};
 
 		final JTextArea txtLeft = new JTextArea();
-		txtLeft.enableInputMethods(false);
+		// txtLeft.enableInputMethods(false);
 		txtLeft.addKeyListener(ka);
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		spLeft.setBounds(5, 5, 220, 100);
+		add(spLeft);
 
 		final JTextArea txtRight = new JTextArea();
 		txtRight.setEditable(false);
@@ -72,6 +74,7 @@ public class Sim2TradFrame extends JFrame {
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		spRight.setBounds(5, 110, 220, 100);
+		add(spRight);
 
 		JButton btnTrad = new JButton("繁体");
 		btnTrad.setBounds(230, 5, 80, 30);
@@ -88,6 +91,7 @@ public class Sim2TradFrame extends JFrame {
 				}
 			}
 		});
+		add(btnTrad);
 
 		JButton btnBig5 = new JButton("BIG5");
 		btnBig5.setBounds(230, 45, 80, 30);
@@ -104,6 +108,7 @@ public class Sim2TradFrame extends JFrame {
 				}
 			}
 		});
+		add(btnBig5);
 
 		JButton btnTradBig5 = new JButton("繁体BIG5");
 		btnTradBig5.setBounds(230, 85, 80, 30);
@@ -120,6 +125,7 @@ public class Sim2TradFrame extends JFrame {
 				}
 			}
 		});
+		add(btnTradBig5);
 
 		JButton btnExit = new JButton("退出");
 		btnExit.setBounds(230, 180, 80, 30);
@@ -131,23 +137,25 @@ public class Sim2TradFrame extends JFrame {
 				dispose();
 			}
 		});
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.add(spLeft);
-		panel.add(spRight);
-		panel.add(btnTrad);
-		panel.add(btnBig5);
-		panel.add(btnTradBig5);
-		panel.add(btnExit);
-		setContentPane(panel);
+		add(btnExit);
 
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				dispose();
 			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// Clear all focusless windows including MethodInputJFrame
+				for (Frame frame : getFrames()) {
+					if (!frame.isFocusableWindow()) {
+						frame.dispose();
+					}
+				}
+			}
 		});
+
 		Class<Sim2TradFrame> clazz = Sim2TradFrame.class;
 		InputStream in16 = clazz.getResourceAsStream("Sim2TradIcon16.gif");
 		InputStream in32 = clazz.getResourceAsStream("Sim2TradIcon32.gif");
