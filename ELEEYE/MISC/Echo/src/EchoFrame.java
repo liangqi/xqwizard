@@ -146,35 +146,30 @@ class ByteArrayQueue {
 	}
 }
 
-public class Echo {
+public class EchoFrame extends JFrame {
+	private static final long serialVersionUID = 1L;
+
 	private static final int BUFFER_SIZE = 32768;
 
-	static TrayIcon tray;
+	volatile boolean running = false;
 
-	static {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+	TrayIcon tray;
+	JSlider slider = new JSlider(0, 8, 0);
+	JLabel label = new JLabel("Delay 1 Second");
 
-	static volatile boolean running = false;
+	private MenuItem miStart = new MenuItem("Start");
+	private JButton btnStart = new JButton("Start");
+	private JButton btnExit = new JButton("Exit");
 
-	static ByteArrayQueue baq = new ByteArrayQueue();
-	static AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
+	private ByteArrayQueue baq = new ByteArrayQueue();
+	private AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
 
-	static MenuItem miStart = new MenuItem("Start");
-	static JButton btnStart = new JButton("Start");
-	static JButton btnExit = new JButton("Exit");
-	static JSlider slider = new JSlider(0, 8, 0);
-	static JLabel label = new JLabel("Delay 1 Second");
-
-	static void input() {
+	void input() {
 		byte[] b = new byte[BUFFER_SIZE];
 		TargetDataLine target;
 		try {
-			target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
+			target = (TargetDataLine) AudioSystem.
+					getLine(new Info(TargetDataLine.class, af));
 			target.open();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -193,12 +188,13 @@ public class Echo {
 		}
 	}
 
-	static void output() {
+	void output() {
 		byte[] b = new byte[BUFFER_SIZE];
 		int delay = slider.getValue();
 		SourceDataLine source;
 		try {
-			source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
+			source = (SourceDataLine) AudioSystem.
+					getLine(new Info(SourceDataLine.class, af));
 			source.open();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -220,12 +216,11 @@ public class Echo {
 				source.write(b, 0, bytesRead);
 			}
 		}
-		tray.setToolTip("Echo");
 		source.stop();
 		source.close();
 	}
 
-	static void start() {
+	void start() {
 		running = true;
 		new Thread() {
 			@Override
@@ -245,113 +240,24 @@ public class Echo {
 		slider.setEnabled(false);
 	}
 
-	static void stop() {
+	void stop() {
 		running = false;
+		tray.setToolTip("Echo");
 		miStart.setLabel("Start");
 		btnStart.setText("Start");
 		slider.setEnabled(true);
 	}
 
-	public static void main(String[] args) {
-		final JFrame frame = new JFrame("Echo");
-		frame.setSize(320, 60);
-		frame.setResizable(false);
-
-		MenuItem miOpen = new MenuItem("Open"), miExit = new MenuItem("Exit");
-		Font font = btnStart.getFont();
-		miOpen.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
-		miStart.setFont(font);
-		miExit.setFont(font);
-        PopupMenu popup = new PopupMenu();
-        popup.add(miOpen);
-        popup.add(miStart);
-		popup.add(miExit);
-		InputStream in = Echo.class.getResourceAsStream("/EchoIcon16.gif");
-		try {
-			tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
-			in.close();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		tray.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					SystemTray.getSystemTray().remove(tray);
-					frame.setVisible(true);		
-					frame.setState(Frame.NORMAL);
-				}
-			}
-		});
-
-		miOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SystemTray.getSystemTray().remove(tray);
-				frame.setVisible(true);		
-				frame.setState(Frame.NORMAL);
-			}
-		});
-		miStart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (running) {
-					stop();
-				} else {
-					start();
-				}
-			}
-		});
-        miExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SystemTray.getSystemTray().remove(tray);
-				frame.dispose();
-			}
-		});
-
-        frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowIconified(WindowEvent e) {
-				if (SystemTray.isSupported()) {
-					frame.setVisible(false);
-					try {
-						SystemTray.getSystemTray().add(tray);
-					} catch (Exception ex) {
-						throw new RuntimeException(ex);
-					}
-				}
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-				frame.dispose();
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-				running = false;
-			}
-		});
-		InputStream in16 = Echo.class.getResourceAsStream("/EchoIcon16.gif");
-		InputStream in32 = Echo.class.getResourceAsStream("/EchoIcon32.gif");
-		InputStream in48 = Echo.class.getResourceAsStream("/EchoIcon48.gif");
-		try {
-			frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
-					ImageIO.read(in32), ImageIO.read(in48)}));
-			in16.close();
-			in32.close();
-			in48.close();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
+	public EchoFrame() {
+		super("Echo");
+		setSize(320, 60);
+		setResizable(false);
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					frame.dispose();
+					dispose();
 				}
 			}
 		};
@@ -388,19 +294,113 @@ public class Echo {
 		btnExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				dispose();
 			}
 		});
 		btnExit.addKeyListener(ka);
 
-		final JPanel panel = new JPanel();
+		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.add(slider);
 		panel.add(label);
 		panel.add(btnStart);
 		panel.add(btnExit);
+		setContentPane(panel);
 
-		frame.setContentPane(panel);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowIconified(WindowEvent e) {
+				if (SystemTray.isSupported()) {
+					setVisible(false);
+					try {
+						SystemTray.getSystemTray().add(tray);
+					} catch (Exception ex) {
+						throw new RuntimeException(ex);
+					}
+				}
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				running = false;
+			}
+		});
+		Class<EchoFrame> clazz = EchoFrame.class;
+		InputStream in16 = clazz.getResourceAsStream("EchoIcon16.gif");
+		InputStream in32 = clazz.getResourceAsStream("EchoIcon32.gif");
+		InputStream in48 = clazz.getResourceAsStream("EchoIcon48.gif");
+		try {
+			setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
+					ImageIO.read(in32), ImageIO.read(in48)}));
+			in16.close();
+			in32.close();
+			in48.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		MenuItem miOpen = new MenuItem("Open"), miExit = new MenuItem("Exit");
+		Font font = btnStart.getFont();
+		miOpen.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
+		miStart.setFont(font);
+		miExit.setFont(font);
+		PopupMenu popup = new PopupMenu();
+		popup.add(miOpen);
+		popup.add(miStart);
+		popup.add(miExit);
+		InputStream in = clazz.getResourceAsStream("EchoIcon16.gif");
+		try {
+			tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
+			in.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		tray.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					SystemTray.getSystemTray().remove(tray);
+					setVisible(true);		
+					setState(Frame.NORMAL);
+				}
+			}
+		});
+
+		miOpen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SystemTray.getSystemTray().remove(tray);
+				setVisible(true);		
+				setState(Frame.NORMAL);
+			}
+		});
+		miStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (running) {
+					stop();
+				} else {
+					start();
+				}
+			}
+		});
+		miExit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SystemTray.getSystemTray().remove(tray);
+				dispose();
+			}
+		});
+	}
+
+	public static void main(String[] args) throws Exception {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		EchoFrame frame = new EchoFrame();
 		frame.setVisible(true);
 	}
 }

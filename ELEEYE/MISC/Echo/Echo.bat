@@ -1,1 +1,1 @@
-start javaw -cp bin Echo
+start javaw -cp bin EchoFrame

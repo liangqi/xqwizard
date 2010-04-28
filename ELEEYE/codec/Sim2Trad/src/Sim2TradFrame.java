@@ -22,7 +22,9 @@ import javax.swing.UIManager;
 import com.google.api.translate.Language;
 import com.google.api.translate.Translate;
 
-public class Sim2Trad {
+public class Sim2TradFrame extends JFrame {
+	private static final long serialVersionUID = 1L;
+
 	static String sim2Trad(String sim) throws Exception {
 		String[] sims = sim.split("\n");
 		StringBuilder sb = new StringBuilder();
@@ -40,42 +42,17 @@ public class Sim2Trad {
 		return new String(gb.getBytes("BIG5"));
 	}
 
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		Translate.setHttpReferrer("http://code.google.com/p/google-api-translate-java/");
-
-        final JFrame frame = new JFrame("¼ò·±×ª»»");
-		frame.setSize(320, 240);
-        frame.setResizable(false);
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				frame.dispose();
-			}
-		});
-		InputStream in16 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon16.gif");
-		InputStream in32 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon32.gif");
-		InputStream in48 = Sim2Trad.class.getResourceAsStream("/Sim2TradIcon48.gif");
-		try {
-			frame.setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
-					ImageIO.read(in32), ImageIO.read(in48)}));
-			in16.close();
-			in32.close();
-			in48.close();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public Sim2TradFrame() {
+		super("¼ò·±×ª»»");
+		setSize(320, 240);
+		setResizable(false);
 
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					frame.dispose();
+					dispose();
 				}
 			}
 		};
@@ -106,8 +83,8 @@ public class Sim2Trad {
 				try {
 					txtRight.setText(sim2Trad(txtLeft.getText()));
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Sim2TradFrame.this, ex,
+							getTitle(), JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -122,8 +99,8 @@ public class Sim2Trad {
 				try {
 					txtRight.setText(gb2Big5(txtLeft.getText()));
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Sim2TradFrame.this, ex,
+							getTitle(), JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -138,8 +115,8 @@ public class Sim2Trad {
 				try {
 					txtRight.setText(gb2Big5(sim2Trad(txtLeft.getText())));
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, ex, frame.getTitle(),
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Sim2TradFrame.this, ex,
+							getTitle(), JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -151,7 +128,7 @@ public class Sim2Trad {
 		btnExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				dispose();
 			}
 		});
 		
@@ -163,8 +140,33 @@ public class Sim2Trad {
 		panel.add(btnBig5);
 		panel.add(btnTradBig5);
 		panel.add(btnExit);
+		setContentPane(panel);
 
-		frame.setContentPane(panel);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+		});
+		Class<Sim2TradFrame> clazz = Sim2TradFrame.class;
+		InputStream in16 = clazz.getResourceAsStream("Sim2TradIcon16.gif");
+		InputStream in32 = clazz.getResourceAsStream("Sim2TradIcon32.gif");
+		InputStream in48 = clazz.getResourceAsStream("Sim2TradIcon48.gif");
+		try {
+			setIconImages(Arrays.asList(new Image[] {ImageIO.read(in16),
+					ImageIO.read(in32), ImageIO.read(in48)}));
+			in16.close();
+			in32.close();
+			in48.close();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Translate.setHttpReferrer("http://code.google.com/p/google-api-translate-java/");
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		Sim2TradFrame frame = new Sim2TradFrame();
 		frame.setVisible(true);
 	}
 }
