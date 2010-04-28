@@ -149,6 +149,8 @@ class ByteArrayQueue {
 public class Echo {
 	private static final int BUFFER_SIZE = 32768;
 
+	static TrayIcon tray;
+
 	static {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -158,85 +160,96 @@ public class Echo {
 	}
 
 	static volatile boolean running = false;
-	static int delay = 0;
 
 	static ByteArrayQueue baq = new ByteArrayQueue();
 	static AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
-	static Runnable input = new Runnable() {
-		@Override
-		public void run() {
-			byte[] b = new byte[BUFFER_SIZE];
-			TargetDataLine target;
-			try {
-				target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
-				target.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			target.start();
-			while (running) {
-				int bytesRead = target.read(b, 0, BUFFER_SIZE);
-				synchronized (baq) {
-					baq.add(b, 0, bytesRead);
-				}
-			}
-			target.stop();
-			target.close();
-			synchronized (baq) {
-				baq.clear();
-			}
-		}
-	};
-	static Runnable output = new Runnable() {			
-		@Override
-		public void run() {
-			byte[] b = new byte[BUFFER_SIZE];
-			SourceDataLine source;
-			try {
-				source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
-				source.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			source.start();
-			while (running) {
-				int bytesRead = 0;
-				synchronized (baq) {
-					if (baq.length() > BUFFER_SIZE * 5 * delay) {
-						bytesRead = Math.min(baq.length(), BUFFER_SIZE);
-						baq.remove(b, 0, BUFFER_SIZE);
-					}
-				}
-				if (bytesRead == 0) {
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {/**/}
-				} else {
-					source.write(b, 0, bytesRead);
-				}
-			}
-			source.stop();
-			source.close();
-		}
-	};
 
 	static MenuItem miStart = new MenuItem("Start");
 	static JButton btnStart = new JButton("Start");
 	static JButton btnExit = new JButton("Exit");
 	static JSlider slider = new JSlider(0, 8, 0);
+	static JLabel label = new JLabel("Delay 1 Second");
+
+	static void input() {
+		byte[] b = new byte[BUFFER_SIZE];
+		TargetDataLine target;
+		try {
+			target = (TargetDataLine) AudioSystem.getLine(new Info(TargetDataLine.class, af));
+			target.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		target.start();
+		while (running) {
+			int bytesRead = target.read(b, 0, BUFFER_SIZE);
+			synchronized (baq) {
+				baq.add(b, 0, bytesRead);
+			}
+		}
+		target.stop();
+		target.close();
+		synchronized (baq) {
+			baq.clear();
+		}
+	}
+
+	static void output() {
+		byte[] b = new byte[BUFFER_SIZE];
+		int delay = slider.getValue();
+		SourceDataLine source;
+		try {
+			source = (SourceDataLine) AudioSystem.getLine(new Info(SourceDataLine.class, af));
+			source.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		source.start();
+		while (running) {
+			int bytesRead = 0;
+			synchronized (baq) {
+				if (baq.length() > BUFFER_SIZE * 5 * delay) {
+					bytesRead = Math.min(baq.length(), BUFFER_SIZE);
+					baq.remove(b, 0, BUFFER_SIZE);
+				}
+			}
+			if (bytesRead == 0) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {/**/}
+			} else {
+				source.write(b, 0, bytesRead);
+			}
+		}
+		tray.setToolTip("Echo");
+		source.stop();
+		source.close();
+	}
 
 	static void start() {
-		running = !running;
-		if (running) {
-			new Thread(input).start();
-			new Thread(output).start();
-			miStart.setLabel("Stop");
-			btnStart.setText("Stop");
-		} else {
-			miStart.setLabel("Start");
-			btnStart.setText("Start");
-		}
-		slider.setEnabled(!running);
+		running = true;
+		new Thread() {
+			@Override
+			public void run() {
+				input();
+			}
+		}.start();
+		new Thread() {
+			@Override
+			public void run() {
+				output();
+			}
+		}.start();
+		tray.setToolTip("Echo (" + label.getText() + ")");
+		miStart.setLabel("Stop");
+		btnStart.setText("Stop");
+		slider.setEnabled(false);
+	}
+
+	static void stop() {
+		running = false;
+		miStart.setLabel("Start");
+		btnStart.setText("Start");
+		slider.setEnabled(true);
 	}
 
 	public static void main(String[] args) {
@@ -253,7 +266,6 @@ public class Echo {
         popup.add(miOpen);
         popup.add(miStart);
 		popup.add(miExit);
-		final TrayIcon tray;
 		InputStream in = Echo.class.getResourceAsStream("/EchoIcon16.gif");
 		try {
 			tray = new TrayIcon(ImageIO.read(in), "Echo", popup);
@@ -283,7 +295,11 @@ public class Echo {
 		miStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				start();
+				if (running) {
+					stop();
+				} else {
+					start();
+				}
 			}
 		});
         miExit.addActionListener(new ActionListener() {
@@ -340,15 +356,15 @@ public class Echo {
 			}
 		};
 
-		final JLabel label = new JLabel("Delay 1 Second(s)");
 		label.setBounds(100, 5, 110, 25);
 		slider.setBounds(5, 5, 90, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				delay = slider.getValue();
-				label.setText("Delay " + (delay + 1) + " Second(s)");
+				int delay = slider.getValue();
+				label.setText("Delay " + (delay + 1) +
+						" Second" + (delay > 0 ? "s" : ""));
 			}
 		});
 		slider.addKeyListener(ka);
@@ -358,7 +374,11 @@ public class Echo {
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				start();
+				if (running) {
+					stop();
+				} else {
+					start();
+				}
 			}
 		});
 		btnStart.addKeyListener(ka);
