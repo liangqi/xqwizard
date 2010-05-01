@@ -60,6 +60,7 @@ public class Sim2TradFrame extends JFrame {
 
 		final JTextArea txtLeft = new JTextArea();
 		// txtLeft.enableInputMethods(false);
+		txtLeft.setFont(getFont());
 		txtLeft.addKeyListener(ka);
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -68,6 +69,7 @@ public class Sim2TradFrame extends JFrame {
 		add(spLeft);
 
 		final JTextArea txtRight = new JTextArea();
+		txtRight.setFont(getFont());
 		txtRight.setEditable(false);
 		txtRight.addKeyListener(ka);
 		JScrollPane spRight = new JScrollPane(txtRight,
@@ -147,7 +149,7 @@ public class Sim2TradFrame extends JFrame {
 
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// Clear all focusless windows including MethodInputJFrame
+				// Clear all non-focusable windows including MethodInputJFrame
 				for (Frame frame : getFrames()) {
 					if (!frame.isFocusableWindow()) {
 						frame.dispose();
