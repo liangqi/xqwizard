@@ -45,8 +45,8 @@ public class Sim2TradFrame extends JFrame {
 	public Sim2TradFrame() {
 		super("简繁转换");
 		setLayout(null);
+		setLocationByPlatform(true);
 		setResizable(false);
-		setSize(320, 240);
 
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
@@ -65,7 +65,7 @@ public class Sim2TradFrame extends JFrame {
 		JScrollPane spLeft = new JScrollPane(txtLeft,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		spLeft.setBounds(5, 5, 220, 100);
+		spLeft.setBounds(5, 5, 225, 100);
 		add(spLeft);
 
 		final JTextArea txtRight = new JTextArea();
@@ -75,11 +75,11 @@ public class Sim2TradFrame extends JFrame {
 		JScrollPane spRight = new JScrollPane(txtRight,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		spRight.setBounds(5, 110, 220, 100);
+		spRight.setBounds(5, 110, 225, 100);
 		add(spRight);
 
 		JButton btnTrad = new JButton("繁体");
-		btnTrad.setBounds(230, 5, 80, 30);
+		btnTrad.setBounds(235, 5, 80, 30);
 		btnTrad.setMargin(insets);
 		btnTrad.addKeyListener(ka);
 		btnTrad.addActionListener(new ActionListener() {
@@ -96,7 +96,7 @@ public class Sim2TradFrame extends JFrame {
 		add(btnTrad);
 
 		JButton btnBig5 = new JButton("BIG5");
-		btnBig5.setBounds(230, 45, 80, 30);
+		btnBig5.setBounds(235, 45, 80, 30);
 		btnBig5.setMargin(insets);
 		btnBig5.addKeyListener(ka);
 		btnBig5.addActionListener(new ActionListener() {
@@ -113,7 +113,7 @@ public class Sim2TradFrame extends JFrame {
 		add(btnBig5);
 
 		JButton btnTradBig5 = new JButton("繁体BIG5");
-		btnTradBig5.setBounds(230, 85, 80, 30);
+		btnTradBig5.setBounds(235, 85, 80, 30);
 		btnTradBig5.setMargin(insets);
 		btnTradBig5.addKeyListener(ka);
 		btnTradBig5.addActionListener(new ActionListener() {
@@ -130,7 +130,7 @@ public class Sim2TradFrame extends JFrame {
 		add(btnTradBig5);
 
 		JButton btnExit = new JButton("退出");
-		btnExit.setBounds(230, 180, 80, 30);
+		btnExit.setBounds(235, 180, 80, 30);
 		btnExit.setMargin(insets);
 		btnExit.addKeyListener(ka);
 		btnExit.addActionListener(new ActionListener() {
@@ -142,6 +142,12 @@ public class Sim2TradFrame extends JFrame {
 		add(btnExit);
 
 		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				Insets i = getInsets();
+				setSize(320 + i.left + i.right, 215 + i.top + i.bottom);
+			}
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				dispose();

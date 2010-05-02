@@ -250,8 +250,8 @@ public class EchoFrame extends JFrame {
 	public EchoFrame() {
 		super("Echo");
 		setLayout(null);
+		setLocationByPlatform(true);
 		setResizable(false);
-		setSize(320, 60);
 
 		Insets insets = new Insets(0, 0, 0, 0);
 		KeyAdapter ka = new KeyAdapter() {
@@ -264,7 +264,7 @@ public class EchoFrame extends JFrame {
 		};
 
 
-		slider.setBounds(5, 5, 90, 25);
+		slider.setBounds(5, 5, 100, 25);
 		slider.setSnapToTicks(true);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
@@ -277,10 +277,10 @@ public class EchoFrame extends JFrame {
 		slider.addKeyListener(ka);
 		add(slider);
 
-		label.setBounds(100, 5, 110, 25);
+		label.setBounds(110, 5, 110, 25);
 		add(label);
 
-		btnStart.setBounds(205, 5, 50, 25);
+		btnStart.setBounds(210, 5, 50, 25);
 		btnStart.setMargin(insets);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
@@ -295,7 +295,7 @@ public class EchoFrame extends JFrame {
 		btnStart.addKeyListener(ka);
 		add(btnStart);
 
-		btnExit.setBounds(260, 5, 50, 25);
+		btnExit.setBounds(265, 5, 50, 25);
 		btnExit.setMargin(insets);
 		btnExit.addActionListener(new ActionListener() {
 			@Override
@@ -307,6 +307,12 @@ public class EchoFrame extends JFrame {
 		add(btnExit);
 
 		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				Insets i = getInsets();
+				setSize(320 + i.left + i.right, 35 + i.top + i.bottom);
+			}
+
 			@Override
 			public void windowIconified(WindowEvent e) {
 				if (SystemTray.isSupported()) {
