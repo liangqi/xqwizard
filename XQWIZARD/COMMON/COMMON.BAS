@@ -245,7 +245,7 @@ If Options_nLanguage = LANGUAGE_ZH_CN Then
 
 Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
+Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施于人。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
 Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
         "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
