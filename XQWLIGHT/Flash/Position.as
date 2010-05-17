@@ -995,6 +995,105 @@ package {
 			return pos;
 		}
 
+		private static function fenPiece(c:String):int {
+			var cUCase:String;
+			if (c.charCodeAt() > 'Z'.charCodeAt()) {
+				cUCase = String.fromCharCode(c.charCodeAt() - 'a'.charCodeAt() + 'A'.charCodeAt());
+			} else {
+				cUCase = c
+			}
+			var retVal:int;
+			switch (cUCase) {
+			case 'K':
+				retVal = 8;
+				break;
+			case 'A':
+				retVal = 9;
+				break;
+			case 'B':
+			case 'E':
+				retVal = 10;
+				break;
+			case 'N':
+			case 'H':
+				retVal = 11;
+				break;
+			case 'R':
+				retVal = 12;
+				break;
+			case 'C':
+				retVal = 13;
+				break;
+			case 'P':
+				retVal = 14;
+				break;
+			default:
+				return 0;
+			}
+			return cUCase == c ? retVal : retVal + 8;
+		}
+
+		public function fromFen(fen:String):void {
+			clearBoard();
+			var y:int = RANK_TOP;
+			var x:int = FILE_LEFT;
+			var index:int = 0;
+			if (index == fen.length) {
+				setIrrev();
+				return;
+			}
+			var pt:int;
+			var c:String = fen.charAt(index);
+			while (c != ' ') {
+				if (c == '/') {
+					x = FILE_LEFT;
+					y ++;
+					if (y > RANK_BOTTOM) {
+						break;
+					}
+				} else if (c >= '1' && c <= '9') {
+					var kk:int = c.charCodeAt() - '0'.charCodeAt();
+					for (var k:int = 0; k < kk; k ++) {
+						if (x >= FILE_RIGHT) {
+							break;
+						}
+						x ++;
+					}
+				} else if (c >= 'A' && c <= 'Z') {
+					if (x <= FILE_RIGHT) {
+						pt = fenPiece(c);
+						if (pt >= 0) {
+							addPiece(COORD_XY(x, y), pt);
+						}
+						x ++;
+					}
+				} else if (c >= 'a' && c <= 'z') {
+					if (x <= FILE_RIGHT) {
+						pt = fenPiece(c);
+						if (pt >= 0) {
+							addPiece(COORD_XY(x, y), pt);
+						}
+						x ++;
+					}
+				}
+				index ++;
+				if (index == fen.length) {
+					setIrrev();
+					return;
+				}
+				c = fen.charAt(index);
+			}
+			index ++;
+			if (index == fen.length) {
+				setIrrev();
+				return;
+			}
+			if (sdPlayer == (fen.charAt(index) == 'b' ? 0 : 1)) {
+				changeSide();
+			}
+			setIrrev();
+		}
+
 		public function bookMove():int {
 			if (nBookSize == 0) {
 				return 0;
