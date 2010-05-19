@@ -1,7 +1,7 @@
 Type=Exe
 Form=XQWLIGHT.FRM
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
-Object={D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0; Flash9f.ocx
+Object={D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0; Flash10e.ocx
 Module=mdlXQWLight; XQWLIGHT.BAS
 IconForm="frmXQWLight"
 Startup="frmXQWLight"

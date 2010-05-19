@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0"; "Flash10b.ocx"
+Object = "{D27CDB6B-AE6D-11CF-96B8-444553540000}#1.0#0"; "Flash10e.ocx"
 Begin VB.Form frmXQWLight 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "象棋小巫师"
@@ -85,7 +85,7 @@ Begin VB.Form frmXQWLight
       FlashVars       =   ""
       Movie           =   ""
       Src             =   ""
-      WMode           =   "Window"
+      WMode           =   "Transparent"
       Play            =   "0"
       Loop            =   "-1"
       Quality         =   "High"
@@ -105,6 +105,13 @@ Begin VB.Form frmXQWLight
       ProfilePort     =   "0"
       AllowNetworking =   "all"
       AllowFullScreen =   "false"
+   End
+   Begin VB.Image Image1 
+      Height          =   8655
+      Left            =   120
+      Picture         =   "XQWLIGHT.frx":0381
+      Top             =   120
+      Width           =   7815
    End
    Begin VB.Label lblLevel 
       Caption         =   "电脑水平："
