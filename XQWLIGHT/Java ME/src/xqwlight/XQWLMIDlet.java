@@ -2,7 +2,7 @@
 XQWLMIDlet.java - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
+Designed by Morning Yellow, Version: 1.42, Last Modified: May 2010
 Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
@@ -52,8 +52,8 @@ public class XQWLMIDlet extends MIDlet {
 	static final int RS_DATA_LEN = 512;
 
 	/**
-	 * 0: Status, 0 = Normal Exit, 1 = Game Saved<br>
-	 * 16: Player, 0 = Red, 1 = Black (Flipped)<br>
+	 * 0: Status, 0 = Startup Form, 1 = Red To Move, 2 = Black To Move<br>
+	 * 16: Player, 0 = Red, 1 = Black (Flipped), 2 = Both<br>
 	 * 17: Handicap, 0 = None, 1 = 1 Knight, 2 = 2 Knights, 3 = 9 Pieces<br>
 	 * 18: Level, 0 = Beginner, 1 = Amateur, 2 = Expert<br>
 	 * 19: Sound Level, 0 = Mute, 5 = Max<br>
@@ -61,8 +61,7 @@ public class XQWLMIDlet extends MIDlet {
 	 * 256-511: Squares
 	 */
 	byte[] rsData = new byte[RS_DATA_LEN];
-	boolean flipped;
-	int handicap, level, sound, music;
+	int moveMode, handicap, level, sound, music;
 	Player midiPlayer = null;
 	Form form = new Form("象棋小巫师");
 	XQWLCanvas canvas = new XQWLCanvas(this);
@@ -70,8 +69,8 @@ public class XQWLMIDlet extends MIDlet {
 	Command cmdStart = new Command("开始", Command.OK, 1);
 	Command cmdExit = new Command("退出", Command.BACK, 1);
 
-	ChoiceGroup cgToMove = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
-			new String[] {"我先走", "电脑先走"}, null);
+	ChoiceGroup cgMoveMode = new ChoiceGroup("谁先走", Choice.EXCLUSIVE,
+			new String[] {"我先走", "电脑先走", "不用电脑"}, null);
 	ChoiceGroup cgHandicap = new ChoiceGroup("先走让子", Choice.POPUP,
 			new String[] {"不让子", "让左马", "让双马", "让九子"}, null);
 	ChoiceGroup cgLevel = new ChoiceGroup("电脑水平", Choice.POPUP,
@@ -80,7 +79,7 @@ public class XQWLMIDlet extends MIDlet {
 	Gauge gMusic = new Gauge("音乐", true, 5, 0);
 
 	{
-		form.append(cgToMove);
+		form.append(cgMoveMode);
 		form.append(cgHandicap);
 		form.append(cgLevel);
 		form.append(gSound);
@@ -92,7 +91,7 @@ public class XQWLMIDlet extends MIDlet {
 		form.setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
 				if (c == cmdStart) {
-					flipped = cgToMove.isSelected(1);
+					moveMode = cgMoveMode.getSelectedIndex();
 					handicap = cgHandicap.getSelectedIndex();
 					level = cgLevel.getSelectedIndex();
 					sound = gSound.getValue();
@@ -156,12 +155,12 @@ public class XQWLMIDlet extends MIDlet {
 		} catch (Exception e) {
 			// Ignored
 		}
-		flipped = (rsData[16] != 0);
+		moveMode = Util.MIN_MAX(0, rsData[16], 2);
 		handicap = Util.MIN_MAX(0, rsData[17], 3);
 		level = Util.MIN_MAX(0, rsData[18], 2);
 		sound = Util.MIN_MAX(0, rsData[19], 5);
 		music = Util.MIN_MAX(0, rsData[20], 5);
-		cgToMove.setSelectedIndex(flipped ? 1 : 0, true);
+		cgMoveMode.setSelectedIndex(moveMode, true);
 		cgLevel.setSelectedIndex(level, true);
 		cgHandicap.setSelectedIndex(handicap, true);
 		gSound.setValue(sound);
@@ -182,7 +181,7 @@ public class XQWLMIDlet extends MIDlet {
 
 	public void destroyApp(boolean unc) {
 		stopMusic();
-		rsData[16] = (byte) (flipped ? 1 : 0);
+		rsData[16] = (byte) moveMode;
 		rsData[17] = (byte) handicap;
 		rsData[18] = (byte) level;
 		rsData[19] = (byte) sound;

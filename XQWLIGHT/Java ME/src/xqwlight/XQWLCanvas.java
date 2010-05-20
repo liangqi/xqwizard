@@ -2,7 +2,7 @@
 XQWLCanvas.java - Source Code for XiangQi Wizard Light, Part IV
 
 XiangQi Wizard Light - a Chinese Chess Program for Java ME
-Designed by Morning Yellow, Version: 1.31, Last Modified: Jan. 2010
+Designed by Morning Yellow, Version: 1.42, Last Modified: May 2010
 Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
@@ -38,6 +38,12 @@ class XQWLCanvas extends Canvas {
 	private static final int PHASE_THINKING = 2;
 	private static final int PHASE_EXITTING = 3;
 
+	private static final int COMPUTER_BLACK = 0;
+	private static final int COMPUTER_RED = 1;
+	private static final int COMPUTER_NONE = 2;
+
+	private static final int RESP_HUMAN_SINGLE = -2;
+	private static final int RESP_HUMAN_BOTH = -1;
 	private static final int RESP_CLICK = 0;
 	private static final int RESP_ILLEGAL = 1;
 	private static final int RESP_MOVE = 2;
@@ -167,7 +173,7 @@ class XQWLCanvas extends Canvas {
 					pos.addPiece(sq, pc);
 				}
 			}
-			if (midlet.flipped) {
+			if (midlet.rsData[0] == 2) {
 				pos.changeSide();
 			}
 			pos.setIrrev();
@@ -176,7 +182,8 @@ class XQWLCanvas extends Canvas {
 		System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
 		// Call "responseMove()" if Computer Moves First
 		phase = PHASE_LOADING;
-		if (pos.sdPlayer == 0 ? midlet.flipped : !midlet.flipped) {
+		if (pos.sdPlayer == 0 ? midlet.moveMode == COMPUTER_RED :
+				midlet.moveMode == COMPUTER_BLACK) {
 			new Thread() {
 				public void run() {
 					while (phase == PHASE_LOADING) {
@@ -277,7 +284,7 @@ class XQWLCanvas extends Canvas {
 			drawSquare(g, (pos.squares[sqSelected] & 8) == 0 ? imgSelected : imgSelected2, sqSelected);
 		}
 		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);
-		if (midlet.flipped) {
+		if (midlet.moveMode == COMPUTER_RED) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		if (sq == sqSrc || sq == sqDst || sq == sqSelected) {
@@ -287,7 +294,7 @@ class XQWLCanvas extends Canvas {
 		}
 		if (phase == PHASE_THINKING) {
 			int x, y;
-			if (midlet.flipped) {
+			if (midlet.moveMode == COMPUTER_RED) {
 				x = (Position.FILE_X(sqDst) < 8 ? left : right);
 				y = (Position.RANK_Y(sqDst) < 8 ? top : bottom);
 			} else {
@@ -422,7 +429,7 @@ class XQWLCanvas extends Canvas {
 
 	private void clickSquare() {
 		int sq = Position.COORD_XY(cursorX + Position.FILE_LEFT, cursorY + Position.RANK_TOP);
-		if (midlet.flipped) {
+		if (midlet.moveMode == COMPUTER_RED) {
 			sq = Position.SQUARE_FLIP(sq);
 		}
 		int pc = pos.squares[sq];
@@ -439,7 +446,7 @@ class XQWLCanvas extends Canvas {
 	}
 
 	private void drawSquare(Graphics g, Image image, int sq) {
-		int sqFlipped = (midlet.flipped ? Position.SQUARE_FLIP(sq) : sq);
+		int sqFlipped = (midlet.moveMode == COMPUTER_RED ? Position.SQUARE_FLIP(sq) : sq);
 		int sqX = left + (Position.FILE_X(sqFlipped) - Position.FILE_LEFT) * squareSize;
 		int sqY = top + (Position.RANK_Y(sqFlipped) - Position.RANK_TOP) * squareSize;
 		g.drawImage(image, sqX, sqY, Graphics.LEFT + Graphics.TOP);
@@ -447,7 +454,8 @@ class XQWLCanvas extends Canvas {
 
 	/** Player Move Result */
 	private boolean getResult() {
-		return getResult(-1);
+		return getResult(midlet.moveMode == COMPUTER_NONE ?
+				RESP_HUMAN_BOTH : RESP_HUMAN_SINGLE);
 	}
 
 	/** Computer Move Result */
@@ -471,12 +479,14 @@ class XQWLCanvas extends Canvas {
 			message = "超过自然限着作和，辛苦了！";
 			return true;
 		}
-		if (response >= 0) {
-			midlet.playSound(response);
+		if (response != RESP_HUMAN_SINGLE) {
+			if (response >= 0) {
+				midlet.playSound(response);
+			}
 			// Backup Retract Status
 			System.arraycopy(midlet.rsData, 0, retractData, 0, XQWLMIDlet.RS_DATA_LEN);
 			// Backup Record-Score Data
-			midlet.rsData[0] = 1;
+			midlet.rsData[0] = (byte) (pos.sdPlayer + 1);
 			System.arraycopy(pos.squares, 0, midlet.rsData, 256, 256);
 		}
 		return false;
@@ -502,6 +512,9 @@ class XQWLCanvas extends Canvas {
 	boolean responseMove() {
 		if (getResult()) {
 			return false;
+		}
+		if (midlet.moveMode == COMPUTER_NONE) {
+			return true;
 		}
 		phase = PHASE_THINKING;
 		repaint();
