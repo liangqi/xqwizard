@@ -45,6 +45,8 @@ BEGIN
     END
     POPUP "帮助(&H)"
     BEGIN
+        MENUITEM "象棋百科全书(&X)", IDM_HELP_HOME
+        MENUITEM SEPARATOR
         MENUITEM "关于(&A)", IDM_HELP_ABOUT
     END
 END
@@ -62,13 +64,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "Comments", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.elephantbase.net\0"
-            VALUE "CompanyName", "Author: Morning Yellow (* Shanghai Computer Chess Research Center, eMail: webmaster@elephantbase.net)\0"
+            VALUE "Comments", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.xqbase.com\0"
+            VALUE "CompanyName", "www.xqbase.com\0"
             VALUE "FileDescription", "XiangQi Wizard Light\0"
             VALUE "FileVersion", "0.x\0"
             VALUE "InternalName", "XiangQi Wizard Light\0"
-            VALUE "LegalCopyright", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.elephantbase.net\0"
-            VALUE "LegalTrademarks", "www.elephantbase.net\0"
+            VALUE "LegalCopyright", "XiangQi Wizard Light 0.x, (C) 2004-2008 www.xqbase.com\0"
+            VALUE "LegalTrademarks", "www.xqbase.com\0"
             VALUE "OriginalFilename", "XQWLIGHT.EXE\0"
             VALUE "ProductName", "XiangQi Wizard Light\0"
             VALUE "ProductVersion", "0.x\0"

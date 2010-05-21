@@ -1,7 +1,7 @@
 /**
  * XiangQi Wizard Light - A Very Simple Chinese Chess Program
  * Designed by Morning Yellow, Version: 0.2, Last Modified: Mar. 2008
- * Copyright (C) 2004-2008 www.elephantbase.net
+ * Copyright (C) 2004-2008 www.xqbase.com
  *
  * 象棋小巫师 0.2 的目标：
  * 一、实现中国象棋规则。
@@ -12,8 +12,8 @@
 
 // 版本号
 const LPCSTR cszAbout = "象棋小巫师 0.2\n象棋百科全书 荣誉出品\n\n"
-    "(C) 2004-2008 www.elephantbase.net\n本产品符合GNU通用公共许可协议\n\n"
-    "欢迎登录 www.elephantbase.net\n免费下载PC版 象棋巫师";
+    "(C) 2004-2008 www.xqbase.com\n本产品符合GNU通用公共许可协议\n\n"
+    "欢迎登录 www.xqbase.com\n免费下载PC版 象棋巫师";
 
 // 窗口和绘图属性
 const int WINDOW_STYLES = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
@@ -910,6 +910,9 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
       break;
     case IDM_FILE_EXIT:
       DestroyWindow(Xqwl.hWnd);
+      break;
+    case IDM_HELP_HOME:
+      ShellExecute(NULL, NULL, "http://www.xqbase.com/", NULL, NULL, SW_SHOWNORMAL);
       break;
     case IDM_HELP_ABOUT:
       // 弹出带象棋小巫师图标的对话框

@@ -36,6 +36,7 @@
 #define IDM_FILE_RED   401
 #define IDM_FILE_BLACK 402
 #define IDM_FILE_EXIT  403
-#define IDM_HELP_ABOUT 404
+#define IDM_HELP_HOME  404
+#define IDM_HELP_ABOUT 405
 
 #endif
