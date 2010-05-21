@@ -2,8 +2,8 @@
 XQWLight.as - Source Code for XiangQi Wizard Light, Part III
 
 XiangQi Wizard Light - a Flash Chinese Chess Program
-Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 1.42, Last Modified: May 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,9 +32,15 @@ package {
 	import flash.utils.Timer;
 
 	public class XQWLight extends Sprite {
+		private static const STARTUP_FEN = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w";
+
 		private static const PHASE_LOADING:int = 0;
 		private static const PHASE_WAITING:int = 1;
 		private static const PHASE_THINKING:int = 2;
+
+		private static const COMPUTER_BLACK:int = 0;
+		private static const COMPUTER_RED:int = 1;
+		private static const COMPUTER_NONE:int = 2;
 
 		private static const RESP_CLICK:int = 0;
 		private static const RESP_ILLEGAL:int = 1;
@@ -120,8 +126,8 @@ package {
 		private var bmpSquares:Array = new Array(256);
 		private var pos:Position = new Position();
 		private var search:Search = new Search(pos, 16);
-		private var bFlipped:Boolean = false, bSound:Boolean = true;
-		private var nHandicap:int = 0, nLevel:int = 0;
+		private var bSound:Boolean = true;
+		private var nMoveMode:int = 0, nLevel:int = 0;
 		private var sqSelected:int = 0, mvLast:int = 0;
 		private var sdCurrent:int, sdRetract:int = 0;
 		private var pcCurrent:Array = new Array(256), pcRetract:Array = new Array(256);
@@ -131,7 +137,7 @@ package {
 
 		private function drawSquare(sq:int, bSelected:Boolean = false):void {
 			var pc:int = pos.pcSquares[sq];
-			sq = bFlipped ? Position.SQUARE_FLIP(sq) : sq;
+			sq = nMoveMode == COMPUTER_RED ? Position.SQUARE_FLIP(sq) : sq;
 			bmpSquares[sq].bitmapData = bSelected ? bmpSelected[pc] : bmpPieces[pc];
 		}
 
@@ -239,7 +245,7 @@ package {
 		}
 
 		private function clickSquare(sq:int):void {
-			sq = bFlipped ? Position.SQUARE_FLIP(sq) : sq;
+			sq = nMoveMode == COMPUTER_RED ? Position.SQUARE_FLIP(sq) : sq;
 			var pc:int = pos.pcSquares[sq];
 			if ((pc & Position.SIDE_TAG(pos.sdPlayer)) != 0) {
 				if (sqSelected != 0) {
@@ -256,6 +262,8 @@ package {
 				if (addMove(mv)) {
 					if (getResult()) {
 						nPhase = PHASE_LOADING;
+					} else if (nMoveMode == COMPUTER_NONE) {
+						saveRetract();
 					} else {
 						thinking();
 					}
@@ -283,27 +291,27 @@ package {
 			}
 		}
 
-		public function restart(bFlipped_:Boolean = false, nHandicap_:int = 0):void {
-			if (nPhase != PHASE_THINKING) {
-				nPhase = PHASE_LOADING;
-				bFlipped = bFlipped_;
-				nHandicap = nHandicap_;
-				pos.startup(nHandicap);
-				sdCurrent = pos.sdPlayer;
-				saveCurrent();
-				saveRetract();
-				sqSelected = mvLast = 0;
-				drawBoard();
-				lblMessage.visible = false;
-				if (bFlipped) {
-					thinking();
-				} else {
-					nPhase = PHASE_WAITING;
-				}
+		private function restart(nMoveMode_:int, szFen:String):void {
+			if (nPhase == PHASE_THINKING) {
+				return;
+			}
+			nPhase = PHASE_LOADING;
+			nMoveMode = nMoveMode_;
+			pos.fromFen(szFen);
+			sdCurrent = pos.sdPlayer;
+			saveCurrent();
+			saveRetract();
+			sqSelected = mvLast = 0;
+			drawBoard();
+			lblMessage.visible = false;
+			if (sdCurrent == 0 ? nMoveMode == COMPUTER_RED : nMoveMode == COMPUTER_BLACK) {
+				thinking();
+			} else {
+				nPhase = PHASE_WAITING;
 			}
 		}
 
-		public function retract():void {
+		private function retract():void {
 			lblMessage.visible = false;
 			pos.clearBoard();
 			var sq:int;
@@ -319,18 +327,18 @@ package {
 			saveCurrent();
 			sqSelected = mvLast = 0;
 			drawBoard();
-			if (bFlipped && pos.sdPlayer == 0) {
+			if (sdCurrent == 0 ? nMoveMode == COMPUTER_RED : nMoveMode == COMPUTER_BLACK) {
 				thinking();
 			} else {
 				nPhase = PHASE_WAITING
 			}
 		}
 
-		public function setLevel(nLevel_:int):void {
+		private function setLevel(nLevel_:int):void {
 			nLevel = nLevel_;
 		}
 
-		public function setSound(bSound_:Boolean):void {
+		private function setSound(bSound_:Boolean):void {
 			bSound = bSound_;
 			playSound(RESP_CLICK);
 		}
@@ -354,7 +362,12 @@ package {
 			board.addChild(bmpThinking);
 			addChild(board);
 			setChildIndex(lblMessage, numChildren - 1);
-			restart();
+			var nMode:int = loaderInfo.parameters.mode;
+			var szFen:String = loaderInfo.parameters.fen;
+			if (szFen == null) {
+				szFen = STARTUP_FEN;
+			}
+			restart(nMode, szFen);
 			ExternalInterface.addCallback("restart", restart);
 			ExternalInterface.addCallback("retract", retract);
 			ExternalInterface.addCallback("setLevel", setLevel);

@@ -39,8 +39,15 @@ content="text/html; charset=gb_2312-80">
             <dt><script language="JavaScript"><!--
 var XQWLight = document["XQWLight"];
 
+var startupFens = [
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w",
+  "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w",
+];
+
 function restart_click() {
-  XQWLight.restart(selFlipped.selectedIndex == 1, selHandicap.selectedIndex);
+  XQWLight.restart(selMoveMode.selectedIndex, startupFens[selHandicap.selectedIndex]);
 }
 
 function retract_click() {
@@ -56,10 +63,11 @@ function sound_click() {
 }
 // --></script><font
                 size="2">谁先走：</font></dt>
-            <dt><font size="2"><select name="selFlipped" size="2"
-                id="selFlipped">
+            <dt><font size="2"><select name="selMoveMode" size="3"
+                id="selMoveMode">
                     <option selected value="0">我先走　</option>
                     <option value="1">电脑先走</option>
+                    <option value="2">不用电脑</option>
                 </select></font></dt>
             <dt><font size="2">先走让子：</font></dt>
             <dt><font size="2"><select name="selHandicap"

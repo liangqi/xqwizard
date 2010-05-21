@@ -2,8 +2,8 @@
 Position.as - Source Code for XiangQi Wizard Light, Part I
 
 XiangQi Wizard Light - a Flash Chinese Chess Program
-Designed by Morning Yellow, Version: 1.0, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 1.42, Last Modified: May 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -174,46 +174,6 @@ package {
 			new Array(-33, -18), new Array(-31, -14), new Array(14, 31), new Array(18, 33)
 		);
 		private static const cnMvvValue:Array = new Array(50, 10, 10, 30, 40, 30, 20, 0);
-
-		private static const cpcStartup:Array = new Array(
-			new Array(
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 14,  0, 14,  0, 14,  0, 14,  0, 14,  0,  0,  0,  0,
-				0,  0,  0,  0, 13,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 12, 11, 10,  9,  8,  9, 10, 11, 12,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
-			), new Array(
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 14,  0, 14,  0, 14,  0, 14,  0, 14,  0,  0,  0,  0,
-				0,  0,  0,  0, 13,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 12,  0, 10,  9,  8,  9, 10, 11, 12,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
-			), new Array(
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 14,  0, 14,  0, 14,  0, 14,  0, 14,  0,  0,  0,  0,
-				0,  0,  0,  0, 13,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 12,  0, 10,  9,  8,  9, 10,  0, 12,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
-			), new Array(
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0, 13,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0, 12, 11,  0,  0,  8,  0,  0, 11, 12,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-				0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
-			)
-		);
 
 		private static const cnpvKingPawn:Array = new Array(
 			0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -504,22 +464,6 @@ package {
 			bCheckList[0] = checked();
 			nMoveNum = 1;
 			nDistance = 0;
-		}
-
-		public function startup(nHandicap:int):void {
-			clearBoard();
-			var sq:int;
-			for (sq = 0; sq < 128; sq ++) {
-				var pc:int = cpcStartup[0][sq];
-				if (pc > 0) {
-					addPiece(SQUARE_FLIP(sq + 128), pc + 8);
-				}
-				pc = cpcStartup[nHandicap][sq];
-				if (pc > 0) {
-					addPiece(sq + 128, pc);
-				}
-			}
-			setIrrev();
 		}
 
 		public function addPiece(sq:int, pc:int, bDel:Boolean = false):void {
@@ -996,41 +940,26 @@ package {
 		}
 
 		private static function fenPiece(c:String):int {
-			var cUCase:String;
-			if (c.charCodeAt() > 'Z'.charCodeAt()) {
-				cUCase = String.fromCharCode(c.charCodeAt() - 'a'.charCodeAt() + 'A'.charCodeAt());
-			} else {
-				cUCase = c
-			}
-			var retVal:int;
-			switch (cUCase) {
+			switch (c) {
 			case 'K':
-				retVal = 8;
-				break;
+				return PIECE_KING;
 			case 'A':
-				retVal = 9;
-				break;
+				return PIECE_ADVISOR;
 			case 'B':
 			case 'E':
-				retVal = 10;
-				break;
-			case 'N':
+				return PIECE_BISHOP;
 			case 'H':
-				retVal = 11;
-				break;
+			case 'N':
+				return PIECE_KNIGHT;
 			case 'R':
-				retVal = 12;
-				break;
+				return PIECE_ROOK;
 			case 'C':
-				retVal = 13;
-				break;
+				return PIECE_CANNON;
 			case 'P':
-				retVal = 14;
-				break;
+				return PIECE_PAWN;
 			default:
-				return 0;
+				return -1;
 			}
-			return cUCase == c ? retVal : retVal + 8;
 		}
 
 		public function fromFen(fen:String):void {
@@ -1063,15 +992,15 @@ package {
 					if (x <= FILE_RIGHT) {
 						pt = fenPiece(c);
 						if (pt >= 0) {
-							addPiece(COORD_XY(x, y), pt);
+							addPiece(COORD_XY(x, y), pt + 8);
 						}
 						x ++;
 					}
 				} else if (c >= 'a' && c <= 'z') {
 					if (x <= FILE_RIGHT) {
-						pt = fenPiece(c);
+						pt = fenPiece(String.fromCharCode(c.charCodeAt() - 'a'.charCodeAt() + 'A'.charCodeAt()));
 						if (pt >= 0) {
-							addPiece(COORD_XY(x, y), pt);
+							addPiece(COORD_XY(x, y), pt + 16);
 						}
 						x ++;
 					}
