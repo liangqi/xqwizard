@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.61, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.7, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -25,8 +25,9 @@ Option Explicit
 Private Declare Function GetACP Lib "KERNEL32.DLL" () As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.62"
-Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
+Public Const STRING_VERSION     As String = "4.7"
+Public Const STRING_COPYRIGHT   As String = "(C) 2010 象棋百科全书" + vbCrLf + _
+        "(C) 2010 上海贤趣信息技术有限公司"
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
@@ -159,10 +160,10 @@ Public Sub AboutXQWizard()
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本产品符合GNU通用公共许可协议", "关于象棋巫师"
+            STRING_COPYRIGHT, "关于象棋巫师"
 Else
     MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT & vbCrLf & "本產品符合GNU通用公共許可協議", "關於象棋巫師"
+            STRING_COPYRIGHT, "關於象棋巫師"
 End If
 
 End Sub
