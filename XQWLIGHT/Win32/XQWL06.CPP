@@ -17,7 +17,6 @@
 
 // 版本号
 const LPCSTR cszAbout = "象棋小巫师 0.6\n象棋百科全书 荣誉出品\n\n"
-    "(C) 2004-2008 www.xqbase.com\n本产品符合GNU通用公共许可协议\n\n"
     "欢迎登录 www.xqbase.com\n免费下载PC版 象棋巫师";
 
 // 窗口和绘图属性
