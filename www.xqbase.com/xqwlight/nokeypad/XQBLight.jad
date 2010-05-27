@@ -1,0 +1,13 @@
+MIDlet-1: 象棋巫师魔法学校,/images/xqblight.png,com.xqbase.XQBLMIDlet
+MIDlet-Delete-Confirm: 是否已经解除注册？
+MIDlet-Description: 手机象棋游戏 - 象棋巫师魔法学校 1.41
+MIDlet-Icon: /images/xqblight.png
+MIDlet-Info-URL: http://www.xqbase.com/
+MIDlet-Jar-Size: 264755
+MIDlet-Jar-URL: XQBLight.jar
+MIDlet-Name: 象棋巫师魔法学校
+MIDlet-Vendor: www.xqbase.com
+MIDlet-Version: 1.41
+MicroEdition-Configuration: CLDC-1.0
+MicroEdition-Profile: MIDP-2.0
+XQBLight-NoKeyPad: true

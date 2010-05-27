@@ -22,7 +22,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.62
+AppVerName={cm:AppName} 4.63
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -88,10 +88,8 @@ Source: "EXAMPLES\SAMPLE_S.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
 Source: "EXAMPLES\SAMPLE_T.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
 Source: "EXAMPLES\XQFEXAMA.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
 Source: "EXAMPLES\XQFEXAMB.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
-Source: "DOC\README_S.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
-Source: "DOC\README_T.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
-Source: "DOC\ELEEYE.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
-Source: "DOC\GPL.TXT"; DestDir: "{app}\DOC"; Flags: ignoreversion
+Source: "DOC\README_S.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: cn
+Source: "DOC\README_T.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: tw
 ; 残局文件
 Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
@@ -113,10 +111,16 @@ Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqwlight_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqwlight_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\landlord_ad.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\landlord_ad.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqwlight.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqwlight.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqblight.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqblight.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\donate.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\donate.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\contact.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\contact.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; 棋盘文件(小)
