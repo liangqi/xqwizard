@@ -116,7 +116,7 @@ class XQWLCanvas extends Canvas {
 		altAbout.setTimeout(Alert.FOREVER);
 		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +
 				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
-				"(C) 2004-2010 www.xqbase.com\n\r\f本产品符合GNU通用公共许可协议\n\r\f\n\r\f" +
+				"(C) 2004-2010 www.xqbase.com\n\r\f\n\r\f" +
 				"欢迎登录 www.xqbase.com\n\r\f免费下载PC版 象棋巫师");
 		altBack.setTimeout(Alert.FOREVER);
 		altBack.addCommand(cmdBackOK);
