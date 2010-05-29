@@ -1,10 +1,13 @@
 www.elephantbase.net Advert List
 update_ad,30,538,1000
+advert1,30,355,1000
 xqwlight,30,469,17943
+advert2,30,355,1000
 xqblight,30,1210,1000
+advert1,30,355,1000
 xqbase2,30,461,9007
+advert2,30,355,1000
 donate,30,1483,1000
+advert1,30,355,1000
 contact,30,1474,1000
-xqwlight,30,469,17943
-xqbase2,30,461,9007
-xqblight,30,1210,1000
+advert2,30,355,1000
