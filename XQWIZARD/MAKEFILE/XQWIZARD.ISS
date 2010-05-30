@@ -123,6 +123,18 @@ Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert3.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert3.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert4.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert4.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert5.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert5.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert6.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert6.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; ÆåÅÌÎÄ¼þ(Ð¡)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
