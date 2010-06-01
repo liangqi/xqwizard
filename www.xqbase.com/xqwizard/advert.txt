@@ -1,0 +1,8 @@
+XQWizard Advert List
+update_ad,30,256,1000
+advert1,30,332,1000
+advert2,30,332,1000
+advert3,30,332,1000
+advert4,30,332,1000
+advert5,30,332,1000
+advert6,30,332,1000
