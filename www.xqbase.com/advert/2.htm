@@ -25,14 +25,16 @@ var cpro_id = 'u31937';
         language="JavaScript"
         src="http://cpro.baidu.com/cpro/ui/c.js"></script><script
         language="JavaScript"><!--
+var X_MAX = 468 - 249;
 var x = 0;
 var timer = setInterval(function() {
-  x += 2;
-  container.style.marginLeft = "-" + x + "px";
-  container.style.marginRight = "-" + (219 - x) + "px";
-  if (x == 218) {
+  x += 8;
+  if (x > X_MAX) {
+    x = X_MAX;
     clearInterval(timer);
   }
+  container.style.marginLeft = "-" + x + "px";
+  container.style.marginRight = "-" + (X_MAX - x) + "px";
 }, 250);
 // --></script><!--webbot
         bot="HTMLMarkup" startspan --></div><!--webbot
