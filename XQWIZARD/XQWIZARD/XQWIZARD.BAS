@@ -3142,7 +3142,9 @@ If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
     If Gui_nAdvertIndex > Gui_nAdvertNum Then
         Gui_nAdvertIndex = 1
     End If
+    App_frmMain.web.Visible = False
     App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
+    App_frmMain.web.Visible = True
 End If
 ' ΩÁ√Ê
 DoEvents

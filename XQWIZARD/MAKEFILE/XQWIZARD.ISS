@@ -22,7 +22,7 @@ tw.Custom=自定義設置
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.63
+AppVerName={cm:AppName} 4.64
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -113,28 +113,10 @@ Source: "ADVERT\xqbase2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqwlight.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqblight.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqblight.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\donate.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\donate.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\contact.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\contact.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert3.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert3.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert4.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert4.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert5.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert5.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert6.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert6.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; め攫恅璃(苤)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
