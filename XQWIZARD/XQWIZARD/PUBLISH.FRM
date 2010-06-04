@@ -269,7 +269,7 @@ Attribute VB_Exposed = False
 ' PUBLISH.FRM - Source Code for XiangQi Wizard, Part XI
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -468,9 +468,8 @@ End Sub
 
 Private Sub btnPublish_Click()
 
-Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
+Dim szCopy As String, szFen As String, szBr As String, szAd As String, szFlashVars As String
 Dim bReturned As Boolean, cnt As Integer, sd As Integer, i As Integer
-Dim szSt1 As String, szSt2 As String
 Dim pos As PositionStruct
 
 ' 输出标题(赛事、结果、日起地点、开局)
@@ -488,25 +487,22 @@ End If
 If OpenString <> "" Then
     szCopy = szCopy & OpenString & szBr
 End If
-szSt1 = L("# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面", "# 在瀏覽器中打開下面的鏈接，就能直接用象棋巫師打開盤面")
-szSt2 = L("用象棋巫师打开盘面", "用象棋巫師打開盤面")
+szAd = L("# 本棋谱由象棋巫师生成，欢迎访问 ", "# 本棋譜由象棋巫師生成，歡迎訪問 ")
 If Publish_bContent Then
     ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
     szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
     Select Case Publish_nFormat
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
         szCopy = szCopy & GetBoardText(Game_posIrrev(Game_nCurrIrrev))
-        szCopy = szCopy & "# " & szFen & szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
-        szCopy = szCopy & szSt1 & szBr
-        szCopy = szCopy & "# http://www.xqbase.com/pub/fen.php?fen=" & UrlEncode(szFen) & szBr
+        szCopy = szCopy & "# " & szFen & szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy & "[img]" & GetBoardUrl(szFen) & "[/img]" & szBr
         szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-                UrlEncode(szFen) & "]" & szSt2 & "[/url]" & szBr
+                UrlEncode(szFen) & "]" & szFen & "[/url]" & szBr
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "<img src=""" & GetBoardUrl(szFen) & """>" & szBr
         szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-                UrlEncode(szFen) & """>" & szSt2 & "</a>" & szBr
+                UrlEncode(szFen) & """>" & szFen & "</a>" & szBr
     End Select
 Else
     ' 发布整个棋局，如果不是从起始局面开始的，那么依次显示文本棋盘/图片棋盘，外加FEN链接
@@ -515,43 +511,25 @@ Else
         Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
             CchessFen2Board pos, Game_szIrrevFen(0)
             szCopy = szCopy & GetBoardText(pos)
-            szCopy = szCopy & szSt1 & szBr
-            szCopy = szCopy & "# http://www.xqbase.com/pub/fen.php?fen=" & UrlEncode(Game_szIrrevFen(0)) & szBr
+            szCopy = szCopy & "# " & Game_szIrrevFen(0) & szBr
         Case PUB_FORMAT_UBB
             szCopy = szCopy & "[img]" & GetBoardUrl(Game_szIrrevFen(0)) & "[/img]" & szBr
             szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & "]" & szSt2 & "[/url]" & szBr
+                    UrlEncode(Game_szIrrevFen(0)) & "]" & Game_szIrrevFen(0) & "[/url]" & szBr
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-            ' 后面有Flash棋盘，这里就不再显示图片棋盘了
-            ' szCopy = szCopy & "<img src=""" & GetBoardUrl(Game_szIrrevFen(0)) & """>" & szBr
+            szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szIrrevFen(0)) & "&") & "MoveList="
+            For i = 1 To Game_nMaxMove
+                szFlashVars = szFlashVars & UrlEncode(Move2Iccs(Game_mvMove(i)) & " ")
+            Next
+            szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
+                    "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
+                    "pluginspage=""http://www.macromedia.com/go/getflashplayer"" allowScriptAccess=""always"" " & _
+                    "quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
             szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & """>" & szSt2 & "</a>" & szBr
+                    UrlEncode(Game_szIrrevFen(0)) & """>" & Game_szIrrevFen(0) & "</a>" & szBr
         End Select
     End If
-    ' 如果发布模式是UBB或者HTML，那么显示Flash棋盘
-    szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szIrrevFen(0)) & "&") & "MoveList="
-    For i = 1 To Game_nMaxMove
-        szFlashVars = szFlashVars & UrlEncode(Move2Iccs(Game_mvMove(i)) & " ")
-    Next
-    Select Case Publish_nFormat
-    Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-        ' 文本方式给出的链接太长了，不便于发表和显示
-        ' szCopy = szCopy & "# 在浏览器中打开下面的链接，就能播放棋谱" & szBr
-        ' szCopy = szCopy & "# http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & szBr
-    Case PUB_FORMAT_UBB
-        szCopy = szCopy & "# [url=http://www.xqbase.com/pub/flashxq.htm?" & szFlashVars & _
-                L("]播放棋谱[/url]", "]播放棋譜[/url]") & szBr
-    Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-        szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
-                "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
-                "pluginspage=""http://www.macromedia.com/go/getflashplayer"" allowScriptAccess=""always"" " & _
-                "quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
-    End Select
-    ' 显示文本棋谱
-    ' 以下是供复制粘贴的文本棋谱
-    szCopy = szCopy & L("=== 选中以下文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
-            "=== 選中以下文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
-    ' 润色字体
+    ' 显示文本棋谱，润色字体
     Select Case Publish_nFormat
     Case PUB_FORMAT_ANSI
         szCopy = szCopy & Chr(27) & "[1;33m"
@@ -561,7 +539,6 @@ Else
         szCopy = szCopy & "<font color=""#003333"">"
     End Select
     ' 输出棋谱
-    szCopy = szCopy & "{$fen " & Game_szIrrevFen(0) & "}" & szBr
     If Game_szComment(0) <> "" Then
         szCopy = szCopy & "{" & Replace(Game_szComment(0), vbCrLf, szBr) & "}" & szBr
     End If
@@ -602,23 +579,19 @@ Else
     Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
         szCopy = szCopy & "</font>"
     End Select
-    szCopy = szCopy & L("=== 选中以上文字，按Ctrl-C复制到剪贴板，就可以粘贴到象棋巫师里了 ===", _
-            "=== 選中以上文字，按Ctrl-C複製到剪貼板，就可以粘貼到像棋巫師裡了 ===") & szBr
     ' 以上是供复制粘贴的文本棋谱
 End If
 ' 给象棋巫师做个广告
-szSt1 = L("下载象棋巫师", "下載象棋巫師")
-szSt2 = L("象棋百科全书", "象棋百科全書")
+If Not Publish_bContent Then
+    szCopy = szCopy & "===============================================" & szBr
+End If
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-    szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
-    szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/"
+    szCopy = szCopy & szAd & "www.xqbase.com"
 Case PUB_FORMAT_UBB
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt1 & "[/url]" & szBr
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/]" & szSt2 & "[/url]"
+    szCopy = szCopy & szAd & "[url=http://www.xqbase.com/]www.xqbase.com[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt2 & "</a>"
+    szCopy = szCopy & szAd & "<a href=""http://www.xqbase.com/"">www.xqbase.com</a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then

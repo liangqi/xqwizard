@@ -46,7 +46,7 @@ Begin VB.Form frmHide2
       MaskColor       =   -2147483633
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   29
+         NumListImages   =   30
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "HIDE2.frx":000C
             Key             =   ""
@@ -163,47 +163,51 @@ Begin VB.Form frmHide2
             Picture         =   "HIDE2.frx":25E4
             Key             =   ""
          EndProperty
+         BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "HIDE2.frx":273E
+            Key             =   ""
+         EndProperty
       EndProperty
    End
    Begin VB.Image imgEngineBlackLarge 
       Height          =   855
       Left            =   840
-      Picture         =   "HIDE2.frx":273E
+      Picture         =   "HIDE2.frx":2898
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineRedLarge 
       Height          =   855
       Left            =   0
-      Picture         =   "HIDE2.frx":2C4E
+      Picture         =   "HIDE2.frx":2DA8
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineBlack 
       Height          =   615
       Left            =   2280
-      Picture         =   "HIDE2.frx":315E
+      Picture         =   "HIDE2.frx":32B8
       Top             =   0
       Width           =   615
    End
    Begin VB.Image imgEngineRed 
       Height          =   615
       Left            =   1680
-      Picture         =   "HIDE2.frx":35BA
+      Picture         =   "HIDE2.frx":3714
       Top             =   0
       Width           =   615
    End
    Begin VB.Image imgFormRed 
       Height          =   480
       Left            =   3600
-      Picture         =   "HIDE2.frx":3A16
+      Picture         =   "HIDE2.frx":3B70
       Top             =   0
       Width           =   480
    End
    Begin VB.Image imgFormBlack 
       Height          =   480
       Left            =   3600
-      Picture         =   "HIDE2.frx":3D20
+      Picture         =   "HIDE2.frx":3E7A
       Top             =   600
       Width           =   480
    End

@@ -84,10 +84,10 @@ Source: "MAKEBOOK.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PGNS2JAR.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ZIP32Z64.DLL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "EXAMPLES\SAMPLE_S.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
-Source: "EXAMPLES\SAMPLE_T.PGN"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
-Source: "EXAMPLES\XQFEXAMA.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
-Source: "EXAMPLES\XQFEXAMB.XQF"; DestDir: "{app}\EXAMPLES"; Flags: ignoreversion
+Source: "EXAMPLES\SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "EXAMPLES\SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
+Source: "EXAMPLES\XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
+Source: "EXAMPLES\XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DOC\README_S.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: cn
 Source: "DOC\README_T.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: tw
 ; ╡п╬жнд╪Ч

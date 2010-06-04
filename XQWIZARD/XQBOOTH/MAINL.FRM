@@ -941,9 +941,6 @@ Begin VB.Form frmMainLarge
             Caption         =   "¥Û(&L)"
          End
       End
-      Begin VB.Menu mnOptionsSep1 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnOptionsBoard_ 
          Caption         =   "∆Â≈Ã(&B)"
          Begin VB.Menu mnOptionsBoard 
@@ -990,13 +987,10 @@ Begin VB.Form frmMainLarge
             Index           =   2
          End
       End
-      Begin VB.Menu mnOptionsSep2 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnOptionsSounds 
          Caption         =   "“Ù–ß(&S)"
       End
-      Begin VB.Menu mnOptionsSep3 
+      Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
       End
       Begin VB.Menu mnOptionsLanguage_ 

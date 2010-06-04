@@ -243,7 +243,7 @@ Attribute VB_Exposed = False
 ' PUBLISH.FRM - Source Code for XiangQi Witchcraft School, Part VI
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -427,50 +427,30 @@ End Sub
 
 Private Sub btnPublish_Click()
 
-Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String
-Dim szSt1 As String, szSt2 As String, szSt3 As String
+Dim szCopy As String, szFen As String, szBr As String, szFlashVars As String, szAd As String
 Dim pos As PositionStruct
 
 szBr = IIf(Publish_nFormat >= PUB_FORMAT_HTML, "<br>" & vbCrLf, vbCrLf)
 szCopy = L("象棋巫师魔法学校第", "象棋巫師魔法學校第") & (Gui_nCurr + 1) & _
         L("关怎么过？", "關怎麼過？") & szBr
-szSt1 = L("# 在浏览器中打开下面的链接，就能直接用象棋巫师打开盘面", "# 在瀏覽器中打開下面的鏈接，就能直接用象棋巫師打開盤面")
-szSt2 = L("用象棋巫师打开盘面", "用象棋巫師打開盤面")
+szAd = L("# 本棋图由象棋巫师生成，欢迎访问 ", "# 本棋圖由象棋巫師生成，歡迎訪問 ")
 ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
 szFen = App_szEndgames(Gui_nCurr)
 Select Case Publish_nFormat
 Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
     CchessFen2Board pos, szFen
-    szCopy = szCopy & GetBoardText(pos)
-    szCopy = szCopy & "# " & szFen & szBr ' 这里还是要显示FEN，以免下面的链接无法打开给用户造成麻烦
-    szCopy = szCopy & szSt1 & szBr
-    szCopy = szCopy & "# http://www.xqbase.com/pub/fen.php?fen=" & UrlEncode(szFen) & szBr
+    szCopy = szCopy & GetBoardText(pos) & "# " & szFen & szBr
+    szCopy = szCopy & szAd & "www.xqbase.com"
 Case PUB_FORMAT_UBB
     szCopy = szCopy & "[img]" & GetBoardUrl(szFen) & "[/img]" & szBr
     szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-            UrlEncode(szFen) & "]" & szSt2 & "[/url]" & szBr
+            UrlEncode(szFen) & "]" & szFen & "[/url]" & szBr
+    szCopy = szCopy & szAd & "[url=http://www.xqbase.com/]www.xqbase.com[/url]"
 Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
     szCopy = szCopy & "<img src=""" & GetBoardUrl(szFen) & """>" & szBr
     szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-            UrlEncode(szFen) & """>" & szSt2 & "</a>" & szBr
-End Select
-' 给象棋巫师做个广告
-szSt1 = L("象棋巫师魔法学校手机版", "象棋巫師魔法學校手機版")
-szSt2 = L("下载象棋巫师", "下載象棋巫師")
-szSt3 = L("象棋百科全书", "象棋百科全書")
-Select Case Publish_nFormat
-Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-    szCopy = szCopy & "# " & szSt1 & " http://www.xqbase.com/pub/xqblight.php" & szBr
-    szCopy = szCopy & "# " & szSt2 & " http://www.xqbase.com/pub/xqwizard.php" & szBr
-    szCopy = szCopy & "# " & szSt3 & " http://www.xqbase.com/"
-Case PUB_FORMAT_UBB
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqblight.php]" & szSt1 & "[/url]" & szBr
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/xqwizard.php]" & szSt2 & "[/url]" & szBr
-    szCopy = szCopy & "# [url=http://www.xqbase.com/pub/]" & szSt3 & "[/url]"
-Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqblight.php"" target=""_blank"">" & szSt1 & "</a>" & szBr
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/xqwizard.php"" target=""_blank"">" & szSt2 & "</a>" & szBr
-    szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/"" target=""_blank"">" & szSt3 & "</a>"
+            UrlEncode(szFen) & """>" & szFen & "</a>" & szBr
+    szCopy = szCopy & szAd & "<a href=""http://www.xqbase.com/"">www.xqbase.com</a>"
 End Select
 ' 把szCopy的内容复制到剪贴板
 If Publish_nFormat = PUB_FORMAT_WEB Then

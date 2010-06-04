@@ -63,7 +63,7 @@ Begin VB.Form frmMainSmall
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   29
+         NumButtons      =   30
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "FileNew"
             Object.ToolTipText     =   "新的对局"
@@ -151,38 +151,42 @@ Begin VB.Form frmMainSmall
             Object.ToolTipText     =   "发布棋谱"
          EndProperty
          BeginProperty Button22 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "WizardBitmap"
+            Object.ToolTipText     =   "生成图片棋盘"
+         EndProperty
+         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button23 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EndgamesStart"
             Object.ToolTipText     =   "挑战 - 当前题库"
          EndProperty
-         BeginProperty Button24 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
             MixedState      =   -1  'True
          EndProperty
-         BeginProperty Button25 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineLevel"
             Object.ToolTipText     =   "设置级别"
             Style           =   1
          EndProperty
-         BeginProperty Button26 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineRed"
             Object.ToolTipText     =   "电脑执红"
             Style           =   1
          EndProperty
-         BeginProperty Button27 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineBlack"
             Object.ToolTipText     =   "电脑执黑"
             Style           =   1
          EndProperty
-         BeginProperty Button28 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineAnalyze"
             Object.ToolTipText     =   "电脑分析"
             Style           =   1
          EndProperty
-         BeginProperty Button29 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+         BeginProperty Button30 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "EngineStop"
             Object.ToolTipText     =   "停止思考/立即走棋"
          EndProperty
@@ -1591,6 +1595,9 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardPublish 
          Caption         =   "发布棋谱(&U)"
       End
+      Begin VB.Menu mnWizardBitmap 
+         Caption         =   "生成图片棋盘(&B)"
+      End
    End
    Begin VB.Menu mnEndgames_ 
       Caption         =   "挑战(&C)"
@@ -1721,6 +1728,15 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnOptionsSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnOptionsGui 
+         Caption         =   "界面(&G)"
+         Begin VB.Menu mnOptionsGuiSmall 
+            Caption         =   "小(&S)"
+         End
+         Begin VB.Menu mnOptionsGuiLarge 
+            Caption         =   "大(&L)"
+         End
+      End
       Begin VB.Menu mnOptionsBoard_ 
          Caption         =   "棋盘(&B)"
          Begin VB.Menu mnOptionsBoard 
@@ -1802,6 +1818,9 @@ Begin VB.Form frmMainSmall
             Caption         =   "纵马奔流(&G)"
             Index           =   6
          End
+      End
+      Begin VB.Menu mnOptionsSounds 
+         Caption         =   "音效(&S)"
       End
       Begin VB.Menu mnOptionsMusic_ 
          Caption         =   "音乐(&M)"

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.63, Last Modified: May 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1325,18 +1325,6 @@ Loop
 szLineStr = ""
 szRemStr = ""
 nRemLevel = 0
-' 第一行，检测{$fen ... }标志
-Line Input #nFileNo, szLineStr
-If Left(szLineStr, 6) = "{$fen " Then
-    i = InStr(szLineStr, "}")
-    If i > 0 Then
-        If CancelSave Then
-            Exit Sub
-        End If
-        LoadFenStr Mid(szLineStr, 7, i - 7)
-    End If
-End If
-' 读下面的行
 Do While Not (EOF(nFileNo) And szRemStr = "")
     If szLineStr = "" Then
         Line Input #nFileNo, szLineStr
