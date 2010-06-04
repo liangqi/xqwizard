@@ -2650,6 +2650,30 @@ Options_nMusic = nMusicIndex
 
 End Sub
 
+' 生成图片棋盘
+Public Sub WizardBitmap()
+
+Dim nBoard As Integer, nPieces As Integer, szFen As String, szUrl As String
+Select Case Publish_nSize
+Case PUB_SIZE_MINI, PUB_SIZE_PRINT
+    nBoard = 0
+    nPieces = IIf(Publish_bTrad, 1, 0)
+Case PUB_SIZE_SMALL
+    nBoard = Publish_nBoardS
+    nPieces = Publish_nPiecesS
+Case PUB_SIZE_LARGE
+    nBoard = Publish_nBoardL
+    nPieces = Publish_nPiecesL
+End Select
+szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+szUrl = "http://www.xqbase.com/pub/board.php?&fen=" & UrlEncode(szFen) & _
+        "&size=" & Publish_nSize & "&board=" & nBoard & "&pieces=" & nPieces
+ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
+MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複制了。") + vbCrLf + _
+        L("如需更改棋盘棋子样式，请在“发布棋谱”功能中设置。", "如需更改棋盤棋子樣式，請在“發布棋譜”功能中設置。"), vbInformation
+
+End Sub
+
 ' 以上是图片和声音的处理例程
 
 ' 以下是参数设置例程
@@ -2767,6 +2791,18 @@ Exit Sub
 lnErrorOpen:
 On Error GoTo 0
 ErrorOpen App_szPath & "ENDGAMES\" & szEpdName & ".EPD"
+
+End Sub
+
+' 切换界面
+Public Sub SwapGui()
+
+Dim bLargeGui As Boolean
+bLargeGui = App_frmMain.mnOptionsGuiSmall.Checked
+App_frmMain.mnOptionsGuiSmall.Checked = Not bLargeGui
+App_frmMain.mnOptionsGuiLarge.Checked = bLargeGui
+SaveSetting "XQWizard", "Options", "LargeGui", IIf(bLargeGui, "1", "0")
+MsgBox L("显示模式已经更改，重新启动程序后才能生效。", "顯示模式已經更改，重新啟動程序後才能生效。"), vbInformation
 
 End Sub
 
@@ -2972,8 +3008,12 @@ App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
 
 App_frmMain.mnOptions.Caption = "選項(&O)"
 App_frmMain.mnOptionsSettings.Caption = "設置(&O)..."
+App_frmMain.mnOptionsGui.Caption = "界面(&G)"
+App_frmMain.mnOptionsGuiSmall.Caption = "小(&S)"
+App_frmMain.mnOptionsGuiLarge.Caption = "大(&L)"
 App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
 App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
+App_frmMain.mnOptionsSounds.Caption = "音效(&S)"
 App_frmMain.mnOptionsMusic_.Caption = "音樂(&M)"
 App_frmMain.mnOptionsMusic(0).Caption = "緊張(&A)"
 App_frmMain.mnOptionsMusic(1).Caption = "風趣(&B)"
@@ -3287,6 +3327,9 @@ If Not App_bPromotion Then
     App_frmMain.mnMoveSep1.Visible = False
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
+App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
+App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
+App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
 Unload frmStartup

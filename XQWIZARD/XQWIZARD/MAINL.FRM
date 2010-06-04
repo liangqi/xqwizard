@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -1925,7 +1925,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2289,6 +2289,12 @@ frmPublish.Show vbModal, Me
 
 End Sub
 
+Private Sub mnWizardBitmap_Click()
+
+WizardBitmap
+
+End Sub
+
 Private Sub mnEndgamesStart_Click()
 
 If CancelSave Then
@@ -2502,6 +2508,22 @@ frmOptions.Show vbModal, Me
 
 End Sub
 
+Private Sub mnOptionsGuiSmall_Click()
+
+If Not mnOptionsGuiSmall.Checked Then
+    SwapGui
+End If
+
+End Sub
+
+Private Sub mnOptionsGuiLarge_Click()
+
+If Not mnOptionsGuiLarge.Checked Then
+    SwapGui
+End If
+
+End Sub
+
 Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
 BoardSettingLarge nIndex
@@ -2511,6 +2533,13 @@ End Sub
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
 PiecesSettingLarge nIndex
+
+End Sub
+
+Private Sub mnOptionsSounds_Click()
+
+Options_bSounds = Not Options_bSounds
+mnOptionsSounds.Checked = Options_bSounds
 
 End Sub
 
@@ -2676,6 +2705,8 @@ Case "SearchPosition"
     mnSearchPosition_Click
 Case "WizardPublish"
     mnWizardPublish_Click
+Case "WizardBitmap"
+    mnWizardBitmap_Click
 ' Separator
 Case "EndgamesStart"
     mnEndgamesStart_Click

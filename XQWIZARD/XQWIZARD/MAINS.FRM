@@ -45,7 +45,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -2334,6 +2334,12 @@ frmPublish.Show vbModal, Me
 
 End Sub
 
+Private Sub mnWizardBitmap_Click()
+
+WizardBitmap
+
+End Sub
+
 Private Sub mnEndgamesStart_Click()
 
 If CancelSave Then
@@ -2547,6 +2553,22 @@ frmOptions.Show vbModal, Me
 
 End Sub
 
+Private Sub mnOptionsGuiSmall_Click()
+
+If Not mnOptionsGuiSmall.Checked Then
+    SwapGui
+End If
+
+End Sub
+
+Private Sub mnOptionsGuiLarge_Click()
+
+If Not mnOptionsGuiLarge.Checked Then
+    SwapGui
+End If
+
+End Sub
+
 Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
 BoardSettingSmall nIndex
@@ -2556,6 +2578,13 @@ End Sub
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
 PiecesSettingSmall nIndex
+
+End Sub
+
+Private Sub mnOptionsSounds_Click()
+
+Options_bSounds = Not Options_bSounds
+mnOptionsSounds.Checked = Options_bSounds
 
 End Sub
 
@@ -2721,6 +2750,8 @@ Case "SearchPosition"
     mnSearchPosition_Click
 Case "WizardPublish"
     mnWizardPublish_Click
+Case "WizardBitmap"
+    mnWizardBitmap_Click
 ' Separator
 Case "EndgamesStart"
     mnEndgamesStart_Click

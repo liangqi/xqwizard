@@ -1038,7 +1038,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1059,8 +1059,6 @@ Option Explicit
 
 Private Sub Form_Load()
 
-mnOptionsGuiSmall.Checked = Not Options_bLargeGui
-mnOptionsGuiLarge.Checked = Options_bLargeGui
 mnOptionsBoard_Click Options_nBoardL
 mnOptionsPieces_Click Options_nPiecesL
 ClearHint

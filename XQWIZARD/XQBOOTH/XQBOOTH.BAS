@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.64, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1231,8 +1231,10 @@ End If
 ' 在显示窗口以前，先把语言设置好
 SetLang
 App_frmMain.Show
-App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
+App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
+App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
+App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
 Unload frmStartup
 
