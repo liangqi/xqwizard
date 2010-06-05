@@ -10,7 +10,6 @@ cn.LanguageName=<7B80><4F53><4E2D><6587>
 tw.LanguageName=<7E41><9AD4><4E2d><6587>
 
 [CustomMessages]
-Quot="
 cn.AppName=象棋巫师
 tw.AppName=禜囱畍
 cn.MenuOpen=打开(&O)
@@ -64,10 +63,10 @@ Name: "orange"; Description: "杆撅い囱眯"; Types: default; Languages: tw
 
 [Files]
 ; 系统文件
-Source: "SYSTEM\MSCOMCTL.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "SYSTEM\COMCT232.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "SYSTEM\MCI32.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
-Source: "SYSTEM\MSINET.OCX"; DestDir: "{sys}"; Flags: regserver sharedfile uninsneveruninstall
+Source: "MSCOMCTL.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
+Source: "COMCT232.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
+Source: "MCI32.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
+Source: "MSINET.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
@@ -685,59 +684,58 @@ Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "簿从囱眯"; 
 Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit"; ValueType: string; ValueData: "{cm:MenuEdit}"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: pgn
+Root: HKCR; Subkey: "XQWizard.PGN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE ""%1"""; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: ".fen"; ValueType: string; ValueData: "XQWizard.FEN"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "象棋局面文件"; Flags: uninsdeletekey; Components: fen; Languages: cn
 Root: HKCR; Subkey: "XQWizard.FEN"; ValueType: string; ValueData: "禜囱Ыゅン"; Flags: uninsdeletekey; Components: fen; Languages: tw
 Root: HKCR; Subkey: "XQWizard.FEN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,2"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell"; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} /F {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" /F ""%1"""; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit"; ValueType: string; ValueData: "{cm:MenuEdit}"; Flags: uninsdeletekey; Components: fen
-Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: fen
+Root: HKCR; Subkey: "XQWizard.FEN\Shell\Edit\command"; ValueType: string; ValueData: "NOTEPAD.EXE ""%1"""; Flags: uninsdeletekey; Components: fen
 Root: HKCR; Subkey: ".xqf"; ValueType: string; ValueData: "XQWizard.XQF"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "象棋演播室棋谱"; Flags: uninsdeletekey; Components: xqf; Languages: cn
 Root: HKCR; Subkey: "XQWizard.XQF"; ValueType: string; ValueData: "禜囱簍冀囱眯"; Flags: uninsdeletekey; Components: xqf; Languages: tw
 Root: HKCR; Subkey: "XQWizard.XQF\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,3"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell"; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: xqf
-Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: xqf
+Root: HKCR; Subkey: "XQWizard.XQF\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: xqf
 Root: HKCR; Subkey: ".mxq"; ValueType: string; ValueData: "XQWizard.MXQ"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "弈天棋谱"; Flags: uninsdeletekey; Components: mxq; Languages: cn
 Root: HKCR; Subkey: "XQWizard.MXQ"; ValueType: string; ValueData: "ぱ囱眯"; Flags: uninsdeletekey; Components: mxq; Languages: tw
 Root: HKCR; Subkey: "XQWizard.MXQ\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,4"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell"; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: mxq
-Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: mxq
+Root: HKCR; Subkey: "XQWizard.MXQ\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: mxq
 Root: HKCR; Subkey: ".che"; ValueType: string; ValueData: "XQWizard.CHE"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ象棋棋谱"; Flags: uninsdeletekey; Components: che; Languages: cn
 Root: HKCR; Subkey: "XQWizard.CHE"; ValueType: string; ValueData: "QQ禜囱囱眯"; Flags: uninsdeletekey; Components: che; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CHE\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,5"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell"; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: che
-Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: che
+Root: HKCR; Subkey: "XQWizard.CHE\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: che
 Root: HKCR; Subkey: ".chn"; ValueType: string; ValueData: "XQWizard.CHN"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: "XQWizard.CHN"; ValueType: string; ValueData: "联众象棋棋谱"; Flags: uninsdeletekey; Components: chn; Languages: cn
 Root: HKCR; Subkey: "XQWizard.CHN"; ValueType: string; ValueData: "羛渤禜囱囱眯"; Flags: uninsdeletekey; Components: chn; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CHN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,8"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: "XQWizard.CHN\Shell"; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: chn
-Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: chn
+Root: HKCR; Subkey: "XQWizard.CHN\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: chn
 Root: HKCR; Subkey: ".ccm"; ValueType: string; ValueData: "XQWizard.CCM"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM"; ValueType: string; ValueData: "中游象棋棋谱"; Flags: uninsdeletekey; Components: ccm; Languages: cn
 Root: HKCR; Subkey: "XQWizard.CCM"; ValueType: string; ValueData: "い村禜囱囱眯"; Flags: uninsdeletekey; Components: ccm; Languages: tw
 Root: HKCR; Subkey: "XQWizard.CCM\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,9"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell"; Flags: uninsdeletekey; Components: ccm
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: ccm
-Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: "{cm:Quot}{app}\XQWIZARD.EXE{cm:Quot} {cm:Quot}%1{cm:Quot}"; Flags: uninsdeletekey; Components: ccm
+Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: ccm
 
 [Icons]
 Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
-Name: "{group}\象棋巫师帮助主题"; Filename: "http://www.xqbase.com/xqwizard/help.htm"; Languages: cn
 Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
 Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
 Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
@@ -749,7 +747,6 @@ Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: 
 Name: "{group}\禜囱畍臸猭厩"; Filename: "{app}\XQBOOTH.EXE"; Languages: tw
 Name: "{group}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 Name: "{group}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
-Name: "{group}\禜囱畍腊肈"; Filename: "http://www.xqbase.com/xqwizard/help.htm"; Languages: tw
 Name: "{group}\も审囱眯ㄣ"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
 Name: "{group}\囱眯у秖锣传ㄣ"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
 Name: "{group}\秨Ы畐恨瞶ㄣ"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
