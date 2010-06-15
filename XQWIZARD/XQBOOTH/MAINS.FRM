@@ -1344,7 +1344,7 @@ End Sub
 
 Private Sub mnHelpSuggest_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest", vbNullString, vbNullString, vbNormalFocus
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=suggest&referer=xqbooth", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 

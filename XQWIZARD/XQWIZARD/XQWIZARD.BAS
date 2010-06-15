@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
+' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -3319,7 +3319,7 @@ App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.txtMove.SetFocus
 App_frmMain.tlb.ImageList = frmHide2.imglst
-For i = 1 To 29
+For i = 1 To 30
     App_frmMain.tlb.Buttons(i).Image = i
 Next
 If Not App_bPromotion Then
