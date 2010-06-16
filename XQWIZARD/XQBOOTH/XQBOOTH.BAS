@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Witchcraft School, Part I
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
+' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -247,7 +247,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
         If App_pos.ucsqPieces(16) > 0 Then
             DrawSquare App_pos.ucsqPieces(16), , DRAW_MATE
         End If
-        MsgBoxMute L("请再接再厉！", "請再接再厲！"), vbInformation
+        MsgBoxIcon L("请再接再厉！", "請再接再厲！"), , , , ICON_LOSS
         GetResult = PHASE_LOSS
     Else
         App_frmMain.mnGameXQWizard.Enabled = True
@@ -262,9 +262,9 @@ If (nStatus And MOVE_MATE) <> 0 Then
             DrawSquare App_pos.ucsqPieces(32), , DRAW_MATE
         End If
         If Gui_nCurr = App_nEndgames - 1 Then
-            MsgBoxMute L("恭喜你闯过所有关卡！", "恭喜你闖過所有關卡！"), vbInformation
+            MsgBoxIcon L("恭喜你闯过所有关卡！", "恭喜你闖過所有關卡！"), , , , ICON_WIN
         Else
-            MsgBoxMute L("恭喜你过关！", "恭喜你過關！"), vbInformation
+            MsgBoxIcon L("恭喜你过关！", "恭喜你過關！"), , , , ICON_WIN
         End If
         If Gui_nCurr = Gui_nLast Then
             Gui_nLast = Gui_nLast + 1
@@ -277,7 +277,7 @@ If (nStatus And (MOVE_PERPETUAL Or MOVE_DRAW)) <> 0 Then
     App_frmMain.mnGameHint.Enabled = False
     App_frmMain.btnHint.Enabled = False
     PlayWavSound "PROMOTE2"
-    MsgBoxMute L("请不要气馁！", "請不要氣餒！"), vbInformation
+    MsgBoxIcon L("请不要气馁！", "請不要氣餒！"), , , , ICON_LOSS
     GetResult = PHASE_LOSS
     Exit Function
 End If

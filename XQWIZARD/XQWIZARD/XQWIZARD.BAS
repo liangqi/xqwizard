@@ -21,26 +21,6 @@ Attribute VB_Name = "mdlXQWizard"
 
 Option Explicit
 
-' 没有声音的MsgBox
-Private Type MsgBoxParams
-    cbSize As Long
-    hwndOwner As Long
-    hInstance As Long
-    lpszText As String
-    lpszCaption As String
-    dwStyle As Long
-    lpszIcon As Long
-    dwContextHelpId As Long
-    lpfnMsgBoxCallback As Long
-    dwLanguageId As Long
-End Type
-
-Private Const MB_USERICON       As Long = 128
-Private Const MB_YESNO          As Long = 4
-Private Const IDI_QUESTION      As Long = 32514
-
-Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
-
 ' 全局常量——象棋巫师参数
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
@@ -1001,45 +981,24 @@ EngineNewGame
 End Sub
 
 ' 结束一局对局
-Public Sub GameOver(ByVal szSound As String, ByVal szPrompt As String)
+Public Sub GameOver(ByVal szPrompt As String, ByVal nIcon As Integer)
 
-Dim mbp As MsgBoxParams, dwResult As Long
-
-PlayWavSound szSound
+PlayWavSound IIf(nIcon = ICON_WIN, "WIN", IIf(nIcon = ICON_LOSS, "LOSS", "DRAW"))
 If App_sqMate > 0 Then
     DrawSquare App_sqMate, , DRAW_MATE
 End If
-If Not Options_bTryAgain Then
-    MsgBoxMute szPrompt, vbInformation
-    Exit Sub
-End If
-
-mbp.cbSize = Len(mbp)
-mbp.hwndOwner = App_frmMain.hWnd
-mbp.hInstance = 0
-mbp.lpszText = szPrompt & vbCrLf & vbCrLf & L("再来一局吗？", "再來一局嗎？")
-mbp.lpszCaption = App.Title
-mbp.dwStyle = MB_USERICON + MB_YESNO
-mbp.lpszIcon = IDI_QUESTION
-mbp.dwContextHelpId = 0
-mbp.lpfnMsgBoxCallback = 0
-mbp.dwLanguageId = 0
-' Unsupported under Windows 98
-dwResult = MessageBoxIndirectA(mbp)
-If dwResult = 0 Then
-    mbp.hInstance = App.hInstance
-    mbp.lpszIcon = 1
-    dwResult = MessageBoxIndirectA(mbp)
-End If
-
-If dwResult = vbYes Then
-    If Not CancelSave Then
-        If App_bEndgame Then
-            LoadEndgames Gui_szEpdName, Gui_szEpdTitle
-        Else
-            NewGame
+If Options_bTryAgain Then
+    If MsgBoxIcon(szPrompt & vbCrLf & vbCrLf & L("再来一局吗？", "再來一局嗎？"), vbYesNo, , , nIcon) = vbYes Then
+        If Not CancelSave Then
+            If App_bEndgame Then
+                LoadEndgames Gui_szEpdName, Gui_szEpdTitle
+            Else
+                NewGame
+            End If
         End If
     End If
+Else
+    MsgBoxIcon szPrompt, , , , nIcon
 End If
 
 End Sub
@@ -1417,7 +1376,7 @@ End Sub
 ' 新增一个着法，可以是从文件中读入的，用户搬的，或引擎走的
 Public Function AddMove(ByVal mv As Long, Optional ByVal bEcho = False, Optional ByVal bEngine = False) As Boolean
 
-Dim i As Integer, nMoveStatus As Long, szResult As String
+Dim i As Integer, nMoveStatus As Long, nIcon As Integer
 Dim szMoveChinText As String, szMoveFileText As String, szMoveIccsText As String
 
 If Game_cntCurr = 1000 Or Game_posIrrev(Game_nCurrIrrev).nMoveNum = 256 Then
@@ -1493,8 +1452,8 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
     If (nMoveStatus And MOVE_MATE) <> 0 Then
         App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         If bEcho Then
-            szResult = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), "LOSS", "WIN")
-            GameOver szResult, IIf(Game_sdCurr = 1, L("红胜。", "紅勝。"), L("黑胜。", "黑勝。"))
+            nIcon = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), ICON_LOSS, ICON_WIN)
+            GameOver IIf(Game_sdCurr = 1, L("红胜。", "紅勝。"), L("黑胜。", "黑勝。")), nIcon
         End If
         Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
         App_frmMain.lblResult = ResultString
@@ -1513,7 +1472,7 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
         End If
         If (nMoveStatus And MOVE_DRAW) <> 0 Then
             If bEcho Then
-                GameOver "DRAW", L("自然作和。", "自然作和。")
+                GameOver L("自然作和。", "自然作和。"), ICON_DRAW
             End If
             Game_nResult = RESULT_DRAW
             App_frmMain.lblResult = ResultString
@@ -1533,14 +1492,14 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
             End If
             If bEcho Then
                 If Game_nResult = 2 Then
-                    szResult = "DRAW"
+                    nIcon = ICON_DRAW
                 Else
-                    szResult = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), "LOSS", "WIN")
+                    nIcon = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), ICON_LOSS, ICON_WIN)
                 End If
                 If Options_nLanguage = LANGUAGE_ZH_CN Then
-                    GameOver szResult, Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！")
+                    GameOver Choose(Game_nResult, "黑方长打作负！", "双方不变作和。", "红方长打作负！"), nIcon
                 Else
-                    GameOver szResult, Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！")
+                    GameOver Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！"), nIcon
                 End If
             End If
             App_frmMain.lblResult = ResultString
@@ -1562,13 +1521,13 @@ If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
                 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                GameOver "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
+                GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_WIN
             ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
                 Engine_nStatus = IDLE_REST
-                GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
-                        L("黑方接受提和。", "黑方接受提和。"))
+                GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+                        L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
             Else
                 Engine_nStatus = IDLE_READY
                 AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
@@ -1633,17 +1592,17 @@ End Sub
 Public Sub AboutEngine()
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
-    MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
+    MsgBoxIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
             IIf(Engine_szVersion = "", "", "版本：" & Engine_szVersion & vbCrLf) & _
             IIf(Engine_szCopyright = "", "", "版权：" & Engine_szCopyright & vbCrLf) & _
             IIf(Engine_szAuthor = "", "", "作者：" & Engine_szAuthor & vbCrLf) & _
-            IIf(Engine_szUser = "", "", "用户：" & Engine_szUser), "关于UCCI引擎", Engine_szFile
+            IIf(Engine_szUser = "", "", "用户：" & Engine_szUser), vbInformation, "关于UCCI引擎", Engine_szFile
 Else
-    MsgBoxWithIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
+    MsgBoxIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
             IIf(Engine_szVersion = "", "", "版本：" & Engine_szVersion & vbCrLf) & _
             IIf(Engine_szCopyright = "", "", "版權：" & Engine_szCopyright & vbCrLf) & _
             IIf(Engine_szAuthor = "", "", "作者：" & Engine_szAuthor & vbCrLf) & _
-            IIf(Engine_szUser = "", "", "用戶：" & Engine_szUser), "關於UCCI引擎", Engine_szFile
+            IIf(Engine_szUser = "", "", "用戶：" & Engine_szUser), vbInformation, "關於UCCI引擎", Engine_szFile
 End If
 
 End Sub
@@ -2010,7 +1969,7 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                GameOver "WIN", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
+                GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_WIN
             ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
                 Game_nResult = RESULT_DRAW
                 App_frmMain.lblResult = ResultString
@@ -2018,8 +1977,8 @@ Else
                 App_frmMain.mnEngineLevel.Checked = False
                 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
                 Engine_nStatus = IDLE_REST
-                GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
-                        L("黑方接受提和。", "黑方接受提和。"))
+                GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+                        L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
             Else
                 Engine_nStatus = IDLE_READY
                 ' 一定要在 IDLE_READY 的时候 AddMove
@@ -2396,15 +2355,15 @@ Do While Not Engine_bSlaveBlack
 Loop
 If Engine_bSlaveBlack Then
     If Options_nLanguage = LANGUAGE_ZH_CN Then
-        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+        MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
                 IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                IIf(szUser = "", "", "用户：" & szUser), "关于UCCI引擎", szEngineFile
+                IIf(szUser = "", "", "用户：" & szUser), vbInformation, "关于UCCI引擎", szEngineFile
     Else
-        MsgBoxWithIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+        MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
                 IIf(szCopyright = "", "", "版權：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                IIf(szUser = "", "", "用戶：" & szUser), "關於UCCI引擎", szEngineFile
+                IIf(szUser = "", "", "用戶：" & szUser), vbInformation, "關於UCCI引擎", szEngineFile
     End If
     If Engine_nTimeRatioSlave = 1000 Then
         SendEngine "setoption usemillisec true", SLAVE_ENGINE

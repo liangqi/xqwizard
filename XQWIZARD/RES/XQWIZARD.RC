@@ -8,3 +8,6 @@
 8                       ICON    DISCARDABLE     "ICONS\\QUOTE.ICO"
 9                       ICON    DISCARDABLE     "ICONS\\CHN.ICO"
 10                      ICON    DISCARDABLE     "ICONS\\CCM.ICO"
+15                      ICON    DISCARDABLE     "ICONS\\WIN.ICO"
+16                      ICON    DISCARDABLE     "ICONS\\DRAW.ICO"
+17                      ICON    DISCARDABLE     "ICONS\\LOSS.ICO"

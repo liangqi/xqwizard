@@ -36,7 +36,7 @@ Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Lo
 Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
-' For MsgBoxWithIcon/MsgBoxMute
+' For MsgBoxIcon
 Private Type MsgBoxParams
     cbSize As Long
     hwndOwner As Long
@@ -278,10 +278,10 @@ End Function
 
 ' === End URLs ===
 
-' === Begin MsgBoxWithIcon/MsgBoxMute ===
+' === Begin MsgBoxIcon ===
 
-Public Sub MsgBoxWithIcon(ByVal szPrompt As String, Optional ByVal szTitle As String = vbNullString, _
-        Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1)
+Public Function MsgBoxIcon(ByVal szPrompt As String, Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString, _
+        Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1) As Long
 
 Dim mbp As MsgBoxParams
 Dim hInstance As Long, hIcon As Long
@@ -297,9 +297,11 @@ Else
     hIcon = LoadIconA(hInstance, 1)
 End If
 If hIcon = 0 Then
-    MsgBox szPrompt, vbInformation, szTitle
+    MsgBoxIcon = MsgBox(szPrompt, dwStyle, szTitle)
 Else
-    MessageBeep vbInformation
+    If (dwStyle And &H70) <> 0 Then
+        MessageBeep dwStyle And &H70
+    End If
     mbp.cbSize = Len(mbp)
     mbp.hwndOwner = 0
     On Error Resume Next
@@ -313,40 +315,15 @@ Else
     mbp.dwContextHelpId = 0
     mbp.lpfnMsgBoxCallback = 0
     mbp.dwLanguageId = 0
-    MessageBoxIndirectA mbp
+    MsgBoxIcon = MessageBoxIndirectA(mbp)
 End If
 If hInstance <> 0 And hInstance <> App.hInstance Then
     FreeLibrary mbp.hInstance
 End If
 
-End Sub
+End Function
 
-Public Sub MsgBoxMute(ByVal szPrompt As String, Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString)
-
-Dim mbp As MsgBoxParams
-mbp.cbSize = Len(mbp)
-mbp.hwndOwner = 0
-On Error Resume Next
-mbp.hwndOwner = Screen.ActiveForm.hWnd
-On Error GoTo 0
-mbp.hInstance = 0
-mbp.lpszText = szPrompt
-mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
-mbp.dwStyle = MB_USERICON
-mbp.lpszIcon = dwStyle \ 16 + IDI_APPLICATION
-mbp.dwContextHelpId = 0
-mbp.lpfnMsgBoxCallback = 0
-mbp.dwLanguageId = 0
-' Unsupported under Windows 98
-If MessageBoxIndirectA(mbp) = 0 Then
-    mbp.hInstance = App.hInstance
-    mbp.lpszIcon = 1
-    MessageBoxIndirectA mbp
-End If
-
-End Sub
-
-' === End MsgBoxWithIcon/MsgBoxMute ===
+' === End MsgBoxIcon ===
 
 ' === Begin Open/Save ===
 

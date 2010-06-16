@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun 2010
+' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,9 @@ Public Const STRING_VERSION     As String = "4.65"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 象棋百科全书"
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
+Public Const ICON_WIN           As Integer = 15   ' 胜的图标
+Public Const ICON_DRAW          As Integer = 16   ' 和的图标
+Public Const ICON_LOSS          As Integer = 17   ' 负的图标
 Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_WOOD       As Integer = 0
@@ -158,11 +161,11 @@ End Function
 Public Sub AboutXQWizard()
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
-    MsgBoxWithIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT, "关于象棋巫师"
+    MsgBoxIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT, vbInformation, "关于象棋巫师"
 Else
-    MsgBoxWithIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT, "關於象棋巫師"
+    MsgBoxIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
+            STRING_COPYRIGHT, vbInformation, "關於象棋巫師"
 End If
 
 End Sub

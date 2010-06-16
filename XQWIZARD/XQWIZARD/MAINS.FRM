@@ -1961,7 +1961,7 @@ Attribute VB_Exposed = False
 ' MAINS.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.6, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2656,7 +2656,7 @@ End Sub
 
 Private Sub mnHelpQuote_Click()
 
-MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), "ÃûÑÔ", , ICON_QUOTE
+MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), vbInformation, "ÃûÑÔ", , ICON_QUOTE
 
 End Sub
 

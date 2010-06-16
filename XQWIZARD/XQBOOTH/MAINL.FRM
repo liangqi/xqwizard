@@ -109,7 +109,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -1038,7 +1038,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Witchcraft School, Part II
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
+' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1289,7 +1289,7 @@ End Sub
 
 Private Sub mnHelpQuote_Click()
 
-MsgBoxWithIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), L("名言", "名言"), , ICON_QUOTE
+MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), vbInformation, L("名言", "名言"), , ICON_QUOTE
 
 End Sub
 
