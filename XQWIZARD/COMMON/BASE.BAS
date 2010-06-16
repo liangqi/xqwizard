@@ -284,40 +284,29 @@ Public Function MsgBoxIcon(ByVal szPrompt As String, Optional ByVal dwStyle As L
         Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1) As Long
 
 Dim mbp As MsgBoxParams
-Dim hInstance As Long, hIcon As Long
-
+mbp.cbSize = Len(mbp)
+mbp.hwndOwner = 0
+On Error Resume Next
+mbp.hwndOwner = Screen.ActiveForm.hWnd
+On Error GoTo 0
 If szIconFile = vbNullString Then
-    hInstance = App.hInstance
+    mbp.hInstance = App.hInstance
 Else
-    hInstance = LoadLibraryA(szIconFile)
-End If
-If hInstance = 0 Then
-    hIcon = 0
-Else
-    hIcon = LoadIconA(hInstance, 1)
-End If
-If hIcon = 0 Then
-    MsgBoxIcon = MsgBox(szPrompt, dwStyle, szTitle)
-Else
-    If (dwStyle And &H70) <> 0 Then
-        MessageBeep dwStyle And &H70
+    mbp.hInstance = LoadLibraryA(szIconFile)
+    If mbp.hInstance = 0 Then
+        mbp.hInstance = App.hInstance
+        nIcon = 1
     End If
-    mbp.cbSize = Len(mbp)
-    mbp.hwndOwner = 0
-    On Error Resume Next
-    mbp.hwndOwner = Screen.ActiveForm.hWnd
-    On Error GoTo 0
-    mbp.hInstance = hInstance
-    mbp.lpszText = szPrompt
-    mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
-    mbp.dwStyle = MB_USERICON
-    mbp.lpszIcon = nIcon
-    mbp.dwContextHelpId = 0
-    mbp.lpfnMsgBoxCallback = 0
-    mbp.dwLanguageId = 0
-    MsgBoxIcon = MessageBoxIndirectA(mbp)
 End If
-If hInstance <> 0 And hInstance <> App.hInstance Then
+mbp.lpszText = szPrompt
+mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
+mbp.dwStyle = MB_USERICON + dwStyle
+mbp.lpszIcon = nIcon
+mbp.dwContextHelpId = 0
+mbp.lpfnMsgBoxCallback = 0
+mbp.dwLanguageId = 0
+MsgBoxIcon = MessageBoxIndirectA(mbp)
+If mbp.hInstance <> App.hInstance Then
     FreeLibrary mbp.hInstance
 End If
 

@@ -1289,7 +1289,8 @@ End Sub
 
 Private Sub mnHelpQuote_Click()
 
-MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), vbInformation, L("名言", "名言"), , ICON_QUOTE
+MessageBeep vbInformation
+MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), , L("名言", "名言"), , ICON_QUOTE
 
 End Sub
 

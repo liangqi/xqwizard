@@ -1591,18 +1591,19 @@ End Sub
 ' 显示引擎信息的对话框
 Public Sub AboutEngine()
 
+MessageBeep vbInformation
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     MsgBoxIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
             IIf(Engine_szVersion = "", "", "版本：" & Engine_szVersion & vbCrLf) & _
             IIf(Engine_szCopyright = "", "", "版权：" & Engine_szCopyright & vbCrLf) & _
             IIf(Engine_szAuthor = "", "", "作者：" & Engine_szAuthor & vbCrLf) & _
-            IIf(Engine_szUser = "", "", "用户：" & Engine_szUser), vbInformation, "关于UCCI引擎", Engine_szFile
+            IIf(Engine_szUser = "", "", "用户：" & Engine_szUser), , "关于UCCI引擎", Engine_szFile
 Else
     MsgBoxIcon IIf(Engine_szName = "", "", "引擎：" & Engine_szName & vbCrLf) & _
             IIf(Engine_szVersion = "", "", "版本：" & Engine_szVersion & vbCrLf) & _
             IIf(Engine_szCopyright = "", "", "版權：" & Engine_szCopyright & vbCrLf) & _
             IIf(Engine_szAuthor = "", "", "作者：" & Engine_szAuthor & vbCrLf) & _
-            IIf(Engine_szUser = "", "", "用戶：" & Engine_szUser), vbInformation, "關於UCCI引擎", Engine_szFile
+            IIf(Engine_szUser = "", "", "用戶：" & Engine_szUser), , "關於UCCI引擎", Engine_szFile
 End If
 
 End Sub
@@ -2354,16 +2355,17 @@ Do While Not Engine_bSlaveBlack
     End If
 Loop
 If Engine_bSlaveBlack Then
+    MessageBeep vbInformation
     If Options_nLanguage = LANGUAGE_ZH_CN Then
         MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
                 IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                IIf(szUser = "", "", "用户：" & szUser), vbInformation, "关于UCCI引擎", szEngineFile
+                IIf(szUser = "", "", "用户：" & szUser), , "关于UCCI引擎", szEngineFile
     Else
         MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
                 IIf(szCopyright = "", "", "版權：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
-                IIf(szUser = "", "", "用戶：" & szUser), vbInformation, "關於UCCI引擎", szEngineFile
+                IIf(szUser = "", "", "用戶：" & szUser), , "關於UCCI引擎", szEngineFile
     End If
     If Engine_nTimeRatioSlave = 1000 Then
         SendEngine "setoption usemillisec true", SLAVE_ENGINE

@@ -2656,7 +2656,8 @@ End Sub
 
 Private Sub mnHelpQuote_Click()
 
-MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), vbInformation, "ÃûÑÔ", , ICON_QUOTE
+MessageBeep vbInformation
+MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), , "ÃûÑÔ", , ICON_QUOTE
 
 End Sub
 

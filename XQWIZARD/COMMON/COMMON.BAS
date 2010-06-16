@@ -160,12 +160,13 @@ End Function
 ' 关于象棋巫师
 Public Sub AboutXQWizard()
 
+MessageBeep vbInformation
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     MsgBoxIcon "象棋巫师 " & STRING_VERSION & vbCrLf & "象棋百科全书 荣誉出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT, vbInformation, "关于象棋巫师"
+            STRING_COPYRIGHT, , "关于象棋巫师"
 Else
     MsgBoxIcon "象棋巫師 " & STRING_VERSION & vbCrLf & "象棋百科全書 榮譽出品" & vbCrLf & vbCrLf & _
-            STRING_COPYRIGHT, vbInformation, "關於象棋巫師"
+            STRING_COPYRIGHT, , "關於象棋巫師"
 End If
 
 End Sub
