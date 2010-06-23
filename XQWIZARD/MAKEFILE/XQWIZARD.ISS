@@ -87,8 +87,6 @@ Source: "EXAMPLES\SAMPLE_S.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EXAMPLES\SAMPLE_T.PGN"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EXAMPLES\XQFEXAMA.XQF"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EXAMPLES\XQFEXAMB.XQF"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DOC\README_S.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: cn
-Source: "DOC\README_T.TXT"; DestDir: "{app}"; DestName: "README.TXT"; Flags: ignoreversion; Languages: tw
 ; ╡п╬жнд╪Ч
 Source: "ENDGAMES\FUNNY.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_A.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
