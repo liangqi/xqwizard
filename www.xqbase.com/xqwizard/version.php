@@ -1,5 +1,5 @@
 <?
-  echo '4.62';
+  echo '4.65';
 
   include './counter_conf.php';
   mysql_connect($host, $username, $password);
@@ -10,9 +10,9 @@
   } else {
     mysql_query('INSERT INTO ' . $table . ' (name, value) VALUES ("' . $name . '", 1)');
   }
-  $referer = $_GET['referer'];
-  $version = $_GET['version'];
-  $userid = $_GET['userid'];
-  mysql_query(sprintf('INSERT INTO tb_tracker (time, ip, referer, version, userid) VALUES (%d, "%s", "%s", "%s", "%s")', time(), $_SERVER['REMOTE_ADDR'], $referer, $version, $userid));
+  // $referer = $_GET['referer'];
+  // $version = $_GET['version'];
+  // $userid = $_GET['userid'];
+  // mysql_query(sprintf('INSERT INTO tb_tracker (time, ip, referer, version, userid) VALUES (%d, "%s", "%s", "%s", "%s")', time(), $_SERVER['REMOTE_ADDR'], $referer, $version, $userid));
   // mysql_close();
 ?>
