@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin VB.Form frmStartup 
    BorderStyle     =   0  'None
-   ClientHeight    =   6030
+   ClientHeight    =   4320
    ClientLeft      =   0
    ClientTop       =   0
-   ClientWidth     =   5430
+   ClientWidth     =   7680
    BeginProperty Font 
       Name            =   "ËÎÌו"
       Size            =   9
@@ -18,8 +18,8 @@ Begin VB.Form frmStartup
    MaxButton       =   0   'False
    MinButton       =   0   'False
    Picture         =   "STARTUP.frx":000C
-   ScaleHeight     =   6030
-   ScaleWidth      =   5430
+   ScaleHeight     =   4320
+   ScaleWidth      =   7680
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
 End

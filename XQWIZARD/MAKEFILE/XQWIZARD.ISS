@@ -21,7 +21,7 @@ tw.Custom=自定義設置
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.65
+AppVerName={cm:AppName} 4.66
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -74,6 +74,7 @@ Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "APPTYPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CCHESS.DLL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ALPHABLT.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "MXQFCONV.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ELEEYE.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "EVALUATE.DLL"; DestDir: "{app}"; Flags: ignoreversion

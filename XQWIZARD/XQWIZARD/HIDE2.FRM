@@ -211,6 +211,20 @@ Begin VB.Form frmHide2
       Top             =   600
       Width           =   480
    End
+   Begin VB.Image imgMickey 
+      Height          =   5400
+      Left            =   0
+      Picture         =   "HIDE2.frx":4184
+      Top             =   0
+      Width           =   3750
+   End
+   Begin VB.Image imgMickeyAlpha 
+      Height          =   5400
+      Left            =   960
+      Picture         =   "HIDE2.frx":A31E
+      Top             =   0
+      Width           =   3750
+   End
 End
 Attribute VB_Name = "frmHide2"
 Attribute VB_GlobalNameSpace = False

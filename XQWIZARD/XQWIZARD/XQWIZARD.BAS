@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun 2010
+' Designed by Morning Yellow, Version: 4.66, Last Modified: Jul. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -3145,14 +3145,13 @@ Public Sub Main()
 
 Dim nLogFileNo As Integer
 Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
-Dim imgLoading As Picture
 
 ' 弹出启动画面，初始化
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
-frmStartup.Show
-frmStartup.Refresh
+hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
+        frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
 LoadRegs
 LoadRegs2
 CchessInit Options_nLanguage
@@ -3293,7 +3292,7 @@ App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
-Unload frmStartup
+DestroyWindow hWnd
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If
