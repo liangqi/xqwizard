@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -2466,8 +2466,8 @@ If Engine_bDraw Then
     Timer_bEnabled = False
     mnEngineLevel.Checked = False
     tlb.Buttons("EngineLevel").Value = tbrUnpressed
-    GameOver "DRAW", IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
-            L("黑方接受提和。", "黑方接受提和。"))
+    GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+            L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
 Else
     If mnEngineDraw.Checked Then
         MsgBox L("放弃提和。", "放棄提和。"), vbInformation
@@ -2492,7 +2492,7 @@ lblResult = ResultString
 Timer_bEnabled = False
 mnEngineLevel.Checked = False
 tlb.Buttons("EngineLevel").Value = tbrUnpressed
-GameOver "LOSS", IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。"))
+GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_LOSS
 
 End Sub
 

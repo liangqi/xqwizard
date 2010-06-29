@@ -59,7 +59,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "下一关"
       Height          =   975
       Left            =   6720
-      Picture         =   "MAINL.frx":1812
+      Picture         =   "MAINL.frx":16DA
       Style           =   1  'Graphical
       TabIndex        =   3
       TabStop         =   0   'False
@@ -70,7 +70,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "提交存档"
       Height          =   975
       Left            =   5760
-      Picture         =   "MAINL.frx":1CDF
+      Picture         =   "MAINL.frx":1BA7
       Style           =   1  'Graphical
       TabIndex        =   2
       TabStop         =   0   'False
@@ -109,7 +109,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
