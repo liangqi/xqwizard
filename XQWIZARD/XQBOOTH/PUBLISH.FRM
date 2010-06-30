@@ -282,10 +282,9 @@ cmbFormat.ListIndex = Publish_nFormat
 cmbLocation.Clear
 cmbLocation.AddItem L("百度知道", "百度知道"), 0
 cmbLocation.AddItem L("百度贴吧象棋吧", "百度貼吧象棋吧"), 1
-cmbLocation.AddItem L("象棋家园", "象棋家園"), 2
-cmbLocation.AddItem L("新浪博客", "新浪博客"), 3
-cmbLocation.AddItem L("QQ空间", "QQ空間"), 4
-cmbLocation.AddItem L("(其他)", "(其他)"), 5
+cmbLocation.AddItem L("新浪博客", "新浪博客"), 2
+cmbLocation.AddItem L("QQ空间", "QQ空間"), 3
+cmbLocation.AddItem L("(其他)", "(其他)"), 4
 cmbLocation.ListIndex = Publish_nLocation
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
@@ -472,9 +471,6 @@ Case PUB_LOCATION_ZHIDAO
 Case PUB_LOCATION_TIEBA
     ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", _
             vbNullString, vbNullString, vbNormalFocus
-Case PUB_LOCATION_HOME
-    ShellExecuteA 0, vbNullString, "http://home.xqbase.com/cp.php?ac=blog", _
-            vbNullString, vbNullString, vbNormalFocus
 Case PUB_LOCATION_SINA
     ShellExecuteA 0, vbNullString, "http://control.blog.sina.com.cn/admin/article/article_add.php?index", _
             vbNullString, vbNullString, vbNormalFocus
@@ -514,8 +510,6 @@ Case PUB_LOCATION_ZHIDAO
     Publish_nFormat = PUB_FORMAT_TEXT
 Case PUB_LOCATION_TIEBA
     Publish_nFormat = PUB_FORMAT_TEXT
-Case PUB_LOCATION_HOME
-    Publish_nFormat = PUB_FORMAT_WEB
 Case PUB_LOCATION_SINA
     Publish_nFormat = PUB_FORMAT_WEB
 Case PUB_LOCATION_QZONE

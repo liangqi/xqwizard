@@ -79,11 +79,10 @@ Public Const PUB_SIZE_MAX       As Integer = 4
 ' 全局常量——发布站点
 Public Const PUB_LOCATION_ZHIDAO As Integer = 0
 Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_HOME  As Integer = 2
-Public Const PUB_LOCATION_SINA  As Integer = 3
-Public Const PUB_LOCATION_QZONE As Integer = 4
-Public Const PUB_LOCATION_OTHER As Integer = 5
-Public Const PUB_LOCATION_MAX   As Integer = 6
+Public Const PUB_LOCATION_SINA  As Integer = 2
+Public Const PUB_LOCATION_QZONE As Integer = 3
+Public Const PUB_LOCATION_OTHER As Integer = 4
+Public Const PUB_LOCATION_MAX   As Integer = 5
 ' 全局常量——发布格式
 Public Const PUB_FORMAT_TEXT    As Integer = 0
 Public Const PUB_FORMAT_ANSI    As Integer = 1
