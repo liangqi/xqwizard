@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -139,7 +139,7 @@ Begin VB.Form frmMainLarge
          EndProperty
          BeginProperty Button19 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "WizardPlay"
-            Object.ToolTipText     =   "自动播放"
+            Object.ToolTipText     =   "播放"
             Style           =   1
          EndProperty
          BeginProperty Button20 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -1490,6 +1490,10 @@ Begin VB.Form frmMainLarge
          Caption         =   "删除(&D)"
          Shortcut        =   {DEL}
       End
+      Begin VB.Menu mnMoveInput 
+         Caption         =   "键盘输入(&K)"
+         Shortcut        =   ^I
+      End
       Begin VB.Menu mnMoveSep3 
          Caption         =   "-"
       End
@@ -1540,7 +1544,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnWizard 
       Caption         =   "魔法(&W)"
       Begin VB.Menu mnWizardPlay 
-         Caption         =   "自动播放(&P)"
+         Caption         =   "播放(&P)"
       End
       Begin VB.Menu mnWizardSep1 
          Caption         =   "-"
@@ -2084,6 +2088,12 @@ MoveCut
 MoveFlush
 FileUpdated
 AnalyzeEcco
+
+End Sub
+
+Private Sub mnMoveInput_Click()
+
+txtMove.SetFocus
 
 End Sub
 

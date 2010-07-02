@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
+' Designed by Morning Yellow, Version: 4.67, Last Modified: Jul. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Option Explicit
 Private Declare Function GetACP Lib "KERNEL32.DLL" () As Long
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.66"
+Public Const STRING_VERSION     As String = "4.67"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
 Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
