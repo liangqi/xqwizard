@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.66, Last Modified: Jul. 2010
+' Designed by Morning Yellow, Version: 4.67, Last Modified: Jul. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -80,16 +80,20 @@ Public Const MUSIC_FULELISE     As Integer = 5
 Public Const MUSIC_LOVDREAM     As Integer = 6
 Public Const MUSIC_WALTZ        As Integer = 7
 Public Const MUSIC_HUMOUR       As Integer = 8
-Public Const MUSIC_PAL          As Integer = 9
-Public Const MUSIC_CMUSIC       As Integer = 10
-Public Const MUSIC_NONE         As Integer = 11
-Public Const MUSIC_MAX          As Integer = 12
+Public Const MUSIC_MARIO1       As Integer = 9
+Public Const MUSIC_MARIO2       As Integer = 10
+Public Const MUSIC_PAL          As Integer = 11
+Public Const MUSIC_CMUSIC       As Integer = 12
+Public Const MUSIC_NONE         As Integer = 13
+Public Const MUSIC_MAX          As Integer = 14
 ' 全局常量——棋盘坐标
 Public Const COORD_CHAR         As String = "１２３４５６７８９九八七六五四三二一"
 ' 全局常量——让子
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
+' 全局常量——Windows参数常量
+Public Const WM_MOVE            As Long = 3
 
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
@@ -135,6 +139,10 @@ Public Options_bTryAgain        As Boolean  ' 棋局结束后提示“再来一局”
 ' 全局变量——界面(杂项)
 Public Gui_nLeft                As Long     ' 窗口坐标
 Public Gui_nTop                 As Long     ' 窗口坐标
+Public Gui_nThinkWidth          As Integer  ' 思考窗口的宽度
+Public Gui_nThinkHeight         As Integer  ' 思考窗口的高度
+Public Gui_nThinkLeft           As Integer  ' 思考窗口相对主窗口的左边线
+Public Gui_nThinkTop            As Integer  ' 思考窗口相对主窗口的右边线
 Public Gui_nEndgamesIndex       As Integer  ' 残局的条目序号
 Public Gui_szEpdName            As String   ' 残局文件名
 Public Gui_szEpdTitle           As String   ' 残局标题
@@ -1158,7 +1166,7 @@ End Sub
 ' 显示当前走过的着法，并且根据哪方走棋更新主窗口的图标
 Public Sub MoveFlush()
 
-Dim bNotBegin As Boolean, bNotEnd As Boolean
+Dim bNotBegin As Boolean, bNotEnd As Boolean, bComputer As Boolean
 If App_sqSelected > 0 Then
     DrawSquare App_sqSelected
     App_sqSelected = 0
@@ -1198,6 +1206,11 @@ If Not bNotEnd Then
 End If
 App_frmMain.txtComment.Text = Game_szComment(Game_nCurrMove)
 App_frmMain.Icon = IIf(Game_sdMax = 0, frmHide2.imgFormRed.Picture, frmHide2.imgFormBlack.Picture)
+' 如果不是电脑走，那么显示“提和”与“认输”
+bComputer = IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack)
+App_frmMain.mnEngineDraw.Enabled = Not bComputer
+App_frmMain.mnEngineResign.Enabled = Not bComputer
+' 如果处于“电脑分析”模式，那么停止分析
 If Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
     If Engine_nStatus > BUSY_WAIT Then
         Engine_nStatus = BUSY_WAIT
@@ -1658,8 +1671,6 @@ App_frmMain.mnEndgames_.Enabled = Not bBusy
 App_frmMain.mnEngineLevel.Enabled = Not bBusy
 App_frmMain.tlb.Buttons("EngineLevel").Enabled = Not bBusy
 App_frmMain.mnEngineSet.Enabled = Not bBusy
-App_frmMain.mnEngineDraw.Enabled = Not bBusy
-App_frmMain.mnEngineResign.Enabled = Not bBusy
 App_frmMain.mnEngineStop.Enabled = bBusy
 App_frmMain.tlb.Buttons("EngineStop").Enabled = bBusy
 If bBusy And App_bPlay Then
@@ -1723,7 +1734,7 @@ Engine_nMoves = CchessGenMoves(Engine_posBoard, nMoveList(1))
 Engine_nDepth = 0
 Engine_nCurrMove = 0
 If Engine_bAnalyze Then
-    App_frmMain.txtThink.Text = ""
+    frmThink.txtThink.Text = ""
 End If
 szFenStr = Game_szIrrevFen(Game_nCurrIrrev)
 nIrrevMove = Game_nCurrMove + 1 - Game_posIrrev(Game_nCurrIrrev).nMoveNum
@@ -1790,14 +1801,14 @@ End Sub
 Public Sub AppendThink(ByVal sz As String)
 
 Dim nTextLen As Long
-If App_frmMain.txtThink.Text = "" Then
-    App_frmMain.txtThink.Text = sz
-    App_frmMain.txtThink.SelStart = 0
+If frmThink.txtThink.Text = "" Then
+    frmThink.txtThink.Text = sz
+    frmThink.txtThink.SelStart = 0
 Else
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text & vbCrLf
-    nTextLen = Len(App_frmMain.txtThink.Text)
-    App_frmMain.txtThink.Text = App_frmMain.txtThink.Text & sz
-    App_frmMain.txtThink.SelStart = nTextLen
+    frmThink.txtThink.Text = frmThink.txtThink.Text & vbCrLf
+    nTextLen = Len(frmThink.txtThink.Text)
+    frmThink.txtThink.Text = frmThink.txtThink.Text & sz
+    frmThink.txtThink.SelStart = nTextLen
 End If
 
 End Sub
@@ -2117,14 +2128,13 @@ Engine_bPonder = False
 App_frmMain.mnEnginePonder.Enabled = False
 App_frmMain.mnEnginePonder.Checked = False
 If Engine_bAnalyze Then
-    StopAnalyze
+    Unload frmThink
 End If
 App_frmMain.mnEngineAnalyze.Enabled = bLoaded
 App_frmMain.tlb.Buttons("EngineAnalyze").Enabled = bLoaded
 App_frmMain.mnEngineStop.Enabled = False
 App_frmMain.mnEngineRetract.Enabled = bLoaded
 App_frmMain.mnEngineBan.Enabled = bLoaded
-App_frmMain.mnEngineDraw.Enabled = bLoaded
 App_frmMain.mnEngineDraw.Checked = False
 App_frmMain.tlb.Buttons("EngineStop").Enabled = False
 App_frmMain.mnHelpEngine.Enabled = bLoaded
@@ -2446,39 +2456,6 @@ End If
 
 End Sub
 
-' 引擎分析开始
-Public Sub StartAnalyze()
-
-Engine_bAnalyze = True
-App_frmMain.mnEngineAnalyze.Checked = True
-App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrPressed
-App_frmMain.strpRight.Tabs.Item(2).Selected = True
-App_frmMain.frmInfo.Visible = False
-App_frmMain.frmThink.Visible = True
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top + IIf(Options_bLargeGui, 2760, 1440)
-
-End Sub
-
-' 引擎分析结束
-Public Sub StopAnalyze()
-
-If Not (Engine_bRed Or Engine_bBlack) Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
-End If
-Engine_bAnalyze = False
-App_frmMain.mnEngineAnalyze.Checked = False
-App_frmMain.tlb.Buttons("EngineAnalyze").Value = tbrUnpressed
-App_frmMain.strpRight.Tabs.Item(1).Selected = True
-App_frmMain.frmInfo.Visible = True
-App_frmMain.frmThink.Visible = False
-App_frmMain.frmMove2.Move App_frmMain.frmMove2.Left, App_frmMain.frmMove2.Top - IIf(Options_bLargeGui, 2760, 1440)
-
-End Sub
-
 ' 以上是引擎控制例程
 
 ' 以下是图片和声音的处理例程
@@ -2598,7 +2575,7 @@ frmHide2.mci.Command = "Close"
 If nMusicIndex < MUSIC_NONE Then
     frmHide2.mci.FileName = App_szPath & "MUSICS\" & _
             Choose(nMusicIndex + 1, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
-            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "PAL", "CMUSIC") & ".MID"
+            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "MARIO1", "MARIO2", "PAL", "CMUSIC") & ".MID"
     If Not App_bPrevInstance Then
         frmHide2.mci.Command = "Open"
         frmHide2.mci.Command = "Play"
@@ -2789,6 +2766,10 @@ Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <
 Options_bTryAgain = (Str2Int(GetSetting("XQWizard", "Options", "TryAgain", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
 Gui_nTop = Str2Int(GetSetting("XQWizard", "Gui", "Top", "480"), 0, Int(Screen.Height * 0.75))
+Gui_nThinkWidth = Str2Int(GetSetting("XQWizard", "Gui", "ThinkWidth", "4800"), 2400)
+Gui_nThinkHeight = Str2Int(GetSetting("XQWizard", "Gui", "ThinkHeight", "2400"), 1200)
+Gui_nThinkLeft = Str2Int(GetSetting("XQWizard", "Gui", "ThinkLeft", "8100"))
+Gui_nThinkTop = Str2Int(GetSetting("XQWizard", "Gui", "ThinkTop", "6300"))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
 Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", L("趣味象棋", "趣味象棋"))
@@ -2836,6 +2817,10 @@ SaveSetting "XQWizard", "Options", "ShowNew", IIf(Options_bShowNew, "1", "0")
 SaveSetting "XQWizard", "Options", "TryAgain", IIf(Options_bTryAgain, "1", "0")
 SaveSetting "XQWizard", "Gui", "Left", Gui_nLeft
 SaveSetting "XQWizard", "Gui", "Top", Gui_nTop
+SaveSetting "XQWizard", "Gui", "ThinkWidth", Gui_nThinkWidth
+SaveSetting "XQWizard", "Gui", "ThinkHeight", Gui_nThinkHeight
+SaveSetting "XQWizard", "Gui", "ThinkLeft", Gui_nThinkLeft
+SaveSetting "XQWizard", "Gui", "ThinkTop", Gui_nThinkTop
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", Gui_nEndgamesIndex
 SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
@@ -2862,6 +2847,8 @@ SaveSetting "XQWizard", "Engine", "FileName", Engine_szFile
 End Sub
 
 ' 以上是参数设置例程
+
+' 以下是语言例程
 
 ' 显示软件名称
 Public Sub SetTitle()
@@ -2985,9 +2972,11 @@ App_frmMain.mnOptionsMusic(5).Caption = "貝多芬(&F)"
 App_frmMain.mnOptionsMusic(6).Caption = "李斯特(&G)"
 App_frmMain.mnOptionsMusic(7).Caption = "柴可夫斯基(&H)"
 App_frmMain.mnOptionsMusic(8).Caption = "德沃夏克(&I)"
-App_frmMain.mnOptionsMusic(9).Caption = "仙劍奇俠傳(&J)"
-App_frmMain.mnOptionsMusic(10).Caption = "望江南(&K)"
-App_frmMain.mnOptionsMusic(11).Caption = "無聲(&L)"
+App_frmMain.mnOptionsMusic(9).Caption = "馬里奧一(&J)"
+App_frmMain.mnOptionsMusic(10).Caption = "馬里奧二(&K)"
+App_frmMain.mnOptionsMusic(11).Caption = "仙劍奇俠傳(&L)"
+App_frmMain.mnOptionsMusic(12).Caption = "望江南(&M)"
+App_frmMain.mnOptionsMusic(13).Caption = "無聲(&N)"
 App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
 App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
 App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
@@ -3039,10 +3028,6 @@ App_frmMain.tlb.Buttons("EngineAnalyze").ToolTipText = "電腦分析"
 App_frmMain.tlb.Buttons("EngineStop").ToolTipText = "停止思考/立即走棋"
 ' 界面
 App_frmMain.strpRight.Tabs(1).Caption = "棋局信息"
-App_frmMain.strpRight.Tabs(2).Caption = "電腦分析"
-App_frmMain.lblDepth.Caption = "深度"
-App_frmMain.lblScore.Caption = "評價"
-App_frmMain.lblPv.Caption = "思考路線"
 App_frmMain.lblTimeLeftUp1.Caption = "時限"
 App_frmMain.lblTimeElapsedUp1.Caption = "用時"
 App_frmMain.lblTimeLeftDown1.Caption = "時限"
@@ -3057,6 +3042,40 @@ App_frmMain.stb.Panels(3).ToolTipText = "思考路線"
 App_frmMain.stb.Panels(4).ToolTipText = "提示信息"
 
 End Sub
+
+' 以上是语言例程
+
+' 以下是窗口的移动过程处理
+
+' 主窗口移动时，显示思考窗口要跟着移动
+Public Function MainWindowProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+Dim lResult As Long
+lResult = CallWindowProcA(App_lpMainPrev, hWnd, uMsg, wParam, lParam)
+If uMsg = WM_MOVE And Engine_bAnalyze Then
+    SetWindowLongA frmThink.hWnd, GWL_WNDPROC, App_lpThinkPrev
+    frmThink.Left = App_frmMain.Left + Gui_nThinkLeft
+    frmThink.Top = App_frmMain.Top + Gui_nThinkTop
+    SetWindowLongA frmThink.hWnd, GWL_WNDPROC, AddressOf ThinkWindowProc
+End If
+MainWindowProc = lResult
+
+End Function
+
+' 显示思考窗口移动时，记录该窗口跟主窗口的相对位置
+Public Function ThinkWindowProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+Dim lResult As Long
+lResult = CallWindowProcA(App_lpThinkPrev, hWnd, uMsg, wParam, lParam)
+If uMsg = WM_MOVE Then
+    Gui_nThinkLeft = frmThink.Left - App_frmMain.Left
+    Gui_nThinkTop = frmThink.Top - App_frmMain.Top
+End If
+ThinkWindowProc = lResult
+
+End Function
+
+' 以上是窗口的移动过程处理
 
 ' 以下是主函数例程
 

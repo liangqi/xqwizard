@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -25,7 +25,7 @@ Begin VB.Form frmMainSmall
    Begin SHDocVwCtl.WebBrowser web 
       Height          =   975
       Left            =   6000
-      TabIndex        =   51
+      TabIndex        =   46
       Top             =   6120
       Width           =   3735
       ExtentX         =   6588
@@ -196,7 +196,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   17
       Left            =   5040
-      TabIndex        =   49
+      TabIndex        =   44
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -205,7 +205,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   16
       Left            =   4440
-      TabIndex        =   48
+      TabIndex        =   43
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -214,7 +214,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   15
       Left            =   3840
-      TabIndex        =   47
+      TabIndex        =   42
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -223,7 +223,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   14
       Left            =   3240
-      TabIndex        =   46
+      TabIndex        =   41
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -232,7 +232,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   13
       Left            =   2640
-      TabIndex        =   45
+      TabIndex        =   40
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -241,7 +241,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   12
       Left            =   2040
-      TabIndex        =   44
+      TabIndex        =   39
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -250,7 +250,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   11
       Left            =   1440
-      TabIndex        =   43
+      TabIndex        =   38
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -259,7 +259,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   10
       Left            =   840
-      TabIndex        =   42
+      TabIndex        =   37
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -268,7 +268,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   9
       Left            =   240
-      TabIndex        =   41
+      TabIndex        =   36
       TabStop         =   0   'False
       Top             =   7080
       Width           =   615
@@ -277,7 +277,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   8
       Left            =   5040
-      TabIndex        =   40
+      TabIndex        =   35
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -286,7 +286,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   7
       Left            =   4440
-      TabIndex        =   39
+      TabIndex        =   34
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -295,7 +295,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   6
       Left            =   3840
-      TabIndex        =   38
+      TabIndex        =   33
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -304,7 +304,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   5
       Left            =   3240
-      TabIndex        =   37
+      TabIndex        =   32
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -313,7 +313,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   4
       Left            =   2640
-      TabIndex        =   36
+      TabIndex        =   31
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -322,7 +322,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   3
       Left            =   2040
-      TabIndex        =   35
+      TabIndex        =   30
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -331,7 +331,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   2
       Left            =   1440
-      TabIndex        =   34
+      TabIndex        =   29
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -340,7 +340,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   1
       Left            =   840
-      TabIndex        =   33
+      TabIndex        =   28
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -349,7 +349,7 @@ Begin VB.Form frmMainSmall
       Height          =   225
       Index           =   0
       Left            =   240
-      TabIndex        =   32
+      TabIndex        =   27
       TabStop         =   0   'False
       Top             =   480
       Width           =   615
@@ -358,14 +358,14 @@ Begin VB.Form frmMainSmall
       BorderStyle     =   0  'None
       Height          =   2535
       Left            =   6000
-      TabIndex        =   15
+      TabIndex        =   10
       Top             =   2040
       Width           =   3735
       Begin VB.Frame frmMove 
          Caption         =   "着法列表"
          Height          =   2535
          Left            =   2160
-         TabIndex        =   26
+         TabIndex        =   21
          Top             =   0
          Width           =   1575
          Begin VB.ListBox lstMoveText 
@@ -373,14 +373,14 @@ Begin VB.Form frmMainSmall
             ItemData        =   "MAINS.frx":0ABA
             Left            =   120
             List            =   "MAINS.frx":0ABC
-            TabIndex        =   29
+            TabIndex        =   24
             Top             =   600
             Width           =   1335
          End
          Begin VB.TextBox txtMove 
             Height          =   285
             Left            =   960
-            TabIndex        =   28
+            TabIndex        =   23
             Top             =   240
             Width           =   495
          End
@@ -390,7 +390,7 @@ Begin VB.Form frmMainSmall
             Left            =   600
             List            =   "MAINS.frx":0AC0
             Style           =   2  'Dropdown List
-            TabIndex        =   31
+            TabIndex        =   26
             Top             =   2160
             Width           =   855
          End
@@ -398,7 +398,7 @@ Begin VB.Form frmMainSmall
             Caption         =   "输入"
             Height          =   255
             Left            =   120
-            TabIndex        =   27
+            TabIndex        =   22
             Top             =   240
             Width           =   375
          End
@@ -406,7 +406,7 @@ Begin VB.Form frmMainSmall
             Caption         =   "格式"
             Height          =   255
             Left            =   120
-            TabIndex        =   30
+            TabIndex        =   25
             Top             =   2160
             Width           =   375
          End
@@ -415,7 +415,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "用时"
          Height          =   255
          Left            =   720
-         TabIndex        =   24
+         TabIndex        =   19
          Top             =   2160
          Width           =   375
       End
@@ -423,7 +423,7 @@ Begin VB.Form frmMainSmall
          Alignment       =   2  'Center
          Height          =   255
          Left            =   720
-         TabIndex        =   23
+         TabIndex        =   18
          Top             =   1920
          Width           =   1215
       End
@@ -431,7 +431,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "用时"
          Height          =   255
          Left            =   720
-         TabIndex        =   19
+         TabIndex        =   14
          Top             =   600
          Width           =   375
       End
@@ -440,7 +440,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   20
+         TabIndex        =   15
          Top             =   600
          Width           =   735
       End
@@ -448,7 +448,7 @@ Begin VB.Form frmMainSmall
          Alignment       =   2  'Center
          Height          =   255
          Left            =   720
-         TabIndex        =   18
+         TabIndex        =   13
          Top             =   360
          Width           =   1215
       End
@@ -470,7 +470,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   16
+         TabIndex        =   11
          Top             =   120
          Width           =   375
       End
@@ -479,7 +479,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   17
+         TabIndex        =   12
          Top             =   120
          Width           =   735
       End
@@ -488,7 +488,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   22
+         TabIndex        =   17
          Top             =   1680
          Width           =   735
       End
@@ -496,7 +496,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "时限"
          Height          =   255
          Left            =   720
-         TabIndex        =   21
+         TabIndex        =   16
          Top             =   1680
          Width           =   375
       End
@@ -505,7 +505,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "00:00:00"
          Height          =   255
          Left            =   1200
-         TabIndex        =   25
+         TabIndex        =   20
          Top             =   2160
          Width           =   735
       End
@@ -579,52 +579,6 @@ Begin VB.Form frmMainSmall
          Width           =   3735
       End
    End
-   Begin VB.Frame frmThink 
-      BorderStyle     =   0  'None
-      Height          =   5175
-      Left            =   6000
-      TabIndex        =   10
-      Top             =   840
-      Visible         =   0   'False
-      Width           =   3735
-      Begin VB.TextBox txtThink 
-         Height          =   2295
-         Left            =   0
-         Locked          =   -1  'True
-         MultiLine       =   -1  'True
-         ScrollBars      =   3  'Both
-         TabIndex        =   14
-         Top             =   240
-         Width           =   3735
-      End
-      Begin VB.Label lblPv 
-         Alignment       =   2  'Center
-         Caption         =   "思考路线"
-         Height          =   255
-         Left            =   960
-         TabIndex        =   13
-         Top             =   0
-         Width           =   735
-      End
-      Begin VB.Label lblScore 
-         Alignment       =   2  'Center
-         Caption         =   "评价"
-         Height          =   255
-         Left            =   480
-         TabIndex        =   12
-         Top             =   0
-         Width           =   495
-      End
-      Begin VB.Label lblDepth 
-         Alignment       =   2  'Center
-         Caption         =   "深度"
-         Height          =   255
-         Left            =   0
-         TabIndex        =   11
-         Top             =   0
-         Width           =   495
-      End
-   End
    Begin MSComctlLib.TabStrip strpRight 
       Height          =   6735
       Left            =   5880
@@ -635,13 +589,9 @@ Begin VB.Form frmMainSmall
       _ExtentY        =   11880
       _Version        =   393216
       BeginProperty Tabs {1EFB6598-857C-11D1-B16A-00C0F0283628} 
-         NumTabs         =   2
+         NumTabs         =   1
          BeginProperty Tab1 {1EFB659A-857C-11D1-B16A-00C0F0283628} 
             Caption         =   "棋局信息"
-            ImageVarType    =   2
-         EndProperty
-         BeginProperty Tab2 {1EFB659A-857C-11D1-B16A-00C0F0283628} 
-            Caption         =   "电脑分析"
             ImageVarType    =   2
          EndProperty
       EndProperty
@@ -688,7 +638,7 @@ Begin VB.Form frmMainSmall
       Align           =   1  'Align Top
       Height          =   360
       Left            =   0
-      TabIndex        =   50
+      TabIndex        =   45
       Top             =   360
       Width           =   9960
       _ExtentX        =   17568
@@ -1865,16 +1815,24 @@ Begin VB.Form frmMainSmall
             Index           =   8
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "仙剑奇侠传(&J)"
+            Caption         =   "马里奥一(&J)"
             Index           =   9
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "望江南(&K)"
+            Caption         =   "马里奥二(&K)"
             Index           =   10
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "无声(&L)"
+            Caption         =   "仙剑奇侠传(&L)"
             Index           =   11
+         End
+         Begin VB.Menu mnOptionsMusic 
+            Caption         =   "望江南(&M)"
+            Index           =   12
+         End
+         Begin VB.Menu mnOptionsMusic 
+            Caption         =   "无声(&N)"
+            Index           =   13
          End
       End
       Begin VB.Menu mnOptionsTopMost 
@@ -1965,7 +1923,7 @@ Attribute VB_Exposed = False
 ' MAINS.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.65, Last Modified: Jun. 2010
+' Designed by Morning Yellow, Version: 4.67, Last Modified: Jul. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2024,7 +1982,7 @@ If CancelSave Then
     Exit Sub
 End If
 If Engine_bAnalyze Then
-    StopAnalyze
+    Unload frmThink
 End If
 If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
@@ -2471,13 +2429,14 @@ End Sub
 Private Sub mnEngineAnalyze_Click()
 
 If Engine_bAnalyze Then
-    StopAnalyze
+    Unload frmThink
 Else
-    StartAnalyze
+    Engine_bAnalyze = True
     mnEngineAnalyze.Checked = True
     tlb.Buttons("EngineAnalyze").Value = tbrPressed
+    frmThink.Show 0, Me
 End If
-    
+
 End Sub
 
 Private Sub mnEngineRetract_Click()
@@ -2844,24 +2803,6 @@ Private Sub txtComment_Change()
 If Game_szComment(Game_nCurrMove) <> txtComment.Text Then
     Game_szComment(Game_nCurrMove) = txtComment.Text
     FileUpdated
-End If
-
-End Sub
-
-Private Sub strpRight_Click()
-
-If Engine_bAnalyze Then
-    If strpRight.Tabs.Item(1).Selected Then
-        StopAnalyze
-    End If
-Else
-    If strpRight.Tabs.Item(2).Selected Then
-        If Engine_nStatus > IDLE_UNLOAD Then
-            StartAnalyze
-        Else
-            strpRight.Tabs.Item(1).Selected = True
-        End If
-    End If
 End If
 
 End Sub

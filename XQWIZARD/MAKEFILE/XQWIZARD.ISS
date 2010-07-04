@@ -490,6 +490,8 @@ Source: "MUSICS\FURELISE.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\LOVDREAM.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\WALTZ.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\HUMOUR.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\MARIO1.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
+Source: "MUSICS\MARIO2.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\PAL.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\CMUSIC.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 ; ÊÖ»úÆåÆ×

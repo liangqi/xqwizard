@@ -27,6 +27,7 @@ Form=XQWIZARD\PUBLISH.FRM
 Module=mdlCommon; COMMON\COMMON.BAS
 Form=COMMON\HIDE.FRM
 Module=mdlAlphaBlt; COMMON\ALPHABLT.BAS
+Form=XQWIZARD\THINK.FRM
 ResFile32="RES\XQWIZARD.RES"
 IconForm="frmMainSmall"
 Startup="Sub Main"
