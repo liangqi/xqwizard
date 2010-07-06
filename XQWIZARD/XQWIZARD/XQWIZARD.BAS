@@ -21,6 +21,9 @@ Attribute VB_Name = "mdlXQWizard"
 
 Option Explicit
 
+Private Declare Function GetFocus Lib "USER32.DLL" () As Long
+Private Declare Sub SetFocus Lib "USER32.DLL" (ByVal hWnd As Long)
+
 ' 全局常量——象棋巫师参数
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
@@ -3082,7 +3085,7 @@ End Function
 ' 空闲事件
 Public Sub DoIdleEvents()
 
-Dim dfThisTime As Double
+Dim dfThisTime As Double, hWnd As Long
 ' 依次检测以下几个事件
 ' 时间
 If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
@@ -3150,9 +3153,12 @@ If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
     If Gui_nAdvertIndex > Gui_nAdvertNum Then
         Gui_nAdvertIndex = 1
     End If
+    hWnd = GetFocus
     App_frmMain.web.Visible = False
     App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
     App_frmMain.web.Visible = True
+    ' 切换广告时，把浏览器控件隐藏掉，就不会发出“咔嗒”声了，但要恢复焦点
+    SetFocus hWnd
 End If
 ' 界面
 DoEvents

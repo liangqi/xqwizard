@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -45,7 +45,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -583,6 +583,7 @@ Begin VB.Form frmMainLarge
       Height          =   9135
       Left            =   8040
       TabIndex        =   1
+      TabStop         =   0   'False
       Top             =   480
       Width           =   4215
       _ExtentX        =   7435
@@ -595,6 +596,7 @@ Begin VB.Form frmMainLarge
             ImageVarType    =   2
          EndProperty
       EndProperty
+      Enabled         =   0   'False
    End
    Begin MSComctlLib.StatusBar stb 
       Align           =   2  'Align Bottom
@@ -1440,10 +1442,6 @@ Begin VB.Form frmMainLarge
          Caption         =   "…æ≥˝(&D)"
          Shortcut        =   {DEL}
       End
-      Begin VB.Menu mnMoveInput 
-         Caption         =   "º¸≈Ã ‰»Î(&K)"
-         Shortcut        =   ^I
-      End
       Begin VB.Menu mnMoveSep3 
          Caption         =   "-"
       End
@@ -2046,12 +2044,6 @@ MoveCut
 MoveFlush
 FileUpdated
 AnalyzeEcco
-
-End Sub
-
-Private Sub mnMoveInput_Click()
-
-txtMove.SetFocus
 
 End Sub
 
