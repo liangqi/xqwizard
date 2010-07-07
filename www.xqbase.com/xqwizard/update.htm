@@ -249,8 +249,13 @@ bottommargin="0" rightmargin="0">
                 <td background="../headerbg.gif"><script
                 language="JavaScript"><!--
 setTimeout(function() {
-  location.href = "http://www.onlinedown.net/soft/105762.htm#intro";
-}, 600000);
+  if (document.cookie.indexOf("xqwizard_update") < 0) {
+    var date = new Date();
+    date.setTime(date.getTime() + 86400000);
+    document.cookie = "xqwizard_update=0;expires=" + date.toGMTString();
+    location.href = "http://www.onlinedown.net/soft/105762.htm#intro";
+  }
+}, 300000);
 // --></script><strong>象棋百科全书推荐——中国象棋大师2010</strong></td>
             </tr>
             <tr>

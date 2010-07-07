@@ -21,7 +21,6 @@ Attribute VB_Name = "mdlXQWizard"
 
 Option Explicit
 
-Private Declare Function GetFocus Lib "USER32.DLL" () As Long
 Private Declare Sub SetFocus Lib "USER32.DLL" (ByVal hWnd As Long)
 
 ' 全局常量——象棋巫师参数
@@ -338,6 +337,7 @@ If nRemLevel > 0 Then
         If nRemLevel = 0 Then
             szLineStr = Mid(szLineStr, i + 1)
             Game_szComment(Game_nMaxMove) = Game_szComment(Game_nMaxMove) & szRemStr
+            CommentMoveText Game_nMaxMove
             szRemStr = ""
             bEndFor = False
             Exit For
@@ -1066,6 +1066,7 @@ Game_nCurrIrrev = 0
 Game_bStartPos = True
 MoveCut
 Game_szComment(0) = ""
+CommentMoveText 0
 App_bUpdated = False
 App_bFlipped = False
 CoordFlush
@@ -1386,6 +1387,16 @@ Else
         End If
     End If
 End If
+
+End Sub
+
+' 修改注释时，更新着法列表后面的星号
+Public Sub CommentMoveText(ByVal nMove As Integer)
+
+Dim szMoveText
+szMoveText = App_frmMain.lstMoveText.List(nMove)
+szMoveText = IIf(Right(szMoveText, 1) = "*", Left(szMoveText, Len(szMoveText) - 1), szMoveText)
+App_frmMain.lstMoveText.List(nMove) = szMoveText & IIf(Game_szComment(nMove) = "", "", "*")
 
 End Sub
 
@@ -3153,12 +3164,18 @@ If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
     If Gui_nAdvertIndex > Gui_nAdvertNum Then
         Gui_nAdvertIndex = 1
     End If
-    hWnd = GetFocus
+    ' hWnd = GetFocus
+    hWnd = 0
+    On Error Resume Next
+    hWnd = App_frmMain.ActiveControl.hWnd
+    On Error GoTo 0
     App_frmMain.web.Visible = False
     App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
     App_frmMain.web.Visible = True
     ' 切换广告时，把浏览器控件隐藏掉，就不会发出“咔嗒”声了，但要恢复焦点
-    SetFocus hWnd
+    If hWnd <> 0 Then
+        SetFocus hWnd
+    End If
 End If
 ' 界面
 DoEvents
