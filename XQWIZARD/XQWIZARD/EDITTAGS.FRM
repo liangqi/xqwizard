@@ -21,7 +21,7 @@ Begin VB.Form frmEditTags
    ScaleHeight     =   4200
    ScaleWidth      =   4440
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
       Caption         =   "È¡Ïû"

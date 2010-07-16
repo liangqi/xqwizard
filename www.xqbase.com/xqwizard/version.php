@@ -1,5 +1,5 @@
 <?
-  echo '4.66';
+  echo '4.68';
 
   include './counter_conf.php';
   mysql_connect($host, $username, $password);

@@ -21,7 +21,7 @@ Begin VB.Form frmPublish
    ScaleHeight     =   3195
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnHelp 
       Caption         =   "°ïÖú"
       Height          =   375

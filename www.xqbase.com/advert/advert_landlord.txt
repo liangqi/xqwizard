@@ -1,4 +1,0 @@
-www.elephantbase.net Advert List
-xqbase,30,453,5389
-xqwlight,30,469,17943
-xqbase2,30,461,9007

@@ -21,7 +21,7 @@ Begin VB.Form frmEngineSet
    ScaleHeight     =   4200
    ScaleWidth      =   7800
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnLoadSlave 
       Height          =   375
       Left            =   6480

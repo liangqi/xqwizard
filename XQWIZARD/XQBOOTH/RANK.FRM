@@ -21,7 +21,7 @@ Begin VB.Form frmRank
    ScaleHeight     =   4440
    ScaleWidth      =   3090
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnConfirm 
       Cancel          =   -1  'True
       Caption         =   "È·¶¨"

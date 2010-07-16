@@ -1,2 +1,0 @@
-XQWizard Advert List
-update_ad,300,246,1000

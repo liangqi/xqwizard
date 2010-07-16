@@ -21,7 +21,7 @@ Begin VB.Form frmSelect
    ScaleHeight     =   7200
    ScaleWidth      =   10650
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.PictureBox frame 
       Height          =   6555
       Left            =   0

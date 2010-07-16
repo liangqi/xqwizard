@@ -22,7 +22,7 @@ Begin VB.Form frmOptions
    ScaleHeight     =   3120
    ScaleWidth      =   6840
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.Frame frmMisc 
       Caption         =   "ÆäËû"
       Height          =   1695
@@ -230,7 +230,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196636
+         BuddyDispid     =   196631
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355

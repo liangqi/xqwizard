@@ -1,7 +1,0 @@
-www.elephantbase.net Advert List
-update_ad,30,528,1000
-xqwlight,30,469,17943
-xqbase2,30,461,9007
-xqbase,30,453,5389
-xqwlight,30,469,17943
-xqbase2,30,461,9007

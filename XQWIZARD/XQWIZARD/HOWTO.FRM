@@ -21,7 +21,7 @@ Begin VB.Form frmHowTo
    ScaleHeight     =   3210
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   2  'CenterScreen
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
       Caption         =   "¹Ø±Õ"

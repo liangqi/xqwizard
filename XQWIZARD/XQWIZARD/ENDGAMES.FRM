@@ -20,7 +20,7 @@ Begin VB.Form frmEndgames
    ScaleHeight     =   3195
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   1  'CenterOwner
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
       Caption         =   "È¡Ïû"
