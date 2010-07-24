@@ -300,9 +300,9 @@ txtDate = Game_szDate
 txtSite = Game_szSite
 cmbResult.Clear
 cmbResult.AddItem "Î´Öª", 0
-cmbResult.AddItem "ºìÊ¤", 1
+cmbResult.AddItem "¼t„Ù", 1
 cmbResult.AddItem "ºÍÆå", 2
-cmbResult.AddItem "ºÚÊ¤", 3
+cmbResult.AddItem "ºÚ„Ù", 3
 cmbResult.ListIndex = Game_nResult
 txtRedTeam = Game_szRedTeam
 txtRedPlayer = Game_szRedPlayer

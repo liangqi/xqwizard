@@ -3195,7 +3195,6 @@ App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
         frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
 LoadRegs
-LoadRegs2
 CchessInit Options_nLanguage
 ' ≈–∂œ «∑Ò‘ –Ì…˝±‰
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3207,6 +3206,7 @@ Else
     App_bPromotion = False
     sz = Command
 End If
+LoadRegs2
 EccoInitOpenVar Options_nLanguage
 ConvInit Options_nLanguage
 LoadQuotes
