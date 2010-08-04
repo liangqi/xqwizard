@@ -2189,7 +2189,7 @@ End Sub
 
 Private Sub mnPosAnalyze_Click()
 
-Shell App_szPath & App.EXEName & IIf(App_bPromotion, " /P /S ", " /S ") & """" & _
+Shell App_szPath & App.EXEName & ".EXE" & IIf(App_bPromotion, " /P /S ", " /S ") & """" & _
         AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr & """", vbNormalFocus
 
 End Sub
