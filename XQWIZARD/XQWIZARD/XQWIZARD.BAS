@@ -2618,7 +2618,7 @@ Case PUB_SIZE_LARGE
     nPieces = Publish_nPiecesL
 End Select
 szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
-szUrl = "http://www.xqbase.com/pub/board.php?&fen=" & UrlEncode(szFen) & _
+szUrl = "http://www.xqbase.com/pub/board.php?fen=" & UrlEncode(szFen) & _
         "&size=" & Publish_nSize & "&board=" & nBoard & "&pieces=" & nPieces
 ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
 MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複制了。") + vbCrLf + _

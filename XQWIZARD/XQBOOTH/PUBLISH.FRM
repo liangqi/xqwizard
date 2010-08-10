@@ -541,7 +541,7 @@ End Sub
 
 Private Function GetBoardUrl(ByVal szFen As String) As String
 
-GetBoardUrl = "http://www.xqbase.com/pub/board.php?&fen=" & UrlEncode(szFen) & _
+GetBoardUrl = "http://www.xqbase.com/pub/board.php?fen=" & UrlEncode(szFen) & _
         "&size=" & Publish_nSize & "&board=" & cmbBoard.ListIndex & "&pieces=" & cmbPieces.ListIndex
 
 End Function
