@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.68
+AppVerName={cm:AppName} 4.7
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -69,7 +69,7 @@ Source: "MCI32.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
 Source: "MSINET.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQSCHOOL.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "APPTYPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
@@ -102,7 +102,6 @@ Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
-Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
@@ -734,35 +733,35 @@ Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open"; ValueType: string; ValueData: "{c
 Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueData: """{app}\XQWIZARD.EXE"" ""%1"""; Flags: uninsdeletekey; Components: ccm
 
 [Icons]
-Name: "{group}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn
+Name: "{group}\象棋巫师魔法学校Ⅱ"; Filename: "{app}\XQSCHOOL.EXE"; Languages: cn
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
 Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
 Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
 Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"; Languages: cn
-Name: "{userdesktop}\象棋巫师魔法学校"; Filename: "{app}\XQBOOTH.EXE"; Languages: cn
+Name: "{userdesktop}\象棋巫师魔法学校Ⅱ"; Filename: "{app}\XQSCHOOL.EXE"; Languages: cn
 Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
 Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
 
-Name: "{group}\禜囱畍臸猭厩"; Filename: "{app}\XQBOOTH.EXE"; Languages: tw
+Name: "{group}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw
 Name: "{group}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 Name: "{group}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
 Name: "{group}\も审囱眯ㄣ"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
 Name: "{group}\囱眯у秖锣传ㄣ"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
 Name: "{group}\秨Ы畐恨瞶ㄣ"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
 Name: "{group}\更禜囱畍"; Filename: "{uninstallexe}"; Languages: tw
-Name: "{userdesktop}\禜囱畍臸猭厩"; Filename: "{app}\XQBOOTH.EXE"; Languages: tw
+Name: "{userdesktop}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw
 Name: "{userdesktop}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 Name: "{userdesktop}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
 
 [Run]
-Filename: "{app}\XQBOOTH.EXE"; Description: "开始闯关"; Flags: nowait postinstall skipifsilent; Languages: cn
-Filename: "{app}\XQWIZARD.EXE"; Description: "开始对局"; Flags: nowait postinstall skipifsilent unchecked; Languages: cn
+Filename: "{app}\XQSCHOOL.EXE"; Description: "开始练习"; Flags: nowait postinstall skipifsilent; Languages: cn
+Filename: "{app}\XQWIZARD.EXE"; Description: "开始实战"; Flags: nowait postinstall skipifsilent unchecked; Languages: cn
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: cn
 
-Filename: "{app}\XQBOOTH.EXE"; Description: "秨﹍卖闽"; Flags: nowait postinstall skipifsilent; Languages: tw
-Filename: "{app}\XQWIZARD.EXE"; Description: "秨﹍癸Ы"; Flags: nowait postinstall skipifsilent unchecked; Languages: tw
+Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinstall skipifsilent; Languages: tw
+Filename: "{app}\XQWIZARD.EXE"; Description: "秨﹍龟驹"; Flags: nowait postinstall skipifsilent unchecked; Languages: tw
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "ㄏノ"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
 
 [Code]

@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -1873,10 +1873,10 @@ Begin VB.Form frmMainSmall
          End
       End
    End
-   Begin VB.Menu mnTools 
+   Begin VB.Menu mnToolS 
       Caption         =   "工具(&T)"
-      Begin VB.Menu mnToolBooth 
-         Caption         =   "象棋巫师魔法学校(&T)"
+      Begin VB.Menu mnToolSchool 
+         Caption         =   "象棋巫师魔法学校(&S)"
       End
       Begin VB.Menu mnToolSep1 
          Caption         =   "-"
@@ -2595,10 +2595,10 @@ MsgBox L("语言已经更改，重新启动程序后才能生效。", "語言已經更改，重新啟動程序後
 
 End Sub
 
-Private Sub mnToolBooth_Click()
+Private Sub mnToolSchool_Click()
 
 WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath & "XQBOOTH.EXE", vbNullString, vbNullString, vbNormalFocus
+ShellExecuteA 0, vbNullString, App_szPath & "XQSCHOOL.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
