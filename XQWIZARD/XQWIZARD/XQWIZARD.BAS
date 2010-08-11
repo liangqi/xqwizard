@@ -2996,7 +2996,7 @@ App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
 App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
 App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
 
-App_frmMain.mnToolS.Caption = "工具(&T)"
+App_frmMain.mnTools.Caption = "工具(&T)"
 App_frmMain.mnToolSchool.Caption = "象棋巫師魔法學校(&T)"
 App_frmMain.mnToolPgns2Jar.Caption = "制作手机棋譜(&J)"
 App_frmMain.mnToolConvert.Caption = "批量轉換棋譜(&C)"
