@@ -1,4 +1,5 @@
 www.xqbase.com Advert List
 xqbase,30,453,5389
 xqwlight,30,469,17943
+jj,30,469,34837
 xqbase2,30,461,9007
