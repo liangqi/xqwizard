@@ -246,57 +246,57 @@ Public Sub LoadQuotes()
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
 
-Gui_szQuotes(1) = "　　子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(2) = "　　子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施于人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
-Gui_szQuotes(3) = "　　或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
-Gui_szQuotes(4) = "　　子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
-Gui_szQuotes(7) = "　　将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
-Gui_szQuotes(9) = "　　图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
-Gui_szQuotes(12) = "　　怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
+Gui_szQuotes(1) = "子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？人不知而不愠，不亦君子乎？”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(2) = "子贡问曰：“有一言而可以终身行之者乎？”子曰：“其恕乎！己所不欲，勿施于人。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·卫灵公》"
+Gui_szQuotes(3) = "或曰：“以德报怨，何如？”子曰：“何以报德？以直报怨，以德报德。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·宪问》"
+Gui_szQuotes(4) = "子夏曰：“博学而笃志，切问而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·子张》"
+Gui_szQuotes(5) = "子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·学而》"
+Gui_szQuotes(6) = "子曰：“三人行，必有我师焉：择其善者而从之，其不善者而改之。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《论语·述而》"
+Gui_szQuotes(7) = "将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固兴之；将欲取之，必固与之。是谓微明。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(8) = "柔弱胜刚强。鱼不可脱于渊，国之利器不可以示人。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子·第三十六章》"
+Gui_szQuotes(9) = "图难于其易；为大于其细。天下难事，必作于易；天下大事，必作于细。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子·第六十三章》"
+Gui_szQuotes(10) = "合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子·第六十四章》"
+Gui_szQuotes(11) = "知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《孙子兵法·地形》"
+Gui_szQuotes(12) = "怒可以复喜，愠可以复说，亡国不可以复存，死者不可以复生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《孙子兵法·火攻》"
 
 Else
 
-Gui_szQuotes(1) = "　　子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(2) = "　　子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
-Gui_szQuotes(3) = "　　或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
-Gui_szQuotes(4) = "　　子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
-Gui_szQuotes(5) = "　　子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
-Gui_szQuotes(6) = "　　子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
-Gui_szQuotes(7) = "　　將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(8) = "　　柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
-Gui_szQuotes(9) = "　　圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
-Gui_szQuotes(10) = "　　合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
-Gui_szQuotes(11) = "　　知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
-Gui_szQuotes(12) = "　　怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
-        "　　　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
+Gui_szQuotes(1) = "子曰：“學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(2) = "子貢問曰：“有一言而可以終身行之者乎？”子曰：“其恕乎！己所不欲，勿施於人。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．衛靈公》"
+Gui_szQuotes(3) = "或曰：“以德報怨，何如？”子曰：“何以報德？以直報怨，以德報德。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．憲問》"
+Gui_szQuotes(4) = "子夏曰：“博學而篤志，切問而近思；仁在其中矣。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．子張》"
+Gui_szQuotes(5) = "子曰：“不患人之不己知，患不知人也。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．學而》"
+Gui_szQuotes(6) = "子曰：“三人行，必有我師焉：擇其善者而從之，其不善者而改之。”" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《論語．述而》"
+Gui_szQuotes(7) = "將欲歙之，必固張之；將欲弱之，必固強之；將欲廢之，必固興之；將欲取之，必固与之。是謂微明。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(8) = "柔弱胜剛強。魚不可脫於淵，國之利器不可以示人。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子．第三十六章》"
+Gui_szQuotes(9) = "圖難於其易；為大於其細。天下難事，必作於易；天下大事，必作於細。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子．第六十三章》"
+Gui_szQuotes(10) = "合抱之木，生於毫末；九層之台，起於累土；千里之行，始於足下。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《老子．第六十四章》"
+Gui_szQuotes(11) = "知彼知己，胜乃不殆；知天知地，胜乃可全。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《孫子兵法．地形》"
+Gui_szQuotes(12) = "怒可以複喜，慍可以複說，亡國不可以複存，死者不可以複生。" & vbCrLf & vbCrLf & _
+        "　　　　　　　　　　　　　　　　　　　　——《孫子兵法．火攻》"
 
 End If
 
