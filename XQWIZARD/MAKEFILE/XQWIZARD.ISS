@@ -21,7 +21,7 @@ tw.Custom=自定義設置
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.7
+AppVerName={cm:AppName} 4.71
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -114,8 +114,6 @@ Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\jj.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\jj.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; め攫恅璃(苤)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion

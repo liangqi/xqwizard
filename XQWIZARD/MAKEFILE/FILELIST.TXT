@@ -46,8 +46,6 @@ ADVERT\landlord.htm
 ADVERT\landlord.gif
 ADVERT\mobilechess.htm
 ADVERT\mobilechess.gif
-ADVERT\jj.htm
-ADVERT\jj.gif
 IMAGES_S\WOOD.GIF
 IMAGES_S\GREEN.GIF
 IMAGES_S\WHITE.GIF
