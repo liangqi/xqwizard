@@ -1403,7 +1403,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnFile 
       Caption         =   "文件(&F)"
       Begin VB.Menu mnFileNew 
-         Caption         =   "新的对局(&N)"
+         Caption         =   "新的对局(&N)..."
          Shortcut        =   ^N
       End
       Begin VB.Menu mnFileOpen 
@@ -1567,7 +1567,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnWizardPublish 
-         Caption         =   "发布棋谱(&U)"
+         Caption         =   "发布棋谱(&U)..."
       End
       Begin VB.Menu mnWizardBitmap 
          Caption         =   "生成图片棋盘(&B)"
@@ -1837,7 +1837,7 @@ Begin VB.Form frmMainLarge
          End
       End
    End
-   Begin VB.Menu mnToolS 
+   Begin VB.Menu mnTools 
       Caption         =   "工具(&T)"
       Begin VB.Menu mnToolSchool 
          Caption         =   "象棋巫师魔法学校(&S)"

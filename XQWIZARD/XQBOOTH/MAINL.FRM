@@ -849,7 +849,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnGame 
       Caption         =   "游戏(&G)"
       Begin VB.Menu mnGameSelect 
-         Caption         =   "选关(&O)"
+         Caption         =   "选关(&O)..."
          Shortcut        =   ^O
       End
       Begin VB.Menu mnGameNext 
@@ -897,10 +897,10 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnUsersRank 
-         Caption         =   "排名(&R)"
+         Caption         =   "排名(&R)..."
       End
       Begin VB.Menu mnUsersPoints 
-         Caption         =   "查询点数(&P)"
+         Caption         =   "查询点数(&P)..."
       End
       Begin VB.Menu mnUsersCenter 
          Caption         =   "用户中心首页(&C)"
@@ -909,16 +909,16 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnUsersHelp 
-         Caption         =   "求助(&E)"
+         Caption         =   "求助(&E)..."
       End
    End
    Begin VB.Menu mnMobile 
       Caption         =   "手机版(&M)"
       Begin VB.Menu mnMobileSave 
-         Caption         =   "提交存档到手机(&S)"
+         Caption         =   "提交存档到手机(&S)..."
       End
       Begin VB.Menu mnMobileLoad 
-         Caption         =   "从手机获取存档(&L)"
+         Caption         =   "从手机获取存档(&L)..."
       End
       Begin VB.Menu mnMobileSep1 
          Caption         =   "-"

@@ -2895,7 +2895,7 @@ Next
 On Error GoTo 0
 ' 菜单
 App_frmMain.mnFile.Caption = "文件(&F)"
-App_frmMain.mnFileNew.Caption = "新的對局(&N)"
+App_frmMain.mnFileNew.Caption = "新的對局(&N)..."
 App_frmMain.mnFileOpen.Caption = "打開(&O)..."
 App_frmMain.mnFileSave.Caption = "保存(&S)"
 App_frmMain.mnFileSaveAs.Caption = "另存為(&A)..."
@@ -2933,7 +2933,7 @@ App_frmMain.mnWizardHandicap(2).Caption = "被讓九子(&C)"
 App_frmMain.mnWizardHandicap(4).Caption = "讓單馬(&D)"
 App_frmMain.mnWizardHandicap(5).Caption = "讓單馬(&D)"
 App_frmMain.mnWizardHandicap(6).Caption = "讓九子(&F)"
-App_frmMain.mnWizardPublish.Caption = "發布棋譜(&U)"
+App_frmMain.mnWizardPublish.Caption = "發布棋譜(&U)..."
 App_frmMain.mnSearchOpening.Caption = "搜索開局(&O)"
 App_frmMain.mnSearchPosition.Caption = "搜索局面(&F)"
 App_frmMain.mnSearchEndgame.Caption = "搜索殘局(&E)"
