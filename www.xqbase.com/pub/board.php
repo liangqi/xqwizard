@@ -79,8 +79,6 @@
   $imgBoard = $board_style->getBoardImage($board);
   $imgPieces = $board_style->getPieceImages($pieces);
 
-  $imgPiece = $imgPieces[PIECE_RED + PIECE_KING];
-
   $gif = imagecreatetruecolor($board_style->width, $board_style->height);
   imagecopy($gif, $imgBoard, 0, 0, 0, 0, $board_style->width, $board_style->height);
   for ($i = 0; $i < 10; $i ++) {

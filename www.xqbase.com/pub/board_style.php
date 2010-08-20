@@ -136,9 +136,9 @@
     var $top;
     var $span;
     var $size;
-    var $images_folder;
-    var $board_array;
-    var $pieces_array;
+    var $folder;
+    var $board;
+    var $pieces;
 
     function BoardStyle($width, $height, $left, $top, $span, $size, $folder, $board, $pieces) {
       $this->width = $width;
@@ -173,11 +173,6 @@
         $pieceImages[$key] = imagecreatefromgif($piecesFolder . $value . ".gif");
       }
       return $pieceImages;
-    }
-
-    function getPieceImage($piecesFolder, $index) {
-      $pieceName = $this->piece_name[$index];
-      return $pieceName ? $piecesFolder + $pieceName + ".gif" : null;
     }
   }
 
