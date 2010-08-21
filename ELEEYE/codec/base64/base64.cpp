@@ -3,8 +3,8 @@
 #include <windows.h>
 #include "base64.h"
 
-__declspec(dllexport) VOID WINAPI Base64Enc(LPSTR szAsc, LPVOID lpBlock, LONG nBlockLen, LONG nLineLen);
-__declspec(dllexport) LONG WINAPI Base64Dec(LPVOID lpBlock, LPCSTR szAsc);
+extern "C" __declspec(dllexport) VOID WINAPI Base64Enc(LPSTR szAsc, LPVOID lpBlock, LONG nBlockLen, LONG nLineLen);
+extern "C" __declspec(dllexport) LONG WINAPI Base64Dec(LPVOID lpBlock, LPCSTR szAsc);
 
 VOID WINAPI Base64Enc(LPSTR szAsc, LPVOID lpBlock, LONG nBlockLen, LONG nLineLen) {
   B64Enc(szAsc, lpBlock, nBlockLen, nLineLen);
