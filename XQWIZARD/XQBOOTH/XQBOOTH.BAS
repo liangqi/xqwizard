@@ -909,10 +909,10 @@ Case USERS_POINTS
                 nResult = Str2Int(szResults(1))
                 If Options_nLanguage = LANGUAGE_ZH_CN Then
                     MsgBox "您还有 " & szResults(0) & " 点可用。" & IIf(nResult < 2800, "", _
-                            vbCrLf & vbCrLf & "您是白金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
+                            vbCrLf & vbCrLf & "您是黄金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
                 Else
                     MsgBox "您還有 " & szResults(0) & " 點可用。" & IIf(nResult < 2800, "", _
-                            vbCrLf & vbCrLf & "您是白金會員用戶，可以無限次使用提示和悔棋功能。"), vbInformation
+                            vbCrLf & vbCrLf & "您是黄金會員用戶，可以無限次使用提示和悔棋功能。"), vbInformation
                 End If
             Else
                 ConnError

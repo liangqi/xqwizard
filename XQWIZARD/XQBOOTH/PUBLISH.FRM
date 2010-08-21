@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmPublish 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "棋谱交流"
+   Caption         =   "求助"
    ClientHeight    =   3195
    ClientLeft      =   45
    ClientTop       =   330
@@ -300,7 +300,7 @@ On Error GoTo 0
 lblViewBoard.Font.Underline = True
 lblLocation.Font.Underline = True
 lblFormat.Font.Underline = True
-Caption = "發布棋譜"
+Caption = "求助"
 frmBoard.Caption = "棋盤"
 lblSize.Caption = "圖片類型"
 optSize(0).Caption = "簡單"
@@ -312,7 +312,7 @@ lblPieces.Caption = "棋子樣式"
 lblBoardUrl.Caption = "圖片地址"
 txtBoardUrl.ToolTipText = "按Ctrl-C複製到剪貼板"
 lblViewBoard.Caption = "預覽"
-frmPublish.Caption = "發布"
+frmFormat.Caption = "發布"
 lblLocation.Caption = "發布站點"
 lblFormat.Caption = "發布格式"
 btnHelp.Caption = "幫助"
