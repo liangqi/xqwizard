@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.67, Last Modified: Jul. 2010
+' Designed by Morning Yellow, Version: 4.72, Last Modified: Aug. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -846,25 +846,35 @@ Dim nSeconds As Integer, sdThis As Integer
 sdThis = IIf(sd = -1, Game_sdMax, sd)
 nSeconds = IIf(sd = -1, Game_sdMax, sd)
 If sdThis = 0 Eqv App_bFlipped Then
-    App_frmMain.lblTimeLeftUp.Caption = TimeText(Timer_nTimeLeft(sdThis))
-    If Options_nLanguage = LANGUAGE_ZH_CN Then
-        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
-                "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+    If Timer_nDepth > 0 Then
+        App_frmMain.lblTimeLeftUp.Caption = "-"
+        App_frmMain.lblTimeRuleUp.Caption = ""
     Else
-        App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
-                "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        App_frmMain.lblTimeLeftUp.Caption = TimeText(Timer_nTimeLeft(sdThis))
+        If Options_nLanguage = LANGUAGE_ZH_CN Then
+            App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
+                    "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        Else
+            App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
+                    "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        End If
     End If
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
-    App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
-    If Options_nLanguage = LANGUAGE_ZH_CN Then
-        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
-                "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+    If Timer_nDepth > 0 Then
+        App_frmMain.lblTimeLeftDown.Caption = "-"
+        App_frmMain.lblTimeRuleDown.Caption = ""
     Else
-        App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
-                "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
+        If Options_nLanguage = LANGUAGE_ZH_CN Then
+            App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
+                    "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        Else
+            App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
+                    "走完 " & Timer_nMoveLeft(sdThis) & " 步")
+        End If
+        App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
     End If
-    App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 End If
 
 End Sub
@@ -2430,42 +2440,43 @@ End Sub
 ' 新局时选择引擎走哪方
 Public Sub EngineNewGame(Optional ByVal nEnginePlay As Integer = -1)
 
-If Engine_nStatus > IDLE_UNLOAD Then
-    Select Case IIf(nEnginePlay < 0, Options_nEnginePlay, nEnginePlay)
-    Case ENGINE_PLAY_NONE
-        Engine_bRed = False
-        Engine_bBlack = False
-    Case ENGINE_PLAY_RED
+If Engine_nStatus = IDLE_UNLOAD Then
+    Exit Sub
+End If
+Select Case IIf(nEnginePlay < 0, Options_nEnginePlay, nEnginePlay)
+Case ENGINE_PLAY_NONE
+    Engine_bRed = False
+    Engine_bBlack = False
+Case ENGINE_PLAY_RED
+    Engine_bRed = True
+    Engine_bBlack = False
+Case ENGINE_PLAY_BLACK
+    Engine_bRed = False
+    Engine_bBlack = True
+Case ENGINE_PLAY_TURN
+    If App_bRedTurn Then
         Engine_bRed = True
         Engine_bBlack = False
-    Case ENGINE_PLAY_BLACK
+    Else
         Engine_bRed = False
         Engine_bBlack = True
-    Case ENGINE_PLAY_TURN
-        If App_bRedTurn Then
-            Engine_bRed = True
-            Engine_bBlack = False
-        Else
-            Engine_bRed = False
-            Engine_bBlack = True
-        End If
-        App_bRedTurn = Not App_bRedTurn
-    Case ENGINE_PLAY_RANDOM
-        If Rnd < 0.5 Then
-            Engine_bRed = True
-            Engine_bBlack = False
-        Else
-            Engine_bRed = False
-            Engine_bBlack = True
-        End If
-    End Select
-    App_frmMain.mnEngineRed.Checked = Engine_bRed
-    App_frmMain.tlb.Buttons("EngineRed").Value = IIf(Engine_bRed, tbrPressed, tbrUnpressed)
-    App_frmMain.mnEngineBlack.Checked = Engine_bBlack
-    App_frmMain.tlb.Buttons("EngineBlack").Value = IIf(Engine_bBlack, tbrPressed, tbrUnpressed)
-    If Engine_bRed Or Engine_bBlack Then
-        EnginePlayer
     End If
+    App_bRedTurn = Not App_bRedTurn
+Case ENGINE_PLAY_RANDOM
+    If Rnd < 0.5 Then
+        Engine_bRed = True
+        Engine_bBlack = False
+    Else
+        Engine_bRed = False
+        Engine_bBlack = True
+    End If
+End Select
+App_frmMain.mnEngineRed.Checked = Engine_bRed
+App_frmMain.tlb.Buttons("EngineRed").Value = IIf(Engine_bRed, tbrPressed, tbrUnpressed)
+App_frmMain.mnEngineBlack.Checked = Engine_bBlack
+App_frmMain.tlb.Buttons("EngineBlack").Value = IIf(Engine_bBlack, tbrPressed, tbrUnpressed)
+If Engine_bRed Or Engine_bBlack Then
+    EnginePlayer
 End If
 
 End Sub
@@ -2790,7 +2801,7 @@ Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", L("趣味象棋", "趣味象
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
-Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
+Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "2"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
 Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "999"), 1, 999)

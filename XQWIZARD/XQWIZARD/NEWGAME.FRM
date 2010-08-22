@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmNewGame 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "开始对局"
-   ClientHeight    =   4200
+   ClientHeight    =   3120
    ClientLeft      =   5310
    ClientTop       =   1830
    ClientWidth     =   3000
@@ -18,38 +18,31 @@ Begin VB.Form frmNewGame
    Icon            =   "NEWGAME.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4200
+   ScaleHeight     =   3120
    ScaleWidth      =   3000
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
-   Begin VB.CheckBox chkNoComputer 
-      Caption         =   "不用电脑，只观看或编辑棋局"
-      Height          =   255
-      Left            =   120
-      TabIndex        =   15
-      Top             =   3000
-      Width           =   2655
-   End
    Begin VB.CheckBox chkShowNew 
       Caption         =   "始终显示“开始对局”对话框"
       Height          =   255
       Left            =   120
-      TabIndex        =   16
-      Top             =   3360
+      TabIndex        =   12
+      Top             =   2280
       Width           =   2655
    End
    Begin VB.Frame frmHandicap 
       Caption         =   "先走让子"
       Height          =   2055
-      Left            =   120
-      TabIndex        =   3
-      Top             =   840
+      Left            =   1560
+      TabIndex        =   6
+      Top             =   120
       Width           =   1335
-      Begin VB.CheckBox chkCustom 
+      Begin VB.OptionButton optHandicap 
          Caption         =   "自定义"
          Height          =   255
+         Index           =   4
          Left            =   120
-         TabIndex        =   8
+         TabIndex        =   11
          Top             =   1680
          Width           =   1095
       End
@@ -58,7 +51,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   2
          Left            =   120
-         TabIndex        =   6
+         TabIndex        =   9
          Top             =   960
          Width           =   1095
       End
@@ -67,7 +60,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   3
          Left            =   120
-         TabIndex        =   7
+         TabIndex        =   10
          Top             =   1320
          Width           =   1095
       End
@@ -76,7 +69,7 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   0
          Left            =   120
-         TabIndex        =   4
+         TabIndex        =   7
          Top             =   240
          Width           =   1095
       End
@@ -85,25 +78,34 @@ Begin VB.Form frmNewGame
          Height          =   255
          Index           =   1
          Left            =   120
-         TabIndex        =   5
+         TabIndex        =   8
          Top             =   600
          Width           =   1095
       End
    End
    Begin VB.Frame frmFlip 
       Caption         =   "谁先走"
-      Height          =   615
+      Height          =   1335
       Left            =   120
       TabIndex        =   0
       Top             =   120
-      Width           =   2775
+      Width           =   1335
+      Begin VB.OptionButton optFlip 
+         Caption         =   "不用电脑"
+         Height          =   255
+         Index           =   2
+         Left            =   120
+         TabIndex        =   3
+         Top             =   960
+         Width           =   1095
+      End
       Begin VB.OptionButton optFlip 
          Caption         =   "电脑先走"
          Height          =   255
          Index           =   1
-         Left            =   1560
+         Left            =   120
          TabIndex        =   2
-         Top             =   240
+         Top             =   600
          Width           =   1095
       End
       Begin VB.OptionButton optFlip 
@@ -117,55 +119,18 @@ Begin VB.Form frmNewGame
       End
    End
    Begin VB.Frame frmLevel 
-      Caption         =   "电脑水平"
-      Height          =   2055
-      Left            =   1560
-      TabIndex        =   9
-      Top             =   840
+      Caption         =   "难度"
+      Height          =   615
+      Left            =   120
+      TabIndex        =   4
+      Top             =   1560
       Width           =   1335
-      Begin VB.OptionButton optLevel 
-         Caption         =   "业余"
-         Height          =   255
-         Index           =   1
+      Begin VB.ComboBox cmbLevel 
+         Height          =   300
          Left            =   120
-         TabIndex        =   11
-         Top             =   600
-         Width           =   735
-      End
-      Begin VB.OptionButton optLevel 
-         Caption         =   "专业"
-         Height          =   255
-         Index           =   2
-         Left            =   120
-         TabIndex        =   12
-         Top             =   960
-         Width           =   735
-      End
-      Begin VB.OptionButton optLevel 
-         Caption         =   "大师"
-         Height          =   255
-         Index           =   3
-         Left            =   120
-         TabIndex        =   13
-         Top             =   1320
-         Width           =   735
-      End
-      Begin VB.OptionButton optLevel 
-         Caption         =   "入门"
-         Height          =   255
-         Index           =   0
-         Left            =   120
-         TabIndex        =   10
+         Style           =   2  'Dropdown List
+         TabIndex        =   5
          Top             =   240
-         Width           =   735
-      End
-      Begin VB.OptionButton optLevel 
-         Caption         =   "特级大师"
-         Height          =   255
-         Index           =   4
-         Left            =   120
-         TabIndex        =   14
-         Top             =   1680
          Width           =   1095
       End
    End
@@ -174,8 +139,8 @@ Begin VB.Form frmNewGame
       Default         =   -1  'True
       Height          =   375
       Left            =   360
-      TabIndex        =   17
-      Top             =   3720
+      TabIndex        =   13
+      Top             =   2640
       Width           =   975
    End
    Begin VB.CommandButton btnCancel 
@@ -183,8 +148,8 @@ Begin VB.Form frmNewGame
       Caption         =   "取消"
       Height          =   375
       Left            =   1680
-      TabIndex        =   18
-      Top             =   3720
+      TabIndex        =   14
+      Top             =   2640
       Width           =   975
    End
 End
@@ -196,7 +161,7 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.72, Last Modified: Aug. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -215,38 +180,71 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private Const DIFF_FRESHMAN_1 = 0
+Private Const DIFF_FRESHMAN_2 = 1
+Private Const DIFF_FRESHMAN_3 = 2
+Private Const DIFF_BEGINNER = 3
+Private Const DIFF_AMATEUR = 4
+Private Const DIFF_EXPERT = 5
+Private Const DIFF_MASTER = 6
+Private Const DIFF_GRANDMASTER = 7
+
 Private Sub Form_Load()
 
 Dim i As Integer
+cmbLevel.AddItem L("新手一", "新手一")
+cmbLevel.AddItem L("新手二", "新手二")
+cmbLevel.AddItem L("新手三", "新手三")
+cmbLevel.AddItem L("入门", "入門")
+cmbLevel.AddItem L("业余", "業餘")
+cmbLevel.AddItem L("专业", "專業")
+cmbLevel.AddItem L("大师", "大師")
+cmbLevel.AddItem L("特级大师", "特級大師")
 
 Select Case Options_nEnginePlay
+Case ENGINE_PLAY_NONE
+    optFlip(2).Value = True
 Case ENGINE_PLAY_RED
     optFlip(1).Value = True
 Case ENGINE_PLAY_BLACK
     optFlip(0).Value = True
 Case ENGINE_PLAY_TURN
-    optFlip(0).Value = Not App_bRedTurn
-Case Else
-    optFlip(0).Value = Rnd < 0.5
+    If App_bRedTurn Then
+        optFlip(1).Value = True
+    Else
+        optFlip(0).Value = True
+    End If
+Case ENGINE_PLAY_RANDOM
+    If Rnd < 0.5 Then
+        optFlip(1).Value = True
+    Else
+        optFlip(0).Value = True
+    End If
 End Select
-optFlip(1).Value = Not optFlip(0).Value
 
 optHandicap(0).Value = True
 
 Select Case Timer_nDepth
-Case LEVEL_GRANDMASTER
-    optLevel(4).Value = True
-Case LEVEL_MASTER
-    optLevel(3).Value = True
-Case LEVEL_EXPERT
-    optLevel(2).Value = True
+Case 1, 2
+    cmbLevel.ListIndex = DIFF_FRESHMAN_1
+Case 3
+    cmbLevel.ListIndex = DIFF_FRESHMAN_2
+Case 4
+    cmbLevel.ListIndex = DIFF_FRESHMAN_3
+Case LEVEL_BEGINNER
+    cmbLevel.ListIndex = DIFF_BEGINNER
 Case LEVEL_AMATEUR
-    optLevel(1).Value = True
+    cmbLevel.ListIndex = DIFF_AMATEUR
+Case LEVEL_EXPERT
+    cmbLevel.ListIndex = DIFF_EXPERT
+Case LEVEL_MASTER
+    cmbLevel.ListIndex = DIFF_MASTER
+Case LEVEL_GRANDMASTER
+    cmbLevel.ListIndex = DIFF_GRANDMASTER
 Case Else
-    optLevel(0).Value = True
+    cmbLevel.ListIndex = DIFF_BEGINNER
 End Select
 
-chkNoComputer.Value = IIf(Options_nEnginePlay = ENGINE_PLAY_NONE, 1, 0)
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
 
@@ -264,65 +262,55 @@ Caption = "開始對局"
 frmFlip.Caption = "誰先走"
 optFlip(0).Caption = "我先走"
 optFlip(1).Caption = "電腦先走"
+optFlip(2).Caption = "不用電腦"
 frmHandicap.Caption = "先走讓子"
 optHandicap(0).Caption = "不讓子"
 optHandicap(1).Caption = "讓單馬"
 optHandicap(2).Caption = "讓雙馬"
 optHandicap(3).Caption = "讓九子"
-chkCustom.Caption = "自定義"
-frmLevel.Caption = "電腦水平"
-optLevel(0).Caption = "入門"
-optLevel(1).Caption = "業余"
-optLevel(2).Caption = "專業"
-optLevel(3).Caption = "大師"
-optLevel(4).Caption = "特級大師"
-chkNoComputer.Caption = "不用電腦，只觀看或編輯棋局"
+optHandicap(4).Caption = "自定義"
+frmLevel.Caption = "難度"
 chkShowNew.Caption = "始終顯示“開始對局”對話框"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
 
 End Sub
 
-Private Sub chkNoComputer_Click()
-
-Dim i As Integer, bEnabled As Boolean
-bEnabled = chkNoComputer.Value = 0
-frmFlip.Enabled = bEnabled
-For i = 0 To 1
-    optFlip(i).Enabled = bEnabled
-Next
-frmLevel.Enabled = bEnabled
-For i = 0 To 4
-    optLevel(i).Enabled = bEnabled
-Next
-
-End Sub
-
 Private Sub btnConfirm_Click()
 
-If optLevel(4).Value Then
-    Timer_nDepth = LEVEL_GRANDMASTER
-    Timer_nIncMove = 1
-ElseIf optLevel(3).Value Then
-    Timer_nDepth = LEVEL_MASTER
-    Timer_nIncMove = 6
-ElseIf optLevel(2).Value Then
-    Timer_nDepth = LEVEL_EXPERT
-    Timer_nIncMove = 36
-ElseIf optLevel(1).Value Then
-    Timer_nDepth = LEVEL_AMATEUR
-    Timer_nIncMove = 216
-Else
+Select Case cmbLevel.ListIndex
+Case DIFF_FRESHMAN_1
+    Timer_nDepth = 2
+Case DIFF_FRESHMAN_2
+    Timer_nDepth = 3
+Case DIFF_FRESHMAN_3
+    Timer_nDepth = 4
+Case DIFF_BEGINNER
     Timer_nDepth = LEVEL_BEGINNER
     Timer_nIncMove = 999
-End If
+Case DIFF_AMATEUR
+    Timer_nDepth = LEVEL_AMATEUR
+    Timer_nIncMove = 216
+Case DIFF_EXPERT
+    Timer_nDepth = LEVEL_EXPERT
+    Timer_nIncMove = 36
+Case DIFF_MASTER
+    Timer_nDepth = LEVEL_MASTER
+    Timer_nIncMove = 6
+Case DIFF_GRANDMASTER
+    Timer_nDepth = LEVEL_GRANDMASTER
+    Timer_nIncMove = 1
+End Select
+
 Timer_bIncMode = False
 Timer_nInitTime = 1
 Timer_nIncTime = 1
 ' 以上难度设置代码必须在RestartGame前运行才会生效
 
 App_szFileName = ""
-If optHandicap(1).Value Then
+If optHandicap(0).Value Then
+    NewGame0
+ElseIf optHandicap(1).Value Then
     LoadFenStr HANDICAP_A
 ElseIf optHandicap(2).Value Then
     LoadFenStr HANDICAP_B
@@ -330,12 +318,10 @@ ElseIf optHandicap(3).Value Then
     LoadFenStr HANDICAP_C
 Else
     NewGame0
-End If
-If chkCustom.Value = 1 Then
     frmPosEdit.Show vbModal, Me
 End If
 
-EngineNewGame IIf(chkNoComputer.Value = 1, ENGINE_PLAY_NONE, _
+EngineNewGame IIf(optFlip(2).Value, ENGINE_PLAY_NONE, _
         IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED))
 If Options_nEnginePlay = ENGINE_PLAY_TURN Then
     App_bRedTurn = Not App_bRedTurn
