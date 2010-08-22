@@ -5224,7 +5224,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5243,7 +5242,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5262,7 +5260,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5281,7 +5278,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5300,7 +5296,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5319,7 +5314,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5338,7 +5332,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5357,7 +5350,6 @@ Begin VB.Form frmSelect
       End
       Begin VB.Label lblTag 
          Alignment       =   2  'Center
-         Caption         =   "第 ???? 关"
          BeginProperty Font 
             Name            =   "宋体"
             Size            =   10.5
@@ -5386,6 +5378,7 @@ Begin VB.Form frmSelect
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
+      Default         =   -1  'True
       Height          =   375
       Left            =   3840
       TabIndex        =   10
@@ -5495,6 +5488,9 @@ For i = 0 To Controls.Count - 1
     Controls(i).Font = Font
 Next
 On Error GoTo 0
+Caption = "選關"
+btnConfirm.Caption = "確定"
+btnCancel.Caption = "取消"
 
 End Sub
 

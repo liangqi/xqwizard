@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmPublish 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "ÇóÖú"
-   ClientHeight    =   3195
+   ClientHeight    =   2760
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4680
@@ -18,7 +18,7 @@ Begin VB.Form frmPublish
    Icon            =   "PUBLISH.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3195
+   ScaleHeight     =   2760
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -27,7 +27,7 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   360
       TabIndex        =   18
-      Top             =   2760
+      Top             =   2280
       Width           =   1095
    End
    Begin VB.CommandButton btnPublish 
@@ -36,7 +36,7 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   1800
       TabIndex        =   19
-      Top             =   2760
+      Top             =   2280
       Width           =   1095
    End
    Begin VB.Frame frmBoard 
@@ -167,12 +167,12 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   3240
       TabIndex        =   20
-      Top             =   2760
+      Top             =   2280
       Width           =   1095
    End
    Begin VB.Frame frmFormat 
       Caption         =   "·¢²¼"
-      Height          =   1095
+      Height          =   615
       Left            =   120
       TabIndex        =   13
       Top             =   1560
@@ -182,7 +182,7 @@ Begin VB.Form frmPublish
          Left            =   960
          Style           =   2  'Dropdown List
          TabIndex        =   15
-         Top             =   600
+         Top             =   240
          Width           =   1215
       End
       Begin VB.ComboBox cmbFormat 
@@ -190,7 +190,7 @@ Begin VB.Form frmPublish
          Left            =   3120
          Style           =   2  'Dropdown List
          TabIndex        =   17
-         Top             =   600
+         Top             =   240
          Width           =   1215
       End
       Begin VB.Label lblFormat 
@@ -210,7 +210,7 @@ Begin VB.Form frmPublish
          MouseIcon       =   "PUBLISH.frx":015E
          MousePointer    =   99  'Custom
          TabIndex        =   16
-         Top             =   600
+         Top             =   240
          Width           =   735
       End
       Begin VB.Label lblLocation 
@@ -230,7 +230,7 @@ Begin VB.Form frmPublish
          MouseIcon       =   "PUBLISH.frx":02B0
          MousePointer    =   99  'Custom
          TabIndex        =   14
-         Top             =   600
+         Top             =   240
          Width           =   735
       End
    End

@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmRank 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "近两周排名"
-   ClientHeight    =   4440
+   ClientHeight    =   4320
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   3090
@@ -18,7 +18,7 @@ Begin VB.Form frmRank
    Icon            =   "RANK.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4440
+   ScaleHeight     =   4320
    ScaleWidth      =   3090
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -26,7 +26,7 @@ Begin VB.Form frmRank
       Cancel          =   -1  'True
       Caption         =   "确定"
       Default         =   -1  'True
-      Height          =   495
+      Height          =   375
       Left            =   960
       TabIndex        =   38
       Top             =   3840
