@@ -307,7 +307,7 @@ Private Sub Form_Load()
 Dim i As Integer
 
 cmbEnginePlay.Clear
-cmbEnginePlay.AddItem L("不启用电脑", "不啟用電腦。"), 0
+cmbEnginePlay.AddItem L("不启用电脑", "不啟用電腦"), 0
 cmbEnginePlay.AddItem L("电脑执红", "電腦執紅"), 1
 cmbEnginePlay.AddItem L("电脑执黑", "電腦執黑"), 2
 cmbEnginePlay.AddItem L("红黑轮流", "紅黑輪流"), 3

@@ -123,6 +123,7 @@ Begin VB.Form frmNewGame
       Height          =   615
       Left            =   120
       TabIndex        =   4
+      ToolTipText     =   "如果“新手一”对你仍有难度，可以叫电脑让你几个子。"
       Top             =   1560
       Width           =   1335
       Begin VB.ComboBox cmbLevel 
@@ -249,6 +250,7 @@ chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
+    cmbLevel.ToolTipText = frmLevel.ToolTipText
     Exit Sub
 End If
 Font.Charset = 136
@@ -270,9 +272,11 @@ optHandicap(2).Caption = "讓雙馬"
 optHandicap(3).Caption = "讓九子"
 optHandicap(4).Caption = "自定義"
 frmLevel.Caption = "難度"
+frmLevel.ToolTipText = "如果“新手一”對你仍有難度，可以叫電腦讓你幾個子。"
 chkShowNew.Caption = "始終顯示“開始對局”對話框"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
+cmbLevel.ToolTipText = frmLevel.ToolTipText
 
 End Sub
 
@@ -324,7 +328,7 @@ End If
 EngineNewGame IIf(optFlip(2).Value, ENGINE_PLAY_NONE, _
         IIf(optFlip(0).Value, ENGINE_PLAY_BLACK, ENGINE_PLAY_RED))
 If Options_nEnginePlay = ENGINE_PLAY_TURN Then
-    App_bRedTurn = Not App_bRedTurn
+    App_bRedTurn = optFlip(0).Value
 End If
 
 Options_bShowNew = (chkShowNew.Value = 1)
