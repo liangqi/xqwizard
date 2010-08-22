@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmPublish 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "发布棋谱"
-   ClientHeight    =   3195
+   ClientHeight    =   3120
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   4680
@@ -18,7 +18,7 @@ Begin VB.Form frmPublish
    Icon            =   "PUBLISH.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3195
+   ScaleHeight     =   3120
    ScaleWidth      =   4680
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
@@ -27,7 +27,7 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   360
       TabIndex        =   21
-      Top             =   2760
+      Top             =   2640
       Width           =   1095
    End
    Begin VB.CommandButton btnPublish 
@@ -36,7 +36,7 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   1800
       TabIndex        =   22
-      Top             =   2760
+      Top             =   2640
       Width           =   1095
    End
    Begin VB.Frame frmBoard 
@@ -167,12 +167,12 @@ Begin VB.Form frmPublish
       Height          =   375
       Left            =   3240
       TabIndex        =   23
-      Top             =   2760
+      Top             =   2640
       Width           =   1095
    End
    Begin VB.Frame frmFormat 
       Caption         =   "发布"
-      Height          =   1095
+      Height          =   975
       Left            =   120
       TabIndex        =   13
       Top             =   1560
