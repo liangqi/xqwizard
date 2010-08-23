@@ -1,7 +1,7 @@
 /*
 UCCILEAG - a Computer Chinese Chess League (UCCI Engine League) Emulator
-Designed by Morning Yellow, Version: 3.7, Last Modified: Apr. 2008
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.72, Last Modified: Aug. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <math.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -114,6 +115,7 @@ static TeamStruct TeamList[MAX_TEAM];
 
 // 联赛全局变量
 static struct {
+  volatile bool bRunning;
   int nTeamNum, nRobinNum, nRoundNum, nGameNum, nRemainProcs;
   int nInitTime, nIncrTime, nStopTime, nStandardCpuTime, nNameLen;
   bool bPromotion;
@@ -725,8 +727,10 @@ struct GameStruct {
   void AddMove(int mv);  // 走一个着法
   void RunEngine(void);  // 让引擎运行
   void BeginGame(int nRobin, int nRound, int nGame); // 开始一个棋局
+  void QuitEngine(void); // 让引擎退出
   void ResumeGame(void); // 继续上次挂起的棋局
   bool EndGame(int nRobin, int nRound, int nGame);   // 终止一个棋局
+  void TerminateGame(void); // 中断一个棋局
 };
 
 static const char *const cszColorStr[2] = {
@@ -994,85 +998,93 @@ void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   // 向引擎发送指令后，棋局就挂起，等待下次调用"ResumeGame()"以继续进行
 }
 
+// 退出引擎
+void GameStruct::QuitEngine(void) {
+  char szLineStr[MAX_CHAR];
+  for (sd = 0; sd < 2; sd ++) {
+    if (bStarted[sd]) {
+      llTime = GetTime();
+      Send("quit");
+      while ((int) (GetTime() - llTime) < 1000) {
+        if (Receive(szLineStr)) {
+          if (StrEqv(szLineStr, "bye")) {
+            break;
+          }
+        } else {
+          Idle();
+        }
+      }
+      pipe[sd].Close();
+    }
+  }
+  League.nRemainProcs ++; // 在EndGame()之前就释放处理器资源，提高处理器利用率
+}
+
 // 继续上次挂起的棋局
 void GameStruct::ResumeGame(void) {
   char szLineStr[MAX_CHAR];
   CheckStruct chkRecord;
   char *lp;
 
-  if (nResult == 0) { // 棋局尚未结束时才有操作
-    // 首先读取引擎反馈信息
-    chkRecord.mv = BESTMOVE_THINKING;
-    while (Receive(szLineStr)) {
-      lp = szLineStr;
-      if (StrEqvSkip(lp, "bestmove ")) {
-        chkRecord.mv = COORD_MOVE(*(uint32_t *) lp);
-        lp += 4;
-        if (StrScan(lp, " resign")) {
-          chkRecord.mv = BESTMOVE_RESIGN;
-        } else {
-          if (StrScan(lp, " draw")) {
-            if (bDraw) {
-              chkRecord.mv = BESTMOVE_DRAW;
-            } else {
-              bDraw = true;
-            }
-          } else {
-            bDraw = false;
-          };
-        };
-        break;
-      } else if (StrEqv(lp, "nobestmove")) {
+  // 棋局尚未结束时才有操作
+  if (nResult > 0) {
+    return;
+  }
+  // 首先读取引擎反馈信息
+  chkRecord.mv = BESTMOVE_THINKING;
+  while (Receive(szLineStr)) {
+    lp = szLineStr;
+    if (StrEqvSkip(lp, "bestmove ")) {
+      chkRecord.mv = COORD_MOVE(*(uint32_t *) lp);
+      lp += 4;
+      if (StrScan(lp, " resign")) {
         chkRecord.mv = BESTMOVE_RESIGN;
-        break;
-      }
-    }
-    // 如果没有读到反馈着法，就判断引擎是否超时
-    if (chkRecord.mv == BESTMOVE_THINKING) {
-      if (bTimeout) {
-        if ((int) (GetTime() - llTime) > nTimer[sd] + League.nStopTime) {
-          chkRecord.mv = BESTMOVE_TIMEOUT; // 只有时间超出停止时间后，才给空着以表示超时
-        }
       } else {
-        if ((int) (GetTime() - llTime) > nTimer[sd]) {
-          Send("stop");
-          bTimeout = true;
-        }
-      }
-    }
-    // 如果有反馈着法(包括超时返回的空着)，就走这个着法
-    if (chkRecord.mv != BESTMOVE_THINKING) {
-      nTimer[sd] -= (int) (GetTime() - llTime);
-      if (nTimer[sd] < 0) {
-        nTimer[sd] = 0;
-      }
-      chkRecord.nTimer = nTimer[sd];
-      CheckFile.Write(chkRecord);
-      AddMove(chkRecord.mv);
-      lppgn->Write(szGameFile);
-      PublishGame(lppgn, szGameFile, nResult > 0);
-      if (nResult == 0) {
-        RunEngine(); // 如果棋局尚未结束，那么让引擎思考下一步棋
-      } else {
-        // 如果棋局已经结束，那么终止两个引擎
-        for (sd = 0; sd < 2; sd ++) {
-          if (bStarted[sd]) {
-            llTime = GetTime();
-            Send("quit");
-            while ((int) (GetTime() - llTime) < 1000) {
-              if (Receive(szLineStr)) {
-                if (StrEqv(szLineStr, "bye")) {
-                  break;
-                }
-              } else {
-                Idle();
-              }
-            }
-            pipe[sd].Close();
+        if (StrScan(lp, " draw")) {
+          if (bDraw) {
+            chkRecord.mv = BESTMOVE_DRAW;
+          } else {
+            bDraw = true;
           }
-        }
-        League.nRemainProcs ++; // 在EndGame()之前就释放处理器资源，提高处理器利用率
+        } else {
+          bDraw = false;
+        };
+      };
+      break;
+    } else if (StrEqv(lp, "nobestmove")) {
+      chkRecord.mv = BESTMOVE_RESIGN;
+      break;
+    }
+  }
+  // 如果没有读到反馈着法，就判断引擎是否超时
+  if (chkRecord.mv == BESTMOVE_THINKING) {
+    if (bTimeout) {
+      if ((int) (GetTime() - llTime) > nTimer[sd] + League.nStopTime) {
+        chkRecord.mv = BESTMOVE_TIMEOUT; // 只有时间超出停止时间后，才给空着以表示超时
       }
+    } else {
+      if ((int) (GetTime() - llTime) > nTimer[sd]) {
+        Send("stop");
+        bTimeout = true;
+      }
+    }
+  }
+  // 如果有反馈着法(包括超时返回的空着)，就走这个着法
+  if (chkRecord.mv != BESTMOVE_THINKING) {
+    nTimer[sd] -= (int) (GetTime() - llTime);
+    if (nTimer[sd] < 0) {
+      nTimer[sd] = 0;
+    }
+    chkRecord.nTimer = nTimer[sd];
+    CheckFile.Write(chkRecord);
+    AddMove(chkRecord.mv);
+    lppgn->Write(szGameFile);
+    PublishGame(lppgn, szGameFile, nResult > 0);
+    if (nResult == 0) {
+      RunEngine(); // 如果棋局尚未结束，那么让引擎思考下一步棋
+    } else {
+      // 如果棋局已经结束，那么终止两个引擎
+      QuitEngine();
     }
   }
 }
@@ -1100,42 +1112,54 @@ bool GameStruct::EndGame(int nRobin, int nRound, int nGame) {
   double dfWeHome;
   const ResultStruct *lpResult;
 
-  if (nResult > 0) {
-    delete lppgn;
-    fclose(fpLogFile);
-    CheckFile.Close();
-    // 如果棋局已经完成，那么计算成绩
-    dfWeHome = 1.0 / (1.0 + pow(10.0, (double) (lpTeam[1]->nEloValue - lpTeam[0]->nEloValue) / 400.0));
-    lpResult = ResultList + nResult;
-    lpTeam[0]->nWin += lpResult->nHomeWin;
-    lpTeam[0]->nDraw += lpResult->nHomeDraw;
-    lpTeam[0]->nLoss += lpResult->nHomeLoss;
-    lpTeam[0]->nScore += lpResult->nHomeScore;
-    lpTeam[1]->nWin += lpResult->nAwayWin;
-    lpTeam[1]->nDraw += lpResult->nAwayDraw;
-    lpTeam[1]->nLoss += lpResult->nAwayLoss;
-    lpTeam[1]->nScore += lpResult->nAwayScore;
-    lpTeam[0]->nEloValue += (int) ((lpResult->dfWHome - dfWeHome) * lpTeam[0]->nKValue);
-    lpTeam[1]->nEloValue += (int) ((dfWeHome - lpResult->dfWHome) * lpTeam[1]->nKValue);
-    // 每轮的第一局棋显示轮次
-    if (nGame == 0) {
-      printf("第 %d 轮：\n\n", nRobin * League.nRoundNum + nRound + 1);
-    }
-    // 输出棋局结果
-    printf("%s", lpTeam[0]->szEngineName);
-    PrintDup(' ', League.nNameLen - strlen(lpTeam[0]->szEngineName));
-    printf(" %s %s", lpResult->szResultStr, lpTeam[1]->szEngineName);
-    PrintDup(' ', League.nNameLen - strlen(lpTeam[1]->szEngineName));
-    printf(" (%.3s-%.3s%c.PGN)\n", (const char *) &lpTeam[0]->dwAbbr,
-        (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
-    fflush(stdout);
-    // 整理直播
-    Live.cResult[nRobin][nRound][nGame] = nResult;
-    PublishLeague();
-    return true;
-  } else {
+  if (nResult == 0) {
     return false;
   }
+  delete lppgn;
+  fclose(fpLogFile);
+  CheckFile.Close();
+  // 如果棋局已经完成，那么计算成绩
+  dfWeHome = 1.0 / (1.0 + pow(10.0, (double) (lpTeam[1]->nEloValue - lpTeam[0]->nEloValue) / 400.0));
+  lpResult = ResultList + nResult;
+  lpTeam[0]->nWin += lpResult->nHomeWin;
+  lpTeam[0]->nDraw += lpResult->nHomeDraw;
+  lpTeam[0]->nLoss += lpResult->nHomeLoss;
+  lpTeam[0]->nScore += lpResult->nHomeScore;
+  lpTeam[1]->nWin += lpResult->nAwayWin;
+  lpTeam[1]->nDraw += lpResult->nAwayDraw;
+  lpTeam[1]->nLoss += lpResult->nAwayLoss;
+  lpTeam[1]->nScore += lpResult->nAwayScore;
+  lpTeam[0]->nEloValue += (int) ((lpResult->dfWHome - dfWeHome) * lpTeam[0]->nKValue);
+  lpTeam[1]->nEloValue += (int) ((dfWeHome - lpResult->dfWHome) * lpTeam[1]->nKValue);
+  // 每轮的第一局棋显示轮次
+  if (nGame == 0) {
+    printf("第 %d 轮：\n\n", nRobin * League.nRoundNum + nRound + 1);
+  }
+  // 输出棋局结果
+  printf("%s", lpTeam[0]->szEngineName);
+  PrintDup(' ', League.nNameLen - strlen(lpTeam[0]->szEngineName));
+  printf(" %s %s", lpResult->szResultStr, lpTeam[1]->szEngineName);
+  PrintDup(' ', League.nNameLen - strlen(lpTeam[1]->szEngineName));
+  printf(" (%.3s-%.3s%c.PGN)\n", (const char *) &lpTeam[0]->dwAbbr,
+      (const char *) &lpTeam[1]->dwAbbr, cszRobinChar[nRobin]);
+  fflush(stdout);
+  // 整理直播
+  Live.cResult[nRobin][nRound][nGame] = nResult;
+  PublishLeague();
+  return true;
+}
+
+// 中断一个棋局
+void GameStruct::TerminateGame(void) {
+  if (nResult == 0) {
+    if (!bTimeout) {
+      Send("stop");
+    }
+    QuitEngine();
+  }
+  delete lppgn;
+  fclose(fpLogFile);
+  CheckFile.Close();
 }
 
 // 输出排名表
@@ -1180,6 +1204,12 @@ static void PrintRankList(void) {
 
 // 棋局队列占用大量空间，所以必须用全局变量
 static GameStruct GameList[QUEUE_LEN];
+
+// 捕获Ctrl-C和Ctrl-Break
+static void signal_handler(int sig) {
+  signal(sig, signal_handler);
+  League.bRunning = false;
+}
 
 // 主例程
 int main(void) {
@@ -1310,7 +1340,7 @@ int main(void) {
   if (League.bPromotion) {
     printf("规则：　　允许仕(士)相(象)升变成兵(卒)\n");
   }
-  printf("模拟器：　UCCI引擎联赛模拟器 3.7\n\n");
+  printf("模拟器：　UCCI引擎联赛模拟器 3.72\n\n");
   printf("参赛引擎：\n\n");
   printf("   缩写 引擎名称");
   PrintDup(' ', League.nNameLen - 8);
@@ -1412,6 +1442,14 @@ int main(void) {
   }
   Live.llTime = GetTime();
 
+  // 捕获Ctrl-C和Ctrl-Break
+  League.bRunning = true;
+  signal(SIGINT, signal_handler);
+  signal(SIGTERM, signal_handler); 
+#ifdef SIGBREAK
+  signal(SIGBREAK, signal_handler);
+#endif
+
   // 现在开始控制棋局队列，这是本模拟器的核心部分
   printf("=== 联赛进程开始 ===\n\n");
   fflush(stdout);
@@ -1421,7 +1459,7 @@ int main(void) {
   nRobinPush = nRoundPush = nGamePush = 0; // 压入队列的循环、轮次和棋局序号
   nRobinPop = nRoundPop = nGamePop = 0;    // 弹出队列的循环、轮次和棋局序号
   nQueueBegin = nQueueEnd = 0;             // 队列出口和队列入口
-  while (nRobinPop < League.nRobinNum) {
+  while (League.bRunning && nRobinPop < League.nRobinNum) {
     // 把一个棋局压入队列的条件是：(1) 所有比赛完成，(2) 有剩余的处理器，(3) 队列未被填满
     if (nRobinPush < League.nRobinNum && League.nRemainProcs > 0 && (nQueueEnd + 1) % QUEUE_LEN != nQueueBegin) {
       GameList[nQueueEnd].BeginGame(nRobinPush, nRoundPush, nGamePush);
@@ -1468,6 +1506,14 @@ int main(void) {
     }
     Idle();
   }
+
+  // 如果队列不是空的，那么尝试将棋局中断
+  nQueueIndex = nQueueBegin;
+  while (nQueueIndex != nQueueEnd) {
+    GameList[nQueueIndex].TerminateGame();
+    nQueueIndex = (nQueueIndex + 1) % QUEUE_LEN;
+  }
+
   printf("=== 联赛进程结束 ===\n\n");
   printf("最终排名：\n\n");
   PrintRankList();
