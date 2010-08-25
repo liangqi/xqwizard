@@ -717,11 +717,11 @@ If Not (Options_bPromptSave And App_bUpdated) Then
     Exit Function
 End If
 If Options_nLanguage = LANGUAGE_ZH_CN Then
-    dwResult = MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " & App_szFileName & " 已更改。") & _
-            vbCrLf & "是否保存更改？", vbYesNoCancel + vbExclamation)
+    dwResult = MsgBox(IIf(App_szFileName = "", "棋局已更改。", "文件 " & App_szFileName & " 中的棋局已更改。") & vbCrLf & vbCrLf & _
+            "想保存文件吗？", vbYesNoCancel + vbExclamation)
 Else
-    dwResult = MsgBox(IIf(App_szFileName = "", "文件已更改。", "文件 " & App_szFileName & " 已更改。") & _
-            vbCrLf & "是否保存更改？", vbYesNoCancel + vbExclamation)
+    dwResult = MsgBox(IIf(App_szFileName = "", "棋局已更改。", "文件 " & App_szFileName & " 中的棋局已更改。") & vbCrLf & vbCrLf & _
+            "想保存文件嗎？", vbYesNoCancel + vbExclamation)
 End If
 Select Case dwResult
 Case vbYes
