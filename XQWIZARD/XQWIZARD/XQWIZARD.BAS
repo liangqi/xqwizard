@@ -348,95 +348,97 @@ If nRemLevel > 0 Then
         szRemStr = szRemStr & vbCrLf
         szLineStr = ""
     End If
-Else
-    bEndFor = True
-    For i = 1 To Len(szLineStr)
-        szChar = Mid(szLineStr, i, 1)
-        Select Case szChar
-        Case "(", "{"
-            nRemLevel = 1
-            szLineStr = Mid(szLineStr, i + 1)
-            bEndFor = False
-            Exit For
-        Case "*"
-            szLineStr = ""
-            ImportLine = True
-            Exit Function
-        Case "0", "1"
-            If Len(szLineStr) - i >= 6 Then
-                If Mid(szLineStr, i, 7) = "1/2-1/2" Then
-                    Game_nResult = RESULT_DRAW
-                    App_frmMain.lblResult = ResultString
-                    szLineStr = ""
-                    ImportLine = True
-                    Exit Function
-                End If
-            End If
-            If Len(szLineStr) - i >= 2 Then
-                If Mid(szLineStr, i, 3) = "1-0" Then
-                    Game_nResult = RESULT_REDWIN
-                    App_frmMain.lblResult = ResultString
-                    szLineStr = ""
-                    ImportLine = True
-                    Exit Function
-                ElseIf Mid(szLineStr, i, 3) = "0-1" Then
-                    Game_nResult = RESULT_BLACKWIN
-                    App_frmMain.lblResult = ResultString
-                    szLineStr = ""
-                    ImportLine = True
-                    Exit Function
-                End If
-            End If
-        Case Else
-            If Game_nFormat = 0 Then
-                If Asc(szChar) > 255 Or Asc(szChar) < 0 Then
-                    j = InStr(i + 1, szLineStr, " ")
-                    If j = 0 Then
-                        szMoveStr = Mid(szLineStr, i)
-                        szLineStr = ""
-                    Else
-                        szMoveStr = Mid(szLineStr, i, j - i)
-                        szLineStr = Mid(szLineStr, j + 1)
-                    End If
-                    j = Byte2Digit(Mid(szMoveStr, 2, 1))
-                    If j > 0 Then
-                        szMoveStr = Left(szMoveStr, 1) & Digit2Word(j) & Mid(szMoveStr, 3)
-                    End If
-                    j = Byte2Digit(Mid(szMoveStr, 4, 1))
-                    If j > 0 Then
-                        szMoveStr = Left(szMoveStr, 3) & Digit2Word(j)
-                    End If
-                    mv = CchessFile2Move(CchessChin2File(CvC(szMoveStr)), Game_posIrrev(Game_nCurrIrrev))
-                    AddMove mv
-                    bEndFor = False
-                    Exit For
-                End If
-            Else
-                If (szChar >= "A" And szChar <= "Z") Or (szChar >= "a" And szChar <= "z") Or _
-                        szChar = "+" Or szChar = "-" Or szChar = "=" Then
-                    j = InStr(i + 1, szLineStr, " ")
-                    If j = 0 Then
-                        szMoveStr = Mid(szLineStr, i)
-                        szLineStr = ""
-                    Else
-                        szMoveStr = Mid(szLineStr, i, j - i)
-                        szLineStr = Mid(szLineStr, j + 1)
-                    End If
-                    If Game_nFormat = 1 Then
-                        mv = CchessFile2Move(CvL(szMoveStr), Game_posIrrev(Game_nCurrIrrev))
-                    Else
-                        mv = Iccs2Move(szMoveStr)
-                    End If
-                    AddMove mv
-                    bEndFor = False
-                    Exit For
-                End If
-            End If
-        End Select
-    Next
-    If bEndFor Then
+    ImportLine = False
+    Exit Function
+End If
+
+bEndFor = True
+For i = 1 To Len(szLineStr)
+    szChar = Mid(szLineStr, i, 1)
+    Select Case szChar
+    Case "(", "{"
+        nRemLevel = 1
+        szLineStr = Mid(szLineStr, i + 1)
+        bEndFor = False
+        Exit For
+    Case "*"
         szLineStr = ""
-    End If
+        ImportLine = True
+        Exit Function
+    Case "0", "1"
+        If Len(szLineStr) - i >= 6 Then
+            If Mid(szLineStr, i, 7) = "1/2-1/2" Then
+                Game_nResult = RESULT_DRAW
+                App_frmMain.lblResult = ResultString
+                szLineStr = ""
+                ImportLine = True
+                Exit Function
+            End If
+        End If
+        If Len(szLineStr) - i >= 2 Then
+            If Mid(szLineStr, i, 3) = "1-0" Then
+                Game_nResult = RESULT_REDWIN
+                App_frmMain.lblResult = ResultString
+                szLineStr = ""
+                ImportLine = True
+                Exit Function
+            ElseIf Mid(szLineStr, i, 3) = "0-1" Then
+                Game_nResult = RESULT_BLACKWIN
+                App_frmMain.lblResult = ResultString
+                szLineStr = ""
+                ImportLine = True
+                Exit Function
+            End If
+        End If
+    Case Else
+        If Game_nFormat = 0 Then
+            If Asc(szChar) > 255 Or Asc(szChar) < 0 Then
+                j = InStr(i + 1, szLineStr, " ")
+                If j = 0 Then
+                    szMoveStr = Mid(szLineStr, i)
+                    szLineStr = ""
+                Else
+                    szMoveStr = Mid(szLineStr, i, j - i)
+                    szLineStr = Mid(szLineStr, j + 1)
+                End If
+                j = Byte2Digit(Mid(szMoveStr, 2, 1))
+                If j > 0 Then
+                    szMoveStr = Left(szMoveStr, 1) & Digit2Word(j) & Mid(szMoveStr, 3)
+                End If
+                j = Byte2Digit(Mid(szMoveStr, 4, 1))
+                If j > 0 Then
+                    szMoveStr = Left(szMoveStr, 3) & Digit2Word(j)
+                End If
+                mv = CchessFile2Move(CchessChin2File(CvC(szMoveStr)), Game_posIrrev(Game_nCurrIrrev))
+                AddMove mv
+                bEndFor = False
+                Exit For
+            End If
+        Else
+            If (szChar >= "A" And szChar <= "Z") Or (szChar >= "a" And szChar <= "z") Or _
+                    szChar = "+" Or szChar = "-" Or szChar = "=" Then
+                j = InStr(i + 1, szLineStr, " ")
+                If j = 0 Then
+                    szMoveStr = Mid(szLineStr, i)
+                    szLineStr = ""
+                Else
+                    szMoveStr = Mid(szLineStr, i, j - i)
+                    szLineStr = Mid(szLineStr, j + 1)
+                End If
+                If Game_nFormat = 1 Then
+                    mv = CchessFile2Move(CvL(szMoveStr), Game_posIrrev(Game_nCurrIrrev))
+                Else
+                    mv = Iccs2Move(szMoveStr)
+                End If
+                AddMove mv
+                bEndFor = False
+                Exit For
+            End If
+        End If
+    End Select
+Next
+If bEndFor Then
+    szLineStr = ""
 End If
 ImportLine = False
 
@@ -1410,6 +1412,52 @@ App_frmMain.lstMoveText.List(nMove) = szMoveText & IIf(Game_szComment(nMove) = "
 
 End Sub
 
+' µçÄÔÈÏÊä
+Public Sub EngineResign()
+
+Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+App_frmMain.lblResult = ResultString
+Timer_bEnabled = False
+App_frmMain.mnEngineLevel.Checked = False
+App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+Engine_nStatus = IDLE_REST
+GameOver IIf(Game_sdMax = 0, L("ºì·½ÈÏÊä¡£", "¼t·½ÕJÝ”¡£"), L("ºÚ·½ÈÏÊä¡£", "ºÚ·½ÕJÝ”¡£")), ICON_WIN
+
+End Sub
+
+' µçÄÔ½ÓÊÜÌáºÍ
+Public Sub EngineAcceptDraw()
+
+Game_nResult = RESULT_DRAW
+App_frmMain.lblResult = ResultString
+Timer_bEnabled = False
+App_frmMain.mnEngineLevel.Checked = False
+App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+Engine_nStatus = IDLE_REST
+GameOver IIf(Game_sdMax = 0, L("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), _
+        L("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£")), ICON_DRAW
+
+End Sub
+
+' µçÄÔÌáºÍ
+Public Sub EngineOfferDraw()
+
+Engine_bDraw = True
+If IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
+    Exit Sub
+End If
+If Options_nLanguage = LANGUAGE_ZH_CN Then
+    MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & vbCrLf & _
+            "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+            "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌÐøÏÂÒ»×ÅÆå¡£", vbInformation
+Else
+    MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & vbCrLf & _
+            "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
+            "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
+End If
+
+End Sub
+
 ' ÐÂÔöÒ»¸ö×Å·¨£¬¿ÉÒÔÊÇ´ÓÎÄ¼þÖÐ¶ÁÈëµÄ£¬ÓÃ»§°áµÄ£¬»òÒýÇæ×ßµÄ
 Public Function AddMove(ByVal mv As Long, Optional ByVal bEcho = False, Optional ByVal bEngine = False) As Boolean
 
@@ -1426,178 +1474,163 @@ End If
 szMoveIccsText = Move2Iccs(mv)
 szMoveFileText = MkL(CchessMove2File(mv, Game_posIrrev(Game_nCurrIrrev)))
 szMoveChinText = MkC(CchessFile2Chin(CvL(szMoveFileText), Game_sdCurr))
-If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) Then
-    CchessUndoMove Game_posIrrev(Game_nCurrIrrev)
-    If Engine_nStatus > BUSY_WAIT Then
-        If Engine_nStatus = BUSY_PONDER And mv = Engine_mvPonder Then
-            SendEngine "ponderhit", IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack)
-            Engine_nStatus = BUSY_THINK
-        Else
-            Engine_nStatus = BUSY_WAIT
-            StopEngine
-        End If
-    End If
-    If Game_nCurrMove < Game_nMaxMove Then
-        If MsgBox(L("±ØÐëÇå³ýÒÔºóËùÓÐµÄ×Å·¨¡£", "±ØíšÇå³ýÒÔááËùÓÐµÄÖø·¨¡£") & vbCrLf _
-                & L("ÊÇ·ñ¼ÌÐø£¿", "ÊÇ·ñÀ^Àm£¿"), vbYesNo + vbQuestion) = vbYes Then
-            MoveCut
-        Else
-            AddMove = False
-            Exit Function
-        End If
-    End If
-    If (nMoveStatus And MOVE_CAPTURE) <> 0 Then
-        Game_posIrrev(Game_nMaxIrrev + 1) = Game_posIrrev(Game_nMaxIrrev)
-        Game_nMaxIrrev = Game_nMaxIrrev + 1
-        CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
-        CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
-        Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) & _
-                " - - 0 " & IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1)
-    End If
-    If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
-        If Timer_bIncMode Then
-            Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) + Timer_nIncTime
-            If Timer_nTimeLeft(Game_sdMax) < 0 Then
-                Timer_nTimeLeft(Game_sdMax) = 0
-            ElseIf Timer_nTimeLeft(Game_sdMax) > 28800 Then
-                Timer_nTimeLeft(Game_sdMax) = 28800
-            End If
-            SetTimer
-        Else
-            Timer_nMoveLeft(Game_sdMax) = Timer_nMoveLeft(Game_sdMax) - 1
-            If Timer_nMoveLeft(Game_sdMax) = 0 Then
-                Timer_nTimeLeft(Game_sdMax) = Timer_nInitTime * 60
-                Timer_nMoveLeft(Game_sdMax) = Timer_nIncMove
-                SetTimer
-            End If
-        End If
-    End If
-    Timer_dfLastTime = Timer
-    Game_nMaxMove = Game_nMaxMove + 1
-    Game_sdMax = 1 - Game_sdMax
-    Game_szMoveText(0, Game_nMaxMove) = szMoveChinText
-    Game_szMoveText(1, Game_nMaxMove) = szMoveFileText
-    Game_szMoveText(2, Game_nMaxMove) = szMoveIccsText
-    App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) & _
-            Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
-    Game_mvMove(Game_nMaxMove) = mv
-    MoveForward
-    If bEcho Then
-        MoveFlush
-    End If
-    AnalyzeEcco
-    If (nMoveStatus And MOVE_MATE) <> 0 Then
-        App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
-        If bEcho Then
-            nIcon = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), ICON_LOSS, ICON_WIN)
-            GameOver IIf(Game_sdCurr = 1, L("ºìÊ¤¡£", "¼t„Ù¡£"), L("ºÚÊ¤¡£", "ºÚ„Ù¡£")), nIcon
-        End If
-        Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
-        App_frmMain.lblResult = ResultString
-        Timer_bEnabled = False
-        App_frmMain.mnEngineLevel.Checked = False
-        App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-    Else
-        If bEcho Then
-            If (nMoveStatus And MOVE_CHECK) <> 0 Then
-                PlayWavSound "CHECK" & IIf(bEngine, "2", "")
-            ElseIf (nMoveStatus And MOVE_CAPTURE) <> 0 Then
-                PlayWavSound IIf(Src(mv) = Dst(mv), "PROMOTE", "CAPTURE") & IIf(bEngine, "2", "")
-            Else
-                PlayWavSound "MOVE" & IIf(bEngine, "2", "")
-            End If
-        End If
-        If (nMoveStatus And MOVE_DRAW) <> 0 Then
-            If bEcho Then
-                GameOver L("×ÔÈ»×÷ºÍ¡£", "×ÔÈ»×÷ºÍ¡£"), ICON_DRAW
-            End If
-            Game_nResult = RESULT_DRAW
-            App_frmMain.lblResult = ResultString
-            Timer_bEnabled = False
-            App_frmMain.mnEngineLevel.Checked = False
-            App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-            If Engine_bRed Or Engine_bBlack Then
-                EngineLoaded True
-            End If
-        ElseIf (nMoveStatus And MOVE_PERPETUAL) <> 0 Then
-            Game_nResult = RESULT_DRAW
-            If (nMoveStatus And MOVE_PERPETUAL_WIN) <> 0 Then
-                Game_nResult = Game_nResult + 1 - Game_sdCurr * 2
-            End If
-            If (nMoveStatus And MOVE_PERPETUAL_LOSS) <> 0 Then
-                Game_nResult = Game_nResult - 1 + Game_sdCurr * 2
-            End If
-            If bEcho Then
-                If Game_nResult = 2 Then
-                    nIcon = ICON_DRAW
-                Else
-                    nIcon = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), ICON_LOSS, ICON_WIN)
-                End If
-                If Options_nLanguage = LANGUAGE_ZH_CN Then
-                    GameOver Choose(Game_nResult, "ºÚ·½³¤´ò×÷¸º£¡", "Ë«·½²»±ä×÷ºÍ¡£", "ºì·½³¤´ò×÷¸º£¡"), nIcon
-                Else
-                    GameOver Choose(Game_nResult, "ºÚ·½éL´ò×÷Ø“£¡", "ëp·½²»×ƒ×÷ºÍ¡£", "¼t·½éL´ò×÷Ø“£¡"), nIcon
-                End If
-            End If
-            App_frmMain.lblResult = ResultString
-            Timer_bEnabled = False
-            App_frmMain.mnEngineLevel.Checked = False
-            App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-            If Engine_bRed Or Engine_bBlack Then
-                EngineLoaded True
-            End If
-        End If
-    End If
-    If App_frmMain.mnEngineDraw.Checked Then
-        App_frmMain.mnEngineDraw.Checked = False
-        Engine_bDraw = True
-    End If
-    If Engine_nStatus = IDLE_PONDER Then
-        If mv = Engine_mvPonder Then
-            If Options_bAllowResign And Engine_bPonderFinishedResign Then
-                Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-                App_frmMain.lblResult = ResultString
-                Engine_nStatus = IDLE_REST
-                GameOver IIf(Game_sdMax = 0, L("ºì·½ÈÏÊä¡£", "¼t·½ÕJÝ”¡£"), L("ºÚ·½ÈÏÊä¡£", "ºÚ·½ÕJÝ”¡£")), ICON_WIN
-            ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
-                Game_nResult = RESULT_DRAW
-                App_frmMain.lblResult = ResultString
-                Engine_nStatus = IDLE_REST
-                GameOver IIf(Game_sdMax = 0, L("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), _
-                        L("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£")), ICON_DRAW
-            Else
-                Engine_nStatus = IDLE_READY
-                AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
-                If Options_bAllowResign And Engine_bPonderFinishedDraw Then
-                    Engine_bDraw = True
-                    If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                        If Options_nLanguage = LANGUAGE_ZH_CN Then
-                            MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
-                                    "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
-                                    "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌÐøÏÂÒ»×ÅÆå¡£", vbInformation
-                        Else
-                            MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
-                                    "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
-                                    "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
-                        End If
-                    End If
-                End If
-                If Engine_mvPonderFinishedPonder <> 0 Then
-                    Engine_mvPonder = Engine_mvPonderFinishedPonder
-                    Engine_nStatus = BUSY_PONDER
-                    RunEngine
-                End If
-            End If
-        Else
-            Engine_nStatus = IDLE_READY
-        End If
-    End If
-    AddMove = True
-Else
+If CchessTryMove(Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv) = 0 Then
     If bEcho And (nMoveStatus And MOVE_INCHECK) <> 0 Then
         PlayWavSound "ILLEGAL"
     End If
     AddMove = False
+    Exit Function
+End If
+
+CchessUndoMove Game_posIrrev(Game_nCurrIrrev)
+If Engine_nStatus > BUSY_WAIT Then
+    If Engine_nStatus = BUSY_PONDER And mv = Engine_mvPonder Then
+        SendEngine "ponderhit", IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack)
+        Engine_nStatus = BUSY_THINK
+    Else
+        Engine_nStatus = BUSY_WAIT
+        StopEngine
+    End If
+End If
+If Game_nCurrMove < Game_nMaxMove Then
+    If MsgBox(L("±ØÐëÇå³ýÒÔºóËùÓÐµÄ×Å·¨¡£", "±ØíšÇå³ýÒÔááËùÓÐµÄÖø·¨¡£") & vbCrLf _
+            & L("ÊÇ·ñ¼ÌÐø£¿", "ÊÇ·ñÀ^Àm£¿"), vbYesNo + vbQuestion) = vbYes Then
+        MoveCut
+    Else
+        AddMove = False
+        Exit Function
+    End If
+End If
+AddMove = True
+If (nMoveStatus And MOVE_CAPTURE) <> 0 Then
+    Game_posIrrev(Game_nMaxIrrev + 1) = Game_posIrrev(Game_nMaxIrrev)
+    Game_nMaxIrrev = Game_nMaxIrrev + 1
+    CchessTryMove Game_posIrrev(Game_nMaxIrrev), nMoveStatus, mv
+    CchessSetIrrev Game_posIrrev(Game_nMaxIrrev)
+    Game_szIrrevFen(Game_nMaxIrrev) = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nMaxIrrev))) & _
+            " - - 0 " & IIf(Game_sdCurr = 0, Game_cntCurr, Game_cntCurr + 1)
+End If
+If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
+    If Timer_bIncMode Then
+        Timer_nTimeLeft(Game_sdMax) = Timer_nTimeLeft(Game_sdMax) + Timer_nIncTime
+        If Timer_nTimeLeft(Game_sdMax) < 0 Then
+            Timer_nTimeLeft(Game_sdMax) = 0
+        ElseIf Timer_nTimeLeft(Game_sdMax) > 28800 Then
+            Timer_nTimeLeft(Game_sdMax) = 28800
+        End If
+        SetTimer
+    Else
+        Timer_nMoveLeft(Game_sdMax) = Timer_nMoveLeft(Game_sdMax) - 1
+        If Timer_nMoveLeft(Game_sdMax) = 0 Then
+            Timer_nTimeLeft(Game_sdMax) = Timer_nInitTime * 60
+            Timer_nMoveLeft(Game_sdMax) = Timer_nIncMove
+            SetTimer
+        End If
+    End If
+End If
+Timer_dfLastTime = Timer
+Game_nMaxMove = Game_nMaxMove + 1
+Game_sdMax = 1 - Game_sdMax
+Game_szMoveText(0, Game_nMaxMove) = szMoveChinText
+Game_szMoveText(1, Game_nMaxMove) = szMoveFileText
+Game_szMoveText(2, Game_nMaxMove) = szMoveIccsText
+App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) & _
+        Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
+Game_mvMove(Game_nMaxMove) = mv
+MoveForward
+If bEcho Then
+    MoveFlush
+End If
+AnalyzeEcco
+If (nMoveStatus And MOVE_MATE) = 0 Then
+    If bEcho Then
+        If (nMoveStatus And MOVE_CHECK) <> 0 Then
+            PlayWavSound "CHECK" & IIf(bEngine, "2", "")
+        ElseIf (nMoveStatus And MOVE_CAPTURE) <> 0 Then
+            PlayWavSound IIf(Src(mv) = Dst(mv), "PROMOTE", "CAPTURE") & IIf(bEngine, "2", "")
+        Else
+            PlayWavSound "MOVE" & IIf(bEngine, "2", "")
+        End If
+    End If
+    If (nMoveStatus And MOVE_DRAW) <> 0 Then
+        If bEcho Then
+            GameOver L("×ÔÈ»×÷ºÍ¡£", "×ÔÈ»×÷ºÍ¡£"), ICON_DRAW
+        End If
+        Game_nResult = RESULT_DRAW
+        App_frmMain.lblResult = ResultString
+        Timer_bEnabled = False
+        App_frmMain.mnEngineLevel.Checked = False
+        App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+        If Engine_bRed Or Engine_bBlack Then
+            EngineLoaded True
+        End If
+    ElseIf (nMoveStatus And MOVE_PERPETUAL) <> 0 Then
+        Game_nResult = RESULT_DRAW
+        If (nMoveStatus And MOVE_PERPETUAL_WIN) <> 0 Then
+            Game_nResult = Game_nResult + 1 - Game_sdCurr * 2
+        End If
+        If (nMoveStatus And MOVE_PERPETUAL_LOSS) <> 0 Then
+            Game_nResult = Game_nResult - 1 + Game_sdCurr * 2
+        End If
+        If bEcho Then
+            If Game_nResult = 2 Then
+                nIcon = ICON_DRAW
+            Else
+                nIcon = IIf((Game_nResult = 1 And Engine_bRed) Or (Game_nResult = 3 And Engine_bBlack), ICON_LOSS, ICON_WIN)
+            End If
+            If Options_nLanguage = LANGUAGE_ZH_CN Then
+                GameOver Choose(Game_nResult, "ºÚ·½³¤´ò×÷¸º£¡", "Ë«·½²»±ä×÷ºÍ¡£", "ºì·½³¤´ò×÷¸º£¡"), nIcon
+            Else
+                GameOver Choose(Game_nResult, "ºÚ·½éL´ò×÷Ø“£¡", "ëp·½²»×ƒ×÷ºÍ¡£", "¼t·½éL´ò×÷Ø“£¡"), nIcon
+            End If
+        End If
+        App_frmMain.lblResult = ResultString
+        Timer_bEnabled = False
+        App_frmMain.mnEngineLevel.Checked = False
+        App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+        If Engine_bRed Or Engine_bBlack Then
+            EngineLoaded True
+        End If
+    End If
+Else
+    App_sqMate = Game_posIrrev(Game_nCurrIrrev).ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
+    If bEcho Then
+        nIcon = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), ICON_LOSS, ICON_WIN)
+        GameOver IIf(Game_sdCurr = 1, L("ºìÊ¤¡£", "¼t„Ù¡£"), L("ºÚÊ¤¡£", "ºÚ„Ù¡£")), nIcon
+    End If
+    Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
+    App_frmMain.lblResult = ResultString
+    Timer_bEnabled = False
+    App_frmMain.mnEngineLevel.Checked = False
+    App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
+End If
+If App_frmMain.mnEngineDraw.Checked Then
+    App_frmMain.mnEngineDraw.Checked = False
+    Engine_bDraw = True
+End If
+
+If Engine_nStatus <> IDLE_PONDER Then
+    Exit Function
+End If
+If mv <> Engine_mvPonder Then
+    Engine_nStatus = IDLE_READY
+    Exit Function
+End If
+If Options_bAllowResign And Engine_bPonderFinishedResign Then
+    EngineResign
+ElseIf Engine_bDraw And Engine_bPonderFinishedDraw Then
+    EngineAcceptDraw
+Else
+    Engine_nStatus = IDLE_READY
+    AddMove Engine_mvPonderFinished, MOVE_WITH_ECHO, MOVE_BY_ENGINE
+    If Options_bAllowResign And Engine_bPonderFinishedDraw Then
+        EngineOfferDraw
+    End If
+    If Engine_mvPonderFinishedPonder <> 0 Then
+        Engine_mvPonder = Engine_mvPonderFinishedPonder
+        Engine_nStatus = BUSY_PONDER
+        RunEngine
+    End If
 End If
 
 End Function
@@ -1970,114 +2003,91 @@ Else
 End If
 If lpStr = 0 Then
     ReceiveEngine = False
-Else
-    szReceived = AllocString(lpStr)
-    ReceiveEngineLog szReceived, bSlaveEngine
-    If Left(szReceived, 9) = "bestmove " Then
-        EngineBusy False
-        mv = Coord2Move(Mid(szReceived, 10, 4))
-        Select Case Engine_nStatus
-        Case BUSY_WAIT
-            Engine_nStatus = IDLE_READY
-        Case BUSY_PONDER
-            Engine_mvPonderFinished = mv
-            If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
-                Engine_mvPonderFinishedPonder = Coord2Move(Mid(szReceived, 22, 4))
-            Else
-                Engine_mvPonderFinishedPonder = 0
-            End If
-            Engine_bPonderFinishedResign = (Right(szReceived, 7) = " resign")
-            Engine_bPonderFinishedDraw = (Right(szReceived, 5) = " draw")
-            Engine_nStatus = IDLE_PONDER
-        Case BUSY_ANALYZE
-            Engine_nStatus = IDLE_REST
-        Case BUSY_THINK
-            If Options_nMoveDelay > 0 Then
-                Sleep Options_nMoveDelay * 1000
-            End If
-            Do While Game_nCurrMove < Game_nMaxMove
-                MoveForward
-            Loop
-            If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
-                Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-                App_frmMain.lblResult = ResultString
-                Timer_bEnabled = False
-                App_frmMain.mnEngineLevel.Checked = False
-                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                Engine_nStatus = IDLE_REST
-                GameOver IIf(Game_sdMax = 0, L("ºì·½ÈÏÊä¡£", "¼t·½ÕJÝ”¡£"), L("ºÚ·½ÈÏÊä¡£", "ºÚ·½ÕJÝ”¡£")), ICON_WIN
-            ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
-                Game_nResult = RESULT_DRAW
-                App_frmMain.lblResult = ResultString
-                Timer_bEnabled = False
-                App_frmMain.mnEngineLevel.Checked = False
-                App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-                Engine_nStatus = IDLE_REST
-                GameOver IIf(Game_sdMax = 0, L("ºì·½½ÓÊÜÌáºÍ¡£", "¼t·½½ÓÊÜÌáºÍ¡£"), _
-                        L("ºÚ·½½ÓÊÜÌáºÍ¡£", "ºÚ·½½ÓÊÜÌáºÍ¡£")), ICON_DRAW
-            Else
-                Engine_nStatus = IDLE_READY
-                ' Ò»¶¨ÒªÔÚ IDLE_READY µÄÊ±ºò AddMove
-                If AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
-                    App_frmMain.SetFocus
-                    If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
-                        Engine_bDraw = True
-                        If Not IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
-                            If Options_nLanguage = LANGUAGE_ZH_CN Then
-                                MsgBox IIf(Game_sdMax = 1, "ºì·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
-                                        "Èç¹û½ÓÊÜÌáºÍ£¬ÇëÑ¡Ôñ¡°µçÄÔ¡±²Ëµ¥µÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
-                                        "Èç¹û¾Ü¾øÌáºÍ£¬Ôò¿ÉÒÔ²»ÓèÀí²Ç£¬¼ÌÐøÏÂÒ»×ÅÆå¡£", vbInformation
-                            Else
-                                MsgBox IIf(Game_sdMax = 1, "¼t·½ÌáºÍ¡£", "ºÚ·½ÌáºÍ¡£") & vbCrLf & _
-                                        "Èç¹û½ÓÊÜÌáºÍ£¬Õˆßx“ñ¡°ëŠÄX¡±²Ë†ÎµÄ¡°ÌáºÍ/½ÓÊÜÌáºÍ¡±¹¦ÄÜ¡£" & vbCrLf & _
-                                        "Èç¹û¾Ü½^ÌáºÍ£¬„t¿ÉÒÔ²»ÓèÀí²Ç£¬À^ÀmÏÂÒ»ÖøÆå¡£", vbInformation
-                            End If
-                        End If
-                    End If
-                    If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
-                        Engine_mvPonder = Coord2Move(Mid(szReceived, 22, 4))
-                        Engine_nStatus = BUSY_PONDER
-                        RunEngine
-                    End If
-                Else
-                    ' ×ßÆåÃ»ÓÐ³É¹¦£¬Ôò²»ÈÃÒýÇæË¼¿¼
-                    Engine_nStatus = IDLE_REST
-                End If
-            End If
-        Case Else
-            If (MsgBox(L("²»¸Ã½ÓÊÕµ½µÄÒýÇæÐÅÏ¢£º", "²»Ô“½ÓÊÕµ½µÄÒýÇæÐÅÏ¢£º") & szReceived & vbCrLf & _
-                    L("ÊÇ·ñ°ÑÕâ¸öÇé¿ö»ã±¨¸øÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó£¿", "ÊÇ·ñ°Ñß@‚€Çé›r…Rˆó½oÏóÆåÎ×ŽŸé_°lˆFê £¿"), _
-                    vbQuestion + vbYesNo)) = vbYes Then
-                ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#receive", _
-                        vbNullString, vbNullString, vbNormalFocus
-            End If
-        End Select
-        If Options_bStatusBar Then
-            App_frmMain.stb.Panels("Curr").Text = ""
-        End If
-    ElseIf Left(szReceived, 10) = "nobestmove" Then
-        EngineBusy False
-        Select Case Engine_nStatus
-        Case BUSY_WAIT
-            Engine_nStatus = IDLE_READY
-        Case BUSY_PONDER
-            Engine_nStatus = IDLE_READY
-        Case BUSY_ANALYZE
-            Engine_nStatus = IDLE_REST
-        Case BUSY_THINK
-            Engine_nStatus = IDLE_REST
-        Case Else
-            ' MsgBox "²»¸Ã½ÓÊÕµ½ÒýÇæµÄÐÅÏ¢£º" & szReceived, vbExclamation
-        End Select
-        If Options_bStatusBar Then
-            App_frmMain.stb.Panels("Curr").Text = ""
-        End If
-    ElseIf Left(szReceived, 12) = "info string " Then
-    ElseIf Left(szReceived, 5) = "info " Then
-        PopEngine szReceived
-    End If
-    ReceiveEngine = True
+    Exit Function
 End If
+
+szReceived = AllocString(lpStr)
+ReceiveEngineLog szReceived, bSlaveEngine
+If Left(szReceived, 9) = "bestmove " Then
+    EngineBusy False
+    mv = Coord2Move(Mid(szReceived, 10, 4))
+    Select Case Engine_nStatus
+    Case BUSY_WAIT
+        Engine_nStatus = IDLE_READY
+    Case BUSY_PONDER
+        Engine_mvPonderFinished = mv
+        If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
+            Engine_mvPonderFinishedPonder = Coord2Move(Mid(szReceived, 22, 4))
+        Else
+            Engine_mvPonderFinishedPonder = 0
+        End If
+        Engine_bPonderFinishedResign = (Right(szReceived, 7) = " resign")
+        Engine_bPonderFinishedDraw = (Right(szReceived, 5) = " draw")
+        Engine_nStatus = IDLE_PONDER
+    Case BUSY_ANALYZE
+        Engine_nStatus = IDLE_REST
+    Case BUSY_THINK
+        If Options_nMoveDelay > 0 Then
+            Sleep Options_nMoveDelay * 1000
+        End If
+        Do While Game_nCurrMove < Game_nMaxMove
+            MoveForward
+        Loop
+        If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
+            EngineResign
+        ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
+            EngineAcceptDraw
+        Else
+            Engine_nStatus = IDLE_READY
+            ' Ò»¶¨ÒªÔÚ IDLE_READY µÄÊ±ºò AddMove
+            If AddMove(mv, MOVE_WITH_ECHO, MOVE_BY_ENGINE) Then
+                App_frmMain.SetFocus
+                If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
+                    EngineOfferDraw
+                End If
+                If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
+                    Engine_mvPonder = Coord2Move(Mid(szReceived, 22, 4))
+                    Engine_nStatus = BUSY_PONDER
+                    RunEngine
+                End If
+            Else
+                ' ×ßÆåÃ»ÓÐ³É¹¦£¬Ôò²»ÈÃÒýÇæË¼¿¼
+                Engine_nStatus = IDLE_REST
+            End If
+        End If
+    Case Else
+        If (MsgBox(L("²»¸Ã½ÓÊÕµ½µÄÒýÇæÐÅÏ¢£º", "²»Ô“½ÓÊÕµ½µÄÒýÇæÐÅÏ¢£º") & szReceived & vbCrLf & _
+                L("ÊÇ·ñ°ÑÕâ¸öÇé¿ö»ã±¨¸øÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó£¿", "ÊÇ·ñ°Ñß@‚€Çé›r…Rˆó½oÏóÆåÎ×ŽŸé_°lˆFê £¿"), _
+                vbQuestion + vbYesNo)) = vbYes Then
+            ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#receive", _
+                    vbNullString, vbNullString, vbNormalFocus
+        End If
+    End Select
+    If Options_bStatusBar Then
+        App_frmMain.stb.Panels("Curr").Text = ""
+    End If
+ElseIf Left(szReceived, 10) = "nobestmove" Then
+    EngineBusy False
+    Select Case Engine_nStatus
+    Case BUSY_WAIT
+        Engine_nStatus = IDLE_READY
+    Case BUSY_PONDER
+        Engine_nStatus = IDLE_READY
+    Case BUSY_ANALYZE
+        Engine_nStatus = IDLE_REST
+    Case BUSY_THINK
+        Engine_nStatus = IDLE_REST
+    Case Else
+        ' MsgBox "²»¸Ã½ÓÊÕµ½ÒýÇæµÄÐÅÏ¢£º" & szReceived, vbExclamation
+    End Select
+    If Options_bStatusBar Then
+        App_frmMain.stb.Panels("Curr").Text = ""
+    End If
+ElseIf Left(szReceived, 12) = "info string " Then
+ElseIf Left(szReceived, 5) = "info " Then
+    PopEngine szReceived
+End If
+ReceiveEngine = True
 
 End Function
 
@@ -2649,7 +2659,7 @@ If Options_nLanguage = LANGUAGE_ZH_CN Then
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×Ê¦ÊÇÒ»¿î¹¦ÄÜ³¬Ç¿µÄÏóÆå½ÌÑ§¡¢µçÄÔ¶ÔÞÄºÍÆåÆ×±à¼­Èí¼þ£¬¾ßÓÐ·½±ãµÄÈË»ú¶ÔÕ½¡¢ÆåÆ×¼ÇÂ¼¡¢ÐÀÉÍ¡¢·¢²¼¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬»¹ÄÚÖÃ´óÁ¿ÏóÆåÏ°Ìâ£¬ÍêÈ«¿ÉÒÔÂú×ã¸÷²ã´ÎÏóÆå°®ºÃÕß¡¢ÆåÊÖ¡¢²ÃÅÐÔ±¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷ÖÖÐèÒª¡£"
 Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¶à¸öÍ¨ÓÃÏóÆåÒýÇæ£¬ËûÃÇ´ó¶¼¾ßÓÐ×¨ÒµÆåÊÖµÄË®Æ½£¬ÊÇÏóÆå°®ºÃÕßºÍ×¨ÒµÆåÊÖÌá¸ßÆåÒÕµÄÁ¼Ê¦ÒæÓÑ¡£" & vbCrLf & _
         "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦×Ô´øµÄÒýÇæ ElephantEye µÄ±íÏÖ²»ÂúÒâ£¬¿ÉÒÔµÇÂ¼ http://www.xqbase.com/league.htm £¬ÏÂÔØµ½ÆäËû¸÷¾ßÌØÉ«µÄÒýÇæ¡£"
-Gui_szTips(3) = "¡¡¡¡µã»÷¡°ÐÂµÄÆå¾Ö¡±°´Å¥£¬¾Í¿ÉÒÔÕ¹¿ªÈË»ú¶ÔÞÄ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁËÎåÖÖµÄÄÑ¶ÈºÍËÄÖÖµÄÈÃ×ÓÄ£Ê½¸øÓÃ»§ÌåÑé¡£"
+Gui_szTips(3) = "¡¡¡¡µã»÷¡°ÐÂµÄÆå¾Ö¡±°´Å¥£¬¾Í¿ÉÒÔÕ¹¿ªÈË»ú¶ÔÞÄ£¬ÏóÆåÎ×Ê¦Ìá¹©ÁË°ËÖÖµÄÄÑ¶ÈºÍËÄÖÖµÄÈÃ×ÓÄ£Ê½¸øÓÃ»§ÌåÑé¡£"
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£ÍûÈÃµçÄÔ×ßÆå£¬¶ø½ö½öÊÇÏëÖªµÀµçÄÔÔÚÏëÐ©Ê²Ã´£¬»òÕßÈÃµçÄÔ¸øÄãÒ»Ð©Æô·¢£¬¿ÉÒÔµã»÷¡°µçÄÔ·ÖÎö¡±°´Å¥£¬´ò¿ªË¼¿¼Ï¸½Ú´°¿Ú¡£" & vbCrLf & _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼Ï¸½Ú´°¿ÚÖÐµÄË¼¿¼Â·Ïß¸´ÖÆÏÂÀ´£¬Õ³Ìùµ½Ö÷´°¿ÚÖÐ£¬¶ÔË¼¿¼ÏßÂ·½øÐÐÍÆÑÝ¡£"
 Gui_szTips(5) = "¡¡¡¡µã»÷¡°·¢²¼ÆåÆ×¡±°´Å¥£¬¾Í¿ÉÒÔÔÚÍøÉÏºÍÆåÓÑ½»Á÷ÆåÆ×£¬»òÕßÏò¸ßÊÖÇóÖú¡£" & vbCrLf & _
@@ -2661,11 +2671,11 @@ Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓÐÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏ
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÁªÏµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ÐÏ¸ÔÄ¶Á±¾Èí¼þ¡°°ïÖú¡±Ñ¡µ¥ÖÐµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
-Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼þ¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼þ(Í¼±êÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼þ(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
-Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆåÆ×¡£Ö»ÒªË«»÷XQFÎÄ¼þ(Í¼±êÊÇ¡°Ïó¡±×Ö)£¬»òÕßµã»÷¡°´ò¿ª¡±°´Å¥²¢Ñ¡ÔñÒ»¸öXQFÎÄ¼þ£¬ÏóÆåÎ×Ê¦¾Í»á´ò¿ªÕâ¸öÆåÆ×¡£"
-Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬ÔÚ¡°Ñ¡ÏîÉèÖÃ¡±¶Ô»°¿ò(¡°Ñ¡Ïî¡±Ñ¡µ¥ÖÐµÄ¡°ÉèÖÃ¡±Ò»Ïî)£¬°Ñ¡°½çÃæ¡±Éè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ð§¹û¡£"
+Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼þ¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼þ(Í¼±êÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼þ(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
+Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆåÆ×¡£Ö»ÒªË«»÷XQFÎÄ¼þ(Í¼±êÊÇÁ¥Êé¡°Ïó¡±×Ö)£¬»òÕßµã»÷¡°´ò¿ª¡±°´Å¥²¢Ñ¡ÔñÒ»¸öXQFÎÄ¼þ£¬ÏóÆåÎ×Ê¦¾Í»á´ò¿ªÕâ¸öÆåÆ×¡£"
+Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬°Ñ¡°Ñ¡Ïî¡±²Ëµ¥µÄ¡°½çÃæ¡±Ò»ÏîÉè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ð§¹û£¬·´Ö®ÒàÈ»¡£"
 Gui_szTips(14) = "¡¡¡¡µã»÷¡°²é¿´ÎÄ±¾ÆåÆ×¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖÐÌá¹©ÁË·½±ã¡£"
-Gui_szTips(15) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É¶ÁÈëÁªÖÚ¡¢ÞÄÌì¡¢ÖÐ¹úÓÎÏ·ÖÐÐÄµÈÖÐ¹úÏóÆåµÄ´æÅÌÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾ÆåÆ×ÎÄ¼þ£¬°ÑÕâÐ©º¬ÓÐ×Å·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÌù°å£¬µã»÷¡°´Ó¼ôÌù°åµ¼Èë¡±°´Å¥£¬ÕâÐ©×Å·¨¾Í»áÂ¼ÖÆµ½ÏóÆåÎ×Ê¦ÖÐ¡£"
+Gui_szTips(15) = "¡¡¡¡ÏóÆåÎ×Ê¦¿É¶ÁÈëÞÄÌì¡¢QQ¡¢ÁªÖÚ¡¢ÖÐÓÎµÈÏóÆå´æÅÌÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾ÆåÆ×ÎÄ¼þ£¬°ÑÕâÐ©º¬ÓÐ×Å·¨µÄÎÄ±¾¸´ÖÆµ½¼ôÌù°å£¬µã»÷¡°´Ó¼ôÌù°åµ¼Èë¡±°´Å¥£¬ÕâÐ©×Å·¨¾Í»áÂ¼ÖÆµ½ÏóÆåÎ×Ê¦ÖÐ¡£"
 Gui_szTips(16) = "¡¡¡¡ÏóÆåÎ×Ê¦Ìá¹©µÄÆåÆ×¼üÅÌÊäÈë·¨ÎªÏ²»¶¼üÅÌÂ¼ÈëÆåÆ×µÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßÐ§µÄÆåÆ×ÊäÈë·½·¨£¬ÆåÓÑ¿É¸ù¾Ý×Ô¼ºµÄÏ°¹ßÔÚÊý×ÖÐ¡¼üÅÌ»òWXF×ÖÄ¸¸ñÊ½ÖÐÈÎÒâÑ¡Ôñ¡£"
 Gui_szTips(17) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬µã»÷¡°²¥·Å¡±°´Å¥¾Í¿É´Ó¸Ã²½×Ô¶¯ÑÝÊ¾£¬ÑÝÊ¾µÄÊ±¼ä¼ä¸ô¿ÉÒÔ×ÔÓÉµ÷Õû¡£ÔÙ´Îµã»÷¡°²¥·ÅÆå¾Ö¡±°´Å¥¿ÉÍ£Ö¹×Ô¶¯ÑÝÊ¾¡£"
 Gui_szTips(18) = "¡¡¡¡ÔÚÐÀÉÍÆåÆ×µÄ¹ý³ÌÖÐ£¬¿ÉÒÔÊ¹ÓÃÆåÅÌµ¹ÖÃºÍ×óÓÒµ÷»»¹¦ÄÜÀ´´Ó²»Í¬µÄ½Ç¶ÈÐÀÉÍÆå¾Ö¡£ÆäÖÐ×óÓÒµ÷»»¹¦ÄÜ»¹¿ÉÒÔÒ»´Î½«ÀàËÆÓÚ¡°ÅÚ°ËÆ½Îå¡±¿ª¾ÖÕâÑùµÄÆåÆ××Ô¶¯×ª»»³É´ó¼ÒÏ°¹ßµÄ¡°ÅÚ¶þÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
@@ -2681,23 +2691,23 @@ Else
 Gui_szTips(1) = "¡¡¡¡ÏóÆåÎ×ŽŸÊÇÒ»¿î¹¦ÄÜ³¬ŠµÄÏóÆå½ÌŒW¡¢ëŠÄXŒ¦ÞÄºÍÆå×V¾ŽÝ‹Ü›¼þ£¬¾ßÓÐ·½±ãµÄÈË™CŒ¦‘ð¡¢Æå×VÓ›ä›¡¢ÐÀÙp¡¢°l²¼¡¢¹ÜÀíÆå¾ÖµÄ¹¦ÄÜ£¬ß€ƒÈÖÃ´óÁ¿ÏóÆåÁ•î}£¬ÍêÈ«¿ÉÒÔM×ã¸÷ŒÓ´ÎÏóÆåÛºÃÕß¡¢ÆåÊÖ¡¢²ÃÅÐ†T¼°ÏóÆåÎÄ×Ö¹¤×÷ÕßµÄ¸÷·NÐèÒª¡£"
 Gui_szTips(2) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¶à‚€Í¨ÓÃÏóÆåÒýÇæ£¬Ëû‚ƒ´ó¶¼¾ßÓÐŒ£˜IÆåÊÖµÄË®Æ½£¬ÊÇÏóÆåÛºÃÕßºÍŒ£˜IÆåÊÖÌá¸ßÆåË‡µÄÁ¼ŽŸÒæÓÑ¡£" & vbCrLf & _
         "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŽŸ×ÔŽ§µÄÒýÇæ ElephantEye µÄ±í¬F²»MÒâ£¬¿ÉÒÔµÇä› http://www.xqbase.com/league.htm £¬ÏÂÝdµ½ÆäËû¸÷¾ßÌØÉ«µÄÒýÇæ¡£"
-Gui_szTips(3) = "¡¡¡¡üc“ô¡°ÐÂµÄÆå¾Ö¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË™CŒ¦ÞÄ£¬ÏóÆåÎ×ŽŸÌá¹©ÁËÎå·NµÄëy¶ÈºÍËÄ·NµÄ×Œ×ÓÄ£Ê½½oÓÃ‘ôówòž¡£"
+Gui_szTips(3) = "¡¡¡¡üc“ô¡°ÐÂµÄÆå¾Ö¡±°´âo£¬¾Í¿ÉÒÔÕ¹é_ÈË™CŒ¦ÞÄ£¬ÏóÆåÎ×ŽŸÌá¹©ÁË°Ë·NµÄëy¶ÈºÍËÄ·NµÄ×Œ×ÓÄ£Ê½½oÓÃ‘ôówòž¡£"
 Gui_szTips(4) = "¡¡¡¡Èç¹ûÄú²»Ï£Íû×ŒëŠÄX×ßÆå£¬¶øƒHƒHÊÇÏëÖªµÀëŠÄXÔÚÏëÐ©Ê²Ã´£¬»òÕß×ŒëŠÄX½oÄãÒ»Ð©†¢°l£¬¿ÉÒÔüc“ô¡°ëŠÄX·ÖÎö¡±°´âo£¬´òé_Ë¼¿¼¼š¹´°¿Ú¡£" & vbCrLf & _
         "¡¡¡¡Äú¿ÉÒÔ°ÑË¼¿¼¼š¹´°¿ÚÖÐµÄË¼¿¼Â·¾€Ñ}ÑuÏÂí£¬Õ³ÙNµ½Ö÷´°¿ÚÖÐ£¬Œ¦Ë¼¿¼¾€Â·ßMÐÐÍÆÑÝ¡£"
 Gui_szTips(5) = "¡¡¡¡üc“ô¡°°l²¼Æå×V¡±°´âo£¬¾Í¿ÉÒÔÔÚ¾WÉÏºÍÆåÓÑ½»Á÷Æå×V£¬»òÕßÏò¸ßÊÖÇóÖú¡£" & vbCrLf & _
         "¡¡¡¡ÏóÆåÎ×ŽŸÍÆË]ÁËŽ×‚€ÖøÃûµÄÏóÆåÕ“‰¯£¬K½oÓÃ‘ôÌá¹©¿ì½ÝµÄ°lÌûÒýŒ§£¬ºÜ·½±ãµØ×ŒÓÃ‘ôÔÚß@Ð©ÏóÆåÕ“‰¯ÉÏ°l²¼Æå×V»ò°lÆðÇóÖú¡£"
-Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŽŸÄ¿Ç°Ö÷ÒªÍ¨ß^¾W½j°lÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔÄ¡¶ÏóÆå°Ù¿ÆÈ«•ø¾W¡·«@µÃ£º" & vbCrLf & "¡¡¡¡http://www.xqbase.com/"
+Gui_szTips(6) = "¡¡¡¡ÏóÆåÎ×ŽŸÄ¿Ç°Ö÷ÒªÍ¨ß^¾W½j°lÐÐ£¬×îÐÂµÄ°æ±¾¿ÉÒÔÄÏóÆå°Ù¿ÆÈ«•ø¾W«@µÃ£º" & vbCrLf & "¡¡¡¡http://www.xqbase.com/"
 Gui_szTips(7) = "¡¡¡¡Ä¿Ç°¾W½jÉÏÒÑ½›ÓÐ”µÒÔÍòÓ‹Í¨ÓÃ¸ñÊ½µÄÆå×VÎÄ¼þ(áá¾Y.PGN)¿É¹©ÏÂÝd¡£Äú¿ÉÒÔµ½ÒÔÏÂí“ÃæÏÂÝd½ü20ÄêƒÈÈ«‡øí”¼‰ÏóÆå±ÈÙµÄÆå×V£ºhttp://www.xqbase.com/xqbase/" & vbCrLf & _
         "¡¡¡¡Í¬•rÒ²šgÓ­ÄúŒ¢×Ô¼ºÑu×÷µÄÎÄ¼þÉÏ‚÷½oÎÒ‚ƒ¡£"
 Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŽŸÓÐÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×ŽŸé_°lˆFê Â“Ïµ£¬à]¼þµØÖ·ÊÇ£º" & vbCrLf & "¡¡¡¡webmaster@xqbase.com" & vbCrLf & _
         "¡¡¡¡ÏóÆåÎ×ŽŸé_°lˆFê ·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÂ“Ïµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔëp“ô×ÀÃæÉÏµÄÏóÆåÎ×ŽŸˆD˜Ë(ÓÉÆå×Ó¡°Ïó¡±¡¢Æå±PºÍÎ×ŽŸ°ô½M³É)Ö±½Ó†¢„ÓÏóÆåÎ×ŽŸ¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»‚€ÏóÆåÎ×ŽŸµÄ³õŒWÕß£¬ÕˆÄú×Ð¼šé†×x±¾Ü›¼þ¡°ŽÍÖú¡±ßx†ÎÖÐµÄ¡°ŽÍÖúÖ÷î}¡±²¢¶à¼Ó¾šÁ•£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×ŽŸµÄ¸÷ÖÖ¹¦ÄÜ¡£"
-Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³ÖÎÄ¼þêPÂ“¹¦ÄÜ£¬ëp“ôPGNÎÄ¼þ(ˆD˜ËÊÇÆå×Ó¡°Ïà¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ôFENÎÄ¼þ(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
-Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆå×V¡£Ö»Òªëp“ôXQFÎÄ¼þ(ˆD˜ËÊÇ¡°Ïó¡±×Ö)£¬»òÕßüc“ô¡°´òé_¡±°´âo²¢ßx“ñÒ»‚€XQFÎÄ¼þ£¬ÏóÆåÎ×ŽŸ¾Í•þ´òé_ß@‚€Æå×V¡£"
-Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×ŽŸ×îÊÊºÏ800x600ºÍ1024x768µÄï@Ê¾·ÖÞqÂÊ£¬ÔÚ¡°ßxí—ÔOÖÃ¡±Œ¦Ô’¿ò(¡°ßxí—¡±ßx†ÎÖÐµÄ¡°ÔOÖÃ¡±Ò»í—)£¬°Ñ¡°½çÃæ¡±ÔO³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄï@Ê¾·ÖÞqÂÊÏÂµÃµ½×îÊæÊÊµÄï@Ê¾Ð§¹û¡£"
+Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³ÖÎÄ¼þêPÂ“¹¦ÄÜ£¬ëp“ôPGNÎÄ¼þ(ˆD˜ËÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ôFENÎÄ¼þ(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
+Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×ŽŸÖ§³Ö¡°ÏóÆåÑÝ²¥ÊÒ¡±µÄÆå×V¡£Ö»Òªëp“ôXQFÎÄ¼þ(ˆD˜ËÊÇë`•ø¡°Ïó¡±×Ö)£¬»òÕßüc“ô¡°´òé_¡±°´âo²¢ßx“ñÒ»‚€XQFÎÄ¼þ£¬ÏóÆåÎ×ŽŸ¾Í•þ´òé_ß@‚€Æå×V¡£"
+Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×ŽŸ×îßmºÏ800x600ºÍ1024x768µÄï@Ê¾·ÖÞqÂÊ£¬°Ñ¡°ßxí—¡±²Ë†ÎµÄ¡°½çÃæ¡±Ò»í—ÔO³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄï@Ê¾·ÖÞqÂÊÏÂµÃµ½×îÊæßmµÄï@Ê¾Ð§¹û£¬·´Ö®ÒàÈ»¡£"
 Gui_szTips(14) = "¡¡¡¡üc“ô¡°²é¿´ÎÄ±¾Æå×V¡±°´âo£¬¾Í¿ÉÒÔ¿´µ½Æå×VÎÄ±¾£¬žéÕ³ÙNµ½BBSÉÏ»òÕßWordÎÄ™nÖÐÌá¹©ÁË·½±ã¡£"
-Gui_szTips(15) = "¡¡¡¡ÏóÆåÎ×ŽŸ¿É×xÈëÂ“±Š¡¢ÞÄÌì¡¢ÖÐ‡øÓÎ‘òÖÐÐÄµÈÖÐ‡øÏóÆåµÄ´æ±PÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾Æå×VÎÄ¼þ£¬°Ñß@Ð©º¬ÓÐÖø·¨µÄÎÄ±¾Ñ}Ñuµ½¼ôÙN°å£¬üc“ô¡°Ä¼ôÙN°åŒ§Èë¡±°´âo£¬ß@Ð©Öø·¨¾Í•þä›Ñuµ½ÏóÆåÎ×ŽŸÖÐ¡£"
+Gui_szTips(15) = "¡¡¡¡ÏóÆåÎ×ŽŸ¿É×xÈëÞÄÌì¡¢QQ¡¢Â“±Š¡¢ÖÐÓÎµÈÏóÆå´æ±PÎÄ¼þºÍ´ó²¿·ÖµÄÎÄ±¾Æå×VÎÄ¼þ£¬°Ñß@Ð©º¬ÓÐÖø·¨µÄÎÄ±¾Ñ}Ñuµ½¼ôÙN°å£¬üc“ô¡°Ä¼ôÙN°åŒ§Èë¡±°´âo£¬ß@Ð©Öø·¨¾Í•þä›Ñuµ½ÏóÆåÎ×ŽŸÖÐ¡£"
 Gui_szTips(16) = "¡¡¡¡ÏóÆåÎ×ŽŸÌá¹©µÄÆå×VæI±PÝ”Èë·¨žéÏ²šgæI±Pä›ÈëÆå×VµÄÆåÓÑÌá¹©ÁËÒ»ÖÖ¸ßÐ§µÄÆå×VÝ”Èë·½·¨£¬ÆåÓÑ¿É¸ù¾Ý×Ô¼ºµÄÁ•‘TÔÚ”µ×ÖÐ¡æI±P»òWXF×ÖÄ¸¸ñÊ½ÖÐÈÎÒâßx“ñ¡£"
 Gui_szTips(17) = "¡¡¡¡ÔÚÐÀÙpÆå×VµÄß^³ÌÖÐ£¬üc“ô¡°²¥·Å¡±°´âo¾Í¿ÉÄÔ“²½×Ô„ÓÑÝÊ¾£¬ÑÝÊ¾µÄ•régég¸ô¿ÉÒÔ×ÔÓÉÕ{Õû¡£ÔÙ´Îüc“ô¡°²¥·ÅÆå¾Ö¡±°´âo¿ÉÍ£Ö¹×Ô„ÓÑÝÊ¾¡£"
 Gui_szTips(18) = "¡¡¡¡ÔÚÐÀÙpÆå×VµÄß^³ÌÖÐ£¬¿ÉÒÔÊ¹ÓÃÆå±Pµ¹ÖÃºÍ×óÓÒÕ{“Q¹¦ÄÜíÄ²»Í¬µÄ½Ç¶ÈÐÀÙpÆå¾Ö¡£ÆäÖÐ×óÓÒÕ{“Q¹¦ÄÜß€¿ÉÒÔÒ»´ÎŒ¢îËÆì¶¡°ÅÚ°ËÆ½Îå¡±é_¾Öß@˜ÓµÄÆå×V×Ô„ÓÞD“Q³É´ó¼ÒÁ•‘TµÄ¡°ÅÚ¶þÆ½Îå¡±¡£·´Ö®ÒàÈ»¡£"
