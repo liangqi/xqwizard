@@ -1642,6 +1642,12 @@ Begin VB.Form frmMainLarge
          Caption         =   "江湖百局秘谱(&L)"
          Index           =   14
       End
+      Begin VB.Menu mnEndgamesSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnEndgamesHelp 
+         Caption         =   "求助(&P)"
+      End
    End
    Begin VB.Menu mnEngine 
       Caption         =   "电脑(&E)"
@@ -1885,6 +1891,9 @@ Begin VB.Form frmMainLarge
          End
          Begin VB.Menu mnHelpShareRenren 
             Caption         =   "人人网(&R)"
+         End
+         Begin VB.Menu mnHelpShareSep 
+            Caption         =   "-"
          End
          Begin VB.Menu mnHelpShareOther 
             Caption         =   "其他网站(&O)"
@@ -2638,7 +2647,8 @@ End Sub
 Private Sub mnHelpShareKaixin001_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.kaixin001.com/~repaste/repaste.php?rtitle=" & _
-        ShareWords & "&rcontent=" & ShareWords & " http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+        ShareWords & "%20%20%20%20&rcontent=" & ShareWords & _
+        "%20%20%20%20&rurl=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
