@@ -1930,7 +1930,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.67, Last Modified: Jul. 2010
+' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2072,7 +2072,7 @@ End Sub
 Private Sub mnMoveDel_Click()
 
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & _
+    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & vbCrLf & _
             L("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
         Exit Sub
     End If
@@ -2477,8 +2477,9 @@ Else
         MsgBox L("放弃提和。", "放棄提和。"), vbInformation
         mnEngineDraw.Checked = False
     Else
-        MsgBox L("请走一着棋，然后等待电脑接受或拒绝提和。", "請走一著棋，然後等待電腦接受或拒絕提和。") & _
-                vbCrLf & L("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
+        MsgBox L("请走一着棋，然后等待电脑接受或拒绝提和。", _
+                "請走一著棋，然後等待電腦接受或拒絕提和。") & vbCrLf & vbCrLf & _
+                L("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
                 "如果電腦拒絕提和，則不會理睬，而是繼續走棋。"), vbInformation
         mnEngineDraw.Checked = True
     End If

@@ -1495,7 +1495,7 @@ If Engine_nStatus > BUSY_WAIT Then
     End If
 End If
 If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法。") & vbCrLf _
+    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法。") & vbCrLf & vbCrLf _
             & L("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) = vbYes Then
         MoveCut
     Else
@@ -2058,7 +2058,7 @@ If Left(szReceived, 9) = "bestmove " Then
             End If
         End If
     Case Else
-        If (MsgBox(L("不该接收到的引擎信息：", "不該接收到的引擎信息：") & szReceived & vbCrLf & _
+        If (MsgBox(L("不该接收到的引擎信息：", "不該接收到的引擎信息：") & szReceived & vbCrLf & vbCrLf & _
                 L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
                 vbQuestion + vbYesNo)) = vbYes Then
             ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#receive", _
@@ -2261,7 +2261,7 @@ Public Sub ErrorOpenEngine()
 Engine_szFile = ""
 EngineLoaded False
 SetTitle
-If (MsgBox(L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & _
+If (MsgBox(L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
         L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
         vbQuestion + vbYesNo)) = vbYes Then
     ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#load", _
@@ -2348,7 +2348,7 @@ End Sub
 ' 打开副引擎
 Public Sub OpenSlaveEngine()
 
-Dim szEngineFile As String, szCopyright As String, szAuthor As String, szUser As String
+Dim szEngineFile As String, szVersion As String, szCopyright As String, szAuthor As String, szUser As String
 Dim dfLastTime As Double, dfThisTime As Double
 Dim lpStr As Long, szReceived As String
 
@@ -2387,6 +2387,8 @@ Do While Not Engine_bSlaveBlack
         ReceiveEngineLog szReceived, SLAVE_ENGINE
         If Left(szReceived, 8) = "id name " Then
             Engine_szSlaveName = Mid(szReceived, 9)
+        ElseIf Left(szReceived, 11) = "id version " Then
+            szVersion = Mid(szReceived, 12)
         ElseIf Left(szReceived, 13) = "id copyright " Then
             szCopyright = Mid(szReceived, 14)
         ElseIf Left(szReceived, 10) = "id author " Then
@@ -2404,11 +2406,13 @@ If Engine_bSlaveBlack Then
     MessageBeep vbInformation
     If Options_nLanguage = LANGUAGE_ZH_CN Then
         MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+                IIf(szVersion = "", "", "版本：" & szVersion & vbCrLf) & _
                 IIf(szCopyright = "", "", "版权：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
                 IIf(szUser = "", "", "用户：" & szUser), , "关于UCCI引擎", szEngineFile
     Else
         MsgBoxIcon IIf(Engine_szSlaveName = "", "", "引擎：" & Engine_szSlaveName & vbCrLf) & _
+                IIf(szVersion = "", "", "版本：" & szVersion & vbCrLf) & _
                 IIf(szCopyright = "", "", "版權：" & szCopyright & vbCrLf) & _
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
                 IIf(szUser = "", "", "用戶：" & szUser), , "關於UCCI引擎", szEngineFile
@@ -2644,7 +2648,7 @@ szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
 szUrl = "http://www.xqbase.com/pub/board.php?fen=" & UrlEncode(szFen) & _
         "&size=" & Publish_nSize & "&board=" & nBoard & "&pieces=" & nPieces
 ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
-MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複制了。") + vbCrLf + _
+MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複制了。") & vbCrLf & vbCrLf & _
         L("如需更改棋盘棋子样式，请在“发布棋谱”功能中设置。", "如需更改棋盤棋子樣式，請在“發布棋譜”功能中設置。"), vbInformation
 
 End Sub
