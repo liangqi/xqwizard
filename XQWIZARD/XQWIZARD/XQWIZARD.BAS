@@ -25,6 +25,7 @@ Private Declare Sub SetFocus Lib "USER32.DLL" (ByVal hWnd As Long)
 
 ' 全局常量——象棋巫师参数
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
+Public Const MAX_EPD_MENU       As Integer = 15   ' 挑战菜单的数量
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
 Public Const TEMP_FILE_NAME_S   As String = "查看文本棋谱(只读).TXT"
 Public Const TEMP_FILE_NAME_T   As String = "查看文本棋譜(只讀).TXT"
@@ -148,6 +149,7 @@ Public Gui_nThinkTop            As Integer  ' 思考窗口相对主窗口的右边线
 Public Gui_nEndgamesIndex       As Integer  ' 残局的条目序号
 Public Gui_szEpdName            As String   ' 残局文件名
 Public Gui_szEpdTitle           As String   ' 残局标题
+Public Gui_nEpdMenu             As Integer  ' 残局菜单
 Public Gui_bShowHowTo           As Boolean  ' 启动时显示“日积月累”
 Public Gui_nTipIndex            As Integer  ' “日积月累”的条目序号
 Public Gui_szTips(1 To TIP_NUM) As String   ' “日积月累”的条目
@@ -2808,6 +2810,7 @@ Gui_nThinkTop = Str2Int(GetSetting("XQWizard", "Gui", "ThinkTop", "6300"))
 Gui_nEndgamesIndex = Str2Int(GetSetting("XQWizard", "Gui", "EndgamesIndex", "0"), 0, MAX_ENDGAMES - 1)
 Gui_szEpdName = GetSetting("XQWizard", "Gui", "EpdName", "FUNNY")
 Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", L("趣味象棋", "趣味象棋"))
+Gui_nEpdMenu = Str2Int(GetSetting("XQWizard", "Gui", "EpdMenu", "0"), 0, MAX_EPD_MENU - 1)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
 Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
@@ -2859,6 +2862,7 @@ SaveSetting "XQWizard", "Gui", "ThinkTop", Gui_nThinkTop
 SaveSetting "XQWizard", "Gui", "EndgamesIndex", Gui_nEndgamesIndex
 SaveSetting "XQWizard", "Gui", "EpdName", Gui_szEpdName
 SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
+SaveSetting "XQWizard", "Gui", "EpdMenu", Gui_nEpdMenu
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", Gui_nTipIndex
 SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
@@ -2961,7 +2965,6 @@ App_frmMain.mnSearchEndgame.Caption = "搜索殘局(&E)"
 
 App_frmMain.mnEndgames_.Caption = "挑戰(&C)"
 App_frmMain.mnEndgamesStart.Caption = "當前題庫(&S)"
-App_frmMain.mnEndgamesFunny.Caption = "趣味象棋(&Y)"
 App_frmMain.mnEndgames(0).Caption = "基本殺法(&A)"
 App_frmMain.mnEndgames(1).Caption = "基本戰術(&B)"
 App_frmMain.mnEndgames(2).Caption = "中局殺法(&C)"
@@ -3351,6 +3354,9 @@ If Not App_bPromotion Then
     App_frmMain.mnMoveSep1.Visible = False
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
+On Error Resume Next
+App_frmMain.mnEndgames(Gui_nEpdMenu).Checked = True
+On Error GoTo 0
 App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
 App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds

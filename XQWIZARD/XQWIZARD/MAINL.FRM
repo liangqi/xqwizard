@@ -1582,63 +1582,65 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnEndgamesSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnEndgamesFunny 
-         Caption         =   "趣味象棋(&Y)"
-      End
-      Begin VB.Menu mnEndgamesSep2 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnEndgames 
-         Caption         =   "基本杀法(&A)"
+         Caption         =   "趣味象棋(&Y)"
          Index           =   0
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "基本战术(&B)"
+         Caption         =   "-"
          Index           =   1
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "中局杀法(&C)"
+         Caption         =   "基本杀法(&A)"
          Index           =   2
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "象棋杀着大全(&D)"
+         Caption         =   "基本战术(&B)"
          Index           =   3
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "残局攻杀谱(&E)"
+         Caption         =   "中局杀法(&C)"
          Index           =   4
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "象棋实用残局(第一集)(&F)"
+         Caption         =   "象棋杀着大全(&D)"
          Index           =   5
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "象棋实用残局(第二集)(&G)"
+         Caption         =   "残局攻杀谱(&E)"
          Index           =   6
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "-"
+         Caption         =   "象棋实用残局(第一集)(&F)"
          Index           =   7
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "橘中秘(残局篇)(&H)"
+         Caption         =   "象棋实用残局(第二集)(&G)"
          Index           =   8
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "适情雅趣(&I)"
+         Caption         =   "-"
          Index           =   9
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "烂柯神机(&J)"
+         Caption         =   "橘中秘(残局篇)(&H)"
          Index           =   10
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "象局汇存(&K)"
+         Caption         =   "适情雅趣(&I)"
          Index           =   11
       End
       Begin VB.Menu mnEndgames 
-         Caption         =   "江湖百局秘谱(&L)"
+         Caption         =   "烂柯神机(&J)"
          Index           =   12
+      End
+      Begin VB.Menu mnEndgames 
+         Caption         =   "象局汇存(&K)"
+         Index           =   13
+      End
+      Begin VB.Menu mnEndgames 
+         Caption         =   "江湖百局秘谱(&L)"
+         Index           =   14
       End
    End
    Begin VB.Menu mnEngine 
@@ -1870,6 +1872,27 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnHelpShare 
+         Caption         =   "推荐给好友(&F)"
+         Begin VB.Menu mnHelpShareQQ 
+            Caption         =   "&QQ空间"
+         End
+         Begin VB.Menu mnHelpShareSina 
+            Caption         =   "新浪微博(&S)"
+         End
+         Begin VB.Menu mnHelpShareKaixin001 
+            Caption         =   "开心网(&K)"
+         End
+         Begin VB.Menu mnHelpShareRenren 
+            Caption         =   "人人网(&R)"
+         End
+         Begin VB.Menu mnHelpShareOther 
+            Caption         =   "其他网站(&O)"
+         End
+      End
+      Begin VB.Menu mnHelpSep2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnHelpUpdate 
          Caption         =   "检查最新版本(&P)"
       End
@@ -1888,7 +1911,7 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpSuggest 
          Caption         =   "意见反馈(&S)"
       End
-      Begin VB.Menu mnHelpSep2 
+      Begin VB.Menu mnHelpSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpEngine 
@@ -2287,29 +2310,26 @@ LoadEndgames Gui_szEpdName, Gui_szEpdTitle
 
 End Sub
 
-Private Sub mnEndgamesFunny_Click()
-
-If CancelSave Then
-    Exit Sub
-End If
-LoadEndgames "FUNNY", L("趣味象棋", "趣味象棋")
-
-End Sub
-
 Private Sub mnEndgames_Click(nIndex As Integer)
 
-Dim szEpdName As String, szTitle As String
+Dim i As Integer, szEpdName As String, szTitle As String
 If CancelSave Then
     Exit Sub
 End If
-szEpdName = "_" & Choose(nIndex + 1, "A", "B", "C", "D", "E", "F", "G", "", "H", "I", "J", "K", "L")
+
+For i = 0 To MAX_EPD_MENU - 1
+    mnEndgames(i).Checked = False
+Next
+mnEndgames(nIndex).Checked = True
+Gui_nEpdMenu = nIndex
+szEpdName = Choose(nIndex + 1, "FUNNY", "", "_A", "_B", "_C", "_D", "_E", "_F", "_G", "", "_H", "_I", "_J", "_K", "_L")
 If Options_nLanguage = LANGUAGE_ZH_CN Then
-    szTitle = Choose(nIndex + 1, "基本杀法", "基本战术", "中局杀法", "象棋杀着大全", _
-            "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
+    szTitle = Choose(nIndex + 1, "趣味象棋", "", "基本杀法", "基本战术", "中局杀法", _
+            "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
             "", "橘中秘(残局篇)", "适情雅趣", "烂柯神机", "象局汇存", "江湖百局秘谱")
 Else
-    szTitle = Choose(nIndex + 1, "基本殺法", "基本戰術", "中局殺法", "象棋殺著大全", _
-            "殘局攻殺譜", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
+    szTitle = Choose(nIndex + 1, "趣味象棋", "", "基本殺法", "基本戰術", "中局殺法", _
+            "象棋殺著大全", "殘局攻殺譜", "象棋實用殘局(第一集)", "象棋實用殘局(第二集)", _
             "", "橘中秘(殘局篇)", "適情雅趣", "爛柯神機", "象局匯存", "江湖百局秘譜")
 End If
 LoadEndgames szEpdName, szTitle
@@ -2597,6 +2617,44 @@ Private Sub mnHelpQuote_Click()
 
 MessageBeep vbInformation
 MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), , "名言", , ICON_QUOTE
+
+End Sub
+
+Private Sub mnHelpShareQQ_Click()
+
+ShellExecuteA 0, vbNullString, "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey" & _
+        "?url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpShareSina_Click()
+
+ShellExecuteA 0, vbNullString, "http://v.t.sina.com.cn/share/share.php?title=" & _
+        ShareWords & "&url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpShareKaixin001_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.kaixin001.com/~repaste/repaste.php?rtitle=" & _
+        ShareWords & "&rcontent=" & ShareWords & " http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpShareRenren_Click()
+
+ShellExecuteA 0, vbNullString, "http://share.renren.com/share/buttonshare.do" & _
+        "?link=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnHelpShareOther_Click()
+
+Clipboard.Clear
+Clipboard.SetText ShareWords & " " & vbCrLf & "http://www.xqbase.com/xqwizard/xqwizard.htm"
+MsgBox L("推荐链接已复制到剪贴板，您可以将推荐链接粘贴到任何网站、论坛、社区上(按Ctrl-V键粘贴)。", _
+        "推薦鏈接已復製到剪貼板，您可以將推薦鏈接粘貼到任何網站、論壇、社區上(按Ctrl-V鍵粘貼)。") & vbCrLf & vbCrLf & _
+        L("感谢您对象棋巫师的支持。", "感謝您對象棋巫師的支持。"), vbInformation
 
 End Sub
 

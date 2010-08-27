@@ -156,6 +156,14 @@ End If
 
 End Function
 
+' “推荐给好友”的广告词
+Public Function ShareWords() As String
+
+ShareWords = L("象棋巫师 - 功能超强的中国象棋教学、电脑对弈和棋谱编辑软件", _
+        "象棋巫師 - 功能超強的中國象棋教學、電腦對弈和棋譜編輯軟件")
+
+End Function
+
 ' 关于象棋巫师
 Public Sub AboutXQWizard()
 
