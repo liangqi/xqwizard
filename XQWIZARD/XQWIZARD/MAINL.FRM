@@ -2632,8 +2632,8 @@ End Sub
 
 Private Sub mnHelpShareQQ_Click()
 
-ShellExecuteA 0, vbNullString, "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey" & _
-        "?url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+ShellExecuteA 0, vbNullString, "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?" & _
+        "url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2654,8 +2654,8 @@ End Sub
 
 Private Sub mnHelpShareRenren_Click()
 
-ShellExecuteA 0, vbNullString, "http://share.renren.com/share/buttonshare.do" & _
-        "?link=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
+ShellExecuteA 0, vbNullString, "http://share.renren.com/share/buttonshare.do?" & _
+        "link=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 

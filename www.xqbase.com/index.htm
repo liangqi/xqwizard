@@ -158,6 +158,16 @@ bottommargin="0" rightmargin="0">
 function search() {
   open("http://www.baidu.com/s?q1=" + q.value + "&q6=xqbase.com", "_blank");
 }
+
+function share() {
+  if (typeof clipboardData == "undefined") {
+    alert("暂不支持在IE以外的浏览器上使用剪贴板，敬请谅解。");
+  } else {
+    clipboardData.clearData();
+    clipboardData.setData("Text", "象棋巫师 - 功能超强的中国象棋教学、电脑对弈和棋谱编辑软件 \r\nhttp://www.xqbase.com/xqwizard/xqwizard.htm");
+    alert("推荐链接已复制到剪贴板，您可以将推荐链接粘贴到任何网站、论坛、社区上(按Ctrl-V键粘贴)。\n\n感谢您对象棋巫师的支持。");
+  }
+}
 // --></script><font
                         color="#000000"><input type="text"
                         size="20" maxlength="255" name="q"
@@ -220,8 +230,12 @@ function search() {
                         href="http://share.renren.com/share/buttonshare.do?link=http://www.xqbase.com/xqwizard/xqwizard.htm"
                         target="_blank"><font size="2"><img
                         src="xqwizard/renren.gif" alt="人人网"
+                        border="0" width="16" height="16"></font></a><font
+                        size="2"> </font><a
+                        href="javascript:share()"><font size="2"><img
+                        src="xqwizard/ie.gif" alt="其他网站"
                         border="0" width="16" height="16"></font></a></dd>
-                    <dd><font size="2"></font>　</dd>
+                    <dd>　</dd>
                     <dd><a href="xqwizard/news.htm"
                         target="_blank"><font size="2">最新动态、每日一题</font></a><font
                         size="2"><img src="new.gif" width="30"
