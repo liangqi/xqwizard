@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.72, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@ Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
 Public Const ICON_WIN           As Integer = 15   ' 胜的图标
 Public Const ICON_DRAW          As Integer = 16   ' 和的图标
 Public Const ICON_LOSS          As Integer = 17   ' 负的图标
+Public Const HELP_SCHOOL        As Boolean = True ' HelpPublish
 Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_WOOD       As Integer = 0
@@ -70,26 +71,17 @@ Public Const PIECES_L_WOOD      As Integer = 0
 Public Const PIECES_L_DELICATE  As Integer = 1
 Public Const PIECES_L_POLISH    As Integer = 2
 Public Const PIECES_L_MAX       As Integer = 3
-' 全局常量——发布图片大小
-Public Const PUB_SIZE_MINI      As Integer = 0
-Public Const PUB_SIZE_PRINT     As Integer = 1
-Public Const PUB_SIZE_SMALL     As Integer = 2
-Public Const PUB_SIZE_LARGE     As Integer = 3
-Public Const PUB_SIZE_MAX       As Integer = 4
-' 全局常量——发布站点
-Public Const PUB_LOCATION_ZHIDAO As Integer = 0
-Public Const PUB_LOCATION_TIEBA As Integer = 1
-Public Const PUB_LOCATION_SINA  As Integer = 2
-Public Const PUB_LOCATION_QZONE As Integer = 3
-Public Const PUB_LOCATION_OTHER As Integer = 4
-Public Const PUB_LOCATION_MAX   As Integer = 5
-' 全局常量——发布格式
-Public Const PUB_FORMAT_TEXT    As Integer = 0
-Public Const PUB_FORMAT_ANSI    As Integer = 1
-Public Const PUB_FORMAT_UBB     As Integer = 2
-Public Const PUB_FORMAT_HTML    As Integer = 3
-Public Const PUB_FORMAT_WEB     As Integer = 4
-Public Const PUB_FORMAT_MAX     As Integer = 5
+' 全局变量——网站求助
+Public Const HELP_PUB_ZHIDAO    As Integer = 0
+Public Const HELP_PUB_TIEBA     As Integer = 1
+Public Const HELP_PUB_OTHER     As Integer = 2
+' 全局变量——网站求助
+Public Const HELP_SHARE_QQ      As Integer = 0
+Public Const HELP_SHARE_SINA     As Integer = 1
+Public Const HELP_SHARE_KAIXIN001 As Integer = 2
+Public Const HELP_SHARE_RENREN    As Integer = 3
+Public Const HELP_SHARE_RESERVED As Integer = 4
+Public Const HELP_SHARE_OTHER   As Integer = 5
 ' 全局常量——语言
 Public Const LANGUAGE_ZH_CN     As Integer = 0
 Public Const LANGUAGE_ZH_TW     As Integer = 1
@@ -109,15 +101,6 @@ Public Gui_szUpgradeDate        As String   ' 检查升级的日期
 Public Gui_szAdvertDate         As String   ' 检查广告的日期
 Public Gui_nAdvertIndex         As Integer  ' 当前广告序号
 Public Gui_dfLastTime           As Double   ' 当前时间(每天00:00过去的秒数)
-' 全局变量——发布设置
-Public Publish_nSize            As Integer  ' 图片类型
-Public Publish_bTrad            As Boolean  ' 是否繁体(简单/印刷)
-Public Publish_nBoardS          As Integer  ' 棋盘类型(小)
-Public Publish_nPiecesS         As Integer  ' 棋子类型(小)
-Public Publish_nBoardL          As Integer  ' 棋盘类型(小)
-Public Publish_nPiecesL         As Integer  ' 棋子类型(大)
-Public Publish_nLocation        As Integer  ' 发布站点
-Public Publish_nFormat          As Integer  ' 发布格式
 
 ' 简繁选择，0选简体，1选繁体
 Public Function L(ParamArray sz() As Variant) As String
@@ -156,6 +139,31 @@ End If
 
 End Function
 
+' 推荐给好友
+Public Sub HelpPublish(ByVal nIndex As Integer, ByVal szTitle As String, ByVal szFen As String, _
+        Optional ByVal bSchool As Boolean = False)
+
+Dim pos As PositionStruct
+CchessFen2Board pos, szFen
+Clipboard.Clear
+Clipboard.SetText szTitle & vbCrLf & _
+        Replace(Replace(AllocString(CchessBoardText(pos)), "  ", L("‐", "．")), "--", "—") & _
+        L("=== 本棋谱由象棋巫师生成，欢迎访问 www.xqbase.com ===", "=== 本棋譜由象棋巫師生成，歡迎訪問 www.xqbase.com ===")
+Select Case nIndex
+Case HELP_PUB_ZHIDAO
+    ShellExecuteA 0, vbNullString, "http://zhidao.baidu.com/", _
+            vbNullString, vbNullString, vbNormalFocus
+Case HELP_PUB_TIEBA
+    ShellExecuteA 0, vbNullString, "http://tieba.baidu.com/f?kw=%CF%F3%C6%E5#sub", _
+            vbNullString, vbNullString, vbNormalFocus
+End Select
+MsgBox L("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
+        "棋譜已復製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。") & _
+        IIf(bSchool, vbCrLf & vbCrLf & L("每位学员的题目是不一样的，所以请务必把题目粘贴完整。", _
+        "每位學員的題目是不一樣的，所以請務必把題目粘貼完整。"), ""), vbInformation
+
+End Sub
+
 ' “推荐给好友”的广告词
 Public Function ShareWords() As String
 
@@ -163,6 +171,33 @@ ShareWords = L("象棋巫师 - 功能超强的中国象棋教学、电脑对弈和棋谱编辑软件", _
         "象棋巫師 - 功能超強的中國象棋教學、電腦對弈和棋譜編輯軟件")
 
 End Function
+
+' 推荐给好友
+Public Sub HelpShare(ByVal nIndex As Integer, ByVal szTitle As String, ByVal szUrl As String)
+
+Select Case nIndex
+Case HELP_SHARE_QQ
+    ShellExecuteA 0, vbNullString, "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?" & _
+            "url=" & UrlEncode(szUrl), vbNullString, vbNullString, vbNormalFocus
+Case HELP_SHARE_SINA
+    ShellExecuteA 0, vbNullString, "http://v.t.sina.com.cn/share/share.php?title=" & _
+            szTitle & "&url=" & UrlEncode(szUrl), vbNullString, vbNullString, vbNormalFocus
+Case HELP_SHARE_KAIXIN001
+    ShellExecuteA 0, vbNullString, "http://www.kaixin001.com/~repaste/repaste.php?rtitle=" & _
+            szTitle & "%20%20%20%20&rcontent=" & szTitle & _
+            "%20%20%20%20&rurl=" & UrlEncode(szUrl), vbNullString, vbNullString, vbNormalFocus
+Case HELP_SHARE_RENREN
+    ShellExecuteA 0, vbNullString, "http://share.renren.com/share/buttonshare.do?" & _
+            "link=" & UrlEncode(szUrl), vbNullString, vbNullString, vbNormalFocus
+Case HELP_SHARE_OTHER
+    Clipboard.Clear
+    Clipboard.SetText szTitle & " " & vbCrLf & szUrl
+    MsgBox L("推荐链接已复制到剪贴板，您可以将推荐链接粘贴到任何网站、论坛、社区上(按Ctrl-V键粘贴)。", _
+            "推薦鏈接已復製到剪貼板，您可以將推薦鏈接粘貼到任何網站、論壇、社區上(按Ctrl-V鍵粘貼)。") & vbCrLf & vbCrLf & _
+            L("感谢您对象棋巫师的支持。", "感謝您對象棋巫師的支持。"), vbInformation
+End Select
+
+End Sub
 
 ' 关于象棋巫师
 Public Sub AboutXQWizard()
@@ -323,14 +358,6 @@ Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0")
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
-Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
-Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
-Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
-Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
-Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
-Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
-Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
-Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 
 End Sub
 
@@ -344,13 +371,5 @@ SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
 SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
-SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
-SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
-SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
-SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
-SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
-SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
-SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
-SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
 
 End Sub

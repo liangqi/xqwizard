@@ -1647,6 +1647,37 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnEndgamesHelp 
          Caption         =   "求助(&P)"
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "百度知道(&Z)"
+            Index           =   0
+         End
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "百度贴吧象棋吧(&T)"
+            Index           =   1
+         End
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "其他网站(&O)"
+            Index           =   2
+         End
+         Begin VB.Menu mnEndgamesSep3 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnEndgamesShare 
+            Caption         =   "&QQ空间"
+            Index           =   0
+         End
+         Begin VB.Menu mnEndgamesShare 
+            Caption         =   "新浪微博(&S)"
+            Index           =   1
+         End
+         Begin VB.Menu mnEndgamesShare 
+            Caption         =   "开心网(&K)"
+            Index           =   2
+         End
+         Begin VB.Menu mnEndgamesShare 
+            Caption         =   "人人网(&R)"
+            Index           =   3
+         End
       End
    End
    Begin VB.Menu mnEngine 
@@ -1914,25 +1945,31 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
-      Begin VB.Menu mnHelpShare 
+      Begin VB.Menu mnHelpShare_ 
          Caption         =   "推荐给好友(&F)"
-         Begin VB.Menu mnHelpShareQQ 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "&QQ空间"
+            Index           =   0
          End
-         Begin VB.Menu mnHelpShareSina 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "新浪微博(&S)"
+            Index           =   1
          End
-         Begin VB.Menu mnHelpShareKaixin001 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "开心网(&K)"
+            Index           =   2
          End
-         Begin VB.Menu mnHelpShareRenren 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "人人网(&R)"
+            Index           =   3
          End
-         Begin VB.Menu mnHelpShareSep 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "-"
+            Index           =   4
          End
-         Begin VB.Menu mnHelpShareOther 
+         Begin VB.Menu mnHelpShare 
             Caption         =   "其他网站(&O)"
+            Index           =   5
          End
       End
       Begin VB.Menu mnHelpSep2 
@@ -2370,7 +2407,8 @@ For i = 0 To MAX_EPD_MENU - 1
 Next
 mnEndgames(nIndex).Checked = True
 Gui_nEpdMenu = nIndex
-szEpdName = Choose(nIndex + 1, "FUNNY", "", "_A", "_B", "_C", "_D", "_E", "_F", "_G", "", "_H", "_I", "_J", "_K", "_L")
+szEpdName = Choose(nIndex + 1, "FUNNY", "", "_A", "_B", "_C", "_D", "_E", "_F", "_G", "", _
+        "_H", "_I", "_J", "_K", "_L")
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     szTitle = Choose(nIndex + 1, "趣味象棋", "", "基本杀法", "基本战术", "中局杀法", _
             "象棋杀着大全", "残局攻杀谱", "象棋实用残局(第一集)", "象棋实用残局(第二集)", _
@@ -2381,6 +2419,19 @@ Else
             "", "橘中秘(殘局篇)", "適情雅趣", "爛柯神機", "象局匯存", "江湖百局秘譜")
 End If
 LoadEndgames szEpdName, szTitle
+
+End Sub
+
+Private Sub mnEndgamesPublish_Click(nIndex As Integer)
+
+HelpPublish nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), Game_szIrrevFen(0)
+
+End Sub
+
+Private Sub mnEndgamesShare_Click(nIndex As Integer)
+
+HelpShare nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), _
+        "http://www.xqbase.com/xqwizard/help_puzzle.htm?fen=" & Game_szIrrevFen(0)
 
 End Sub
 
@@ -2669,42 +2720,9 @@ MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), , "名言", , ICON_QUOTE
 
 End Sub
 
-Private Sub mnHelpShareQQ_Click()
+Private Sub mnHelpShare_Click(nIndex As Integer)
 
-ShellExecuteA 0, vbNullString, "http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?" & _
-        "url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnHelpShareSina_Click()
-
-ShellExecuteA 0, vbNullString, "http://v.t.sina.com.cn/share/share.php?title=" & _
-        ShareWords & "&url=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnHelpShareKaixin001_Click()
-
-ShellExecuteA 0, vbNullString, "http://www.kaixin001.com/~repaste/repaste.php?rtitle=" & _
-        ShareWords & "%20%20%20%20&rcontent=" & ShareWords & _
-        "%20%20%20%20&rurl=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnHelpShareRenren_Click()
-
-ShellExecuteA 0, vbNullString, "http://share.renren.com/share/buttonshare.do?" & _
-        "link=http://www.xqbase.com/xqwizard/xqwizard.htm", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnHelpShareOther_Click()
-
-Clipboard.Clear
-Clipboard.SetText ShareWords & " " & vbCrLf & "http://www.xqbase.com/xqwizard/xqwizard.htm"
-MsgBox L("推荐链接已复制到剪贴板，您可以将推荐链接粘贴到任何网站、论坛、社区上(按Ctrl-V键粘贴)。", _
-        "推薦鏈接已復製到剪貼板，您可以將推薦鏈接粘貼到任何網站、論壇、社區上(按Ctrl-V鍵粘貼)。") & vbCrLf & vbCrLf & _
-        L("感谢您对象棋巫师的支持。", "感謝您對象棋巫師的支持。"), vbInformation
+HelpShare nIndex, ShareWords, "http://www.xqbase.com/xqwizard/xqwizard.htm"
 
 End Sub
 

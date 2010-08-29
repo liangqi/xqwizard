@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.72, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -95,6 +95,26 @@ Public Const COORD_CHAR         As String = "£±£²£³£´£µ£¶£·£¸£¹¾Å°ËÆßÁùÎåËÄÈý¶þÒ
 Public Const HANDICAP_A         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKAB1R w - - 0 1"
 Public Const HANDICAP_B         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKAB1R w - - 0 1"
 Public Const HANDICAP_C         As String = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w - - 0 1"
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Í¼Æ¬´óÐ¡
+Public Const PUB_SIZE_MINI      As Integer = 0
+Public Const PUB_SIZE_PRINT     As Integer = 1
+Public Const PUB_SIZE_SMALL     As Integer = 2
+Public Const PUB_SIZE_LARGE     As Integer = 3
+Public Const PUB_SIZE_MAX       As Integer = 4
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼Õ¾µã
+Public Const PUB_LOCATION_ZHIDAO As Integer = 0
+Public Const PUB_LOCATION_TIEBA As Integer = 1
+Public Const PUB_LOCATION_SINA  As Integer = 2
+Public Const PUB_LOCATION_QZONE As Integer = 3
+Public Const PUB_LOCATION_OTHER As Integer = 4
+Public Const PUB_LOCATION_MAX   As Integer = 5
+' È«¾Ö³£Á¿¡ª¡ª·¢²¼¸ñÊ½
+Public Const PUB_FORMAT_TEXT    As Integer = 0
+Public Const PUB_FORMAT_ANSI    As Integer = 1
+Public Const PUB_FORMAT_UBB     As Integer = 2
+Public Const PUB_FORMAT_HTML    As Integer = 3
+Public Const PUB_FORMAT_WEB     As Integer = 4
+Public Const PUB_FORMAT_MAX     As Integer = 5
 ' È«¾Ö³£Á¿¡ª¡ªWindows²ÎÊý³£Á¿
 Public Const WM_MOVE            As Long = 3
 
@@ -154,7 +174,15 @@ Public Gui_bShowHowTo           As Boolean  ' Æô¶¯Ê±ÏÔÊ¾¡°ÈÕ»ýÔÂÀÛ¡±
 Public Gui_nTipIndex            As Integer  ' ¡°ÈÕ»ýÔÂÀÛ¡±µÄÌõÄ¿ÐòºÅ
 Public Gui_szTips(1 To TIP_NUM) As String   ' ¡°ÈÕ»ýÔÂÀÛ¡±µÄÌõÄ¿
 ' È«¾Ö±äÁ¿¡ª¡ª·¢²¼ÉèÖÃ
+Public Publish_nSize            As Integer  ' Í¼Æ¬ÀàÐÍ
+Public Publish_bTrad            As Boolean  ' ÊÇ·ñ·±Ìå(¼òµ¥/Ó¡Ë¢)
+Public Publish_nBoardS          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
+Public Publish_nPiecesS         As Integer  ' Æå×ÓÀàÐÍ(Ð¡)
+Public Publish_nBoardL          As Integer  ' ÆåÅÌÀàÐÍ(Ð¡)
+Public Publish_nPiecesL         As Integer  ' Æå×ÓÀàÐÍ(´ó)
 Public Publish_bContent         As Boolean  ' ÊÇ·ñÖ»·¢²¼µ±Ç°¾ÖÃæ
+Public Publish_nLocation        As Integer  ' ·¢²¼Õ¾µã
+Public Publish_nFormat          As Integer  ' ·¢²¼¸ñÊ½
 ' È«¾Ö±äÁ¿¡ª¡ªÆå¾Ö
 Public Game_szEvent             As String   ' ÈüÊÂ
 Public Game_szRound             As String   ' ÂÖ´Î
@@ -2817,7 +2845,15 @@ Gui_szEpdTitle = GetSetting("XQWizard", "Gui", "EpdTitle", L("È¤Î¶ÏóÆå", "È¤Î¶Ïó
 Gui_nEpdMenu = Str2Int(GetSetting("XQWizard", "Gui", "EpdMenu", "0"), 0, MAX_EPD_MENU - 1)
 Gui_bShowHowTo = (Str2Int(GetSetting("XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), "1")) <> 0)
 Gui_nTipIndex = Str2Int(GetSetting("XQWizard", "Gui", "TipIndex", "1"), 1, TIP_NUM)
+Publish_nSize = Str2Int(GetSetting("XQWizard", "Publish", "Size", "0"), 0, PUB_SIZE_MAX - 1)
+Publish_bTrad = (Str2Int(GetSetting("XQWizard", "Publish", "Trad", "0")) <> 0)
+Publish_nBoardS = Str2Int(GetSetting("XQWizard", "Publish", "BoardS", "0"), 0, BOARD_S_MAX - 1)
+Publish_nPiecesS = Str2Int(GetSetting("XQWizard", "Publish", "PiecesS", "0"), 0, PIECES_S_MAX - 1)
+Publish_nBoardL = Str2Int(GetSetting("XQWizard", "Publish", "BoardL", "0"), 0, BOARD_L_MAX - 1)
+Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0, PIECES_L_MAX - 1)
 Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
+Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
+Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
 Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "2"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
@@ -2869,7 +2905,15 @@ SaveSetting "XQWizard", "Gui", "EpdTitle", Gui_szEpdTitle
 SaveSetting "XQWizard", "Gui", "EpdMenu", Gui_nEpdMenu
 SaveSetting "XQWizard", "Gui", IIf(App_bPromotion, "ShowHowTo2", "ShowHowTo"), IIf(Gui_bShowHowTo, "1", "0")
 SaveSetting "XQWizard", "Gui", "TipIndex", Gui_nTipIndex
+SaveSetting "XQWizard", "Publish", "Size", Publish_nSize
+SaveSetting "XQWizard", "Publish", "Trad", IIf(Publish_bTrad, "1", "0")
+SaveSetting "XQWizard", "Publish", "BoardS", Publish_nBoardS
+SaveSetting "XQWizard", "Publish", "PiecesS", Publish_nPiecesS
+SaveSetting "XQWizard", "Publish", "BoardL", Publish_nBoardL
+SaveSetting "XQWizard", "Publish", "PiecesL", Publish_nPiecesL
 SaveSetting "XQWizard", "Publish", "Content", IIf(Publish_bContent, "1", "0")
+SaveSetting "XQWizard", "Publish", "Location", Publish_nLocation
+SaveSetting "XQWizard", "Publish", "Format", Publish_nFormat
 SaveSetting "XQWizard", "Timer", "Depth", Timer_nDepth
 SaveSetting "XQWizard", "Timer", "IncMode", IIf(Timer_bIncMode, "1", "0")
 SaveSetting "XQWizard", "Timer", "InitTime", Timer_nInitTime
@@ -3333,8 +3377,8 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
-' ³õÊ¼»¯ frmHide.web
-frmHide.web.Navigate "about:blank"
+' ³õÊ¼»¯ frmHide2.web
+frmHide2.web.Navigate "about:blank"
 ' ¼ì²é¸üÐÂ£¬Èç¹ûÓÃ»§¾ö¶¨¸üÐÂ£¬»áµ¯³öÏÂÔØÒ³Ãæ£¬³öÏÖÔÚÏóÆåÎ×Ê¦Ò³ÃæÖ®Ç°
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate "xqwizard"
