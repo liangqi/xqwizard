@@ -114,6 +114,12 @@ Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\tips1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\tips1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\tips2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\tips2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\gz2010.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\gz2010.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; ÆåÅÌÎÄ¼þ(Ð¡)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
