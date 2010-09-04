@@ -2086,12 +2086,7 @@ If Left(szReceived, 9) = "bestmove " Then
             End If
         End If
     Case Else
-        If (MsgBox(L("不该接收到的引擎信息：", "不該接收到的引擎信息：") & szReceived & vbCrLf & vbCrLf & _
-                L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
-                vbQuestion + vbYesNo)) = vbYes Then
-            ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#receive", _
-                    vbNullString, vbNullString, vbNormalFocus
-        End If
+        ' 不该接收到的引擎信息
     End Select
     If Options_bStatusBar Then
         App_frmMain.stb.Panels("Curr").Text = ""
@@ -2108,7 +2103,7 @@ ElseIf Left(szReceived, 10) = "nobestmove" Then
     Case BUSY_THINK
         Engine_nStatus = IDLE_REST
     Case Else
-        ' MsgBox "不该接收到引擎的信息：" & szReceived, vbExclamation
+        ' 不该接收到引擎的信息
     End Select
     If Options_bStatusBar Then
         App_frmMain.stb.Panels("Curr").Text = ""
@@ -2134,7 +2129,7 @@ Do While Engine_nStatus = nOldStatus
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 1# Then
+        If dfThisTime > dfLastTime + 10# Then
             Exit Do
         End If
     End If
@@ -2286,15 +2281,12 @@ End Sub
 ' 加载引擎失败
 Public Sub ErrorOpenEngine()
 
+MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
+        L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
+        "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
 Engine_szFile = ""
 EngineLoaded False
 SetTitle
-If (MsgBox(L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
-        L("是否把这个情况汇报给象棋巫师开发团队？", "是否把這個情況匯報給象棋巫師開發團隊？"), _
-        vbQuestion + vbYesNo)) = vbYes Then
-    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_engine.htm#load", _
-            vbNullString, vbNullString, vbNormalFocus
-End If
 
 End Sub
 
@@ -2329,8 +2321,8 @@ Do While Engine_nStatus = IDLE_UNLOAD
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        ' 加载引擎的时间延长到30秒
-        If dfThisTime > dfLastTime + 30# Then
+        ' 加载引擎的时间延长到60秒
+        If dfThisTime > dfLastTime + 60# Then
             Exit Do
         End If
     Else
@@ -3027,13 +3019,14 @@ App_frmMain.mnEndgames(10).Caption = "爛柯神机(&J)"
 App_frmMain.mnEndgames(11).Caption = "象局匯存(&K)"
 App_frmMain.mnEndgames(12).Caption = "江湖百局秘譜(&L)"
 App_frmMain.mnEndgamesHelp.Caption = "求助(&P)"
-App_frmMain.mnEndgamesPublish(0).Caption = "百度知道(&Z)"
-App_frmMain.mnEndgamesPublish(1).Caption = "百度貼吧象棋吧(&T)"
-App_frmMain.mnEndgamesPublish(2).Caption = "其他網站(&O)"
-App_frmMain.mnEndgamesShare(0).Caption = "&QQ空間"
+App_frmMain.mnEndgamesEndgames.Caption = "殘局庫(&E)"
+App_frmMain.mnEndgamesShare(0).Caption = "QQ空間(&Q)"
 App_frmMain.mnEndgamesShare(1).Caption = "新浪微博(&S)"
 App_frmMain.mnEndgamesShare(2).Caption = "開心網(&K)"
 App_frmMain.mnEndgamesShare(3).Caption = "人人網(&R)"
+App_frmMain.mnEndgamesPublish(0).Caption = "百度知道(&Z)"
+App_frmMain.mnEndgamesPublish(1).Caption = "百度貼吧象棋吧(&T)"
+App_frmMain.mnEndgamesPublish(2).Caption = "其他網站(&O)"
 
 App_frmMain.mnEngine.Caption = "電腦(&E)"
 App_frmMain.mnEngineLevel.Caption = "級別設置(&L)..."
@@ -3088,7 +3081,7 @@ App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
 App_frmMain.mnHelpHowTo.Caption = "日積月累(&W)..."
 App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
 App_frmMain.mnHelpShare_.Caption = "推薦給好友(&F)"
-App_frmMain.mnHelpShare(0).Caption = "&QQ空間"
+App_frmMain.mnHelpShare(0).Caption = "QQ空間(&Q)"
 App_frmMain.mnHelpShare(1).Caption = "新浪微博(&S)"
 App_frmMain.mnHelpShare(2).Caption = "開心網(&K)"
 App_frmMain.mnHelpShare(3).Caption = "人人網(&R)"

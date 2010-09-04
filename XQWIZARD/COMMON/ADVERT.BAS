@@ -34,7 +34,7 @@ Public Sub DownloadAdvertList(ByVal szAdvertFile As String)
 Dim buffer() As Byte, nFileNo As Integer, sz As String
 nFileNo = FreeFile
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szAdvertFile)
+sz = frmHide.Inet.OpenURL("http://www.xqbase.com/advert/" & szAdvertFile)
 On Error GoTo 0
 If sz <> "" Then
     On Error Resume Next
@@ -73,7 +73,7 @@ End Function
 ' 检查广告(htm和gif文件)
 Public Sub CheckAdvert(ByVal szFileName As String, ByVal nHtmSize As Long, ByVal nGifSize As Long)
 
-Dim nFileNo As Integer, sz As String, buffer() As Byte
+Dim nFileNo As Integer, sz As String, ucBuffer() As Byte
 ' 判断文件字节数，如果跟广告列表中的一致，就不需要下载了
 If GetFileSize(App_szPath & "ADVERT\" & szFileName & ".htm") = nHtmSize Then
     If GetFileSize(App_szPath & "ADVERT\" & szFileName & ".gif") = nGifSize Then
@@ -84,7 +84,7 @@ End If
 nFileNo = FreeFile
 ' 下载htm文件，文本方式
 On Error GoTo lnErrorOpen
-sz = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".htm")
+sz = frmHide.Inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".htm")
 On Error GoTo 0
 If sz <> "" Then
     On Error GoTo lnErrorOpen
@@ -97,17 +97,18 @@ If sz <> "" Then
 End If
 ' 下载gif文件，二进制方式
 On Error GoTo lnErrorOpen
-buffer() = frmHide.inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".gif", icByteArray)
+ucBuffer() = frmHide.Inet.OpenURL("http://www.xqbase.com/advert/" & szFileName & ".gif", icByteArray)
 On Error GoTo 0
-If UBound(buffer) >= 0 Then
-    On Error Resume Next
-    Kill App_szPath & "ADVERT\" & szFileName & ".gif"
-    On Error GoTo lnErrorOpen
-    Open App_szPath & "ADVERT\" & szFileName & ".gif" For Binary Access Write As #nFileNo
-    On Error GoTo 0
-    Put #nFileNo, , buffer()
-    Close #nFileNo
+If UBound(ucBuffer()) < 0 Then
+    Exit Sub
 End If
+On Error Resume Next
+Kill App_szPath & "ADVERT\" & szFileName & ".gif"
+On Error GoTo lnErrorOpen
+Open App_szPath & "ADVERT\" & szFileName & ".gif" For Binary Access Write As #nFileNo
+On Error GoTo 0
+Put #nFileNo, , ucBuffer()
+Close #nFileNo
 
 lnErrorOpen:
 On Error GoTo 0

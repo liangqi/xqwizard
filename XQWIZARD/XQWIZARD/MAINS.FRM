@@ -46,7 +46,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -1647,23 +1647,14 @@ Begin VB.Form frmMainSmall
       End
       Begin VB.Menu mnEndgamesHelp 
          Caption         =   "求助(&P)"
-         Begin VB.Menu mnEndgamesPublish 
-            Caption         =   "百度知道(&Z)"
-            Index           =   0
-         End
-         Begin VB.Menu mnEndgamesPublish 
-            Caption         =   "百度贴吧象棋吧(&T)"
-            Index           =   1
-         End
-         Begin VB.Menu mnEndgamesPublish 
-            Caption         =   "其他网站(&O)"
-            Index           =   2
+         Begin VB.Menu mnEndgamesEndgames 
+            Caption         =   "残局库(&E)"
          End
          Begin VB.Menu mnEndgamesSep3 
             Caption         =   "-"
          End
          Begin VB.Menu mnEndgamesShare 
-            Caption         =   "&QQ空间"
+            Caption         =   "QQ空间(&Q)"
             Index           =   0
          End
          Begin VB.Menu mnEndgamesShare 
@@ -1677,6 +1668,21 @@ Begin VB.Form frmMainSmall
          Begin VB.Menu mnEndgamesShare 
             Caption         =   "人人网(&R)"
             Index           =   3
+         End
+         Begin VB.Menu mnEndgamesSep4 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "百度知道(&Z)"
+            Index           =   0
+         End
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "百度贴吧象棋吧(&T)"
+            Index           =   1
+         End
+         Begin VB.Menu mnEndgamesPublish 
+            Caption         =   "其他网站(&O)"
+            Index           =   2
          End
       End
    End
@@ -1948,7 +1954,7 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnHelpShare_ 
          Caption         =   "推荐给好友(&F)"
          Begin VB.Menu mnHelpShare 
-            Caption         =   "&QQ空间"
+            Caption         =   "QQ空间(&Q)"
             Index           =   0
          End
          Begin VB.Menu mnHelpShare 
@@ -2422,9 +2428,10 @@ LoadEndgames szEpdName, szTitle
 
 End Sub
 
-Private Sub mnEndgamesPublish_Click(nIndex As Integer)
+Private Sub mnEndgamesEndgames_Click()
 
-HelpPublish nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), Game_szIrrevFen(0)
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & _
+        UrlEncode(Game_szIrrevFen(0)), vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -2432,6 +2439,12 @@ Private Sub mnEndgamesShare_Click(nIndex As Integer)
 
 HelpShare nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), _
         "http://www.xqbase.com/xqwizard/help_puzzle.htm?fen=" & Game_szIrrevFen(0)
+
+End Sub
+
+Private Sub mnEndgamesPublish_Click(nIndex As Integer)
+
+HelpPublish nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), Game_szIrrevFen(0)
 
 End Sub
 
