@@ -1497,18 +1497,18 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnPosCopy 
-         Caption         =   "复制FEN串(&C)"
+         Caption         =   "复制局面代码(&C)"
          Shortcut        =   ^{INSERT}
       End
       Begin VB.Menu mnPosPaste 
-         Caption         =   "粘贴FEN串(&P)"
+         Caption         =   "粘贴局面代码(&P)"
          Shortcut        =   +{INSERT}
       End
       Begin VB.Menu mnPosLoad 
-         Caption         =   "从FEN文件导入(&L)..."
+         Caption         =   "从局面文件导入(&L)..."
       End
       Begin VB.Menu mnPosStore 
-         Caption         =   "导出到FEN文件(&S)..."
+         Caption         =   "导出到局面文件(&S)..."
       End
    End
    Begin VB.Menu mnWizard 
@@ -2276,7 +2276,7 @@ Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
 Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
-MsgBox L("FEN串已复制到剪贴板。", "FEN串已復製到剪貼板"), vbInformation
+MsgBox L("局面代码已复制到剪贴板。", "局面代碼已復製到剪貼板"), vbInformation
 
 End Sub
 
@@ -2295,7 +2295,7 @@ Dim szFileName As String
 If CancelSave Then
     Exit Sub
 End If
-szFileName = FileDialog(L("从FEN文件导入", "從FEN文件導入"), L("象棋局面文件", "象棋局面文件"), "FEN")
+szFileName = FileDialog(L("从局面文件导入", "從局面文件導入"), L("象棋局面文件", "象棋局面文件"), "FEN")
 If szFileName <> "" Then
     LoadFenFile szFileName
 End If
@@ -2305,7 +2305,7 @@ End Sub
 Private Sub mnPosStore_Click()
 
 Dim szFileName As String, nFileNo As Integer
-szFileName = FileDialog(L("导出到FEN文件", "導出到FEN文件"), _
+szFileName = FileDialog(L("导出到局面文件", "導出到局面文件"), _
         L("象棋局面文件", "象棋局面文件"), "FEN", DefaultFileName)
 If szFileName <> "" Then
     nFileNo = FreeFile
@@ -2656,7 +2656,11 @@ End Sub
 
 Private Sub mnOptionsMusic_Click(nIndex As Integer)
 
+Dim i As Integer
 MusicSetting nIndex
+For i = 0 To MUSIC_MAX - 1
+    mnOptionsMusic(i).Checked = (nIndex = i)
+Next
 
 End Sub
 

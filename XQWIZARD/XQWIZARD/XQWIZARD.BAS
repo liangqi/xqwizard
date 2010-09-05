@@ -73,22 +73,6 @@ Public Const ENGINE_PLAY_BLACK  As Integer = 2
 Public Const ENGINE_PLAY_TURN   As Integer = 3
 Public Const ENGINE_PLAY_RANDOM As Integer = 4
 Public Const ENGINE_PLAY_MAX    As Integer = 5
-' È«¾Ö³£Á¿¡ª¡ªÒôÀÖÉèÖÃÑ¡Ïî
-Public Const MUSIC_EXPRESS      As Integer = 0
-Public Const MUSIC_FUNNY        As Integer = 1
-Public Const MUSIC_CLASSIC      As Integer = 2
-Public Const MUSIC_MOZART1      As Integer = 3
-Public Const MUSIC_MOZART4      As Integer = 4
-Public Const MUSIC_FULELISE     As Integer = 5
-Public Const MUSIC_LOVDREAM     As Integer = 6
-Public Const MUSIC_WALTZ        As Integer = 7
-Public Const MUSIC_HUMOUR       As Integer = 8
-Public Const MUSIC_MARIO1       As Integer = 9
-Public Const MUSIC_MARIO2       As Integer = 10
-Public Const MUSIC_PAL          As Integer = 11
-Public Const MUSIC_CMUSIC       As Integer = 12
-Public Const MUSIC_NONE         As Integer = 13
-Public Const MUSIC_MAX          As Integer = 14
 ' È«¾Ö³£Á¿¡ª¡ªÆåÅÌ×ø±ê
 Public Const COORD_CHAR         As String = "£±£²£³£´£µ£¶£·£¸£¹¾Å°ËÆßÁùÎåËÄÈı¶şÒ»"
 ' È«¾Ö³£Á¿¡ª¡ªÈÃ×Ó
@@ -152,7 +136,6 @@ Public Options_bAlwaysPonder    As Boolean  ' ÆôÓÃºóÌ¨Ë¼¿¼
 Public Options_bEngineTime      As Boolean  ' ÏÔÊ¾ÒıÇæËÙ¶È
 Public Options_bStatusBar       As Boolean  ' Êä³öµ½×´Ì¬À¸
 Public Options_nEnginePlay      As Integer  ' ĞÂ¾ÖÒıÇæ×´Ì¬
-Public Options_nMusic           As Integer  ' ÒôÀÖ
 Public Options_bTopMost         As Integer  ' ×ÜÔÚ×îÇ°Ãæ
 Public Options_bPromptSave      As Boolean  ' ÌáÊ¾±£´æ
 Public Options_bAutoSave        As Boolean  ' ×Ô¶¯±£´æ
@@ -291,32 +274,6 @@ End Function
 Public Function NumberText(cnt As Integer, sd As Integer) As String
 
 NumberText = IIf(sd = 0, cnt & ".", Space(Len("" & cnt) + 1))
-
-End Function
-
-' ´ò¿ªÎÄ¼ş¶Ô»°¿ò
-Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, _
-        ByVal szExt As String, Optional ByVal szSave As String = "") As String
-
-Dim szFileName As String, szFilter As String
-szFilter = szFileType & " (*." & szExt & ")|*." & szExt & "|" & L("ËùÓĞÎÄ¼ş", "ËùÓĞÎÄ¼ş") & " (*.*)|*.*"
-If szSave = "" Then
-    szFileName = OpenFileDialog(szTitle, szFilter)
-Else
-    szFileName = szSave
-    szFileName = Replace(szFileName, "\", "£Ü")
-    szFileName = Replace(szFileName, "/", "£¯")
-    szFileName = Replace(szFileName, ":", "£º")
-    szFileName = Replace(szFileName, "*", "£ª")
-    szFileName = Replace(szFileName, "?", "£¿")
-    ' È«½ÇË«ÒıºÅÓÃÔÚÄ³Ğ©²Ù×÷ÏµÍ³ÉÏ²»Õı³££¬ËùÒÔÓÃ°ë½Çµ¥ÒıºÅ´úÌæ
-    szFileName = Replace(szFileName, """", "'")
-    szFileName = Replace(szFileName, "<", "£¼")
-    szFileName = Replace(szFileName, ">", "£¾")
-    szFileName = Replace(szFileName, "|", "£ü")
-    szFileName = SaveFileDialog(szTitle, szFilter, szFileName & "." & szExt, szExt)
-End If
-FileDialog = szFileName
 
 End Function
 
@@ -533,7 +490,7 @@ Do While Not (EOF(nFileNo) And szLineStr = "" And szLineStrEx = "")
     End If
     If bDetail Then
         If Not (bCchess Or App_szFileName = "") Then
-            MsgBox App_szFileName & L(" ¿ÉÄÜ²»ÊÇÖĞ¹úÏóÆåµÄPGNÎÄ¼ş¡£", " ¿ÉÄÜ²»ÊÇÖĞ‡øÏóÆåµÄPGNÎÄ¼ş¡£"), vbExclamation
+            MsgBox App_szFileName & L(" ¿ÉÄÜ²»ÊÇÖĞ¹úÏóÆåµÄÆåÆ×ÎÄ¼ş¡£", " ¿ÉÄÜ²»ÊÇÖĞ‡øÏóÆåµÄÆå×VÎÄ¼ş¡£"), vbExclamation
             App_szFileName = ""
             SetTitle
         End If
@@ -725,12 +682,12 @@ Dim szFileName As String
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     szFileName = OpenFileDialog("´ò¿ªÆåÆ×ÎÄ¼ş", "ËùÓĞÆåÆ× (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|" & _
             "*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
-            "¿ÉÒÆÖ²ÆåÆ× (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆåÆ× (*.XQF)|*.XQF|ŞÄÌìÆåÆ× (*.MXQ)|*.MXQ|" & _
+            "±ãĞ¯Ê½ÆåÆ× (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆåÆ× (*.XQF)|*.XQF|ŞÄÌìÆåÆ× (*.MXQ)|*.MXQ|" & _
             "QQÏóÆåÆåÆ× (*.CHE)|*.CHE|ÁªÖÚÏóÆåÆåÆ× (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆåÆ× (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
 Else
     szFileName = OpenFileDialog("´òé_Æå×VÎÄ¼ş", "ËùÓĞÆå×V (*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM)|" & _
             "*.PGN;*.XQF;*.MXQ;*.CHE;*.CHN;*.CCM|" & _
-            "¿ÉÒÆÖ²Æå×V (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆå×V (*.XQF)|*.XQF|ŞÄÌìÆå×V (*.MXQ)|*.MXQ|" & _
+            "±ã”yÊ½Æå×V (*.PGN)|*.PGN|ÏóÆåÑİ²¥ÊÒÆå×V (*.XQF)|*.XQF|ŞÄÌìÆå×V (*.MXQ)|*.MXQ|" & _
             "QQÏóÆåÆå×V (*.CHE)|*.CHE|Â“±ŠÏóÆåÆå×V (*.CHN)|*.CHN|ÖĞÓÎÏóÆåÆå×V (*.CCM)|*.CCM|ËùÓĞÎÄ¼ş (*.*)|*.*")
 End If
 If szFileName <> "" Then
@@ -779,7 +736,7 @@ End Function
 Public Function SaveFileAs()
 
 Dim sz As String
-sz = FileDialog(L("±£´æÆåÆ×ÎÄ¼ş", "±£´æÆå×VÎÄ¼ş"), L("¿ÉÒÆÖ²ÆåÆ×", "¿ÉÒÆÖ²Æå×V"), "PGN", DefaultFileName)
+sz = FileDialog(L("±£´æÆåÆ×ÎÄ¼ş", "±£´æÆå×VÎÄ¼ş"), L("±ãĞ¯Ê½ÆåÆ×", "±ã”yÊ½Æå×V"), "PGN", DefaultFileName)
 If sz <> "" Then
     App_szFileName = sz
     SetTitle
@@ -2628,27 +2585,6 @@ Options_nPiecesL = nPiecesIndex
 
 End Sub
 
-' ÉèÖÃÒôÀÖ
-Public Sub MusicSetting(ByVal nMusicIndex As Integer)
-
-Dim i As Integer
-frmHide2.mci.Command = "Close"
-If nMusicIndex < MUSIC_NONE Then
-    frmHide2.mci.FileName = App_szPath & "MUSICS\" & _
-            Choose(nMusicIndex + 1, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
-            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "MARIO1", "MARIO2", "PAL", "CMUSIC") & ".MID"
-    If Not App_bPrevInstance Then
-        frmHide2.mci.Command = "Open"
-        frmHide2.mci.Command = "Play"
-    End If
-End If
-For i = 0 To MUSIC_MAX - 1
-    App_frmMain.mnOptionsMusic(i).Checked = (nMusicIndex = i)
-Next
-Options_nMusic = nMusicIndex
-
-End Sub
-
 ' Éú³ÉÍ¼Æ¬ÆåÅÌ
 Public Sub WizardBitmap()
 
@@ -2697,7 +2633,7 @@ Gui_szTips(8) = "¡¡¡¡Èç¹ûÄú¶ÔÏóÆåÎ×Ê¦ÓĞÊ²Ã´Òâ¼û»ò½¨Òé£¬¿ÉÒÔ¸úÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶ÓÁªÏ
         "¡¡¡¡ÏóÆåÎ×Ê¦¿ª·¢ÍÅ¶Ó·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÁªÏµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔË«»÷×ÀÃæÉÏµÄÏóÆåÎ×Ê¦Í¼±ê(ÓÉÆå×Ó¡°Ïó¡±¡¢ÆåÅÌºÍÎ×Ê¦°ô×é³É)Ö±½ÓÆô¶¯ÏóÆåÎ×Ê¦¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»¸öÏóÆåÎ×Ê¦µÄ³õÑ§Õß£¬ÇëÄú×ĞÏ¸ÔÄ¶Á±¾Èí¼ş¡°°ïÖú¡±Ñ¡µ¥ÖĞµÄ¡°°ïÖúÖ÷Ìâ¡±²¢¶à¼ÓÁ·Ï°£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×Ê¦µÄ¸÷ÖÖ¹¦ÄÜ¡£"
-Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼ş¹ØÁª¹¦ÄÜ£¬Ë«»÷PGNÎÄ¼ş(Í¼±êÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷FENÎÄ¼ş(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
+Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³ÖÎÄ¼ş¹ØÁª¹¦ÄÜ£¬Ë«»÷ÆåÆ×ÎÄ¼ş(Í¼±êÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´ò¿ªÆåÆ×£¬Ë«»÷¾ÖÃæÎÄ¼ş(Í¼±êÊÇÆåÅÌ)¿ÉÒÔ´ò¿ª¾ÖÃæ¡£"
 Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×Ê¦Ö§³Ö¡°ÏóÆåÑİ²¥ÊÒ¡±µÄÆåÆ×¡£Ö»ÒªË«»÷XQFÎÄ¼ş(Í¼±êÊÇÁ¥Êé¡°Ïó¡±×Ö)£¬»òÕßµã»÷¡°´ò¿ª¡±°´Å¥²¢Ñ¡ÔñÒ»¸öXQFÎÄ¼ş£¬ÏóÆåÎ×Ê¦¾Í»á´ò¿ªÕâ¸öÆåÆ×¡£"
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ê¦×îÊÊºÏ800x600ºÍ1024x768µÄÏÔÊ¾·Ö±çÂÊ£¬°Ñ¡°Ñ¡Ïî¡±²Ëµ¥µÄ¡°½çÃæ¡±Ò»ÏîÉè³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄÏÔÊ¾·Ö±çÂÊÏÂµÃµ½×îÊæÊÊµÄÏÔÊ¾Ğ§¹û£¬·´Ö®ÒàÈ»¡£"
 Gui_szTips(14) = "¡¡¡¡µã»÷¡°²é¿´ÎÄ±¾ÆåÆ×¡±°´Å¥£¬¾Í¿ÉÒÔ¿´µ½ÆåÆ×ÎÄ±¾£¬ÎªÕ³Ìùµ½BBSÉÏ»òÕßWordÎÄµµÖĞÌá¹©ÁË·½±ã¡£"
@@ -2729,7 +2665,7 @@ Gui_szTips(8) = "¡¡¡¡Èç¹ûÄúŒ¦ÏóÆåÎ×ŸÓĞÊ²Ã´ÒâÒŠ»ò½¨×h£¬¿ÉÒÔ¸úÏóÆåÎ×Ÿé_°lˆFê Â“Ï
         "¡¡¡¡ÏóÆåÎ×Ÿé_°lˆFê ·Ç³£Ï£ÍûºÍ´ó¼Ò±£³ÖÂ“Ïµ¡£"
 Gui_szTips(9) = "¡¡¡¡Äú¿ÉÒÔëp“ô×ÀÃæÉÏµÄÏóÆåÎ×ŸˆD˜Ë(ÓÉÆå×Ó¡°Ïó¡±¡¢Æå±PºÍÎ×Ÿ°ô½M³É)Ö±½Ó†¢„ÓÏóÆåÎ×Ÿ¡£"
 Gui_szTips(10) = "¡¡¡¡Èç¹ûÄúÊÇÒ»‚€ÏóÆåÎ×ŸµÄ³õŒWÕß£¬ÕˆÄú×Ğ¼šé†×x±¾Ü›¼ş¡°ÍÖú¡±ßx†ÎÖĞµÄ¡°ÍÖúÖ÷î}¡±²¢¶à¼Ó¾šÁ•£¬×£ÄúÔçÈÕ¾«Í¨ÏóÆåÎ×ŸµÄ¸÷ÖÖ¹¦ÄÜ¡£"
-Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³ÖÎÄ¼şêPÂ“¹¦ÄÜ£¬ëp“ôPGNÎÄ¼ş(ˆD˜ËÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ôFENÎÄ¼ş(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
+Gui_szTips(11) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³ÖÎÄ¼şêPÂ“¹¦ÄÜ£¬ëp“ôÆå×VÎÄ¼ş(ˆD˜ËÊÇÆå×Ó¡°Ïó¡±)¿ÉÒÔ´òé_Æå×V£¬ëp“ô¾ÖÃæÎÄ¼ş(ˆD˜ËÊÇÆå±P)¿ÉÒÔ´òé_¾ÖÃæ¡£"
 Gui_szTips(12) = "¡¡¡¡ÏóÆåÎ×ŸÖ§³Ö¡°ÏóÆåÑİ²¥ÊÒ¡±µÄÆå×V¡£Ö»Òªëp“ôXQFÎÄ¼ş(ˆD˜ËÊÇë`•ø¡°Ïó¡±×Ö)£¬»òÕßüc“ô¡°´òé_¡±°´âo²¢ßx“ñÒ»‚€XQFÎÄ¼ş£¬ÏóÆåÎ×Ÿ¾Í•ş´òé_ß@‚€Æå×V¡£"
 Gui_szTips(13) = "¡¡¡¡ÏóÆåÎ×Ÿ×îßmºÏ800x600ºÍ1024x768µÄï@Ê¾·ÖŞqÂÊ£¬°Ñ¡°ßxí—¡±²Ë†ÎµÄ¡°½çÃæ¡±Ò»í—ÔO³É¡°´ó¡±£¬¾Í¿ÉÔÚ1024x768µÄï@Ê¾·ÖŞqÂÊÏÂµÃµ½×îÊæßmµÄï@Ê¾Ğ§¹û£¬·´Ö®ÒàÈ»¡£"
 Gui_szTips(14) = "¡¡¡¡üc“ô¡°²é¿´ÎÄ±¾Æå×V¡±°´âo£¬¾Í¿ÉÒÔ¿´µ½Æå×VÎÄ±¾£¬éÕ³ÙNµ½BBSÉÏ»òÕßWordÎÄ™nÖĞÌá¹©ÁË·½±ã¡£"
@@ -2818,7 +2754,6 @@ Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign",
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
 Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
-Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "8"), 0, MUSIC_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
@@ -2878,7 +2813,6 @@ SaveSetting "XQWizard", "Options", "AllowResign", IIf(Options_bAllowResign, "1",
 SaveSetting "XQWizard", "Options", "EngineTime", IIf(Options_bEngineTime, "1", "0")
 SaveSetting "XQWizard", "Options", "StatusBar", IIf(Options_bStatusBar, "1", "0")
 SaveSetting "XQWizard", "Options", "EnginePlay", Options_nEnginePlay
-SaveSetting "XQWizard", "Options", "Music", Options_nMusic
 SaveSetting "XQWizard", "Options", "TopMost", IIf(Options_bTopMost, "1", "0")
 SaveSetting "XQWizard", "Options", "PromptSave", IIf(Options_bPromptSave, "1", "0")
 SaveSetting "XQWizard", "Options", "AutoSave", IIf(Options_bAutoSave, "1", "0")
@@ -2984,10 +2918,10 @@ App_frmMain.mnPosFlip.Caption = "·­ŞDÆå±P(&F)"
 App_frmMain.mnPosMirror.Caption = "×óÓÒŒ¦·Q(&M)"
 App_frmMain.mnPosAnalyze.Caption = "ÔÚĞÂ´°¿ÚÖĞÍÆÑİ(&A)"
 App_frmMain.mnPosEdit.Caption = "¾İ‹¾ÖÃæ(&E)..."
-App_frmMain.mnPosCopy.Caption = "¸´ÖÆFEN´®(&C)"
-App_frmMain.mnPosPaste.Caption = "Õ³ÙNFEN´®(&P)"
-App_frmMain.mnPosLoad.Caption = "ÄFENÎÄ¼şŒ§Èë(&L)..."
-App_frmMain.mnPosStore.Caption = "Œ§³öµ½FENÎÄ¼ş(&S)..."
+App_frmMain.mnPosCopy.Caption = "¸´ÖÆ¾ÖÃæ´ú´a(&C)"
+App_frmMain.mnPosPaste.Caption = "Õ³ÙN¾ÖÃæ´ú´a(&P)"
+App_frmMain.mnPosLoad.Caption = "Ä¾ÖÃæÎÄ¼şŒ§Èë(&L)..."
+App_frmMain.mnPosStore.Caption = "Œ§³öµ½¾ÖÃæ¼ş(&S)..."
 
 App_frmMain.mnWizard.Caption = "Ä§·¨(&W)"
 App_frmMain.mnWizardPlay.Caption = "²¥·Å(&P)"
@@ -3227,10 +3161,10 @@ If Engine_nStatus = IDLE_READY Then
 End If
 ' ÒôÀÖ
 If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
-    If frmHide2.mci.Length = frmHide2.mci.Position Then
-        frmHide2.mci.To = 0
-        frmHide2.mci.Command = "Seek"
-        frmHide2.mci.Command = "Play"
+    If frmHide.mci.Length = frmHide.mci.Position Then
+        frmHide.mci.To = 0
+        frmHide.mci.Command = "Seek"
+        frmHide.mci.Command = "Play"
     End If
 End If
 ' ¹ã¸æ
@@ -3320,6 +3254,9 @@ Else
     PiecesSettingSmall Options_nPiecesS
 End If
 MusicSetting Options_nMusic
+For i = 0 To MUSIC_MAX - 1
+    App_frmMain.mnOptionsMusic(i).Checked = (Options_nMusic = i)
+Next
 Timer_bEnabled = False
 ' Çå¿ÕÒıÇæÈÕÖ¾£¬¼ÓÔØÒıÇæ£¬¿ÉÄÜÓĞµÈ´ı£¬Æô¶¯»­Ãæ±£³Ö
 Engine_nStatus = IDLE_UNLOAD
@@ -3455,7 +3392,7 @@ End If
 SaveRegs
 SaveRegs2
 PlaySoundA vbNullString, 0, 0
-frmHide2.mci.Command = "Close"
+frmHide.mci.Command = "Close"
 ExitPopup
 Unload frmHide
 Unload frmHide2

@@ -1,7 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{C1A8AF28-1257-101B-8FB0-0020AF039CA3}#1.1#0"; "MCI32.OCX"
 Begin VB.Form frmHide2 
    BorderStyle     =   3  'Fixed Dialog
    ClientHeight    =   3195
@@ -27,7 +26,7 @@ Begin VB.Form frmHide2
    Begin SHDocVwCtl.WebBrowser web 
       Height          =   255
       Left            =   3000
-      TabIndex        =   1
+      TabIndex        =   0
       Top             =   120
       Width           =   255
       ExtentX         =   450
@@ -47,19 +46,7 @@ Begin VB.Form frmHide2
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
-   End
-   Begin MCI.MMControl mci 
-      Height          =   330
-      Left            =   0
-      TabIndex        =   0
-      Top             =   840
-      Width           =   3540
-      _ExtentX        =   6244
-      _ExtentY        =   582
-      _Version        =   393216
-      DeviceType      =   ""
-      FileName        =   ""
+      Location        =   "http:///"
    End
    Begin MSComctlLib.ImageList imglst 
       Left            =   2880

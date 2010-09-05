@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{C1A8AF28-1257-101B-8FB0-0020AF039CA3}#1.1#0"; "MCI32.OCX"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmHide 
    BorderStyle     =   3  'Fixed Dialog
@@ -29,6 +30,18 @@ Begin VB.Form frmHide
       _ExtentY        =   1005
       _Version        =   393216
       RequestTimeout  =   5
+   End
+   Begin MCI.MMControl mci 
+      Height          =   330
+      Left            =   840
+      TabIndex        =   0
+      Top             =   240
+      Width           =   3540
+      _ExtentX        =   6244
+      _ExtentY        =   582
+      _Version        =   393216
+      DeviceType      =   ""
+      FileName        =   ""
    End
    Begin VB.Image imgPiecesLarge 
       Height          =   855

@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.74, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -90,6 +90,22 @@ Public Const PIECES_L_WOOD      As Integer = 0
 Public Const PIECES_L_DELICATE  As Integer = 1
 Public Const PIECES_L_POLISH    As Integer = 2
 Public Const PIECES_L_MAX       As Integer = 3
+' 全局常量——音乐设置选项
+Public Const MUSIC_EXPRESS      As Integer = 0
+Public Const MUSIC_FUNNY        As Integer = 1
+Public Const MUSIC_CLASSIC      As Integer = 2
+Public Const MUSIC_MOZART1      As Integer = 3
+Public Const MUSIC_MOZART4      As Integer = 4
+Public Const MUSIC_FULELISE     As Integer = 5
+Public Const MUSIC_LOVDREAM     As Integer = 6
+Public Const MUSIC_WALTZ        As Integer = 7
+Public Const MUSIC_HUMOUR       As Integer = 8
+Public Const MUSIC_MARIO1       As Integer = 9
+Public Const MUSIC_MARIO2       As Integer = 10
+Public Const MUSIC_PAL          As Integer = 11
+Public Const MUSIC_CMUSIC       As Integer = 12
+Public Const MUSIC_NONE         As Integer = 13
+Public Const MUSIC_MAX          As Integer = 14
 ' 全局变量——网站求助
 Public Const HELP_PUB_ZHIDAO    As Integer = 0
 Public Const HELP_PUB_TIEBA     As Integer = 1
@@ -108,11 +124,12 @@ Public Const LANGUAGE_MAX       As Integer = 2
 ' 全局变量——选项
 Public Options_nLanguage        As Integer  ' 语言
 Public Options_bLargeGui        As Boolean  ' 大界面
-Public Options_bSounds          As Boolean  ' 声音
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
 Public Options_nPiecesS         As Integer  ' 小界面的棋子
 Public Options_nBoardL          As Integer  ' 大界面的棋盘
 Public Options_nPiecesL         As Integer  ' 大界面的棋子
+Public Options_bSounds          As Boolean  ' 声音
+Public Options_nMusic           As Integer  ' 音乐
 ' 全局变量——界面(杂项)
 Public Gui_szQuotes(1 To QUOTE_NUM) As String ' “名言”的条目
 Public Gui_szUpgradeVer         As String   ' 检查升级的版本
@@ -127,6 +144,50 @@ Public Function L(ParamArray sz() As Variant) As String
 L = sz(Options_nLanguage)
 
 End Function
+
+' 打开文件对话框
+Public Function FileDialog(ByVal szTitle As String, ByVal szFileType As String, _
+        ByVal szExt As String, Optional ByVal szSave As String = "") As String
+
+Dim szFileName As String, szFilter As String
+szFilter = szFileType & " (*." & szExt & ")|*." & szExt & "|" & L("所有文件", "所有文件") & " (*.*)|*.*"
+If szSave = "" Then
+    szFileName = OpenFileDialog(szTitle, szFilter)
+Else
+    szFileName = szSave
+    szFileName = Replace(szFileName, "\", "＼")
+    szFileName = Replace(szFileName, "/", "／")
+    szFileName = Replace(szFileName, ":", "：")
+    szFileName = Replace(szFileName, "*", "＊")
+    szFileName = Replace(szFileName, "?", "？")
+    ' 全角双引号用在某些操作系统上不正常，所以用半角单引号代替
+    szFileName = Replace(szFileName, """", "'")
+    szFileName = Replace(szFileName, "<", "＜")
+    szFileName = Replace(szFileName, ">", "＞")
+    szFileName = Replace(szFileName, "|", "｜")
+    szFileName = SaveFileDialog(szTitle, szFilter, szFileName & "." & szExt, szExt)
+End If
+FileDialog = szFileName
+
+End Function
+
+' 设置音乐
+Public Sub MusicSetting(ByVal nMusicIndex As Integer)
+
+Dim i As Integer
+frmHide.mci.Command = "Close"
+If nMusicIndex < MUSIC_NONE Then
+    frmHide.mci.FileName = App_szPath & "MUSICS\" & _
+            Choose(nMusicIndex + 1, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
+            "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "MARIO1", "MARIO2", "PAL", "CMUSIC") & ".MID"
+    If Not App.PrevInstance Then
+        frmHide.mci.Command = "Open"
+        frmHide.mci.Command = "Play"
+    End If
+End If
+Options_nMusic = nMusicIndex
+
+End Sub
 
 ' 无法打开文件提示
 Public Sub ErrorOpen(ByVal szFileName As String)
@@ -369,11 +430,12 @@ Public Sub LoadRegs()
 
 Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", IIf(GetACP = 950, "1", "0")), 0, LANGUAGE_MAX - 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
-Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
 Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0"), 0, PIECES_S_MAX - 1)
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
+Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
+Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "8"), 0, MUSIC_MAX - 1)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")
@@ -383,11 +445,12 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
-SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
 SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
 SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
 SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
 SaveSetting "XQWizard", "Options", "PiecesLarge", Options_nPiecesL
+SaveSetting "XQWizard", "Options", "Sounds", IIf(Options_bSounds, "1", "0")
+SaveSetting "XQWizard", "Options", "Music", Options_nMusic
 SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 
@@ -404,6 +467,7 @@ If hSnapshot = 0 Then
     Exit Function
 End If
 
+szName = UCase(szName)
 pe.dwSize = Len(pe)
 If Process32First(hSnapshot, pe) <> 0 Then
     Do
