@@ -46,7 +46,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -1572,6 +1572,18 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnWizardBitmap 
          Caption         =   "生成图片棋盘(&B)"
       End
+      Begin VB.Menu mnWizardSep4 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnWizardPgns2Jar 
+         Caption         =   "制作手机棋谱(&J)"
+      End
+      Begin VB.Menu mnWizardConvert 
+         Caption         =   "批量转换棋谱(&C)"
+      End
+      Begin VB.Menu mnWizardBook 
+         Caption         =   "管理开局库(&K)"
+      End
    End
    Begin VB.Menu mnEndgames_ 
       Caption         =   "挑战(&C)"
@@ -1916,24 +1928,6 @@ Begin VB.Form frmMainSmall
             Caption         =   "繁体中文/&Traditional Chinese"
             Index           =   1
          End
-      End
-   End
-   Begin VB.Menu mnTools 
-      Caption         =   "工具(&T)"
-      Begin VB.Menu mnToolSchool 
-         Caption         =   "象棋巫师魔法学校(&S)"
-      End
-      Begin VB.Menu mnToolSep1 
-         Caption         =   "-"
-      End
-      Begin VB.Menu mnToolPgns2Jar 
-         Caption         =   "制作手机棋谱(&J)"
-      End
-      Begin VB.Menu mnToolConvert 
-         Caption         =   "批量转换棋谱(&C)"
-      End
-      Begin VB.Menu mnToolBook 
-         Caption         =   "管理开局库(&B)"
       End
    End
    Begin VB.Menu mnHelp 
@@ -2689,26 +2683,19 @@ MsgBox L("语言已经更改，重新启动程序后才能生效。", "語言已經更改，重新啟動程序後
 
 End Sub
 
-Private Sub mnToolSchool_Click()
-
-WindowState = vbMinimized
-ShellExecuteA 0, vbNullString, App_szPath & "XQSCHOOL.EXE", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnToolPgns2Jar_Click()
+Private Sub mnWizardPgns2Jar_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath & "PGNS2JAR.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
-Private Sub mnToolConvert_Click()
+Private Sub mnWizardConvert_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath & "MXQFCONV.EXE", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
-Private Sub mnToolBook_Click()
+Private Sub mnWizardBook_Click()
 
 ShellExecuteA 0, vbNullString, App_szPath & "MAKEBOOK.EXE", vbNullString, vbNullString, vbNormalFocus
 

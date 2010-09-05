@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.74, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -3003,6 +3003,9 @@ App_frmMain.mnSearchPosition.Caption = "搜索局面(&F)"
 App_frmMain.mnSearchEndgame.Caption = "搜索殘局(&E)"
 App_frmMain.mnWizardPublish.Caption = "發布棋譜(&U)..."
 App_frmMain.mnWizardBitmap.Caption = "生成圖片棋盤(&B)"
+App_frmMain.mnWizardPgns2Jar.Caption = "制作手机棋譜(&J)"
+App_frmMain.mnWizardConvert.Caption = "批量轉換棋譜(&C)"
+App_frmMain.mnWizardBook.Caption = "管理開局庫(&K)"
 
 App_frmMain.mnEndgames_.Caption = "挑戰(&C)"
 App_frmMain.mnEndgamesStart.Caption = "當前題庫(&S)"
@@ -3069,12 +3072,6 @@ App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
 App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
 App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
 App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
-
-App_frmMain.mnTools.Caption = "工具(&T)"
-App_frmMain.mnToolSchool.Caption = "象棋巫師魔法學校(&T)"
-App_frmMain.mnToolPgns2Jar.Caption = "制作手机棋譜(&J)"
-App_frmMain.mnToolConvert.Caption = "批量轉換棋譜(&C)"
-App_frmMain.mnToolBook.Caption = "管理開局庫(&B)"
 
 App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
@@ -3270,6 +3267,13 @@ Public Sub Main()
 Dim nLogFileNo As Integer
 Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 
+' 检查XQSCHOOL.EXE的进程，有的话就不启动象棋巫师
+If FindProcess("XQSCHOOL.EXE") Then
+    MsgBox L("象棋巫师魔法学校正在运行，请先退出象棋巫师魔法学校再运行象棋巫师。", _
+            "象棋巫師魔法學校正在運行，請先退出象棋巫師魔法學校再運行象棋巫師。"), vbExclamation
+    Exit Sub
+End If
+
 ' 弹出启动画面，初始化
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
@@ -3317,7 +3321,7 @@ Else
 End If
 MusicSetting Options_nMusic
 Timer_bEnabled = False
-' 加载引擎，可能有等待，启动画面保持
+' 清空引擎日志，加载引擎，可能有等待，启动画面保持
 Engine_nStatus = IDLE_UNLOAD
 If Engine_bEngineLog And Engine_szLogFile <> "" Then
     nLogFileNo = FreeFile

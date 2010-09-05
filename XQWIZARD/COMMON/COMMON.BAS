@@ -22,7 +22,26 @@ Attribute VB_Name = "mdlCommon"
 
 Option Explicit
 
+Private Const TH32CS_SNAPPROCESS As Long = 2
+
+Private Type PROCESSENTRY32
+    dwSize As Long
+    cntUsage As Long
+    th32ProcessID As Long
+    th32DefaultHeapID As Long
+    th32ModuleID As Long
+    cntThreads As Long
+    th32ParentProcessID As Long
+    pcPriClassBase As Long
+    dwFlags As Long
+    szExeFile As String * 1024
+End Type
+
 Private Declare Function GetACP Lib "KERNEL32.DLL" () As Long
+Private Declare Function CreateToolhelp32Snapshot Lib "KERNEL32.DLL" (ByVal dwFlags As Long, ByVal th32ProcessID As Long) As Long
+Private Declare Function Process32First Lib "KERNEL32.DLL" (ByVal hSnapshot As Long, ByRef lppe As PROCESSENTRY32) As Long
+Private Declare Function Process32Next Lib "KERNEL32.DLL" (ByVal hSnapshot As Long, ByRef lppe As PROCESSENTRY32) As Long
+Private Declare Sub CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long)
 
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "4.74"
@@ -373,3 +392,27 @@ SaveSetting "XQWizard", "Gui", "UpgradeVer", Gui_szUpgradeVer
 SaveSetting "XQWizard", "Gui", "AdvertDate", Gui_szAdvertDate
 
 End Sub
+
+Public Function FindProcess(ByVal szName As String) As Boolean
+
+Dim hSnapshot As Long, pe As PROCESSENTRY32
+Dim i As Integer
+
+FindProcess = False
+hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+If hSnapshot = 0 Then
+    Exit Function
+End If
+
+pe.dwSize = Len(pe)
+If Process32First(hSnapshot, pe) <> 0 Then
+    Do
+        If InStr(UCase(pe.szExeFile), szName) > 0 Then
+            FindProcess = True
+            Exit Do
+        End If
+    Loop Until Process32Next(hSnapshot, pe) = 0
+End If
+CloseHandle hSnapshot
+
+End Function
