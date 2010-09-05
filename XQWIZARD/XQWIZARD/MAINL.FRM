@@ -1976,7 +1976,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.73, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify

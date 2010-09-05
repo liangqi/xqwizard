@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.74
+AppVerName={cm:AppName} 4.75
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -578,109 +578,109 @@ Source: "PGNS2JAR\images\large\bb.png"; DestDir: "{app}\PGNS2JAR\images\large"; 
 Source: "PGNS2JAR\images\large\ba.png"; DestDir: "{app}\PGNS2JAR\images\large"; Flags: ignoreversion
 Source: "PGNS2JAR\META-INF\MANIFEST.MF_"; DestDir: "{app}\PGNS2JAR\META-INF"; Flags: ignoreversion
 ; 橘中秘
-Source: "橘中秘\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-16.大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{userdesktop}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{userdesktop}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
-Source: "橘中秘\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{userdesktop}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-16.大列手炮局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{app}\橘中秘\1.得先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{app}\橘中秘\2.让先"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{app}\橘中秘\3.让左马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
+Source: "橘中秘\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{app}\橘中秘\4.让双马"; Flags: ignoreversion; Components: orange; Languages: cn
 ; 橘中秘(繁体)
-Source: "橘中秘(繁体)\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-01.抖绢ó瘆ó斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-02.抖绢ó瘆ó皑斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-03.抖绢ó瘆óぃ斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-04.抖绢ó瘆óノ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-05.抖绢ó瘆óノ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-06.抖绢ó瘆璉干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-07.抖绢ó瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-08.抖痕み绢ó瘆à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-09.抖绢ó瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-10.抖óオǖ猠瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-11.抖óオǖ猠瘆绢óЖ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-12.ó瘆オ虫矗皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-13.ó瘆虫矗皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-14.绢ó瘆禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-15.绢ó瘆鸟à皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-16.大列手炮局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-16.もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-17.も瘆もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-18.瘆滥.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-19.瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{userdesktop}\撅い\1.眔"; DestName: "1-20.皑瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-01.琵-抖绢ó瘆ó管.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-02.琵-抖绢ó瘆ó斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-03.琵-抖绢ó瘆ó↖.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-04.琵-抖ó瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-05.琵-抖óǖ猠瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-06.琵-抖óЖ皑癬玂皑瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-07.琵-抖ó佳皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-08.琵-もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-09.琵-も瘆もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-10.琵-もó溃皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-11.琵-も斌炒ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-12.琵-皑瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{userdesktop}\撅い\2.琵"; DestName: "2-13.琵-い瘆禜锣à皑Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-01.琵オ皑-抖绢ó瘆ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-02.琵オ皑-抖绢ó瘆皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-03.琵オ皑-抖绢ó瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-04.琵オ皑-抖绢ó瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-05.琵オ皑-皑绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-06.琵オ皑-绢ó瘆禜虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-07.琵オ皑-ó瘆禜虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-08.琵オ皑-抖ó瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-09.琵オ皑-も瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{userdesktop}\撅い\3.琵オ皑"; DestName: "3-10.琵オ皑-も.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-01.琵蛮皑-ǖ猠瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-02.琵蛮皑-ǖ猠瘆讽繷ぃ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-03.琵蛮皑-ǖ猠瘆虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-04.琵蛮皑-ǖ猠瘆オ虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-05.琵蛮皑-瘆矮ǖ猠.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-06.琵蛮皑-ǖ猠瘆禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-07.琵蛮皑-ǖ猠瘆皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
-Source: "橘中秘(繁体)\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{userdesktop}\撅い\4.琵蛮皑"; DestName: "4-08.琵蛮皑-痕み瘆虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-01.顺炮横车破直车弃马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-01.抖绢ó瘆ó斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-02.顺炮横车破直车他先上马弃马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-02.抖绢ó瘆ó皑斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-03.顺炮横车破直车不食弃马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-03.抖绢ó瘆óぃ斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-04.顺炮横车破直车用马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-04.抖绢ó瘆óノ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-05.顺炮横车破直车用马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-05.抖绢ó瘆óノ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-06.顺炮横车破背补士角炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-06.抖绢ó瘆璉干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-07.顺炮横车破先补士角炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-07.抖绢ó瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-08.顺炮窝心横车破士角炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-08.抖痕み绢ó瘆à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-09.顺炮横车破夹马炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-09.抖绢ó瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-10.顺炮直车左炮巡河破横车.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-10.抖óオǖ猠瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-11.顺炮直车左炮巡河破横车夹马.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-11.抖óオǖ猠瘆绢óЖ皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-12.右炮直车破左单提马士象局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-12.ó瘆オ虫矗皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-13.右炮直车破右单提马士象局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-13.ó瘆虫矗皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-14.右炮横车破象局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-14.绢ó瘆禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-15.右炮横车破缠角马象局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-15.绢ó瘆鸟à皑禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-16.大列手炮局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-16.もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-17.小列手破大列手炮局.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-17.も瘆もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-18.列炮破敛炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-18.瘆滥.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-19.列炮破补士角炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-19.瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\1.得先\1-20.屏风马破当头炮.PGN"; DestDir: "{app}\撅い\1.眔"; DestName: "1-20.皑瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-01.让先-顺炮横车破直车夺先.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-01.琵-抖绢ó瘆ó管.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-02.让先-顺炮横车破直车弃马.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-02.琵-抖绢ó瘆ó斌皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-03.让先-顺炮横车破直车沉炮.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-03.琵-抖绢ó瘆ó↖.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-04.让先-顺炮直车破横车.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-04.琵-抖ó瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-05.让先-顺炮直车巡河破横车.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-05.琵-抖óǖ猠瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-06.让先-顺炮直车夹马炮起相保马破横车.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-06.琵-抖óЖ皑癬玂皑瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-07.让先-顺炮直车卧槽马.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-07.琵-抖ó佳皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-08.让先-大列手炮局.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-08.琵-もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-09.让先-小列手破大列手炮局.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-09.琵-も瘆もЫ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-10.让先-列手炮兑车压马.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-10.琵-もó溃皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-11.让先-小列手炮弃相陷车.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-11.琵-も斌炒ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-12.让先-屏风马破当头炮.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-12.琵-皑瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\2.让先\2-13.让先-中炮破士象转角马局.PGN"; DestDir: "{app}\撅い\2.琵"; DestName: "2-13.琵-い瘆禜锣à皑Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-01.让左马-顺炮横车破直车.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-01.琵オ皑-抖绢ó瘆ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-02.让左马-顺炮横车破他先上马.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-02.琵オ皑-抖绢ó瘆皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-03.让左马-顺炮横车破先补士角炮.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-03.琵オ皑-抖绢ó瘆干à.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-04.让左马-顺炮横车破夹马炮.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-04.琵オ皑-抖绢ó瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-05.让左马-先马后炮横车.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-05.琵オ皑-皑绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-06.让左马-横车炮破士象右单提马.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-06.琵オ皑-绢ó瘆禜虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-07.让左马-直车破士象右单提马.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-07.琵オ皑-ó瘆禜虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-08.让左马-顺炮直车破横车.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-08.琵オ皑-抖ó瘆绢ó.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-09.让左马-列手炮破夹马.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-09.琵オ皑-も瘆Ж皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\3.让左马\3-10.让左马-列手炮.PGN"; DestDir: "{app}\撅い\3.琵オ皑"; DestName: "3-10.琵オ皑-も.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-01.让双马-巡河炮破当头炮取兵.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-01.琵蛮皑-ǖ猠瘆讽繷.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-02.让双马-巡河炮破当头炮不取兵.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-02.琵蛮皑-ǖ猠瘆讽繷ぃ.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-03.让双马-巡河炮破右单提马.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-03.琵蛮皑-ǖ猠瘆虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-04.让双马-巡河炮破左单提马.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-04.琵蛮皑-ǖ猠瘆オ虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-05.让双马-破斗巡河炮.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-05.琵蛮皑-瘆矮ǖ猠.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-06.让双马-巡河炮破象局.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-06.琵蛮皑-ǖ猠瘆禜Ы.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-07.让双马-巡河炮破屏风马.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-07.琵蛮皑-ǖ猠瘆皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
+Source: "橘中秘(繁体)\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{app}\撅い\4.琵蛮皑"; DestName: "4-08.琵蛮皑-痕み瘆虫矗皑.PGN"; Flags: ignoreversion; Components: orange; Languages: tw
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
@@ -745,10 +745,10 @@ Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; 
 Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
 Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
 Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
+Name: "{group}\橘中秘"; Filename: "{app}\橘中秘"; Languages: cn
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"; Languages: cn
 Name: "{userdesktop}\象棋巫师魔法学校Ⅱ"; Filename: "{app}\XQSCHOOL.EXE"; Languages: cn
 Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
-Name: "{userdesktop}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
 
 Name: "{group}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw
 Name: "{group}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
@@ -756,18 +756,16 @@ Name: "{group}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; 
 Name: "{group}\も审囱眯ㄣ"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
 Name: "{group}\囱眯у秖锣传ㄣ"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
 Name: "{group}\秨Ы畐恨瞶ㄣ"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
+Name: "{group}\撅い"; Filename: "{app}\撅い"; Languages: tw
 Name: "{group}\更禜囱畍"; Filename: "{uninstallexe}"; Languages: tw
 Name: "{userdesktop}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw
 Name: "{userdesktop}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
-Name: "{userdesktop}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
 
 [Run]
 Filename: "{app}\XQSCHOOL.EXE"; Description: "开始练习"; Flags: nowait postinstall skipifsilent; Languages: cn
-Filename: "{app}\XQWIZARD.EXE"; Description: "开始实战"; Flags: nowait postinstall skipifsilent unchecked; Languages: cn
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: cn
 
 Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinstall skipifsilent; Languages: tw
-Filename: "{app}\XQWIZARD.EXE"; Description: "秨﹍龟驹"; Flags: nowait postinstall skipifsilent unchecked; Languages: tw
 Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "ㄏノ"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
 
 [Code]

@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.74, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2182,7 +2182,7 @@ Do While Engine_nStatus > IDLE_UNLOAD
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 1# Then
+        If dfThisTime > dfLastTime + 10# Then
             Exit Do
         End If
     Else
@@ -2214,7 +2214,7 @@ Do While (Engine_bSlaveRed Or Engine_bSlaveBlack)
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 1# Then
+        If dfThisTime > dfLastTime + 10# Then
             Exit Do
         End If
     Else
@@ -2234,19 +2234,6 @@ If Engine_bSlaveRed Or Engine_bSlaveBlack Then
 End If
 
 End Sub
-
-' 加载引擎失败
-Public Sub ErrorOpenEngine()
-
-MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
-        L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
-        "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
-Engine_szFile = ""
-EngineLoaded False
-SetTitle
-
-End Sub
-
 
 ' 打开引擎
 Public Sub OpenEngine(Optional ByVal bInfo As Boolean = False)
@@ -2316,7 +2303,11 @@ If Engine_nStatus > IDLE_UNLOAD Then
 Else
     SendEngine "quit"
     PipeClose Engine_pipe
-    ErrorOpenEngine
+    MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
+            L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
+            "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
+    Engine_szFile = ""
+    EngineLoaded False
 End If
 SetTitle
 
@@ -2356,7 +2347,7 @@ Do While Not Engine_bSlaveBlack
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 10# Then
+        If dfThisTime > dfLastTime + 60# Then
             Exit Do
         End If
     Else
@@ -2401,7 +2392,7 @@ If Engine_bSlaveBlack Then
 Else
     SendEngine "quit", SLAVE_ENGINE
     PipeClose Engine_pipeSlave
-    MsgBox szEngineFile & L(" 不是中国象棋引擎文件！", " 不是中國象棋引擎文件！"), vbExclamation
+    MsgBox L("无法加载引擎：", "無法加載引擎：") & szEngineFile, vbExclamation
 End If
 
 End Sub
@@ -2884,7 +2875,6 @@ Dim i As Integer
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
-App.Title = "象棋巫師"
 App_frmMain.Font.Charset = 136
 App_frmMain.Font.Name = "細明體"
 On Error Resume Next
@@ -2943,18 +2933,19 @@ App_frmMain.mnWizardBook.Caption = "管理開局庫(&K)"
 
 App_frmMain.mnEndgames_.Caption = "挑戰(&C)"
 App_frmMain.mnEndgamesStart.Caption = "當前題庫(&S)"
-App_frmMain.mnEndgames(0).Caption = "基本殺法(&A)"
-App_frmMain.mnEndgames(1).Caption = "基本戰術(&B)"
-App_frmMain.mnEndgames(2).Caption = "中局殺法(&C)"
-App_frmMain.mnEndgames(3).Caption = "象棋殺著大全(&D)"
-App_frmMain.mnEndgames(4).Caption = "殘局攻殺譜(&E)"
-App_frmMain.mnEndgames(5).Caption = "象棋實用殘局(第一集)(&F)"
-App_frmMain.mnEndgames(6).Caption = "象棋實用殘局(第二集)(&G)"
-App_frmMain.mnEndgames(8).Caption = "橘中秘(殘局篇)(&H)"
-App_frmMain.mnEndgames(9).Caption = "适情雅趣(&I)"
-App_frmMain.mnEndgames(10).Caption = "爛柯神机(&J)"
-App_frmMain.mnEndgames(11).Caption = "象局匯存(&K)"
-App_frmMain.mnEndgames(12).Caption = "江湖百局秘譜(&L)"
+App_frmMain.mnEndgames(0).Caption = "趣味象棋(&Y)"
+App_frmMain.mnEndgames(2).Caption = "基本殺法(&A)"
+App_frmMain.mnEndgames(3).Caption = "基本戰術(&B)"
+App_frmMain.mnEndgames(4).Caption = "中局殺法(&C)"
+App_frmMain.mnEndgames(5).Caption = "象棋殺著大全(&D)"
+App_frmMain.mnEndgames(6).Caption = "殘局攻殺譜(&E)"
+App_frmMain.mnEndgames(7).Caption = "象棋實用殘局(第一集)(&F)"
+App_frmMain.mnEndgames(8).Caption = "象棋實用殘局(第二集)(&G)"
+App_frmMain.mnEndgames(10).Caption = "橘中秘(殘局篇)(&H)"
+App_frmMain.mnEndgames(11).Caption = "适情雅趣(&I)"
+App_frmMain.mnEndgames(12).Caption = "爛柯神机(&J)"
+App_frmMain.mnEndgames(13).Caption = "象局匯存(&K)"
+App_frmMain.mnEndgames(14).Caption = "江湖百局秘譜(&L)"
 App_frmMain.mnEndgamesHelp.Caption = "求助(&P)"
 App_frmMain.mnEndgamesEndgames.Caption = "殘局庫(&E)"
 App_frmMain.mnEndgamesShare(0).Caption = "QQ空間(&Q)"
@@ -3201,20 +3192,23 @@ Public Sub Main()
 Dim nLogFileNo As Integer
 Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 
+' 初始化
+LoadRegs
+If Options_nLanguage <> LANGUAGE_ZH_CN Then
+    App.Title = "象棋巫師"
+End If
 ' 检查XQSCHOOL.EXE的进程，有的话就不启动象棋巫师
 If FindProcess("XQSCHOOL.EXE") Then
     MsgBox L("象棋巫师魔法学校正在运行，请先退出象棋巫师魔法学校再运行象棋巫师。", _
             "象棋巫師魔法學校正在運行，請先退出象棋巫師魔法學校再運行象棋巫師。"), vbExclamation
     Exit Sub
 End If
-
-' 弹出启动画面，初始化
+' 弹出启动画面，继续初始化
+hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
+        frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
-hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
-        frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
-LoadRegs
 CchessInit Options_nLanguage
 ' 判断是否允许升变
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -3275,7 +3269,10 @@ Else
     If GetAppType(Engine_szFile) = IMAGE_SUBSYSTEM_WINDOWS_CUI Then
         OpenEngine
     Else
-        ErrorOpenEngine
+        MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile, vbExclamation
+        Engine_szFile = ""
+        EngineLoaded False
+        SetTitle
     End If
 End If
 

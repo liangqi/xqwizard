@@ -19,6 +19,7 @@ Form=COMMON\HIDE.FRM
 Module=mdlCommon; COMMON\COMMON.BAS
 Form=XQSCHOOL\REGISTER.FRM
 ResFile32="RES\XQSCHOOL.RES"
+Module=mdlAppType; COMMON\APPTYPE.BAS
 IconForm="frmHide2"
 Startup="Sub Main"
 HelpFile=""
