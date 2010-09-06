@@ -43,7 +43,7 @@ Name: "default"; Description: "砞竚"; Languages: tw
 Name: "custom"; Description: "{cm:Custom}"; Flags: iscustom
 
 [Components]
-Name: "pgn"; Description: "关联可移植棋谱文件(*.PGN)"; Types: default; Languages: cn
+Name: "pgn"; Description: "关联便携式棋谱文件(*.PGN)"; Types: default; Languages: cn
 Name: "fen"; Description: "关联局面文件(*.FEN)"; Types: default; Languages: cn
 Name: "xqf"; Description: "关联象棋演播室棋谱文件(*.XQF)"; Types: default; Languages: cn
 Name: "mxq"; Description: "关联弈天棋谱文件(*.MXQ)"; Types: default; Languages: cn
@@ -52,7 +52,7 @@ Name: "chn"; Description: "关联联众象棋棋谱文件(*.CHN)"; Types: default; Languag
 Name: "ccm"; Description: "关联中游象棋棋谱文件(*.CCM)"; Types: default; Languages: cn
 Name: "orange"; Description: "安装《橘中秘》棋谱"; Types: default; Languages: cn
 
-Name: "pgn"; Description: "闽羛簿从囱眯ゅン(*.PGN)"; Types: default; Languages: tw
+Name: "pgn"; Description: "闽羛獽拟Α囱眯ゅン(*.PGN)"; Types: default; Languages: tw
 Name: "fen"; Description: "闽羛Ыゅン(*.FEN)"; Types: default; Languages: tw
 Name: "xqf"; Description: "闽羛禜囱簍冀囱眯ゅン(*.XQF)"; Types: default; Languages: tw
 Name: "mxq"; Description: "闽羛ぱ囱眯ゅン(*.MXQ)"; Types: default; Languages: tw
@@ -685,8 +685,8 @@ Source: "橘中秘(繁体)\4.让双马\4-08.让双马-窝心炮破右单提马.PGN"; DestDir: "{app
 
 [Registry]
 Root: HKCR; Subkey: ".pgn"; ValueType: string; ValueData: "XQWizard.PGN"; Flags: uninsdeletekey; Components: pgn
-Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "可移植棋谱"; Flags: uninsdeletekey; Components: pgn; Languages: cn
-Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "簿从囱眯"; Flags: uninsdeletekey; Components: pgn; Languages: tw
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "便携式棋谱"; Flags: uninsdeletekey; Components: pgn; Languages: cn
+Root: HKCR; Subkey: "XQWizard.PGN"; ValueType: string; ValueData: "獽拟Α囱眯"; Flags: uninsdeletekey; Components: pgn; Languages: tw
 Root: HKCR; Subkey: "XQWizard.PGN\DefaultIcon"; ValueType: string; ValueData: "{app}\XQWIZARD.EXE,1"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell"; Flags: uninsdeletekey; Components: pgn
 Root: HKCR; Subkey: "XQWizard.PGN\Shell\Open"; ValueType: string; ValueData: "{cm:MenuOpen}"; Flags: uninsdeletekey; Components: pgn
