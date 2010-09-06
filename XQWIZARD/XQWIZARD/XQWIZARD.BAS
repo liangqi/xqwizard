@@ -3338,8 +3338,12 @@ If Not App_bPrevInstance Then
 End If
 ' 在显示窗口以前，先把语言设置好
 SetLang
-' 如果是零售版，则隐藏“检查更新”
-App_frmMain.mnHelpUpdate.Visible = Not RETAIL_VERSION
+' 如果是零售版，则隐藏“推荐给好友”和“检查更新”
+If RETAIL_VERSION Then
+    App_frmMain.mnHelpShare_.Visible = False
+    App_frmMain.mnHelpSep2.Visible = False
+    App_frmMain.mnHelpUpdate.Visible = False
+End If
 App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.txtMove.SetFocus
