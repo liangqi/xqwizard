@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
+Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -75,21 +75,10 @@ static bool Interrupt(void) {
   if (Search.bIdle) {
     Idle();
   }
-  switch (Search.nGoMode) {
-  case GO_MODE_NODES:
-    if (Search2.nAllNodes > Search.nNodes) {
-      Search2.bStop = true;
-      return true;
-    }
-    break;
-  case GO_MODE_TIMER:
-    if (!Search.bPonder && (int) (GetTime() - Search2.llTime) > Search.nMaxTimer) {
-      Search2.bStop = true;
-      return true;
-    }
-    break;
-  default:
-    break;
+  if (Search.nGoMode == GO_MODE_TIMER && !Search.bPonder &&
+      (int) (GetTime() - Search2.llTime) > Search.nMaxTimer) {
+    Search2.bStop = true;
+    return true;
   }
   if (Search.bBatch) {
     return false;
@@ -662,7 +651,7 @@ static bool SearchUnique(int vlBeta, int nDepth) {
 // 主搜索例程
 void SearchMain(int nDepth) {
   int i, vl, vlLast, nBookMoves;
-  int nCurrTimer, nLimitTimer;
+  int nCurrTimer, nLimitTimer, nLimitNodes;
   bool bUnique;
   uint32_t dwMoveStr;
   MoveStruct mvsBook[MAX_GEN_MOVES];
@@ -778,12 +767,22 @@ void SearchMain(int nDepth) {
       // c. 如果最佳着法连续多层没有变化，那么适当时限减半
       nLimitTimer = (Search2.nUnchanged >= UNCHANGED_DEPTH ? nLimitTimer / 2 : nLimitTimer);
       if (nCurrTimer > nLimitTimer) {
-        if (Search.bPonder) {        
+        if (Search.bPonder) {
           Search2.bPonderStop = true; // 如果处于后台思考模式，那么只是在后台思考命中后立即中止搜索。
         } else {
           vlLast = vl;
           break; // 不管是否跳出，"vlLast"都已更新
         }
+      }
+    } else if (Search.nGoMode == GO_MODE_NODES) {
+      // nLimitNodes的计算方法与nLimitTimer是一样的
+      nLimitNodes = (Search.bNullMove ? Search.nNodes : Search.nNodes / 2);
+      nLimitNodes = (vl + DROPDOWN_VALUE >= vlLast ? nLimitNodes / 2 : nLimitNodes);
+      nLimitNodes = (Search2.nUnchanged >= UNCHANGED_DEPTH ? nLimitNodes / 2 : nLimitNodes);
+      // GO_MODE_NODES下是不延长后台思考时间的
+      if (Search2.nAllNodes > nLimitNodes) {
+        vlLast = vl;
+        break;
       }
     }
     vlLast = vl;

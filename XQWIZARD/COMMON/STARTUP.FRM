@@ -17,11 +17,18 @@ Begin VB.Form frmStartup
    Icon            =   "STARTUP.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   Picture         =   "STARTUP.frx":000C
    ScaleHeight     =   4320
    ScaleWidth      =   7680
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
+   Begin VB.Image imgStartup 
+      Height          =   4320
+      Left            =   0
+      Picture         =   "STARTUP.frx":000C
+      Stretch         =   -1  'True
+      Top             =   0
+      Width           =   7680
+   End
 End
 Attribute VB_Name = "frmStartup"
 Attribute VB_GlobalNameSpace = False

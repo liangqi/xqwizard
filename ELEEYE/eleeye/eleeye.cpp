@@ -2,7 +2,7 @@
 eleeye.cpp - Source Code for ElephantEye, Part IX
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
+Designed by Morning Yellow, Version: 3.2, Last Modified: Jul. 2008
 Copyright (C) 2004-2008 www.elephantbase.net
 
 This library is free software; you can redistribute it and/or
@@ -145,7 +145,7 @@ int main(void) {
     printf("id name %s / ElephantEye\n", szEngineName);
     fflush(stdout);
   }
-  PrintLn("id version 3.15");
+  PrintLn("id version 3.2");
   PrintLn("id copyright 2004-2008 www.elephantbase.net");
   PrintLn("id author Morning Yellow");
   PrintLn("id user ElephantEye Test Team");

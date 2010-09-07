@@ -3,10 +3,10 @@ Object = "{FE0065C0-1B7B-11CF-9D53-00AA003C9CB6}#1.1#0"; "COMCT232.OCX"
 Begin VB.Form frmLevelSet 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "级别设置"
-   ClientHeight    =   2760
+   ClientHeight    =   3480
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   3240
+   ClientWidth     =   3120
    BeginProperty Font 
       Name            =   "宋体"
       Size            =   9
@@ -19,56 +19,80 @@ Begin VB.Form frmLevelSet
    Icon            =   "LEVEL.frx":0000
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   2760
-   ScaleWidth      =   3240
+   ScaleHeight     =   3480
+   ScaleWidth      =   3120
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.OptionButton optRookie 
+      Caption         =   "新手"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   2
+      Top             =   840
+      Width           =   735
+   End
+   Begin VB.OptionButton optNewbie 
+      Caption         =   "菜鸟"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   1
+      Top             =   480
+      Width           =   735
+   End
+   Begin VB.OptionButton optPeaBrain 
+      Caption         =   "傻瓜"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   0
+      Top             =   120
+      Width           =   735
+   End
    Begin VB.CommandButton btnCancel 
       Cancel          =   -1  'True
       Caption         =   "取消"
       Height          =   375
-      Left            =   1800
-      TabIndex        =   27
-      Top             =   2280
-      Width           =   735
+      Left            =   1680
+      TabIndex        =   30
+      Top             =   3000
+      Width           =   855
    End
    Begin VB.OptionButton optOverwhelming 
       Caption         =   "无敌(不限时)"
       Height          =   255
-      Left            =   120
-      TabIndex        =   5
+      Left            =   1080
+      TabIndex        =   28
       ToolTipText     =   "仅供解杀局、残局用，电脑将一直运算下去直到算出胜负为止。您可以按“停止思考”按钮中止电脑的运算。"
-      Top             =   1920
+      Top             =   2640
       Width           =   1455
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
       Default         =   -1  'True
       Height          =   375
-      Left            =   720
-      TabIndex        =   26
-      Top             =   2280
-      Width           =   735
+      Left            =   600
+      TabIndex        =   29
+      Top             =   3000
+      Width           =   855
    End
    Begin VB.Frame frmDepth 
       BorderStyle     =   0  'None
       Height          =   495
-      Left            =   1440
-      TabIndex        =   21
-      Top             =   1800
+      Left            =   1320
+      TabIndex        =   23
+      Top             =   2160
       Width           =   1695
       Begin VB.TextBox txtDepth 
          Alignment       =   1  'Right Justify
          Height          =   270
          Left            =   720
-         TabIndex        =   23
+         TabIndex        =   25
          Top             =   120
          Width           =   495
       End
       Begin ComCtl2.UpDown updnDepth 
          Height          =   270
          Left            =   1200
-         TabIndex        =   24
+         TabIndex        =   26
          Top             =   120
          Width           =   195
          _ExtentX        =   344
@@ -91,7 +115,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "深度"
          Height          =   255
          Left            =   240
-         TabIndex        =   22
+         TabIndex        =   24
          Top             =   120
          Width           =   375
       End
@@ -99,63 +123,63 @@ Begin VB.Form frmLevelSet
          Caption         =   "层"
          Height          =   255
          Left            =   1440
-         TabIndex        =   25
+         TabIndex        =   27
          Top             =   120
          Width           =   255
       End
    End
    Begin VB.OptionButton optGrandMaster 
-      Caption         =   "特级大师"
+      Caption         =   "特大"
       Height          =   255
       Left            =   120
-      TabIndex        =   4
-      Top             =   1560
-      Width           =   1095
+      TabIndex        =   7
+      Top             =   2640
+      Width           =   735
    End
    Begin VB.OptionButton optBeginner 
       Caption         =   "入门"
-      Height          =   255
-      Left            =   120
-      TabIndex        =   0
-      Top             =   120
-      Width           =   735
-   End
-   Begin VB.OptionButton optMaster 
-      Caption         =   "大师"
       Height          =   255
       Left            =   120
       TabIndex        =   3
       Top             =   1200
       Width           =   735
    End
+   Begin VB.OptionButton optMaster 
+      Caption         =   "大师"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   6
+      Top             =   2280
+      Width           =   735
+   End
    Begin VB.OptionButton optExpert 
       Caption         =   "专业"
       Height          =   255
       Left            =   120
-      TabIndex        =   2
-      Top             =   840
+      TabIndex        =   5
+      Top             =   1920
       Width           =   735
    End
    Begin VB.OptionButton optAmateur 
       Caption         =   "业余"
       Height          =   255
       Left            =   120
-      TabIndex        =   1
-      Top             =   480
+      TabIndex        =   4
+      Top             =   1560
       Width           =   735
    End
    Begin VB.Frame frmTimer 
       BorderStyle     =   0  'None
       Height          =   1215
-      Left            =   1440
-      TabIndex        =   7
+      Left            =   1320
+      TabIndex        =   9
       Top             =   360
       Width           =   1695
       Begin VB.TextBox txtInitTime 
          Alignment       =   1  'Right Justify
          Height          =   270
          Left            =   720
-         TabIndex        =   9
+         TabIndex        =   11
          Top             =   120
          Width           =   495
       End
@@ -163,7 +187,7 @@ Begin VB.Form frmLevelSet
          Alignment       =   1  'Right Justify
          Height          =   270
          Left            =   720
-         TabIndex        =   17
+         TabIndex        =   19
          Top             =   840
          Width           =   495
       End
@@ -171,7 +195,7 @@ Begin VB.Form frmLevelSet
          Alignment       =   1  'Right Justify
          Height          =   270
          Left            =   720
-         TabIndex        =   13
+         TabIndex        =   15
          Top             =   480
          Width           =   495
       End
@@ -179,7 +203,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "加时"
          Height          =   255
          Left            =   0
-         TabIndex        =   16
+         TabIndex        =   18
          Top             =   840
          Width           =   735
       End
@@ -187,14 +211,14 @@ Begin VB.Form frmLevelSet
          Caption         =   "限着"
          Height          =   255
          Left            =   0
-         TabIndex        =   12
+         TabIndex        =   14
          Top             =   480
          Width           =   735
       End
       Begin ComCtl2.UpDown updnSegment 
          Height          =   270
          Left            =   1200
-         TabIndex        =   10
+         TabIndex        =   12
          Top             =   120
          Width           =   195
          _ExtentX        =   344
@@ -216,7 +240,7 @@ Begin VB.Form frmLevelSet
       Begin ComCtl2.UpDown updnIncMove 
          Height          =   270
          Left            =   1200
-         TabIndex        =   14
+         TabIndex        =   16
          Top             =   480
          Width           =   195
          _ExtentX        =   344
@@ -238,7 +262,7 @@ Begin VB.Form frmLevelSet
       Begin ComCtl2.UpDown updnIncTime 
          Height          =   270
          Left            =   1200
-         TabIndex        =   18
+         TabIndex        =   20
          Top             =   840
          Width           =   195
          _ExtentX        =   344
@@ -261,7 +285,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "分"
          Height          =   255
          Left            =   1440
-         TabIndex        =   11
+         TabIndex        =   13
          Top             =   120
          Width           =   255
       End
@@ -269,7 +293,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "秒"
          Height          =   255
          Left            =   1440
-         TabIndex        =   19
+         TabIndex        =   21
          Top             =   840
          Width           =   255
       End
@@ -277,7 +301,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "着"
          Height          =   255
          Left            =   1440
-         TabIndex        =   15
+         TabIndex        =   17
          Top             =   480
          Width           =   255
       End
@@ -285,7 +309,7 @@ Begin VB.Form frmLevelSet
          Caption         =   "限时"
          Height          =   255
          Left            =   240
-         TabIndex        =   8
+         TabIndex        =   10
          Top             =   120
          Width           =   375
       End
@@ -293,16 +317,16 @@ Begin VB.Form frmLevelSet
    Begin VB.OptionButton optDepth 
       Caption         =   "限定深度(不限时)"
       Height          =   255
-      Left            =   1200
-      TabIndex        =   20
-      Top             =   1560
+      Left            =   1080
+      TabIndex        =   22
+      Top             =   1920
       Width           =   1815
    End
    Begin VB.OptionButton optTimer 
       Caption         =   "限定时间"
       Height          =   255
-      Left            =   1200
-      TabIndex        =   6
+      Left            =   1080
+      TabIndex        =   8
       Top             =   120
       Width           =   1095
    End
@@ -315,7 +339,7 @@ Attribute VB_Exposed = False
 ' LEVEL.FRM - Source Code for XiangQi Wizard, Part IV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -354,30 +378,6 @@ End Sub
 
 Private Sub LevelSetting(ByVal nInitTime As Integer, Optional ByVal bIncMode As Boolean = True, Optional ByVal nIncMove As Integer = 0, Optional ByVal nIncTime As Integer = 0)
 
-If nIncMove = 0 Then
-    Level_nInitTime = 1
-    txtInitTime.Text = 1
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-    optIncMove.Value = True
-    Level_nIncMove = nInitTime
-    txtIncTime.Text = 1
-    IncModeSetting False
-Else
-    Level_nInitTime = nInitTime
-    txtInitTime.Text = nInitTime
-    If bIncMode Then
-        optIncTime.Value = True
-    Else
-        optIncMove.Value = True
-    End If
-    Level_nIncTime = nIncTime
-    txtIncTime.Text = nIncTime
-    Level_nIncMove = nIncMove
-    txtIncMove.Text = nIncMove
-    IncModeSetting bIncMode
-End If
-
 End Sub
 
 ' 以上是级别设置例程
@@ -385,6 +385,20 @@ End Sub
 Private Sub Form_Load()
 
 Dim i As Integer
+
+Level_nInitTime = Timer_nInitTime
+txtInitTime.Text = Timer_nInitTime
+If Timer_bIncMode Then
+    optIncTime.Value = True
+Else
+    optIncMove.Value = True
+End If
+IncModeSetting Timer_bIncMode
+Level_nIncTime = Timer_nIncTime
+txtIncTime.Text = Timer_nIncTime
+Level_nIncMove = Timer_nIncMove
+txtIncMove.Text = Timer_nIncMove
+
 Select Case Timer_nDepth
 Case LEVEL_GRANDMASTER
     optGrandMaster.Value = True
@@ -406,6 +420,18 @@ Case LEVEL_BEGINNER
     optBeginner.Value = True
     frmTimer.Visible = False
     frmDepth.Visible = False
+Case LEVEL_ROOKIE
+    optRookie.Value = True
+    frmTimer.Visible = False
+    frmDepth.Visible = False
+Case LEVEL_NEWBIE
+    optNewbie.Value = True
+    frmTimer.Visible = False
+    frmDepth.Visible = False
+Case LEVEL_PEABRAIN
+    optPeaBrain.Value = True
+    frmTimer.Visible = False
+    frmDepth.Visible = False
 Case LEVEL_TIMER
     optTimer.Value = True
     frmTimer.Visible = True
@@ -421,7 +447,9 @@ Case LEVEL_INFINITE
     frmTimer.Visible = False
     frmDepth.Visible = False
 End Select
+
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
+
 SetTopMost hWnd
 
 If Options_nLanguage = LANGUAGE_ZH_CN Then
@@ -435,13 +463,14 @@ For i = 0 To Controls.Count - 1
 Next
 On Error GoTo 0
 Caption = "引擎設置"
+optPeaBrain.Caption = "傻瓜"
+optNewbie.Caption = "菜鳥"
+optRookie.Caption = "新手"
 optBeginner.Caption = "入門"
 optAmateur.Caption = "業餘"
 optExpert.Caption = "專業"
 optMaster.Caption = "大師"
-optGrandMaster.Caption = "特級大師"
-optOverwhelming.Caption = "無敵(不限時)"
-optOverwhelming.ToolTipText = "僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。您可以按“停止思考”按鈕中止電腦的運算。"
+optGrandMaster.Caption = "特大"
 optTimer.Caption = "限定時間"
 lblStart.Caption = "限時"
 lblMinutes.Caption = "分"
@@ -451,6 +480,8 @@ optIncTime.Caption = "加時"
 lblSeconds.Caption = "秒"
 optDepth.Caption = "限定深度(不限時)"
 lblDepth.Caption = "層"
+optOverwhelming.Caption = "無敵(不限時)"
+optOverwhelming.ToolTipText = "僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。您可以按“停止思考”按鈕中止電腦的運算。"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
 
@@ -464,37 +495,50 @@ End If
 
 End Sub
 
+Private Sub optPeaBrain_Click()
+
+Level_nDepth = LEVEL_PEABRAIN
+
+End Sub
+
+Private Sub optNewbie_Click()
+
+Level_nDepth = LEVEL_NEWBIE
+
+End Sub
+
+Private Sub optRookie_Click()
+
+Level_nDepth = LEVEL_ROOKIE
+
+End Sub
+
 Private Sub optBeginner_Click()
 
-LevelSetting 999
 Level_nDepth = LEVEL_BEGINNER
 
 End Sub
 
 Private Sub optAmateur_Click()
 
-LevelSetting 216
 Level_nDepth = LEVEL_AMATEUR
 
 End Sub
 
 Private Sub optExpert_Click()
 
-LevelSetting 36
 Level_nDepth = LEVEL_EXPERT
 
 End Sub
 
 Private Sub optMaster_Click()
 
-LevelSetting 6
 Level_nDepth = LEVEL_MASTER
 
 End Sub
 
 Private Sub optGrandMaster_Click()
 
-LevelSetting 1
 Level_nDepth = LEVEL_GRANDMASTER
 
 End Sub
@@ -519,7 +563,7 @@ Private Sub optDepth_Click()
 
 frmTimer.Visible = False
 frmDepth.Visible = True
-If Level_nDepth <= 0 Or Level_nDepth >= 100 Then
+If Level_nDepth < LEVEL_DEPTH_MIN Or Level_nDepth > LEVEL_DEPTH_MAX Then
     Level_nDepth = 8
     txtDepth.Text = 8
 End If

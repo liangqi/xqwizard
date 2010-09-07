@@ -119,11 +119,11 @@ Begin VB.Form frmNewGame
       End
    End
    Begin VB.Frame frmLevel 
-      Caption         =   "难度"
+      Caption         =   "级别"
       Height          =   615
       Left            =   120
       TabIndex        =   4
-      ToolTipText     =   "如果“新手一”对你仍有难度，可以叫电脑让你几个子。"
+      ToolTipText     =   "如果“傻瓜”对你仍有难度，可以叫电脑让你几个子。"
       Top             =   1560
       Width           =   1335
       Begin VB.ComboBox cmbLevel 
@@ -162,7 +162,7 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.72, Last Modified: Aug. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -181,21 +181,12 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Const DIFF_FRESHMAN_1 = 0
-Private Const DIFF_FRESHMAN_2 = 1
-Private Const DIFF_FRESHMAN_3 = 2
-Private Const DIFF_BEGINNER = 3
-Private Const DIFF_AMATEUR = 4
-Private Const DIFF_EXPERT = 5
-Private Const DIFF_MASTER = 6
-Private Const DIFF_GRANDMASTER = 7
-
 Private Sub Form_Load()
 
 Dim i As Integer
-cmbLevel.AddItem L("新手一", "新手一")
-cmbLevel.AddItem L("新手二", "新手二")
-cmbLevel.AddItem L("新手三", "新手三")
+cmbLevel.AddItem L("傻瓜", "傻瓜")
+cmbLevel.AddItem L("菜鸟", "菜鳥")
+cmbLevel.AddItem L("新手", "新手")
 cmbLevel.AddItem L("入门", "入門")
 cmbLevel.AddItem L("业余", "業餘")
 cmbLevel.AddItem L("专业", "專業")
@@ -225,26 +216,11 @@ End Select
 
 optHandicap(0).Value = True
 
-Select Case Timer_nDepth
-Case 1, 2
-    cmbLevel.ListIndex = DIFF_FRESHMAN_1
-Case 3
-    cmbLevel.ListIndex = DIFF_FRESHMAN_2
-Case 4
-    cmbLevel.ListIndex = DIFF_FRESHMAN_3
-Case LEVEL_BEGINNER
-    cmbLevel.ListIndex = DIFF_BEGINNER
-Case LEVEL_AMATEUR
-    cmbLevel.ListIndex = DIFF_AMATEUR
-Case LEVEL_EXPERT
-    cmbLevel.ListIndex = DIFF_EXPERT
-Case LEVEL_MASTER
-    cmbLevel.ListIndex = DIFF_MASTER
-Case LEVEL_GRANDMASTER
-    cmbLevel.ListIndex = DIFF_GRANDMASTER
-Case Else
-    cmbLevel.ListIndex = DIFF_BEGINNER
-End Select
+If Timer_nDepth < LEVEL_GRANDMASTER Or Timer_nDepth > LEVEL_PEABRAIN Then
+    cmbLevel.ListIndex = 0
+Else
+    cmbLevel.ListIndex = LEVEL_PEABRAIN - Timer_nDepth
+End If
 
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
@@ -271,8 +247,8 @@ optHandicap(1).Caption = "讓單馬"
 optHandicap(2).Caption = "讓雙馬"
 optHandicap(3).Caption = "讓九子"
 optHandicap(4).Caption = "自定義"
-frmLevel.Caption = "難度"
-frmLevel.ToolTipText = "如果“新手一”對你仍有難度，可以叫電腦讓你幾個子。"
+frmLevel.Caption = "級別"
+frmLevel.ToolTipText = "如果“傻瓜”對你仍有難度，可以叫電腦讓你幾個子。"
 chkShowNew.Caption = "始終顯示“開始對局”對話框"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
@@ -282,35 +258,8 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
-Select Case cmbLevel.ListIndex
-Case DIFF_FRESHMAN_1
-    Timer_nDepth = 2
-Case DIFF_FRESHMAN_2
-    Timer_nDepth = 3
-Case DIFF_FRESHMAN_3
-    Timer_nDepth = 4
-Case DIFF_BEGINNER
-    Timer_nDepth = LEVEL_BEGINNER
-    Timer_nIncMove = 999
-Case DIFF_AMATEUR
-    Timer_nDepth = LEVEL_AMATEUR
-    Timer_nIncMove = 216
-Case DIFF_EXPERT
-    Timer_nDepth = LEVEL_EXPERT
-    Timer_nIncMove = 36
-Case DIFF_MASTER
-    Timer_nDepth = LEVEL_MASTER
-    Timer_nIncMove = 6
-Case DIFF_GRANDMASTER
-    Timer_nDepth = LEVEL_GRANDMASTER
-    Timer_nIncMove = 1
-End Select
-
-Timer_bIncMode = False
-Timer_nInitTime = 1
-Timer_nIncTime = 1
+Timer_nDepth = LEVEL_PEABRAIN - cmbLevel.ListIndex
 ' 以上难度设置代码必须在RestartGame前运行才会生效
-
 App_szFileName = ""
 If optHandicap(0).Value Then
     NewGame0

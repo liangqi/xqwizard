@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -58,11 +58,14 @@ Public Const RESULT_REDWIN      As Integer = 1
 Public Const RESULT_DRAW        As Integer = 2
 Public Const RESULT_BLACKWIN    As Integer = 3
 ' 全局常量——引擎级别设置
-Public Const LEVEL_GRANDMASTER  As Integer = -5
-Public Const LEVEL_MASTER       As Integer = -4
-Public Const LEVEL_EXPERT       As Integer = -3
-Public Const LEVEL_AMATEUR      As Integer = -2
-Public Const LEVEL_BEGINNER     As Integer = -1
+Public Const LEVEL_GRANDMASTER  As Integer = -8
+Public Const LEVEL_MASTER       As Integer = -7
+Public Const LEVEL_EXPERT       As Integer = -6
+Public Const LEVEL_AMATEUR      As Integer = -5
+Public Const LEVEL_BEGINNER     As Integer = -4
+Public Const LEVEL_ROOKIE       As Integer = -3
+Public Const LEVEL_NEWBIE       As Integer = -2
+Public Const LEVEL_PEABRAIN     As Integer = -1
 Public Const LEVEL_TIMER        As Integer = 0
 Public Const LEVEL_DEPTH_MIN    As Integer = 1
 Public Const LEVEL_DEPTH_MAX    As Integer = 99
@@ -836,10 +839,8 @@ Dim nSeconds As Integer, sdThis As Integer
 sdThis = IIf(sd = -1, Game_sdMax, sd)
 nSeconds = IIf(sd = -1, Game_sdMax, sd)
 If sdThis = 0 Eqv App_bFlipped Then
-    If Timer_nDepth > 0 Then
-        App_frmMain.lblTimeLeftUp.Caption = "-"
-        App_frmMain.lblTimeRuleUp.Caption = ""
-    Else
+    If Timer_nDepth = 0 Then
+        App_frmMain.lblTimeLeftUp1.Caption = L("时限", "時限")
         App_frmMain.lblTimeLeftUp.Caption = TimeText(Timer_nTimeLeft(sdThis))
         If Options_nLanguage = LANGUAGE_ZH_CN Then
             App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
@@ -848,13 +849,15 @@ If sdThis = 0 Eqv App_bFlipped Then
             App_frmMain.lblTimeRuleUp.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
                     "走完 " & Timer_nMoveLeft(sdThis) & " 步")
         End If
+    Else
+        App_frmMain.lblTimeLeftUp1.Caption = L("级别", "級別")
+        App_frmMain.lblTimeLeftUp.Caption = LevelString(Timer_nDepth)
+        App_frmMain.lblTimeRuleUp.Caption = ""
     End If
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
-    If Timer_nDepth > 0 Then
-        App_frmMain.lblTimeLeftDown.Caption = "-"
-        App_frmMain.lblTimeRuleDown.Caption = ""
-    Else
+    If Timer_nDepth = 0 Then
+        App_frmMain.lblTimeLeftUp1.Caption = L("时限", "時限")
         App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
         If Options_nLanguage = LANGUAGE_ZH_CN Then
             App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
@@ -864,10 +867,29 @@ Else
                     "走完 " & Timer_nMoveLeft(sdThis) & " 步")
         End If
         App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
+    Else
+        App_frmMain.lblTimeLeftUp1.Caption = L("级别", "級別")
+        App_frmMain.lblTimeLeftDown.Caption = LevelString(Timer_nDepth)
+        App_frmMain.lblTimeRuleDown.Caption = ""
     End If
 End If
 
 End Sub
+
+' 级别字符串
+Public Function LevelString(ByVal nDepth As String) As String
+
+If nDepth = LEVEL_INFINITE Then
+    LevelString = L("无敌", "無敵")
+ElseIf nDepth > 0 Then
+    LevelString = nDepth & L("层", "層")
+ElseIf Options_nLanguage = LANGUAGE_ZH_CN Then
+    LevelString = Choose(-nDepth, "傻瓜", "菜鸟", "新手", "入门", "业余", "专业", "大师", "特级大师")
+Else
+    LevelString = Choose(-nDepth, "傻瓜", "菜鳥", "新手", "入門", "業餘", "專業", "大師", "特級大師")
+End If
+
+End Function
 
 ' 赛事字符串
 Public Function EventString() As String
@@ -1818,7 +1840,7 @@ End If
 If Engine_nStatus = BUSY_ANALYZE Then
     SendEngine "go infinite", bSlaveEngine
 Else
-    If Timer_nDepth <= 0 Then
+    If Timer_nDepth = 0 Then
         If Timer_bIncMode Then
             SendEngine szGoPonder & " time " & (nTimeRatio * Timer_nTimeLeft(Engine_posBoard.sdPlayer)) & _
                     " increment " & IIf(Timer_nIncTime < 0, 0, nTimeRatio * Timer_nIncTime) & _
@@ -1830,6 +1852,8 @@ Else
                     " opptime " & (nTimeRatio * Timer_nTimeLeft(1 - Engine_posBoard.sdPlayer)) & _
                     " oppmovestogo " & (Timer_nMoveLeft(1 - Engine_posBoard.sdPlayer)), bSlaveEngine
         End If
+    ElseIf Timer_nDepth < 0 Then
+        SendEngine szGoPonder & " nodes " & (6 ^ (2 - Timer_nDepth)), bSlaveEngine
     Else
         SendEngine szGoPonder & " depth " & Timer_nDepth, bSlaveEngine
     End If
@@ -2773,7 +2797,7 @@ Publish_nPiecesL = Str2Int(GetSetting("XQWizard", "Publish", "PiecesL", "0"), 0,
 Publish_bContent = (Str2Int(GetSetting("XQWizard", "Publish", "Content", "0")) <> 0)
 Publish_nLocation = Str2Int(GetSetting("XQWizard", "Publish", "Location", "0"), 0, PUB_LOCATION_MAX - 1)
 Publish_nFormat = Str2Int(GetSetting("XQWizard", "Publish", "Format", "0"), 0, PUB_FORMAT_MAX - 1)
-Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "2"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
+Timer_nDepth = Str2Int(GetSetting("XQWizard", "Timer", "Depth", "-1"), LEVEL_GRANDMASTER, LEVEL_INFINITE)
 Timer_bIncMode = Str2Int(GetSetting("XQWizard", "Timer", "IncMode", "0")) <> 0
 Timer_nInitTime = Str2Int(GetSetting("XQWizard", "Timer", "InitTime", "1"), 1, 480)
 Timer_nIncMove = Str2Int(GetSetting("XQWizard", "Timer", "IncMove", "999"), 1, 999)
