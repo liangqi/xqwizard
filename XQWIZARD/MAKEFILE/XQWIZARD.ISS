@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.75
+AppVerName={cm:AppName} 4.76
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -763,10 +763,7 @@ Name: "{userdesktop}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 
 [Run]
 Filename: "{app}\XQSCHOOL.EXE"; Description: "开始练习"; Flags: nowait postinstall skipifsilent; Languages: cn
-Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "如何使用"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: cn
-
 Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinstall skipifsilent; Languages: tw
-Filename: "http://www.xqbase.com/xqwizard/help.htm"; Description: "ㄏノ"; Flags: nowait postinstall shellexec skipifsilent unchecked; Languages: tw
 
 [Code]
 procedure DeinitializeUninstall();

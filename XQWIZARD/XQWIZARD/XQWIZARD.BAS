@@ -2449,6 +2449,7 @@ End Sub
 ' 新局时选择引擎走哪方
 Public Sub EngineNewGame(Optional ByVal nEnginePlay As Integer = -1)
 
+PlayWavSound "NEWGAME"
 If Engine_nStatus = IDLE_UNLOAD Then
     Exit Sub
 End If
