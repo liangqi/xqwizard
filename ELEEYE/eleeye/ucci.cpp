@@ -2,8 +2,8 @@
 ucci.h/ucci.cpp - Source Code for ElephantEye, Part I
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This part (ucci.h/ucci.cpp only) of codes is NOT published under LGPL, and
 can be used without restriction.
@@ -261,12 +261,16 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, bool bDebug) {
       if (false) {
       } else if (StrEqv(lp, "none")) {
         UcciComm.Grade = UCCI_GRADE_NONE;
+      } else if (StrEqv(lp, "tiny")) {
+        UcciComm.Grade = UCCI_GRADE_TINY;
       } else if (StrEqv(lp, "small")) {
         UcciComm.Grade = UCCI_GRADE_SMALL;
       } else if (StrEqv(lp, "medium")) {
         UcciComm.Grade = UCCI_GRADE_MEDIUM;
       } else if (StrEqv(lp, "large")) {
         UcciComm.Grade = UCCI_GRADE_LARGE;
+      } else if (StrEqv(lp, "huge")) {
+        UcciComm.Grade = UCCI_GRADE_HUGE;
       } else {
         UcciComm.Grade = UCCI_GRADE_NONE;
       }

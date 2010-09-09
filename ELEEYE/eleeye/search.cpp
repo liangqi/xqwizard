@@ -3,7 +3,7 @@ search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
 Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
-Copyright (C) 2004-2008 www.elephantbase.net
+Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

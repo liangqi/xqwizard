@@ -2,8 +2,8 @@
 eleeye.cpp - Source Code for ElephantEye, Part IX
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.2, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -146,8 +146,8 @@ int main(void) {
     fflush(stdout);
   }
   PrintLn("id version 3.2");
-  PrintLn("id copyright 2004-2008 www.elephantbase.net");
-  PrintLn("id author Morning Yellow");
+  PrintLn("id copyright 2004-2010 www.xqbase.com");
+  PrintLn("id author ElephantEye Development Team");
   PrintLn("id user ElephantEye Test Team");
   PrintLn("option usemillisec type check default true");
   PrintLn("option promotion type check default false");
@@ -165,7 +165,7 @@ int main(void) {
   PrintLn("option idle type combo var none var small var medium var large default none");
   PrintLn("option pruning type combo var none var small var medium var large default large");
   PrintLn("option knowledge type combo var none var small var medium var large default large");
-  PrintLn("option randomness type combo var none var small var medium var large default none");
+  PrintLn("option randomness type combo var none var tiny var small var medium var large var huge default none");
   PrintLn("option newgame type button");
   PrintLn("ucciok");
 
@@ -271,14 +271,20 @@ int main(void) {
         case UCCI_GRADE_NONE:
           Search.nRandomMask = 0;
           break;
-        case UCCI_GRADE_SMALL:
+        case UCCI_GRADE_TINY:
           Search.nRandomMask = 1;
           break;
-        case UCCI_GRADE_MEDIUM:
+        case UCCI_GRADE_SMALL:
           Search.nRandomMask = 3;
           break;
-        case UCCI_GRADE_LARGE:
+        case UCCI_GRADE_MEDIUM:
           Search.nRandomMask = 7;
+          break;
+        case UCCI_GRADE_LARGE:
+          Search.nRandomMask = 15;
+          break;
+        case UCCI_GRADE_HUGE:
+          Search.nRandomMask = 31;
           break;
         default:
           break;

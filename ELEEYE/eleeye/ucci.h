@@ -2,8 +2,8 @@
 ucci.h/ucci.cpp - Source Code for ElephantEye, Part I
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This part (ucci.h/ucci.cpp only) of codes is NOT published under LGPL, and
 can be used without restriction.
@@ -26,7 +26,7 @@ enum UcciRepetEnum {
   UCCI_REPET_ALWAYSDRAW, UCCI_REPET_CHECKBAN, UCCI_REPET_ASIANRULE, UCCI_REPET_CHINESERULE
 }; // 选项"repetition"的设定值
 enum UcciGradeEnum {
-  UCCI_GRADE_NONE, UCCI_GRADE_SMALL, UCCI_GRADE_MEDIUM, UCCI_GRADE_LARGE
+  UCCI_GRADE_NONE, UCCI_GRADE_TINY, UCCI_GRADE_SMALL, UCCI_GRADE_MEDIUM, UCCI_GRADE_LARGE, UCCI_GRADE_HUGE
 }; // 选项"idle"、"pruning"、"knowledge"、"selectivity"的设定值
 enum UcciStyleEnum {
   UCCI_STYLE_SOLID, UCCI_STYLE_NORMAL, UCCI_STYLE_RISKY
