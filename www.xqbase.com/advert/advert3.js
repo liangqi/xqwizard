@@ -1,0 +1,1 @@
+document.write("<iframe width=\"249\" height=\"65\" src=\"http://www.xqbase.com/xqwizard/gz2010.htm\"></iframe>");

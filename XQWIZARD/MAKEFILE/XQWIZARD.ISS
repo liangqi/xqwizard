@@ -114,12 +114,12 @@ Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\tips1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\tips1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\tips2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\tips2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\gz2010.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\gz2010.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert3.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\advert3.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; 棋盘文件(小)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
@@ -485,6 +485,7 @@ Source: "SOUNDS\CHECK2.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\WIN.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\DRAW.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 Source: "SOUNDS\LOSS.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
+Source: "SOUNDS\NEWGAME.WAV"; DestDir: "{app}\SOUNDS"; Flags: ignoreversion
 ; 音乐文件
 Source: "MUSICS\EXPRESS.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion
 Source: "MUSICS\FUNNY.MID"; DestDir: "{app}\MUSICS"; Flags: ignoreversion

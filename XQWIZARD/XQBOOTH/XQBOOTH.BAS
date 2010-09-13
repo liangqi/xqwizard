@@ -205,7 +205,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
     App_frmMain.mnGameHint.Enabled = False
     App_frmMain.btnHint.Enabled = False
     If App_pos.sdPlayer = 0 Then
-        PlayWavSound "PROMOTE2"
+        PlayWavSound "LOSS"
         If App_pos.ucsqPieces(16) > 0 Then
             DrawSquare App_pos.ucsqPieces(16), , DRAW_MATE
         End If
@@ -217,7 +217,7 @@ If (nStatus And MOVE_MATE) <> 0 Then
             App_frmMain.mnGameNext.Enabled = True
             App_frmMain.btnNext.Enabled = True
         End If
-        PlayWavSound "PROMOTE"
+        PlayWavSound "WIN"
         If App_pos.ucsqPieces(32) > 0 Then
             DrawSquare App_pos.ucsqPieces(32), , DRAW_MATE
         End If
@@ -236,7 +236,7 @@ End If
 If (nStatus And (MOVE_PERPETUAL Or MOVE_DRAW)) <> 0 Then
     App_frmMain.mnGameHint.Enabled = False
     App_frmMain.btnHint.Enabled = False
-    PlayWavSound "PROMOTE2"
+    PlayWavSound "LOSS"
     MsgBoxIcon L("请不要气馁！", "請不要氣餒！"), , , , ICON_LOSS
     GetResult = PHASE_LOSS
     Exit Function
