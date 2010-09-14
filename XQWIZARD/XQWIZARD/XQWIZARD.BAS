@@ -122,7 +122,7 @@ Public App_bFlipped             As Boolean  ' 是否已经翻转棋盘
 Public App_mvNewMove            As Long     ' 最新的一个着法，棋盘上有标记
 Public App_sqSelected           As Integer  ' 鼠标选中的棋子
 Public App_sqMate               As Integer  ' 被将死的帅(将)
-Public App_bPlay                As Integer  ' 播放棋局
+Public App_bPlay                As Boolean  ' 播放棋局
 Public App_bRedTurn             As Boolean  ' 红黑轮流标志
 Public App_bPromotion           As Boolean  ' 是否允许升变
 Public App_bPrevInstance        As Boolean  ' 是否再一次启动
@@ -3005,20 +3005,20 @@ App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
 App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
 App_frmMain.mnOptionsSounds.Caption = "音效(&S)"
 App_frmMain.mnOptionsMusic_.Caption = "音樂(&M)"
-App_frmMain.mnOptionsMusic(0).Caption = "緊張(&A)"
-App_frmMain.mnOptionsMusic(1).Caption = "風趣(&B)"
-App_frmMain.mnOptionsMusic(2).Caption = "巴赫(&C)"
-App_frmMain.mnOptionsMusic(3).Caption = "莫扎特一(&D)"
-App_frmMain.mnOptionsMusic(4).Caption = "莫扎特四(&E)"
-App_frmMain.mnOptionsMusic(5).Caption = "貝多芬(&F)"
-App_frmMain.mnOptionsMusic(6).Caption = "李斯特(&G)"
-App_frmMain.mnOptionsMusic(7).Caption = "柴可夫斯基(&H)"
-App_frmMain.mnOptionsMusic(8).Caption = "德沃夏克(&I)"
-App_frmMain.mnOptionsMusic(9).Caption = "馬里奧一(&J)"
-App_frmMain.mnOptionsMusic(10).Caption = "馬里奧二(&K)"
-App_frmMain.mnOptionsMusic(11).Caption = "仙劍奇俠傳(&L)"
-App_frmMain.mnOptionsMusic(12).Caption = "望江南(&M)"
-App_frmMain.mnOptionsMusic(13).Caption = "無聲(&N)"
+App_frmMain.mnOptionsMusic(0).Caption = "無聲(&A)"
+App_frmMain.mnOptionsMusic(1).Caption = "緊張(&B)"
+App_frmMain.mnOptionsMusic(2).Caption = "風趣(&C)"
+App_frmMain.mnOptionsMusic(3).Caption = "巴赫(&D)"
+App_frmMain.mnOptionsMusic(4).Caption = "莫扎特一(&E)"
+App_frmMain.mnOptionsMusic(5).Caption = "莫扎特四(&F)"
+App_frmMain.mnOptionsMusic(6).Caption = "貝多芬(&G)"
+App_frmMain.mnOptionsMusic(7).Caption = "李斯特(&H)"
+App_frmMain.mnOptionsMusic(8).Caption = "柴可夫斯基(&I)"
+App_frmMain.mnOptionsMusic(9).Caption = "德沃夏克(&J)"
+App_frmMain.mnOptionsMusic(10).Caption = "馬里奧一(&K)"
+App_frmMain.mnOptionsMusic(11).Caption = "馬里奧二(&L)"
+App_frmMain.mnOptionsMusic(12).Caption = "仙劍奇俠傳(&M)"
+App_frmMain.mnOptionsMusic(13).Caption = "望江南(&N)"
 App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
 App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
 App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"

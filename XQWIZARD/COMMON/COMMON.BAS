@@ -91,20 +91,20 @@ Public Const PIECES_L_DELICATE  As Integer = 1
 Public Const PIECES_L_POLISH    As Integer = 2
 Public Const PIECES_L_MAX       As Integer = 3
 ' 全局常量——音乐设置选项
-Public Const MUSIC_EXPRESS      As Integer = 0
-Public Const MUSIC_FUNNY        As Integer = 1
-Public Const MUSIC_CLASSIC      As Integer = 2
-Public Const MUSIC_MOZART1      As Integer = 3
-Public Const MUSIC_MOZART4      As Integer = 4
-Public Const MUSIC_FULELISE     As Integer = 5
-Public Const MUSIC_LOVDREAM     As Integer = 6
-Public Const MUSIC_WALTZ        As Integer = 7
-Public Const MUSIC_HUMOUR       As Integer = 8
-Public Const MUSIC_MARIO1       As Integer = 9
-Public Const MUSIC_MARIO2       As Integer = 10
-Public Const MUSIC_PAL          As Integer = 11
-Public Const MUSIC_CMUSIC       As Integer = 12
-Public Const MUSIC_NONE         As Integer = 13
+Public Const MUSIC_NONE         As Integer = 0
+Public Const MUSIC_EXPRESS      As Integer = 1
+Public Const MUSIC_FUNNY        As Integer = 2
+Public Const MUSIC_CLASSIC      As Integer = 3
+Public Const MUSIC_MOZART1      As Integer = 4
+Public Const MUSIC_MOZART4      As Integer = 5
+Public Const MUSIC_FULELISE     As Integer = 6
+Public Const MUSIC_LOVDREAM     As Integer = 7
+Public Const MUSIC_WALTZ        As Integer = 8
+Public Const MUSIC_HUMOUR       As Integer = 9
+Public Const MUSIC_MARIO1       As Integer = 10
+Public Const MUSIC_MARIO2       As Integer = 11
+Public Const MUSIC_PAL          As Integer = 12
+Public Const MUSIC_CMUSIC       As Integer = 13
 Public Const MUSIC_MAX          As Integer = 14
 ' 全局变量——网站求助
 Public Const HELP_PUB_ZHIDAO    As Integer = 0
@@ -176,9 +176,9 @@ Public Sub MusicSetting(ByVal nMusicIndex As Integer)
 
 Dim i As Integer
 frmHide.mci.Command = "Close"
-If nMusicIndex < MUSIC_NONE Then
+If nMusicIndex > MUSIC_NONE Then
     frmHide.mci.FileName = App_szPath & "MUSICS\" & _
-            Choose(nMusicIndex + 1, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
+            Choose(nMusicIndex, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
             "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "MARIO1", "MARIO2", "PAL", "CMUSIC") & ".MID"
     If Not App.PrevInstance Then
         frmHide.mci.Command = "Open"
@@ -435,7 +435,7 @@ Options_nPiecesS = Str2Int(GetSetting("XQWizard", "Options", "PiecesSmall", "0")
 Options_nBoardL = Str2Int(GetSetting("XQWizard", "Options", "BoardLarge", "0"), 0, BOARD_L_MAX - 1)
 Options_nPiecesL = Str2Int(GetSetting("XQWizard", "Options", "PiecesLarge", "0"), 0, PIECES_L_MAX - 1)
 Options_bSounds = (Str2Int(GetSetting("XQWizard", "Options", "Sounds", "1")) <> 0)
-Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", MUSIC_NONE), 0, MUSIC_MAX - 1)
+Options_nMusic = Str2Int(GetSetting("XQWizard", "Options", "Music", "0"), 0, MUSIC_MAX - 1)
 Gui_szUpgradeVer = GetSetting("XQWizard", "Gui", "UpgradeVer", STRING_VERSION)
 Gui_szUpgradeDate = GetSetting("XQWizard", "Gui", "UpgradeDate", "")
 Gui_szAdvertDate = GetSetting("XQWizard", "Gui", "AdvertDate", "")

@@ -106,7 +106,8 @@ void CheckFileStruct::Open(const char *szFileName) {
 struct TeamStruct {
   uint32_t dwAbbr;
   int nEloValue, nKValue;
-  char szEngineName[MAX_CHAR], szEngineFile[MAX_CHAR], szOptionFile[MAX_CHAR], szUrl[MAX_CHAR];
+  char szEngineName[MAX_CHAR], szEngineFile[MAX_CHAR];
+  char szOptionFile[MAX_CHAR], szUrl[MAX_CHAR], szGoParam[MAX_CHAR];
   int nWin, nDraw, nLoss, nScore;
 };
 
@@ -918,7 +919,10 @@ void GameStruct::RunEngine(void) {
   }
 
   // 向引擎发送走棋指令："go [draw] time %d increment %d opptime %d oppincrement %d";
-  if (bUseMilliSec[sd]) {
+  if (lpTeam[sd]->szGoParam[0] != '\0') {
+    strcpy(szLineStr, bDraw ? "go " : "go draw ");
+    strcat(szLineStr, lpTeam[sd]->szGoParam);
+  } else if (bUseMilliSec[sd]) {
     sprintf(szLineStr, bDraw ? cszGoDraw : cszGo, nTimer[sd],
         League.nIncrTime * League.nStandardCpuTime, nTimer[1 - sd], League.nIncrTime * League.nStandardCpuTime);
   } else {
@@ -1285,6 +1289,7 @@ int main(void) {
         nEngineFileLen = MAX(nEngineFileLen, (int) strlen(lpTeam->szEngineFile));
         StrSplitSkip(lp, ',', lpTeam->szOptionFile);
         StrSplitSkip(lp, ',', lpTeam->szUrl);
+        StrSplitSkip(lp, ',', lpTeam->szGoParam);
         League.nTeamNum ++;
       }
     // 以下参数只跟转播有关

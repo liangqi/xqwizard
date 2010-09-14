@@ -942,59 +942,59 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnOptionsMusic_ 
          Caption         =   "音乐(&M)"
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "紧张(&A)"
+            Caption         =   "无声(&A)"
             Index           =   0
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "风趣(&B)"
+            Caption         =   "紧张(&B)"
             Index           =   1
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "巴赫(&C)"
+            Caption         =   "风趣(&C)"
             Index           =   2
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "莫扎特一(&D)"
+            Caption         =   "巴赫(&D)"
             Index           =   3
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "莫扎特四(&E)"
+            Caption         =   "莫扎特一(&E)"
             Index           =   4
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "贝多芬(&F)"
+            Caption         =   "莫扎特四(&F)"
             Index           =   5
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "李斯特(&G)"
+            Caption         =   "贝多芬(&G)"
             Index           =   6
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "柴可夫斯基(&H)"
+            Caption         =   "李斯特(&H)"
             Index           =   7
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "德沃夏克(&I)"
+            Caption         =   "柴可夫斯基(&I)"
             Index           =   8
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "马里奥一(&J)"
+            Caption         =   "德沃夏克(&J)"
             Index           =   9
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "马里奥二(&K)"
+            Caption         =   "马里奥一(&K)"
             Index           =   10
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "仙剑奇侠传(&L)"
+            Caption         =   "马里奥二(&L)"
             Index           =   11
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "望江南(&M)"
+            Caption         =   "仙剑奇侠传(&M)"
             Index           =   12
          End
          Begin VB.Menu mnOptionsMusic 
-            Caption         =   "无声(&N)"
+            Caption         =   "望江南(&N)"
             Index           =   13
          End
       End
