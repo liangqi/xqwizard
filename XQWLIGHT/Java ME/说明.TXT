@@ -9,5 +9,3 @@
 ★ 象棋小巫师可在绝大多数品牌和型号的手机上运行(支持 Java ME 标准 CLDC 1.0 和 MIDP 2.0)，适合多种屏幕尺寸，支持按键、触屏等输入方式。
 
 === 欢迎登录 www.xqbase.com 免费下载PC版 象棋巫师 ===
-★ 象棋巫师(包括魔法学校)：http://www.xqbase.com/xqwizard/xqwizard.htm
-★ 象棋小巫师：　　　　　　http://www.xqbase.com/xqwizard/xqwlight.htm
