@@ -857,7 +857,7 @@ If sdThis = 0 Eqv App_bFlipped Then
     App_frmMain.lblTimeElapsedUp.Caption = TimeText(Timer_nTimeElapsed(sdThis))
 Else
     If Timer_nDepth = 0 Then
-        App_frmMain.lblTimeLeftUp1.Caption = L("时限", "時限")
+        App_frmMain.lblTimeLeftDown1.Caption = L("时限", "時限")
         App_frmMain.lblTimeLeftDown.Caption = TimeText(Timer_nTimeLeft(sdThis))
         If Options_nLanguage = LANGUAGE_ZH_CN Then
             App_frmMain.lblTimeRuleDown.Caption = IIf(Timer_bIncMode, "每步加 " & Timer_nIncTime & " 秒", _
@@ -868,7 +868,7 @@ Else
         End If
         App_frmMain.lblTimeElapsedDown.Caption = TimeText(Timer_nTimeElapsed(sdThis))
     Else
-        App_frmMain.lblTimeLeftUp1.Caption = L("级别", "級別")
+        App_frmMain.lblTimeLeftDown1.Caption = L("级别", "級別")
         App_frmMain.lblTimeLeftDown.Caption = LevelString(Timer_nDepth)
         App_frmMain.lblTimeRuleDown.Caption = ""
     End If
@@ -1270,17 +1270,45 @@ Game_cntCurr = Game_cntCurr - Game_sdCurr
 End Sub
 
 ' 前进一个着法
-Public Sub MoveForward()
+Public Sub MoveForward(Optional ByVal nSteps As Integer = 0)
 
-Dim nMoveStatus As Long
+Dim nMoveStatus As Long, mv As Long, sqSrc As Integer, sqDst As Integer
+Dim i As Integer, xSrc As Long, ySrc As Long, xDst As Long, yDst As Long, img As Image
+
 Game_nCurrMove = Game_nCurrMove + 1
-CchessTryMove Game_posIrrev(Game_nCurrIrrev), nMoveStatus, Game_mvMove(Game_nCurrMove)
+mv = Game_mvMove(Game_nCurrMove)
+sqSrc = Src(mv)
+sqDst = Dst(mv)
+' 显示动画开始
+If nSteps > 0 Then
+    yDst = sqDst \ 16
+    xDst = sqDst Mod 16
+    Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - yDst) * 9 + 11 - xDst, (yDst - 3) * 9 + xDst - 3))
+    xDst = img.Left
+    yDst = img.Top
+    ySrc = sqSrc \ 16
+    xSrc = sqSrc Mod 16
+    Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - ySrc) * 9 + 11 - xSrc, (ySrc - 3) * 9 + xSrc - 3))
+    xSrc = img.Left
+    ySrc = img.Top
+    img.ZOrder
+    For i = 1 To nSteps
+        img.Move (xSrc * (nSteps - i) + xDst * i) \ nSteps, (ySrc * (nSteps - i) + yDst * i) \ nSteps
+        img.Refresh
+        Sleep 20
+    Next
+    img.Picture = App_picPieces(0)
+    img.Move xSrc, ySrc
+    img.Refresh
+End If
+' 显示动画结束
+CchessTryMove Game_posIrrev(Game_nCurrIrrev), nMoveStatus, mv
 If (nMoveStatus And MOVE_CAPTURE) <> 0 Then
     CchessUndoMove Game_posIrrev(Game_nCurrIrrev)
     Game_nCurrIrrev = Game_nCurrIrrev + 1
 End If
-DrawSquare Dst(Game_mvMove(Game_nCurrMove))
-DrawSquare Src(Game_mvMove(Game_nCurrMove))
+DrawSquare sqDst
+DrawSquare sqSrc
 Game_sdCurr = 1 - Game_sdCurr
 Game_cntCurr = Game_cntCurr + 1 - Game_sdCurr
 
@@ -1547,9 +1575,11 @@ Game_szMoveText(2, Game_nMaxMove) = szMoveIccsText
 App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) & _
         Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
 Game_mvMove(Game_nMaxMove) = mv
-MoveForward
 If bEcho Then
+    MoveForward Options_nMoveDelay * 5
     MoveFlush
+Else
+    MoveForward
 End If
 AnalyzeEcco
 If (nMoveStatus And MOVE_MATE) = 0 Then
@@ -2039,12 +2069,12 @@ If Left(szReceived, 9) = "bestmove " Then
     Case BUSY_ANALYZE
         Engine_nStatus = IDLE_REST
     Case BUSY_THINK
-        If Options_nMoveDelay > 0 Then
-            Sleep Options_nMoveDelay * 1000
-        End If
         Do While Game_nCurrMove < Game_nMaxMove
             MoveForward
         Loop
+        If Options_nMoveDelay > 0 Then
+            Sleep Options_nMoveDelay * 800
+        End If
         If Options_bAllowResign And Right(szReceived, 7) = " resign" Then
             EngineResign
         ElseIf Engine_bDraw And Right(szReceived, 5) = " draw" Then
@@ -3156,7 +3186,7 @@ If App_bPlay Then
     dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
     If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
         Timer_dfLastTime = Timer
-        MoveForward
+        MoveForward Options_nPlayIntv * 5
         MoveFlush
     End If
 End If
