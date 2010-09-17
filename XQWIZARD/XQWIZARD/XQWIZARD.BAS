@@ -132,7 +132,6 @@ Public App_szEndgames(0 To MAX_ENDGAMES - 1) As String ' 读入的残局
 ' 全局变量——选项
 Public Options_bAutoPlay        As Boolean  ' 自动播放
 Public Options_nPlayIntv        As Integer  ' 播放间隔(秒)
-Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_bAutoFlip        As Boolean  ' 自动翻转棋盘
 Public Options_bEngineName      As Boolean  ' 显示引擎名称
 Public Options_bAllowResign     As Boolean  ' 允许引擎认输
@@ -2793,7 +2792,6 @@ Public Sub LoadRegs2()
 
 Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
-Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
 Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
@@ -2852,7 +2850,6 @@ Public Sub SaveRegs2()
 
 SaveSetting "XQWizard", "Options", "AutoPlay", IIf(Options_bAutoPlay, "1", "0")
 SaveSetting "XQWizard", "Options", "PlayIntv", Options_nPlayIntv
-SaveSetting "XQWizard", "Options", "MoveDelay", Options_nMoveDelay
 SaveSetting "XQWizard", "Options", "AutoFlip", IIf(Options_bAutoFlip, "1", "0")
 SaveSetting "XQWizard", "Options", "EngineName", IIf(Options_bEngineName, "1", "0")
 SaveSetting "XQWizard", "Options", "AlwaysPonder", IIf(Options_bAlwaysPonder, "1", "0")

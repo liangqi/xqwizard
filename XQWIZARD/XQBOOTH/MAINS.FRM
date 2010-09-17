@@ -40,32 +40,6 @@ Begin VB.Form frmMainSmall
       Top             =   6240
       Width           =   975
    End
-   Begin VB.CommandButton btnHint 
-      Caption         =   "提示"
-      Height          =   495
-      Left            =   0
-      TabIndex        =   1
-      TabStop         =   0   'False
-      Top             =   6720
-      Width           =   975
-   End
-   Begin VB.CommandButton btnRetract 
-      Caption         =   "悔棋"
-      Height          =   495
-      Left            =   0
-      TabIndex        =   0
-      TabStop         =   0   'False
-      Top             =   6240
-      Width           =   975
-   End
-   Begin InetCtlsObjects.Inet inet 
-      Left            =   0
-      Top             =   0
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-      RequestTimeout  =   10
-   End
    Begin SHDocVwCtl.WebBrowser web 
       Height          =   975
       Left            =   960
@@ -91,6 +65,32 @@ Begin VB.Form frmMainSmall
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
       Location        =   ""
+   End
+   Begin VB.CommandButton btnRetract 
+      Caption         =   "悔棋"
+      Height          =   495
+      Left            =   0
+      TabIndex        =   1
+      TabStop         =   0   'False
+      Top             =   6720
+      Width           =   975
+   End
+   Begin VB.CommandButton btnHint 
+      Caption         =   "提示"
+      Height          =   495
+      Left            =   0
+      TabIndex        =   0
+      TabStop         =   0   'False
+      Top             =   6240
+      Width           =   975
+   End
+   Begin InetCtlsObjects.Inet inet 
+      Left            =   0
+      Top             =   0
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      _Version        =   393216
+      RequestTimeout  =   10
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -1071,7 +1071,7 @@ Attribute VB_Exposed = False
 ' MAINS.FRM - Source Code for XiangQi Booth, Part II
 '
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 
 Option Explicit
@@ -1110,37 +1110,27 @@ End Sub
 
 Private Sub Form_Unload(nCancel As Integer)
 
-If App_nPhase = PHASE_BUSY Then
-    nCancel = 1
-Else
-    App_bRunning = False
-End If
+App_bRunning = False
 
 End Sub
 
 Private Sub mnGameSelect_Click()
 
-If App_nPhase <> PHASE_BUSY Then
-    frmSelect.Show vbModal, Me
-End If
+frmSelect.Show vbModal, Me
 
 End Sub
 
 Private Sub mnGameNext_Click()
 
-If App_nPhase <> PHASE_BUSY Then
-    ClearHint
-    Gui_nCurr = Gui_nCurr + 1
-    LoadGame
-End If
+ClearHint
+Gui_nCurr = Gui_nCurr + 1
+LoadGame
 
 End Sub
 
 Private Sub mnGameRestart_Click()
 
-If App_nPhase <> PHASE_BUSY Then
-    LoadGame
-End If
+LoadGame
 
 End Sub
 
@@ -1152,13 +1142,13 @@ End Sub
 
 Private Sub mnGameHint_Click()
 
-TryHint
+Hint
 
 End Sub
 
 Private Sub mnGameRetract_Click()
 
-TryRetract
+Retract
 
 End Sub
 
@@ -1170,9 +1160,7 @@ End Sub
 
 Private Sub mnGameExit_Click()
 
-If App_nPhase <> PHASE_BUSY Then
-    Unload Me
-End If
+Unload Me
 
 End Sub
 
@@ -1287,7 +1275,7 @@ Private Sub btnHint_MouseDown(nButton As Integer, nShift As Integer, x As Single
 
 btnHint.Enabled = False
 btnHint.Enabled = True
-TryHint
+Hint
 
 End Sub
 
@@ -1295,7 +1283,7 @@ Private Sub btnRetract_MouseDown(nButton As Integer, nShift As Integer, x As Sin
 
 btnRetract.Enabled = False
 btnRetract.Enabled = True
-TryRetract
+Retract
 
 End Sub
 

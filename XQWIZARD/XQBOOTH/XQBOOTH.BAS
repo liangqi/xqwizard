@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 
 Option Explicit
@@ -21,9 +21,8 @@ Public Const DRAW_MATE          As Boolean = True
 Public Const DRAW_REFRESH       As Boolean = True
 ' 全局常量——闯关阶段
 Public Const PHASE_READY        As Integer = 0
-Public Const PHASE_BUSY         As Integer = 1
-Public Const PHASE_WIN          As Integer = 2
-Public Const PHASE_LOSS         As Integer = 3
+Public Const PHASE_WIN          As Integer = 1
+Public Const PHASE_LOSS         As Integer = 2
 ' 全局常量——提示状态
 Public Const HINT_NONE          As Integer = 0
 Public Const HINT_RESTART       As Integer = 1
@@ -39,7 +38,6 @@ Public App_pos                  As PositionStruct   ' 棋局
 Public App_mvLast               As Long     ' 最新的一个着法，棋盘上有标记
 Public App_sqSelected           As Integer  ' 鼠标选中的棋子
 Public App_nPhase               As Integer  ' 闯关阶段
-Public App_nPhaseSaved          As Integer  ' 待恢复的闯关阶段
 Public App_nUsersEvent          As Integer  ' 用户中心事件
 Public App_nHint                As Integer  ' 提示状态
 Public App_dfHintTime           As Double   ' 提示允许时间
@@ -142,6 +140,40 @@ Next
 
 End Sub
 
+' 动画
+Public Sub Animate(ByVal mv As Long, ByVal nSteps As Integer)
+
+Dim sqSrc As Integer, sqDst As Integer
+Dim i As Integer, xSrc As Long, ySrc As Long, xDst As Long, yDst As Long, img As Image
+
+sqSrc = Src(mv)
+sqDst = Dst(mv)
+yDst = sqDst \ 16
+xDst = sqDst Mod 16
+Set img = App_frmMain.imgSquares((yDst - 3) * 9 + xDst - 3)
+xDst = img.Left
+yDst = img.Top
+ySrc = sqSrc \ 16
+xSrc = sqSrc Mod 16
+Set img = App_frmMain.imgSquares((ySrc - 3) * 9 + xSrc - 3)
+xSrc = img.Left
+ySrc = img.Top
+img.ZOrder
+For i = 1 To nSteps
+    img.Move (xSrc * (nSteps - i) + xDst * i) \ nSteps, (ySrc * (nSteps - i) + yDst * i) \ nSteps
+    img.Refresh
+    Sleep 20
+Next
+If Options_bLargeGui Then
+    img.Picture = frmHide.imgPiecesLarge(0).Picture
+Else
+    img.Picture = frmHide.imgPiecesSmall(0).Picture
+End If
+img.Move xSrc, ySrc
+img.Refresh
+
+End Sub
+
 ' 点击棋盘
 Public Sub ClickSquare(ByVal sq As Integer)
 
@@ -162,25 +194,30 @@ If (pc And (16 + App_pos.sdPlayer * 16)) <> 0 Then
 ElseIf App_sqSelected > 0 Then
     mv = Move(App_sqSelected, sq)
     If CchessTryMove(App_pos, nStatus, mv) Then
-        DrawSquare Src(mv), DRAW_SELECTED
-        DrawSquare Dst(mv), DRAW_SELECTED
+        If Options_nMoveDelay > 0 Then
+            Animate mv, Options_nMoveDelay * 5
+        End If
+        ' 随后电脑思考可能会阻塞，所以要强制刷新
+        DrawSquare Src(mv), DRAW_SELECTED, , DRAW_REFRESH
+        DrawSquare Dst(mv), DRAW_SELECTED, , DRAW_REFRESH
         App_mvLast = mv
         App_sqSelected = 0
         App_nPhase = GetResult(nStatus)
         If App_nPhase = PHASE_READY Then
-            App_nPhase = PHASE_BUSY
-            App_frmMain.MousePointer = vbHourglass
             mv = GetBestMove
             If App_mvLast > 0 Then
                 DrawSquare Src(App_mvLast)
                 DrawSquare Dst(App_mvLast)
             End If
             CchessTryMove App_pos, nStatus, mv
+            If Options_nMoveDelay > 0 Then
+                Sleep Options_nMoveDelay * 800
+                Animate mv, Options_nMoveDelay * 5
+            End If
             DrawSquare Src(mv), DRAW_SELECTED
             DrawSquare Dst(mv), DRAW_SELECTED
             App_mvLast = mv
             App_nPhase = GetResult(nStatus)
-            App_frmMain.MousePointer = vbDefault
         End If
         If App_nPhase = PHASE_WIN And App_nHint = HINT_RETRY Then
             If MsgBox(L("您是使用提示功能通过本关的，是否不用提示再试一次？", _
@@ -258,6 +295,8 @@ Public Function GetBestMove() As Long
 
 Dim lpStr As Long, mv As Long, nStatus As Long
 Dim i As Integer, sz As String
+
+App_frmMain.MousePointer = vbHourglass
 sz = "position fen " & App_szEndgames(Gui_nCurr)
 If App_pos.nMoveNum > 1 Then
     sz = sz & " moves"
@@ -271,7 +310,7 @@ mv = 0
 Do While mv = 0
     lpStr = PipeLineInput(Engine_pipe)
     If lpStr = 0 Then
-        DoEvents
+        ' DoEvents
         Sleep 1
     Else
         sz = AllocString(lpStr)
@@ -281,73 +320,15 @@ Do While mv = 0
     End If
 Loop
 GetBestMove = mv
+App_frmMain.MousePointer = vbDefault
 
 End Function
-
-' 提示
-Public Sub DoHint()
-
-Dim mv As Long, i As Integer
-
-App_nHint = HINT_RETRY
-mv = GetBestMove
-App_frmMain.MousePointer = vbDefault
-If App_sqSelected > 0 Then
-    DrawSquare App_sqSelected
-ElseIf App_mvLast > 0 Then
-    DrawSquare Src(App_mvLast)
-    DrawSquare Dst(App_mvLast)
-End If
-For i = 1 To 5
-    DrawSquare Src(mv), DRAW_SELECTED, , DRAW_REFRESH
-    Sleep 250
-    DrawSquare Dst(mv), DRAW_SELECTED, , DRAW_REFRESH
-    DrawSquare Src(mv), , , DRAW_REFRESH
-    Sleep 250
-    DrawSquare Dst(mv), , , DRAW_REFRESH
-Next
-If App_sqSelected > 0 Then
-    DrawSquare App_sqSelected, DRAW_SELECTED
-ElseIf App_mvLast > 0 Then
-    DrawSquare Src(App_mvLast), DRAW_SELECTED
-    DrawSquare Dst(App_mvLast), DRAW_SELECTED
-End If
-
-End Sub
-
-' 悔棋
-Public Sub DoRetract()
-
-If App_pos.nDistance = 0 Then
-    MsgBox L("悔棋失败。", "悔棋失敗。"), vbInformation
-    Exit Sub
-End If
-If App_pos.nDistance Mod 2 = 0 Then
-    CchessUndoMove App_pos
-End If
-CchessUndoMove App_pos
-BoardFlush
-App_sqSelected = 0
-App_mvLast = 0
-' DoRetract 都是在 EnterBusy 后调用的，所以要修改 nPhaseSaved 而不是 nPhase
-App_nPhaseSaved = PHASE_READY
-If App_pos.nDistance = 0 Then
-    App_frmMain.mnGameRetract.Enabled = False
-    App_frmMain.btnRetract.Enabled = False
-End If
-App_frmMain.mnGameHint.Enabled = True
-App_frmMain.btnHint.Enabled = True
-
-End Sub
 
 ' 获取存档
 Public Sub OpenCode()
 
 Dim szCode As String, nScore As Long, bLoad As Boolean
 
-If App_nPhase = PHASE_BUSY Then
-    Exit Sub
-End If
 szCode = InputBox(L("您可以把存档码更新到其他电脑或手机上，也可以从其他电脑或手机上更新到这里。", _
         "您可以把存檔碼更新到其他電腦或手機上，也可以從其他電腦或手機上更新到這裡。"), _
         L("存档码", "存檔碼"), Mid(100000000 + Encrypt(Gui_nLast), 2))
@@ -384,30 +365,10 @@ End If
 
 End Sub
 
-' 等待用户中心响应开始
-Public Sub EnterBusy()
-
-App_nPhaseSaved = App_nPhase
-App_nPhase = PHASE_BUSY
-App_frmMain.MousePointer = vbHourglass
-
-End Sub
-
-' 等待用户中心响应结束
-Public Sub LeaveBusy()
-
-App_nPhase = App_nPhaseSaved
-App_frmMain.MousePointer = vbDefault
-
-End Sub
-
 ' 尝试提示
-Public Sub TryHint()
+Public Sub Hint()
 
-Dim dfThinkTime As Double
-If App_nPhase = PHASE_BUSY Then
-    Exit Sub
-End If
+Dim dfThinkTime As Double, mv As Long, i As Integer
 
 dfThinkTime = Timer
 dfThinkTime = dfThinkTime + IIf(dfThinkTime < App_dfHintTime, 86400#, 0#) - App_dfHintTime
@@ -417,20 +378,52 @@ If dfThinkTime / 60 < 1 + Gui_nCurr \ 1000 Then
     Exit Sub
 End If
 
-EnterBusy
-DoHint
-LeaveBusy
+App_nHint = HINT_RETRY
+mv = GetBestMove
+If App_sqSelected > 0 Then
+    DrawSquare App_sqSelected
+ElseIf App_mvLast > 0 Then
+    DrawSquare Src(App_mvLast)
+    DrawSquare Dst(App_mvLast)
+End If
+For i = 1 To 5
+    DrawSquare Src(mv), DRAW_SELECTED, , DRAW_REFRESH
+    Sleep 250
+    DrawSquare Dst(mv), DRAW_SELECTED, , DRAW_REFRESH
+    DrawSquare Src(mv), , , DRAW_REFRESH
+    Sleep 250
+    DrawSquare Dst(mv), , , DRAW_REFRESH
+Next
+If App_sqSelected > 0 Then
+    DrawSquare App_sqSelected, DRAW_SELECTED
+ElseIf App_mvLast > 0 Then
+    DrawSquare Src(App_mvLast), DRAW_SELECTED
+    DrawSquare Dst(App_mvLast), DRAW_SELECTED
+End If
 
 End Sub
 
 ' 尝试悔棋
-Public Sub TryRetract()
+Public Sub Retract()
 
-If App_nPhase <> PHASE_BUSY Then
-    EnterBusy
-    DoRetract
-    LeaveBusy
+If App_pos.nDistance = 0 Then
+    MsgBox L("悔棋失败。", "悔棋失敗。"), vbInformation
+    Exit Sub
 End If
+If App_pos.nDistance Mod 2 = 0 Then
+    CchessUndoMove App_pos
+End If
+CchessUndoMove App_pos
+BoardFlush
+App_sqSelected = 0
+App_mvLast = 0
+App_nPhase = PHASE_READY
+If App_pos.nDistance = 0 Then
+    App_frmMain.mnGameRetract.Enabled = False
+    App_frmMain.btnRetract.Enabled = False
+End If
+App_frmMain.mnGameHint.Enabled = True
+App_frmMain.btnHint.Enabled = True
 
 End Sub
 

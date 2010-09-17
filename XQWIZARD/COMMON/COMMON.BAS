@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -122,6 +122,7 @@ Public Const LANGUAGE_ZH_CN     As Integer = 0
 Public Const LANGUAGE_ZH_TW     As Integer = 1
 Public Const LANGUAGE_MAX       As Integer = 2
 ' 全局变量——选项
+Public Options_nMoveDelay       As Integer  ' 走子延时
 Public Options_nLanguage        As Integer  ' 语言
 Public Options_bLargeGui        As Boolean  ' 大界面
 Public Options_nBoardS          As Integer  ' 小界面的棋盘
@@ -428,6 +429,7 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
+Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
 Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", IIf(GetACP = 950, "1", "0")), 0, LANGUAGE_MAX - 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)
@@ -445,6 +447,7 @@ End Sub
 ' 保存参数到注册表
 Public Sub SaveRegs()
 
+SaveSetting "XQWizard", "Options", "MoveDelay", Options_nMoveDelay
 SaveSetting "XQWizard", "Options", "BoardSmall", Options_nBoardS
 SaveSetting "XQWizard", "Options", "PiecesSmall", Options_nPiecesS
 SaveSetting "XQWizard", "Options", "BoardLarge", Options_nBoardL
