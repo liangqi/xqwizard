@@ -64,7 +64,7 @@ Begin VB.Form frmOptions
       End
    End
    Begin VB.Frame frmEngine 
-      Caption         =   "电脑"
+      Caption         =   "电脑对弈"
       Height          =   2415
       Left            =   3480
       TabIndex        =   11
@@ -133,7 +133,7 @@ Begin VB.Form frmOptions
          Width           =   1455
       End
       Begin VB.CheckBox chkEngineName 
-         Caption         =   "显示引擎名称"
+         Caption         =   "显示对弈双方"
          Height          =   255
          Left            =   1680
          TabIndex        =   17
@@ -178,20 +178,20 @@ Begin VB.Form frmOptions
          Width           =   735
       End
       Begin VB.Label lblUser 
-         Caption         =   "人机对弈用户"
+         Caption         =   "棋手名字"
          Height          =   255
-         Left            =   480
+         Left            =   840
          TabIndex        =   24
          Top             =   2040
-         Width           =   1095
+         Width           =   855
       End
       Begin VB.Label lblEnginePlay 
-         Caption         =   "新局电脑状态"
+         Caption         =   "电脑角色"
          Height          =   255
-         Left            =   480
+         Left            =   840
          TabIndex        =   22
          Top             =   1680
-         Width           =   1095
+         Width           =   855
       End
    End
    Begin VB.CommandButton btnCancel 
@@ -352,17 +352,17 @@ chkShowNew.Caption = "啟動時顯示“開始對局”對話框"
 chkTryAgain.Caption = "棋局結束後提示“再來一局”"
 chkPromptSave.Caption = "提示保存棋局"
 chkAutoSave.Caption = "自動保存棋局"
-frmEngine.Caption = "電腦"
+frmEngine.Caption = "電腦對弈"
 lblMoveDelay.Caption = "走子延時"
 lblDelaySec.Caption = "秒"
 chkAutoFlip.Caption = "自動翻轉棋盤"
-chkEngineName.Caption = "顯示引擎名稱"
+chkEngineName.Caption = "顯示對弈雙方"
 chkAlwaysPonder.Caption = "啟用後台思考"
 chkAllowResign.Caption = "允許提和認輸"
 chkEngineTime.Caption = "顯示思考時間"
 chkStatusBar.Caption = "輸出到狀態欄"
-lblEnginePlay.Caption = "新局電腦狀態"
-lblUser.Caption = "人機對弈用戶"
+lblEnginePlay.Caption = "電腦角色"
+lblUser.Caption = "棋手名字"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
 

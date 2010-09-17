@@ -1442,6 +1442,19 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnMovePromote 
          Caption         =   "升变(&P)"
       End
+      Begin VB.Menu mnMoveRetract 
+         Caption         =   "悔棋(&T)"
+         Shortcut        =   +{DEL}
+      End
+      Begin VB.Menu mnMoveBan 
+         Caption         =   "设为禁着(&N)"
+      End
+      Begin VB.Menu mnMoveDraw 
+         Caption         =   "提和/接受提和(&D)"
+      End
+      Begin VB.Menu mnMoveResign 
+         Caption         =   "认输(&G)"
+      End
       Begin VB.Menu mnMoveSep1 
          Caption         =   "-"
       End
@@ -1461,7 +1474,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnMoveDel 
-         Caption         =   "删除(&D)"
+         Caption         =   "删除(&L)"
          Shortcut        =   {DEL}
       End
       Begin VB.Menu mnMoveSep3 
@@ -1730,24 +1743,8 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnEngineSep3 
          Caption         =   "-"
       End
-      Begin VB.Menu mnEngineRetract 
-         Caption         =   "悔棋(&T)"
-         Shortcut        =   +{DEL}
-      End
-      Begin VB.Menu mnEngineBan 
-         Caption         =   "设为禁着(&N)"
-      End
-      Begin VB.Menu mnEngineDraw 
-         Caption         =   "提和/接受提和(&D)"
-      End
-      Begin VB.Menu mnEngineResign 
-         Caption         =   "认输(&G)"
-      End
-      Begin VB.Menu mnEngineSep4 
-         Caption         =   "-"
-      End
       Begin VB.Menu mnEngineStop 
-         Caption         =   "停止思考/立即走棋(&O)"
+         Caption         =   "停止思考/立即走棋(&T)"
          Shortcut        =   ^T
       End
    End
@@ -2154,14 +2151,8 @@ AddMove mdlCChess.Move(App_sqSelected, App_sqSelected), MOVE_WITH_ECHO
 
 End Sub
 
-Private Sub mnMoveDel_Click()
+Private Sub mnMoveRetract_Click()
 
-If Game_nCurrMove < Game_nMaxMove Then
-    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & vbCrLf & _
-            L("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
-        Exit Sub
-    End If
-End If
 If Engine_nStatus > IDLE_UNLOAD Then
     If Engine_nStatus > BUSY_WAIT Then
         Engine_nStatus = BUSY_WAIT
@@ -2170,10 +2161,65 @@ If Engine_nStatus > IDLE_UNLOAD Then
     Engine_nStatus = IDLE_READY
 End If
 MoveBack
+If Game_nCurrMove > 0 Then
+    MoveBack
+End If
 MoveCut
 MoveFlush
 FileUpdated
 AnalyzeEcco
+
+End Sub
+
+Private Sub mnMoveBan_Click()
+
+Dim mv As Long
+mv = Game_mvMove(Game_nCurrMove)
+MoveBack
+MoveCut
+MoveFlush
+FileUpdated
+AnalyzeEcco
+Engine_mvBan = mv
+
+End Sub
+
+Private Sub mnMoveDraw_Click()
+
+If Engine_bDraw Then
+    Game_nResult = RESULT_DRAW
+    lblResult = ResultString
+    Timer_bEnabled = False
+    mnEngineLevel.Checked = False
+    tlb.Buttons("EngineLevel").Value = tbrUnpressed
+    GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
+            L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
+Else
+    If mnMoveDraw.Checked Then
+        MsgBox L("放弃提和。", "放棄提和。"), vbInformation
+        mnMoveDraw.Checked = False
+    Else
+        MsgBox L("请走一着棋，然后等待电脑接受或拒绝提和。", _
+                "請走一著棋，然後等待電腦接受或拒絕提和。") & vbCrLf & vbCrLf & _
+                L("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
+                "如果電腦拒絕提和，則不會理睬，而是繼續走棋。"), vbInformation
+        mnMoveDraw.Checked = True
+    End If
+End If
+
+End Sub
+
+Private Sub mnMoveResign_Click()
+
+If MsgBox(L("真的要认输吗？", "真的要認輸嗎？"), vbQuestion + vbYesNo) <> vbYes Then
+    Exit Sub
+End If
+Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+lblResult = ResultString
+Timer_bEnabled = False
+mnEngineLevel.Checked = False
+tlb.Buttons("EngineLevel").Value = tbrUnpressed
+GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_LOSS
 
 End Sub
 
@@ -2206,6 +2252,29 @@ Do While Game_nCurrMove < Game_nMaxMove
     MoveForward
 Loop
 MoveFlush
+
+End Sub
+
+Private Sub mnMoveDel_Click()
+
+If Game_nCurrMove < Game_nMaxMove Then
+    If MsgBox(L("必须清除以后所有的着法。", "必須清除以後所有的著法") & vbCrLf & vbCrLf & _
+            L("是否继续？", "是否繼續？"), vbYesNo + vbQuestion) <> vbYes Then
+        Exit Sub
+    End If
+End If
+If Engine_nStatus > IDLE_UNLOAD Then
+    If Engine_nStatus > BUSY_WAIT Then
+        Engine_nStatus = BUSY_WAIT
+        StopEngine
+    End If
+    Engine_nStatus = IDLE_READY
+End If
+MoveBack
+MoveCut
+MoveFlush
+FileUpdated
+AnalyzeEcco
 
 End Sub
 
@@ -2532,78 +2601,6 @@ Else
     tlb.Buttons("EngineAnalyze").Value = tbrPressed
     frmThink.Show 0, Me
 End If
-
-End Sub
-
-Private Sub mnEngineRetract_Click()
-
-If Engine_nStatus > IDLE_UNLOAD Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
-End If
-MoveBack
-If Game_nCurrMove > 0 Then
-    MoveBack
-End If
-MoveCut
-MoveFlush
-FileUpdated
-AnalyzeEcco
-
-End Sub
-
-Private Sub mnEngineBan_Click()
-
-Dim mv As Long
-mv = Game_mvMove(Game_nCurrMove)
-MoveBack
-MoveCut
-MoveFlush
-FileUpdated
-AnalyzeEcco
-Engine_mvBan = mv
-
-End Sub
-
-Private Sub mnEngineDraw_Click()
-
-If Engine_bDraw Then
-    Game_nResult = RESULT_DRAW
-    lblResult = ResultString
-    Timer_bEnabled = False
-    mnEngineLevel.Checked = False
-    tlb.Buttons("EngineLevel").Value = tbrUnpressed
-    GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
-            L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
-Else
-    If mnEngineDraw.Checked Then
-        MsgBox L("放弃提和。", "放棄提和。"), vbInformation
-        mnEngineDraw.Checked = False
-    Else
-        MsgBox L("请走一着棋，然后等待电脑接受或拒绝提和。", _
-                "請走一著棋，然後等待電腦接受或拒絕提和。") & vbCrLf & vbCrLf & _
-                L("如果电脑拒绝提和，则不会理睬，而是继续走棋。", _
-                "如果電腦拒絕提和，則不會理睬，而是繼續走棋。"), vbInformation
-        mnEngineDraw.Checked = True
-    End If
-End If
-
-End Sub
-
-Private Sub mnEngineResign_Click()
-
-If MsgBox(L("真的要认输吗？", "真的要認輸嗎？"), vbQuestion + vbYesNo) <> vbYes Then
-    Exit Sub
-End If
-Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-lblResult = ResultString
-Timer_bEnabled = False
-mnEngineLevel.Checked = False
-tlb.Buttons("EngineLevel").Value = tbrUnpressed
-GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_LOSS
 
 End Sub
 

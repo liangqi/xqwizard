@@ -1222,8 +1222,8 @@ App_frmMain.mnMoveForward.Enabled = bNotEnd
 App_frmMain.tlb.Buttons("MoveForward").Enabled = bNotEnd
 App_frmMain.mnMoveEnd.Enabled = bNotEnd
 App_frmMain.tlb.Buttons("MoveEnd").Enabled = bNotEnd
-App_frmMain.mnEngineRetract.Enabled = bNotBegin And Not bNotEnd
-App_frmMain.mnEngineBan.Enabled = bNotBegin And Not bNotEnd
+App_frmMain.mnMoveRetract.Enabled = bNotBegin And Not bNotEnd
+App_frmMain.mnMoveBan.Enabled = bNotBegin And Not bNotEnd
 If Not bNotEnd Then
     App_bPlay = False
     App_frmMain.mnWizardPlay.Checked = False
@@ -1233,8 +1233,8 @@ App_frmMain.txtComment.Text = Game_szComment(Game_nCurrMove)
 App_frmMain.Icon = IIf(Game_sdMax = 0, frmHide2.imgFormRed.Picture, frmHide2.imgFormBlack.Picture)
 ' 如果不是电脑走，那么显示“提和”与“认输”
 bComputer = IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack)
-App_frmMain.mnEngineDraw.Enabled = Not bComputer
-App_frmMain.mnEngineResign.Enabled = Not bComputer
+App_frmMain.mnMoveDraw.Enabled = Not bComputer
+App_frmMain.mnMoveResign.Enabled = Not bComputer
 ' 如果处于“电脑分析”模式，那么停止分析
 If Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
     If Engine_nStatus > BUSY_WAIT Then
@@ -1643,8 +1643,8 @@ Else
     App_frmMain.mnEngineLevel.Checked = False
     App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
 End If
-If App_frmMain.mnEngineDraw.Checked Then
-    App_frmMain.mnEngineDraw.Checked = False
+If App_frmMain.mnMoveDraw.Checked Then
+    App_frmMain.mnMoveDraw.Checked = False
     Engine_bDraw = True
 End If
 
@@ -1720,7 +1720,7 @@ End Sub
 ' 根据引擎走子方翻转棋盘并显示对阵双方
 Public Sub EnginePlayer()
 
-Dim szName As String, szSlaveName As String
+Dim szName As String, szSlaveName As String, szUser As String
 Engine_bPonder = False
 App_frmMain.mnEnginePonder.Checked = False
 If Engine_bRed Eqv Engine_bBlack Then
@@ -1742,8 +1742,9 @@ App_frmMain.tlb.Buttons("PosFlip").Value = IIf(App_bFlipped, tbrPressed, tbrUnpr
 If Options_bEngineName Then
     szName = IIf(Engine_szName = "ElephantEye", L("象棋巫师", "象棋巫師"), Engine_szName)
     szSlaveName = IIf(Engine_szSlaveName = "ElephantEye", L("象棋巫师", "象棋巫師"), Engine_szSlaveName)
-    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, szSlaveName, szName), Options_szUser)
-    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, szSlaveName, szName), Options_szUser)
+    szUser = IIf(Options_szUser = "", IIf(Timer_nDepth < 0, LevelString(Timer_nDepth), ""), Options_szUser)
+    Game_szRedPlayer = IIf(Engine_bRed, IIf(Engine_bSlaveRed, szSlaveName, szName), szUser)
+    Game_szBlackPlayer = IIf(Engine_bBlack, IIf(Engine_bSlaveBlack, szSlaveName, szName), szUser)
 End If
 LabelFlush
 StartTimer
@@ -2203,9 +2204,9 @@ End If
 App_frmMain.mnEngineAnalyze.Enabled = bLoaded
 App_frmMain.tlb.Buttons("EngineAnalyze").Enabled = bLoaded
 App_frmMain.mnEngineStop.Enabled = False
-App_frmMain.mnEngineRetract.Enabled = bLoaded
-App_frmMain.mnEngineBan.Enabled = bLoaded
-App_frmMain.mnEngineDraw.Checked = False
+App_frmMain.mnMoveRetract.Enabled = bLoaded
+App_frmMain.mnMoveBan.Enabled = bLoaded
+App_frmMain.mnMoveDraw.Checked = False
 App_frmMain.tlb.Buttons("EngineStop").Enabled = False
 App_frmMain.mnHelpEngine.Enabled = bLoaded
 If Not bLoaded Then
@@ -2797,12 +2798,12 @@ Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "
 Options_bAlwaysPonder = (Str2Int(GetSetting("XQWizard", "Options", "AlwaysPonder", "0")) <> 0)
 Options_bAllowResign = (Str2Int(GetSetting("XQWizard", "Options", "AllowResign", "1")) <> 0)
 Options_bEngineTime = (Str2Int(GetSetting("XQWizard", "Options", "EngineTime", "0")) <> 0)
-Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "1")) <> 0)
+Options_bStatusBar = (Str2Int(GetSetting("XQWizard", "Options", "StatusBar", "0")) <> 0)
 Options_nEnginePlay = Str2Int(GetSetting("XQWizard", "Options", "EnginePlay", "3"), 0, ENGINE_PLAY_MAX - 1)
 Options_bTopMost = (Str2Int(GetSetting("XQWizard", "Options", "TopMost", "0")) <> 0)
 Options_bPromptSave = (Str2Int(GetSetting("XQWizard", "Options", "PromptSave", "1")) <> 0)
 Options_bAutoSave = (Str2Int(GetSetting("XQWizard", "Options", "AutoSave", "0")) <> 0)
-Options_szUser = GetSetting("XQWizard", "Options", "User", L("象棋巫师测试团队", "象棋巫師測試團隊"))
+Options_szUser = GetSetting("XQWizard", "Options", "User", "")
 Options_bShowNew = (Str2Int(GetSetting("XQWizard", "Options", "ShowNew", "1")) <> 0)
 Options_bTryAgain = (Str2Int(GetSetting("XQWizard", "Options", "TryAgain", "1")) <> 0)
 Gui_nLeft = Str2Int(GetSetting("XQWizard", "Gui", "Left", "480"), 0, Int(Screen.Width * 0.75))
@@ -2948,6 +2949,10 @@ App_frmMain.mnFileExit.Caption = "退出(&X)"
 
 App_frmMain.mnMove.Caption = "著法(&M)"
 App_frmMain.mnMovePromote.Caption = "升變(&P)"
+App_frmMain.mnMoveRetract.Caption = "悔棋(&T)"
+App_frmMain.mnMoveBan.Caption = "設為禁著(&N)"
+App_frmMain.mnMoveDraw.Caption = "提和/接受提和(&D)"
+App_frmMain.mnMoveResign.Caption = "認輸(&G)"
 App_frmMain.mnMoveStart.Caption = "起始局面(&S)"
 App_frmMain.mnMoveBack.Caption = "上一著(&B)"
 App_frmMain.mnMoveForward.Caption = "下一著(&F)"
@@ -3017,10 +3022,6 @@ App_frmMain.mnEngineRed.Caption = "電腦執紅(&R)"
 App_frmMain.mnEngineBlack.Caption = "電腦執黑(&B)"
 App_frmMain.mnEnginePonder.Caption = "後台思考(&P)"
 App_frmMain.mnEngineAnalyze.Caption = "電腦分析(&A)"
-App_frmMain.mnEngineRetract.Caption = "悔棋(&T)"
-App_frmMain.mnEngineBan.Caption = "設為禁著(&N)"
-App_frmMain.mnEngineDraw.Caption = "提和/接受提和(&D)"
-App_frmMain.mnEngineResign.Caption = "認輸(&G)"
 App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
 
 App_frmMain.mnOptions.Caption = "選項(&O)"
@@ -3204,7 +3205,7 @@ If Engine_nStatus = IDLE_READY Then
     End If
 End If
 ' 音乐
-If Options_nMusic < MUSIC_NONE And Not App_bPrevInstance Then
+If Options_nMusic > MUSIC_NONE And Not App_bPrevInstance Then
     If frmHide.mci.Length = frmHide.mci.Position Then
         frmHide.mci.To = 0
         frmHide.mci.Command = "Seek"
@@ -3405,7 +3406,6 @@ For i = 1 To 30
 Next
 If Not App_bPromotion Then
     App_frmMain.mnMovePromote.Visible = False
-    App_frmMain.mnMoveSep1.Visible = False
     App_frmMain.tlb.Buttons("MovePromote").Visible = False
 End If
 On Error Resume Next

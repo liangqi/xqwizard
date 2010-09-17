@@ -701,7 +701,7 @@ App_bRunning = True
 bPrevInstance = App.PrevInstance
 Do While App_bRunning
     ' “Ù¿÷
-    If Options_nMusic < MUSIC_NONE And Not bPrevInstance Then
+    If Options_nMusic > MUSIC_NONE And Not bPrevInstance Then
         If frmHide.mci.Length = frmHide.mci.Position Then
             frmHide.mci.To = 0
             frmHide.mci.Command = "Seek"
