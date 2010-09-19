@@ -2791,7 +2791,7 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs2()
 
-Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "0")) <> 0)
+Options_bAutoPlay = (Str2Int(GetSetting("XQWizard", "Options", "AutoPlay", "1")) <> 0)
 Options_nPlayIntv = Str2Int(GetSetting("XQWizard", "Options", "PlayIntv", "1"), 1, 10)
 Options_bAutoFlip = (Str2Int(GetSetting("XQWizard", "Options", "AutoFlip", "1")) <> 0)
 Options_bEngineName = (Str2Int(GetSetting("XQWizard", "Options", "EngineName", "1")) <> 0)
