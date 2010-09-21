@@ -3252,10 +3252,15 @@ LoadRegs
 If Options_nLanguage <> LANGUAGE_ZH_CN Then
     App.Title = "象棋巫師"
 End If
-' 检查XQSCHOOL.EXE的进程，有的话就不启动象棋巫师
+' 检查XQSCHOOL.EXE和XQARENA.EXE的进程，有的话就不启动象棋巫师
 If FindProcess("XQSCHOOL.EXE") Then
     MsgBox L("象棋巫师魔法学校正在运行，请先退出象棋巫师魔法学校再运行象棋巫师。", _
             "象棋巫師魔法學校正在運行，請先退出象棋巫師魔法學校再運行象棋巫師。"), vbExclamation
+    Exit Sub
+End If
+If FindProcess("XQARENA.EXE") Then
+    MsgBox L("象棋巫师竞技场正在运行，请先退出象棋巫师竞技场再运行象棋巫师魔法学校。", _
+            "象棋巫師競技場正在運行，請先退出象棋巫師競技場再運行象棋巫師魔法學校。"), vbExclamation
     Exit Sub
 End If
 ' 弹出启动画面，继续初始化

@@ -460,7 +460,7 @@ End Sub
 
 Private Sub btnHelp_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm", _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_publish.htm", _
         vbNullString, vbNullString, vbNormalFocus
 
 End Sub
@@ -668,14 +668,14 @@ End Sub
 
 Private Sub lblLocation_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm#location", _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_publish.htm#location", _
         vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub lblFormat_Click()
 
-ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/publish.htm#format", _
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/help_publish.htm#format", _
         vbNullString, vbNullString, vbNormalFocus
 
 End Sub
