@@ -106,20 +106,8 @@ Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqbase2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqbase2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqwlight.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\xqwlight.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\landlord.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\landlord.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\mobilechess.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\mobilechess.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert1.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert1.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert2.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert2.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert3.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
-Source: "ADVERT\advert3.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase_advert.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
+Source: "ADVERT\xqbase_advert.gif"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 ; 棋盘文件(小)
 Source: "IMAGES_S\WOOD.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
 Source: "IMAGES_S\GREEN.GIF"; DestDir: "{app}\IMAGES_S"; Flags: ignoreversion
@@ -767,9 +755,10 @@ Filename: "{app}\XQSCHOOL.EXE"; Description: "开始练习"; Flags: nowait postinsta
 Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinstall skipifsilent; Languages: tw
 
 [Code]
-procedure DeinitializeUninstall();
+function InitializeUninstall(): Boolean;
 var
   ErrorCode: Integer;
 begin
   ShellExec('', 'http://www.xqbase.com/xqwizard/uninstall.htm', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  Result := True;
 end;
