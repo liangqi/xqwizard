@@ -80,9 +80,10 @@ void PipeStruct::Open(const char *szProcFile) {
     si.hStdInput = hStdinRead;
     si.hStdOutput = hStdoutWrite;
     si.hStdError = hStdoutWrite;
-    CreateProcess(NULL, (LPSTR) szProcFile, NULL, NULL, TRUE, DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | IDLE_PRIORITY_CLASS, NULL, NULL, &si, &pi);
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
+    if (CreateProcess(NULL, (LPSTR) szProcFile, NULL, NULL, TRUE, DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | IDLE_PRIORITY_CLASS, NULL, NULL, &si, &pi)) {
+      CloseHandle(pi.hProcess);
+      CloseHandle(pi.hThread);
+    }
     CloseHandle(hStdinRead);
     CloseHandle(hStdoutWrite);
     hInput = hStdoutRead;

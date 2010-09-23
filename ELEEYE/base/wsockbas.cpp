@@ -122,10 +122,7 @@ LONG WINAPI WSBSend(LONG nSocket, LPCSTR lpBuffer, LONG nLen) {
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
 #include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 
 const int INVALID_SOCKET = -1;
 

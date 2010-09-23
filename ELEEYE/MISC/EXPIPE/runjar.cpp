@@ -28,9 +28,11 @@ int main(void) {
   si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
   si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
   si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
-  CreateProcess(NULL, (LPSTR) szCommand, NULL, NULL, TRUE,
+  if (!CreateProcess(NULL, (LPSTR) szCommand, NULL, NULL, TRUE,
       (GetConsoleMode(si.hStdInput, &dw) ? 0 : DETACHED_PROCESS) |
-      CREATE_NEW_PROCESS_GROUP, NULL, NULL, &si, &pi);
+      CREATE_NEW_PROCESS_GROUP, NULL, NULL, &si, &pi)) {
+    return -1;
+  }
   WaitForSingleObject(pi.hProcess, INFINITE);
   GetExitCodeProcess(pi.hProcess, &dw);
   CloseHandle(pi.hProcess);
