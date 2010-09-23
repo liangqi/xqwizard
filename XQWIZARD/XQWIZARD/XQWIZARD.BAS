@@ -875,9 +875,11 @@ End If
 End Sub
 
 ' ¼¶±ð×Ö·û´®
-Public Function LevelString(ByVal nDepth As String) As String
+Public Function LevelString(ByVal nDepth As Integer) As String
 
-If nDepth = LEVEL_INFINITE Then
+If nDepth = 0 Then
+    LevelString = ""
+ElseIf nDepth = LEVEL_INFINITE Then
     LevelString = L("ÎÞµÐ", "Ÿo”³")
 ElseIf nDepth > 0 Then
     LevelString = nDepth & L("²ã", "ŒÓ")
