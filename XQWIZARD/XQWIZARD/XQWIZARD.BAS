@@ -29,7 +29,6 @@ Public Const MAX_EPD_MENU       As Integer = 15   ' 挑战菜单的数量
 Public Const TIP_NUM            As Integer = 22   ' 日积月累条目数
 Public Const TEMP_FILE_NAME_S   As String = "查看文本棋谱(只读).TXT"
 Public Const TEMP_FILE_NAME_T   As String = "查看文本棋譜(只讀).TXT"
-Public Const RETAIL_VERSION     As Boolean = False
 ' 全局常量——可选参数
 Public Const AUTO_SAVE          As Boolean = True ' ReadFile
 Public Const WRITE_TEMP_FILE    As Boolean = True ' WriteFile
@@ -3374,7 +3373,11 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList IIf(RETAIL_VERSION, "advert_retail.txt", "advert_0450.txt")
+    #If RETAIL_VERSION Then
+        DownloadAdvertList "advert_retail.txt"
+    #Else
+        DownloadAdvertList "advert_0450.txt"
+    #End If
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -3387,9 +3390,11 @@ End If
 ' 初始化 frmHide2.web
 frmHide2.web.Navigate "about:blank"
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
-If Not RETAIL_VERSION And Gui_szUpgradeDate <> Date Then
-    CheckUpdate "xqwizard"
-End If
+#If Not RETAIL_VERSION Then
+    If Gui_szUpgradeDate <> Date Then
+        CheckUpdate "xqwizard"
+    End If
+#End If
 ' 显示并调整主窗口
 If Not App_bPrevInstance Then
     App_frmMain.Left = Gui_nLeft
@@ -3398,11 +3403,11 @@ End If
 ' 在显示窗口以前，先把语言设置好
 SetLang
 ' 如果是零售版，则隐藏“推荐给好友”和“检查更新”
-If RETAIL_VERSION Then
+#If RETAIL_VERSION Then
     App_frmMain.mnHelpShare_.Visible = False
     App_frmMain.mnHelpSep2.Visible = False
     App_frmMain.mnHelpUpdate.Visible = False
-End If
+#End If
 App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.txtMove.SetFocus
@@ -3445,7 +3450,11 @@ Do While App_bRunning
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList IIf(RETAIL_VERSION, "advert_retail.txt", "advert_0450.txt")
+    #If RETAIL_VERSION Then
+        DownloadAdvertList "advert_retail.txt"
+    #Else
+        DownloadAdvertList "advert_0450.txt"
+    #End If
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date
@@ -3455,9 +3464,9 @@ SaveRegs
 SaveRegs2
 PlaySoundA vbNullString, 0, 0
 frmHide.mci.Command = "Close"
-If Not RETAIL_VERSION Then
+#If Not RETAIL_VERSION Then
     ExitPopup
-End If
+#End If
 Unload frmHide
 Unload frmHide2
 

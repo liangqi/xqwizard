@@ -2,8 +2,8 @@ DEL xqwizard_setup.exe
 DEL xqwizard_portable.7z
 DEL XQWIZARD.EXE
 DEL XQSCHOOL.EXE
-"C:\Program Files\Microsoft Visual Studio\VB98\vb6.exe" XQWIZARD.VBP /make
-"C:\Program Files\Microsoft Visual Studio\VB98\vb6.exe" XQSCHOOL.VBP /make
+"C:\Program Files\Microsoft Visual Studio\VB98\vb6.exe" /m XQWIZARD.VBP
+"C:\Program Files\Microsoft Visual Studio\VB98\vb6.exe" /m XQSCHOOL.VBP
 DEL *.OCA
 SIGNCODE /SPC MAKEFILE\XQWIZARD.SPC /V MAKEFILE\XQWIZARD.PVK XQWIZARD.EXE
 SIGNCODE /SPC MAKEFILE\XQWIZARD.SPC /V MAKEFILE\XQWIZARD.PVK XQSCHOOL.EXE
