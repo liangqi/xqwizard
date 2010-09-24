@@ -920,7 +920,7 @@ void GameStruct::RunEngine(void) {
 
   // 向引擎发送走棋指令："go [draw] time %d increment %d opptime %d oppincrement %d";
   if (lpTeam[sd]->szGoParam[0] != '\0') {
-    strcpy(szLineStr, bDraw ? "go " : "go draw ");
+    strcpy(szLineStr, bDraw ? "go draw " : "go ");
     strcat(szLineStr, lpTeam[sd]->szGoParam);
   } else if (bUseMilliSec[sd]) {
     sprintf(szLineStr, bDraw ? cszGoDraw : cszGo, nTimer[sd],

@@ -2348,6 +2348,7 @@ Loop
 If Engine_nStatus > IDLE_UNLOAD Then
     Engine_bSlaveRed = False
     Engine_bSlaveBlack = False
+    SendEngine "setoption guiname XQWizard"
     If Engine_nTimeRatio = 1000 Then
         SendEngine "setoption usemillisec true"
     End If
@@ -2441,6 +2442,7 @@ If Engine_bSlaveBlack Then
                 IIf(szAuthor = "", "", "作者：" & szAuthor & vbCrLf) & _
                 IIf(szUser = "", "", "用戶：" & szUser), , "關於UCCI引擎", szEngineFile
     End If
+    SendEngine "setoption guiname XQWizard", SLAVE_ENGINE
     If Engine_nTimeRatioSlave = 1000 Then
         SendEngine "setoption usemillisec true", SLAVE_ENGINE
     End If
