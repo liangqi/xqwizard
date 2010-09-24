@@ -504,6 +504,17 @@ If Publish_bContent Then
                 UrlEncode(szFen) & """>" & szFen & "</a>" & szBr
     End Select
 Else
+    ' 无论是否从起始局面开始，HTML格式都显示Flash棋盘
+    If Publish_nFormat >= PUB_FORMAT_HTML Then
+        szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szIrrevFen(0)) & "&") & "MoveList="
+        For i = 1 To Game_nMaxMove
+            szFlashVars = szFlashVars & UrlEncode(Move2Iccs(Game_mvMove(i)) & " ")
+        Next
+        szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
+                "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
+                "pluginspage=""http://www.macromedia.com/go/getflashplayer"" allowScriptAccess=""always"" " & _
+                "quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
+    End If
     ' 发布整个棋局，如果不是从起始局面开始的，那么依次显示文本棋盘/图片棋盘，外加FEN链接
     If Not Game_bStartPos Then
         Select Case Publish_nFormat
@@ -516,14 +527,6 @@ Else
             szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
                     UrlEncode(Game_szIrrevFen(0)) & "]" & Game_szIrrevFen(0) & "[/url]" & szBr
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
-            szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szIrrevFen(0)) & "&") & "MoveList="
-            For i = 1 To Game_nMaxMove
-                szFlashVars = szFlashVars & UrlEncode(Move2Iccs(Game_mvMove(i)) & " ")
-            Next
-            szCopy = szCopy & "<embed src=""http://www.xqbase.com/pub/flashxq.swf"" " & _
-                    "width=""324"" height=""396"" type=""application/x-shockwave-flash"" " & _
-                    "pluginspage=""http://www.macromedia.com/go/getflashplayer"" allowScriptAccess=""always"" " & _
-                    "quality=""high"" wmode=""transparent"" flashvars=""" & szFlashVars & """>" & szBr
             szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
                     UrlEncode(Game_szIrrevFen(0)) & """>" & Game_szIrrevFen(0) & "</a>" & szBr
         End Select
