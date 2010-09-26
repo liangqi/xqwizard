@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Sep. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2221,8 +2221,6 @@ End Sub
 ' 关闭引擎(如果有副引擎，先关闭副引擎)
 Public Sub CloseEngine()
 
-Dim dfLastTime As Double, dfThisTime As Double, szReceived As String
-Dim lpStr As Long
 If Engine_nStatus > BUSY_WAIT Then
     Engine_nStatus = BUSY_WAIT
     StopEngine
@@ -2231,63 +2229,18 @@ If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
 End If
 SendEngine "quit"
-dfLastTime = Timer
-Do While Engine_nStatus > IDLE_UNLOAD
-    lpStr = PipeLineInput(Engine_pipe)
-    If lpStr = 0 Then
-        Sleep 1
-        dfThisTime = Timer
-        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 10# Then
-            Exit Do
-        End If
-    Else
-        szReceived = AllocString(lpStr)
-        ReceiveEngineLog szReceived
-        If szReceived = "bye" Then
-            Engine_nStatus = IDLE_UNLOAD
-        End If
-    End If
-Loop
 PipeClose Engine_pipe
-If Engine_nStatus > IDLE_UNLOAD Then
-    MsgBox L("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
-    Engine_nStatus = IDLE_UNLOAD
-End If
+Engine_nStatus = IDLE_UNLOAD
 
 End Sub
 
 ' 关闭副引擎
 Public Sub CloseSlaveEngine()
 
-Dim dfLastTime As Double, dfThisTime As Double, szReceived As String
-Dim lpStr As Long
 SendEngine "quit", SLAVE_ENGINE
-dfLastTime = Timer
-Do While (Engine_bSlaveRed Or Engine_bSlaveBlack)
-    lpStr = PipeLineInput(Engine_pipeSlave)
-    If lpStr = 0 Then
-        Sleep 1
-        dfThisTime = Timer
-        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 10# Then
-            Exit Do
-        End If
-    Else
-        szReceived = AllocString(lpStr)
-        ReceiveEngineLog szReceived, SLAVE_ENGINE
-        If szReceived = "bye" Then
-            Engine_bSlaveRed = False
-            Engine_bSlaveBlack = False
-        End If
-    End If
-Loop
 PipeClose Engine_pipeSlave
-If Engine_bSlaveRed Or Engine_bSlaveBlack Then
-    MsgBox L("无法正常卸载副引擎！", "無法正常卸載副引擎！"), vbExclamation
-    Engine_bSlaveRed = False
-    Engine_bSlaveBlack = False
-End If
+Engine_bSlaveRed = False
+Engine_bSlaveBlack = False
 
 End Sub
 
@@ -2295,7 +2248,7 @@ End Sub
 Public Sub OpenEngine(Optional ByVal bInfo As Boolean = False)
 
 Dim dfLastTime As Double, dfThisTime As Double
-Dim lpStr As Long, szReceived As String
+Dim lpStr As Long, szReceived As String, bError As Double
 
 If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
@@ -2315,6 +2268,7 @@ Engine_szCopyright = ""
 Engine_szAuthor = ""
 Engine_szUser = ""
 Engine_nTimeRatio = 1
+bError = False
 Do While Engine_nStatus = IDLE_UNLOAD
     lpStr = PipeLineInput(Engine_pipe)
     If lpStr = 0 Then
@@ -2328,7 +2282,10 @@ Do While Engine_nStatus = IDLE_UNLOAD
     Else
         szReceived = AllocString(lpStr)
         ReceiveEngineLog szReceived
-        If Left(szReceived, 8) = "id name " Then
+        If szReceived = "copyprotection error" Then
+            bError = True
+            Exit Do
+        ElseIf Left(szReceived, 8) = "id name " Then
             Engine_szName = Mid(szReceived, 9)
         ElseIf Left(szReceived, 11) = "id version " Then
             Engine_szVersion = Mid(szReceived, 12)
@@ -2360,9 +2317,13 @@ If Engine_nStatus > IDLE_UNLOAD Then
 Else
     SendEngine "quit"
     PipeClose Engine_pipe
-    MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
-            L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
-            "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
+    If bError Then
+        MsgBox L("认证错误，无法加载引擎。", "認證錯誤，無法加載引擎。"), vbExclamation
+    Else
+        MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
+                L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
+                "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
+    End If
     Engine_szFile = ""
     EngineLoaded False
 End If
