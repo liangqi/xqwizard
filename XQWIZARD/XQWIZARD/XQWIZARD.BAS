@@ -2045,6 +2045,23 @@ Else
     lpStr = PipeLineInput(Engine_pipe)
 End If
 If lpStr = 0 Then
+    If bSlaveEngine Then
+        If PipeEof(Engine_pipeSlave) Then
+            PipeClose Engine_pipeSlave
+            MsgBox L("副引擎异常退出！", "副引擎異常退出！"), vbExclamation
+            Engine_bSlaveRed = False
+            Engine_bSlaveBlack = False
+            Engine_nStatus = IDLE_READY
+            EngineBusy False
+        End If
+    Else
+        If PipeEof(Engine_pipe) Then
+            PipeClose Engine_pipe
+            MsgBox L("引擎异常退出！", "引擎異常退出！"), vbExclamation
+            Engine_nStatus = IDLE_UNLOAD
+            EngineLoaded False
+        End If
+    End If
     ReceiveEngine = False
     Exit Function
 End If
@@ -2248,7 +2265,7 @@ End Sub
 Public Sub OpenEngine(Optional ByVal bInfo As Boolean = False)
 
 Dim dfLastTime As Double, dfThisTime As Double
-Dim lpStr As Long, szReceived As String, bError As Double
+Dim lpStr As Long, szReceived As String, bPipeEof As Boolean
 
 If Engine_nStatus > IDLE_UNLOAD Then
     CloseEngine
@@ -2268,10 +2285,14 @@ Engine_szCopyright = ""
 Engine_szAuthor = ""
 Engine_szUser = ""
 Engine_nTimeRatio = 1
-bError = False
+bPipeEof = False
 Do While Engine_nStatus = IDLE_UNLOAD
     lpStr = PipeLineInput(Engine_pipe)
     If lpStr = 0 Then
+        If PipeEof(Engine_pipe) Then
+            bPipeEof = True
+            Exit Do
+        End If
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
@@ -2282,10 +2303,7 @@ Do While Engine_nStatus = IDLE_UNLOAD
     Else
         szReceived = AllocString(lpStr)
         ReceiveEngineLog szReceived
-        If szReceived = "copyprotection error" Then
-            bError = True
-            Exit Do
-        ElseIf Left(szReceived, 8) = "id name " Then
+        If Left(szReceived, 8) = "id name " Then
             Engine_szName = Mid(szReceived, 9)
         ElseIf Left(szReceived, 11) = "id version " Then
             Engine_szVersion = Mid(szReceived, 12)
@@ -2317,8 +2335,8 @@ If Engine_nStatus > IDLE_UNLOAD Then
 Else
     SendEngine "quit"
     PipeClose Engine_pipe
-    If bError Then
-        MsgBox L("认证错误，无法加载引擎。", "認證錯誤，無法加載引擎。"), vbExclamation
+    If bPipeEof Then
+        MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile, vbExclamation
     Else
         MsgBox L("无法加载引擎：", "無法加載引擎：") & Engine_szFile & vbCrLf & vbCrLf & _
                 L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
@@ -2336,7 +2354,7 @@ Public Sub OpenSlaveEngine()
 
 Dim szEngineFile As String, szVersion As String, szCopyright As String, szAuthor As String, szUser As String
 Dim dfLastTime As Double, dfThisTime As Double
-Dim lpStr As Long, szReceived As String
+Dim lpStr As Long, szReceived As String, bPipeEof As Boolean
 
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
@@ -2359,9 +2377,14 @@ szCopyright = ""
 szAuthor = ""
 szUser = ""
 Engine_nTimeRatioSlave = 1
+bPipeEof = False
 Do While Not Engine_bSlaveBlack
     lpStr = PipeLineInput(Engine_pipeSlave)
     If lpStr = 0 Then
+        If PipeEof(Engine_pipeSlave) Then
+            bPipeEof = True
+            Exit Do
+        End If
         Sleep 1
         dfThisTime = Timer
         dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
@@ -2411,7 +2434,13 @@ If Engine_bSlaveBlack Then
 Else
     SendEngine "quit", SLAVE_ENGINE
     PipeClose Engine_pipeSlave
-    MsgBox L("无法加载引擎：", "無法加載引擎：") & szEngineFile, vbExclamation
+    If bPipeEof Then
+        MsgBox L("无法加载引擎：", "無法加載引擎：") & szEngineFile, vbExclamation
+    Else
+        MsgBox L("无法加载引擎：", "無法加載引擎：") & szEngineFile & vbCrLf & vbCrLf & _
+                L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师并重新运行试试看。", _
+                "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師並重新運行試試看。"), vbExclamation
+    End If
 End If
 
 End Sub

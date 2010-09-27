@@ -75,10 +75,16 @@ static bool Interrupt(void) {
   if (Search.bIdle) {
     Idle();
   }
-  if (Search.nGoMode == GO_MODE_TIMER && !Search.bPonder &&
-      (int) (GetTime() - Search2.llTime) > Search.nMaxTimer) {
-    Search2.bStop = true;
-    return true;
+  if (Search.nGoMode == GO_MODE_NODES) {
+    if (!Search.bPonder && Search2.nAllNodes > Search.nNodes * 4) {
+      Search2.bStop = true;
+      return true;
+    }
+  } else if (Search.nGoMode == GO_MODE_TIMER) {
+    if (!Search.bPonder && (int) (GetTime() - Search2.llTime) > Search.nMaxTimer) {
+      Search2.bStop = true;
+      return true;
+    }
   }
   if (Search.bBatch) {
     return false;

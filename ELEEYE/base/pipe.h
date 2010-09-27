@@ -16,6 +16,7 @@ struct PipeStruct {
 #else
   int nInput, nOutput;
 #endif
+  int nEof;
   int nReadEnd;
   char szBuffer[LINE_INPUT_MAX_CHAR];
 

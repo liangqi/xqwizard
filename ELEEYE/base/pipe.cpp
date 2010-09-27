@@ -26,6 +26,7 @@ extern "C" __declspec(dllexport) VOID WINAPI PipeOpen(PipeStruct *lppipe, LPCSTR
 extern "C" __declspec(dllexport) VOID WINAPI PipeClose(PipeStruct *lppipe);
 extern "C" __declspec(dllexport) LPSTR WINAPI PipeLineInput(PipeStruct *lppipe);
 extern "C" __declspec(dllexport) VOID WINAPI PipeLineOutput(PipeStruct *lppipe, LPCSTR szLineStr);
+extern "C" __declspec(dllexport) BOOL WINAPI PipeEof(PipeStruct *lppipe);
 
 VOID WINAPI PipeOpen(PipeStruct *lppipe, LPCSTR szProcFile) {
   lppipe->Open(szProcFile);
@@ -48,6 +49,10 @@ VOID WINAPI PipeLineOutput(PipeStruct *lppipe, LPCSTR szLineStr) {
   lppipe->LineOutput(szLineStr);
 }
 
+BOOL WINAPI PipeEof(PipeStruct *lppipe) {
+  return lppipe->nEof != 0;
+}
+
 #endif
 
 void PipeStruct::Open(const char *szProcFile) {
@@ -58,6 +63,7 @@ void PipeStruct::Open(const char *szProcFile) {
   PROCESS_INFORMATION pi;
   char szDir[PATH_MAX_CHAR], szCurDir[PATH_MAX_CHAR];
 
+  nEof = 0;
   if (szProcFile == NULL) {
     hInput = GetStdHandle(STD_INPUT_HANDLE);
     hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -83,6 +89,8 @@ void PipeStruct::Open(const char *szProcFile) {
     if (CreateProcess(NULL, (LPSTR) szProcFile, NULL, NULL, TRUE, DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | IDLE_PRIORITY_CLASS, NULL, NULL, &si, &pi)) {
       CloseHandle(pi.hProcess);
       CloseHandle(pi.hThread);
+    } else {
+      nEof = 1;
     }
     CloseHandle(hStdinRead);
     CloseHandle(hStdoutWrite);
@@ -107,10 +115,13 @@ void PipeStruct::Close(void) const {
 
 void PipeStruct::ReadInput(void) {
   DWORD dwBytes;
-  ReadFile(hInput, szBuffer + nReadEnd, LINE_INPUT_MAX_CHAR - nReadEnd, &dwBytes, NULL);
-  nReadEnd += dwBytes;
-  if (nBytesLeft > 0) {
-    nBytesLeft -= dwBytes;
+  if (ReadFile(hInput, szBuffer + nReadEnd, LINE_INPUT_MAX_CHAR - nReadEnd, &dwBytes, NULL)) {
+    nReadEnd += dwBytes;
+    if (nBytesLeft > 0) {
+      nBytesLeft -= dwBytes;
+    }
+  } else {
+    nEof = 1;
   }
 }
 
@@ -151,6 +162,8 @@ void PipeStruct::LineOutput(const char *szLineStr) const {
 void PipeStruct::Open(const char *szProcFile) {
   int nStdinPipe[2], nStdoutPipe[2];
   char szDir[PATH_MAX_CHAR];
+
+  nEof = 0;
   if (szProcFile == NULL) {
     nInput = STDIN_FILENO;
     nOutput = STDOUT_FILENO;
@@ -187,7 +200,13 @@ void PipeStruct::Close(void) const {
 }
 
 void PipeStruct::ReadInput(void) {
-  nReadEnd += read(nInput, szBuffer + nReadEnd, LINE_INPUT_MAX_CHAR - nReadEnd);
+  int n;
+  n = read(nInput, szBuffer + nReadEnd, LINE_INPUT_MAX_CHAR - nReadEnd);
+  if (n < 0) {
+    nEof = 1;
+  } else {
+    nReadEnd += n;
+  }
 }
 
 bool PipeStruct::CheckInput(void) {

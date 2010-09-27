@@ -292,11 +292,12 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private EngineSet_bRunning As Boolean, EngineSet_bCommandSent As Boolean
+Private bActive As Boolean, bRunning As Boolean, bGoing As Boolean
 
 Private Sub Form_Load()
 
 Dim i As Integer
+bActive = False
 cmbHash.Clear
 cmbHash.AddItem L("自动", "自動"), 0
 cmbHash.AddItem "16MB", 1
@@ -382,11 +383,19 @@ End Sub
 Private Sub Form_Activate()
 
 Dim lpStr As Long, szReceived As String
-EngineSet_bRunning = True
-EngineSet_bCommandSent = False
-Do While EngineSet_bRunning
+If bActive Then
+    Exit Sub
+End If
+
+bActive = True
+bRunning = True
+bGoing = False
+Do While bRunning
     lpStr = PipeLineInput(Engine_pipe)
     If lpStr = 0 Then
+        If PipeEof(Engine_pipe) Then
+            Unload Me
+        End If
         DoEvents
         Sleep 1
     Else
@@ -394,9 +403,12 @@ Do While EngineSet_bRunning
         ReceiveEngineLog szReceived
         frmEngineSet.lstReceived.AddItem szReceived
         frmEngineSet.lstReceived.ListIndex = frmEngineSet.lstReceived.ListCount - 1
+        If Left(szReceived, 9) = "bestmove " Or Left(szReceived, 10) = "nobestmove" Then
+            bGoing = False
+        End If
     End If
 Loop
-If EngineSet_bCommandSent Then
+If bGoing Then
     Engine_nStatus = BUSY_WAIT
     StopEngine
 End If
@@ -405,7 +417,7 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
-EngineSet_bRunning = False
+bRunning = False
 
 End Sub
 
@@ -442,14 +454,13 @@ Dim sz As String, i As Integer, j As Integer
 If txtCommand.Text = vbNullString Then
     Exit Sub
 End If
-If UCase(Left(txtCommand.Text, 4)) = "QUIT" Then
-    MsgBox L("别开这种玩笑！", "別開這種玩笑！"), vbExclamation
-    Exit Sub
-End If
 SendEngine txtCommand.Text
 sz = txtCommand.Text
 txtCommand.Text = ""
-EngineSet_bCommandSent = True
+If Left(sz, 3) = "go " Then
+    bGoing = True
+    Exit Sub
+End If
 If Left(sz, 9) <> "position " Then
     Exit Sub
 End If
