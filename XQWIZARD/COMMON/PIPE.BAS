@@ -8,7 +8,7 @@ Public Type PipeStruct
     nBytesLeft  As Long
     nEof        As Long
     nReadEnd    As Long
-    szBuffer(0 To 4095) As Byte
+    szBuffer(0 To 8191) As Byte
 End Type
 
 Public Declare Sub PipeOpen Lib "PIPE.DLL" Alias "_PipeOpen@8" (ByRef pipe As PipeStruct, Optional ByVal szProcFile As String = vbNullString)

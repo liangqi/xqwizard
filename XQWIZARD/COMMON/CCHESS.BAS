@@ -44,8 +44,8 @@ Public Type PositionStruct
     vlBlackValue            As Long
     nMoveNum                As Long
     nDistance               As Long
-    rbsList(0 To 255)       As RollbackStruct
-    ucRepHash(0 To 1023)    As Byte
+    rbsList(0 To 1023)      As RollbackStruct
+    ucRepHash(0 To 4095)    As Byte
 End Type
 
 Public Declare Function CchessVersion Lib "CCHESS.DLL" Alias "_CchessVersion@0" () As Long

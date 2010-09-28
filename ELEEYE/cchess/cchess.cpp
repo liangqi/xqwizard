@@ -2,8 +2,8 @@
 cchess.h/cchess.cpp - Source Code for ElephantEye, Additional Part
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.13, Last Modified: Jun. 2008
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.21, Last Modified: Sep. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -61,7 +61,7 @@ extern "C" __declspec(dllexport) LONG WINAPI CchessFile2Move(LONG dwFileStr, con
 extern "C" __declspec(dllexport) LONG WINAPI CchessMove2File(LONG mv, const PositionStruct *lppos);
 
 // 驱动程序的版本号，在《象棋巫师》中使用“关于规则”功能可以看到。
-static const char *const cszCchessVersion = "Chinese Chess Driver 3.13";
+static const char *const cszCchessVersion = "Chinese Chess Driver 3.21";
 
 LPCSTR WINAPI CchessVersion(VOID) {
   return cszCchessVersion;

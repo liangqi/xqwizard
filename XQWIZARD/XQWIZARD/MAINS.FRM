@@ -2316,10 +2316,8 @@ For i = 1 To Game_nMaxMove
     sd = 1 - sd
     cnt = cnt + 1 - sd
 Next
-For i = 0 To Game_nMaxIrrev
-    Game_szIrrevFen(i) = AllocString(CchessFenMirror(Game_szIrrevFen(i)))
-    CchessBoardMirror Game_posIrrev(i)
-Next
+Game_szFen = AllocString(CchessFenMirror(Game_szFen))
+CchessBoardMirror Game_pos
 BoardFlush
 FileUpdated
 
@@ -2328,7 +2326,7 @@ End Sub
 Private Sub mnPosAnalyze_Click()
 
 Shell App_szPath & App.EXEName & ".EXE" & IIf(App_bPromotion, " /P /S ", " /S ") & """" & _
-        AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr & """", vbNormalFocus
+        AllocString(CchessBoard2Fen(Game_pos)) & " - - 0 " & Game_cntCurr & """", vbNormalFocus
 
 End Sub
 
@@ -2344,7 +2342,7 @@ End Sub
 Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
-Clipboard.SetText AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
+Clipboard.SetText AllocString(CchessBoard2Fen(Game_pos)) & " - - 0 " & Game_cntCurr
 MsgBox L("局面代码已复制到剪贴板。", "局面代碼已復製到剪貼板"), vbInformation
 
 End Sub
@@ -2381,7 +2379,7 @@ If szFileName <> "" Then
     On Error GoTo lnErrorOpen
     Open szFileName For Output As #nFileNo
     On Error GoTo 0
-    Print #nFileNo, AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))) & " - - 0 " & Game_cntCurr
+    Print #nFileNo, AllocString(CchessBoard2Fen(Game_pos)) & " - - 0 " & Game_cntCurr
     Close #nFileNo
 End If
 
@@ -2428,7 +2426,7 @@ End Sub
 Private Sub mnSearchPosition_Click()
 
 Dim szFen As String
-szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+szFen = AllocString(CchessBoard2Fen(Game_pos))
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?position=" & UrlEncode(szFen), _
         vbNullString, vbNullString, vbNormalFocus
 
@@ -2437,7 +2435,7 @@ End Sub
 Private Sub mnSearchEndgame_Click()
 
 Dim szFen As String
-szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+szFen = AllocString(CchessBoard2Fen(Game_pos))
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & UrlEncode(szFen), _
         vbNullString, vbNullString, vbNormalFocus
 
@@ -2494,20 +2492,20 @@ End Sub
 Private Sub mnEndgamesEndgames_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqbase/?endgame=" & _
-        UrlEncode(Game_szIrrevFen(0)), vbNullString, vbNullString, vbNormalFocus
+        UrlEncode(Game_szFen), vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
 Private Sub mnEndgamesShare_Click(nIndex As Integer)
 
 HelpShare nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), _
-        "http://www.xqbase.com/xqwizard/help_puzzle.htm?fen=" & Game_szIrrevFen(0)
+        "http://www.xqbase.com/xqwizard/help_puzzle.htm?fen=" & Game_szFen
 
 End Sub
 
 Private Sub mnEndgamesPublish_Click(nIndex As Integer)
 
-HelpPublish nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), Game_szIrrevFen(0)
+HelpPublish nIndex, L("象棋巫师的这道题怎么解？", "象棋巫師的這道題怎麼解？"), Game_szFen
 
 End Sub
 
@@ -2860,7 +2858,7 @@ Private Sub txtMove_Change()
 
 Dim mv As Long
 If Len(txtMove.Text) = 4 Then
-    mv = CchessFile2Move(CvL(txtMove.Text), Game_posIrrev(Game_nCurrIrrev))
+    mv = CchessFile2Move(CvL(txtMove.Text), Game_pos)
     If AddMove(mv, MOVE_WITH_ECHO) Then
         FileUpdated
     End If

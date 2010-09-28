@@ -6,7 +6,7 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-const int LINE_INPUT_MAX_CHAR = 4096;
+const int LINE_INPUT_MAX_CHAR = 8192;
 
 struct PipeStruct {
 #ifdef _WIN32

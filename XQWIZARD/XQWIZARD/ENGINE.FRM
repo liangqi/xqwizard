@@ -472,18 +472,18 @@ RestartGame , RESTART_DEBUG_UCCI
 i = InStr(sz, " moves ")
 If Mid(sz, 10, 4) = "fen " Then
     If i > 0 Then
-        Game_szIrrevFen(0) = Mid(sz, 14, i - 14)
+        Game_szFen = Mid(sz, 14, i - 14)
     Else
-        Game_szIrrevFen(0) = Mid(sz, 14)
+        Game_szFen = Mid(sz, 14)
     End If
 ElseIf Mid(sz, 10, 8) = "startpos" Then
-    Game_szIrrevFen(0) = CCHESS_START_FEN
+    Game_szFen = CCHESS_START_FEN
 End If
-CchessFen2Board Game_posIrrev(0), Game_szIrrevFen(0)
-Game_sdCurr = Game_posIrrev(0).sdPlayer
-j = InStr(Game_szIrrevFen(0), " - - 0 ")
+CchessFen2Board Game_pos, Game_szFen
+Game_sdCurr = Game_pos.sdPlayer
+j = InStr(Game_szFen, " - - 0 ")
 If j > 0 Then
-    Game_cntCurr = Str2Int(Mid(Game_szIrrevFen(0), j + 7), 1, 999)
+    Game_cntCurr = Str2Int(Mid(Game_szFen, j + 7), 1, 999)
 Else
     Game_cntCurr = 1
 End If

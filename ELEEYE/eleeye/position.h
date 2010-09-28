@@ -2,8 +2,8 @@
 position.h/position.cpp - Source Code for ElephantEye, Part III
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.12, Last Modified: Dec. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.21, Last Modified: Sep. 2010
+Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -41,10 +41,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef POSITION_H
 #define POSITION_H
 
-const int MAX_MOVE_NUM = 256;   // 局面能容纳的回滚着法数
+const int MAX_MOVE_NUM = 1024;  // 局面能容纳的回滚着法数
 const int MAX_GEN_MOVES = 128;  // 搜索的最大着法数，中国象棋的任何局面都不会超过120个着法
 const int DRAW_MOVES = 100;     // 默认的和棋着法数，ElephantEye设定在50回合即100步，但将军和应将不计入其中
-const int REP_HASH_MASK = 1023; // 判断重复局面的迷你置换表长度，即1024个表项
+const int REP_HASH_MASK = 4095; // 判断重复局面的迷你置换表长度，即4096个表项
 
 const int MATE_VALUE = 10000;           // 最高分值，即将死的分值
 const int BAN_VALUE = MATE_VALUE - 100; // 长将判负的分值，低于该值将不写入置换表(参阅"hash.cpp")

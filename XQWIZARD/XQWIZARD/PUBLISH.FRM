@@ -434,7 +434,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nBoardL = cmbBoard.ListIndex
 End Select
-txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
+txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_pos)))
 
 End Sub
 
@@ -448,7 +448,7 @@ Case PUB_SIZE_SMALL
 Case PUB_SIZE_LARGE
     Publish_nPiecesL = cmbPieces.ListIndex
 End Select
-txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev))))
+txtBoardUrl.Text = GetBoardUrl(AllocString(CchessBoard2Fen(Game_pos)))
 
 End Sub
 
@@ -489,10 +489,10 @@ End If
 szAd = L("# 本棋谱由象棋巫师生成，欢迎访问 ", "# 本棋譜由象棋巫師生成，歡迎訪問 ")
 If Publish_bContent Then
     ' 发布当前局面，依次显示文本棋盘/图片棋盘，外加FEN链接
-    szFen = AllocString(CchessBoard2Fen(Game_posIrrev(Game_nCurrIrrev)))
+    szFen = AllocString(CchessBoard2Fen(Game_pos))
     Select Case Publish_nFormat
     Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-        szCopy = szCopy & GetBoardText(Game_posIrrev(Game_nCurrIrrev))
+        szCopy = szCopy & GetBoardText(Game_pos)
         szCopy = szCopy & "# " & szFen & szBr
     Case PUB_FORMAT_UBB
         szCopy = szCopy & "[img]" & GetBoardUrl(szFen) & "[/img]" & szBr
@@ -506,7 +506,7 @@ If Publish_bContent Then
 Else
     ' 无论是否从起始局面开始，HTML格式都显示Flash棋盘
     If Publish_nFormat >= PUB_FORMAT_HTML Then
-        szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szIrrevFen(0)) & "&") & "MoveList="
+        szFlashVars = IIf(Game_bStartPos, "", "Position=" & UrlEncode(Game_szFen) & "&") & "MoveList="
         For i = 1 To Game_nMaxMove
             szFlashVars = szFlashVars & UrlEncode(Move2Iccs(Game_mvMove(i)) & " ")
         Next
@@ -519,16 +519,16 @@ Else
     If Not Game_bStartPos Then
         Select Case Publish_nFormat
         Case PUB_FORMAT_TEXT, PUB_FORMAT_ANSI
-            CchessFen2Board pos, Game_szIrrevFen(0)
+            CchessFen2Board pos, Game_szFen
             szCopy = szCopy & GetBoardText(pos)
-            szCopy = szCopy & "# " & Game_szIrrevFen(0) & szBr
+            szCopy = szCopy & "# " & Game_szFen & szBr
         Case PUB_FORMAT_UBB
-            szCopy = szCopy & "[img]" & GetBoardUrl(Game_szIrrevFen(0)) & "[/img]" & szBr
+            szCopy = szCopy & "[img]" & GetBoardUrl(Game_szFen) & "[/img]" & szBr
             szCopy = szCopy & "# [url=http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & "]" & Game_szIrrevFen(0) & "[/url]" & szBr
+                    UrlEncode(Game_szFen) & "]" & Game_szFen & "[/url]" & szBr
         Case PUB_FORMAT_HTML, PUB_FORMAT_WEB
             szCopy = szCopy & "# <a href=""http://www.xqbase.com/pub/fen.php?fen=" & _
-                    UrlEncode(Game_szIrrevFen(0)) & """>" & Game_szIrrevFen(0) & "</a>" & szBr
+                    UrlEncode(Game_szFen) & """>" & Game_szFen & "</a>" & szBr
         End Select
     End If
     ' 显示文本棋谱，润色字体

@@ -1198,7 +1198,7 @@ Dim i As Integer, j As Integer
 Edit_cnt = Game_cntCurr
 Edit_sqSelected = 0
 Edit_pcSelected = 0
-Edit_posBoard = Game_posIrrev(Game_nCurrIrrev)
+Edit_posBoard = Game_pos
 imgBoard.Picture = frmHide.imgBoardSmall.Picture
 PosBoardFlush
 Edit_szFen = AllocString(CchessBoard2Fen(Edit_posBoard)) & " - - 0 " & Edit_cnt
@@ -1406,9 +1406,9 @@ Game_cntStart = Edit_cnt
 Game_sdCurr = Game_sdStart
 Game_cntCurr = Game_cntStart
 Game_sdMax = Game_sdCurr
-Game_szIrrevFen(0) = Edit_szFen
-Game_posIrrev(0) = Edit_posBoard
-CchessSetIrrev Game_posIrrev(0)
+Game_szFen = Edit_szFen
+Game_pos = Edit_posBoard
+CchessSetIrrev Game_pos
 Game_bStartPos = False
 BoardFlush
 LabelFlush
