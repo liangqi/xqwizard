@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.2, Last Modified: Sep. 2010
+Designed by Morning Yellow, Version: 3.21, Last Modified: Sep. 2010
 Copyright (C) 2004-2010 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
@@ -65,6 +65,10 @@ void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
       break;
     }
     pos.MakeMove(mv);
+    // 始终让pos.nMoveNum反映没吃子的步数
+    if (pos.LastMove().CptDrw > 0) {
+      pos.SetIrrev();
+    }
   }
 }
 
@@ -223,12 +227,6 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
   }
 #endif
 
-  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bAlwaysCheck && pos.LastMove().ChkChs <= 0 &&
-      pos.rbsList[pos.nMoveNum - 2].mvs.ChkChs <= 0) {
-    return MATE_VALUE - pos.nDistance;
-  }
-
   // 4. 达到极限深度，直接返回评价值；
   if (pos.nDistance == LIMIT_DEPTH) {
     return Evaluate(pos, vlAlpha, vlBeta);
@@ -331,12 +329,6 @@ static int SearchCut(int vlBeta, int nDepth, bool bNoNull = false) {
   vl = ProbeHash(Search.pos, vlBeta - 1, vlBeta, nDepth, bNoNull, mvHash);
   if (Search.bUseHash && vl > -MATE_VALUE) {
     return vl;
-  }
-
-  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bAlwaysCheck && Search.pos.LastMove().ChkChs <= 0 &&
-      Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
-    return MATE_VALUE - Search.pos.nDistance;
   }
 
   // 4. 达到极限深度，直接返回评价值；
@@ -464,12 +456,6 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16_t *lpwmvPvLine) 
   if (Search.bUseHash && vl > -MATE_VALUE) {
     // 由于PV结点不适用置换裁剪，所以不会发生PV路线中断的情况
     return vl;
-  }
-
-  // 3-a. 连将杀检验(如果没被将军并且上一步没将军对方，则返回胜利分值)；
-  if (Search.bAlwaysCheck && Search.pos.LastMove().ChkChs <= 0 &&
-      Search.pos.rbsList[Search.pos.nMoveNum - 2].mvs.ChkChs <= 0) {
-    return MATE_VALUE - Search.pos.nDistance;
   }
 
   // 4. 达到极限深度，直接返回评价值；

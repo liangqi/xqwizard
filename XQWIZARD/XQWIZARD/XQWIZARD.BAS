@@ -1432,11 +1432,11 @@ If IIf(Game_sdMax = 1, Engine_bBlack, Engine_bRed) Then
 End If
 If Options_nLanguage = LANGUAGE_ZH_CN Then
     MsgBox IIf(Game_sdMax = 1, "红方提和。", "黑方提和。") & vbCrLf & vbCrLf & _
-            "如果接受提和，请选择“电脑”菜单的“提和/接受提和”功能。" & vbCrLf & _
+            "如果接受提和，请选择“着法”菜单的“提和/接受提和”功能。" & vbCrLf & _
             "如果拒绝提和，则可以不予理睬，继续下一着棋。", vbInformation
 Else
     MsgBox IIf(Game_sdMax = 1, "紅方提和。", "黑方提和。") & vbCrLf & vbCrLf & _
-            "如果接受提和，請選擇“電腦”菜單的“提和/接受提和”功能。" & vbCrLf & _
+            "如果接受提和，請選擇“著法”菜單的“提和/接受提和”功能。" & vbCrLf & _
             "如果拒絕提和，則可以不予理睬，繼續下一著棋。", vbInformation
 End If
 

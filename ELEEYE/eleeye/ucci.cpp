@@ -127,18 +127,7 @@ UcciCommEnum IdleLine(UcciCommStruct &UcciComm, bool bDebug) {
         UcciComm.bCheck = false;
       }
 
-    // (4-1) "alwayscheck"选项
-    } else if (StrEqvSkip(lp, "alwayscheck ")) {
-      UcciComm.Option = UCCI_OPTION_ALWAYSCHECK;
-      if (StrEqv(lp, "on")) {
-        UcciComm.bCheck = true;
-      } else if (StrEqv(lp, "true")) {
-        UcciComm.bCheck = true;
-      } else {
-        UcciComm.bCheck = false;
-      }
-
-    // (4-2) "usehash"选项
+    // (4) "usehash"选项
     } else if (StrEqvSkip(lp, "usehash ")) {
       UcciComm.Option = UCCI_OPTION_USEHASH;
       if (StrEqv(lp, "off")) {

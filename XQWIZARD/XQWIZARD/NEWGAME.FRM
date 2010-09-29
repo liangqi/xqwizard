@@ -256,6 +256,12 @@ cmbLevel.ToolTipText = frmLevel.ToolTipText
 
 End Sub
 
+Private Sub Form_Unload(Cancel As Integer)
+
+Options_bShowNew = (chkShowNew.Value = 1)
+
+End Sub
+
 Private Sub btnConfirm_Click()
 
 Timer_nDepth = LEVEL_PEABRAIN - cmbLevel.ListIndex
@@ -280,7 +286,6 @@ If Options_nEnginePlay = ENGINE_PLAY_TURN Then
     App_bRedTurn = optFlip(0).Value
 End If
 
-Options_bShowNew = (chkShowNew.Value = 1)
 Unload Me
 
 End Sub

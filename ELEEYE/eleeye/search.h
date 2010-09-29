@@ -47,7 +47,6 @@ struct SearchStruct {
   bool bBatch, bDebug;               // 是否批处理模式和调试模式
   bool bUseHash, bUseBook;           // 是否使用置换表裁剪和开局库
   bool bNullMove, bKnowledge;        // 是否空着裁剪和使用局面评价知识
-  bool bAlwaysCheck;                 // 是否只将军(解连将杀排局)
   bool bIdle;                        // 是否空闲
   RC4Struct rc4Random;               // 随机数
   int nGoMode, nNodes, nCountMask;   // 搜索模式、结点数和
