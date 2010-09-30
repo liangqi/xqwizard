@@ -1192,7 +1192,9 @@ bComputer = IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack)
 App_frmMain.mnMoveDraw.Enabled = Not bComputer
 App_frmMain.mnMoveResign.Enabled = Not bComputer
 ' 如果处于“电脑分析”模式，那么停止分析
-If Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
+If Engine_nStatus = IDLE_REST Then
+    Engine_nStatus = IDLE_READY
+ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
     If Engine_nStatus > BUSY_WAIT Then
         Engine_nStatus = BUSY_WAIT
         StopEngine
@@ -1448,13 +1450,6 @@ Public Function AddMove(ByVal mv As Long, Optional ByVal bEcho = False, Optional
 Dim i As Integer, nMoveStatus As Long, nIcon As Integer
 Dim szMoveChinText As String, szMoveFileText As String, szMoveIccsText As String
 
-If Game_cntCurr = 1000 Then
-    AddMove = False
-    If bEcho Then
-        MsgBox L("超过最大回合数限制！", "超過最大回合數限制！"), vbExclamation
-    End If
-    Exit Function
-End If
 szMoveIccsText = Move2Iccs(mv)
 szMoveFileText = MkL(CchessMove2File(mv, Game_pos))
 szMoveChinText = MkC(CchessFile2Chin(CvL(szMoveFileText), Game_sdCurr))
@@ -1485,6 +1480,14 @@ If Game_nCurrMove < Game_nMaxMove Then
         Exit Function
     End If
 End If
+If Game_cntCurr = 1000 Or Game_nMaxMove = MAX_MOVE - 1 Then
+    AddMove = False
+    If bEcho Then
+        MsgBox L("超过最大回合数限制！", "超過最大回合數限制！"), vbExclamation
+    End If
+    Exit Function
+End If
+
 AddMove = True
 If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
     If Timer_bIncMode Then

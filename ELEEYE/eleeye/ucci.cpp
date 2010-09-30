@@ -24,7 +24,7 @@ can be used without restriction.
  */
 static PipeStruct pipeStd;
 
-const int MAX_MOVE_NUM = 256;
+const int MAX_MOVE_NUM = 1024;
 
 static char szFen[LINE_INPUT_MAX_CHAR];
 static uint32_t dwCoordList[MAX_MOVE_NUM];

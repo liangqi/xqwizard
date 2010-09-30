@@ -187,7 +187,7 @@ End Sub
 ' 让引擎思考，思考前必须设置思考状态(BUSY_ANALYZE/BUSY_THINK/BUSY_PONDER)
 Public Sub RunEngine()
 
-Dim i As Integer, nMoves As Integer, bSlaveEngine As Boolean
+Dim i As Integer, bSlaveEngine As Boolean
 Dim nTimeRatio As Long, nMoveStatus As Long
 Dim szFenStr As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
@@ -201,10 +201,9 @@ If Engine_bAnalyze Then
     frmThink.txtThink.Text = ""
 End If
 szFenStr = Game_szFen
-nMoves = Game_nCurrMove + 1 - Game_pos.nMoveNum
-If Game_nCurrMove > nMoves Then
+If Game_nCurrMove > 0 Then
     szFenStr = szFenStr & " moves"
-    For i = nMoves + 1 To Game_nCurrMove
+    For i = 1 To Game_nCurrMove
         szFenStr = szFenStr & " " & Move2Coord(Game_mvMove(i))
     Next
 End If
@@ -219,7 +218,7 @@ If Engine_nStatus = BUSY_PONDER Then
         Engine_szPonderStr = Move2Iccs(Engine_mvPonder)
     End Select
     If CchessTryMove(Engine_posBoard, nMoveStatus, Engine_mvPonder) <> 0 Then
-        szFenStr = szFenStr & IIf(Game_nCurrMove > nMoves, "", " moves")
+        szFenStr = szFenStr & IIf(Game_nCurrMove > 0, "", " moves")
         szFenStr = szFenStr & " " & Move2Coord(Engine_mvPonder)
         szGoPonder = szGoPonder & " ponder"
     End If

@@ -21,6 +21,8 @@ Attribute VB_Name = "mdlCChess"
 
 Option Explicit
 
+Public Const MAX_MOVE As Integer = 1023
+
 Public Type RollbackStruct
     dwZobristKey    As Long
     dwZobristLock0  As Long
@@ -44,7 +46,7 @@ Public Type PositionStruct
     vlBlackValue            As Long
     nMoveNum                As Long
     nDistance               As Long
-    rbsList(0 To 1023)      As RollbackStruct
+    rbsList(0 To MAX_MOVE)  As RollbackStruct
     ucRepHash(0 To 4095)    As Byte
 End Type
 
