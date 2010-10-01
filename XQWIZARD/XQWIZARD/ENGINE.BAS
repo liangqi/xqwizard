@@ -539,6 +539,7 @@ End Sub
 ' 设置引擎参数
 Public Sub SetEngine(Optional ByVal bSlaveEngine As Boolean = False)
 
+Dim nThreads As Integer
 SendEngine "setoption promotion " & IIf(App_bPromotion, "true", "false"), bSlaveEngine
 SendEngine "setoption usebook " & IIf(Engine_bUseBook, "true", "false"), bSlaveEngine
 SendEngine "setoption useegtb " & IIf(Engine_bUseEgtb, "true", "false"), bSlaveEngine
@@ -556,7 +557,9 @@ ElseIf Engine_nThreads < 4 Then
     SendEngine "setoption threads 1"
     SendEngine "setoption idle " & Choose(Engine_nThreads, "large", "medium", "small"), bSlaveEngine
 Else
-    SendEngine "setoption threads " & (2 ^ (Engine_nThreads - 4)), bSlaveEngine
+    nThreads = 2 ^ (Engine_nThreads - 4)
+    nThreads = IIf(nThreads < App_nProcessors, nThreads, App_nProcessors)
+    SendEngine "setoption threads " & nThreads, bSlaveEngine
     SendEngine "setoption idle none"
 End If
 SendEngine "setoption randomness " & Choose(Engine_nRandomness + 1, "none", "small", "medium", "large"), bSlaveEngine

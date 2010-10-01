@@ -21,6 +21,20 @@ Attribute VB_Name = "mdlXQWizard"
 
 Option Explicit
 
+Private Type SystemInfo
+    dwOemId     As Long
+    dwPageSize  As Long
+    lpMinimumApplicationAddress As Long
+    lpMaximumApplicationAddress As Long
+    dwActiveProcessorMask       As Long
+    dwNumberOfProcessors        As Long
+    dwProcessorType             As Long
+    dwAllocationGranularity     As Long
+    wProcessorLevel             As Integer
+    wProcessorRevision          As Integer
+End Type
+
+Private Declare Sub GetSystemInfo Lib "KERNEL32.DLL" (ByRef lpSystemInfo As SystemInfo)
 Private Declare Sub SetFocus Lib "USER32.DLL" (ByVal hWnd As Long)
 
 ' 全局常量——象棋巫师参数
@@ -108,6 +122,7 @@ Public Const WM_MOVE            As Long = 3
 ' 全局变量——程序
 Public App_frmMain              As Form     ' 主窗口对象引用
 Public App_szPath               As String   ' 主程序所在的文件夹，以"\"结尾
+Public App_nProcessors          As Integer  ' 处理器数量
 Public App_picPieces(0 To 31)   As Picture  ' 棋子图片对象引用
 Public App_picEngineRed         As Picture  ' 引擎执红的图片对象引用
 Public App_picEngineBlack       As Picture  ' 引擎执黑的图片对象引用
@@ -2358,7 +2373,7 @@ End Sub
 
 Public Sub Main()
 
-Dim nLogFileNo As Integer
+Dim nLogFileNo As Integer, si As SystemInfo
 Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
 
 ' 初始化
@@ -2383,6 +2398,9 @@ hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHi
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
+GetSystemInfo si
+App_nProcessors = si.dwNumberOfProcessors
+Debug.Print App_nProcessors
 CchessInit Options_nLanguage
 ' 判断是否允许升变
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
