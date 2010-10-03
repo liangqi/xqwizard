@@ -905,12 +905,6 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnUsersCenter 
          Caption         =   "用户中心首页(&C)"
       End
-      Begin VB.Menu mnUsersSep2 
-         Caption         =   "-"
-      End
-      Begin VB.Menu mnUsersHelp 
-         Caption         =   "求助(&E)..."
-      End
    End
    Begin VB.Menu mnMobile 
       Caption         =   "手机版(&M)"
@@ -1208,12 +1202,6 @@ End Sub
 Private Sub mnMobileRegister_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=xqblight", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnUsersHelp_Click()
-
-frmPublish.Show vbModal, Me
 
 End Sub
 

@@ -1215,8 +1215,6 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
-' 初始化 frmHide.web
-frmHide.web.Navigate "about:blank"
 ' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
 If Gui_szUpgradeDate <> Date Then
     CheckUpdate "xqbooth"

@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.78
+AppVerName={cm:AppName} 4.79
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -70,6 +70,7 @@ Source: "MSINET.OCX"; DestDir: "{app}"; Flags: regserver sharedfile
 ; 程序文件
 Source: "XQWIZARD.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "XQSCHOOL.EXE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "XQBOOTH.EXE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "PIPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "APPTYPE.DLL"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ECCO.DLL"; DestDir: "{app}"; Flags: ignoreversion
@@ -102,6 +103,7 @@ Source: "ENDGAMES\_I.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_J.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_K.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 Source: "ENDGAMES\_L.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
+Source: "ENDGAMES\BOOTH.EPD"; DestDir: "{app}\ENDGAMES"; Flags: ignoreversion
 ; 广告文件
 Source: "ADVERT\advert.txt"; DestDir: "{app}\ADVERT"; Flags: ignoreversion
 Source: "ADVERT\xqbase.htm"; DestDir: "{app}\ADVERT"; Flags: ignoreversion

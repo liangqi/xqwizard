@@ -99,7 +99,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -895,12 +895,6 @@ Begin VB.Form frmMainSmall
       Begin VB.Menu mnUsersCenter 
          Caption         =   "用户中心首页(&C)"
       End
-      Begin VB.Menu mnUsersSep2 
-         Caption         =   "-"
-      End
-      Begin VB.Menu mnUsersHelp 
-         Caption         =   "求助(&E)..."
-      End
    End
    Begin VB.Menu mnMobile 
       Caption         =   "手机版(&M)"
@@ -1218,12 +1212,6 @@ End Sub
 Private Sub mnUsersCenter_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/", vbNullString, vbNullString, vbNormalFocus
-
-End Sub
-
-Private Sub mnUsersHelp_Click()
-
-frmPublish.Show vbModal, Me
 
 End Sub
 
