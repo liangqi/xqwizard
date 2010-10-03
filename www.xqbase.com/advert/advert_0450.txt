@@ -1,2 +1,0 @@
-www.xqbase.com Advert List
-xqbase_advert,32000,360,1000

@@ -1,1 +1,0 @@
-location.href = "http://www.xqbase.com/advert/advert.mht";
