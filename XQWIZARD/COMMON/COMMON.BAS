@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -46,13 +46,14 @@ Private Declare Sub CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long)
 ' 全局常量——象棋巫师信息
 Public Const STRING_VERSION     As String = "4.79"
 Public Const STRING_COPYRIGHT   As String = "(C) 2004-2010 www.xqbase.com"
-Public Const QUOTE_NUM          As Integer = 12   ' 名言条目数
-Public Const ICON_QUOTE         As Integer = 8    ' 名言图标
-Public Const ICON_WIN           As Integer = 15   ' 胜的图标
-Public Const ICON_DRAW          As Integer = 16   ' 和的图标
-Public Const ICON_LOSS          As Integer = 17   ' 负的图标
-Public Const HELP_SCHOOL        As Boolean = True ' HelpPublish
-Public Const MANUAL_UPDATE      As Boolean = True ' CheckUpdate
+Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
+Public Const ICON_QUOTE         As Integer = 8      ' 名言图标
+Public Const ICON_WIN           As Integer = 15     ' 胜的图标
+Public Const ICON_DRAW          As Integer = 16     ' 和的图标
+Public Const ICON_LOSS          As Integer = 17     ' 负的图标
+Public Const MAX_MOVE_DELAY     As Integer = 5      ' 最长延时
+Public Const HELP_SCHOOL        As Boolean = True   ' HelpPublish
+Public Const MANUAL_UPDATE      As Boolean = True   ' CheckUpdate
 ' 全局常量——棋盘(小)设置选项
 Public Const BOARD_S_WOOD       As Integer = 0
 Public Const BOARD_S_GREEN      As Integer = 1
@@ -173,12 +174,12 @@ FileDialog = szFileName
 End Function
 
 ' 设置音乐
-Public Sub MusicSetting(ByVal nMusicIndex As Integer)
+Public Sub MusicSetting(ByVal szPath As String, ByVal nMusicIndex As Integer)
 
 Dim i As Integer
 frmHide.mci.Command = "Close"
 If nMusicIndex > MUSIC_NONE Then
-    frmHide.mci.FileName = App_szPath & "MUSICS\" & _
+    frmHide.mci.FileName = szPath & "MUSICS\" & _
             Choose(nMusicIndex, "EXPRESS", "FUNNY", "CLASSIC", "MOZART1", "MOZART4", _
             "FURELISE", "LOVDREAM", "WALTZ", "HUMOUR", "MARIO1", "MARIO2", "PAL", "CMUSIC") & ".MID"
     If Not App.PrevInstance Then
@@ -426,10 +427,98 @@ End If
 
 End Sub
 
+' 设置语言(选项)
+Public Sub SetLangOptions(ByVal frm As Form)
+
+If Options_nLanguage = LANGUAGE_ZH_CN Then
+    Exit Sub
+End If
+frm.mnOptions.Caption = "選項(&O)"
+frm.mnOptionsGui.Caption = "界面(&G)"
+frm.mnOptionsGuiSmall.Caption = "小(&S)"
+frm.mnOptionsGuiLarge.Caption = "大(&L)"
+frm.mnOptionsBoard_.Caption = "棋盤(&B)"
+frm.mnOptionsPieces_.Caption = "棋子(&P)"
+frm.mnOptionsAnimation_.Caption = "走棋動畫(&A)"
+frm.mnOptionsAnimation(0).Caption = "無(&A)"
+frm.mnOptionsAnimation(1).Caption = "快(&B)"
+frm.mnOptionsAnimation(2).Caption = "稍快(&C)"
+frm.mnOptionsAnimation(3).Caption = "中速(&D)"
+frm.mnOptionsAnimation(4).Caption = "稍慢(&E)"
+frm.mnOptionsAnimation(5).Caption = "慢(&F)"
+frm.mnOptionsSounds.Caption = "音效(&S)"
+frm.mnOptionsMusic_.Caption = "音樂(&M)"
+frm.mnOptionsMusic(0).Caption = "無聲(&A)"
+frm.mnOptionsMusic(1).Caption = "緊張(&B)"
+frm.mnOptionsMusic(2).Caption = "風趣(&C)"
+frm.mnOptionsMusic(3).Caption = "巴赫(&D)"
+frm.mnOptionsMusic(4).Caption = "莫扎特一(&E)"
+frm.mnOptionsMusic(5).Caption = "莫扎特四(&F)"
+frm.mnOptionsMusic(6).Caption = "貝多芬(&G)"
+frm.mnOptionsMusic(7).Caption = "李斯特(&H)"
+frm.mnOptionsMusic(8).Caption = "柴可夫斯基(&I)"
+frm.mnOptionsMusic(9).Caption = "德沃夏克(&J)"
+frm.mnOptionsMusic(10).Caption = "馬里奧一(&K)"
+frm.mnOptionsMusic(11).Caption = "馬里奧二(&L)"
+frm.mnOptionsMusic(12).Caption = "仙劍奇俠傳(&M)"
+frm.mnOptionsMusic(13).Caption = "望江南(&N)"
+frm.mnOptionsLanguage_.Caption = "語言/&Language"
+frm.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
+frm.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
+
+End Sub
+
+' 设置语言(小棋盘)
+Public Sub SetLangSmall(ByVal frm As Form)
+
+If Options_nLanguage = LANGUAGE_ZH_CN Then
+    Exit Sub
+End If
+frm.mnOptionsBoard(0).Caption = "櫟木(&A)"
+frm.mnOptionsBoard(1).Caption = "綠色大理石(&B)"
+frm.mnOptionsBoard(2).Caption = "白色大理石(&C)"
+frm.mnOptionsBoard(3).Caption = "再生紙(&D)"
+frm.mnOptionsBoard(4).Caption = "畫布(&E)"
+frm.mnOptionsBoard(5).Caption = "水滴(&F)"
+frm.mnOptionsBoard(6).Caption = "藍天白雲(&G)"
+frm.mnOptionsBoard(7).Caption = "象棋演播室(&H)"
+frm.mnOptionsBoard(8).Caption = "弈天棋緣(&I)"
+frm.mnOptionsBoard(9).Caption = "夢入神機(&J)"
+frm.mnOptionsBoard(10).Caption = "縱馬奔流(&K)"
+frm.mnOptionsBoard(11).Caption = "淺紅象棋(&L)"
+frm.mnOptionsPieces(0).Caption = "木刻(&A)"
+frm.mnOptionsPieces(1).Caption = "精緻(&B)"
+frm.mnOptionsPieces(2).Caption = "光澤(&C)"
+frm.mnOptionsPieces(3).Caption = "象棋演播室(&D)"
+frm.mnOptionsPieces(4).Caption = "弈天棋緣(&E)"
+frm.mnOptionsPieces(5).Caption = "夢入神機(&F)"
+frm.mnOptionsPieces(6).Caption = "縱馬奔流(&G)"
+
+End Sub
+
+' 设置语言(大棋盘)
+Public Sub SetLangLarge(ByVal frm As Form)
+
+If Options_nLanguage = LANGUAGE_ZH_CN Then
+    Exit Sub
+End If
+frm.mnOptionsBoard(0).Caption = "櫟木(&A)"
+frm.mnOptionsBoard(1).Caption = "綠色大理石(&B)"
+frm.mnOptionsBoard(2).Caption = "白色大理石(&C)"
+frm.mnOptionsBoard(3).Caption = "再生紙(&D)"
+frm.mnOptionsBoard(4).Caption = "畫布(&E)"
+frm.mnOptionsBoard(5).Caption = "水滴(&F)"
+frm.mnOptionsBoard(6).Caption = "淺紅象棋(&G)"
+frm.mnOptionsPieces(0).Caption = "木刻(&A)"
+frm.mnOptionsPieces(1).Caption = "精緻(&B)"
+frm.mnOptionsPieces(2).Caption = "光澤(&C)"
+
+End Sub
+
 ' 从注册表加载参数
 Public Sub LoadRegs()
 
-Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, 5)
+Options_nMoveDelay = Str2Int(GetSetting("XQWizard", "Options", "MoveDelay", "1"), 0, MAX_MOVE_DELAY)
 Options_nLanguage = Str2Int(GetSetting("XQWizard", "Options", "Language", IIf(GetACP = 950, "1", "0")), 0, LANGUAGE_MAX - 1)
 Options_bLargeGui = (Str2Int(GetSetting("XQWizard", "Options", "LargeGui", IIf(Screen.Height > 10000, "1", "0"))) <> 0)
 Options_nBoardS = Str2Int(GetSetting("XQWizard", "Options", "BoardSmall", "0"), 0, BOARD_S_MAX - 1)

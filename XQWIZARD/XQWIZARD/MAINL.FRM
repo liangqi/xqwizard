@@ -1811,6 +1811,33 @@ Begin VB.Form frmMainLarge
             Index           =   2
          End
       End
+      Begin VB.Menu mnOptionsAnimation_ 
+         Caption         =   "走棋动画(&A)"
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "无(&A)"
+            Index           =   0
+         End
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "快(&B)"
+            Index           =   1
+         End
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "稍快(&C)"
+            Index           =   2
+         End
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "中速(&D)"
+            Index           =   3
+         End
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "稍慢(&E)"
+            Index           =   4
+         End
+         Begin VB.Menu mnOptionsAnimation 
+            Caption         =   "慢(&F)"
+            Index           =   5
+         End
+      End
       Begin VB.Menu mnOptionsSounds 
          Caption         =   "音效(&S)"
       End
@@ -1973,7 +2000,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.75, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2000,19 +2027,11 @@ cmbFormat.AddItem L("炮二平五", "炮二平五"), 0
 cmbFormat.AddItem "C2.5", 1
 cmbFormat.AddItem "H2-E2", 2
 
-If Options_nLanguage = LANGUAGE_ZH_CN Then
-    Exit Sub
-End If
-mnOptionsBoard(0).Caption = "櫟木(&A)"
-mnOptionsBoard(1).Caption = "綠色大理石(&B)"
-mnOptionsBoard(2).Caption = "白色大理石(&C)"
-mnOptionsBoard(3).Caption = "再生紙(&D)"
-mnOptionsBoard(4).Caption = "畫布(&E)"
-mnOptionsBoard(5).Caption = "水滴(&F)"
-mnOptionsBoard(6).Caption = "淺紅象棋(&G)"
-mnOptionsPieces(0).Caption = "木刻(&A)"
-mnOptionsPieces(1).Caption = "精緻(&B)"
-mnOptionsPieces(2).Caption = "光澤(&C)"
+mnOptionsBoard_Click Options_nBoardL
+mnOptionsPieces_Click Options_nPiecesL
+mnOptionsAnimation_Click Options_nMoveDelay
+mnOptionsMusic_Click Options_nMusic
+SetLangLarge Me
 
 End Sub
 
@@ -2593,13 +2612,39 @@ End Sub
 
 Private Sub mnOptionsBoard_Click(nIndex As Integer)
 
-BoardSettingLarge nIndex
+Dim i As Integer
+BoardSettingLargeHide nIndex
+imgBoard.Picture = frmHide.imgBoardLarge.Picture
+For i = 0 To BOARD_L_MAX - 1
+    mnOptionsBoard(i).Checked = (nIndex = i)
+Next
+Options_nBoardL = nIndex
 
 End Sub
 
 Private Sub mnOptionsPieces_Click(nIndex As Integer)
 
-PiecesSettingLarge nIndex
+Dim i As Integer
+PiecesSettingLargeHide nIndex
+For i = 0 To 31
+    Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
+Next
+For i = 0 To PIECES_L_MAX - 1
+    frmMainLarge.mnOptionsPieces(i).Checked = (nIndex = i)
+Next
+BoardFlush
+LabelFlush
+Options_nPiecesL = nIndex
+
+End Sub
+
+Private Sub mnOptionsAnimation_Click(nIndex As Integer)
+
+Dim i As Integer
+For i = 0 To MAX_MOVE_DELAY
+    mnOptionsAnimation(i).Checked = (nIndex = i)
+Next
+Options_nMoveDelay = nIndex
 
 End Sub
 
@@ -2613,7 +2658,7 @@ End Sub
 Private Sub mnOptionsMusic_Click(nIndex As Integer)
 
 Dim i As Integer
-MusicSetting nIndex
+MusicSetting App_szPath, nIndex
 For i = 0 To MUSIC_MAX - 1
     mnOptionsMusic(i).Checked = (nIndex = i)
 Next

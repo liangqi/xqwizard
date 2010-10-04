@@ -109,7 +109,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -1228,7 +1228,7 @@ On Error Resume Next
 frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath & "IMAGES_L\" & _
         Choose(nIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") & ".GIF")
 On Error GoTo 0
-imgBoard.Picture = frmHide.imgBoardLarge
+imgBoard.Picture = frmHide.imgBoardLarge.Picture
 For i = 0 To BOARD_L_MAX - 1
     mnOptionsBoard(i).Checked = (nIndex = i)
 Next

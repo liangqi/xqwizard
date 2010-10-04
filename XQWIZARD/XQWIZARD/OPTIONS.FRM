@@ -70,57 +70,50 @@ Begin VB.Form frmOptions
       TabIndex        =   11
       Top             =   120
       Width           =   3255
-      Begin VB.TextBox txtMoveDelay 
-         Height          =   285
-         Left            =   960
-         TabIndex        =   13
-         Top             =   240
-         Width           =   360
-      End
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   25
+         TabIndex        =   21
          Top             =   2040
          Width           =   1215
       End
       Begin VB.CheckBox chkStatusBar 
          Caption         =   "输出到状态栏"
          Height          =   255
-         Left            =   1680
-         TabIndex        =   21
-         Top             =   1320
+         Left            =   120
+         TabIndex        =   16
+         Top             =   960
          Width           =   1455
       End
       Begin VB.CheckBox chkEngineTime 
          Caption         =   "显示思考时间"
          Height          =   255
-         Left            =   120
-         TabIndex        =   20
-         Top             =   1320
+         Left            =   1680
+         TabIndex        =   17
+         Top             =   960
          Width           =   1455
       End
       Begin VB.CheckBox chkAllowResign 
          Caption         =   "允许提和认输"
          Height          =   255
          Left            =   1680
-         TabIndex        =   19
-         Top             =   960
+         TabIndex        =   15
+         Top             =   600
          Width           =   1455
       End
       Begin VB.CheckBox chkAlwaysPonder 
          Caption         =   "启用后台思考"
          Height          =   255
          Left            =   120
-         TabIndex        =   18
-         Top             =   960
+         TabIndex        =   14
+         Top             =   600
          Width           =   1455
       End
       Begin VB.ComboBox cmbEnginePlay 
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   23
+         TabIndex        =   19
          Top             =   1680
          Width           =   1215
       End
@@ -128,60 +121,23 @@ Begin VB.Form frmOptions
          Caption         =   "自动翻转棋盘"
          Height          =   255
          Left            =   120
-         TabIndex        =   16
-         Top             =   600
+         TabIndex        =   12
+         Top             =   240
          Width           =   1455
       End
       Begin VB.CheckBox chkEngineName 
          Caption         =   "显示对弈双方"
          Height          =   255
          Left            =   1680
-         TabIndex        =   17
-         Top             =   600
+         TabIndex        =   13
+         Top             =   240
          Width           =   1455
-      End
-      Begin ComCtl2.UpDown updnMoveDelay 
-         Height          =   285
-         Left            =   1320
-         TabIndex        =   14
-         Top             =   240
-         Width           =   195
-         _ExtentX        =   344
-         _ExtentY        =   503
-         _Version        =   327681
-         Value           =   1
-         BuddyControl    =   "txtMoveDelay"
-         BuddyDispid     =   196615
-         OrigLeft        =   2160
-         OrigTop         =   240
-         OrigRight       =   2355
-         OrigBottom      =   495
-         Max             =   5
-         SyncBuddy       =   -1  'True
-         BuddyProperty   =   65547
-         Enabled         =   -1  'True
-      End
-      Begin VB.Label lblDelaySec 
-         Caption         =   "秒"
-         Height          =   255
-         Left            =   1560
-         TabIndex        =   15
-         Top             =   240
-         Width           =   255
-      End
-      Begin VB.Label lblMoveDelay 
-         Caption         =   "走子延时"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   12
-         Top             =   240
-         Width           =   735
       End
       Begin VB.Label lblUser 
          Caption         =   "棋手名字"
          Height          =   255
          Left            =   840
-         TabIndex        =   24
+         TabIndex        =   20
          Top             =   2040
          Width           =   855
       End
@@ -189,7 +145,7 @@ Begin VB.Form frmOptions
          Caption         =   "电脑角色"
          Height          =   255
          Left            =   840
-         TabIndex        =   22
+         TabIndex        =   18
          Top             =   1680
          Width           =   855
       End
@@ -199,7 +155,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3720
-      TabIndex        =   27
+      TabIndex        =   23
       Top             =   2640
       Width           =   975
    End
@@ -208,7 +164,7 @@ Begin VB.Form frmOptions
       Default         =   -1  'True
       Height          =   375
       Left            =   2160
-      TabIndex        =   26
+      TabIndex        =   22
       Top             =   2640
       Width           =   975
    End
@@ -281,7 +237,7 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.64, Last Modified: May 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -300,7 +256,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private nPlayIntv As Integer, nMoveDelay As Integer
+Private nPlayIntv As Integer
 
 Private Sub Form_Load()
 
@@ -316,8 +272,6 @@ cmbEnginePlay.AddItem L("红黑随机", "紅黑隨機"), 4
 chkAutoPlay.Value = IIf(Options_bAutoPlay, 1, 0)
 nPlayIntv = Options_nPlayIntv
 txtPlayIntv.Text = nPlayIntv
-nMoveDelay = Options_nMoveDelay
-txtMoveDelay.Text = nMoveDelay
 chkAutoFlip.Value = IIf(Options_bAutoFlip, 1, 0)
 chkEngineName.Value = IIf(Options_bEngineName, 1, 0)
 chkAlwaysPonder.Value = IIf(Options_bAlwaysPonder, 1, 0)
@@ -353,8 +307,6 @@ chkTryAgain.Caption = "棋局結束後提示“再來一局”"
 chkPromptSave.Caption = "提示保存棋局"
 chkAutoSave.Caption = "自動保存棋局"
 frmEngine.Caption = "電腦對弈"
-lblMoveDelay.Caption = "走子延時"
-lblDelaySec.Caption = "秒"
 chkAutoFlip.Caption = "自動翻轉棋盤"
 chkEngineName.Caption = "顯示對弈雙方"
 chkAlwaysPonder.Caption = "啟用後台思考"
@@ -377,20 +329,10 @@ End If
 
 End Sub
 
-Private Sub txtMoveDelay_Change()
-
-If nMoveDelay <> Str2Int(txtMoveDelay.Text) Then
-    nMoveDelay = Str2Int(txtMoveDelay.Text, 0, 5)
-    txtMoveDelay.Text = nMoveDelay
-End If
-
-End Sub
-
 Private Sub btnConfirm_Click()
 
 Options_nPlayIntv = nPlayIntv
 Options_bAutoPlay = (chkAutoPlay.Value = 1)
-Options_nMoveDelay = nMoveDelay
 Options_bAutoFlip = (chkAutoFlip.Value = 1)
 Options_bEngineName = (chkEngineName.Value = 1)
 Options_bAlwaysPonder = (chkAlwaysPonder.Value = 1)

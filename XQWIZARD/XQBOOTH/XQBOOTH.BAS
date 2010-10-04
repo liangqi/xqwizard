@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 
 Option Explicit
@@ -531,32 +531,6 @@ App_frmMain.mnGameRetract.Caption = "悔棋(&T)"
 App_frmMain.mnGameCode.Caption = "存檔碼(&C)"
 App_frmMain.mnGameExit.Caption = "离開(&X)"
 
-App_frmMain.mnOptions.Caption = "選項(&O)"
-App_frmMain.mnOptionsGui.Caption = "界面(&G)"
-App_frmMain.mnOptionsGuiSmall.Caption = "小(&S)"
-App_frmMain.mnOptionsGuiLarge.Caption = "大(&L)"
-App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
-App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
-App_frmMain.mnOptionsSounds.Caption = "音效(&S)"
-App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
-App_frmMain.mnOptionsMusic_.Caption = "音樂(&M)"
-App_frmMain.mnOptionsMusic(0).Caption = "無聲(&A)"
-App_frmMain.mnOptionsMusic(1).Caption = "緊張(&B)"
-App_frmMain.mnOptionsMusic(2).Caption = "風趣(&C)"
-App_frmMain.mnOptionsMusic(3).Caption = "巴赫(&D)"
-App_frmMain.mnOptionsMusic(4).Caption = "莫扎特一(&E)"
-App_frmMain.mnOptionsMusic(5).Caption = "莫扎特四(&F)"
-App_frmMain.mnOptionsMusic(6).Caption = "貝多芬(&G)"
-App_frmMain.mnOptionsMusic(7).Caption = "李斯特(&H)"
-App_frmMain.mnOptionsMusic(8).Caption = "柴可夫斯基(&I)"
-App_frmMain.mnOptionsMusic(9).Caption = "德沃夏克(&J)"
-App_frmMain.mnOptionsMusic(10).Caption = "馬里奧一(&K)"
-App_frmMain.mnOptionsMusic(11).Caption = "馬里奧二(&L)"
-App_frmMain.mnOptionsMusic(12).Caption = "仙劍奇俠傳(&M)"
-App_frmMain.mnOptionsMusic(13).Caption = "望江南(&N)"
-App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
-App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
-
 App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
 App_frmMain.mnHelpSuggest.Caption = "意見反饋(&S)"
@@ -681,13 +655,11 @@ If Options_bLargeGui Then
 Else
     Set App_frmMain = frmMainSmall
 End If
-' 加载音乐
-MusicSetting Options_nMusic
-For i = 0 To MUSIC_MAX - 1
-    App_frmMain.mnOptionsMusic(i).Checked = (Options_nMusic = i)
-Next
+ClearHint
+LoadGame
 ' 在显示窗口以前，先把语言设置好
 SetLang
+SetLangOptions App_frmMain
 App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
@@ -734,27 +706,7 @@ If Gui_szAdvertDate <> Date Then
 End If
 ' 关闭引擎
 PipeLineOutput Engine_pipe, "quit"
-dfLastTime = Timer
-Do While bLoaded
-    lpStr = PipeLineInput(Engine_pipe)
-    If lpStr = 0 Then
-        Sleep 1
-        dfThisTime = Timer
-        dfThisTime = dfThisTime + IIf(dfThisTime < dfLastTime, 86400#, 0#)
-        If dfThisTime > dfLastTime + 10# Then
-            Exit Do
-        End If
-    Else
-        sz = AllocString(lpStr)
-        If sz = "bye" Then
-            bLoaded = False
-        End If
-    End If
-Loop
 PipeClose Engine_pipe
-If bLoaded Then
-    MsgBox L("无法正常卸载引擎！", "無法正常卸載引擎！"), vbExclamation
-End If
 ' 退出
 SaveRegs
 SaveRegs2

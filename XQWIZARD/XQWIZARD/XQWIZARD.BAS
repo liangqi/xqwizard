@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1665,19 +1665,6 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋盘(小)
-Public Sub BoardSettingSmall(ByVal nBoardIndex As Integer)
-
-Dim i As Integer
-BoardSettingSmallHide nBoardIndex
-frmMainSmall.imgBoard.Picture = frmHide.imgBoardSmall.Picture
-For i = 0 To BOARD_S_MAX - 1
-    frmMainSmall.mnOptionsBoard(i).Checked = (nBoardIndex = i)
-Next
-Options_nBoardS = nBoardIndex
-
-End Sub
-
 ' 设置隐藏棋盘(大)
 Public Sub BoardSettingLargeHide(ByVal nBoardIndex As Integer)
 
@@ -1685,19 +1672,6 @@ On Error Resume Next
 frmHide.imgBoardLarge.Picture = LoadPicture(App_szPath & "IMAGES_L\" & _
         Choose(nBoardIndex + 1, "WOOD", "GREEN", "WHITE", "SHEET", "CANVAS", "DROPS", "QIANHONG") & ".GIF")
 On Error GoTo 0
-
-End Sub
-
-' 设置棋盘(大)
-Public Sub BoardSettingLarge(ByVal nBoardIndex As Integer)
-
-Dim i As Integer
-BoardSettingLargeHide nBoardIndex
-frmMainLarge.imgBoard.Picture = frmHide.imgBoardLarge
-For i = 0 To BOARD_L_MAX - 1
-    frmMainLarge.mnOptionsBoard(i).Checked = (nBoardIndex = i)
-Next
-Options_nBoardL = nBoardIndex
 
 End Sub
 
@@ -1714,23 +1688,6 @@ On Error GoTo 0
 
 End Sub
 
-' 设置棋子(小)
-Public Sub PiecesSettingSmall(ByVal nPiecesIndex As Integer)
-
-Dim i As Integer
-PiecesSettingSmallHide nPiecesIndex
-For i = 0 To 31
-    Set App_picPieces(i) = frmHide.imgPiecesSmall(i).Picture
-Next
-For i = 0 To PIECES_S_MAX - 1
-    frmMainSmall.mnOptionsPieces(i).Checked = (nPiecesIndex = i)
-Next
-BoardFlush
-LabelFlush
-Options_nPiecesS = nPiecesIndex
-
-End Sub
-
 ' 设置隐藏棋子(大)
 Public Sub PiecesSettingLargeHide(ByVal nPiecesIndex As Integer)
 
@@ -1741,23 +1698,6 @@ For i = 0 To 31
     frmHide.imgPiecesLarge(i).Picture = LoadPicture(sz & PieceFileName(i) & ".GIF")
 Next
 On Error GoTo 0
-
-End Sub
-
-' 设置棋子(大)
-Public Sub PiecesSettingLarge(ByVal nPiecesIndex As Integer)
-
-Dim i As Integer
-PiecesSettingLargeHide nPiecesIndex
-For i = 0 To 31
-    Set App_picPieces(i) = frmHide.imgPiecesLarge(i).Picture
-Next
-For i = 0 To PIECES_L_MAX - 1
-    frmMainLarge.mnOptionsPieces(i).Checked = (nPiecesIndex = i)
-Next
-BoardFlush
-LabelFlush
-Options_nPiecesL = nPiecesIndex
 
 End Sub
 
@@ -2418,31 +2358,23 @@ ConvInit Options_nLanguage
 LoadQuotes
 LoadTips
 If Options_bLargeGui Then
-    Set App_frmMain = frmMainLarge
     For i = 0 To 31
         Set App_picPieces(i) = frmHide.imgPiecesLarge(i)
     Next
+    Set App_frmMain = frmMainLarge
     Set App_picEngineRed = frmHide2.imgEngineRedLarge.Picture
     Set App_picEngineBlack = frmHide2.imgEngineBlackLarge.Picture
-    BoardSettingLarge Options_nBoardL
-    PiecesSettingLarge Options_nPiecesL
     ' 初始化 frmHide 中的小棋盘和小棋子，这些图片会被 frmPosEdit 用到
     BoardSettingSmallHide Options_nBoardS
     PiecesSettingSmallHide Options_nPiecesS
 Else
-    Set App_frmMain = frmMainSmall
     For i = 0 To 31
         Set App_picPieces(i) = frmHide.imgPiecesSmall(i)
     Next
+    Set App_frmMain = frmMainSmall
     Set App_picEngineRed = frmHide2.imgEngineRed.Picture
     Set App_picEngineBlack = frmHide2.imgEngineBlack.Picture
-    BoardSettingSmall Options_nBoardS
-    PiecesSettingSmall Options_nPiecesS
 End If
-MusicSetting Options_nMusic
-For i = 0 To MUSIC_MAX - 1
-    App_frmMain.mnOptionsMusic(i).Checked = (Options_nMusic = i)
-Next
 Timer_bEnabled = False
 ' 清空引擎日志，加载引擎，可能有等待，启动画面保持
 Engine_nStatus = IDLE_UNLOAD

@@ -755,6 +755,8 @@ Name: "{userdesktop}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 [Run]
 Filename: "{app}\XQSCHOOL.EXE"; Description: "开始练习"; Flags: nowait postinstall skipifsilent; Languages: cn
 Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinstall skipifsilent; Languages: tw
+Filename: "http://www.xqbase.com/xqwizard/bugchess.htm"; Description: "获取小虫象棋引擎"; Flags: nowait postinstall shellexec skipifsilent; Languages: cn
+Filename: "http://www.xqbase.com/xqwizard/bugchess.htm"; Description: "莉︿禜囱ま篮"; Flags: nowait postinstall shellexec skipifsilent; Languages: tw
 
 [Code]
 function InitializeUninstall(): Boolean;

@@ -1079,8 +1079,6 @@ App_frmMain.mnUsersLoad.Caption = "獲取存檔(&L)"
 App_frmMain.mnUsersRank.Caption = "排名(&R)..."
 App_frmMain.mnUsersPoints.Caption = "查詢點數(&P)..."
 App_frmMain.mnUsersCenter.Caption = "用戶中心首頁(&C)"
-App_frmMain.mnUsersHelp.Caption = "求助(&E)..."
-App_frmMain.mnUsers.Caption = "用戶中心(&U)"
 
 App_frmMain.mnMobile.Caption = "手機版(&M)"
 App_frmMain.mnMobileSave.Caption = "提交存檔到手機(&S)..."
