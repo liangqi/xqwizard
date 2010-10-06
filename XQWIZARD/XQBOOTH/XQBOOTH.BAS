@@ -712,9 +712,37 @@ App_frmMain.mnGameRetract.Caption = "悔棋(&T)"
 App_frmMain.mnGameCode.Caption = "存檔碼(&C)"
 App_frmMain.mnGameExit.Caption = "离開(&X)"
 
+App_frmMain.mnUsers.Caption = "用戶中心(&U)"
+App_frmMain.mnUsersSave.Caption = "提交存檔(&S)"
+App_frmMain.mnUsersLoad.Caption = "獲取存檔(&L)"
+App_frmMain.mnUsersRank.Caption = "排名(&R)..."
+App_frmMain.mnUsersPoints.Caption = "查詢點數(&P)..."
+App_frmMain.mnUsersCenter.Caption = "用戶中心首頁(&C)"
+App_frmMain.mnUsersHelp.Caption = "求助(&H)"
+App_frmMain.mnUsersShare(0).Caption = "QQ空間(&Q)"
+App_frmMain.mnUsersShare(1).Caption = "新浪微博(&S)"
+App_frmMain.mnUsersShare(2).Caption = "開心網(&K)"
+App_frmMain.mnUsersShare(3).Caption = "人人網(&R)"
+App_frmMain.mnUsersPublish(0).Caption = "百度知道(&Z)"
+App_frmMain.mnUsersPublish(1).Caption = "百度貼吧象棋吧(&T)"
+App_frmMain.mnUsersPublish(2).Caption = "其他網站(&O)"
+
+App_frmMain.mnMobile.Caption = "手機版(&M)"
+App_frmMain.mnMobileSave.Caption = "提交存檔到手機(&S)..."
+App_frmMain.mnMobileLoad.Caption = "從手機獲取存檔(&L)..."
+App_frmMain.mnMobileDownload.Caption = "下載手機版(&D)"
+App_frmMain.mnMobileRegister.Caption = "獲得許可證(&R)"
+
 App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpQuote.Caption = "名言(&Q)..."
 App_frmMain.mnHelpSuggest.Caption = "意見反饋(&S)"
+App_frmMain.mnHelpShare_.Caption = "推薦給好友(&F)"
+App_frmMain.mnHelpShare(0).Caption = "QQ空間(&Q)"
+App_frmMain.mnHelpShare(1).Caption = "新浪微博(&S)"
+App_frmMain.mnHelpShare(2).Caption = "開心網(&K)"
+App_frmMain.mnHelpShare(3).Caption = "人人網(&R)"
+App_frmMain.mnHelpShare(5).Caption = "其他網站(&O)"
+App_frmMain.mnHelpUpdate.Caption = "檢查最新版本(&P)"
 App_frmMain.mnHelpHome.Caption = "象棋巫師的網站(&H)"
 App_frmMain.mnHelpAbout.Caption = "關于象棋巫師(&A)..."
 
@@ -741,7 +769,9 @@ LoadRegs
 CchessInit Options_nLanguage
 LoadRegs2
 LoadQuotes
-InitCipher
+#If RETAIL_VERSION Then
+    InitCipher
+#End If
 
 ' 加载残局
 nFileNo = FreeFile

@@ -44,8 +44,7 @@ Private Declare Function Process32Next Lib "KERNEL32.DLL" (ByVal hSnapshot As Lo
 Private Declare Sub CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.79"
-Public Const STRING_COPYRIGHT   As String = "版权所有 (C) 2010 上海贤趣信息技术有限公司"
+Public Const STRING_VERSION     As String = "4.8"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8      ' 名言图标
 Public Const ICON_WIN           As Integer = 15     ' 胜的图标
@@ -286,9 +285,9 @@ Public Sub AboutXQWizard()
 
 MessageBeep vbInformation
 If Options_nLanguage = LANGUAGE_ZH_CN Then
-    MsgBoxIcon "象棋巫师 " & STRING_VERSION & vbCrLf & vbCrLf & STRING_COPYRIGHT, , "关于象棋巫师"
+    MsgBoxIcon "象棋巫师 " & STRING_VERSION & vbCrLf & vbCrLf & "版权所有 (C) 2010 上海贤趣信息技术有限公司", , "关于象棋巫师"
 Else
-    MsgBoxIcon "象棋巫師 " & STRING_VERSION & vbCrLf & vbCrLf & STRING_COPYRIGHT, , "關於象棋巫師"
+    MsgBoxIcon "象棋巫師 " & STRING_VERSION & vbCrLf & vbCrLf & "版權所有 (C) 2010 上海賢趣信息技術有限公司", , "關於象棋巫師"
 End If
 
 End Sub
