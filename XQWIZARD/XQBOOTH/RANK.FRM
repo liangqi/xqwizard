@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmRank 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "近两周排名"
+   Caption         =   "近一个月排名"
    ClientHeight    =   4320
    ClientLeft      =   45
    ClientTop       =   330
@@ -431,7 +431,7 @@ Attribute VB_Exposed = False
 ' RANK.FRM - Source Code for XiangQi Witchcraft School, Part V
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -450,7 +450,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private szRankList() As String, nLastRank As Integer
+Private szRankLists() As String, nScoreSelf As Integer, nLastRank As Integer
 
 Private Sub SetTip(ByVal szTip As String)
 
@@ -462,31 +462,41 @@ End Sub
 
 Private Sub Form_Load()
 
-Dim i As Integer
-If Rank_nToday = 0 Then
+Dim i As Integer, nToday As Long, nYesterday As Long
+Dim szRankList As String, szResult As String, szResults() As String
+
+szResults = Split(Login_szResult, "|")
+nScoreSelf = Str2Int(szResults(0))
+nToday = Str2Lng(szResults(1))
+nYesterday = Str2Lng(szResults(2))
+If nToday = 0 Then
     lblRankSelf.Caption = "-"
-    SetTip L("您在近两周内没有排名", "您在近兩週內沒有排名")
+    SetTip L("您在近一个月内没有排名", "您在近一個月內沒有排名")
 Else
-    lblRankSelf.Caption = Rank_nToday
-    If Rank_nYesterday > 0 Then
-        If Rank_nToday = Rank_nYesterday Then
+    lblRankSelf.Caption = nToday
+    If nYesterday > 0 Then
+        If nToday = nYesterday Then
             SetTip L("排名没有变化", "排名沒有變化")
         Else
             If Options_nLanguage = LANGUAGE_ZH_CN Then
-                SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
-                        Abs(Rank_nToday - Rank_nYesterday) & "位"
+                SetTip "排名" & IIf(nToday < nYesterday, "上升", "下降") & _
+                        Abs(nToday - nYesterday) & "位"
             Else
-                SetTip "排名" & IIf(Rank_nToday < Rank_nYesterday, "上升", "下降") & _
-                        Abs(Rank_nToday - Rank_nYesterday) & "位"
+                SetTip "排名" & IIf(nToday < nYesterday, "上升", "下降") & _
+                        Abs(nToday - nYesterday) & "位"
             End If
         End If
     End If
 End If
 lblUserNameSelf.Caption = Login_szUserName
-lblScoreSelf.Caption = Rank_nScore
+lblScoreSelf.Caption = nScoreSelf
 
-szRankList = Split(Rank_szList, vbCrLf)
-nLastRank = UBound(szRankList)
+szRankList = ""
+On Error Resume Next
+szRankList = frmHide.Inet.OpenURL(XQAPP_URL & "ranklist?encoding=" & L("GBK", "BIG5"))
+On Error GoTo 0
+szRankLists = Split(szRankList, vbCrLf)
+nLastRank = UBound(szRankLists)
 vs.Max = IIf(nLastRank > 10, nLastRank - 10, 0)
 vs_Change
 
@@ -500,7 +510,7 @@ For i = 0 To Controls.Count - 1
     Controls(i).Font = Font
 Next
 On Error GoTo 0
-Caption = "近兩週排名"
+Caption = "近一個月排名"
 lblRankHeader.Caption = "排名"
 lblUserNameHeader.Caption = "選手"
 lblScoreHeader.Caption = "成績"
@@ -516,10 +526,10 @@ For i = 0 To 9
     nRank = i + vs.Value
     If nRank < nLastRank Then
         lblRank(i).Caption = i + vs.Value + 1
-        j = InStr(szRankList(nRank), "|")
-        lblUserName(i).Caption = Mid(szRankList(nRank), j + 1)
-        nScore = Str2Int(szRankList(nRank), 0, App_nEndgames)
-        If nScore > 900 And nScore > Rank_nScore + 100 Then
+        j = InStr(szRankLists(nRank), "|")
+        lblUserName(i).Caption = Mid(szRankLists(nRank), j + 1)
+        nScore = Str2Int(szRankLists(nRank), 0, App_nEndgames)
+        If nScore > 900 And nScore > nScoreSelf + 100 Then
             lblScore(i).Caption = L("未知", "未知")
         Else
             lblScore(i).Caption = nScore

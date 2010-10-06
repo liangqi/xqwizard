@@ -1,6 +1,5 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMainLarge 
    BorderStyle     =   1  'Fixed Single
    ClientHeight    =   9600
@@ -68,7 +67,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin VB.CommandButton btnRetract 
       Caption         =   "悔棋"
@@ -91,14 +90,6 @@ Begin VB.Form frmMainLarge
       TabStop         =   0   'False
       Top             =   8640
       Width           =   1095
-   End
-   Begin InetCtlsObjects.Inet inet 
-      Left            =   0
-      Top             =   0
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      _Version        =   393216
-      RequestTimeout  =   10
    End
    Begin VB.CommandButton btnBlur 
       Default         =   -1  'True
@@ -879,6 +870,83 @@ Begin VB.Form frmMainLarge
          Caption         =   "离开(&X)"
       End
    End
+   Begin VB.Menu mnUsers 
+      Caption         =   "用户中心(&U)"
+      Begin VB.Menu mnUsersSave 
+         Caption         =   "提交存档(&S)"
+         Shortcut        =   ^S
+      End
+      Begin VB.Menu mnUsersLoad 
+         Caption         =   "获取存档(&L)"
+      End
+      Begin VB.Menu mnUsersSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersRank 
+         Caption         =   "排名(&R)..."
+      End
+      Begin VB.Menu mnUsersPoints 
+         Caption         =   "查询点数(&P)..."
+      End
+      Begin VB.Menu mnUsersCenter 
+         Caption         =   "用户中心首页(&C)"
+      End
+      Begin VB.Menu mnUsersSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnUsersHelp 
+         Caption         =   "求助(&H)"
+         Begin VB.Menu mnUsersShare 
+            Caption         =   "QQ空间(&Q)"
+            Index           =   0
+         End
+         Begin VB.Menu mnUsersShare 
+            Caption         =   "新浪微博(&S)"
+            Index           =   1
+         End
+         Begin VB.Menu mnUsersShare 
+            Caption         =   "开心网(&K)"
+            Index           =   2
+         End
+         Begin VB.Menu mnUsersShare 
+            Caption         =   "人人网(&R)"
+            Index           =   3
+         End
+         Begin VB.Menu mnUsersSep3 
+            Caption         =   "-"
+         End
+         Begin VB.Menu mnUsersPublish 
+            Caption         =   "百度知道(&Z)"
+            Index           =   0
+         End
+         Begin VB.Menu mnUsersPublish 
+            Caption         =   "百度贴吧象棋吧(&T)"
+            Index           =   1
+         End
+         Begin VB.Menu mnUsersPublish 
+            Caption         =   "其他网站(&O)"
+            Index           =   2
+         End
+      End
+   End
+   Begin VB.Menu mnMobile 
+      Caption         =   "手机版(&M)"
+      Begin VB.Menu mnMobileSave 
+         Caption         =   "提交存档到手机(&S)..."
+      End
+      Begin VB.Menu mnMobileLoad 
+         Caption         =   "从手机获取存档(&L)..."
+      End
+      Begin VB.Menu mnMobileSep1 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnMobileDownload 
+         Caption         =   "下载手机版(&D)"
+      End
+      Begin VB.Menu mnMobileRegister 
+         Caption         =   "获得许可证(&R)"
+      End
+   End
    Begin VB.Menu mnOptions 
       Caption         =   "选项(&O)"
       Begin VB.Menu mnOptionsGui 
@@ -1048,13 +1116,46 @@ Begin VB.Form frmMainLarge
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnHelpShare_ 
+         Caption         =   "推荐给好友(&F)"
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "QQ空间(&Q)"
+            Index           =   0
+         End
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "新浪微博(&S)"
+            Index           =   1
+         End
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "开心网(&K)"
+            Index           =   2
+         End
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "人人网(&R)"
+            Index           =   3
+         End
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "-"
+            Index           =   4
+         End
+         Begin VB.Menu mnHelpShare 
+            Caption         =   "其他网站(&O)"
+            Index           =   5
+         End
+      End
+      Begin VB.Menu mnHelpSep2 
+         Caption         =   "-"
+      End
+      Begin VB.Menu mnHelpUpdate 
+         Caption         =   "检查最新版本(&P)"
+      End
       Begin VB.Menu mnHelpHome 
          Caption         =   "象棋百科全书(&H)"
       End
       Begin VB.Menu mnHelpSuggest 
          Caption         =   "意见反馈(&S)"
       End
-      Begin VB.Menu mnHelpSep2 
+      Begin VB.Menu mnHelpSep3 
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpAbout 
@@ -1072,6 +1173,20 @@ Attribute VB_Exposed = False
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation; either version 2 of the License, or
+' (at your option) any later version.
+
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+
+' You should have received a copy of the GNU General Public License along
+' with this program; if not, write to the Free Software Foundation, Inc.,
+' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 Option Explicit
 
@@ -1119,13 +1234,13 @@ End Sub
 
 Private Sub mnGameHint_Click()
 
-Hint
+TryHint
 
 End Sub
 
 Private Sub mnGameRetract_Click()
 
-Retract
+TryRetract
 
 End Sub
 
@@ -1138,6 +1253,75 @@ End Sub
 Private Sub mnGameExit_Click()
 
 Unload Me
+
+End Sub
+
+Private Sub mnUsersSave_Click()
+
+TrySave
+
+End Sub
+
+Private Sub mnUsersLoad_Click()
+
+TryLoad
+
+End Sub
+
+Private Sub mnUsersRank_Click()
+
+TryRank
+
+End Sub
+
+Private Sub mnUsersPoints_Click()
+
+TryPoints
+
+End Sub
+
+Private Sub mnUsersCenter_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnUsersShare_Click(nIndex As Integer)
+
+HelpShare nIndex, L("象棋巫师魔法学校第", "象棋巫師魔法學校第") & (Gui_nCurr + 1) & _
+        L("关怎么过？", "關怎麼過？"), "http://www.xqbase.com/xqwizard/help_puzzle.htm?fen=" & App_szEndgames(Gui_nCurr)
+
+End Sub
+
+Private Sub mnUsersPublish_Click(nIndex As Integer)
+
+HelpPublish nIndex, L("象棋巫师魔法学校第", "象棋巫師魔法學校第") & (Gui_nCurr + 1) & _
+        L("关怎么过？", "關怎麼過？"), App_szEndgames(Gui_nCurr)
+
+End Sub
+
+Private Sub mnMobileSave_Click()
+
+TryGetCode
+
+End Sub
+
+Private Sub mnMobileLoad_Click()
+
+TryPutCode
+
+End Sub
+
+
+Private Sub mnMobileDownload_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/xqblight.htm", vbNullString, vbNullString, vbNormalFocus
+
+End Sub
+
+Private Sub mnMobileRegister_Click()
+
+ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=xqblight", vbNullString, vbNullString, vbNormalFocus
 
 End Sub
 
@@ -1238,6 +1422,18 @@ MsgBoxIcon Gui_szQuotes(Int(Rnd * QUOTE_NUM + 1)), , L("名言", "名言"), , ICON_Q
 
 End Sub
 
+Private Sub mnHelpShare_Click(nIndex As Integer)
+
+HelpShare nIndex, ShareWords, "http://www.xqbase.com/xqwizard/xqwizard.htm"
+
+End Sub
+
+Private Sub mnHelpUpdate_Click()
+
+CheckUpdate "xqbooth", MANUAL_UPDATE
+
+End Sub
+
 Private Sub mnHelpHome_Click()
 
 ShellExecuteA 0, vbNullString, "http://www.xqbase.com/", vbNullString, vbNullString, vbNormalFocus
@@ -1260,7 +1456,7 @@ Private Sub btnHint_MouseDown(nButton As Integer, nShift As Integer, x As Single
 
 btnHint.Enabled = False
 btnHint.Enabled = True
-Hint
+TryHint
 
 End Sub
 
@@ -1268,7 +1464,7 @@ Private Sub btnRetract_MouseDown(nButton As Integer, nShift As Integer, x As Sin
 
 btnRetract.Enabled = False
 btnRetract.Enabled = True
-Retract
+TryRetract
 
 End Sub
 

@@ -20,14 +20,6 @@ Begin VB.Form frmHide2
       Top             =   0
       Width           =   2415
    End
-   Begin VB.Image imgUnavailable 
-      Height          =   2655
-      Left            =   2400
-      Picture         =   "HIDE2.frx":4E13
-      Stretch         =   -1  'True
-      Top             =   0
-      Width           =   2415
-   End
 End
 Attribute VB_Name = "frmHide2"
 Attribute VB_GlobalNameSpace = False

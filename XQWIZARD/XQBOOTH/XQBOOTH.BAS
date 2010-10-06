@@ -4,6 +4,20 @@ Attribute VB_Name = "mdlXQBooth"
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
 ' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
+'
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation; either version 2 of the License, or
+' (at your option) any later version.
+
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+
+' You should have received a copy of the GNU General Public License along
+' with this program; if not, write to the Free Software Foundation, Inc.,
+' 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 Option Explicit
 
@@ -15,6 +29,13 @@ Private Declare Function Decrypt Lib "XQBLCODE.DLL" Alias "_Decrypt@4" (ByVal nD
 Public Const MAX_ENDGAMES       As Integer = 4096   ' 残局的最大条目数
 Public Const ENDGAME_FILE       As String = "ENDGAMES\BOOTH.EPD"    ' 残局文件
 Public Const ENGINE_FILE        As String = "ELEEYE.EXE"            ' 引擎文件
+Public Const XQAPP_URL          As String = "http://www.xqbase.com/xqbooth/"    ' 魔法学校地址
+' Public Const XQAPP_URL          As String = "http://localhost:8080/xqbooth/"    ' 魔法学校地址
+' 全局常量——登录状态
+Public Const LOGIN_OK           As Integer = 0
+Public Const LOGIN_FIRST        As Integer = 1
+Public Const LOGIN_ERROR        As Integer = 2
+Public Const LOGIN_CANCELED     As Integer = 3
 ' 全局常量——可选参数
 Public Const DRAW_SELECTED      As Boolean = True
 Public Const DRAW_MATE          As Boolean = True
@@ -44,6 +65,13 @@ Public App_dfHintTime           As Double   ' 提示允许时间
 ' 全局变量——进度
 Public Gui_nCurr                As Integer  ' 当前残局的条目序号
 Public Gui_nLast                As Integer  ' 最后残局的条目序号
+' 全局变量——登录
+Public Login_nStatus            As Integer  ' 登录状态
+Public Login_szAct              As String   ' 登录动作
+Public Login_szResult           As String   ' 登录结果
+Public Login_szUserName         As String   ' 登录用户名
+Public Login_szPassword         As String   ' 登录密码
+Public Login_bRemember          As Boolean  ' 记住密码
 ' 全局变量——引擎
 Public Engine_pipe              As PipeStruct ' 引擎管道
 
@@ -325,10 +353,31 @@ App_frmMain.MousePointer = vbDefault
 End Function
 
 ' 获取存档
+Public Sub DoLoad(ByVal nScore As Integer)
+
+Dim bLoad As Boolean
+bLoad = False
+If nScore > Gui_nLast Then
+    bLoad = True
+ElseIf MsgBox(L("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
+        "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
+    bLoad = True
+End If
+If Not bLoad Then
+    Exit Sub
+End If
+Gui_nLast = nScore
+ClearHint
+Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
+LoadGame
+MsgBox L("存档获取成功。", "存檔獲取成功。"), vbInformation
+
+End Sub
+
+' 获取存档
 Public Sub OpenCode()
 
-Dim szCode As String, nScore As Long, bLoad As Boolean
-
+Dim szCode As String, nScore As Long
 szCode = InputBox(L("您可以把存档码更新到其他电脑或手机上，也可以从其他电脑或手机上更新到这里。", _
         "您可以把存檔碼更新到其他電腦或手機上，也可以從其他電腦或手機上更新到這裡。"), _
         L("存档码", "存檔碼"), Mid(100000000 + Encrypt(Gui_nLast), 2))
@@ -340,43 +389,55 @@ If Len(szCode) <> 8 Then
     Exit Sub
 End If
 nScore = Decrypt(Str2Lng(szCode, 0, 99999999))
-If nScore > App_nEndgames Then
+If nScore < 0 Or nScore > App_nEndgames Then
     MsgBox L("存档码错误，请仔细核对。", "存档码错误，请仔细核对。"), vbExclamation
     Exit Sub
 End If
-If nScore = Gui_nLast Then
-    Exit Sub
+If nScore <> Gui_nLast Then
+    DoLoad nScore
 End If
 
-bLoad = False
-If nScore > Gui_nLast Then
-    bLoad = True
-ElseIf MsgBox(L("您将获取的成绩不如当前成绩，是否覆盖当前成绩？", _
-        "您將獲取的成績不如當前成績，是否覆蓋當前成績？"), vbQuestion + vbYesNo) = vbYes Then
-    bLoad = True
-End If
-If bLoad Then
-    Gui_nLast = nScore
-    ClearHint
-    Gui_nCurr = IIf(Gui_nLast = App_nEndgames, Gui_nLast - 1, Gui_nLast)
-    LoadGame
-    MsgBox L("存档更新成功。", "存檔更新成功。"), vbInformation
+End Sub
+
+' 连接错误提示
+Public Sub ConnError()
+
+MsgBox L("无法登录到象棋巫师用户中心，请稍后再试。", _
+        "無法登錄到像棋巫師用戶中心，請稍後再試。"), vbExclamation
+
+End Sub
+
+' 是否登录用户中心
+Public Sub NoRegError(ByVal szPrompt As String)
+
+If MsgBox(szPrompt, vbQuestion + vbYesNo) = vbYes Then
+    ShellExecuteA 0, vbNullString, "http://www.xqbase.com/users/?act=xqblight", _
+            vbNullString, vbNullString, vbNormalFocus
 End If
 
 End Sub
 
 ' 尝试提示
-Public Sub Hint()
+Public Sub TryHint()
 
 Dim dfThinkTime As Double, mv As Long, i As Integer
 
 dfThinkTime = Timer
 dfThinkTime = dfThinkTime + IIf(dfThinkTime < App_dfHintTime, 86400#, 0#) - App_dfHintTime
-If dfThinkTime / 60 < 1 + Gui_nCurr \ 1000 Then
-    MsgBox L("您只思考了不到", "您只思考了不到") & Int(1 + dfThinkTime / 60) & _
-            L("分钟，请再多想想吧。", "分鐘，請再多想想吧。"), vbExclamation
+If dfThinkTime < 60 Then
+    MsgBox L("您只思考了不到1分钟，请再多想想吧。", "您只思考了不到1分鐘，請再多想想吧。"), vbExclamation
     Exit Sub
 End If
+
+#If Not RETAIL_VERSION Then
+    If App_nHint = HINT_NONE And Gui_nCurr >= 500 Then
+        Login_szAct = "hint"
+        frmLogin.Show vbModal, App_frmMain
+        If Login_nStatus <> LOGIN_OK Then
+            Exit Sub
+        End If
+    End If
+#End If
 
 App_nHint = HINT_RETRY
 mv = GetBestMove
@@ -404,12 +465,23 @@ End If
 End Sub
 
 ' 尝试悔棋
-Public Sub Retract()
+Public Sub TryRetract()
 
 If App_pos.nDistance = 0 Then
     MsgBox L("悔棋失败。", "悔棋失敗。"), vbInformation
     Exit Sub
 End If
+
+#If Not RETAIL_VERSION Then
+    If Gui_nCurr >= 500 Then
+        Login_szAct = "retract"
+        frmLogin.Show vbModal, App_frmMain
+        If Login_nStatus <> LOGIN_OK Then
+            Exit Sub
+        End If
+    End If
+#End If
+
 If App_pos.nDistance Mod 2 = 0 Then
     CchessUndoMove App_pos
 End If
@@ -477,6 +549,104 @@ ErrorOpen App_szPath & szFile
 
 End Sub
 
+' 尝试提交
+Public Sub TrySave()
+
+Login_szAct = "save?score=" & Gui_nLast
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus = LOGIN_OK Then
+    MsgBox L("存档提交成功。", "存檔提交成功。"), vbInformation
+End If
+
+End Sub
+
+' 尝试获取
+Public Sub TryLoad()
+
+Login_szAct = "queryscore"
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus = LOGIN_OK Then
+    DoLoad Str2Int(Login_szResult, 0, App_nEndgames)
+End If
+
+End Sub
+
+' 尝试获取点数
+Public Sub TryPoints()
+
+Dim szResults() As String
+Login_szAct = "querypoints"
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus <> LOGIN_OK Then
+    Exit Sub
+End If
+
+szResults = Split(Login_szResult, "|")
+If UBound(szResults) = 1 Then
+    If Options_nLanguage = LANGUAGE_ZH_CN Then
+        MsgBox "您还有 " & szResults(0) & " 点可用。" & IIf(Str2Int(szResults(1)) < 2800, "", _
+                vbCrLf & vbCrLf & "您是黄金会员用户，可以无限次使用提示和悔棋功能。"), vbInformation
+    Else
+        MsgBox "您還有 " & szResults(0) & " 點可用。" & IIf(Str2Int(szResults(1)) < 2800, "", _
+                vbCrLf & vbCrLf & "您是黄金會員用戶，可以無限次使用提示和悔棋功能。"), vbInformation
+    End If
+Else
+    ConnError
+End If
+
+End Sub
+
+' 尝试排名
+Public Sub TryRank()
+    
+Login_szAct = "queryrank"
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus = LOGIN_OK Then
+    If UBound(Split(Login_szResult, "|")) = 2 Then
+        frmRank.Show vbModal, App_frmMain
+    Else
+        ConnError
+    End If
+End If
+
+End Sub
+
+' 尝试提交存档到手机
+Public Sub TryGetCode()
+
+Login_szAct = "getcode?score=" & Gui_nLast
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus = LOGIN_OK Then
+    MsgBox L("存档码是[", "存檔碼是[") & Login_szResult & _
+            L("]，请将这8位数字输入到手机。", "]，請將這8位數字輸入到手機。"), vbInformation
+End If
+
+End Sub
+
+' 尝试提交存档到手机
+Public Sub TryPutCode()
+
+Dim szCode As String
+szCode = ""
+Do
+    szCode = InputBox(L("请输入手机上显示的8位存档码：", "請輸入手機上顯示的8位存檔碼："), _
+            L("从手机获取存档", "從手機獲取存檔"), szCode)
+    If szCode = "" Then
+        Exit Sub
+    End If
+    If Len(szCode) = 8 Then
+        Exit Do
+    End If
+    MsgBox L("存档码必须是8位数字", "存檔碼必須是8位數字"), vbExclamation
+Loop
+Login_szAct = "putcode?code=" & szCode
+frmLogin.Show vbModal, App_frmMain
+If Login_nStatus = LOGIN_OK Then
+    DoLoad Str2Int(Login_szResult, 0, App_nEndgames)
+End If
+
+End Sub
+
 ' 切换界面
 Public Sub SwapGui()
 
@@ -492,8 +662,14 @@ End Sub
 ' 从注册表加载参数
 Public Sub LoadRegs2()
 
-Gui_nLast = Str2Int(GetSetting("XQWizard", "Booth", "Last", "0"), 0, MAX_ENDGAMES - 1)
+Dim nLastOld As Integer, nLastNew As Integer
+nLastOld = Str2Int(GetSetting("XQBooth", "Gui", "Last", "0"), 0, MAX_ENDGAMES - 1)
+nLastNew = Str2Int(GetSetting("XQWizard", "Booth", "Last", "0"), 0, MAX_ENDGAMES - 1)
+Gui_nLast = IIf(nLastOld > nLastNew, nLastOld, nLastNew)
 Gui_nCurr = Str2Int(GetSetting("XQWizard", "Booth", "Curr", "0"), 0, MAX_ENDGAMES - 1)
+Login_szUserName = GetSetting("XQWizard", "Booth", "UserName", "")
+Login_szPassword = GetSetting("XQWizard", "Booth", "Password", "")
+Login_bRemember = GetSetting("XQWizard", "Booth", "Remember", "1") <> "0"
 
 End Sub
 
@@ -502,6 +678,11 @@ Public Sub SaveRegs2()
 
 SaveSetting "XQWizard", "Booth", "Last", Gui_nLast
 SaveSetting "XQWizard", "Booth", "Curr", Gui_nCurr
+SaveSetting "XQWizard", "Booth", "UserName", Login_szUserName
+' 只有32的位密码才是Cookie密码，可以保存在注册表
+SaveSetting "XQWizard", "Booth", "Password", IIf(Login_bRemember And _
+        Len(Login_szPassword) = 32, Login_szPassword, "")
+SaveSetting "XQWizard", "Booth", "Remember", IIf(Login_bRemember, "1", "0")
 
 End Sub
 
@@ -638,7 +819,11 @@ Gui_nAdvertIndex = 0
 Gui_nAdvertTimes(0) = 10 ' 10秒钟后开始播放广告
 LoadAdvertList
 If Gui_nAdvertNum = 0 Then
-    DownloadAdvertList "advert_retail.txt"
+    #If RETAIL_VERSION Then
+        DownloadAdvertList "advert_retail.txt"
+    #Else
+        DownloadAdvertList "advert_0450.txt"
+    #End If
     LoadAdvertList
     If Gui_nAdvertNum = 0 Then
         Gui_nAdvertNum = 1
@@ -648,8 +833,12 @@ If Gui_nAdvertNum = 0 Then
         Gui_szAdvertDate = Date
     End If
 End If
-' 零售版不检查更新
-
+' 检查更新，如果用户决定更新，会弹出下载页面，出现在象棋巫师页面之前
+#If Not RETAIL_VERSION Then
+    If Gui_szUpgradeDate <> Date Then
+        CheckUpdate "xqwizard"
+    End If
+#End If
 If Options_bLargeGui Then
     Set App_frmMain = frmMainLarge
 Else
@@ -660,6 +849,17 @@ LoadGame
 ' 在显示窗口以前，先把语言设置好
 SetLang
 SetLangOptions App_frmMain
+' 如果是零售版，则隐藏“推荐给好友”和“检查更新”
+#If RETAIL_VERSION Then
+    App_frmMain.mnHelpShare_.Visible = False
+    App_frmMain.mnHelpSep2.Visible = False
+    App_frmMain.mnHelpUpdate.Visible = False
+    App_frmMain.mnUsers.Visible = False
+    App_frmMain.mnMobile.Visible = False
+#Else
+    App_frmMain.mnGameCode.Visible = False
+    App_frmMain.mnGameSep4.Visible = False
+#End If
 App_frmMain.Show
 App_frmMain.web.Navigate2 App_szPath & "ADVERT\xqbase.htm"
 App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
@@ -668,6 +868,7 @@ App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
 Unload frmStartup
 
+Login_nStatus = LOGIN_FIRST
 ' 主循环
 App_bRunning = True
 bPrevInstance = App.PrevInstance
@@ -698,7 +899,11 @@ Do While App_bRunning
 Loop
 ' 退出前下载广告列表
 If Gui_szAdvertDate <> Date Then
-    DownloadAdvertList "advert_retail.txt"
+    #If RETAIL_VERSION Then
+        DownloadAdvertList "advert_retail.txt"
+    #Else
+        DownloadAdvertList "advert_0450.txt"
+    #End If
     LoadAdvertList
     If Gui_nAdvertNum > 0 Then
         Gui_szAdvertDate = Date
@@ -711,8 +916,11 @@ PipeClose Engine_pipe
 SaveRegs
 SaveRegs2
 PlaySoundA vbNullString, 0, 0
+frmHide.mci.Command = "Close"
 ' 零售版不退弹
-' ExitPopup
+#If Not RETAIL_VERSION Then
+    ExitPopup
+#End If
 Unload frmHide
 Unload frmHide2
 

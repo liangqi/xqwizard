@@ -162,7 +162,7 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -181,6 +181,10 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private Const MORE_LEVELS As Integer = -LEVEL_GRANDMASTER
+
+Private bMoreLevels As Boolean
+
 Private Sub Form_Load()
 
 Dim i As Integer
@@ -192,6 +196,7 @@ cmbLevel.AddItem L("业余", "業餘")
 cmbLevel.AddItem L("专业", "專業")
 cmbLevel.AddItem L("大师", "大師")
 cmbLevel.AddItem L("特级大师", "特級大師")
+cmbLevel.AddItem L("更多……", "更多……")
 
 Select Case Options_nEnginePlay
 Case ENGINE_PLAY_NONE
@@ -215,13 +220,9 @@ Case ENGINE_PLAY_RANDOM
 End Select
 
 optHandicap(0).Value = True
-
-If Timer_nDepth < LEVEL_GRANDMASTER Or Timer_nDepth > LEVEL_PEABRAIN Then
-    cmbLevel.ListIndex = 0
-Else
-    cmbLevel.ListIndex = LEVEL_PEABRAIN - Timer_nDepth
-End If
-
+bMoreLevels = False
+cmbLevel.ListIndex = IIf(Timer_nDepth < 0, LEVEL_PEABRAIN - Timer_nDepth, MORE_LEVELS)
+bMoreLevels = True
 chkShowNew.Value = IIf(Options_bShowNew, 1, 0)
 SetTopMost hWnd
 
@@ -262,9 +263,23 @@ Options_bShowNew = (chkShowNew.Value = 1)
 
 End Sub
 
+Private Sub cmbLevel_Click()
+
+If Not bMoreLevels Or cmbLevel.ListIndex < MORE_LEVELS Then
+    Exit Sub
+End If
+frmLevelSet.Show vbModal
+If Timer_nDepth < 0 Then
+    cmbLevel.ListIndex = LEVEL_PEABRAIN - Timer_nDepth
+End If
+
+End Sub
+
 Private Sub btnConfirm_Click()
 
-Timer_nDepth = LEVEL_PEABRAIN - cmbLevel.ListIndex
+If cmbLevel.ListIndex < MORE_LEVELS Then
+    Timer_nDepth = LEVEL_PEABRAIN - cmbLevel.ListIndex
+End If
 ' 以上难度设置代码必须在RestartGame前运行才会生效
 App_szFileName = ""
 If optHandicap(0).Value Then

@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Languages]
-Name: "cn"; MessagesFile: "compiler:Languages\ChineseSimp.isl"
-Name: "tw"; MessagesFile: "compiler:Languages\ChineseTrad.isl"
+Name: "cn"; MessagesFile: "compiler:Languages\ChineseSimp.isl"; InfoBeforeFile: "DOC\LICENSES.TXT"
+Name: "tw"; MessagesFile: "compiler:Languages\ChineseTrad.isl"; InfoBeforeFile: "DOC\LICENSET.TXT"
 
 [LangOptions]
 cn.LanguageName=<7B80><4F53><4E2D><6587>

@@ -2094,34 +2094,6 @@ App_frmMain.mnEnginePonder.Caption = "後台思考(&P)"
 App_frmMain.mnEngineAnalyze.Caption = "電腦分析(&A)"
 App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
 
-App_frmMain.mnOptions.Caption = "選項(&O)"
-App_frmMain.mnOptionsSettings.Caption = "設置(&O)..."
-App_frmMain.mnOptionsGui.Caption = "界面(&G)"
-App_frmMain.mnOptionsGuiSmall.Caption = "小(&S)"
-App_frmMain.mnOptionsGuiLarge.Caption = "大(&L)"
-App_frmMain.mnOptionsBoard_.Caption = "棋盤(&B)"
-App_frmMain.mnOptionsPieces_.Caption = "棋子(&P)"
-App_frmMain.mnOptionsSounds.Caption = "音效(&S)"
-App_frmMain.mnOptionsMusic_.Caption = "音樂(&M)"
-App_frmMain.mnOptionsMusic(0).Caption = "無聲(&A)"
-App_frmMain.mnOptionsMusic(1).Caption = "緊張(&B)"
-App_frmMain.mnOptionsMusic(2).Caption = "風趣(&C)"
-App_frmMain.mnOptionsMusic(3).Caption = "巴赫(&D)"
-App_frmMain.mnOptionsMusic(4).Caption = "莫扎特一(&E)"
-App_frmMain.mnOptionsMusic(5).Caption = "莫扎特四(&F)"
-App_frmMain.mnOptionsMusic(6).Caption = "貝多芬(&G)"
-App_frmMain.mnOptionsMusic(7).Caption = "李斯特(&H)"
-App_frmMain.mnOptionsMusic(8).Caption = "柴可夫斯基(&I)"
-App_frmMain.mnOptionsMusic(9).Caption = "德沃夏克(&J)"
-App_frmMain.mnOptionsMusic(10).Caption = "馬里奧一(&K)"
-App_frmMain.mnOptionsMusic(11).Caption = "馬里奧二(&L)"
-App_frmMain.mnOptionsMusic(12).Caption = "仙劍奇俠傳(&M)"
-App_frmMain.mnOptionsMusic(13).Caption = "望江南(&N)"
-App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
-App_frmMain.mnOptionsLanguage_.Caption = "語言/&Language"
-App_frmMain.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
-App_frmMain.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
-
 App_frmMain.mnHelp.Caption = "幫助(&H)"
 App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
 App_frmMain.mnHelpHowTo.Caption = "日積月累(&W)..."
@@ -2340,7 +2312,6 @@ App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
 GetSystemInfo si
 App_nProcessors = si.dwNumberOfProcessors
-Debug.Print App_nProcessors
 CchessInit Options_nLanguage
 ' 判断是否允许升变
 If UCase(Left(Command, 2)) = "/P" Or UCase(Left(Command, 2)) = "-P" Then
@@ -2467,6 +2438,7 @@ If Not App_bPrevInstance Then
 End If
 ' 在显示窗口以前，先把语言设置好
 SetLang
+SetLangOptions App_frmMain
 ' 如果是零售版，则隐藏“推荐给好友”和“检查更新”
 #If RETAIL_VERSION Then
     App_frmMain.mnHelpShare_.Visible = False

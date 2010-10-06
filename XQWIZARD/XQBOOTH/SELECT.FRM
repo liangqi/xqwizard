@@ -5394,7 +5394,7 @@ Attribute VB_Exposed = False
 ' SELECT.FRM - Source Code for XiangQi Witchcraft School, Part III
 '
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -5452,8 +5452,7 @@ Dim i As Integer, nCurr As Integer
 For i = 0 To 7
     nCurr = hsb.Value * BOARD_NUM + i
     If nCurr < nSelLast Then
-        imgBoard(i).Picture = IIf(nCurr <= Gui_nLast, _
-                frmHide2.imgBoardMini.Picture, frmHide2.imgUnavailable.Picture)
+        imgBoard(i).Picture = frmHide2.imgBoardMini.Picture
         DrawBoard i, App_szEndgames(nCurr)
         lblTag(i).Caption = L("第 ", "第 ") & (nCurr + 1) & L(" 关", " 關")
     Else
@@ -5470,7 +5469,7 @@ Private Sub Form_Load()
 
 Dim i As Integer
 
-nSelLast = Gui_nLast + IIf(Gui_nLast = App_nEndgames, 0, 1) + (App_nEndgames \ 1000 - Gui_nLast \ 1000)
+nSelLast = Gui_nLast + IIf(Gui_nLast = App_nEndgames, 0, 1)
 nSelected = -1
 hsb.Min = 0
 hsb.Max = (nSelLast - 1) \ BOARD_NUM
@@ -5545,8 +5544,6 @@ If nCurr <= Gui_nLast And nCurr < App_nEndgames Then
     Gui_nCurr = nCurr
     LoadGame
     Unload Me
-Else
-    MsgBox L("您尚未闯到这一关。", "您尚未闖到這一關。"), vbExclamation
 End If
 
 End Sub
