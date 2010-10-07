@@ -196,7 +196,7 @@ cmbLevel.AddItem L("业余", "業餘")
 cmbLevel.AddItem L("专业", "專業")
 cmbLevel.AddItem L("大师", "大師")
 cmbLevel.AddItem L("特级大师", "特級大師")
-cmbLevel.AddItem L("更多……", "更多……")
+cmbLevel.AddItem L("更多...", "更多...")
 
 Select Case Options_nEnginePlay
 Case ENGINE_PLAY_NONE
