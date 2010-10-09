@@ -190,7 +190,7 @@ img.ZOrder
 For i = 1 To nSteps
     img.Move (xSrc * (nSteps - i) + xDst * i) \ nSteps, (ySrc * (nSteps - i) + yDst * i) \ nSteps
     img.Refresh
-    Sleep 20
+    Sleep 25
 Next
 If Options_bLargeGui Then
     img.Picture = frmHide.imgPiecesLarge(0).Picture
@@ -223,7 +223,7 @@ ElseIf App_sqSelected > 0 Then
     mv = Move(App_sqSelected, sq)
     If CchessTryMove(App_pos, nStatus, mv) Then
         If Options_nMoveDelay > 0 Then
-            Animate mv, Options_nMoveDelay * 5
+            Animate mv, Options_nMoveDelay * 4
         End If
         ' 随后电脑思考可能会阻塞，所以要强制刷新
         DrawSquare Src(mv), DRAW_SELECTED, , DRAW_REFRESH
@@ -240,7 +240,7 @@ ElseIf App_sqSelected > 0 Then
             CchessTryMove App_pos, nStatus, mv
             If Options_nMoveDelay > 0 Then
                 Sleep Options_nMoveDelay * 800
-                Animate mv, Options_nMoveDelay * 5
+                Animate mv, Options_nMoveDelay * 4
             End If
             DrawSquare Src(mv), DRAW_SELECTED
             DrawSquare Dst(mv), DRAW_SELECTED

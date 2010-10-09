@@ -1263,7 +1263,7 @@ If nSteps > 0 Then
     For i = 1 To nSteps
         img.Move (xSrc * (nSteps - i) + xDst * i) \ nSteps, (ySrc * (nSteps - i) + yDst * i) \ nSteps
         img.Refresh
-        Sleep 20
+        Sleep 25
     Next
     img.Picture = App_picPieces(0)
     img.Move xSrc, ySrc
@@ -1532,7 +1532,7 @@ App_frmMain.lstMoveText.AddItem NumberText(Game_cntCurr, Game_sdCurr) & _
         Game_szMoveText(Game_nFormat, Game_nMaxMove), Game_nMaxMove
 Game_mvMove(Game_nMaxMove) = mv
 If bEcho Then
-    MoveForward Options_nMoveDelay * 5
+    MoveForward Options_nMoveDelay * 4
     MoveFlush
 Else
     MoveForward
@@ -2229,7 +2229,7 @@ If App_bPlay Then
     dfThisTime = dfThisTime + IIf(dfThisTime < Timer_dfLastTime, 86400#, 0#)
     If dfThisTime > Timer_dfLastTime + Options_nPlayIntv Then
         Timer_dfLastTime = Timer
-        MoveForward Options_nPlayIntv * 5
+        MoveForward Options_nPlayIntv * 4
         MoveFlush
     End If
 End If

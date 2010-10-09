@@ -61,123 +61,123 @@ Begin VB.Form frmHide2
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   30
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":000C
+            Picture         =   "HIDE2.frx":0ABA
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0166
+            Picture         =   "HIDE2.frx":0C14
             Key             =   ""
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":02C0
+            Picture         =   "HIDE2.frx":0D6E
             Key             =   ""
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":041A
+            Picture         =   "HIDE2.frx":0EC8
             Key             =   ""
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0574
+            Picture         =   "HIDE2.frx":1022
             Key             =   ""
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":06CE
+            Picture         =   "HIDE2.frx":117C
             Key             =   ""
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0828
+            Picture         =   "HIDE2.frx":12D6
             Key             =   ""
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0982
+            Picture         =   "HIDE2.frx":1430
             Key             =   ""
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0ADC
+            Picture         =   "HIDE2.frx":158A
             Key             =   ""
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0C36
+            Picture         =   "HIDE2.frx":16E4
             Key             =   ""
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0D90
+            Picture         =   "HIDE2.frx":183E
             Key             =   ""
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":0EEA
+            Picture         =   "HIDE2.frx":1998
             Key             =   ""
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1044
+            Picture         =   "HIDE2.frx":1AF2
             Key             =   ""
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":119E
+            Picture         =   "HIDE2.frx":1C4C
             Key             =   ""
          EndProperty
          BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":12F8
+            Picture         =   "HIDE2.frx":1DA6
             Key             =   ""
          EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1452
+            Picture         =   "HIDE2.frx":1F00
             Key             =   ""
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":15AC
+            Picture         =   "HIDE2.frx":205A
             Key             =   ""
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1706
+            Picture         =   "HIDE2.frx":21B4
             Key             =   ""
          EndProperty
          BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1860
+            Picture         =   "HIDE2.frx":230E
             Key             =   ""
          EndProperty
          BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":19BA
+            Picture         =   "HIDE2.frx":2468
             Key             =   ""
          EndProperty
          BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1B14
+            Picture         =   "HIDE2.frx":25C2
             Key             =   ""
          EndProperty
          BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1C6E
+            Picture         =   "HIDE2.frx":271C
             Key             =   ""
          EndProperty
          BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1DC8
+            Picture         =   "HIDE2.frx":2876
             Key             =   ""
          EndProperty
          BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":1F22
+            Picture         =   "HIDE2.frx":29D0
             Key             =   ""
          EndProperty
          BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":207C
+            Picture         =   "HIDE2.frx":2B2A
             Key             =   ""
          EndProperty
          BeginProperty ListImage26 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":21D6
+            Picture         =   "HIDE2.frx":2C84
             Key             =   ""
          EndProperty
          BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":2330
+            Picture         =   "HIDE2.frx":2DDE
             Key             =   ""
          EndProperty
          BeginProperty ListImage28 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":248A
+            Picture         =   "HIDE2.frx":2F38
             Key             =   ""
          EndProperty
          BeginProperty ListImage29 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":25E4
+            Picture         =   "HIDE2.frx":3092
             Key             =   ""
          EndProperty
          BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "HIDE2.frx":273E
+            Picture         =   "HIDE2.frx":31EC
             Key             =   ""
          EndProperty
       EndProperty
@@ -185,56 +185,56 @@ Begin VB.Form frmHide2
    Begin VB.Image imgEngineBlackLarge 
       Height          =   855
       Left            =   840
-      Picture         =   "HIDE2.frx":2898
+      Picture         =   "HIDE2.frx":3346
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineRedLarge 
       Height          =   855
       Left            =   0
-      Picture         =   "HIDE2.frx":2DA8
+      Picture         =   "HIDE2.frx":3856
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineBlack 
       Height          =   615
       Left            =   2280
-      Picture         =   "HIDE2.frx":32B8
+      Picture         =   "HIDE2.frx":3D66
       Top             =   0
       Width           =   615
    End
    Begin VB.Image imgEngineRed 
       Height          =   615
       Left            =   1680
-      Picture         =   "HIDE2.frx":3714
+      Picture         =   "HIDE2.frx":41C2
       Top             =   0
       Width           =   615
    End
    Begin VB.Image imgFormRed 
       Height          =   480
       Left            =   3600
-      Picture         =   "HIDE2.frx":3B70
+      Picture         =   "HIDE2.frx":461E
       Top             =   0
       Width           =   480
    End
    Begin VB.Image imgFormBlack 
       Height          =   480
       Left            =   3600
-      Picture         =   "HIDE2.frx":3E7A
+      Picture         =   "HIDE2.frx":4928
       Top             =   600
       Width           =   480
    End
    Begin VB.Image imgMickey 
       Height          =   5400
       Left            =   0
-      Picture         =   "HIDE2.frx":4184
+      Picture         =   "HIDE2.frx":4C32
       Top             =   0
       Width           =   3750
    End
    Begin VB.Image imgMickeyAlpha 
       Height          =   5400
       Left            =   960
-      Picture         =   "HIDE2.frx":A31E
+      Picture         =   "HIDE2.frx":ADCC
       Top             =   0
       Width           =   3750
    End

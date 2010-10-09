@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainSmall 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -46,7 +46,7 @@ Begin VB.Form frmMainSmall
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -371,9 +371,9 @@ Begin VB.Form frmMainSmall
          Width           =   1695
          Begin VB.ListBox lstMoveText 
             Height          =   1500
-            ItemData        =   "MAINS.frx":0ABA
+            ItemData        =   "MAINS.frx":000C
             Left            =   120
-            List            =   "MAINS.frx":0ABC
+            List            =   "MAINS.frx":000E
             TabIndex        =   23
             Top             =   600
             Width           =   1455
@@ -387,9 +387,9 @@ Begin VB.Form frmMainSmall
          End
          Begin VB.ComboBox cmbFormat 
             Height          =   300
-            ItemData        =   "MAINS.frx":0ABE
+            ItemData        =   "MAINS.frx":0010
             Left            =   600
-            List            =   "MAINS.frx":0AC0
+            List            =   "MAINS.frx":0012
             Style           =   2  'Dropdown List
             TabIndex        =   25
             Top             =   2160
@@ -418,7 +418,7 @@ Begin VB.Form frmMainSmall
             ForeColor       =   &H00FF0000&
             Height          =   255
             Left            =   1320
-            MouseIcon       =   "MAINS.frx":0AC2
+            MouseIcon       =   "MAINS.frx":0014
             MousePointer    =   99  'Custom
             TabIndex        =   22
             Top             =   240
@@ -562,7 +562,7 @@ Begin VB.Form frmMainSmall
          ForeColor       =   &H00FF0000&
          Height          =   375
          Left            =   0
-         MouseIcon       =   "MAINS.frx":0C14
+         MouseIcon       =   "MAINS.frx":0166
          MousePointer    =   99  'Custom
          TabIndex        =   6
          Top             =   840

@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}#1.1#0"; "shdocvw.dll"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmMainLarge 
    AutoRedraw      =   -1  'True
    BorderStyle     =   0  'None
@@ -371,9 +371,9 @@ Begin VB.Form frmMainLarge
          Width           =   1695
          Begin VB.ListBox lstMoveText 
             Height          =   2580
-            ItemData        =   "MAINL.frx":0ABA
+            ItemData        =   "MAINL.frx":000C
             Left            =   120
-            List            =   "MAINL.frx":0ABC
+            List            =   "MAINL.frx":000E
             TabIndex        =   23
             Top             =   600
             Width           =   1455
@@ -387,9 +387,9 @@ Begin VB.Form frmMainLarge
          End
          Begin VB.ComboBox cmbFormat 
             Height          =   300
-            ItemData        =   "MAINL.frx":0ABE
+            ItemData        =   "MAINL.frx":0010
             Left            =   600
-            List            =   "MAINL.frx":0AC0
+            List            =   "MAINL.frx":0012
             Style           =   2  'Dropdown List
             TabIndex        =   25
             Top             =   3240
@@ -418,7 +418,7 @@ Begin VB.Form frmMainLarge
             ForeColor       =   &H00FF0000&
             Height          =   255
             Left            =   1320
-            MouseIcon       =   "MAINL.frx":0AC2
+            MouseIcon       =   "MAINL.frx":0014
             MousePointer    =   99  'Custom
             TabIndex        =   22
             Top             =   240
@@ -570,7 +570,7 @@ Begin VB.Form frmMainLarge
          ForeColor       =   &H00FF0000&
          Height          =   375
          Left            =   0
-         MouseIcon       =   "MAINL.frx":0C14
+         MouseIcon       =   "MAINL.frx":0166
          MousePointer    =   99  'Custom
          TabIndex        =   6
          Top             =   840

@@ -25,7 +25,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "下一关"
       Height          =   975
       Left            =   6720
-      Picture         =   "MAINL.frx":0ABA
+      Picture         =   "MAINL.frx":014A
       Style           =   1  'Graphical
       TabIndex        =   3
       TabStop         =   0   'False
@@ -36,7 +36,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "再试一次"
       Height          =   975
       Left            =   5760
-      Picture         =   "MAINL.frx":0F87
+      Picture         =   "MAINL.frx":0617
       Style           =   1  'Graphical
       TabIndex        =   2
       TabStop         =   0   'False
@@ -67,13 +67,13 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.CommandButton btnRetract 
       Caption         =   "悔棋"
       Height          =   975
       Left            =   1080
-      Picture         =   "MAINL.frx":1451
+      Picture         =   "MAINL.frx":0AE1
       Style           =   1  'Graphical
       TabIndex        =   1
       TabStop         =   0   'False
@@ -84,7 +84,7 @@ Begin VB.Form frmMainLarge
       Caption         =   "提示"
       Height          =   975
       Left            =   0
-      Picture         =   "MAINL.frx":189D
+      Picture         =   "MAINL.frx":0F2D
       Style           =   1  'Graphical
       TabIndex        =   0
       TabStop         =   0   'False
