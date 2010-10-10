@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlEngine"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.81, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -189,7 +189,7 @@ Public Sub RunEngine()
 
 Dim i As Integer, bSlaveEngine As Boolean
 Dim nTimeRatio As Long, nMoveStatus As Long
-Dim szFenStr As String, szGoPonder As String
+Dim szPosition As String, szGoPonder As String
 Dim nMoveList(1 To 128) As Long
 
 Engine_posBoard = Game_pos
@@ -200,11 +200,11 @@ Engine_nCurrMove = 0
 If Engine_bAnalyze Then
     frmThink.txtThink.Text = ""
 End If
-szFenStr = Game_szFen
+szPosition = IIf(Game_bStartPos, "startpos", "fen " & Game_szFen)
 If Game_nCurrMove > 0 Then
-    szFenStr = szFenStr & " moves"
+    szPosition = szPosition & " moves"
     For i = 1 To Game_nCurrMove
-        szFenStr = szFenStr & " " & Move2Coord(Game_mvMove(i))
+        szPosition = szPosition & " " & Move2Coord(Game_mvMove(i))
     Next
 End If
 szGoPonder = "go"
@@ -218,8 +218,8 @@ If Engine_nStatus = BUSY_PONDER Then
         Engine_szPonderStr = Move2Iccs(Engine_mvPonder)
     End Select
     If CchessTryMove(Engine_posBoard, nMoveStatus, Engine_mvPonder) <> 0 Then
-        szFenStr = szFenStr & IIf(Game_nCurrMove > 0, "", " moves")
-        szFenStr = szFenStr & " " & Move2Coord(Engine_mvPonder)
+        szPosition = szPosition & IIf(Game_nCurrMove > 0, "", " moves")
+        szPosition = szPosition & " " & Move2Coord(Engine_mvPonder)
         szGoPonder = szGoPonder & " ponder"
     End If
 Else
@@ -229,7 +229,7 @@ Else
 End If
 bSlaveEngine = IIf(Engine_posBoard.sdPlayer = 0, Engine_bSlaveRed, Engine_bSlaveBlack)
 nTimeRatio = IIf(bSlaveEngine, Engine_nTimeRatioSlave, Engine_nTimeRatio)
-SendEngine "position fen " & szFenStr, bSlaveEngine
+SendEngine "position " & szPosition, bSlaveEngine
 If Engine_mvBan <> 0 Then
     SendEngine "banmoves " & Move2Coord(Engine_mvBan), bSlaveEngine
 End If
