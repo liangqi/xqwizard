@@ -623,7 +623,7 @@ Case PUB_LOCATION_QZONE
             vbNullString, vbNullString, vbNormalFocus
 End Select
 MsgBox L("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
-        "棋譜已復製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。"), vbInformation
+        "棋譜已複製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。"), vbInformation
 
 End Sub
 

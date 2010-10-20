@@ -3,7 +3,7 @@ Attribute VB_Name = "mdlCommon"
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
 ' XiangQi Witchcraft School - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.81, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,7 @@ Private Declare Function Process32Next Lib "KERNEL32.DLL" (ByVal hSnapshot As Lo
 Private Declare Sub CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long)
 
 ' 全局常量——象棋巫师信息
-Public Const STRING_VERSION     As String = "4.81"
+Public Const STRING_VERSION     As String = "4.82"
 Public Const QUOTE_NUM          As Integer = 12     ' 名言条目数
 Public Const ICON_QUOTE         As Integer = 8      ' 名言图标
 Public Const ICON_WIN           As Integer = 15     ' 胜的图标
@@ -239,7 +239,7 @@ Case HELP_PUB_TIEBA
             vbNullString, vbNullString, vbNormalFocus
 End Select
 MsgBox L("棋谱已复制到剪贴板，请找到发表帖子的内容框，按Ctrl-V键粘贴。", _
-        "棋譜已復製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。") & _
+        "棋譜已複製到剪貼板，請找到發表帖子的內容框，按Ctrl-V鍵粘貼。") & _
         IIf(bSchool, vbCrLf & vbCrLf & L("每位学员的题目是不一样的，所以请务必把题目粘贴完整。", _
         "每位學員的題目是不一樣的，所以請務必把題目粘貼完整。"), ""), vbInformation
 
@@ -274,7 +274,7 @@ Case HELP_SHARE_OTHER
     Clipboard.Clear
     Clipboard.SetText szTitle & " " & vbCrLf & szUrl
     MsgBox L("推荐链接已复制到剪贴板，您可以将推荐链接粘贴到任何网站、论坛、社区上(按Ctrl-V键粘贴)。", _
-            "推薦鏈接已復製到剪貼板，您可以將推薦鏈接粘貼到任何網站、論壇、社區上(按Ctrl-V鍵粘貼)。") & vbCrLf & vbCrLf & _
+            "推薦鏈接已複製到剪貼板，您可以將推薦鏈接粘貼到任何網站、論壇、社區上(按Ctrl-V鍵粘貼)。") & vbCrLf & vbCrLf & _
             L("感谢您对象棋巫师的支持。", "感謝您對象棋巫師的支持。"), vbInformation
 End Select
 
@@ -295,7 +295,7 @@ End Sub
 ' 检查更新
 Public Sub CheckUpdate(ByVal szReferer As String, Optional ByVal bManual As Boolean = False)
 
-Dim sz As String, szUserID As String, szWhatsNew As String, szUrl As String
+Dim sz As String, szUserID As String, szWhatsNew As String
 Dim dwCounter(0 To 1) As Long
 
 sz = ""
@@ -323,14 +323,8 @@ Else
                     L(" 已经发布，需要下载最新版本吗？", " 已經發布，需要下載最新版本嗎？")
         End If
         If MsgBox(szWhatsNew, vbQuestion + vbYesNo) = vbYes Then
-            szUrl = ""
-            On Error Resume Next
-            szUrl = frmHide.Inet.OpenURL("http://www.xqbase.com/xqwizard/download.txt")
-            On Error GoTo 0
-            If Left(szUrl, 7) <> "http://" Then
-                szUrl = "http://www.xqbase.com/xqwizard/xqwizard.htm"
-            End If
-            ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
+            ShellExecuteA 0, vbNullString, "http://www.xqbase.com/xqwizard/download.php", _
+                    vbNullString, vbNullString, vbNormalFocus
         Else
             Gui_szUpgradeVer = sz
         End If

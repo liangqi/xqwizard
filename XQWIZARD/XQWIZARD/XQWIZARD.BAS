@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -79,7 +79,6 @@ Public Const LEVEL_BEGINNER     As Integer = -4
 Public Const LEVEL_ROOKIE       As Integer = -3
 Public Const LEVEL_NEWBIE       As Integer = -2
 Public Const LEVEL_PEABRAIN     As Integer = -1
-Public Const LEVEL_TIMER        As Integer = 0
 Public Const LEVEL_DEPTH_MIN    As Integer = 1
 Public Const LEVEL_DEPTH_MAX    As Integer = 99
 Public Const LEVEL_INFINITE     As Integer = 100
@@ -1207,9 +1206,7 @@ bComputer = IIf(Game_sdMax = 0, Engine_bRed, Engine_bBlack)
 App_frmMain.mnMoveDraw.Enabled = Not bComputer
 App_frmMain.mnMoveResign.Enabled = Not bComputer
 ' 如果处于“电脑分析”模式，那么停止分析
-If Engine_nStatus = IDLE_REST Then
-    Engine_nStatus = IDLE_READY
-ElseIf Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
+If Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
     If Engine_nStatus > BUSY_WAIT Then
         Engine_nStatus = BUSY_WAIT
         StopEngine
@@ -1282,7 +1279,10 @@ End Sub
 Public Sub MoveCut()
 
 Dim i As Integer
-If Engine_nStatus > BUSY_WAIT Then
+' 走法列表如果变动了，就要重置引擎状态
+If Engine_nStatus = IDLE_REST Then
+    Engine_nStatus = IDLE_READY
+ElseIf Engine_nStatus > BUSY_WAIT Then
     Engine_nStatus = BUSY_WAIT
     StopEngine
 End If
@@ -1720,7 +1720,7 @@ szFen = AllocString(CchessBoard2Fen(Game_pos))
 szUrl = "http://www.xqbase.com/pub/board.php?fen=" & UrlEncode(szFen) & _
         "&size=" & Publish_nSize & "&board=" & nBoard & "&pieces=" & nPieces
 ShellExecuteA 0, vbNullString, szUrl, vbNullString, vbNullString, vbNormalFocus
-MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複制了。") & vbCrLf & vbCrLf & _
+MsgBox L("对页面上的图片棋盘按右键，就可保存或复制了。", "對頁面上的圖片棋盤按右鍵，就可保存或複製了。") & vbCrLf & vbCrLf & _
         L("如需更改棋盘棋子样式，请在“发布棋谱”功能中设置。", "如需更改棋盤棋子樣式，請在“發布棋譜”功能中設置。"), vbInformation
 
 End Sub
@@ -2036,7 +2036,7 @@ App_frmMain.mnPosFlip.Caption = "翻轉棋盤(&F)"
 App_frmMain.mnPosMirror.Caption = "左右對稱(&M)"
 App_frmMain.mnPosAnalyze.Caption = "在新窗口中推演(&A)"
 App_frmMain.mnPosEdit.Caption = "編輯局面(&E)..."
-App_frmMain.mnPosCopy.Caption = "复制局面代碼(&C)"
+App_frmMain.mnPosCopy.Caption = "複製局面代碼(&C)"
 App_frmMain.mnPosPaste.Caption = "粘貼局面代碼(&P)"
 App_frmMain.mnPosLoad.Caption = "從局面文件導入(&L)..."
 App_frmMain.mnPosStore.Caption = "導出到局面件(&S)..."
@@ -2055,7 +2055,7 @@ App_frmMain.mnSearchPosition.Caption = "搜索局面(&F)"
 App_frmMain.mnSearchEndgame.Caption = "搜索殘局(&E)"
 App_frmMain.mnWizardPublish.Caption = "發布棋譜(&U)..."
 App_frmMain.mnWizardBitmap.Caption = "生成圖片棋盤(&B)"
-App_frmMain.mnWizardPgns2Jar.Caption = "制作手机棋譜(&J)"
+App_frmMain.mnWizardPgns2Jar.Caption = "制作手機棋譜(&J)"
 App_frmMain.mnWizardConvert.Caption = "批量轉換棋譜(&C)"
 App_frmMain.mnWizardBook.Caption = "管理開局庫(&K)"
 
@@ -2070,8 +2070,8 @@ App_frmMain.mnEndgames(6).Caption = "殘局攻殺譜(&E)"
 App_frmMain.mnEndgames(7).Caption = "象棋實用殘局(第一集)(&F)"
 App_frmMain.mnEndgames(8).Caption = "象棋實用殘局(第二集)(&G)"
 App_frmMain.mnEndgames(10).Caption = "橘中秘(殘局篇)(&H)"
-App_frmMain.mnEndgames(11).Caption = "适情雅趣(&I)"
-App_frmMain.mnEndgames(12).Caption = "爛柯神机(&J)"
+App_frmMain.mnEndgames(11).Caption = "適情雅趣(&I)"
+App_frmMain.mnEndgames(12).Caption = "爛柯神機(&J)"
 App_frmMain.mnEndgames(13).Caption = "象局匯存(&K)"
 App_frmMain.mnEndgames(14).Caption = "江湖百局秘譜(&L)"
 App_frmMain.mnEndgamesHelp.Caption = "求助(&P)"

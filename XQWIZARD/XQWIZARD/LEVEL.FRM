@@ -23,25 +23,28 @@ Begin VB.Form frmLevelSet
    ScaleWidth      =   3120
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
-   Begin VB.OptionButton optRookie 
+   Begin VB.OptionButton optLevel 
       Caption         =   "新手"
       Height          =   255
+      Index           =   2
       Left            =   120
       TabIndex        =   2
       Top             =   840
       Width           =   735
    End
-   Begin VB.OptionButton optNewbie 
+   Begin VB.OptionButton optLevel 
       Caption         =   "菜鸟"
       Height          =   255
+      Index           =   1
       Left            =   120
       TabIndex        =   1
       Top             =   480
       Width           =   735
    End
-   Begin VB.OptionButton optPeaBrain 
+   Begin VB.OptionButton optLevel 
       Caption         =   "傻瓜"
       Height          =   255
+      Index           =   0
       Left            =   120
       TabIndex        =   0
       Top             =   120
@@ -57,13 +60,12 @@ Begin VB.Form frmLevelSet
       Width           =   855
    End
    Begin VB.OptionButton optOverwhelming 
-      Caption         =   "无敌(不限时)"
+      Caption         =   "无敌"
       Height          =   255
       Left            =   1080
       TabIndex        =   28
-      ToolTipText     =   "仅供解杀局、残局用，电脑将一直运算下去直到算出胜负为止。您可以按“停止思考”按钮中止电脑的运算。"
       Top             =   2640
-      Width           =   1455
+      Width           =   735
    End
    Begin VB.CommandButton btnConfirm 
       Caption         =   "确定"
@@ -100,7 +102,7 @@ Begin VB.Form frmLevelSet
          _Version        =   327681
          Value           =   8
          BuddyControl    =   "txtDepth"
-         BuddyDispid     =   196613
+         BuddyDispid     =   196614
          OrigLeft        =   1200
          OrigTop         =   120
          OrigRight       =   1395
@@ -128,41 +130,46 @@ Begin VB.Form frmLevelSet
          Width           =   255
       End
    End
-   Begin VB.OptionButton optGrandMaster 
+   Begin VB.OptionButton optLevel 
       Caption         =   "特大"
       Height          =   255
+      Index           =   7
       Left            =   120
       TabIndex        =   7
       Top             =   2640
       Width           =   735
    End
-   Begin VB.OptionButton optBeginner 
+   Begin VB.OptionButton optLevel 
       Caption         =   "入门"
       Height          =   255
+      Index           =   3
       Left            =   120
       TabIndex        =   3
       Top             =   1200
       Width           =   735
    End
-   Begin VB.OptionButton optMaster 
+   Begin VB.OptionButton optLevel 
       Caption         =   "大师"
       Height          =   255
+      Index           =   6
       Left            =   120
       TabIndex        =   6
       Top             =   2280
       Width           =   735
    End
-   Begin VB.OptionButton optExpert 
+   Begin VB.OptionButton optLevel 
       Caption         =   "专业"
       Height          =   255
+      Index           =   5
       Left            =   120
       TabIndex        =   5
       Top             =   1920
       Width           =   735
    End
-   Begin VB.OptionButton optAmateur 
+   Begin VB.OptionButton optLevel 
       Caption         =   "业余"
       Height          =   255
+      Index           =   4
       Left            =   120
       TabIndex        =   4
       Top             =   1560
@@ -226,7 +233,7 @@ Begin VB.Form frmLevelSet
          _Version        =   327681
          Value           =   10
          BuddyControl    =   "txtInitTime"
-         BuddyDispid     =   196622
+         BuddyDispid     =   196618
          OrigLeft        =   1200
          OrigTop         =   120
          OrigRight       =   1395
@@ -248,7 +255,7 @@ Begin VB.Form frmLevelSet
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtIncMove"
-         BuddyDispid     =   196624
+         BuddyDispid     =   196620
          OrigLeft        =   1200
          OrigTop         =   480
          OrigRight       =   1395
@@ -270,7 +277,7 @@ Begin VB.Form frmLevelSet
          _Version        =   327681
          Value           =   60
          BuddyControl    =   "txtIncTime"
-         BuddyDispid     =   196623
+         BuddyDispid     =   196619
          OrigLeft        =   1200
          OrigTop         =   840
          OrigRight       =   1395
@@ -315,12 +322,12 @@ Begin VB.Form frmLevelSet
       End
    End
    Begin VB.OptionButton optDepth 
-      Caption         =   "限定深度(不限时)"
+      Caption         =   "限定深度"
       Height          =   255
       Left            =   1080
       TabIndex        =   22
       Top             =   1920
-      Width           =   1815
+      Width           =   1095
    End
    Begin VB.OptionButton optTimer 
       Caption         =   "限定时间"
@@ -339,7 +346,7 @@ Attribute VB_Exposed = False
 ' LEVEL.FRM - Source Code for XiangQi Wizard, Part IV
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.76, Last Modified: Sep. 2010
+' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -399,54 +406,25 @@ txtIncTime.Text = Timer_nIncTime
 Level_nIncMove = Timer_nIncMove
 txtIncMove.Text = Timer_nIncMove
 
-Select Case Timer_nDepth
-Case LEVEL_GRANDMASTER
-    optGrandMaster.Value = True
+If Timer_nDepth < 0 Then
+    optLevel(LEVEL_PEABRAIN - Timer_nDepth).Value = True
     frmTimer.Visible = False
     frmDepth.Visible = False
-Case LEVEL_MASTER
-    optMaster.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_EXPERT
-    optExpert.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_AMATEUR
-    optAmateur.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_BEGINNER
-    optBeginner.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_ROOKIE
-    optRookie.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_NEWBIE
-    optNewbie.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_PEABRAIN
-    optPeaBrain.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-Case LEVEL_TIMER
+ElseIf Timer_nDepth = 0 Then
     optTimer.Value = True
     frmTimer.Visible = True
     frmDepth.Visible = False
-Case LEVEL_DEPTH_MIN To LEVEL_DEPTH_MAX
+ElseIf Timer_nDepth = LEVEL_INFINITE Then
+    optOverwhelming.Value = True
+    frmTimer.Visible = False
+    frmDepth.Visible = False
+Else
     optDepth.Value = True
     frmTimer.Visible = False
     frmDepth.Visible = True
     Level_nDepth = Timer_nDepth
     txtDepth.Text = Level_nDepth
-Case LEVEL_INFINITE
-    optOverwhelming.Value = True
-    frmTimer.Visible = False
-    frmDepth.Visible = False
-End Select
+End If
 
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
 
@@ -463,14 +441,14 @@ For i = 0 To Controls.Count - 1
 Next
 On Error GoTo 0
 Caption = "引擎設置"
-optPeaBrain.Caption = "傻瓜"
-optNewbie.Caption = "菜鳥"
-optRookie.Caption = "新手"
-optBeginner.Caption = "入門"
-optAmateur.Caption = "業餘"
-optExpert.Caption = "專業"
-optMaster.Caption = "大師"
-optGrandMaster.Caption = "特大"
+optLevel(0).Caption = "傻瓜"
+optLevel(1).Caption = "菜鳥"
+optLevel(2).Caption = "新手"
+optLevel(3).Caption = "入門"
+optLevel(4).Caption = "業餘"
+optLevel(5).Caption = "專業"
+optLevel(6).Caption = "大師"
+optLevel(7).Caption = "特大"
 optTimer.Caption = "限定時間"
 lblStart.Caption = "限時"
 lblMinutes.Caption = "分"
@@ -478,10 +456,9 @@ optIncMove.Caption = "限著"
 lblMoves.Caption = "著"
 optIncTime.Caption = "加時"
 lblSeconds.Caption = "秒"
-optDepth.Caption = "限定深度(不限時)"
+optDepth.Caption = "限定深度"
 lblDepth.Caption = "層"
-optOverwhelming.Caption = "無敵(不限時)"
-optOverwhelming.ToolTipText = "僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。您可以按“停止思考”按鈕中止電腦的運算。"
+optOverwhelming.Caption = "無敵"
 btnConfirm.Caption = "確定"
 btnCancel.Caption = "取消"
 
@@ -495,45 +472,14 @@ End If
 
 End Sub
 
-Private Sub optPeaBrain_Click()
+Private Sub optLevel_Click(nIndex As Integer)
 
-Level_nDepth = LEVEL_PEABRAIN
-
-End Sub
-
-Private Sub optNewbie_Click()
-
-Level_nDepth = LEVEL_NEWBIE
-
-End Sub
-
-Private Sub optRookie_Click()
-
-Level_nDepth = LEVEL_ROOKIE
-
-End Sub
-
-Private Sub optBeginner_Click()
-
-Level_nDepth = LEVEL_BEGINNER
-
-End Sub
-
-Private Sub optAmateur_Click()
-
-Level_nDepth = LEVEL_AMATEUR
-
-End Sub
-
-Private Sub optExpert_Click()
-
-Level_nDepth = LEVEL_EXPERT
-
-End Sub
-
-Private Sub optMaster_Click()
-
-Level_nDepth = LEVEL_MASTER
+Level_nDepth = LEVEL_PEABRAIN - nIndex
+If Level_nDepth = LEVEL_GRANDMASTER Then
+    MsgBox L("“特级大师”级别电脑思考时间可能会很长，建议缺乏耐心的象棋爱好者不要选择这个级别。", _
+            "“特級大師”級別電腦思考時間可能會很長，建議缺乏耐心的象棋愛好者不要選擇這個級別。") & vbCrLf & vbCrLf & _
+            L("您可以按“停止思考/立即走棋”按钮中止电脑的运算。", "您可以按“停止思考/立即走棋”按鈕中止電腦的運算。"), vbInformation
+End If
 
 End Sub
 
@@ -545,6 +491,9 @@ End Sub
 
 Private Sub optOverwhelming_Click()
 
+MsgBox L("“无敌”模式不适合一般的人机对弈，仅供解杀局、残局用，电脑将一直运算下去直到算出胜负为止。", _
+        "“無敵”模式不適合一般的人機對弈，僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。") & vbCrLf & vbCrLf & _
+        L("您可以按“停止思考/立即走棋”按钮中止电脑的运算。", "您可以按“停止思考/立即走棋”按鈕中止電腦的運算。"), vbInformation
 frmTimer.Visible = False
 frmDepth.Visible = False
 Level_nDepth = 100
@@ -620,11 +569,6 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
-If optOverwhelming.Value Then
-    If MsgBox("“无敌”模式不适合一般的人机对弈，是否继续？", vbExclamation + vbYesNo) = vbNo Then
-        Exit Sub
-    End If
-End If
 Timer_bIncMode = optIncTime.Value
 Timer_nInitTime = Level_nInitTime
 Timer_nIncMove = Level_nIncMove

@@ -162,7 +162,7 @@ Attribute VB_Exposed = False
 ' NEWGAME.FRM - Source Code for XiangQi Wizard, Part X
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -265,12 +265,17 @@ End Sub
 
 Private Sub cmbLevel_Click()
 
-If Not bMoreLevels Or cmbLevel.ListIndex < MORE_LEVELS Then
-    Exit Sub
-End If
-frmLevelSet.Show vbModal
-If Timer_nDepth < 0 Then
-    cmbLevel.ListIndex = LEVEL_PEABRAIN - Timer_nDepth
+If bMoreLevels And cmbLevel.ListIndex = MORE_LEVELS Then
+    frmLevelSet.Show vbModal
+    If Timer_nDepth < 0 Then
+        cmbLevel.ListIndex = LEVEL_PEABRAIN - Timer_nDepth
+    End If
+Else
+    If cmbLevel.ListIndex = LEVEL_PEABRAIN - LEVEL_GRANDMASTER Then
+        MsgBox L("“特级大师”级别电脑思考时间可能会很长，建议缺乏耐心的象棋爱好者不要选择这个级别。", _
+                "“特級大師”級別電腦思考時間可能會很長，建議缺乏耐心的象棋愛好者不要選擇這個級別。") & vbCrLf & vbCrLf & _
+                L("您可以按“停止思考/立即走棋”按钮中止电脑的运算。", "您可以按“停止思考/立即走棋”按鈕中止電腦的運算。"), vbInformation
+    End If
 End If
 
 End Sub

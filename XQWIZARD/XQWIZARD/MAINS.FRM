@@ -2353,7 +2353,7 @@ Private Sub mnPosCopy_Click()
 
 Clipboard.Clear
 Clipboard.SetText AllocString(CchessBoard2Fen(Game_pos)) & " - - 0 " & Game_cntCurr
-MsgBox L("局面代码已复制到剪贴板。", "局面代碼已復製到剪貼板"), vbInformation
+MsgBox L("局面代码已复制到剪贴板。", "局面代碼已複製到剪貼板"), vbInformation
 
 End Sub
 
