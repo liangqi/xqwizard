@@ -6,7 +6,7 @@ Begin VB.Form frmLevelSet
    ClientHeight    =   3480
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   3120
+   ClientWidth     =   2880
    BeginProperty Font 
       Name            =   "宋体"
       Size            =   9
@@ -20,7 +20,7 @@ Begin VB.Form frmLevelSet
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   3480
-   ScaleWidth      =   3120
+   ScaleWidth      =   2880
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
    Begin VB.OptionButton optLevel 
@@ -54,7 +54,7 @@ Begin VB.Form frmLevelSet
       Cancel          =   -1  'True
       Caption         =   "取消"
       Height          =   375
-      Left            =   1680
+      Left            =   1560
       TabIndex        =   30
       Top             =   3000
       Width           =   855
@@ -71,7 +71,7 @@ Begin VB.Form frmLevelSet
       Caption         =   "确定"
       Default         =   -1  'True
       Height          =   375
-      Left            =   600
+      Left            =   480
       TabIndex        =   29
       Top             =   3000
       Width           =   855
@@ -79,7 +79,7 @@ Begin VB.Form frmLevelSet
    Begin VB.Frame frmDepth 
       BorderStyle     =   0  'None
       Height          =   495
-      Left            =   1320
+      Left            =   1080
       TabIndex        =   23
       Top             =   2160
       Width           =   1695
@@ -178,7 +178,7 @@ Begin VB.Form frmLevelSet
    Begin VB.Frame frmTimer 
       BorderStyle     =   0  'None
       Height          =   1215
-      Left            =   1320
+      Left            =   1080
       TabIndex        =   9
       Top             =   360
       Width           =   1695
@@ -365,6 +365,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Private Level_bLoaded   As Boolean  ' 按钮触发事件
 Private Level_nDepth    As Integer  ' 引擎搜索深度
 Private Level_nInitTime As Integer  ' 起始时间
 Private Level_nIncMove  As Integer  ' 时段制的每时段步数
@@ -406,6 +407,7 @@ txtIncTime.Text = Timer_nIncTime
 Level_nIncMove = Timer_nIncMove
 txtIncMove.Text = Timer_nIncMove
 
+Level_bLoaded = False
 If Timer_nDepth < 0 Then
     optLevel(LEVEL_PEABRAIN - Timer_nDepth).Value = True
     frmTimer.Visible = False
@@ -425,6 +427,7 @@ Else
     Level_nDepth = Timer_nDepth
     txtDepth.Text = Level_nDepth
 End If
+Level_bLoaded = True
 
 LevelSetting Timer_nInitTime, Timer_bIncMode, Timer_nIncMove, Timer_nIncTime
 
@@ -474,6 +477,11 @@ End Sub
 
 Private Sub optLevel_Click(nIndex As Integer)
 
+If Not Level_bLoaded Then
+    Exit Sub
+End If
+frmTimer.Visible = False
+frmDepth.Visible = False
 Level_nDepth = LEVEL_PEABRAIN - nIndex
 If Level_nDepth = LEVEL_GRANDMASTER Then
     MsgBox L("“特级大师”级别电脑思考时间可能会很长，建议缺乏耐心的象棋爱好者不要选择这个级别。", _
@@ -483,25 +491,25 @@ End If
 
 End Sub
 
-Private Sub optGrandMaster_Click()
-
-Level_nDepth = LEVEL_GRANDMASTER
-
-End Sub
-
 Private Sub optOverwhelming_Click()
 
+If Not Level_bLoaded Then
+    Exit Sub
+End If
+frmTimer.Visible = False
+frmDepth.Visible = False
+Level_nDepth = LEVEL_INFINITE
 MsgBox L("“无敌”模式不适合一般的人机对弈，仅供解杀局、残局用，电脑将一直运算下去直到算出胜负为止。", _
         "“無敵”模式不適合一般的人機對弈，僅供解殺局、殘局用，電腦將一直運算下去直到算出勝負為止。") & vbCrLf & vbCrLf & _
         L("您可以按“停止思考/立即走棋”按钮中止电脑的运算。", "您可以按“停止思考/立即走棋”按鈕中止電腦的運算。"), vbInformation
-frmTimer.Visible = False
-frmDepth.Visible = False
-Level_nDepth = 100
 
 End Sub
 
 Private Sub optTimer_Click()
 
+If Not Level_bLoaded Then
+    Exit Sub
+End If
 frmTimer.Visible = True
 frmDepth.Visible = False
 Level_nDepth = 0
@@ -510,6 +518,9 @@ End Sub
 
 Private Sub optDepth_Click()
 
+If Not Level_bLoaded Then
+    Exit Sub
+End If
 frmTimer.Visible = False
 frmDepth.Visible = True
 If Level_nDepth < LEVEL_DEPTH_MIN Or Level_nDepth > LEVEL_DEPTH_MAX Then
