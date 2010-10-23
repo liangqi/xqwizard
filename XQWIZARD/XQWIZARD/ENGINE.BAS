@@ -470,7 +470,8 @@ If Left(szReceived, 9) = "bestmove " Then
                 If Options_bAllowResign And Right(szReceived, 5) = " draw" Then
                     EngineOfferDraw
                 End If
-                If Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
+                If Engine_nStatus = IDLE_READY And _
+                        Engine_bPonder And Mid(szReceived, 14, 8) = " ponder " Then
                     Engine_mvPonder = Coord2Move(Mid(szReceived, 22, 4))
                     Engine_nStatus = BUSY_PONDER
                     RunEngine
@@ -489,13 +490,9 @@ If Left(szReceived, 9) = "bestmove " Then
 ElseIf Left(szReceived, 10) = "nobestmove" Then
     EngineBusy False
     Select Case Engine_nStatus
-    Case BUSY_WAIT
+    Case BUSY_WAIT, BUSY_PONDER
         Engine_nStatus = IDLE_READY
-    Case BUSY_PONDER
-        Engine_nStatus = IDLE_READY
-    Case BUSY_ANALYZE
-        Engine_nStatus = IDLE_REST
-    Case BUSY_THINK
+    Case BUSY_ANALYZE, BUSY_THINK
         Engine_nStatus = IDLE_REST
     Case Else
         ' 不该接收到引擎的信息
@@ -533,6 +530,17 @@ If Engine_nStatus = nOldStatus Then
     Engine_nStatus = IDLE_READY
     EngineBusy False
 End If
+
+End Sub
+
+' 让引擎空闲
+Public Sub IdleEngine()
+
+If Engine_nStatus > BUSY_WAIT Then
+    Engine_nStatus = BUSY_WAIT
+    StopEngine
+End If
+Engine_nStatus = IDLE_READY
 
 End Sub
 
@@ -606,10 +614,7 @@ End Sub
 ' 关闭引擎(如果有副引擎，先关闭副引擎)
 Public Sub CloseEngine()
 
-If Engine_nStatus > BUSY_WAIT Then
-    Engine_nStatus = BUSY_WAIT
-    StopEngine
-End If
+IdleEngine
 If Engine_bSlaveRed Or Engine_bSlaveBlack Then
     CloseSlaveEngine
 End If

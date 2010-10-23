@@ -2134,11 +2134,7 @@ End Sub
 Private Sub mnMoveRetract_Click()
 
 If Engine_nStatus > IDLE_UNLOAD Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 MoveBack
 If Game_nCurrMove > 0 Then
@@ -2168,10 +2164,7 @@ Private Sub mnMoveDraw_Click()
 
 If Engine_bDraw Then
     Game_nResult = RESULT_DRAW
-    lblResult = ResultString
-    Timer_bEnabled = False
-    mnEngineLevel.Checked = False
-    tlb.Buttons("EngineLevel").Value = tbrUnpressed
+    EngineGameOver
     GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
             L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
 Else
@@ -2195,10 +2188,7 @@ If MsgBox(L("真的要认输吗？", "真的要認輸嗎？"), vbQuestion + vbYesNo) <> vbYes 
     Exit Sub
 End If
 Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
-lblResult = ResultString
-Timer_bEnabled = False
-mnEngineLevel.Checked = False
-tlb.Buttons("EngineLevel").Value = tbrUnpressed
+EngineGameOver
 GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_LOSS
 
 End Sub
@@ -2244,11 +2234,7 @@ If Game_nCurrMove < Game_nMaxMove Then
     End If
 End If
 If Engine_nStatus > IDLE_UNLOAD Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 MoveBack
 MoveCut
@@ -2526,11 +2512,7 @@ End Sub
 Private Sub mnEngineRed_Click()
 
 If Not (Engine_bBlack And Game_sdMax = 1) Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 Engine_bRed = Not Engine_bRed
 mnEngineRed.Checked = Engine_bRed
@@ -2542,11 +2524,7 @@ End Sub
 Private Sub mnEngineBlack_Click()
 
 If Not (Engine_bRed And Game_sdMax = 0) Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 Engine_bBlack = Not Engine_bBlack
 mnEngineBlack.Checked = Engine_bBlack
@@ -2558,11 +2536,7 @@ End Sub
 Private Sub mnEnginePonder_Click()
 
 If Engine_bPonder And Engine_nStatus <> BUSY_THINK Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 Engine_bPonder = Not Engine_bPonder
 mnEnginePonder.Checked = Engine_bPonder

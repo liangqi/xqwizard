@@ -1009,11 +1009,7 @@ End Sub
 Public Sub RestartGame(Optional ByVal bKeepLabel As Boolean = False, Optional ByVal bDebugUcci As Boolean = False)
 
 If Engine_nStatus > IDLE_UNLOAD Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
     If Not bDebugUcci Then
         SendEngine "setoption newgame"
         If Engine_bSlaveRed Or Engine_bSlaveBlack Then
@@ -1206,11 +1202,7 @@ App_frmMain.mnMoveDraw.Enabled = Not bComputer
 App_frmMain.mnMoveResign.Enabled = Not bComputer
 ' 如果处于“电脑分析”模式，那么停止分析
 If Engine_bAnalyze And Not (Engine_bRed Or Engine_bBlack) Then
-    If Engine_nStatus > BUSY_WAIT Then
-        Engine_nStatus = BUSY_WAIT
-        StopEngine
-    End If
-    Engine_nStatus = IDLE_READY
+    IdleEngine
 End If
 Engine_bDraw = False
 Engine_mvBan = 0
@@ -1281,9 +1273,8 @@ Dim i As Integer
 ' 走法列表如果变动了，就要重置引擎状态
 If Engine_nStatus = IDLE_REST Then
     Engine_nStatus = IDLE_READY
-ElseIf Engine_nStatus > BUSY_WAIT Then
-    Engine_nStatus = BUSY_WAIT
-    StopEngine
+Else
+    IdleEngine
 End If
 For i = Game_nMaxMove To Game_nCurrMove + 1 Step -1
     App_frmMain.lstMoveText.RemoveItem i
@@ -1412,15 +1403,27 @@ App_frmMain.lstMoveText.List(nMove) = szMoveText & IIf(Game_szComment(nMove) = "
 
 End Sub
 
-' 电脑认输
-Public Sub EngineResign()
+' 结束一局对局，引擎休息
+Public Sub EngineGameOver()
 
-Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
 App_frmMain.lblResult = ResultString
 Timer_bEnabled = False
 App_frmMain.mnEngineLevel.Checked = False
 App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-Engine_nStatus = IDLE_REST
+If Engine_nStatus > IDLE_UNLOAD Then
+    IdleEngine
+    If Engine_bRed Or Engine_bBlack Then
+        Engine_nStatus = IDLE_REST
+    End If
+End If
+
+End Sub
+
+' 电脑认输
+Public Sub EngineResign()
+
+Game_nResult = IIf(Game_sdMax = 0, RESULT_BLACKWIN, RESULT_REDWIN)
+EngineGameOver
 GameOver IIf(Game_sdMax = 0, L("红方认输。", "紅方認輸。"), L("黑方认输。", "黑方認輸。")), ICON_WIN
 
 End Sub
@@ -1429,11 +1432,7 @@ End Sub
 Public Sub EngineAcceptDraw()
 
 Game_nResult = RESULT_DRAW
-App_frmMain.lblResult = ResultString
-Timer_bEnabled = False
-App_frmMain.mnEngineLevel.Checked = False
-App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-Engine_nStatus = IDLE_REST
+EngineGameOver
 GameOver IIf(Game_sdMax = 0, L("红方接受提和。", "紅方接受提和。"), _
         L("黑方接受提和。", "黑方接受提和。")), ICON_DRAW
 
@@ -1548,16 +1547,10 @@ If (nMoveStatus And MOVE_MATE) = 0 Then
         End If
     End If
     If (nMoveStatus And MOVE_DRAW) <> 0 Then
+        Game_nResult = RESULT_DRAW
+        EngineGameOver
         If bEcho Then
             GameOver L("自然作和。", "自然作和。"), ICON_DRAW
-        End If
-        Game_nResult = RESULT_DRAW
-        App_frmMain.lblResult = ResultString
-        Timer_bEnabled = False
-        App_frmMain.mnEngineLevel.Checked = False
-        App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-        If Engine_bRed Or Engine_bBlack Then
-            EngineLoaded True
         End If
     ElseIf (nMoveStatus And MOVE_PERPETUAL) <> 0 Then
         Game_nResult = RESULT_DRAW
@@ -1567,6 +1560,7 @@ If (nMoveStatus And MOVE_MATE) = 0 Then
         If (nMoveStatus And MOVE_PERPETUAL_LOSS) <> 0 Then
             Game_nResult = Game_nResult - 1 + Game_sdCurr * 2
         End If
+        EngineGameOver
         If bEcho Then
             If Game_nResult = 2 Then
                 nIcon = ICON_DRAW
@@ -1579,25 +1573,15 @@ If (nMoveStatus And MOVE_MATE) = 0 Then
                 GameOver Choose(Game_nResult, "黑方長打作負！", "雙方不變作和。", "紅方長打作負！"), nIcon
             End If
         End If
-        App_frmMain.lblResult = ResultString
-        Timer_bEnabled = False
-        App_frmMain.mnEngineLevel.Checked = False
-        App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
-        If Engine_bRed Or Engine_bBlack Then
-            EngineLoaded True
-        End If
     End If
 Else
-    App_sqMate = Game_pos.ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
+    Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
+    EngineGameOver
     If bEcho Then
         nIcon = IIf((Game_sdCurr = 1 And Engine_bRed) Or (Game_sdCurr = 0 And Engine_bBlack), ICON_LOSS, ICON_WIN)
+        App_sqMate = Game_pos.ucsqPieces(IIf(Game_sdCurr = 1, 32, 16))
         GameOver IIf(Game_sdCurr = 1, L("红胜。", "紅勝。"), L("黑胜。", "黑勝。")), nIcon
     End If
-    Game_nResult = IIf(Game_sdCurr = 1, RESULT_REDWIN, RESULT_BLACKWIN)
-    App_frmMain.lblResult = ResultString
-    Timer_bEnabled = False
-    App_frmMain.mnEngineLevel.Checked = False
-    App_frmMain.tlb.Buttons("EngineLevel").Value = tbrUnpressed
 End If
 If App_frmMain.mnMoveDraw.Checked Then
     App_frmMain.mnMoveDraw.Checked = False
@@ -1621,7 +1605,7 @@ Else
     If Options_bAllowResign And Engine_bPonderFinishedDraw Then
         EngineOfferDraw
     End If
-    If Engine_mvPonderFinishedPonder <> 0 Then
+    If Engine_nStatus = IDLE_READY And Engine_mvPonderFinishedPonder <> 0 Then
         Engine_mvPonder = Engine_mvPonderFinishedPonder
         Engine_nStatus = BUSY_PONDER
         RunEngine
