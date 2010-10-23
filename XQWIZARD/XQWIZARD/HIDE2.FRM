@@ -25,7 +25,7 @@ Begin VB.Form frmHide2
    StartUpPosition =   3  'Windows Default
    Begin SHDocVwCtl.WebBrowser web 
       Height          =   255
-      Left            =   3000
+      Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   255
@@ -46,10 +46,10 @@ Begin VB.Form frmHide2
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin MSComctlLib.ImageList imglst 
-      Left            =   2880
+      Left            =   0
       Top             =   0
       _ExtentX        =   1005
       _ExtentY        =   1005
@@ -184,28 +184,28 @@ Begin VB.Form frmHide2
    End
    Begin VB.Image imgEngineBlackLarge 
       Height          =   855
-      Left            =   840
+      Left            =   1440
       Picture         =   "HIDE2.frx":3346
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineRedLarge 
       Height          =   855
-      Left            =   0
+      Left            =   600
       Picture         =   "HIDE2.frx":3856
       Top             =   0
       Width           =   855
    End
    Begin VB.Image imgEngineBlack 
       Height          =   615
-      Left            =   2280
+      Left            =   2880
       Picture         =   "HIDE2.frx":3D66
       Top             =   0
       Width           =   615
    End
    Begin VB.Image imgEngineRed 
       Height          =   615
-      Left            =   1680
+      Left            =   2280
       Picture         =   "HIDE2.frx":41C2
       Top             =   0
       Width           =   615
@@ -219,24 +219,10 @@ Begin VB.Form frmHide2
    End
    Begin VB.Image imgFormBlack 
       Height          =   480
-      Left            =   3600
+      Left            =   4200
       Picture         =   "HIDE2.frx":4928
-      Top             =   600
+      Top             =   0
       Width           =   480
-   End
-   Begin VB.Image imgMickey 
-      Height          =   5400
-      Left            =   0
-      Picture         =   "HIDE2.frx":4C32
-      Top             =   0
-      Width           =   3750
-   End
-   Begin VB.Image imgMickeyAlpha 
-      Height          =   5400
-      Left            =   960
-      Picture         =   "HIDE2.frx":ADCC
-      Top             =   0
-      Width           =   3750
    End
 End
 Attribute VB_Name = "frmHide2"

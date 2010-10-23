@@ -35,7 +35,6 @@ Private Type SystemInfo
 End Type
 
 Private Declare Sub GetSystemInfo Lib "KERNEL32.DLL" (ByRef lpSystemInfo As SystemInfo)
-Private Declare Sub SetFocus Lib "USER32.DLL" (ByVal hWnd As Long)
 
 ' 全局常量——象棋巫师参数
 Public Const MAX_ENDGAMES       As Integer = 1024 ' 残局的最大条目数
@@ -2199,7 +2198,7 @@ End Function
 ' 空闲事件
 Public Sub DoIdleEvents()
 
-Dim dfThisTime As Double, hWnd As Long
+Dim dfThisTime As Double
 ' 依次检测以下几个事件
 ' 时间
 If Timer_bEnabled And Not Timer_bOver(Game_sdMax) Then
@@ -2267,18 +2266,7 @@ If dfThisTime > Gui_dfLastTime + Gui_nAdvertTimes(Gui_nAdvertIndex) Then
     If Gui_nAdvertIndex > Gui_nAdvertNum Then
         Gui_nAdvertIndex = 1
     End If
-    ' hWnd = GetFocus
-    hWnd = 0
-    On Error Resume Next
-    hWnd = App_frmMain.ActiveControl.hWnd
-    On Error GoTo 0
-    App_frmMain.web.Visible = False
     App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
-    App_frmMain.web.Visible = True
-    ' 切换广告时，把浏览器控件隐藏掉，就不会发出“咔嗒”声了，但要恢复焦点
-    If hWnd <> 0 Then
-        SetFocus hWnd
-    End If
 End If
 ' 界面
 DoEvents
@@ -2289,7 +2277,7 @@ End Sub
 Public Sub Main()
 
 Dim nLogFileNo As Integer, si As SystemInfo
-Dim hWnd As Long, i As Integer, bNewGame As Boolean, sz As String
+Dim i As Integer, bNewGame As Boolean, sz As String
 
 ' 初始化
 LoadRegs
@@ -2307,9 +2295,9 @@ If FindProcess("XQARENA.EXE") Then
             "象棋巫師競技場正在運行，請先退出象棋巫師競技場再運行象棋巫師魔法學校。"), vbExclamation
     Exit Sub
 End If
-' 弹出启动画面，继续初始化
-hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
-        frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
+' 不再显示启动画面
+' hWnd = TransparentWindow(App.hInstance, frmHide2.imgMickey.Picture.Handle, frmHide2.imgMickeyAlpha.Picture.Handle, _
+'         frmHide2.imgMickey.Width, frmHide2.imgMickey.Height)
 Randomize Timer
 App_bPrevInstance = App.PrevInstance
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
@@ -2467,7 +2455,7 @@ App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsTopMost.Checked = Options_bTopMost
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
-DestroyWindow hWnd
+' DestroyWindow hWnd
 If Gui_bShowHowTo Then
     frmHowTo.Show vbModal, App_frmMain
 End If

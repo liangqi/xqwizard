@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQBooth"
 ' XQBOOTH.BAS - Source Code for XiangQi Booth, Part I
 '
 ' XiangQi Booth - a Chinese Chess Endgame Challenge Game
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -763,8 +763,9 @@ Dim dfThisTime As Double, dfLastTime As Double
 
 ' 初始化
 App_szPath = App.Path & IIf(Right(App.Path, 1) = "\", "", "\")
-frmStartup.Show
-frmStartup.Refresh
+' 不再显示启动画面
+' frmStartup.Show
+' frmStartup.Refresh
 LoadRegs
 CchessInit Options_nLanguage
 LoadRegs2
@@ -795,7 +796,7 @@ Do While App_nEndgames < MAX_ENDGAMES And Not EOF(nFileNo)
 Loop
 Close #nFileNo
 If App_nEndgames = 0 Then
-    Unload frmStartup
+    ' Unload frmStartup
     ErrorOpen App_szPath & ENDGAME_FILE
     Exit Sub
 End If
@@ -807,7 +808,7 @@ Gui_nCurr = IIf(Gui_nCurr > App_nEndgames - 1, App_nEndgames - 1, Gui_nCurr)
 
 ' 加载引擎
 If GetAppType(App_szPath & "ELEEYE.EXE") <> IMAGE_SUBSYSTEM_WINDOWS_CUI Then
-    Unload frmStartup
+    ' Unload frmStartup
     MsgBox L("无法加载引擎：", "無法加載引擎：") & App_szPath & "ELEEYE.EXE", vbExclamation
     Exit Sub
 End If
@@ -834,7 +835,7 @@ Loop
 If Not bLoaded Then
     PipeLineOutput Engine_pipe, "quit"
     PipeClose Engine_pipe
-    Unload frmStartup
+    ' Unload frmStartup
     MsgBox L("无法加载引擎：", "無法加載引擎：") & App_szPath & "ELEEYE.EXE" & vbCrLf & vbCrLf & _
             L("这可能是由于您的电脑负荷过重而引起的，请退出象棋巫师魔法学校Ⅱ并重新运行试试看。", _
             "這可能是由於您的電腦負荷過重而引起的，請退出象棋巫師魔法學校Ⅱ並重新運行試試看。"), vbExclamation
@@ -896,7 +897,7 @@ App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
 App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds
 App_frmMain.mnOptionsLanguage(Options_nLanguage).Checked = True
-Unload frmStartup
+' Unload frmStartup
 
 Login_nStatus = LOGIN_FIRST
 ' 主循环
@@ -920,9 +921,7 @@ Do While App_bRunning
         If Gui_nAdvertIndex > Gui_nAdvertNum Then
             Gui_nAdvertIndex = 1
         End If
-        App_frmMain.web.Visible = False
         App_frmMain.web.Navigate2 App_szPath & "ADVERT\" & Gui_szAdvertFiles(Gui_nAdvertIndex) & ".htm"
-        App_frmMain.web.Visible = True
     End If
     DoEvents
     Sleep 1
@@ -957,7 +956,7 @@ Unload frmHide2
 Exit Sub
 lnErrorOpen:
 On Error GoTo 0
-Unload frmStartup
+' Unload frmStartup
 ErrorOpen App_szPath & ENDGAME_FILE
 
 End Sub

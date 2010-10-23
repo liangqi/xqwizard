@@ -232,7 +232,7 @@ End Sub
 
 Private Sub Inet_StateChanged(ByVal nState As Integer)
 
-Dim szResult As String, szPassword As String, szUrl As String
+Dim szResult As String, szPassword As String
 
 If nState = icError Then
     EndLogin
