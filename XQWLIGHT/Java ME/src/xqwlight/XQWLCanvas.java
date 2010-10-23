@@ -114,9 +114,9 @@ class XQWLCanvas extends Canvas {
 		midlet = midlet_;
 		setFullScreenMode(true);
 		altAbout.setTimeout(Alert.FOREVER);
-		altAbout.setString(midlet.getAppProperty("MIDlet-Description") +
-				"\n\r\f象棋百科全书 荣誉出品\n\r\f\n\r\f" +
-				"(C) 2004-2010 www.xqbase.com\n\r\f\n\r\f" +
+		altAbout.setString(midlet.getAppProperty("MIDlet-Description") + " " +
+				midlet.getAppProperty("MIDlet-Version") + "\n\r\f\n\r\f" +
+				"(C) 2010 上海贤趣信息技术有限公司\n\r\f\n\r\f" +
 				"欢迎登录 www.xqbase.com\n\r\f免费下载PC版 象棋巫师");
 		altBack.setTimeout(Alert.FOREVER);
 		altBack.addCommand(cmdBackOK);

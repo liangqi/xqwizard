@@ -46,7 +46,7 @@ public class XQWLMIDlet extends MIDlet {
 
 	static final String[] SOUND_NAME = {
 		"click", "illegal", "move", "move2", "capture", "capture2",
-		"check", "check2", "win", "draw", "loss", "newgame",
+		"check", "check2", "win", "draw", "loss",
 	};
 
 	static final int RS_DATA_LEN = 512;
@@ -97,7 +97,6 @@ public class XQWLMIDlet extends MIDlet {
 					sound = gSound.getValue();
 					music = gMusic.getValue();
 					canvas.load();
-					playSound(SOUND_NAME.length - 1);
 					startMusic("canvas");
 					Display.getDisplay(XQWLMIDlet.this).setCurrent(canvas);
 				} else if (c == cmdExit) {
