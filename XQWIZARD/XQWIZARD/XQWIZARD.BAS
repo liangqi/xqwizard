@@ -1271,10 +1271,12 @@ Public Sub MoveCut()
 
 Dim i As Integer
 ' 走法列表如果变动了，就要重置引擎状态
-If Engine_nStatus = IDLE_REST Then
-    Engine_nStatus = IDLE_READY
-Else
-    IdleEngine
+If Engine_nStatus > IDLE_UNLOAD Then
+    If Engine_nStatus = IDLE_REST Then
+        Engine_nStatus = IDLE_READY
+    Else
+        IdleEngine
+    End If
 End If
 For i = Game_nMaxMove To Game_nCurrMove + 1 Step -1
     App_frmMain.lstMoveText.RemoveItem i

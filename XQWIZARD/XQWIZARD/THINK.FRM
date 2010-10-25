@@ -92,7 +92,7 @@ Private Sub Form_Unload(nCancel As Integer)
 
 SetWindowLongA Me.hWnd, GWL_WNDPROC, App_lpThinkPrev
 SetWindowLongA App_frmMain.hWnd, GWL_WNDPROC, App_lpMainPrev
-If Not (Engine_bRed Or Engine_bBlack) Then
+If Engine_nStatus > IDLE_UNLOAD And Not (Engine_bRed Or Engine_bBlack) Then
     IdleEngine
 End If
 Gui_nThinkWidth = Me.Width

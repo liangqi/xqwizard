@@ -424,6 +424,7 @@ If lpStr = 0 Then
             PipeClose Engine_pipe
             MsgBox L("引擎异常退出！", "引擎異常退出！"), vbExclamation
             Engine_nStatus = IDLE_UNLOAD
+            EngineBusy False
             EngineLoaded False
         End If
     End If
