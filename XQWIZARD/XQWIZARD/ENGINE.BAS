@@ -26,6 +26,7 @@ Public Engine_bEngineLog        As Boolean  ' 是否记录引擎日志
 Public Engine_szLogFile         As String   ' 引擎日志文件名
 Public Engine_bUseBook          As Boolean  ' 是否使用开局库
 Public Engine_bUseEgtb          As Boolean  ' 是否使用残局库
+Public Engine_bLegacy           As Boolean  ' 兼容旧版UCCI引擎
 Public Engine_szBookFiles       As String   ' 开局库文件名
 Public Engine_szEgtbPaths       As String   ' 残局库文件名
 Public Engine_nHash             As Integer  ' 置换表大小
@@ -200,7 +201,7 @@ Engine_nCurrMove = 0
 If Engine_bAnalyze Then
     frmThink.txtThink.Text = ""
 End If
-szPosition = IIf(Game_bStartPos, "startpos", "fen " & Game_szFen)
+szPosition = IIf(Game_bStartPos And Not Engine_bLegacy, "startpos", "fen " & Game_szFen)
 If Game_nCurrMove > 0 Then
     szPosition = szPosition & " moves"
     For i = 1 To Game_nCurrMove

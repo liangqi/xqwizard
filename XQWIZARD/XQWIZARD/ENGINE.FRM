@@ -44,6 +44,14 @@ Begin VB.Form frmEngineSet
       TabIndex        =   8
       Top             =   2400
       Width           =   6255
+      Begin VB.CheckBox chkLegacy 
+         Caption         =   "ºÊ»›æ…∞ÊUCCI“˝«Ê"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   29
+         Top             =   960
+         Width           =   1815
+      End
       Begin VB.CommandButton btnResetPath 
          Caption         =   "÷ÿ÷√"
          Height          =   255
@@ -332,6 +340,7 @@ chkEngineLog.Value = IIf(Engine_bEngineLog, 1, 0)
 txtLogFile.Text = Engine_szLogFile
 chkUseBook.Value = IIf(Engine_bUseBook, 1, 0)
 chkUseEgtb.Value = IIf(Engine_bUseEgtb, 1, 0)
+chkLegacy.Value = IIf(Engine_bLegacy, 1, 0)
 txtBookFile.Text = Engine_szBookFiles
 txtEgtbPath.Text = Engine_szEgtbPaths
 cmbHash.ListIndex = Engine_nHash
@@ -567,6 +576,7 @@ Engine_bEngineLog = (chkEngineLog.Value = 1)
 Engine_szLogFile = txtLogFile.Text
 Engine_bUseBook = (chkUseBook.Value = 1)
 Engine_bUseEgtb = (chkUseEgtb.Value = 1)
+Engine_bLegacy = (chkLegacy.Value = 1)
 Engine_szBookFiles = txtBookFile.Text
 Engine_szEgtbPaths = txtEgtbPath.Text
 Engine_nHash = cmbHash.ListIndex

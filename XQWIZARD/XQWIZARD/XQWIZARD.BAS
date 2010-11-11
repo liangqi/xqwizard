@@ -1091,7 +1091,7 @@ End Sub
 Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
         Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, X As Integer, Y As Integer
 pc = Game_pos.ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -1099,24 +1099,24 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-y = sq \ 16
-x = sq Mod 16
-Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - y) * 9 + 11 - x, (y - 3) * 9 + x - 3))
+Y = sq \ 16
+X = sq Mod 16
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - Y) * 9 + 11 - X, (Y - 3) * 9 + X - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
     ' 以下是新功能 - 抖一下将死的子
     img.ZOrder
-    x = img.Left
-    y = img.Top
+    X = img.Left
+    Y = img.Top
     For i = 5 To 1 Step -1
-        img.Move x + i * 20, y
+        img.Move X + i * 20, Y
         img.Refresh
         Sleep 50
-        img.Move x - i * 20, y
+        img.Move X - i * 20, Y
         img.Refresh
         Sleep 50
     Next
-    img.Move x, y
+    img.Move X, Y
     ' 以上是新功能 - 抖一下将死的子
 End If
 img.Picture = App_picPieces(nPicId)
@@ -1891,6 +1891,7 @@ Engine_bEngineLog = (Str2Int(GetSetting("XQWizard", "Engine", "EngineLog", "0"))
 Engine_szLogFile = GetSetting("XQWizard", "Engine", "LogFile", "")
 Engine_bUseBook = (Str2Int(GetSetting("XQWizard", "Engine", "UseBook", "1")) <> 0)
 Engine_bUseEgtb = (Str2Int(GetSetting("XQWizard", "Engine", "UseEgtb", "1")) <> 0)
+Engine_bLegacy = (Str2Int(GetSetting("XQWizard", "Engine", "Legacy", "0")) <> 0)
 Engine_szBookFiles = GetSetting("XQWizard", "Engine", "BookFiles", "")
 Engine_szEgtbPaths = GetSetting("XQWizard", "Engine", "EgtbPaths", "")
 Engine_nHash = Str2Int(GetSetting("XQWizard", "Engine", "Hash", "0"), 0, 7)
@@ -1949,6 +1950,7 @@ SaveSetting "XQWizard", "Engine", "EngineLog", IIf(Engine_bEngineLog, "1", "0")
 SaveSetting "XQWizard", "Engine", "LogFile", Engine_szLogFile
 SaveSetting "XQWizard", "Engine", "UseBook", IIf(Engine_bUseBook, "1", "0")
 SaveSetting "XQWizard", "Engine", "UseEgtb", IIf(Engine_bUseEgtb, "1", "0")
+SaveSetting "XQWizard", "Engine", "Legacy", IIf(Engine_bLegacy, "1", "0")
 SaveSetting "XQWizard", "Engine", "BookFiles", Engine_szBookFiles
 SaveSetting "XQWizard", "Engine", "EgtbPaths", Engine_szEgtbPaths
 SaveSetting "XQWizard", "Engine", "Hash", Engine_nHash
