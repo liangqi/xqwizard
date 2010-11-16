@@ -950,7 +950,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnOptions 
       Caption         =   "选项(&O)"
       Begin VB.Menu mnOptionsGui 
-         Caption         =   "界面(&G)"
+         Caption         =   "窗口(&W)"
          Begin VB.Menu mnOptionsGuiSmall 
             Caption         =   "小(&S)"
          End

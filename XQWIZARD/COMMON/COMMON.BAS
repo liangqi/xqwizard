@@ -425,7 +425,7 @@ If Options_nLanguage = LANGUAGE_ZH_CN Then
     Exit Sub
 End If
 frm.mnOptions.Caption = "選項(&O)"
-frm.mnOptionsGui.Caption = "界面(&G)"
+frm.mnOptionsGui.Caption = "窗口(&W)"
 frm.mnOptionsGuiSmall.Caption = "小(&S)"
 frm.mnOptionsGuiLarge.Caption = "大(&L)"
 frm.mnOptionsBoard_.Caption = "棋盤(&B)"

@@ -73,23 +73,15 @@ Begin VB.Form frmOptions
       Begin VB.TextBox txtUser 
          Height          =   270
          Left            =   1680
-         TabIndex        =   21
+         TabIndex        =   20
          Top             =   2040
          Width           =   1215
-      End
-      Begin VB.CheckBox chkStatusBar 
-         Caption         =   "输出到状态栏"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   16
-         Top             =   960
-         Width           =   1455
       End
       Begin VB.CheckBox chkEngineTime 
          Caption         =   "显示思考时间"
          Height          =   255
-         Left            =   1680
-         TabIndex        =   17
+         Left            =   120
+         TabIndex        =   16
          Top             =   960
          Width           =   1455
       End
@@ -113,7 +105,7 @@ Begin VB.Form frmOptions
          Height          =   300
          Left            =   1680
          Style           =   2  'Dropdown List
-         TabIndex        =   19
+         TabIndex        =   18
          Top             =   1680
          Width           =   1215
       End
@@ -137,7 +129,7 @@ Begin VB.Form frmOptions
          Caption         =   "棋手名字"
          Height          =   255
          Left            =   840
-         TabIndex        =   20
+         TabIndex        =   19
          Top             =   2040
          Width           =   855
       End
@@ -145,7 +137,7 @@ Begin VB.Form frmOptions
          Caption         =   "电脑角色"
          Height          =   255
          Left            =   840
-         TabIndex        =   18
+         TabIndex        =   17
          Top             =   1680
          Width           =   855
       End
@@ -155,7 +147,7 @@ Begin VB.Form frmOptions
       Caption         =   "取消"
       Height          =   375
       Left            =   3720
-      TabIndex        =   23
+      TabIndex        =   22
       Top             =   2640
       Width           =   975
    End
@@ -164,7 +156,7 @@ Begin VB.Form frmOptions
       Default         =   -1  'True
       Height          =   375
       Left            =   2160
-      TabIndex        =   22
+      TabIndex        =   21
       Top             =   2640
       Width           =   975
    End
@@ -186,7 +178,7 @@ Begin VB.Form frmOptions
          _Version        =   327681
          Value           =   1
          BuddyControl    =   "txtPlayIntv"
-         BuddyDispid     =   196631
+         BuddyDispid     =   196628
          OrigLeft        =   2160
          OrigTop         =   240
          OrigRight       =   2355
@@ -237,7 +229,7 @@ Attribute VB_Exposed = False
 ' OPTIONS.FRM - Source Code for XiangQi Wizard, Part VII
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.83, Last Modified: Nov. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -277,7 +269,6 @@ chkEngineName.Value = IIf(Options_bEngineName, 1, 0)
 chkAlwaysPonder.Value = IIf(Options_bAlwaysPonder, 1, 0)
 chkAllowResign.Value = IIf(Options_bAllowResign, 1, 0)
 chkEngineTime.Value = IIf(Options_bEngineTime, 1, 0)
-chkStatusBar.Value = IIf(Options_bStatusBar, 1, 0)
 cmbEnginePlay.ListIndex = Options_nEnginePlay
 txtUser.Text = Options_szUser
 chkPromptSave.Value = IIf(Options_bPromptSave, 1, 0)
@@ -312,7 +303,6 @@ chkEngineName.Caption = "顯示對弈雙方"
 chkAlwaysPonder.Caption = "啟用後台思考"
 chkAllowResign.Caption = "允許提和認輸"
 chkEngineTime.Caption = "顯示思考時間"
-chkStatusBar.Caption = "輸出到狀態欄"
 lblEnginePlay.Caption = "電腦角色"
 lblUser.Caption = "棋手名字"
 btnConfirm.Caption = "確定"
@@ -338,7 +328,6 @@ Options_bEngineName = (chkEngineName.Value = 1)
 Options_bAlwaysPonder = (chkAlwaysPonder.Value = 1)
 Options_bAllowResign = (chkAllowResign.Value = 1)
 Options_bEngineTime = (chkEngineTime.Value = 1)
-Options_bStatusBar = (chkStatusBar.Value = 1)
 Options_nEnginePlay = cmbEnginePlay.ListIndex
 Options_szUser = txtUser.Text
 Options_bPromptSave = (chkPromptSave.Value = 1)

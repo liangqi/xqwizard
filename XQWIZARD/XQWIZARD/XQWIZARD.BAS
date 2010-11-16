@@ -2,7 +2,7 @@ Attribute VB_Name = "mdlXQWizard"
 ' XQWIZARD.BAS - Source Code for XiangQi Wizard, Part I
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.82, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.83, Last Modified: Nov. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1091,7 +1091,7 @@ End Sub
 Public Sub DrawSquare(ByVal sq As Integer, Optional ByVal bSelected As Boolean = False, _
         Optional ByVal bMate As Boolean = False)
 
-Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, X As Integer, Y As Integer
+Dim pc As Integer, nPicId As Integer, img As Image, i As Integer, x As Integer, y As Integer
 pc = Game_pos.ucpcSquares(sq)
 If pc = 0 Then
     nPicId = 0
@@ -1099,24 +1099,24 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 1, 8)
 End If
 nPicId = nPicId + IIf(bSelected, 15, 0)
-Y = sq \ 16
-X = sq Mod 16
-Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - Y) * 9 + 11 - X, (Y - 3) * 9 + X - 3))
+y = sq \ 16
+x = sq Mod 16
+Set img = App_frmMain.imgSquares(IIf(App_bFlipped, (12 - y) * 9 + 11 - x, (y - 3) * 9 + x - 3))
 If bMate Then
     nPicId = IIf(pc = 16, 30, IIf(pc = 32, 31, nPicId))
     ' 以下是新功能 - 抖一下将死的子
     img.ZOrder
-    X = img.Left
-    Y = img.Top
+    x = img.Left
+    y = img.Top
     For i = 5 To 1 Step -1
-        img.Move X + i * 20, Y
+        img.Move x + i * 20, y
         img.Refresh
         Sleep 50
-        img.Move X - i * 20, Y
+        img.Move x - i * 20, y
         img.Refresh
         Sleep 50
     Next
-    img.Move X, Y
+    img.Move x, y
     ' 以上是新功能 - 抖一下将死的子
 End If
 img.Picture = App_picPieces(nPicId)
@@ -2082,6 +2082,7 @@ App_frmMain.mnEngineAnalyze.Caption = "電腦分析(&A)"
 App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
 
 App_frmMain.mnOptionsSettings.Caption = "設置(&O)..."
+App_frmMain.mnOptionsStatusBar.Caption = "狀態欄(&R)..."
 App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
 
 App_frmMain.mnHelp.Caption = "幫助(&H)"
@@ -2438,6 +2439,7 @@ End If
 On Error Resume Next
 App_frmMain.mnEndgames(Gui_nEpdMenu).Checked = True
 On Error GoTo 0
+App_frmMain.mnOptionsStatusBar.Checked = Options_bStatusBar
 App_frmMain.mnOptionsGuiSmall.Checked = Not Options_bLargeGui
 App_frmMain.mnOptionsGuiLarge.Checked = Options_bLargeGui
 App_frmMain.mnOptionsSounds.Checked = Options_bSounds

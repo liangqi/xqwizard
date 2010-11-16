@@ -291,31 +291,27 @@ Dim pos As PositionStruct
 i = InStr(szReceived, " currmove ")
 If i > 0 Then
     Engine_nCurrMove = Engine_nCurrMove + 1
-    If Options_bStatusBar Then
-        mv = Coord2Move(Mid(szReceived, i + 10))
-        Select Case Game_nFormat
-        Case 0
-            szMoveList = MkC(CchessFile2Chin(CchessMove2File(mv, Engine_posBoard), Engine_posBoard.sdPlayer))
-        Case 1
-            szMoveList = MkL(CchessMove2File(mv, Engine_posBoard))
-        Case 2
-            szMoveList = Move2Iccs(mv)
-        End Select
-        App_frmMain.stb.Panels("Curr").Text = Engine_nDepth & _
-                " (" & Engine_nCurrMove & "/" & Engine_nMoves & ") " & szMoveList
-    End If
+    mv = Coord2Move(Mid(szReceived, i + 10))
+    Select Case Game_nFormat
+    Case 0
+        szMoveList = MkC(CchessFile2Chin(CchessMove2File(mv, Engine_posBoard), Engine_posBoard.sdPlayer))
+    Case 1
+        szMoveList = MkL(CchessMove2File(mv, Engine_posBoard))
+    Case 2
+        szMoveList = Move2Iccs(mv)
+    End Select
+    App_frmMain.stb.Panels("Curr").Text = Engine_nDepth & _
+            " (" & Engine_nCurrMove & "/" & Engine_nMoves & ") " & szMoveList
 End If
 
 ' 输出速度
-If Options_bStatusBar Then
-    i = InStr(szReceived, " nodes ")
-    If i > 0 Then
-        nNodes = Str2Lng(Mid(szReceived, i + 7))
-        nTime = (Timer - Engine_dwTime) * 1000
-        nTime = IIf(nTime < 0, nTime + 86400000, nTime)
-        If nTime > 0 Then
-            App_frmMain.stb.Panels("Nps").Text = "NPS " & (nNodes \ nTime) & "K"
-        End If
+i = InStr(szReceived, " nodes ")
+If i > 0 Then
+    nNodes = Str2Lng(Mid(szReceived, i + 7))
+    nTime = (Timer - Engine_dwTime) * 1000
+    nTime = IIf(nTime < 0, nTime + 86400000, nTime)
+    If nTime > 0 Then
+        App_frmMain.stb.Panels("Nps").Text = "NPS " & (nNodes \ nTime) & "K"
     End If
 End If
 
@@ -371,7 +367,7 @@ If i > 0 Then
                 i = i + 5
             Loop
         End If
-        If Options_bStatusBar And Engine_nDepth > 0 Then
+        If Engine_nDepth > 0 Then
             App_frmMain.stb.Panels("Pv").Text = szMoveList
         End If
     End If
@@ -383,9 +379,7 @@ End If
 ' 输出引擎提示信息
 i = InStr(szReceived, " message ")
 If i > 0 Then
-    If Options_bStatusBar Then
-        App_frmMain.stb.Panels("Msg").Text = Mid(szReceived, i + 9)
-    End If
+    App_frmMain.stb.Panels("Msg").Text = Mid(szReceived, i + 9)
     If Engine_bAnalyze Then
         AppendThink Mid(szReceived, i + 9)
     End If
@@ -486,9 +480,7 @@ If Left(szReceived, 9) = "bestmove " Then
     Case Else
         ' 不该接收到的引擎信息
     End Select
-    If Options_bStatusBar Then
-        App_frmMain.stb.Panels("Curr").Text = ""
-    End If
+    App_frmMain.stb.Panels("Curr").Text = ""
 ElseIf Left(szReceived, 10) = "nobestmove" Then
     EngineBusy False
     Select Case Engine_nStatus
@@ -499,9 +491,7 @@ ElseIf Left(szReceived, 10) = "nobestmove" Then
     Case Else
         ' 不该接收到引擎的信息
     End Select
-    If Options_bStatusBar Then
-        App_frmMain.stb.Panels("Curr").Text = ""
-    End If
+    App_frmMain.stb.Panels("Curr").Text = ""
 ElseIf Left(szReceived, 12) = "info string " Then
 ElseIf Left(szReceived, 5) = "info " Then
     PopEngine szReceived

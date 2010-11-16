@@ -1757,7 +1757,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnOptionsGui 
-         Caption         =   "界面(&G)"
+         Caption         =   "窗口(&W)"
          Begin VB.Menu mnOptionsGuiSmall 
             Caption         =   "小(&S)"
          End
@@ -1900,6 +1900,9 @@ Begin VB.Form frmMainLarge
             Index           =   13
          End
       End
+      Begin VB.Menu mnOptionsStatusBar 
+         Caption         =   "状态栏(&R)"
+      End
       Begin VB.Menu mnOptionsTopMost 
          Caption         =   "总在最前面(&T)"
       End
@@ -2000,7 +2003,7 @@ Attribute VB_Exposed = False
 ' MAINL.FRM - Source Code for XiangQi Wizard, Part II
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.79, Last Modified: Oct. 2010
+' Designed by Morning Yellow, Version: 4.83, Last Modified: Nov. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -2031,6 +2034,10 @@ mnOptionsBoard_Click Options_nBoardL
 mnOptionsPieces_Click Options_nPiecesL
 mnOptionsAnimation_Click Options_nMoveDelay
 mnOptionsMusic_Click Options_nMusic
+If Not Options_bStatusBar Then
+    stb.Visible = False
+    Height = Height - stb.Height
+End If
 SetLangLarge Me
 
 End Sub
@@ -2636,6 +2643,19 @@ MusicSetting App_szPath, nIndex
 For i = 0 To MUSIC_MAX - 1
     mnOptionsMusic(i).Checked = (nIndex = i)
 Next
+
+End Sub
+
+Private Sub mnOptionsStatusBar_Click()
+
+Options_bStatusBar = Not Options_bStatusBar
+mnOptionsStatusBar.Checked = Options_bStatusBar
+stb.Visible = Options_bStatusBar
+If Options_bStatusBar Then
+    Height = Height + stb.Height
+Else
+    Height = Height - stb.Height
+End If
 
 End Sub
 
