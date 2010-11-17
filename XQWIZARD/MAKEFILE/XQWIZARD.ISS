@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.82
+AppVerName={cm:AppName} 4.83
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -730,9 +730,9 @@ Root: HKCR; Subkey: "XQWizard.CCM\Shell\Open\command"; ValueType: string; ValueD
 Name: "{group}\象棋巫师魔法学校Ⅱ"; Filename: "{app}\XQSCHOOL.EXE"; Languages: cn
 Name: "{group}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
 Name: "{group}\超级象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: cn
-Name: "{group}\手机棋谱制作工具"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
-Name: "{group}\棋谱批量转换工具"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
-Name: "{group}\开局库管理工具"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
+Name: "{group}\实用工具\制作手机棋谱"; Filename: "{app}\PGNS2JAR.EXE"; Languages: cn
+Name: "{group}\实用工具\批量转换棋谱"; Filename: "{app}\MXQFCONV.EXE"; Languages: cn
+Name: "{group}\实用工具\管理开局库"; Filename: "{app}\MAKEBOOK.EXE"; Languages: cn
 Name: "{group}\橘中秘"; Filename: "{app}\橘中秘"; Languages: cn
 Name: "{group}\卸载象棋巫师"; Filename: "{uninstallexe}"; Languages: cn
 Name: "{userdesktop}\象棋巫师魔法学校Ⅱ"; Filename: "{app}\XQSCHOOL.EXE"; Languages: cn
@@ -741,9 +741,9 @@ Name: "{userdesktop}\象棋巫师"; Filename: "{app}\XQWIZARD.EXE"; Languages: cn
 Name: "{group}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw
 Name: "{group}\禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Languages: tw
 Name: "{group}\禬禜囱畍"; Filename: "{app}\XQWIZARD.EXE"; Parameters: "/P"; IconFilename: "{app}\XQWIZARD.EXE"; IconIndex: 6; Languages: tw
-Name: "{group}\も审囱眯ㄣ"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
-Name: "{group}\囱眯у秖锣传ㄣ"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
-Name: "{group}\秨Ы畐恨瞶ㄣ"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
+Name: "{group}\龟ノㄣ\も审囱眯"; Filename: "{app}\PGNS2JAR.EXE"; Languages: tw
+Name: "{group}\龟ノㄣ\у秖锣传囱眯"; Filename: "{app}\MXQFCONV.EXE"; Languages: tw
+Name: "{group}\龟ノㄣ\恨瞶秨Ы畐"; Filename: "{app}\MAKEBOOK.EXE"; Languages: tw
 Name: "{group}\撅い"; Filename: "{app}\撅い"; Languages: tw
 Name: "{group}\更禜囱畍"; Filename: "{uninstallexe}"; Languages: tw
 Name: "{userdesktop}\禜囱畍臸猭厩⒑"; Filename: "{app}\XQSCHOOL.EXE"; Languages: tw

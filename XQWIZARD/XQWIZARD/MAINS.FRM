@@ -199,7 +199,7 @@ Begin VB.Form frmMainSmall
       Left            =   5040
       TabIndex        =   45
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -208,7 +208,7 @@ Begin VB.Form frmMainSmall
       Left            =   4440
       TabIndex        =   44
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -217,7 +217,7 @@ Begin VB.Form frmMainSmall
       Left            =   3840
       TabIndex        =   43
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -226,7 +226,7 @@ Begin VB.Form frmMainSmall
       Left            =   3240
       TabIndex        =   42
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -235,7 +235,7 @@ Begin VB.Form frmMainSmall
       Left            =   2640
       TabIndex        =   41
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -244,7 +244,7 @@ Begin VB.Form frmMainSmall
       Left            =   2040
       TabIndex        =   40
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -253,7 +253,7 @@ Begin VB.Form frmMainSmall
       Left            =   1440
       TabIndex        =   39
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -262,7 +262,7 @@ Begin VB.Form frmMainSmall
       Left            =   840
       TabIndex        =   38
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -271,7 +271,7 @@ Begin VB.Form frmMainSmall
       Left            =   240
       TabIndex        =   37
       TabStop         =   0   'False
-      Top             =   7080
+      Top             =   6990
       Width           =   615
    End
    Begin VB.CommandButton btnCoord 
@@ -1967,7 +1967,7 @@ Begin VB.Form frmMainSmall
          Caption         =   "日积月累(&W)..."
       End
       Begin VB.Menu mnHelpQuote 
-         Caption         =   "名言(&Q)..."
+         Caption         =   "名言(&Q)"
       End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
@@ -2024,10 +2024,10 @@ Begin VB.Form frmMainSmall
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpEngine 
-         Caption         =   "关于&UCCI引擎..."
+         Caption         =   "关于&UCCI引擎"
       End
       Begin VB.Menu mnHelpAbout 
-         Caption         =   "关于象棋巫师(&A)..."
+         Caption         =   "关于象棋巫师(&A)"
       End
    End
 End

@@ -1111,7 +1111,7 @@ Begin VB.Form frmMainLarge
    Begin VB.Menu mnHelp 
       Caption         =   "帮助(&H)"
       Begin VB.Menu mnHelpQuote 
-         Caption         =   "名言(&Q)..."
+         Caption         =   "名言(&Q)"
       End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
@@ -1159,7 +1159,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpAbout 
-         Caption         =   "关于象棋巫师(&A)..."
+         Caption         =   "关于象棋巫师(&A)"
       End
    End
 End

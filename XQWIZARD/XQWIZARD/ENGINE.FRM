@@ -25,7 +25,7 @@ Begin VB.Form frmEngineSet
    Begin VB.CommandButton btnLoadSlave 
       Height          =   375
       Left            =   6480
-      TabIndex        =   26
+      TabIndex        =   27
       Top             =   2760
       Width           =   1215
    End
@@ -33,7 +33,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "副引擎执红"
       Height          =   255
       Left            =   6480
-      TabIndex        =   25
+      TabIndex        =   26
       Top             =   2400
       Width           =   1215
    End
@@ -48,7 +48,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "兼容旧版UCCI引擎"
          Height          =   255
          Left            =   120
-         TabIndex        =   29
+         TabIndex        =   17
          Top             =   960
          Width           =   1815
       End
@@ -124,7 +124,7 @@ Begin VB.Form frmEngineSet
          Left            =   2160
          List            =   "ENGINE.frx":000E
          Style           =   2  'Dropdown List
-         TabIndex        =   20
+         TabIndex        =   21
          Top             =   1320
          Width           =   855
       End
@@ -134,7 +134,7 @@ Begin VB.Form frmEngineSet
          Left            =   600
          List            =   "ENGINE.frx":0012
          Style           =   2  'Dropdown List
-         TabIndex        =   18
+         TabIndex        =   19
          Top             =   1320
          Width           =   855
       End
@@ -144,7 +144,7 @@ Begin VB.Form frmEngineSet
          Left            =   5280
          List            =   "ENGINE.frx":0016
          Style           =   2  'Dropdown List
-         TabIndex        =   24
+         TabIndex        =   25
          Top             =   1320
          Width           =   855
       End
@@ -154,7 +154,7 @@ Begin VB.Form frmEngineSet
          Left            =   3720
          List            =   "ENGINE.frx":001A
          Style           =   2  'Dropdown List
-         TabIndex        =   22
+         TabIndex        =   23
          Top             =   1320
          Width           =   855
       End
@@ -162,7 +162,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "内存"
          Height          =   255
          Left            =   120
-         TabIndex        =   17
+         TabIndex        =   18
          Top             =   1320
          Width           =   375
       End
@@ -170,7 +170,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "风格"
          Height          =   255
          Left            =   4800
-         TabIndex        =   23
+         TabIndex        =   24
          Top             =   1320
          Width           =   375
       End
@@ -178,7 +178,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "随机"
          Height          =   255
          Left            =   3240
-         TabIndex        =   21
+         TabIndex        =   22
          Top             =   1320
          Width           =   375
       End
@@ -186,7 +186,7 @@ Begin VB.Form frmEngineSet
          Caption         =   "负荷"
          Height          =   255
          Left            =   1680
-         TabIndex        =   19
+         TabIndex        =   20
          Top             =   1320
          Width           =   375
       End
@@ -259,7 +259,7 @@ Begin VB.Form frmEngineSet
       Caption         =   "取消"
       Height          =   375
       Left            =   6480
-      TabIndex        =   28
+      TabIndex        =   29
       Top             =   3720
       Width           =   1215
    End
@@ -268,7 +268,7 @@ Begin VB.Form frmEngineSet
       Default         =   -1  'True
       Height          =   375
       Left            =   6480
-      TabIndex        =   27
+      TabIndex        =   28
       Top             =   3240
       Width           =   1215
    End
@@ -281,7 +281,7 @@ Attribute VB_Exposed = False
 ' ENGINE.FRM - Source Code for XiangQi Wizard, Part V
 '
 ' XiangQi Wizard - a Chinese Chess Program (GUI for UCCI Engines)
-' Designed by Morning Yellow, Version: 4.5, Last Modified: Jan. 2010
+' Designed by Morning Yellow, Version: 4.83, Last Modified: Nov. 2010
 ' Copyright (C) 2004-2010 www.xqbase.com
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -379,6 +379,7 @@ btnResetFile.Caption = "重置"
 chkUseEgtb.Caption = "殘局庫"
 btnSelectPath.Caption = "瀏覽"
 btnResetPath.Caption = "重置"
+chkLegacy.Caption = "兼容舊版UCCI引擎"
 lblHash.Caption = "內存"
 lblThreads.Caption = "負荷"
 lblRandomness.Caption = "隨機"

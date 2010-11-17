@@ -457,6 +457,19 @@ frm.mnOptionsLanguage_.Caption = "語言/&Language"
 frm.mnOptionsLanguage(0).Caption = "簡體中文/&Simplified Chinese"
 frm.mnOptionsLanguage(1).Caption = "繁體中文/&Traditional Chinese"
 
+frm.mnHelp.Caption = "幫助(&H)"
+frm.mnHelpQuote.Caption = "名言(&Q)"
+frm.mnHelpShare_.Caption = "推薦給好友(&F)"
+frm.mnHelpShare(0).Caption = "QQ空間(&Q)"
+frm.mnHelpShare(1).Caption = "新浪微博(&S)"
+frm.mnHelpShare(2).Caption = "開心網(&K)"
+frm.mnHelpShare(3).Caption = "人人網(&R)"
+frm.mnHelpShare(5).Caption = "其他網站(&O)"
+frm.mnHelpUpdate.Caption = "檢查最新版本(&P)"
+frm.mnHelpHome.Caption = "象棋百科全書(&H)"
+frm.mnHelpSuggest.Caption = "意見反饋(&S)"
+frm.mnHelpAbout.Caption = "關于象棋巫師(&A)"
+
 End Sub
 
 ' 设置语言(小棋盘)

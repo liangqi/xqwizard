@@ -46,7 +46,7 @@ Begin VB.Form frmMainLarge
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
+      Location        =   "http:///"
    End
    Begin MSComctlLib.Toolbar tlb 
       Align           =   1  'Align Top
@@ -199,7 +199,7 @@ Begin VB.Form frmMainLarge
       Left            =   6960
       TabIndex        =   45
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -208,7 +208,7 @@ Begin VB.Form frmMainLarge
       Left            =   6120
       TabIndex        =   44
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -217,7 +217,7 @@ Begin VB.Form frmMainLarge
       Left            =   5280
       TabIndex        =   43
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -226,7 +226,7 @@ Begin VB.Form frmMainLarge
       Left            =   4440
       TabIndex        =   42
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -235,7 +235,7 @@ Begin VB.Form frmMainLarge
       Left            =   3600
       TabIndex        =   41
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -244,7 +244,7 @@ Begin VB.Form frmMainLarge
       Left            =   2760
       TabIndex        =   40
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -253,7 +253,7 @@ Begin VB.Form frmMainLarge
       Left            =   1920
       TabIndex        =   39
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -262,7 +262,7 @@ Begin VB.Form frmMainLarge
       Left            =   1080
       TabIndex        =   38
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -271,7 +271,7 @@ Begin VB.Form frmMainLarge
       Left            =   240
       TabIndex        =   37
       TabStop         =   0   'False
-      Top             =   9480
+      Top             =   9390
       Width           =   855
    End
    Begin VB.CommandButton btnCoord 
@@ -1931,7 +1931,7 @@ Begin VB.Form frmMainLarge
          Caption         =   "日积月累(&W)..."
       End
       Begin VB.Menu mnHelpQuote 
-         Caption         =   "名言(&Q)..."
+         Caption         =   "名言(&Q)"
       End
       Begin VB.Menu mnHelpSep1 
          Caption         =   "-"
@@ -1988,10 +1988,10 @@ Begin VB.Form frmMainLarge
          Caption         =   "-"
       End
       Begin VB.Menu mnHelpEngine 
-         Caption         =   "关于&UCCI引擎..."
+         Caption         =   "关于&UCCI引擎"
       End
       Begin VB.Menu mnHelpAbout 
-         Caption         =   "关于象棋巫师(&A)..."
+         Caption         =   "关于象棋巫师(&A)"
       End
    End
 End
