@@ -2082,7 +2082,7 @@ App_frmMain.mnEngineAnalyze.Caption = "電腦分析(&A)"
 App_frmMain.mnEngineStop.Caption = "停止思考/立即走棋(&O)"
 
 App_frmMain.mnOptionsSettings.Caption = "設置(&O)..."
-App_frmMain.mnOptionsStatusBar.Caption = "狀態欄(&R)..."
+App_frmMain.mnOptionsStatusBar.Caption = "狀態欄(&R)"
 App_frmMain.mnOptionsTopMost.Caption = "總在最前面(&T)"
 
 App_frmMain.mnHelpContents.Caption = "幫助主題(&C)"
