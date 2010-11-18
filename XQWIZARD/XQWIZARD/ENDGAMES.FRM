@@ -787,6 +787,7 @@ End Sub
 
 Private Sub btnConfirm_Click()
 
+Timer_nDepth = LEVEL_MASTER
 LoadFenStr App_szEndgames(Gui_nEndgamesIndex)
 EngineNewGame ENGINE_PLAY_BLACK
 App_bEndgame = True
