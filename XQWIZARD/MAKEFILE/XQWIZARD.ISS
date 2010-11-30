@@ -21,7 +21,7 @@ tw.Custom=﹚竡砞竚
 
 [Setup]
 AppName={cm:AppName}
-AppVerName={cm:AppName} 4.83
+AppVerName={cm:AppName} 4.84
 AppPublisher=www.xqbase.com
 AppPublisherURL=http://www.xqbase.com/
 AppSupportURL=http://www.xqbase.com/
@@ -755,11 +755,5 @@ Filename: "{app}\XQSCHOOL.EXE"; Description: "秨﹍絤策"; Flags: nowait postinsta
 Filename: "http://www.xqbase.com/xqwizard/bugchess.htm"; Description: "获取小虫象棋引擎"; Flags: nowait postinstall shellexec skipifsilent; Languages: cn
 Filename: "http://www.xqbase.com/xqwizard/bugchess.htm"; Description: "莉︿禜囱ま篮"; Flags: nowait postinstall shellexec skipifsilent; Languages: tw
 
-[Code]
-function InitializeUninstall(): Boolean;
-var
-  ErrorCode: Integer;
-begin
-  ShellExec('', 'http://www.xqbase.com/xqwizard/uninstall.htm', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-  Result := True;
-end;
+[UninstallRun]
+Filename: "http://www.xqbase.com/xqwizard/uninstall.htm"; Flags: nowait shellexec
