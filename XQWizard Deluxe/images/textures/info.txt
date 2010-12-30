@@ -1,2 +1,0 @@
-
-contains texture images for the 3D board display
