@@ -500,7 +500,7 @@ void PositionStruct::FromFen(const char *szFen) {
   }
   lpFen ++;
   // 3. 确定轮到哪方走
-  if (this->sdPlayer == (*lpFen == 'b' ? 0 : 1)) {
+  if (*lpFen == 'b') {
     ChangeSide();
   }
   // 4. 把局面设成“不可逆”
