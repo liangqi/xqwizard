@@ -317,7 +317,7 @@ Private Sub Form_Load()
 
 CchessInit
 EccoInitOpenVar
-txtBookFile.Text = App.Path + IIf(Right(App.Path, 1) = "\", "", "\") + "BOOK.DAT"
+txtBookFile.Text = App.Path & IIf(Right(App.Path, 1) = "\", "", "\") & "BOOK.DAT"
 Set fs = CreateObject("Scripting.FileSystemObject")
 
 End Sub
@@ -353,7 +353,7 @@ If txtPgnPath.Text = vbNullString Then
     Exit Sub
 End If
 If fs.FileExists(txtBookFile.Text) Then
-    If MsgBox(txtBookFile.Text + " 已存在。" + vbCrLf + "要替换它吗?", vbExclamation + vbYesNo) <> vbYes Then
+    If MsgBox(txtBookFile.Text & " 已存在。" & vbCrLf & "要替换它吗?", vbExclamation + vbYesNo) <> vbYes Then
         Exit Sub
     End If
 End If
@@ -374,7 +374,7 @@ End If
 If fs.FileExists(txtBookFile.Text) Then
     frmViewBook.Show vbModal, Me
 Else
-    MsgBox "开局库文件 " + frmMakeBook.txtBookFile.Text + " 不存在！", vbExclamation
+    MsgBox "开局库文件 " & frmMakeBook.txtBookFile.Text & " 不存在！", vbExclamation
 End If
 
 End Sub

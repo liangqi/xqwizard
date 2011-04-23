@@ -816,7 +816,7 @@ Else
     nPicId = PieceType(pc) + IIf(pc < 32, 2, 9)
 End If
 dwFile = CchessMove2File(mv, pos)
-sz = Mid(MkC(CchessFile2Chin(dwFile, pos.sdPlayer)), 2) + "(" + LTrim(Str(vl)) + ")"
+sz = Mid(MkC(CchessFile2Chin(dwFile, pos.sdPlayer)), 2) & "(" & vl & ")"
 If nIndex = -1 Then
     tree.Nodes.Add , , , sz, nPicId
 Else
@@ -827,7 +827,7 @@ Nodes_szFen(Nodes_nIndex) = AllocString(CchessBoard2Fen(pos))
 If nIndex = -1 Then
     Nodes_szFile(Nodes_nIndex) = MkL(dwFile)
 Else
-    Nodes_szFile(Nodes_nIndex) = Nodes_szFile(nIndex) + MkL(dwFile)
+    Nodes_szFile(Nodes_nIndex) = Nodes_szFile(nIndex) & MkL(dwFile)
 End If
 CchessUndoMove pos
 Nodes_bExpanded(Nodes_nIndex) = False
@@ -864,7 +864,7 @@ CchessFen2Board pos, CCHESS_START_FEN
 DrawPos pos
 nMoveNum = GetBookMoves(pos, frmMakeBook.txtBookFile.Text, mvs(1), vls(1))
 If nMoveNum = 0 Then
-    MsgBox "开局库文件 " + frmMakeBook.txtBookFile.Text + " 格式不正确！", vbExclamation
+    MsgBox "开局库文件 " & frmMakeBook.txtBookFile.Text & " 格式不正确！", vbExclamation
 End If
 For i = 1 To nMoveNum
     AddNode pos, mvs(i), vls(i)
@@ -907,7 +907,7 @@ szEcco = Left(MkL(dwEcco), 3)
 szOpen = AllocString(EccoOpening(dwEcco))
 szVar = AllocString(EccoVariation(dwEcco))
 
-Caption = "浏览开局库 - " + szOpen + IIf(szVar = "", "", "——") + szVar + "(" + szEcco + ")"
+Caption = "浏览开局库 - " & szOpen & IIf(szVar = "", "", "——") & szVar & "(" & szEcco & ")"
 
 End Sub
 
