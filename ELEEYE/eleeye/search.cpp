@@ -2,8 +2,8 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.21, Last Modified: Sep. 2010
-Copyright (C) 2004-2010 www.xqbase.com
+Designed by Morning Yellow, Version: 3.25, Last Modified: Apr. 2011
+Copyright (C) 2004-2011 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -646,7 +646,7 @@ void SearchMain(int nDepth) {
   int nCurrTimer, nLimitTimer, nLimitNodes;
   bool bUnique;
   uint32_t dwMoveStr;
-  MoveStruct mvsBook[MAX_GEN_MOVES];
+  BookStruct bks[MAX_GEN_MOVES];
   // 主搜索例程包括以下几个步骤：
 
   // 1. 遇到和棋则直接返回
@@ -659,19 +659,19 @@ void SearchMain(int nDepth) {
   // 2. 从开局库中搜索着法
   if (Search.bUseBook) {
     // a. 获取开局库中的所有走法
-    nBookMoves = GetBookMoves(Search.pos, Search.szBookFile, mvsBook);
+    nBookMoves = GetBookMoves(Search.pos, Search.szBookFile, bks);
     if (nBookMoves > 0) {
       vl = 0;
       for (i = 0; i < nBookMoves; i ++) {
-        vl += mvsBook[i].wvl;
-        dwMoveStr = MOVE_COORD(mvsBook[i].wmv);
-        printf("info depth 0 score %d pv %.4s\n", mvsBook[i].wvl, (const char *) &dwMoveStr);
+        vl += bks[i].wvl;
+        dwMoveStr = MOVE_COORD(bks[i].wmv);
+        printf("info depth 0 score %d pv %.4s\n", bks[i].wvl, (const char *) &dwMoveStr);
         fflush(stdout);
       }
       // b. 根据权重随机选择一个走法
       vl = Search.rc4Random.NextLong() % (uint32_t) vl;
       for (i = 0; i < nBookMoves; i ++) {
-        vl -= mvsBook[i].wvl;
+        vl -= bks[i].wvl;
         if (vl < 0) {
           break;
         }
@@ -679,15 +679,15 @@ void SearchMain(int nDepth) {
       __ASSERT(vl < 0);
       __ASSERT(i < nBookMoves);
       // c. 如果开局库中的着法够成循环局面，那么不走这个着法
-      Search.pos.MakeMove(mvsBook[i].wmv);
+      Search.pos.MakeMove(bks[i].wmv);
       if (Search.pos.RepStatus(3) == 0) {
-        dwMoveStr = MOVE_COORD(mvsBook[i].wmv);
+        dwMoveStr = MOVE_COORD(bks[i].wmv);
         printf("bestmove %.4s", (const char *) &dwMoveStr);
         // d. 给出后台思考的着法(开局库中第一个即权重最大的后续着法)
-        nBookMoves = GetBookMoves(Search.pos, Search.szBookFile, mvsBook);
+        nBookMoves = GetBookMoves(Search.pos, Search.szBookFile, bks);
         Search.pos.UndoMakeMove();
         if (nBookMoves > 0) {
-          dwMoveStr = MOVE_COORD(mvsBook[0].wmv);
+          dwMoveStr = MOVE_COORD(bks[0].wmv);
           printf(" ponder %.4s", (const char *) &dwMoveStr);
         }
         printf("\n");

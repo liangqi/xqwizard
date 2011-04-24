@@ -1,7 +1,7 @@
 /* 
 ElephantEye Book Maker - a Chinese Chess Book Maker Program for ElephantEye
-Designed by Morning Yellow, Version: 3.1, Last Modified: Nov. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.25, Last Modified: Apr. 2011
+Copyright (C) 2004-2011 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 extern "C" __declspec(dllexport) BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
     LONG nWin, LONG nDraw, LONG nLoss, LONG nRatio);
 extern "C" __declspec(dllexport) LONG WINAPI GetBookMoves(const PositionStruct *lppos,
-    LPCSTR szFile, LPLONG lpMoves, LPLONG lpValues);
+    LPCSTR szFile, BookStruct *lpbks);
+extern "C" __declspec(dllexport) BOOL WINAPI PutBookMove(LPCSTR szFile, const BookStruct *lpcbk);
 
 struct TempStruct {
   uint32_t dwZobristLock0, dwZobristLock1;
@@ -292,14 +293,18 @@ static void MakeBook() {
 
 static bool bInit = false;
 
-BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
-    LONG nWin, LONG nDraw, LONG nLoss, LONG nRatio) {
-  BOOL bSuccess;
+inline void Init(void) {
   if (!bInit) {
     bInit = true;
     PreGenInit();
     ChineseInit();
   }
+}
+
+BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
+    LONG nWin, LONG nDraw, LONG nLoss, LONG nRatio) {
+  BOOL bSuccess;
+  Init();
   bSuccess = FALSE;
   MakeBook2.nWin = nWin;
   MakeBook2.nDraw = nDraw;
@@ -326,18 +331,28 @@ BOOL WINAPI MakeBook(LPCSTR szPath, LPCSTR szFile,
 }
 
 LONG WINAPI GetBookMoves(const PositionStruct *lppos,
-    LPCSTR szFile, LPLONG lpMoves, LPLONG lpValues) { 
-  int i, nMoves;
-  if (!bInit) {
-    bInit = true;
-    PreGenInit();
-    ChineseInit();
+    LPCSTR szFile, BookStruct *lpbks) {
+  Init();
+  return GetBookMoves(*lppos, szFile, lpbks);
+}
+
+BOOL WINAPI PutBookMove(LPCSTR szFile, const BookStruct *lpcbk) {
+  BookFileStruct BookFile;
+  BookStruct bk;
+  int nPtr;
+
+  Init();
+  nPtr = lpcbk->nPtr;
+  if (!BookFile.Open(szFile, true)) {
+    return FALSE;
   }
-  MoveStruct mvs[MAX_GEN_MOVES];
-  nMoves = GetBookMoves(*lppos, szFile, mvs);
-  for (i = 0; i < nMoves; i ++) {
-    lpMoves[i] = mvs[i].wmv;
-    lpValues[i] = mvs[i].wvl;
+  if (nPtr >= BookFile.nLen) {
+    BookFile.Close();
+    return FALSE;
   }
-  return nMoves;
+  BookFile.Read(bk, nPtr);
+  bk.wvl = lpcbk->wvl;
+  BookFile.Write(bk, nPtr);
+  BookFile.Close();
+  return TRUE;
 }

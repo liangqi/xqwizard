@@ -2,8 +2,8 @@
 book.h/book.cpp - Source Code for ElephantEye, Part VI
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.1, Last Modified: Nov. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.25, Last Modified: Apr. 2011
+Copyright (C) 2004-2011 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "position.h"
 #include "book.h"
 
-int GetBookMoves(const PositionStruct &pos, const char *szBookFile, MoveStruct *lpmvs) {
+int GetBookMoves(const PositionStruct &pos, const char *szBookFile, BookStruct *lpbks) {
   BookFileStruct BookFile;
   PositionStruct posScan;
   BookStruct bk;
@@ -83,8 +83,9 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, MoveStruct *
     }
     if (posScan.LegalMove(bk.wmv)) {
       // 如果局面是第二趟搜索到的，则着法必须做镜像
-      lpmvs[nMoves].wmv = (nScan == 0 ? bk.wmv : MOVE_MIRROR(bk.wmv));
-      lpmvs[nMoves].wvl = bk.wvl;
+      lpbks[nMoves].nPtr = nPtr;
+      lpbks[nMoves].wmv = (nScan == 0 ? bk.wmv : MOVE_MIRROR(bk.wmv));
+      lpbks[nMoves].wvl = bk.wvl;
       nMoves ++;
       if (nMoves == MAX_GEN_MOVES) {
         break;
@@ -96,8 +97,8 @@ int GetBookMoves(const PositionStruct &pos, const char *szBookFile, MoveStruct *
   // 6. 对着法按分值排序
   for (i = 0; i < nMoves - 1; i ++) {
     for (j = nMoves - 1; j > i; j --) {
-      if (lpmvs[j - 1].wvl < lpmvs[j].wvl) {
-        SWAP(lpmvs[j - 1], lpmvs[j]);
+      if (lpbks[j - 1].wvl < lpbks[j].wvl) {
+        SWAP(lpbks[j - 1], lpbks[j]);
       }
     }
   }
