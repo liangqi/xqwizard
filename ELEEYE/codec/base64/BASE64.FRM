@@ -79,7 +79,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
 Private Declare Sub Base64Enc2 Lib "BASE64.DLL" Alias "_Base64Enc@16" (ByVal lpText As Long, ByVal sz As String, ByVal nBlockLen As Long, ByVal nLineLen As Long)
 Private Declare Function Base64Dec2 Lib "BASE64.DLL" Alias "_Base64Dec@8" (ByVal lpData As Long, ByVal szText As String) As Long
 

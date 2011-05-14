@@ -17,23 +17,24 @@ Public Const WM_LBUTTONUP       As Long = 514       ' CallWindowProcA
 Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
+Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
 Public Declare Sub QueryPerformanceCounter Lib "KERNEL32.DLL" (ByVal lpPerformanceCounter As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
         ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
-Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, _
         ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
 Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 ' === End Windows APIs ===
 
 ' For AllocString
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal lpsz As Long) As Long
+Private Declare Function lstrlenB Lib "KERNEL32.DLL" Alias "lstrlenA" (ByVal lpsz As Long) As Long
 Private Declare Function SysAllocStringByteLen Lib "OLEAUT32.DLL" (ByVal lpsz As Long, ByVal dwLen As Long) As String
 
 ' For MsgBoxIcon
@@ -164,7 +165,6 @@ Private Declare Sub AllocConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub FreeConsole Lib "KERNEL32.DLL" ()
 Private Declare Sub SetConsoleCtrlHandler Lib "KERNEL32.DLL" (ByVal lpHandlerRoutine As Long, ByVal bAdd As Long)
 Private Declare Sub SetConsoleTitleA Lib "KERNEL32.DLL" (ByVal szConsoleTitle As String)
-Private Declare Function lstrlenA2 Lib "KERNEL32.DLL" Alias "lstrlenA" (ByVal sz As String) As Long
 Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
         ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
 Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal sz As String, _
@@ -177,11 +177,27 @@ Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPos
 
 Private Stdio_si As StartupInfo
 
+' For MD5
+Private Const PROV_RSA_FULL As Long = 1
+Private Const CALG_MD5 As Long = &H8003&
+Private Const HP_HASHVAL As Long = 2
+
+Private Declare Sub CryptAcquireContextA Lib "ADVAPI32.DLL" (ByRef phProv As Long, _
+        ByVal pszContainer As Long, ByVal pszProvider As Long, ByVal dwProvType As Long, ByVal dwFlags As Long)
+Private Declare Sub CryptCreateHash Lib "ADVAPI32.DLL" (ByVal hProv As Long, _
+        ByVal Algid As Long, ByVal hKey As Long, ByVal dwFlags As Long, ByRef phHash As Long)
+Private Declare Sub CryptHashData Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
+        ByVal szData As String, ByVal dwDataLen As Long, ByVal dwFlags As Long)
+Private Declare Sub CryptGetHashParam Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
+        ByVal dwParam As Long, ByRef pbData As Byte, ByRef pdwDataLen As Long, ByVal dwFlags As Long)
+Private Declare Sub CryptDestroyHash Lib "ADVAPI32.DLL" (ByVal hHash As Long)
+Private Declare Sub CryptReleaseContext Lib "ADVAPI32.DLL" (ByVal hProv As Long, ByVal dwFlags As Long)
+
 ' === Begin AllocString ===
 
 Public Function AllocString(ByVal lpsz As Long) As String
 
-AllocString = SysAllocStringByteLen(lpsz, lstrlenA(lpsz))
+AllocString = SysAllocStringByteLen(lpsz, lstrlenB(lpsz))
 
 End Function
 
@@ -284,40 +300,29 @@ Public Function MsgBoxIcon(ByVal szPrompt As String, Optional ByVal dwStyle As L
         Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1) As Long
 
 Dim mbp As MsgBoxParams
-Dim hInstance As Long, hIcon As Long
-
+mbp.cbSize = Len(mbp)
+mbp.hwndOwner = 0
+On Error Resume Next
+mbp.hwndOwner = Screen.ActiveForm.hWnd
+On Error GoTo 0
 If szIconFile = vbNullString Then
-    hInstance = App.hInstance
+    mbp.hInstance = App.hInstance
 Else
-    hInstance = LoadLibraryA(szIconFile)
-End If
-If hInstance = 0 Then
-    hIcon = 0
-Else
-    hIcon = LoadIconA(hInstance, 1)
-End If
-If hIcon = 0 Then
-    MsgBoxIcon = MsgBox(szPrompt, dwStyle, szTitle)
-Else
-    If (dwStyle And &H70) <> 0 Then
-        MessageBeep dwStyle And &H70
+    mbp.hInstance = LoadLibraryA(szIconFile)
+    If mbp.hInstance = 0 Then
+        mbp.hInstance = App.hInstance
+        nIcon = 1
     End If
-    mbp.cbSize = Len(mbp)
-    mbp.hwndOwner = 0
-    On Error Resume Next
-    mbp.hwndOwner = Screen.ActiveForm.hWnd
-    On Error GoTo 0
-    mbp.hInstance = hInstance
-    mbp.lpszText = szPrompt
-    mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
-    mbp.dwStyle = MB_USERICON
-    mbp.lpszIcon = nIcon
-    mbp.dwContextHelpId = 0
-    mbp.lpfnMsgBoxCallback = 0
-    mbp.dwLanguageId = 0
-    MsgBoxIcon = MessageBoxIndirectA(mbp)
 End If
-If hInstance <> 0 And hInstance <> App.hInstance Then
+mbp.lpszText = szPrompt
+mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
+mbp.dwStyle = MB_USERICON + dwStyle
+mbp.lpszIcon = nIcon
+mbp.dwContextHelpId = 0
+mbp.lpfnMsgBoxCallback = 0
+mbp.dwLanguageId = 0
+MsgBoxIcon = MessageBoxIndirectA(mbp)
+If mbp.hInstance <> App.hInstance Then
     FreeLibrary mbp.hInstance
 End If
 
@@ -514,15 +519,38 @@ End Function
 Public Sub StdioOut(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdOutput, sz, lstrlenA2(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdOutput, sz, lstrlenA(sz), nNumberOfBytesWritten
 
 End Sub
 
 Public Sub StdioErr(ByVal sz As String)
 
 Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdError, sz, lstrlenA2(sz), nNumberOfBytesWritten
+WriteFile Stdio_si.hStdError, sz, lstrlenA(sz), nNumberOfBytesWritten
 
 End Sub
 
 ' === End Stdio ===
+
+' === Begin MD5 ===
+
+Public Function MD5(ByVal szData As String) As String
+
+Dim szHash As String, i As Integer
+Dim hProv As Long, hHash As Long, ucHash(1 To 16) As Byte
+
+CryptAcquireContextA hProv, 0, 0, PROV_RSA_FULL, 0
+CryptCreateHash hProv, CALG_MD5, 0, 0, hHash
+CryptHashData hHash, szData, lstrlenA(szData), 0
+CryptGetHashParam hHash, HP_HASHVAL, ucHash(1), 16, 0
+CryptDestroyHash hHash
+CryptReleaseContext hProv, 0
+szHash = ""
+For i = 1 To 16
+    szHash = szHash & Right(Hex(ucHash(i) + &H100), 2)
+Next
+MD5 = szHash
+
+End Function
+
+' === End MD5 ===

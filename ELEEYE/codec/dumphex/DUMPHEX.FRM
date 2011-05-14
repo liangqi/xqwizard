@@ -64,8 +64,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
-Private Declare Sub DumpHex2 Lib "DUMPHEX.DLL" Alias "_DumpHexA@16" (ByVal lpText As Long, ByVal szData As String, ByVal nOffset As Long, ByVal nLength As Long)
+Private Declare Sub DumpHex Lib "DUMPHEX.DLL" Alias "_DumpHexA@16" (ByVal lpText As Long, ByVal szData As String, ByVal nOffset As Long, ByVal nLength As Long)
 
 Private Sub ReadFile(ByVal szFileName As String)
 
@@ -123,7 +122,7 @@ If sz = "" Then
 End If
 nFileLen = lstrlenA(sz)
 ReDim ucText(1 To (nFileLen \ 16 + 1) * 79) As Byte
-DumpHex2 VarPtr(ucText(1)), sz, 0, nFileLen
+DumpHex VarPtr(ucText(1)), sz, 0, nFileLen
 txtCode.Text = AllocString(VarPtr(ucText(1)))
 Erase ucText
 
