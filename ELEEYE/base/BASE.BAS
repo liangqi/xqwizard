@@ -18,7 +18,6 @@ Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
-Public Declare Sub QueryPerformanceCounter Lib "KERNEL32.DLL" (ByVal lpPerformanceCounter As Long)
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
         ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
@@ -177,7 +176,7 @@ Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPos
 
 Private Stdio_si As StartupInfo
 
-' For MD5
+' For MD5/PRNG
 Private Const PROV_RSA_FULL As Long = 1
 Private Const CALG_MD5 As Long = &H8003&
 Private Const HP_HASHVAL As Long = 2
@@ -190,6 +189,7 @@ Private Declare Sub CryptHashData Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
         ByVal szData As String, ByVal dwDataLen As Long, ByVal dwFlags As Long)
 Private Declare Sub CryptGetHashParam Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
         ByVal dwParam As Long, ByRef pbData As Byte, ByRef pdwDataLen As Long, ByVal dwFlags As Long)
+Private Declare Sub CryptGenRandom Lib "ADVAPI32.DLL" (ByVal hProv As Long, ByVal dwLen As Long, ByRef pbBuffer As Byte)
 Private Declare Sub CryptDestroyHash Lib "ADVAPI32.DLL" (ByVal hHash As Long)
 Private Declare Sub CryptReleaseContext Lib "ADVAPI32.DLL" (ByVal hProv As Long, ByVal dwFlags As Long)
 
@@ -532,9 +532,9 @@ End Sub
 
 ' === End Stdio ===
 
-' === Begin MD5 ===
+' === Begin MD5/PRNG ===
 
-Public Function MD5(ByVal szData As String) As String
+Public Function Md5(ByVal szData As String) As String
 
 Dim szHash As String, i As Integer
 Dim hProv As Long, hHash As Long, ucHash(1 To 16) As Byte
@@ -549,8 +549,25 @@ szHash = ""
 For i = 1 To 16
     szHash = szHash & Right(Hex(ucHash(i) + &H100), 2)
 Next
-MD5 = szHash
+Md5 = szHash
 
 End Function
 
-' === End MD5 ===
+Public Function Random(ByVal dwLen As Long) As String
+
+Dim szRand As String, i As Integer, hProv As Long
+
+CryptAcquireContextA hProv, 0, 0, PROV_RSA_FULL, 0
+ReDim ucData(1 To dwLen) As Byte
+CryptGenRandom hProv, dwLen, ucData(1)
+CryptReleaseContext hProv, 0
+szRand = ""
+For i = 1 To dwLen
+    szRand = szRand & Right(Hex(ucData(i) + &H100), 2)
+Next
+Erase ucData
+Random = szRand
+
+End Function
+
+' === End MD5/PRNG ===
