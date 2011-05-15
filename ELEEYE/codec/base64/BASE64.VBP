@@ -2,7 +2,6 @@ Type=Exe
 Form=BASE64.FRM
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\STDOLE2.TLB#OLE Automation
 Module=mdlBase; ..\..\base\BASE.BAS
-Module=mdlBase64; BASE64.BAS
 IconForm="frmBase64"
 Startup="frmBase64"
 HelpFile=""
