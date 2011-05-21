@@ -73,16 +73,14 @@ void PipeStruct::Open(const char *szProcFile) {
     ParseDir(szDir, szProcFile);
     SetCurrentDirectory(szDir);
 
+    memset(&sa, 0, sizeof(SECURITY_ATTRIBUTES));
     sa.nLength = sizeof(SECURITY_ATTRIBUTES);
     sa.bInheritHandle = TRUE;
-    sa.lpSecurityDescriptor = NULL;
     CreatePipe(&hStdinRead, &hStdinWrite, &sa, 0);
     CreatePipe(&hStdoutRead, &hStdoutWrite, &sa, 0);
+    memset(&si, 0, sizeof(STARTUPINFO));
     si.cb = sizeof(STARTUPINFO);
-    si.lpReserved = si.lpDesktop = si.lpTitle = NULL;
     si.dwFlags = STARTF_USESTDHANDLES;
-    si.cbReserved2 = 0;
-    si.lpReserved2 = NULL;
     si.hStdInput = hStdinRead;
     si.hStdOutput = hStdoutWrite;
     si.hStdError = hStdoutWrite;

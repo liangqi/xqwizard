@@ -20,11 +20,9 @@ int main(void) {
   DWORD dw;
   STARTUPINFO si;
   PROCESS_INFORMATION pi;
+  memset(&si, 0, sizeof(STARTUPINFO));
   si.cb = sizeof(STARTUPINFO);
-  si.lpReserved = si.lpDesktop = si.lpTitle = NULL;
   si.dwFlags = STARTF_USESTDHANDLES;
-  si.cbReserved2 = 0;
-  si.lpReserved2 = NULL;
   si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
   si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
   si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
