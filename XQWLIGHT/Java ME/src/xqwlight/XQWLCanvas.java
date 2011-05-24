@@ -92,6 +92,7 @@ class XQWLCanvas extends Canvas {
 	private int normalWidth = getWidth();
 	private int normalHeight = getHeight();
 
+	private Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
 	private Alert altBack = new Alert("象棋小巫师", "放弃这局棋？", null, AlertType.CONFIRMATION);
 
 	Command cmdBack = new Command("返回", Command.ITEM, 1);
@@ -112,6 +113,12 @@ class XQWLCanvas extends Canvas {
 	XQWLCanvas(XQWLMIDlet midlet_) {
 		midlet = midlet_;
 		setFullScreenMode(true);
+		altAbout.setTimeout(Alert.FOREVER);
+		altAbout.setString(midlet.getAppProperty("MIDlet-Description") + " " +
+				midlet.getAppProperty("MIDlet-Version") + "\n\r\f\n\r\f" +
+				"(C) 2004-2011 象棋百科全书网\n\r\f" +
+				"(C) 2010-2011 上海贤趣信息技术有限公司\n\r\f\n\r\f" +
+				"欢迎登录 www.xqbase.com\n\r\f免费下载PC版 象棋巫师");
 		altBack.setTimeout(Alert.FOREVER);
 		altBack.addCommand(cmdBackOK);
 		altBack.addCommand(cmdBackCancel);
@@ -545,13 +552,6 @@ class XQWLCanvas extends Canvas {
 	}
 
 	void about() {
-		Alert altAbout = new Alert("关于\"象棋小巫师\"", null, imgXQWLight, AlertType.INFO);
-		altAbout.setTimeout(Alert.FOREVER);
-		altAbout.setString(midlet.getAppProperty("MIDlet-Description") + " " +
-				midlet.getAppProperty("MIDlet-Version") + "\n\r\f\n\r\f" +
-				"(C) 2004-2011 象棋百科全书网\n\r\f" +
-				"(C) 2010-2011 上海贤趣信息技术有限公司\n\r\f\n\r\f" +
-				"欢迎登录 www.xqbase.com\n\r\f免费下载PC版 象棋巫师");
 		Display.getDisplay(midlet).setCurrent(altAbout);
 		phase = PHASE_LOADING;
 		setFullScreenMode(true);
