@@ -862,7 +862,7 @@ int PositionStruct::RepStatus(int nRecur) const {
    *    如果不等于当前的"nMoveNum"，则说明之前还有局面占有这个置换表项，不必清空该项，参阅"position.h"中的"UndoMakeMove()"函数
    */
   if (this->ucRepHash[this->zobr.dwKey & REP_HASH_MASK] == 0) {
-    return 0;
+    return REP_NONE;
   }
 
   // 2. 初始化
