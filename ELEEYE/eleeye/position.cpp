@@ -240,8 +240,6 @@ void PositionStruct::UndoMovePiece(int mv, int pcCaptured) {
   }
 }
 
-#include <stdio.h>
-
 // Éý±ä
 int PositionStruct::Promote(int sq) {
   int pcCaptured, pcPromoted, pt;
