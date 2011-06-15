@@ -119,13 +119,11 @@ const int REP_WIN = 5;
  * 例如"i"取"KNIGHT_FROM"到"KNIGHT_TO"，则表示依次检查两个马的位置
  */
 inline int SIDE_TAG(int sd) {
-  int pc = 16 + (sd << 4);
-  return pc;
+  return 16 + (sd << 4);
 }
 
 inline int OPP_SIDE_TAG(int sd) {
-  int pc = 32 - (sd << 4);
-  return pc;
+  return 32 - (sd << 4);
 }
 
 inline int SIDE_VALUE(int sd, int vl) {
@@ -175,13 +173,11 @@ union MoveStruct {
 
 // 着法结构
 inline int SRC(int mv) { // 得到着法的起点
-  int sq = mv & 255;
-  return sq;
+  return mv & 255;
 }
 
 inline int DST(int mv) { // 得到着法的终点
-  int sq = mv >> 8;
-  return sq;
+  return mv >> 8;
 }
 
 inline int MOVE(int sqSrc, int sqDst) {   // 由起点和终点得到着法
