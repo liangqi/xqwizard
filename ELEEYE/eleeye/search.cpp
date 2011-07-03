@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.25, Last Modified: Apr. 2011
+Designed by Morning Yellow, Version: 3.26, Last Modified: Jul. 2011
 Copyright (C) 2004-2011 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
@@ -559,7 +559,7 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16_t *lpwmvPvLine) 
  * 6. 不更新历史表和杀手着法表。
  */
 static int SearchRoot(int nDepth) {
-  int nNewDepth, vlBest, vl, mv;
+  int nNewDepth, vlBest, vl, mv, nCurrMove;
   uint32_t dwMoveStr;
   uint16_t wmvPvLine[LIMIT_DEPTH];
   // 根结点搜索例程包括以下几个步骤：
@@ -569,11 +569,13 @@ static int SearchRoot(int nDepth) {
   Search2.MoveSort.ResetRoot();
 
   // 2. 逐一搜索每个着法(要过滤禁止着法)
+  nCurrMove = 0;
   while ((mv = Search2.MoveSort.NextRoot()) != 0) {
     if (Search.pos.MakeMove(mv)) {
       if (Search2.bPopCurrMove || Search.bDebug) {
         dwMoveStr = MOVE_COORD(mv);
-        printf("info currmove %.4s\n", (const char *) &dwMoveStr);
+        nCurrMove ++;
+        printf("info currmove %.4s currmovenumber %d\n", (const char *) &dwMoveStr, nCurrMove);
         fflush(stdout);
       }
 
