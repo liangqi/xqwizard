@@ -108,8 +108,6 @@ class XQWLCanvas extends Canvas {
 	private Image[] imgPieces = new Image[24];
 	private int squareSize, width, height, left, right, top, bottom;
 
-	private boolean bNoKeyPad = false;
-
 	XQWLCanvas(XQWLMIDlet midlet_) {
 		midlet = midlet_;
 		setFullScreenMode(true);
@@ -138,11 +136,6 @@ class XQWLCanvas extends Canvas {
 		addCommand(cmdBack);
 		addCommand(cmdRetract);
 		addCommand(cmdAbout);
-
-		String noKeyPadValue = midlet.getAppProperty("XQWLight-NoKeyPad");
-		if (noKeyPadValue != null && noKeyPadValue.toLowerCase().equals("true")) {
-			bNoKeyPad = true;
-		}
 
 		setCommandListener(new CommandListener() {
 			public void commandAction(Command c, Displayable d) {
@@ -309,7 +302,7 @@ class XQWLCanvas extends Canvas {
 			g.drawString(message, width / 2, height / 2, Graphics.HCENTER + Graphics.BASELINE);
 		}
 
-		if (bNoKeyPad) {
+		if (hasPointerEvents()) {
 			g.setFont(fontSmall);
 			g.setColor(0x0000ff);
 			g.drawString("* - ·µ»Ø", 0, height, Graphics.LEFT + Graphics.BASELINE);
@@ -328,7 +321,7 @@ class XQWLCanvas extends Canvas {
 			return;
 		}
 
-		if (bNoKeyPad) {
+		if (hasPointerEvents()) {
 			switch (code) {
 			case KEY_STAR:
 				back();
@@ -408,7 +401,7 @@ class XQWLCanvas extends Canvas {
 		if (phase == PHASE_THINKING) {
 			return;
 		}
-		if (bNoKeyPad && height - y < fontSmall.getHeight()) {
+		if (hasPointerEvents() && height - y < fontSmall.getHeight()) {
 			switch (x * 3 / width) {
 			case 0:
 				back();
