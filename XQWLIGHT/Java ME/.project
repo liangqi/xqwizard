@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>XQWLight (Java ME)</name>
+	<name>XQWLight</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -11,13 +11,18 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>eclipseme.core.preverifier</name>
+			<name>org.eclipse.mtj.core.preverifier</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.mtj.core.packageBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>eclipseme.core.nature</nature>
+		<nature>org.eclipse.mtj.core.nature</nature>
 	</natures>
 </projectDescription>
