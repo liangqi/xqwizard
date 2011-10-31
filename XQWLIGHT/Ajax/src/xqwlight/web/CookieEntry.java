@@ -17,8 +17,8 @@ public class CookieEntry implements Serializable {
 	}
 
 	public CookieEntry(String name, String value) {
-		this.name = new Model<String>(name);
-		this.value = new Model<String>(value);
+		this.name = new Model<>(name);
+		this.value = new Model<>(value);
 	}
 
 	public Model<String> getNameModel() {

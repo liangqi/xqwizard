@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 public class LoggerFactory {
-	private static HashMap<String, Logger> loggerMap = new HashMap<String, Logger>();
+	private static HashMap<String, Logger> loggerMap = new HashMap<>();
 
 	public static Logger getLogger(String name) {
 		Logger logger = loggerMap.get(name);

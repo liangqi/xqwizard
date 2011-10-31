@@ -376,13 +376,13 @@ public class XQWLightPage extends WebPage {
 		}
 		// 4. Form ...
 		// 4.1. Player Moves ...
-		final RadioChoice<String> selFlipped = new RadioChoice<String>("selFlipped",
-				new Model<String>(flipped ? Choices.FLIPPED_TRUE : Choices.FLIPPED_FALSE),
+		final RadioChoice<String> selFlipped = new RadioChoice<>("selFlipped",
+				new Model<>(flipped ? Choices.FLIPPED_TRUE : Choices.FLIPPED_FALSE),
 				Choices.getFlippedTypes()).setSuffix("");
 		// selFlipped.setModelValue(new String[] {Integer.toString(flipped ? 1 : 0)});
 		// 4.2. Handicap ...
-		final DropDownChoice<String> selHandicap = new DropDownChoice<String>("selHandicap",
-				new Model<String>(Choices.getHandicapTypes().get(handicap)), Choices.getHandicapTypes());
+		final DropDownChoice<String> selHandicap = new DropDownChoice<>("selHandicap",
+				new Model<>(Choices.getHandicapTypes().get(handicap)), Choices.getHandicapTypes());
 		// selHandicap.setModelValue(new String[] {Integer.toString(handicap)});
 		// 4.3. New Game ...
 		Form<Void> frm = new Form<Void>("frm") {
@@ -403,14 +403,14 @@ public class XQWLightPage extends WebPage {
 		frm.add(selHandicap);
 		add(frm);
 		// 4.4. Board ...
-		final DropDownChoice<String> selBoard = new DropDownChoice<String>("selBoard",
-				new Model<String>(Choices.getBoardTypes().get(boardId)), Choices.getBoardTypes());
+		final DropDownChoice<String> selBoard = new DropDownChoice<>("selBoard",
+				new Model<>(Choices.getBoardTypes().get(boardId)), Choices.getBoardTypes());
 		// 4.5. Pieces ...
-		final DropDownChoice<String> selPieces = new DropDownChoice<String>("selPieces",
-				new Model<String>(Choices.getPiecesTypes().get(piecesId)), Choices.getPiecesTypes());
+		final DropDownChoice<String> selPieces = new DropDownChoice<>("selPieces",
+				new Model<>(Choices.getPiecesTypes().get(piecesId)), Choices.getPiecesTypes());
 		// 4.6. Musics ...
-		final DropDownChoice<String> selMusic = new DropDownChoice<String>("selMusic",
-				new Model<String>(Choices.getMusicTypes().get(musicId)), Choices.getMusicTypes());
+		final DropDownChoice<String> selMusic = new DropDownChoice<>("selMusic",
+				new Model<>(Choices.getMusicTypes().get(musicId)), Choices.getMusicTypes());
 		// 4.7. Apply ...
 		Form<Void> frmGui = new Form<Void>("frmGui") {
 			private static final long serialVersionUID = 1L;

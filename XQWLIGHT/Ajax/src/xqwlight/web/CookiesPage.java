@@ -22,9 +22,9 @@ public class CookiesPage extends WebPage {
 
 	private static final String COOKIE_HELPER_NAME = "COOKIEHELPER";
 
-	private ArrayList<Cookie> oldCookies = new ArrayList<Cookie>();
+	private ArrayList<Cookie> oldCookies = new ArrayList<>();
 
-	ArrayList<CookieEntry> newCookieEntries = new ArrayList<CookieEntry>();
+	ArrayList<CookieEntry> newCookieEntries = new ArrayList<>();
 	boolean skipSubmit = false;
 
 	void setCookies() {
@@ -87,8 +87,8 @@ public class CookiesPage extends WebPage {
 			protected void populateItem(ListItem<CookieEntry> item) {
 				final int index = item.getIndex();
 				CookieEntry cookieEntry = item.getModelObject();
-				item.add(new TextField<String>("txtName", cookieEntry.getNameModel()));
-				item.add(new TextField<String>("txtValue", cookieEntry.getValueModel()));
+				item.add(new TextField<>("txtName", cookieEntry.getNameModel()));
+				item.add(new TextField<>("txtValue", cookieEntry.getValueModel()));
 				item.add(new Button("btnDelete") {
 					private static final long serialVersionUID = 1L;
 
