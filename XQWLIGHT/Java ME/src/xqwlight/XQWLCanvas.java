@@ -305,9 +305,9 @@ class XQWLCanvas extends Canvas {
 		if (hasPointerEvents()) {
 			g.setFont(fontSmall);
 			g.setColor(0x0000ff);
-			g.drawString("* - 返回", 0, height, Graphics.LEFT + Graphics.BASELINE);
-			g.drawString("0 - 悔棋", width / 2, height, Graphics.HCENTER + Graphics.BASELINE);
-			g.drawString("# - 关于", width, height, Graphics.RIGHT + Graphics.BASELINE);
+			g.drawString("返回", 0, height, Graphics.LEFT + Graphics.BASELINE);
+			g.drawString("悔棋", width / 2, height, Graphics.HCENTER + Graphics.BASELINE);
+			g.drawString("关于", width, height, Graphics.RIGHT + Graphics.BASELINE);
 		}
 	}
 
@@ -319,20 +319,6 @@ class XQWLCanvas extends Canvas {
 		}
 		if (phase == PHASE_THINKING) {
 			return;
-		}
-
-		if (hasPointerEvents()) {
-			switch (code) {
-			case KEY_STAR:
-				back();
-				return;
-			case KEY_NUM0:
-				retract();
-				return;
-			case KEY_POUND:
-				about();
-				return;
-			}
 		}
 
 		int deltaX = 0, deltaY = 0;
@@ -401,7 +387,7 @@ class XQWLCanvas extends Canvas {
 		if (phase == PHASE_THINKING) {
 			return;
 		}
-		if (hasPointerEvents() && height - y < fontSmall.getHeight()) {
+		if (height - y < fontSmall.getHeight()) {
 			switch (x * 3 / width) {
 			case 0:
 				back();
