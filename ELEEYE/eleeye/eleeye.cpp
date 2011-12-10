@@ -128,7 +128,7 @@ int main(void) {
   bPonderTime = false;
   PreGenInit();
   NewHash(24); // 24=16MB, 25=32MB, 26=64MB, ...
-  Search.pos.FromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
+  Search.pos.FromFen(cszStartFen);
   Search.pos.nDistance = 0;
   Search.PreEvaluate(&Search.pos, &PreEval);
   Search.nBanMoves = 0;

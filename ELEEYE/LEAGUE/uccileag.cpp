@@ -1,7 +1,7 @@
 /*
 UCCILEAG - a Computer Chinese Chess League (UCCI Engine League) Emulator
-Designed by Morning Yellow, Version: 3.72, Last Modified: Aug. 2010
-Copyright (C) 2004-2010 www.xqbase.com
+Designed by Morning Yellow, Version: 3.8, Last Modified: Dec. 2011
+Copyright (C) 2004-2011 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -121,6 +121,7 @@ static struct {
   int nInitTime, nIncrTime, nStopTime, nStandardCpuTime, nNameLen;
   bool bPromotion;
   char szEvent[MAX_CHAR], szSite[MAX_CHAR];
+  char szRobinFens[MAX_ROBIN][MAX_CHAR];
   EccoApiStruct EccoApi;
 } League;
 
@@ -453,23 +454,23 @@ static void PublishLeague(void) {
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
   fprintf(fp, "          <font size=\"2\">\n");
-  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">"
+  fprintf(fp, "            本页面由“<a href=\"http://www.xqbase.com/league/emulator.htm\" target=\"_blank\">"
       "UCCI引擎联赛在线直播系统</a>”生成\n");
   fprintf(fp, "          </font>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <a href=\"http://www.elephantbase.net/\" target=\"_blank\">\n");
-  fprintf(fp, "            <img src=\"elephantbase.gif\" border=\"0\">\n");
+  fprintf(fp, "          <a href=\"http://www.xqbase.com/\" target=\"_blank\">\n");
+  fprintf(fp, "            <img src=\"xqbase.gif\" border=\"0\">\n");
   fprintf(fp, "          </a>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <a href=\"http://www.elephantbase.net/\" target=\"_blank\">\n");
+  fprintf(fp, "          <a href=\"http://www.xqbase.com/\" target=\"_blank\">\n");
   fprintf(fp, "            <font size=\"2\" face=\"Arial\">\n");
-  fprintf(fp, "              <strong>www.elephantbase.net</strong>\n");
+  fprintf(fp, "              <strong>www.xqbase.com</strong>\n");
   fprintf(fp, "            </font>\n");
   fprintf(fp, "          </a>\n");
   fprintf(fp, "        </td>\n");
@@ -499,9 +500,8 @@ inline void MOVE_ICCS(char *szIccs, int mv) {
 static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForce = false) {
   int i, nStatus, nCounter;
   uint64_t dqChinMove;
-  char szEmbeddedFile[MAX_CHAR];
-  char szUploadFile[16];
-  char szIccs[8];
+  char szEmbeddedFile[MAX_CHAR], szStartFen[MAX_CHAR];
+  char szUploadFile[16], szIccs[8];
   char *lp;
   FILE *fp;
   PositionStruct pos;
@@ -564,7 +564,7 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <embed src=\"http://www.elephantbase.net/flashxq.swf\" width=\"216\" height=\"264\""
+  fprintf(fp, "          <embed src=\"http://www.xqbase.com/flashxq.swf\" width=\"216\" height=\"264\""
       "allowScriptAccess=\"sameDomain\" quality=\"high\" wmode=\"transparent\" flashvars=\"MoveList=");
   for (i = 1; i <= lppgn->nMaxMove; i ++) {
     MOVE_ICCS(szIccs, lppgn->wmvMoveTable[i]);
@@ -572,6 +572,10 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   }
   if (lppgn->nResult == 0) {
     fprintf(fp, "&Step=%d", lppgn->nMaxMove);
+  }
+  lppgn->posStart.ToFen(szStartFen);
+  if (strcmp(szStartFen, cszStartFen) != 0) {
+    fprintf(fp, "&Position=%s", szStartFen);
   }
   fprintf(fp, "\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" />\n");
   fprintf(fp, "        </td>\n");
@@ -607,7 +611,7 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "          <dl>\n");
 
   // 显示着法
-  pos.FromFen(cszStartFen);
+  pos = lppgn->posStart;
   nCounter = 1;
   for (i = 1; i <= lppgn->nMaxMove; i ++) {
     dqChinMove = File2Chin(Move2File(lppgn->wmvMoveTable[i], pos), pos.sdPlayer);
@@ -642,16 +646,10 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "    <dl>\n");
   fprintf(fp, "      <dt>　　如果您已经安装《象棋巫师》软件，那么点击上面链接，《象棋巫师》就会自动打开棋局。</dt>\n");
   fprintf(fp, "      <dt>　　《象棋巫师》是免费软件，您可以访问以下页面，获得速度最快的下载链接：</dt>\n");
-  fprintf(fp, "      <dt>　　(1) 《象棋巫师》简体中文版</dt>\n");
   fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.com/soft/24665.html\" target=\"_blank\">"
       "http://www.skycn.com/soft/24665.html</a>(天空软件站)</dt>\n");
   fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/38287.htm\" target=\"_blank\">"
       "http://www.onlinedown.net/soft/38287.htm</a>(华军软件园)</dt>\n");
-  fprintf(fp, "      <dt>　　(2) 《象棋巫师》繁体中文版</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.skycn.com/soft/35392.html\" target=\"_blank\">"
-      "http://www.skycn.com/soft/35392.html</a>(天空软件站)</dt>\n");
-  fprintf(fp, "      <dt>　　　　<a href=\"http://www.onlinedown.net/soft/47666.htm\" target=\"_blank\">"
-      "http://www.onlinedown.net/soft/47666.htm</a>(华军软件园)</dt>\n");
   fprintf(fp, "    </dl>\n");
   fprintf(fp, "    <ul>\n");
   fprintf(fp, "      <li>返回　<a href=\"index.%s\">%s 在线直播</a></li>\n", Live.szExt, League.szEvent);
@@ -664,23 +662,23 @@ static void PublishGame(PgnFileStruct *lppgn, const char *szGameFile, bool bForc
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
   fprintf(fp, "          <font size=\"2\">\n");
-  fprintf(fp, "            本页面由“<a href=\"http://www.elephantbase.net/league/emulator.htm\" target=\"_blank\">"
+  fprintf(fp, "            本页面由“<a href=\"http://www.xqbase.com/league/emulator.htm\" target=\"_blank\">"
       "UCCI引擎联赛在线直播系统</a>”生成\n");
   fprintf(fp, "          </font>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <a href=\"http://www.elephantbase.net/\" target=\"_blank\">\n");
-  fprintf(fp, "            <img src=\"elephantbase.gif\" border=\"0\">\n");
+  fprintf(fp, "          <a href=\"http://www.xqbase.com/\" target=\"_blank\">\n");
+  fprintf(fp, "            <img src=\"xqbase.gif\" border=\"0\">\n");
   fprintf(fp, "          </a>\n");
   fprintf(fp, "        </td>\n");
   fprintf(fp, "      </tr>\n");
   fprintf(fp, "      <tr>\n");
   fprintf(fp, "        <td align=\"center\">\n");
-  fprintf(fp, "          <a href=\"http://www.elephantbase.net/\" target=\"_blank\">\n");
+  fprintf(fp, "          <a href=\"http://www.xqbase.com/\" target=\"_blank\">\n");
   fprintf(fp, "            <font size=\"2\" face=\"Arial\">\n");
-  fprintf(fp, "              <strong>www.elephantbase.net</strong>\n");
+  fprintf(fp, "              <strong>www.xqbase.com</strong>\n");
   fprintf(fp, "            </font>\n");
   fprintf(fp, "          </a>\n");
   fprintf(fp, "        </td>\n");
@@ -748,6 +746,8 @@ void GameStruct::AddMove(int mv) {
   int nStatus;
   uint32_t dwEccoIndex;
   char *szComment;
+  char szStartFen[MAX_CHAR];
+
   if (mv < BESTMOVE_THINKING) {
     szComment = new char[MAX_CHAR];
     lppgn->szCommentTable[lppgn->nMaxMove] = szComment;
@@ -763,7 +763,8 @@ void GameStruct::AddMove(int mv) {
     lppgn->nMaxMove ++;
     lppgn->wmvMoveTable[lppgn->nMaxMove] = mv;
     // 解析ECCO
-    if (League.EccoApi.Available()) {
+    lppgn->posStart.ToFen(szStartFen);
+    if (strcmp(szStartFen, cszStartFen) == 0 && League.EccoApi.Available()) {
       if (lppgn->nMaxMove <= 20) {
         dwFileMove[lppgn->nMaxMove - 1] = Move2File(mv, posIrrev);
       }
@@ -937,6 +938,7 @@ void GameStruct::RunEngine(void) {
 // 开始一个棋局
 void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   int i;
+  const char *szStartFen;
   char szFileName[16];
   CheckStruct chkRecord;
   time_t dwTime;
@@ -952,8 +954,10 @@ void GameStruct::BeginGame(int nRobin, int nRound, int nGame) {
   sd = nCounter = nResult = 0;
   nTimer[0] = nTimer[1] = League.nInitTime * League.nStandardCpuTime * 60;
   bStarted[0] = bStarted[1] = bUseMilliSec[0] = bUseMilliSec[1] = bDraw = false;
-  strcpy(szIrrevFen, cszStartFen);
+  szStartFen = League.szRobinFens[nRobin];
+  strcpy(szIrrevFen, szStartFen[0] == '\0' ? cszStartFen : szStartFen);
   posIrrev.FromFen(szIrrevFen);
+  sd = posIrrev.sdPlayer; // 让sd与posIrrev.sdPlayer同步
 
   // 合成棋谱文件
   lppgn = new PgnFileStruct();
@@ -1222,7 +1226,7 @@ int main(void) {
   char *lp;
   FILE *fpIniFile;
   TeamStruct *lpTeam;
-  int i, j, k, nSocket;
+  int i, j, k, nRobinFen, nSocket;
   int nEngineFileLen; // 引擎文件的最大长度
   // 以下变量牵涉到棋局队列的控制
   int nRobinPush, nRoundPush, nGamePush;
@@ -1241,12 +1245,16 @@ int main(void) {
   strcpy(Live.szExt, "htm");
   Live.nPort = Live.nProxyPort = 80;
   Live.nRefresh = Live.nInterval = 0;
+  nRobinFen = 0;
 
   LocatePath(szLineStr, "UCCILEAG.INI");
   fpIniFile = fopen(szLineStr, "rt");
   if (fpIniFile == NULL) {
     printf("错误：无法打开配置文件\"%s\"！\n", szLineStr);
     return 0;
+  }
+  for (i = 0; i < MAX_ROBIN; i ++) {
+    League.szRobinFens[i][0] = '\0';
   }
   while (fgets(szLineStr, MAX_CHAR, fpIniFile) != NULL) {
     StrCutCrLf(szLineStr);
@@ -1273,6 +1281,12 @@ int main(void) {
         League.bPromotion = true;
       } else if (StrEqv(lp, "On")) {
         League.bPromotion = true;
+      }
+    // 3.8新功能：设定初始局面
+    } else if (StrEqvSkip(lp, "Position=")) {
+      if (nRobinFen < MAX_ROBIN) {
+        strcpy(League.szRobinFens[nRobinFen], lp);
+        nRobinFen ++;
       }
     } else if (StrEqvSkip(lp, "Team=")) {
       if (League.nTeamNum < MAX_TEAM) {
@@ -1345,7 +1359,7 @@ int main(void) {
   if (League.bPromotion) {
     printf("规则：　　允许仕(士)相(象)升变成兵(卒)\n");
   }
-  printf("模拟器：　UCCI引擎联赛模拟器 3.72\n\n");
+  printf("模拟器：　UCCI引擎联赛模拟器 3.8\n\n");
   printf("参赛引擎：\n\n");
   printf("   缩写 引擎名称");
   PrintDup(' ', League.nNameLen - 8);
@@ -1366,7 +1380,7 @@ int main(void) {
   printf("================" "=================" "============\n\n");
   //     "   缩写 引擎名称" " ELO  K  引擎文件" " 配置文件"
 
-  // 接下来生成循环赛对阵表，可参阅：http://www.elephantbase.net/protocol/roundrobin.htm
+  // 接下来生成循环赛对阵表，可参阅：http://www.xqbase.com/protocol/roundrobin.htm
   League.nGameNum = (League.nTeamNum + 1) / 2;
   League.nRoundNum = League.nGameNum * 2 - 1;
   for (i = 0; i < League.nGameNum; i ++) {

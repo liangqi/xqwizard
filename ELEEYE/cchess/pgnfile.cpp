@@ -116,7 +116,7 @@ bool PgnFileStruct::Read(const char *szFileName, bool bNoAdvert) {
   if (fp == NULL) {
     return false;
   }
-  posStart.FromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
+  posStart.FromFen(cszStartFen);
   bReturned = true;
   bDetail = false;
   nRemLevel = 0;
@@ -343,7 +343,7 @@ bool PgnFileStruct::Write(const char *szFileName, bool bNoAdvert) const {
   PrintLabel(fp, "Opening", szOpen);
   PrintLabel(fp, "Variation", szVar);
   posStart.ToFen(szFen);
-  if (strcmp(szFen, "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w") != 0) {
+  if (strcmp(szFen, cszStartFen) != 0) {
     fprintf(fp, "[FEN \"%s - - 0 1\"]\r\n", szFen);
   }
   if (szCommentTable[0] != NULL) {
