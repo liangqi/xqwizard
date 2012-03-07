@@ -13,7 +13,6 @@ can be used without restriction.
 #include "../base/base2.h"
 #include "../base/parse.h"
 #include "../base/pipe.h"
-#include "../base/position.h"
 #include "ucci.h"  
 
 /* UCCI指令分析模块由三各UCCI指令解释器组成。
@@ -38,7 +37,7 @@ static bool ParsePos(UcciCommStruct &UcciComm, char *lp) {
     UcciComm.szFenStr = szFen;
   // 然后判断是否是startpos
   } else if (StrEqv(lp, "startpos")) {
-    UcciComm.szFenStr = cszStartFen;
+    UcciComm.szFenStr = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w";
   // 如果两者都不是，就立即返回
   } else {
     return false;
