@@ -2,8 +2,8 @@
 preeval.h/preeval.cpp - Source Code for ElephantEye, Part X
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 2.1, Last Modified: May 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

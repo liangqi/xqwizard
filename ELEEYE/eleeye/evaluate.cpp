@@ -2,8 +2,8 @@
 evaluate.cpp - Source Code for ElephantEye, Part XI
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 2.34, Last Modified: Oct. 2006
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -20,26 +20,10 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../../base/base.h"
-#include "../pregen.h"
-#include "../position.h"
+#include "../base/base.h"
+#include "pregen.h"
+#include "position.h"
 #include "preeval.h"
-
-#if _WIN32
-
-#include <windows.h>
-
-extern "C" __declspec(dllexport) int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta);
-extern "C" __declspec(dllexport) const char *WINAPI GetEngineName(void);
-
-#else
-
-#define WINAPI
-
-extern "C" int Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta);
-extern "C" const char *GetEngineName(void);
-
-#endif
 
 /* ElephantEye源程序使用的匈牙利记号约定：
  *
@@ -88,15 +72,15 @@ const int SHAPE_CENTER = 1;
 const int SHAPE_LEFT = 2;
 const int SHAPE_RIGHT = 3;
 
-int AdvisorShape(const PositionStruct *lppos) {
+int PositionStruct::AdvisorShape(void) const {
   int pcCannon, pcRook, sq, sqAdv1, sqAdv2, x, y, nShape;
   int vlWhitePenalty, vlBlackPenalty;
   SlideMaskStruct *lpsms;
   vlWhitePenalty = vlBlackPenalty = 0;
-  if ((lppos->wBitPiece[0] & ADVISOR_BITPIECE) == ADVISOR_BITPIECE) {
-    if (lppos->ucsqPieces[SIDE_TAG(0) + KING_FROM] == 0xc7) {
-      sqAdv1 = lppos->ucsqPieces[SIDE_TAG(0) + ADVISOR_FROM];
-      sqAdv2 = lppos->ucsqPieces[SIDE_TAG(0) + ADVISOR_TO];
+  if ((this->wBitPiece[0] & ADVISOR_BITPIECE) == ADVISOR_BITPIECE) {
+    if (this->ucsqPieces[SIDE_TAG(0) + KING_FROM] == 0xc7) {
+      sqAdv1 = this->ucsqPieces[SIDE_TAG(0) + ADVISOR_FROM];
+      sqAdv2 = this->ucsqPieces[SIDE_TAG(0) + ADVISOR_TO];
       if (false) {
       } else if (sqAdv1 == 0xc6) { // 红方一个仕在左侧底线
         nShape = (sqAdv2 == 0xc8 ? SHAPE_CENTER : sqAdv2 == 0xb7 ? SHAPE_LEFT : SHAPE_NONE);
@@ -112,17 +96,17 @@ int AdvisorShape(const PositionStruct *lppos) {
         break;
       case SHAPE_CENTER:
         for (pcCannon = SIDE_TAG(1) + CANNON_FROM; pcCannon <= SIDE_TAG(1) + CANNON_TO; pcCannon ++) {
-          sq = lppos->ucsqPieces[pcCannon];
+          sq = this->ucsqPieces[pcCannon];
           if (sq != 0) {
             x = FILE_X(sq);
             if (x == FILE_CENTER) {
               y = RANK_Y(sq);
-              lpsms = lppos->FileMaskPtr(x, y);
+              lpsms = this->FileMaskPtr(x, y);
               if ((lpsms->wRookCap & WHITE_KING_BITFILE) != 0) {
                 // 计算空头炮的威胁
                 vlWhitePenalty += PreEvalEx.vlHollowThreat[RANK_FLIP(y)];
               } else if ((lpsms->wSuperCap & WHITE_KING_BITFILE) != 0 &&
-                  (lppos->ucpcSquares[0xb7] == 21 || lppos->ucpcSquares[0xb7] == 22)) {
+                  (this->ucpcSquares[0xb7] == 21 || this->ucpcSquares[0xb7] == 22)) {
                 // 计算炮镇窝心马的威胁
                 vlWhitePenalty += PreEvalEx.vlCentralThreat[RANK_FLIP(y)];
               }
@@ -133,23 +117,23 @@ int AdvisorShape(const PositionStruct *lppos) {
       case SHAPE_LEFT:
       case SHAPE_RIGHT:
         for (pcCannon = SIDE_TAG(1) + CANNON_FROM; pcCannon <= SIDE_TAG(1) + CANNON_TO; pcCannon ++) {
-          sq = lppos->ucsqPieces[pcCannon];
+          sq = this->ucsqPieces[pcCannon];
           if (sq != 0) {
             x = FILE_X(sq);
             y = RANK_Y(sq);
             if (x == FILE_CENTER) {
-              if ((lppos->FileMaskPtr(x, y)->wSuperCap & WHITE_KING_BITFILE) != 0) {
+              if ((this->FileMaskPtr(x, y)->wSuperCap & WHITE_KING_BITFILE) != 0) {
                 // 计算一般中炮的威胁，帅(将)门被对方控制的还有额外罚分
                 vlWhitePenalty += (PreEvalEx.vlCentralThreat[RANK_FLIP(y)] >> 2) +
-                    (lppos->Protected(1, nShape == SHAPE_LEFT ? 0xc8 : 0xc6) ? 20 : 0);
+                    (this->Protected(1, nShape == SHAPE_LEFT ? 0xc8 : 0xc6) ? 20 : 0);
                 // 如果车在底线保护帅(将)，则给予更大的罚分！
                 for (pcRook = SIDE_TAG(0) + ROOK_FROM; pcRook <= SIDE_TAG(0) + ROOK_TO; pcRook ++) {
-                  sq = lppos->ucsqPieces[pcRook];
+                  sq = this->ucsqPieces[pcRook];
                   if (sq != 0) {
                     y = RANK_Y(sq);
                     if (y == RANK_BOTTOM) {
                       x = FILE_X(sq);
-                      if ((lppos->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
+                      if ((this->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
                         vlWhitePenalty += 80;
                       }
                     }
@@ -157,7 +141,7 @@ int AdvisorShape(const PositionStruct *lppos) {
                 }
               }
             } else if (y == RANK_BOTTOM) {
-              if ((lppos->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
+              if ((this->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
                 // 计算沉底炮的威胁
                 vlWhitePenalty += PreEvalEx.vlWhiteBottomThreat[x];
               }
@@ -168,20 +152,20 @@ int AdvisorShape(const PositionStruct *lppos) {
       default:
         break;
       }
-    } else if (lppos->ucsqPieces[SIDE_TAG(0) + KING_FROM] == 0xb7) {
+    } else if (this->ucsqPieces[SIDE_TAG(0) + KING_FROM] == 0xb7) {
       // 有双仕(士)但花心被帅(将)占领，要罚分
       vlWhitePenalty += 20;
     }
   } else {
-    if ((lppos->wBitPiece[1] & ROOK_BITPIECE) == ROOK_BITPIECE) {
+    if ((this->wBitPiece[1] & ROOK_BITPIECE) == ROOK_BITPIECE) {
       // 缺仕(士)怕双车，有罚分
       vlWhitePenalty += PreEvalEx.vlWhiteAdvisorLeakage;
     }
   }
-  if ((lppos->wBitPiece[1] & ADVISOR_BITPIECE) == ADVISOR_BITPIECE) {
-    if (lppos->ucsqPieces[SIDE_TAG(1) + KING_FROM] == 0x37) {
-      sqAdv1 = lppos->ucsqPieces[SIDE_TAG(1) + ADVISOR_FROM];
-      sqAdv2 = lppos->ucsqPieces[SIDE_TAG(1) + ADVISOR_TO];
+  if ((this->wBitPiece[1] & ADVISOR_BITPIECE) == ADVISOR_BITPIECE) {
+    if (this->ucsqPieces[SIDE_TAG(1) + KING_FROM] == 0x37) {
+      sqAdv1 = this->ucsqPieces[SIDE_TAG(1) + ADVISOR_FROM];
+      sqAdv2 = this->ucsqPieces[SIDE_TAG(1) + ADVISOR_TO];
       if (false) {
       } else if (sqAdv1 == 0x36) { // 黑方一个士在左侧底线
         nShape = (sqAdv2 == 0x38 ? SHAPE_CENTER : sqAdv2 == 0x47 ? SHAPE_LEFT : SHAPE_NONE);
@@ -197,17 +181,17 @@ int AdvisorShape(const PositionStruct *lppos) {
         break;
       case SHAPE_CENTER:
         for (pcCannon = SIDE_TAG(0) + CANNON_FROM; pcCannon <= SIDE_TAG(0) + CANNON_TO; pcCannon ++) {
-          sq = lppos->ucsqPieces[pcCannon];
+          sq = this->ucsqPieces[pcCannon];
           if (sq != 0) {
             x = FILE_X(sq);
             if (x == FILE_CENTER) {
               y = RANK_Y(sq);
-              lpsms = lppos->FileMaskPtr(x, y);
+              lpsms = this->FileMaskPtr(x, y);
               if ((lpsms->wRookCap & BLACK_KING_BITFILE) != 0) {
                 // 计算空头炮的威胁
                 vlBlackPenalty += PreEvalEx.vlHollowThreat[y];
               } else if ((lpsms->wSuperCap & BLACK_KING_BITFILE) != 0 &&
-                  (lppos->ucpcSquares[0x47] == 37 || lppos->ucpcSquares[0x47] == 38)) {
+                  (this->ucpcSquares[0x47] == 37 || this->ucpcSquares[0x47] == 38)) {
                 // 计算炮镇窝心马的威胁
                 vlBlackPenalty += PreEvalEx.vlCentralThreat[y];
               }
@@ -218,23 +202,23 @@ int AdvisorShape(const PositionStruct *lppos) {
       case SHAPE_LEFT:
       case SHAPE_RIGHT:
         for (pcCannon = SIDE_TAG(0) + CANNON_FROM; pcCannon <= SIDE_TAG(0) + CANNON_TO; pcCannon ++) {
-          sq = lppos->ucsqPieces[pcCannon];
+          sq = this->ucsqPieces[pcCannon];
           if (sq != 0) {
             x = FILE_X(sq);
             y = RANK_Y(sq);
             if (x == FILE_CENTER) {
-              if ((lppos->FileMaskPtr(x, y)->wSuperCap & BLACK_KING_BITFILE) != 0) {
+              if ((this->FileMaskPtr(x, y)->wSuperCap & BLACK_KING_BITFILE) != 0) {
                 // 计算一般中炮的威胁，帅(将)门被对方控制的还有额外罚分
                 vlBlackPenalty += (PreEvalEx.vlCentralThreat[y] >> 2) +
-                    (lppos->Protected(0, nShape == SHAPE_LEFT ? 0x38 : 0x36) ? 20 : 0);
+                    (this->Protected(0, nShape == SHAPE_LEFT ? 0x38 : 0x36) ? 20 : 0);
                 // 如果车在底线保护帅(将)，则给予更大的罚分！
                 for (pcRook = SIDE_TAG(1) + ROOK_FROM; pcRook <= SIDE_TAG(1) + ROOK_TO; pcRook ++) {
-                  sq = lppos->ucsqPieces[pcRook];
+                  sq = this->ucsqPieces[pcRook];
                   if (sq != 0) {
                     y = RANK_Y(sq);
                     if (y == RANK_TOP) {
                       x = FILE_X(sq);
-                      if ((lppos->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
+                      if ((this->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
                         vlBlackPenalty += 80;
                       }
                     }
@@ -242,7 +226,7 @@ int AdvisorShape(const PositionStruct *lppos) {
                 }
               }
             } else if (y == RANK_TOP) {
-              if ((lppos->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
+              if ((this->RankMaskPtr(x, y)->wRookCap & KING_BITRANK) != 0) {
                 // 计算沉底炮的威胁
                 vlBlackPenalty += PreEvalEx.vlBlackBottomThreat[x];
               }
@@ -253,17 +237,17 @@ int AdvisorShape(const PositionStruct *lppos) {
       default:
         break;
       }
-    } else if (lppos->ucsqPieces[SIDE_TAG(1) + KING_FROM] == 0x47) {
+    } else if (this->ucsqPieces[SIDE_TAG(1) + KING_FROM] == 0x47) {
       // 有双仕(士)但花心被帅(将)占领，要罚分
       vlBlackPenalty += 20;
     }
   } else {
-    if ((lppos->wBitPiece[0] & ROOK_BITPIECE) == ROOK_BITPIECE) {
+    if ((this->wBitPiece[0] & ROOK_BITPIECE) == ROOK_BITPIECE) {
       // 缺仕(士)怕双车，有罚分
       vlBlackPenalty += PreEvalEx.vlBlackAdvisorLeakage;
     }
   }
-  return SIDE_VALUE(lppos->sdPlayer, vlBlackPenalty - vlWhitePenalty);
+  return SIDE_VALUE(this->sdPlayer, vlBlackPenalty - vlWhitePenalty);
 }
 
 // 以上是第一部分，特殊棋型的评价
@@ -317,7 +301,7 @@ static const char ccvlStringValueTab[512] = {
 };
 
 // 车或炮牵制帅(将)或车的棋型的评价
-int StringHold(const PositionStruct *lppos) {
+int PositionStruct::StringHold(void) const {
   int sd, i, j, nDir, sqSrc, sqDst, sqStr;
   int x, y, nSideTag, nOppSideTag;
   int vlString[2];
@@ -329,17 +313,17 @@ int StringHold(const PositionStruct *lppos) {
     nOppSideTag = OPP_SIDE_TAG(sd);
     // 考查用车来牵制的情况
     for (i = ROOK_FROM; i <= ROOK_TO; i ++) {
-      sqSrc = lppos->ucsqPieces[nSideTag + i];
+      sqSrc = this->ucsqPieces[nSideTag + i];
       if (sqSrc != 0) {
         __ASSERT_SQUARE(sqSrc);
         // 考查牵制目标是帅(将)的情况
-        sqDst = lppos->ucsqPieces[nOppSideTag + KING_FROM];
+        sqDst = this->ucsqPieces[nOppSideTag + KING_FROM];
         if (sqDst != 0) {
           __ASSERT_SQUARE(sqDst);
           x = FILE_X(sqSrc);
           y = RANK_Y(sqSrc);
           if (x == FILE_X(sqDst)) {
-            lpsmv = lppos->FileMovePtr(x, y);
+            lpsmv = this->FileMovePtr(x, y);
             nDir = (sqSrc < sqDst ? 0 : 1);
             // 如果车用炮的吃法(炮用超级炮的着法)能吃到目标子"sqDst"，牵制就成立了，下同
             if (sqDst == lpsmv->ucCannonCap[nDir] + FILE_DISP(x)) {
@@ -347,23 +331,23 @@ int StringHold(const PositionStruct *lppos) {
               sqStr = lpsmv->ucRookCap[nDir] + FILE_DISP(x);
               __ASSERT_SQUARE(sqStr);
               // 被牵制子必须是对方的子，下同
-              if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+              if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
                 // 如果被牵制子是有价值的，而且被牵制子没有保护(被目标子保护不算)，那么牵制是有价值的，下同
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
-                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 0 &&
+                    !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
             }
           } else if (y == RANK_Y(sqDst)) {
-            lpsmv = lppos->RankMovePtr(x, y);
+            lpsmv = this->RankMovePtr(x, y);
             nDir = (sqSrc < sqDst ? 0 : 1);
             if (sqDst == lpsmv->ucCannonCap[nDir] + RANK_DISP(y)) {
               sqStr = lpsmv->ucRookCap[nDir] + RANK_DISP(y);
               __ASSERT_SQUARE(sqStr);
-              if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
-                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+              if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 0 &&
+                    !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -372,34 +356,34 @@ int StringHold(const PositionStruct *lppos) {
         }
         // 考查牵制目标是车的情况
         for (j = ROOK_FROM; j <= ROOK_TO; j ++) {
-          sqDst = lppos->ucsqPieces[nOppSideTag + j];
+          sqDst = this->ucsqPieces[nOppSideTag + j];
           if (sqDst != 0) {
             __ASSERT_SQUARE(sqDst);
             x = FILE_X(sqSrc);
             y = RANK_Y(sqSrc);
             if (x == FILE_X(sqDst)) {
-              lpsmv = lppos->FileMovePtr(x, y);
+              lpsmv = this->FileMovePtr(x, y);
               nDir = (sqSrc < sqDst ? 0 : 1);
               if (sqDst == lpsmv->ucCannonCap[nDir] + FILE_DISP(x)) {
                 sqStr = lpsmv->ucRookCap[nDir] + FILE_DISP(x);
                 __ASSERT_SQUARE(sqStr);
-                if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
                   // 目标子是车，不同于帅(将)，要求车也没有保护时才有牵制价值，下同
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
-                      !lppos->Protected(OPP_SIDE(sd), sqDst) && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                  if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 0 &&
+                      !this->Protected(OPP_SIDE(sd), sqDst) && !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
               }
             } else if (y == RANK_Y(sqDst)) {
-              lpsmv = lppos->RankMovePtr(x, y);
+              lpsmv = this->RankMovePtr(x, y);
               nDir = (sqSrc < sqDst ? 0 : 1);
               if (sqDst == lpsmv->ucCannonCap[nDir] + RANK_DISP(y)) {
                 sqStr = lpsmv->ucRookCap[nDir] + RANK_DISP(y);
                 __ASSERT_SQUARE(sqStr);
-                if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 0 &&
-                      !lppos->Protected(OPP_SIDE(sd), sqDst) && !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                  if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 0 &&
+                      !this->Protected(OPP_SIDE(sd), sqDst) && !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
@@ -412,37 +396,37 @@ int StringHold(const PositionStruct *lppos) {
 
     // 考查用炮来牵制的情况
     for (i = CANNON_FROM; i <= CANNON_TO; i ++) {
-      sqSrc = lppos->ucsqPieces[nSideTag + i];
+      sqSrc = this->ucsqPieces[nSideTag + i];
       if (sqSrc != 0) {
         __ASSERT_SQUARE(sqSrc);
         // 考查牵制目标是帅(将)的情况
-        sqDst = lppos->ucsqPieces[nOppSideTag + KING_FROM];
+        sqDst = this->ucsqPieces[nOppSideTag + KING_FROM];
         if (sqDst != 0) {
           __ASSERT_SQUARE(sqDst);
           x = FILE_X(sqSrc);
           y = RANK_Y(sqSrc);
           if (x == FILE_X(sqDst)) {
-            lpsmv = lppos->FileMovePtr(x, y);
+            lpsmv = this->FileMovePtr(x, y);
             nDir = (sqSrc < sqDst ? 0 : 1);
             if (sqDst == lpsmv->ucSuperCap[nDir] + FILE_DISP(x)) {
               sqStr = lpsmv->ucCannonCap[nDir] + FILE_DISP(x);
               __ASSERT_SQUARE(sqStr);
-              if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
-                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+              if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 1 &&
+                    !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
             }
           } else if (y == RANK_Y(sqDst)) {
-            lpsmv = lppos->RankMovePtr(x, y);
+            lpsmv = this->RankMovePtr(x, y);
             nDir = (sqSrc < sqDst ? 0 : 1);
             if (sqDst == lpsmv->ucSuperCap[nDir] + RANK_DISP(y)) {
               sqStr = lpsmv->ucCannonCap[nDir] + RANK_DISP(y);
               __ASSERT_SQUARE(sqStr);
-              if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
-                    !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+              if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 1 &&
+                    !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                   vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                 }
               }
@@ -451,33 +435,33 @@ int StringHold(const PositionStruct *lppos) {
         }
         // 考查牵制目标是车的情况
         for (j = ROOK_FROM; j <= ROOK_TO; j ++) {
-          sqDst = lppos->ucsqPieces[nOppSideTag + j];
+          sqDst = this->ucsqPieces[nOppSideTag + j];
           if (sqDst != 0) {
             __ASSERT_SQUARE(sqDst);
             x = FILE_X(sqSrc);
             y = RANK_Y(sqSrc);
             if (x == FILE_X(sqDst)) {
-              lpsmv = lppos->FileMovePtr(x, y);
+              lpsmv = this->FileMovePtr(x, y);
               nDir = (sqSrc < sqDst ? 0 : 1);
               if (sqDst == lpsmv->ucSuperCap[nDir] + FILE_DISP(x)) {
                 sqStr = lpsmv->ucCannonCap[nDir] + FILE_DISP(x);
                 __ASSERT_SQUARE(sqStr);
-                if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
-                      !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                  if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 1 &&
+                      !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
               }
             } else if (y == RANK_Y(sqDst)) {
-              lpsmv = lppos->RankMovePtr(x, y);
+              lpsmv = this->RankMovePtr(x, y);
               nDir = (sqSrc < sqDst ? 0 : 1);
               if (sqDst == lpsmv->ucSuperCap[nDir] + RANK_DISP(y)) {
                 sqStr = lpsmv->ucCannonCap[nDir] + RANK_DISP(y);
                 __ASSERT_SQUARE(sqStr);
-                if ((lppos->ucpcSquares[sqStr] & nOppSideTag) != 0) {
-                  if (cnValuableStringPieces[lppos->ucpcSquares[sqStr]] > 1 &&
-                      !lppos->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
+                if ((this->ucpcSquares[sqStr] & nOppSideTag) != 0) {
+                  if (cnValuableStringPieces[this->ucpcSquares[sqStr]] > 1 &&
+                      !this->Protected(OPP_SIDE(sd), sqStr, sqDst)) {
                     vlString[sd] += ccvlStringValueTab[sqDst - sqStr + 256];
                   }
                 }
@@ -488,32 +472,32 @@ int StringHold(const PositionStruct *lppos) {
       }
     }
   }
-  return SIDE_VALUE(lppos->sdPlayer, vlString[0] - vlString[1]);
+  return SIDE_VALUE(this->sdPlayer, vlString[0] - vlString[1]);
 }
 
 // 以上是第二部分，牵制的评价
 
 // 以下是第三部分，车的灵活性的评价
 
-int RookMobility(const PositionStruct *lppos) {
+int PositionStruct::RookMobility(void) const {
   int sd, i, sqSrc, nSideTag, x, y;
   int vlRookMobility[2];
   for (sd = 0; sd < 2; sd ++) {
     vlRookMobility[sd] = 0;
     nSideTag = SIDE_TAG(sd);
     for (i = ROOK_FROM; i <= ROOK_TO; i ++) {
-      sqSrc = lppos->ucsqPieces[nSideTag + i];
+      sqSrc = this->ucsqPieces[nSideTag + i];
       if (sqSrc != 0) {
         __ASSERT_SQUARE(sqSrc);
         x = FILE_X(sqSrc);
         y = RANK_Y(sqSrc);
-        vlRookMobility[sd] += PreEvalEx.cPopCnt16[lppos->RankMaskPtr(x, y)->wNonCap] +
-            PreEvalEx.cPopCnt16[lppos->FileMaskPtr(x, y)->wNonCap];
+        vlRookMobility[sd] += PreEvalEx.cPopCnt16[this->RankMaskPtr(x, y)->wNonCap] +
+            PreEvalEx.cPopCnt16[this->FileMaskPtr(x, y)->wNonCap];
       }
     }
     __ASSERT(vlRookMobility[sd] <= 34);
   }
-  return SIDE_VALUE(lppos->sdPlayer, vlRookMobility[0] - vlRookMobility[1]) >> 1;
+  return SIDE_VALUE(this->sdPlayer, vlRookMobility[0] - vlRookMobility[1]) >> 1;
 }
 
 // 以上是第三部分，车的灵活性的评价
@@ -540,7 +524,7 @@ static const bool cbcEdgeSquares[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-int KnightTrap(const PositionStruct *lppos) {
+int PositionStruct::KnightTrap(void) const {
   int sd, i, sqSrc, sqDst, nSideTag, nMovable;
   uint8_t *lpucsqDst, *lpucsqPin;
   int vlKnightTraps[2];
@@ -550,7 +534,7 @@ int KnightTrap(const PositionStruct *lppos) {
     nSideTag = SIDE_TAG(sd);
     // 考虑马可以走的位置，走到棋盘边缘上，或者走到对方的控制格，都必须排除
     for (i = KNIGHT_FROM; i <= KNIGHT_TO; i ++) {
-      sqSrc = lppos->ucsqPieces[nSideTag + i];
+      sqSrc = this->ucsqPieces[nSideTag + i];
       if (sqSrc != 0) {
         __ASSERT_SQUARE(sqSrc);
         nMovable = 0;
@@ -560,8 +544,8 @@ int KnightTrap(const PositionStruct *lppos) {
         while (sqDst != 0) {
           __ASSERT_SQUARE(sqDst);
           // 以下的判断区别于"genmoves.cpp"中的着法生成器，排除了走到棋盘边缘和走到对方控制格的着法
-          if (!cbcEdgeSquares[sqDst] && lppos->ucpcSquares[sqDst] == 0 &&
-              lppos->ucpcSquares[*lpucsqPin] == 0 && !lppos->Protected(OPP_SIDE(sd), sqDst)) {
+          if (!cbcEdgeSquares[sqDst] && this->ucpcSquares[sqDst] == 0 &&
+              this->ucpcSquares[*lpucsqPin] == 0 && !this->Protected(OPP_SIDE(sd), sqDst)) {
             nMovable ++;
             if (nMovable > 1) {
               break;
@@ -581,18 +565,18 @@ int KnightTrap(const PositionStruct *lppos) {
       __ASSERT(vlKnightTraps[sd] <= 20);
     }
   }
-  return SIDE_VALUE(lppos->sdPlayer, vlKnightTraps[1] - vlKnightTraps[0]);
+  return SIDE_VALUE(this->sdPlayer, vlKnightTraps[1] - vlKnightTraps[0]);
 }
 
 // 以上是第四部分，马受到阻碍的评价
 
 // 局面评价过程
-int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
+int PositionStruct::Evaluate(int vlAlpha, int vlBeta) const {
   int vl;
   // 偷懒的局面评价函数分以下几个层次：
 
   // 1. 四级偷懒评价(彻底偷懒评价)，只包括子力平衡；
-  vl = lppos->Material();
+  vl = this->Material();
   if (vl + EVAL_MARGIN1 <= vlAlpha) {
     return vl + EVAL_MARGIN1;
   } else if (vl - EVAL_MARGIN1 >= vlBeta) {
@@ -600,7 +584,7 @@ int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
   }
 
   // 2. 三级偷懒评价，包括特殊棋型；
-  vl += AdvisorShape(lppos);
+  vl += this->AdvisorShape();
   if (vl + EVAL_MARGIN2 <= vlAlpha) {
     return vl + EVAL_MARGIN2;
   } else if (vl - EVAL_MARGIN2 >= vlBeta) {
@@ -608,7 +592,7 @@ int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
   }
 
   // 3. 二级偷懒评价，包括牵制；
-  vl += StringHold(lppos);
+  vl += this->StringHold();
   if (vl + EVAL_MARGIN3 <= vlAlpha) {
     return vl + EVAL_MARGIN3;
   } else if (vl - EVAL_MARGIN3 >= vlBeta) {
@@ -616,7 +600,7 @@ int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
   }
 
   // 4. 一级偷懒评价，包括车的灵活性；
-  vl += RookMobility(lppos);
+  vl += this->RookMobility();
   if (vl + EVAL_MARGIN4 <= vlAlpha) {
     return vl + EVAL_MARGIN4;
   } else if (vl - EVAL_MARGIN4 >= vlBeta) {
@@ -624,9 +608,5 @@ int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
   }
 
   // 5. 零级偷懒评价(完全评价)，包括马的阻碍。
-  return vl + KnightTrap(lppos);
-}
-
-const char *WINAPI GetEngineName(void) {
-  return NULL;
+  return vl + this->KnightTrap();
 }

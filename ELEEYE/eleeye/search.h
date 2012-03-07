@@ -54,9 +54,6 @@ struct SearchStruct {
   int nRandomMask, nBanMoves;        // 随机性屏蔽位和禁着数
   uint16_t wmvBanList[MAX_MOVE_NUM]; // 禁着列表
   char szBookFile[1024];             // 开局库
-  const char *(WINAPI *GetEngineName)(void);                     // 局面评价引擎名称API函数指针
-  void (WINAPI *PreEvaluate)(PositionStruct *, PreEvalStruct *); // 局面预评价API函数指针
-  int (WINAPI *Evaluate)(const PositionStruct *, int, int);      // 局面评价API函数指针
 };
 
 extern SearchStruct Search;

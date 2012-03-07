@@ -2,8 +2,8 @@
 position.h/position.cpp - Source Code for ElephantEye, Part III
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.21, Last Modified: Sep. 2010
-Copyright (C) 2004-2010 www.xqbase.com
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -374,6 +374,14 @@ struct PositionStruct {
     nCapNum = GenCapMoves(lpmvs);
     return nCapNum + GenNonCapMoves(lpmvs + nCapNum);
   }
+
+  // 着法生成过程，由于这些过程代码量特别大，所以把他们都集中在"preeval.cpp"和"evaluate.cpp"中
+  void PreEvaluate(void);
+  int AdvisorShape(void) const;
+  int StringHold(void) const;
+  int RookMobility(void) const;
+  int KnightTrap(void) const;
+  int Evaluate(int vlAlpha, int vlBeta) const;
 }; // pos
 
 #endif

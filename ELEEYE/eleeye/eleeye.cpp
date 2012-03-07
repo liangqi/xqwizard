@@ -2,8 +2,8 @@
 eleeye.cpp - Source Code for ElephantEye, Part IX
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.26, Last Modified: Jul. 2011
-Copyright (C) 2004-2011 www.xqbase.com
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -29,77 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "hash.h"
 #include "search.h"
 
-#ifdef _WIN32
-  #include <windows.h>
-  const char *const cszLibEvalFile = "EVALUATE.DLL";
-#else
-  #include <dlfcn.h>
-  #define WINAPI
-  const char *const cszLibEvalFile = "libeval.so";
-#endif
-
 const int INTERRUPT_COUNT = 4096; // 搜索若干结点后调用中断
-
-static const char *WINAPI GetEngineName(void) {
-  return NULL;
-}
-
-static void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
-  // 缺省的局面预评价过程，什么都不做
-}
-
-static int WINAPI Evaluate(const PositionStruct *lppos, int vlAlpha, int vlBeta) {
-  // 缺省的局面评价过程，只返回子力价值
-  return lppos->Material();
-}
-
-#ifdef _WIN32
-
-inline HMODULE LoadEvalApi(const char *szLibEvalFile) {
-  HMODULE hModule;  
-  hModule = LoadLibrary(szLibEvalFile);
-  if (hModule == NULL) {
-    Search.GetEngineName = GetEngineName;
-    Search.PreEvaluate = PreEvaluate;
-    Search.Evaluate = Evaluate;
-  } else {
-    Search.GetEngineName = (const char *(WINAPI *)(void)) GetProcAddress(hModule, "_GetEngineName@0");
-    Search.PreEvaluate = (void (WINAPI *)(PositionStruct *, PreEvalStruct *)) GetProcAddress(hModule, "_PreEvaluate@8");
-    Search.Evaluate = (int (WINAPI *)(const PositionStruct *, int, int)) GetProcAddress(hModule, "_Evaluate@12");
-  }
-  return hModule;
-}
-
-inline void FreeEvalApi(HMODULE hModule) {
-  if (hModule != NULL) {
-    FreeLibrary(hModule);
-  }
-}
-
-#else
-
-inline void *LoadEvalApi(const char *szLibEvalFile) {
-  void *hModule;
-  hModule = dlopen(szLibEvalFile, RTLD_LAZY);
-  if (hModule == NULL) {
-    Search.GetEngineName = GetEngineName;
-    Search.PreEvaluate = PreEvaluate;
-    Search.Evaluate = Evaluate;
-  } else {
-    Search.GetEngineName = (const char *(*)(void)) dlsym(hModule, "GetEngineName");
-    Search.PreEvaluate = (void (*)(PositionStruct *, PreEvalStruct *)) dlsym(hModule, "PreEvaluate");
-    Search.Evaluate = (int (*)(const PositionStruct *, int, int)) dlsym(hModule, "Evaluate");
-  }
-  return hModule;
-}
-
-inline void FreeEvalApi(void *hModule) {
-  if (hModule != NULL) {
-    dlclose(hModule);
-  }
-}
-
-#endif
 
 inline void PrintLn(const char *sz) {
   printf("%s\n", sz);
@@ -110,27 +40,18 @@ int main(void) {
   int i;
   bool bPonderTime;
   UcciCommStruct UcciComm;
-  char szLibEvalFile[1024];
-  const char *szEngineName;
   PositionStruct posProbe;
-#ifdef _WIN32
-  HMODULE hModule;  
-#else
-  void *hModule;
-#endif
 
   if (BootLine() != UCCI_COMM_UCCI) {
     return 0;
   }
   LocatePath(Search.szBookFile, "BOOK.DAT");
-  LocatePath(szLibEvalFile, cszLibEvalFile);
-  hModule = LoadEvalApi(szLibEvalFile);
   bPonderTime = false;
   PreGenInit();
   NewHash(24); // 24=16MB, 25=32MB, 26=64MB, ...
   Search.pos.FromFen(cszStartFen);
   Search.pos.nDistance = 0;
-  Search.PreEvaluate(&Search.pos, &PreEval);
+  Search.pos.PreEvaluate();
   Search.nBanMoves = 0;
   Search.bQuit = Search.bBatch = Search.bDebug = false;
   Search.bUseHash = Search.bUseBook = Search.bNullMove = Search.bKnowledge = true;
@@ -138,15 +59,9 @@ int main(void) {
   Search.nCountMask = INTERRUPT_COUNT - 1;
   Search.nRandomMask = 0;
   Search.rc4Random.InitRand();
-  szEngineName = Search.GetEngineName();
-  if (szEngineName == NULL) {
-    PrintLn("id name ElephantEye");
-  } else {
-    printf("id name %s / ElephantEye\n", szEngineName);
-    fflush(stdout);
-  }
-  PrintLn("id version 3.26");
-  PrintLn("id copyright 2004-2011 www.xqbase.com");
+  PrintLn("id name ElephantEye");
+  PrintLn("id version 3.3");
+  PrintLn("id copyright 2004-2012 www.xqbase.com");
   PrintLn("id author ElephantEye Development Team");
   PrintLn("id user ElephantEye Test Team");
   PrintLn("option usemillisec type check default true");
@@ -157,8 +72,6 @@ int main(void) {
   PrintLn("option usehash type check default true");
   PrintLn("option usebook type check default true");
   printf("option bookfiles type string default %s\n", Search.szBookFile);
-  fflush(stdout);
-  printf("option evalapi type string default %s\n", szLibEvalFile);
   fflush(stdout);
   PrintLn("option hashsize type spin min 16 max 1024 default 16");
   PrintLn("option idle type combo var none var small var medium var large default none");
@@ -180,7 +93,7 @@ int main(void) {
     case UCCI_COMM_POSITION:
       BuildPos(Search.pos, UcciComm);
       Search.pos.nDistance = 0;
-      Search.PreEvaluate(&Search.pos, &PreEval);
+      Search.pos.PreEvaluate();
       Search.nBanMoves = 0;
       break;
     case UCCI_COMM_BANMOVES:
@@ -215,15 +128,6 @@ int main(void) {
         } else {
           LocatePath(Search.szBookFile, UcciComm.szOption);
         }
-        break;
-      case UCCI_OPTION_EVALAPI:
-        if (AbsolutePath(UcciComm.szOption)) {
-          strcpy(szLibEvalFile, UcciComm.szOption);
-        } else {
-          LocatePath(szLibEvalFile, UcciComm.szOption);
-        }
-        FreeEvalApi(hModule);
-        hModule = LoadEvalApi(szLibEvalFile);
         break;
       case UCCI_OPTION_HASHSIZE:
         DelHash();
@@ -340,7 +244,6 @@ int main(void) {
     }
   }
   DelHash();
-  FreeEvalApi(hModule);
   PrintLn("bye");
   return 0;
 }

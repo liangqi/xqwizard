@@ -2,8 +2,8 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.26, Last Modified: Jul. 2011
-Copyright (C) 2004-2011 www.xqbase.com
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -201,7 +201,7 @@ static int HarmlessPruning(const PositionStruct &pos, int vlBeta) {
 // 调整型局面评价函数
 inline int Evaluate(const PositionStruct &pos, int vlAlpha, int vlBeta) {
   int vl;
-  vl = Search.bKnowledge ? Search.Evaluate(&pos, vlAlpha, vlBeta) : pos.Material();
+  vl = Search.bKnowledge ? pos.Evaluate(vlAlpha, vlBeta) : pos.Material();
   return vl == pos.DrawValue() ? vl - 1 : vl;
 }
 

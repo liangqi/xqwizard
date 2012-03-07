@@ -15,7 +15,7 @@ inline uint64_t MAKE_LONG_LONG(uint32_t LowLong, uint32_t HighLong) {
   return (uint64_t) LowLong | ((uint64_t) HighLong << 32);
 }
 
-/*
+#ifdef __arm__
 
 inline int Bsf(uint32_t Operand) {
   uint32_t dw = Operand & -Operand;
@@ -53,7 +53,7 @@ inline int Bsr(uint32_t Operand) {
   return n;
 }
 
-*/
+#else
 
 #ifdef _MSC_VER
 
@@ -280,5 +280,7 @@ inline uint64_t LongShr(uint64_t Operand, uint32_t Count) {
     return MAKE_LONG_LONG(0, 0);
   }
 }
+
+#endif
 
 #endif

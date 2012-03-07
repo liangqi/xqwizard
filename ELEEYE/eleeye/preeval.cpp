@@ -2,8 +2,8 @@
 preeval.h/preeval.cpp - Source Code for ElephantEye, Part X
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.0, Last Modified: Nov. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -20,22 +20,10 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../../base/base.h"
-#include "../pregen.h"
-#include "../position.h"
+#include "../base/base.h"
+#include "pregen.h"
+#include "position.h"
 #include "preeval.h"
-
-#if _WIN32
-
-#include <windows.h>
-extern "C" __declspec(dllexport) void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval);
-
-#else
-
-#define WINAPI
-extern "C" void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval);
-
-#endif
 
 /* ElephantEye源程序使用的匈牙利记号约定：
  *
@@ -355,7 +343,7 @@ static bool bInit = false;
 
 PreEvalStructEx PreEvalEx;
 
-void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
+void PositionStruct::PreEvaluate(void) {
   int i, sq, nMidgameValue, nWhiteAttacks, nBlackAttacks, nWhiteSimpleValue, nBlackSimpleValue;
   uint8_t ucvlPawnPiecesAttacking[256], ucvlPawnPiecesAttackless[256];
 
@@ -365,15 +353,12 @@ void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
     for (i = 0; i < 65536; i ++) {
       PreEvalEx.cPopCnt16[i] = PopCnt16(i);
     }
-    // 注意：引擎和局面评价API函数拥有两个不同的PreGen实例！
-    PreGenInit();
   }
-  PreEval.bPromotion = lpPreEval->bPromotion;
 
   // 首先判断局势处于开中局还是残局阶段，方法是计算各种棋子的数量，按照车=6、马炮=3、其它=1相加。
-  nMidgameValue = PopCnt32(lppos->dwBitPiece & BOTH_BITPIECE(ADVISOR_BITPIECE | BISHOP_BITPIECE | PAWN_BITPIECE)) * OTHER_MIDGAME_VALUE;
-  nMidgameValue += PopCnt32(lppos->dwBitPiece & BOTH_BITPIECE(KNIGHT_BITPIECE | CANNON_BITPIECE)) * KNIGHT_CANNON_MIDGAME_VALUE;
-  nMidgameValue += PopCnt32(lppos->dwBitPiece & BOTH_BITPIECE(ROOK_BITPIECE)) * ROOK_MIDGAME_VALUE;
+  nMidgameValue = PopCnt32(this->dwBitPiece & BOTH_BITPIECE(ADVISOR_BITPIECE | BISHOP_BITPIECE | PAWN_BITPIECE)) * OTHER_MIDGAME_VALUE;
+  nMidgameValue += PopCnt32(this->dwBitPiece & BOTH_BITPIECE(KNIGHT_BITPIECE | CANNON_BITPIECE)) * KNIGHT_CANNON_MIDGAME_VALUE;
+  nMidgameValue += PopCnt32(this->dwBitPiece & BOTH_BITPIECE(ROOK_BITPIECE)) * ROOK_MIDGAME_VALUE;
   // 使用二次函数，子力很少时才认为接近残局
   nMidgameValue = (2 * TOTAL_MIDGAME_VALUE - nMidgameValue) * nMidgameValue / TOTAL_MIDGAME_VALUE;
   __ASSERT_BOUND(0, nMidgameValue, TOTAL_MIDGAME_VALUE);
@@ -403,28 +388,28 @@ void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
   // 然后判断各方是否处于进攻状态，方法是计算各种过河棋子的数量，按照车马2炮兵1相加。
   nWhiteAttacks = nBlackAttacks = 0;
   for (i = SIDE_TAG(0) + KNIGHT_FROM; i <= SIDE_TAG(0) + ROOK_TO; i ++) {
-    if (lppos->ucsqPieces[i] != 0 && BLACK_HALF(lppos->ucsqPieces[i])) {
+    if (this->ucsqPieces[i] != 0 && BLACK_HALF(this->ucsqPieces[i])) {
       nWhiteAttacks += 2;
     }
   }
   for (i = SIDE_TAG(0) + CANNON_FROM; i <= SIDE_TAG(0) + PAWN_TO; i ++) {
-    if (lppos->ucsqPieces[i] != 0 && BLACK_HALF(lppos->ucsqPieces[i])) {
+    if (this->ucsqPieces[i] != 0 && BLACK_HALF(this->ucsqPieces[i])) {
       nWhiteAttacks ++;
     }
   }
   for (i = SIDE_TAG(1) + KNIGHT_FROM; i <= SIDE_TAG(1) + ROOK_TO; i ++) {
-    if (lppos->ucsqPieces[i] != 0 && WHITE_HALF(lppos->ucsqPieces[i])) {
+    if (this->ucsqPieces[i] != 0 && WHITE_HALF(this->ucsqPieces[i])) {
       nBlackAttacks += 2;
     }
   }
   for (i = SIDE_TAG(1) + CANNON_FROM; i <= SIDE_TAG(1) + PAWN_TO; i ++) {
-    if (lppos->ucsqPieces[i] != 0 && WHITE_HALF(lppos->ucsqPieces[i])) {
+    if (this->ucsqPieces[i] != 0 && WHITE_HALF(this->ucsqPieces[i])) {
       nBlackAttacks ++;
     }
   }
   // 如果本方轻子数比对方多，那么每多一个轻子(车算2个轻子)威胁值加2。威胁值最多不超过8。
-  nWhiteSimpleValue = PopCnt16(lppos->wBitPiece[0] & ROOK_BITPIECE) * 2 + PopCnt16(lppos->wBitPiece[0] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
-  nBlackSimpleValue = PopCnt16(lppos->wBitPiece[1] & ROOK_BITPIECE) * 2 + PopCnt16(lppos->wBitPiece[1] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
+  nWhiteSimpleValue = PopCnt16(this->wBitPiece[0] & ROOK_BITPIECE) * 2 + PopCnt16(this->wBitPiece[0] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
+  nBlackSimpleValue = PopCnt16(this->wBitPiece[1] & ROOK_BITPIECE) * 2 + PopCnt16(this->wBitPiece[1] & (KNIGHT_BITPIECE | CANNON_BITPIECE));
   if (nWhiteSimpleValue > nBlackSimpleValue) {
     nWhiteAttacks += (nWhiteSimpleValue - nBlackSimpleValue) * 2;
   } else {
@@ -472,29 +457,26 @@ void WINAPI PreEvaluate(PositionStruct *lppos, PreEvalStruct *lpPreEval) {
 #endif
 
   // 调整不受威胁方少掉的仕(士)相(象)分值
-  lppos->vlWhite = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nBlackAttacks) / TOTAL_ATTACK_VALUE;
-  lppos->vlBlack = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nWhiteAttacks) / TOTAL_ATTACK_VALUE;
+  this->vlWhite = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nBlackAttacks) / TOTAL_ATTACK_VALUE;
+  this->vlBlack = ADVISOR_BISHOP_ATTACKLESS_VALUE * (TOTAL_ATTACK_VALUE - nWhiteAttacks) / TOTAL_ATTACK_VALUE;
   // 如果允许升变，那么不受威胁的仕(士)相(象)分值就少了一半
   if (PreEval.bPromotion) {
-    lppos->vlWhite /= 2;
-    lppos->vlBlack /= 2;
+    this->vlWhite /= 2;
+    this->vlBlack /= 2;
   }
   // 最后重新计算子力位置分
   for (i = 16; i < 32; i ++) {
-    sq = lppos->ucsqPieces[i];
+    sq = this->ucsqPieces[i];
     if (sq != 0) {
       __ASSERT_SQUARE(sq);
-      lppos->vlWhite += PreEval.ucvlWhitePieces[PIECE_TYPE(i)][sq];
+      this->vlWhite += PreEval.ucvlWhitePieces[PIECE_TYPE(i)][sq];
     }
   }
   for (i = 32; i < 48; i ++) {
-    sq = lppos->ucsqPieces[i];
+    sq = this->ucsqPieces[i];
     if (sq != 0) {
       __ASSERT_SQUARE(sq);
-      lppos->vlBlack += PreEval.ucvlBlackPieces[PIECE_TYPE(i)][sq];
+      this->vlBlack += PreEval.ucvlBlackPieces[PIECE_TYPE(i)][sq];
     }
   }
-
-  // 注意：引擎和局面评价API函数拥有两个不同的PreEval实例！
-  *lpPreEval = PreEval;
 }
