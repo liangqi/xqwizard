@@ -1,9 +1,12 @@
 Type=Exe
 Form=WEBMON.FRM
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\WINDOWS\system32\stdole2.tlb#OLE Automation
 Object={48E59290-9880-11CF-9754-00AA00C00908}#1.0#0; MSINET.OCX
 IconForm="frmWebMon"
 Startup="frmWebMon"
+HelpFile=""
+Title="ÍøÂç¼à¿Ø"
+ExeName32="WEBMON.EXE"
 Command32=""
 Name="prjWebMon"
 HelpContextID="0"
