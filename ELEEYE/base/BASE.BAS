@@ -3,32 +3,26 @@ Option Explicit
 
 ' === Begin Windows APIs ===
 
-Public Const IDI_APPLICATION    As Long = 32512     ' LoadIconA
 Public Const SND_ASYNC          As Long = 1         ' PlaySoundA
 Public Const SND_NOWAIT         As Long = 8192      ' PlaySoundA
 Public Const SND_FILENAME       As Long = 131072    ' PlaySoundA
-Public Const SND_RESOURCE       As Long = 262148    ' PlaySoundA
 Public Const HWND_TOPMOST       As Long = -1        ' SetWindowPos
 Public Const HWND_NOTOPMOST     As Long = -2        ' SetWindowPos
 Public Const SWP_NOSIZE         As Long = 1         ' SetWindowPos
 Public Const SWP_NOMOVE         As Long = 2         ' SetWindowPos
 Public Const GWL_WNDPROC        As Long = -4        ' SetWindowLongA
-Public Const WM_LBUTTONUP       As Long = 514       ' CallWindowProcA
-Public Const WM_RBUTTONUP       As Long = 517       ' CallWindowProcA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
 Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
         ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
-Public Declare Sub DestroyWindow Lib "USER32.DLL" (ByVal hWnd As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, _
         ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
 Public Declare Function SetWindowLongA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 Public Declare Function CallWindowProcA Lib "USER32.DLL" (ByVal lpPrevWndFunc As Long, _
         ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hmod As Long, ByVal fdwSound As Long)
-Public Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
+Public Declare Sub PlaySoundA Lib "WINMM.DLL" (ByVal szSound As String, ByVal hMod As Long, ByVal fdwSound As Long)
 
 ' === End Windows APIs ===
 
@@ -56,6 +50,38 @@ Private Declare Function LoadLibraryA Lib "KERNEL32.DLL" (ByVal lpLibFileName As
 Private Declare Sub FreeLibrary Lib "KERNEL32.DLL" (ByVal hLibModule As Long)
 Private Declare Function LoadIconA Lib "USER32.DLL" (ByVal hInstance As Long, ByVal lpIconName As Long) As Long
 Private Declare Function MessageBoxIndirectA Lib "USER32.DLL" (ByRef lpMsgBoxParams As MsgBoxParams) As Long
+
+' For MsgBoxCheck
+Private Const WH_CBT            As Long = 5             ' SetWindowsHookExA
+Private Const HCBT_CREATEWND    As Long = 3             ' HookProc
+Private Const WM_SETFONT        As Long = 48            ' SendMessageA/WndProc
+Private Const BM_SETCHECK       As Long = 241           ' SendMessageA/WndProc
+Private Const WM_INITDIALOG     As Long = 272           ' SendMessageA/WndProc
+Private Const WM_COMMAND        As Long = 273           ' SendMessageA/WndProc
+Private Const BN_CLICKED        As Long = 0             ' SendMessageA/WndProc
+Private Const BS_CHECKBOX       As Long = 2             ' CreateWindowExA
+Private Const WS_TABSTOP        As Long = &H10000       ' CreateWindowExA
+Private Const WS_VISIBLE        As Long = &H10000000    ' CreateWindowExA
+Private Const WS_CHILD          As Long = &H40000000    ' CreateWindowExA
+Private Const CW_USEDEFAULT     As Long = &H80000000    ' CreateWindowExA
+Private Const DEFAULT_GUI_FONT  As Long = 17            ' GetStockObject
+
+Private Declare Function SetWindowsHookExA Lib "USER32.DLL" (ByVal idHook As Long, ByVal lpfn As Long, ByVal hMod As Long, ByVal dwThreadId As Long) As Long
+Private Declare Function CallNextHookEx Lib "USER32.DLL" (ByVal hhk As Long, ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Declare Sub UnhookWindowsHookEx Lib "USER32.DLL" (ByVal hhk As Long)
+Private Declare Sub GetClassNameA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal lpClassName As Long, ByVal nMaxCount As Long)
+Private Declare Sub GetWindowRect Lib "USER32.DLL" (ByVal hWnd As Long, ByVal lpRect As Long)
+Private Declare Sub GetClientRect Lib "USER32.DLL" (ByVal hWnd As Long, ByVal lpRect As Long)
+Private Declare Sub SendMessageA Lib "USER32.DLL" (ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long)
+Private Declare Sub MoveWindow Lib "USER32.DLL" (ByVal hWnd As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal bRepaint As Long)
+Private Declare Function FindWindowExA Lib "USER32.DLL" (Optional ByVal hWndParent As Long = 0, Optional ByVal hwndChildAfter As Long = 0, _
+        Optional ByVal szClassName As String = vbNullString, Optional ByVal szWindowName As String = vbNullString) As Long
+Private Declare Function CreateWindowExA Lib "USER32.DLL" (ByVal dwExStyle As Long, ByVal lpClassName As String, ByVal lpWindowName As String, ByVal dwStyle As Long, _
+        ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hWndParent As Long, ByVal hMenu As Long, ByVal hInstance As Long, ByVal lpParam As Long) As Long
+Private Declare Function GetStockObject Lib "GDI32.DLL" (ByVal fnObject As Long) As Long
+
+Private mbc_hhkPrev As Long, mbc_WndProcPrev As Long, mbc_hCheck As Long
+Private mbc_szCheck As String, mbc_bChecked As Boolean
 
 ' For Open/Save
 Private Type OpenFileName
@@ -169,8 +195,6 @@ Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lp
 Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal sz As String, _
         ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
 Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
-Private Declare Function FindWindowA Lib "USER32.DLL" (Optional ByVal szClassName As String = vbNullString, _
-        Optional ByVal szWindowName As String = vbNullString) As Long
 Private Declare Function GetSystemMenu Lib "USER32.DLL" (ByVal hWnd As Long, Optional ByVal bRevert As Long = 0) As Long
 Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPosition As Long, Optional ByVal uFlag As Long = 0)
 
@@ -297,7 +321,7 @@ End Function
 ' === Begin MsgBoxIcon ===
 
 Public Function MsgBoxIcon(ByVal szPrompt As String, Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString, _
-        Optional ByVal szIconFile As String = vbNullString, Optional ByVal nIcon As Integer = 1) As Long
+        Optional ByVal nIcon As Integer = 1, Optional ByVal szIconFile As String = vbNullString) As Long
 
 Dim mbp As MsgBoxParams
 mbp.cbSize = Len(mbp)
@@ -305,7 +329,7 @@ mbp.hwndOwner = 0
 On Error Resume Next
 mbp.hwndOwner = Screen.ActiveForm.hWnd
 On Error GoTo 0
-If szIconFile = vbNullString Then
+If StrPtr(szIconFile) = 0 Then
     mbp.hInstance = App.hInstance
 Else
     mbp.hInstance = LoadLibraryA(szIconFile)
@@ -315,7 +339,7 @@ Else
     End If
 End If
 mbp.lpszText = szPrompt
-mbp.lpszCaption = IIf(szTitle = vbNullString, App.Title, szTitle)
+mbp.lpszCaption = IIf(StrPtr(szTitle) = 0, App.Title, szTitle)
 mbp.dwStyle = MB_USERICON + dwStyle
 mbp.lpszIcon = nIcon
 mbp.dwContextHelpId = 0
@@ -329,6 +353,71 @@ End If
 End Function
 
 ' === End MsgBoxIcon ===
+
+' === Begin MsgBoxCheck ===
+
+Public Function mbc_NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+Dim dw(0 To 3) As Long, nWidth As Long, nHeight As Long
+
+If uMsg = WM_INITDIALOG Then
+    GetClientRect hWnd, VarPtr(dw(0))
+    nWidth = dw(2)
+    nHeight = dw(3)
+    GetWindowRect hWnd, VarPtr(dw(0))
+    MoveWindow hWnd, dw(0), dw(1), dw(2) - dw(0), dw(3) - dw(1) + 30, 0
+    mbc_hCheck = CreateWindowExA(0, "BUTTON", mbc_szCheck, WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_CHECKBOX, _
+            10, nHeight, nWidth - 20, 20, hWnd, 0, App.hInstance, 0)
+    SendMessageA mbc_hCheck, WM_SETFONT, GetStockObject(DEFAULT_GUI_FONT), 1
+    SendMessageA mbc_hCheck, BM_SETCHECK, IIf(mbc_bChecked, 1, 0), 0
+ElseIf uMsg = WM_COMMAND Then
+    If wParam \ 65536 = BN_CLICKED And lParam = mbc_hCheck Then
+        mbc_bChecked = Not mbc_bChecked
+        SendMessageA mbc_hCheck, BM_SETCHECK, IIf(mbc_bChecked, 1, 0), 0
+    End If
+End If
+mbc_NewWndProc = CallWindowProcA(mbc_WndProcPrev, hWnd, uMsg, wParam, lParam)
+
+End Function
+
+Public Function mbc_NewCbtProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+
+Dim ucClass(0 To 7) As Byte
+If iCode = HCBT_CREATEWND Then
+    GetClassNameA wParam, VarPtr(ucClass(0)), 7
+    If AllocString(VarPtr(ucClass(0))) = "#32770" Then
+        mbc_WndProcPrev = SetWindowLongA(wParam, GWL_WNDPROC, AddressOf mbc_NewWndProc)
+    End If
+End If
+mbc_NewCbtProc = CallNextHookEx(mbc_hhkPrev, iCode, wParam, lParam)
+
+End Function
+
+Public Function MsgBoxCheck(ByVal szPrompt As String, ByVal szCheck As String, Optional ByVal bChecked As Boolean = False, _
+        Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString, _
+        Optional ByVal nIcon As Integer = 0, Optional ByVal szIconFile As String = vbNullString) As Long
+
+mbc_szCheck = szCheck
+mbc_bChecked = bChecked
+mbc_hhkPrev = SetWindowsHookExA(WH_CBT, AddressOf mbc_NewCbtProc, App.hInstance, App.ThreadID)
+If nIcon > 0 Then
+    MsgBoxCheck = MsgBoxIcon(szPrompt, dwStyle, szTitle, nIcon, szIconFile)
+ElseIf StrPtr(szTitle) = 0 Then
+    MsgBoxCheck = MsgBox(szPrompt, dwStyle)
+Else
+    MsgBoxCheck = MsgBox(szPrompt, dwStyle, szTitle)
+End If
+UnhookWindowsHookEx mbc_hhkPrev
+
+End Function
+
+Public Function MsgBoxIsChecked() As Boolean
+
+MsgBoxIsChecked = mbc_bChecked
+
+End Function
+
+' === End MsgBoxCheck ===
 
 ' === Begin Open/Save ===
 
@@ -487,7 +576,7 @@ SetConsoleTitleA szTempTitle
 hWnd = 0
 Do While hWnd = 0
     Sleep 1
-    hWnd = FindWindowA(, szTempTitle)
+    hWnd = FindWindowExA(, , , szTempTitle)
 Loop
 SetConsoleTitleA IIf(szTitle = "", App.Title, szTitle)
 hMenu = GetSystemMenu(hWnd)

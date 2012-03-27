@@ -30,6 +30,7 @@ Private Declare Sub ReleaseDC Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hdc As
 Private Declare Function CreateCompatibleDC Lib "GDI32.DLL" (ByVal hdc As Long) As Long
 Private Declare Sub SelectObject Lib "GDI32.DLL" (ByVal hdc As Long, ByVal hgdiobj As Long)
 Private Declare Sub DeleteDC Lib "GDI32.DLL" (ByVal hdc As Long)
+Private Declare Function Assign Lib "MSVBVM60.DLL" Alias "VarPtr" (ByVal dw As Long) As Long
 
 Private Function WndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
