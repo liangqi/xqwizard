@@ -14,8 +14,6 @@ Public Const GWL_WNDPROC        As Long = -4        ' SetWindowLongA
 
 Public Declare Sub Sleep Lib "KERNEL32.DLL" (ByVal dwMilliseconds As Long)
 Public Declare Function lstrlenA Lib "KERNEL32.DLL" (ByVal sz As String) As Long
-Public Declare Sub ShellExecuteA Lib "SHELL32.DLL" (ByVal hWnd As Long, ByVal lpOperation As String, _
-        ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long)
 Public Declare Sub MessageBeep Lib "USER32.DLL" (ByVal uType As Long)
 Public Declare Sub SetWindowPos Lib "USER32.DLL" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, _
         ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long)
@@ -154,68 +152,6 @@ Private Const NIM_DELETE As Long = 2
 Public Const WM_TRAY As Long = &H401
 
 Private Declare Sub Shell_NotifyIconA Lib "SHELL32.DLL" (ByVal dwMessage As Long, ByRef lpData As NotifyIconData)
-
-' For Stdio
-Private Type StartupInfo
-    cb              As Long
-    lpReserved      As Long
-    lpDesktop       As Long
-    lpTitle         As Long
-    dwX             As Long
-    dwY             As Long
-    dwXSize         As Long
-    dwYSize         As Long
-    dwXCountChars   As Long
-    dwYCountChars   As Long
-    dwFillAttribute As Long
-    dwFlags         As Long
-    wShowWindow     As Integer
-    cbReserved2     As Integer
-    lpReserved2     As Long
-    hStdInput       As Long
-    hStdOutput      As Long
-    hStdError       As Long
-End Type
-
-Private Const STARTF_USESTDHANDLES As Long = 256
-Private Const STD_INPUT_HANDLE As Long = -10
-Private Const STD_OUTPUT_HANDLE As Long = -11
-Private Const STD_ERROR_HANDLE As Long = -12
-Private Const INVALID_HANDLE_VALUE As Long = -1
-Private Const READ_BUFFER_LEN As Long = 65536
-Private Const SC_CLOSE As Long = 61536
-
-Private Declare Sub GetStartupInfoA Lib "KERNEL32.DLL" (ByRef lpStartupInfo As StartupInfo)
-Private Declare Sub AllocConsole Lib "KERNEL32.DLL" ()
-Private Declare Sub FreeConsole Lib "KERNEL32.DLL" ()
-Private Declare Sub SetConsoleCtrlHandler Lib "KERNEL32.DLL" (ByVal lpHandlerRoutine As Long, ByVal bAdd As Long)
-Private Declare Sub SetConsoleTitleA Lib "KERNEL32.DLL" (ByVal szConsoleTitle As String)
-Private Declare Sub ReadFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal lpBuffer As Long, _
-        ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
-Private Declare Sub WriteFile Lib "KERNEL32.DLL" (ByVal hHandle As Long, ByVal sz As String, _
-        ByVal nNumberOfBytesToWrite As Long, ByRef lpNumberOfBytesWritten As Long, Optional ByVal lpOverlapped As Long = 0)
-Private Declare Function GetStdHandle Lib "KERNEL32.DLL" (ByVal nStdHandle As Long) As Long
-Private Declare Function GetSystemMenu Lib "USER32.DLL" (ByVal hWnd As Long, Optional ByVal bRevert As Long = 0) As Long
-Private Declare Sub DeleteMenu Lib "USER32.DLL" (ByVal hMenu As Long, ByVal uPosition As Long, Optional ByVal uFlag As Long = 0)
-
-Private Stdio_si As StartupInfo
-
-' For MD5/PRNG
-Private Const PROV_RSA_FULL As Long = 1
-Private Const CALG_MD5 As Long = &H8003&
-Private Const HP_HASHVAL As Long = 2
-
-Private Declare Sub CryptAcquireContextA Lib "ADVAPI32.DLL" (ByRef phProv As Long, _
-        ByVal pszContainer As Long, ByVal pszProvider As Long, ByVal dwProvType As Long, ByVal dwFlags As Long)
-Private Declare Sub CryptCreateHash Lib "ADVAPI32.DLL" (ByVal hProv As Long, _
-        ByVal Algid As Long, ByVal hKey As Long, ByVal dwFlags As Long, ByRef phHash As Long)
-Private Declare Sub CryptHashData Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
-        ByVal szData As String, ByVal dwDataLen As Long, ByVal dwFlags As Long)
-Private Declare Sub CryptGetHashParam Lib "ADVAPI32.DLL" (ByVal hHash As Long, _
-        ByVal dwParam As Long, ByRef pbData As Byte, ByRef pdwDataLen As Long, ByVal dwFlags As Long)
-Private Declare Sub CryptGenRandom Lib "ADVAPI32.DLL" (ByVal hProv As Long, ByVal dwLen As Long, ByRef pbBuffer As Byte)
-Private Declare Sub CryptDestroyHash Lib "ADVAPI32.DLL" (ByVal hHash As Long)
-Private Declare Sub CryptReleaseContext Lib "ADVAPI32.DLL" (ByVal hProv As Long, ByVal dwFlags As Long)
 
 ' === Begin AllocString ===
 
@@ -382,14 +318,19 @@ End Function
 
 Public Function mbc_NewCbtProc(ByVal iCode As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
-Dim ucClass(0 To 7) As Byte
+Dim ucClass(0 To 7) As Byte, bDone As Boolean
+bDone = False
 If iCode = HCBT_CREATEWND Then
     GetClassNameA wParam, VarPtr(ucClass(0)), 7
     If AllocString(VarPtr(ucClass(0))) = "#32770" Then
         mbc_WndProcPrev = SetWindowLongA(wParam, GWL_WNDPROC, AddressOf mbc_NewWndProc)
+        bDone = True
     End If
 End If
 mbc_NewCbtProc = CallNextHookEx(mbc_hhkPrev, iCode, wParam, lParam)
+If bDone Then
+    UnhookWindowsHookEx mbc_hhkPrev
+End If
 
 End Function
 
@@ -407,7 +348,6 @@ ElseIf StrPtr(szTitle) = 0 Then
 Else
     MsgBoxCheck = MsgBox(szPrompt, dwStyle, szTitle)
 End If
-UnhookWindowsHookEx mbc_hhkPrev
 
 End Function
 
@@ -552,111 +492,3 @@ Shell_NotifyIconA NIM_DELETE, nid
 End Sub
 
 ' === End TrayIcon ===
-
-' === Begin Stdio ===
-
-Private Function CtrlHandlerRoutine(ByVal dwCtrlType) As Long
-
-CtrlHandlerRoutine = 1
-
-End Function
-
-Public Sub StdioOpen(Optional ByVal szTitle As String = "")
-
-Dim hWnd As Long, hMenu As Long, szTempTitle As String
-
-GetStartupInfoA Stdio_si
-If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) <> 0 Then
-    Exit Sub
-End If
-AllocConsole
-SetConsoleCtrlHandler AddressOf CtrlHandlerRoutine, 1
-szTempTitle = "Console " & App.hInstance & " " & App.ThreadID
-SetConsoleTitleA szTempTitle
-hWnd = 0
-Do While hWnd = 0
-    Sleep 1
-    hWnd = FindWindowExA(, , , szTempTitle)
-Loop
-SetConsoleTitleA IIf(szTitle = "", App.Title, szTitle)
-hMenu = GetSystemMenu(hWnd)
-DeleteMenu hMenu, SC_CLOSE
-Stdio_si.hStdInput = GetStdHandle(STD_INPUT_HANDLE)
-Stdio_si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE)
-Stdio_si.hStdError = GetStdHandle(STD_ERROR_HANDLE)
-
-End Sub
-
-Public Sub StdioClose()
-
-If (Stdio_si.dwFlags And STARTF_USESTDHANDLES) = 0 Then
-    FreeConsole
-End If
-
-End Sub
-
-Public Function StdioIn() As String
-
-Dim nNumberOfBytesRead As Long
-Dim lpBuffer(0 To READ_BUFFER_LEN - 1) As Byte
-ReadFile Stdio_si.hStdInput, VarPtr(lpBuffer(0)), READ_BUFFER_LEN - 1, nNumberOfBytesRead
-lpBuffer(nNumberOfBytesRead) = 0
-StdioIn = AllocString(VarPtr(lpBuffer(0)))
-
-End Function
-
-Public Sub StdioOut(ByVal sz As String)
-
-Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdOutput, sz, lstrlenA(sz), nNumberOfBytesWritten
-
-End Sub
-
-Public Sub StdioErr(ByVal sz As String)
-
-Dim nNumberOfBytesWritten As Long
-WriteFile Stdio_si.hStdError, sz, lstrlenA(sz), nNumberOfBytesWritten
-
-End Sub
-
-' === End Stdio ===
-
-' === Begin MD5/PRNG ===
-
-Public Function Md5(ByVal szData As String) As String
-
-Dim szHash As String, i As Integer
-Dim hProv As Long, hHash As Long, ucHash(1 To 16) As Byte
-
-CryptAcquireContextA hProv, 0, 0, PROV_RSA_FULL, 0
-CryptCreateHash hProv, CALG_MD5, 0, 0, hHash
-CryptHashData hHash, szData, lstrlenA(szData), 0
-CryptGetHashParam hHash, HP_HASHVAL, ucHash(1), 16, 0
-CryptDestroyHash hHash
-CryptReleaseContext hProv, 0
-szHash = ""
-For i = 1 To 16
-    szHash = szHash & Right(Hex(ucHash(i) + &H100), 2)
-Next
-Md5 = szHash
-
-End Function
-
-Public Function Random(ByVal dwLen As Long) As String
-
-Dim szRand As String, i As Integer, hProv As Long
-
-CryptAcquireContextA hProv, 0, 0, PROV_RSA_FULL, 0
-ReDim ucData(1 To dwLen) As Byte
-CryptGenRandom hProv, dwLen, ucData(1)
-CryptReleaseContext hProv, 0
-szRand = ""
-For i = 1 To dwLen
-    szRand = szRand & Right(Hex(ucData(i) + &H100), 2)
-Next
-Erase ucData
-Random = szRand
-
-End Function
-
-' === End MD5/PRNG ===

@@ -75,7 +75,7 @@ Open szFileName For Binary Access Read As #nOpenFile
 On Error GoTo 0
 nFileLen = LOF(nOpenFile)
 ReDim ucData(1 To nFileLen) As Byte
-ReDim ucText(1 To (nFileLen \ 16 + 1) * 79) As Byte
+ReDim ucText(1 To ((nFileLen + 15) \ 16 + 1) * 79) As Byte
 For i = 1 To nFileLen
     Get #nOpenFile, , ucData(i)
 Next
@@ -121,7 +121,7 @@ If sz = "" Then
     Exit Sub
 End If
 nFileLen = lstrlenA(sz)
-ReDim ucText(1 To (nFileLen \ 16 + 1) * 79) As Byte
+ReDim ucText(1 To ((nFileLen + 15) \ 16 + 1) * 79) As Byte
 DumpHex VarPtr(ucText(1)), sz, 0, nFileLen
 txtCode.Text = AllocString(VarPtr(ucText(1)))
 Erase ucText

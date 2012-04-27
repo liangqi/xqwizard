@@ -92,7 +92,7 @@ Open szFileName For Binary Access Read As #nOpenFile
 On Error GoTo 0
 nFileLen = LOF(nOpenFile)
 ReDim ucData(1 To nFileLen) As Byte
-ReDim ucText(1 To (nFileLen \ 33 + 1) * 46) As Byte
+ReDim ucText(1 To ((nFileLen + 32) \ 33 + 1) * 46) As Byte
 For i = 1 To nFileLen
     Get #nOpenFile, , ucData(i)
 Next
@@ -114,7 +114,7 @@ Private Sub ReadClipboard(ByVal sz As String)
 Dim i As Long, nFileLen As Long
 
 nFileLen = lstrlenA(sz)
-ReDim ucText(1 To (nFileLen \ 33 + 1) * 46) As Byte
+ReDim ucText(1 To ((nFileLen + 32) \ 33 + 1) * 46) As Byte
 Base64Enc VarPtr(ucText(1)), sz, nFileLen, chkMultiLine.Value * 11
 txtCode.Text = AllocString(VarPtr(ucText(1)))
 Erase ucText
