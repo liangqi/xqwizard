@@ -153,6 +153,41 @@ Public Const WM_TRAY As Long = &H401
 
 Private Declare Sub Shell_NotifyIconA Lib "SHELL32.DLL" (ByVal dwMessage As Long, ByRef lpData As NotifyIconData)
 
+' For GetSelfExe & FindProcess
+Private Const TH32CS_SNAPPROCESS As Long = 2
+
+Private Type PROCESSENTRY32
+    dwSize As Long
+    cntUsage As Long
+    th32ProcessID As Long
+    th32DefaultHeapID As Long
+    th32ModuleID As Long
+    cntThreads As Long
+    th32ParentProcessID As Long
+    pcPriClassBase As Long
+    dwFlags As Long
+    szExeFile As String * 1024
+End Type
+
+Private Declare Function GetModuleFileNameA Lib "KERNEL32.DLL" (ByVal hModule As Long, ByVal lpFileName As Long, ByVal nSize As Long) As Long
+Private Declare Function CreateToolhelp32Snapshot Lib "KERNEL32.DLL" (ByVal dwFlags As Long, ByVal th32ProcessID As Long) As Long
+Private Declare Function Process32First Lib "KERNEL32.DLL" (ByVal hSnapshot As Long, ByRef lppe As PROCESSENTRY32) As Long
+Private Declare Function Process32Next Lib "KERNEL32.DLL" (ByVal hSnapshot As Long, ByRef lppe As PROCESSENTRY32) As Long
+Private Declare Sub CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long)
+
+' For GetExeType
+Public Const IMAGE_SUBSYSTEM_UNKNOWN        As Integer = 0  ' Unknown subsystem.
+Public Const IMAGE_SUBSYSTEM_NATIVE         As Integer = 1  ' Image doesn't require a subsystem.
+Public Const IMAGE_SUBSYSTEM_WINDOWS_GUI    As Integer = 2  ' Image runs in the Windows GUI subsystem.
+Public Const IMAGE_SUBSYSTEM_WINDOWS_CUI    As Integer = 3  ' Image runs in the Windows character subsystem.
+Public Const IMAGE_SUBSYSTEM_OS2_CUI        As Integer = 5  ' image runs in the OS/2 character subsystem.
+Public Const IMAGE_SUBSYSTEM_POSIX_CUI      As Integer = 7  ' image runs in the Posix character subsystem.
+Public Const IMAGE_SUBSYSTEM_NATIVE_WINDOWS As Integer = 8  ' image is a native Win9x driver.
+Public Const IMAGE_SUBSYSTEM_WINDOWS_CE_GUI As Integer = 9  ' Image runs in the Windows CE subsystem.
+
+Private Const IMAGE_DOS_SIGNATURE           As Integer = &H5A4D
+Private Const IMAGE_NT_SIGNATURE            As Long = &H4550
+
 ' === Begin AllocString ===
 
 Public Function AllocString(ByVal lpsz As Long) As String
@@ -492,3 +527,81 @@ Shell_NotifyIconA NIM_DELETE, nid
 End Sub
 
 ' === End TrayIcon ===
+
+' === Begin GetSelfExe & FindProcess ===
+
+Public Function GetSelfExe() As String
+
+Dim ucFileName(0 To 255) As Byte, lpsz As Long, dwLen As Long
+lpsz = VarPtr(ucFileName(0))
+dwLen = GetModuleFileNameA(0, lpsz, 256)
+GetSelfExe = SysAllocStringByteLen(lpsz, dwLen)
+
+End Function
+
+Public Function FindProcess(ByVal szName As String) As Boolean
+
+Dim hSnapshot As Long, pe As PROCESSENTRY32
+Dim i As Integer
+
+FindProcess = False
+hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+If hSnapshot = 0 Then
+    Exit Function
+End If
+
+szName = UCase(szName)
+pe.dwSize = Len(pe)
+If Process32First(hSnapshot, pe) <> 0 Then
+    Do
+        If InStr(UCase(pe.szExeFile), szName) > 0 Then
+            FindProcess = True
+            Exit Do
+        End If
+    Loop Until Process32Next(hSnapshot, pe) = 0
+End If
+CloseHandle hSnapshot
+
+End Function
+
+' === End GetSelfExe & FindProcess ===
+
+' === Begin GetExeType ===
+
+Public Function GetExeType(ByVal szFile As String) As Integer
+
+Dim nFileNo As Integer, wMagic As Integer, wSubsystem As Integer
+Dim dwLfanew As Long, dwNTSignature As Long
+
+nFileNo = FreeFile
+On Error GoTo lnErrorOpen
+Open szFile For Input As #nFileNo
+Close #nFileNo
+Open szFile For Binary Access Read As #nFileNo
+On Error GoTo 0
+
+Get #nFileNo, 1, wMagic
+If wMagic <> IMAGE_DOS_SIGNATURE Then
+    Close #nFileNo
+    GetExeType = -1
+    Exit Function
+End If
+
+Get #nFileNo, 61, dwLfanew
+Get #nFileNo, dwLfanew + 1, dwNTSignature
+If dwNTSignature <> IMAGE_NT_SIGNATURE Then
+    Close #nFileNo
+    GetExeType = -1
+    Exit Function
+End If
+Get #nFileNo, dwLfanew + 93, wSubsystem
+Close #nFileNo
+GetExeType = wSubsystem
+
+Exit Function
+lnErrorOpen:
+GetExeType = -2
+
+End Function
+
+' === End GetExeType ===
