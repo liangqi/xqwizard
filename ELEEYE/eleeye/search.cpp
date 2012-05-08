@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.3, Last Modified: Mar. 2012
+Designed by Morning Yellow, Version: 3.31, Last Modified: May 2012
 Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
@@ -20,13 +20,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <stdio.h>
+#ifndef CCHESS_A3800
+  #include <stdio.h>
+#endif
 #include "../base/base2.h"
-#include "ucci.h"
 #include "pregen.h"
 #include "position.h"
 #include "hash.h"
-#include "book.h"
+#ifndef CCHESS_A3800
+  #include "ucci.h"
+  #include "book.h"
+#endif
 #include "movesort.h"
 #include "search.h"
 
@@ -53,6 +57,8 @@ static struct {
   MoveSortStruct MoveSort;            // 根结点的着法序列
 } Search2;
 
+#ifndef CCHESS_A3800
+
 void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
   int i, mv;
   pos.FromFen(UcciComm.szFenStr);
@@ -72,10 +78,10 @@ void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
   }
 }
 
+#endif
+
 // 中断例程
 static bool Interrupt(void) {
-  UcciCommStruct UcciComm;
-  PositionStruct posProbe;
   if (Search.bIdle) {
     Idle();
   }
@@ -94,6 +100,11 @@ static bool Interrupt(void) {
     return false;
   }
 
+#ifdef CCHESS_A3800
+  return false;
+#else
+  UcciCommStruct UcciComm;
+  PositionStruct posProbe;
   // 如果不是批处理模式，那么先调用UCCI解释程序，再判断是否中止
   switch (BusyLine(UcciComm, Search.bDebug)) {
   case UCCI_COMM_ISREADY:
@@ -136,7 +147,10 @@ static bool Interrupt(void) {
   default:
     return false;
   }
+#endif
 }
+
+#ifndef CCHESS_A3800
 
 // 输出主要变例
 static void PopPvLine(int nDepth = 0, int vl = 0) {
@@ -173,6 +187,8 @@ static void PopPvLine(int nDepth = 0, int vl = 0) {
   printf("\n");
   fflush(stdout);
 }
+
+#endif
 
 // 无害裁剪
 static int HarmlessPruning(const PositionStruct &pos, int vlBeta) {
@@ -294,6 +310,8 @@ static int SearchQuiesc(PositionStruct &pos, int vlAlpha, int vlBeta) {
   }
 }
 
+#ifndef CCHESS_A3800
+
 // UCCI支持 - 输出叶子结点的局面信息
 void PopLeaf(PositionStruct &pos) {
   int vl;
@@ -302,6 +320,8 @@ void PopLeaf(PositionStruct &pos) {
   printf("pophash lowerbound %d depth 0 upperbound %d depth 0\n", vl, vl);
   fflush(stdout);
 }
+
+#endif
 
 const bool NO_NULL = true; // "SearchCut()"的参数，是否禁止空着裁剪
 
@@ -349,6 +369,10 @@ static int SearchCut(int vlBeta, int nDepth, bool bNoNull = false) {
     Search.pos.NullMove();
     vl = -SearchCut(1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
     Search.pos.UndoNullMove();
+    if (Search2.bStop) {
+      return vlBest;
+    }
+
     if (vl >= vlBeta) {
       if (Search.pos.NullSafe()) {
         // a. 如果空着裁剪不带检验，那么记录深度至少为(NULL_DEPTH + 1)；
@@ -560,7 +584,9 @@ static int SearchPV(int vlAlpha, int vlBeta, int nDepth, uint16_t *lpwmvPvLine) 
  */
 static int SearchRoot(int nDepth) {
   int nNewDepth, vlBest, vl, mv, nCurrMove;
+#ifndef CCHESS_A3800
   uint32_t dwMoveStr;
+#endif
   uint16_t wmvPvLine[LIMIT_DEPTH];
   // 根结点搜索例程包括以下几个步骤：
 
@@ -572,12 +598,14 @@ static int SearchRoot(int nDepth) {
   nCurrMove = 0;
   while ((mv = Search2.MoveSort.NextRoot()) != 0) {
     if (Search.pos.MakeMove(mv)) {
+#ifndef CCHESS_A3800
       if (Search2.bPopCurrMove || Search.bDebug) {
         dwMoveStr = MOVE_COORD(mv);
         nCurrMove ++;
         printf("info currmove %.4s currmovenumber %d\n", (const char *) &dwMoveStr, nCurrMove);
         fflush(stdout);
       }
+#endif
 
       // 3. 尝试选择性延伸(只考虑将军延伸)
       nNewDepth = (Search.pos.LastMove().ChkChs > 0 ? nDepth : nDepth - 1);
@@ -606,7 +634,9 @@ static int SearchRoot(int nDepth) {
 
         // 7. 搜索到最佳着法时记录主要变例
         AppendPvLine(Search2.wmvPvLine, mv, wmvPvLine);
+#ifndef CCHESS_A3800
         PopPvLine(nDepth, vl);
+#endif
 
         // 8. 如果要考虑随机性，则Alpha值要作随机浮动，但已搜索到杀棋时不作随机浮动
         if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
@@ -644,20 +674,26 @@ static bool SearchUnique(int vlBeta, int nDepth) {
 
 // 主搜索例程
 void SearchMain(int nDepth) {
-  int i, vl, vlLast, nBookMoves;
+  int i, vl, vlLast;
   int nCurrTimer, nLimitTimer, nLimitNodes;
   bool bUnique;
+#ifndef CCHESS_A3800
+  int nBookMoves;
   uint32_t dwMoveStr;
   BookStruct bks[MAX_GEN_MOVES];
+#endif
   // 主搜索例程包括以下几个步骤：
 
   // 1. 遇到和棋则直接返回
   if (Search.pos.IsDraw() || Search.pos.RepStatus(3) > 0) {
+#ifndef CCHESS_A3800
     printf("nobestmove\n");
     fflush(stdout);
+#endif
     return;    
   }
 
+#ifndef CCHESS_A3800
   // 2. 从开局库中搜索着法
   if (Search.bUseBook) {
     // a. 获取开局库中的所有走法
@@ -699,13 +735,16 @@ void SearchMain(int nDepth) {
       Search.pos.UndoMakeMove();
     }
   }
+#endif
 
   // 3. 如果深度为零则返回静态搜索值
   if (nDepth == 0) {
+#ifndef CCHESS_A3800
     printf("info depth 0 score %d\n", SearchQuiesc(Search.pos, -MATE_VALUE, MATE_VALUE));
     fflush(stdout);
     printf("nobestmove\n");
     fflush(stdout);
+#endif
     return;
   }
 
@@ -733,6 +772,7 @@ void SearchMain(int nDepth) {
   // 6. 做迭代加深搜索
   for (i = 1; i <= nDepth; i ++) {
     // 需要输出主要变例时，第一个"info depth n"是不输出的
+#ifndef CCHESS_A3800
     if (Search2.bPopPv || Search.bDebug) {
       printf("info depth %d\n", i);
       fflush(stdout);
@@ -741,6 +781,7 @@ void SearchMain(int nDepth) {
     // 7. 根据搜索的时间决定，是否需要输出主要变例和当前思考的着法
     Search2.bPopPv = (nCurrTimer > 300);
     Search2.bPopCurrMove = (nCurrTimer > 3000);
+#endif
 
     // 8. 搜索根结点
     vl = SearchRoot(i);
@@ -793,6 +834,9 @@ void SearchMain(int nDepth) {
     }
   }
 
+#ifdef CCHESS_A3800
+  Search.mvResult = Search2.wmvPvLine[0];
+#else
   // 12. 输出最佳着法及其最佳应对(作为后台思考的猜测着法)
   if (Search2.wmvPvLine[0] != 0) {
     PopPvLine();
@@ -816,4 +860,5 @@ void SearchMain(int nDepth) {
   }
   printf("\n");
   fflush(stdout);
+#endif
 }

@@ -2,8 +2,8 @@
 hash.h/hash.cpp - Source Code for ElephantEye, Part V
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.12, Last Modified: Dec. 2007
-Copyright (C) 2004-2007 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.31, Last Modified: May 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -92,7 +92,9 @@ int ProbeHash(const PositionStruct &pos, int vlAlpha, int vlBeta, int nDepth, bo
   int ProbeHashQ(const PositionStruct &pos, int vlAlpha, int vlBeta);   // 获取置换表局面信息(静态搜索)
 #endif
 
-// UCCI支持 - 输出Hash表中的局面信息
-bool PopHash(const PositionStruct &pos);
+#ifndef CCHESS_A3800
+  // UCCI支持 - 输出Hash表中的局面信息
+  bool PopHash(const PositionStruct &pos);
+#endif
 
 #endif

@@ -2,8 +2,8 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.15, Last Modified: Jul. 2008
-Copyright (C) 2004-2008 www.elephantbase.net
+Designed by Morning Yellow, Version: 3.31, Last Modified: May 2012
+Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -22,18 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "../base/base.h"
 #include "../base/rc4prng.h"
-#include "ucci.h"
+#ifndef CCHESS_A3800
+  #include "ucci.h"
+#endif
 #include "pregen.h"
 #include "position.h"
 
 #ifndef SEARCH_H
 #define SEARCH_H
-
-#ifdef _WIN32
-  #include <windows.h>
-#else
-  #define WINAPI
-#endif
 
 // 搜索模式
 const int GO_MODE_INFINITY = 0;
@@ -54,15 +50,22 @@ struct SearchStruct {
   int nRandomMask, nBanMoves;        // 随机性屏蔽位和禁着数
   uint16_t wmvBanList[MAX_MOVE_NUM]; // 禁着列表
   char szBookFile[1024];             // 开局库
+#ifdef CCHESS_A3800
+  int mvResult;                      // 返回着法
+#endif
 };
 
 extern SearchStruct Search;
+
+#ifndef CCHESS_A3800
 
 // UCCI局面构造过程
 void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm);
 
 // UCCI支持 - 输出叶子结点的局面信息
 void PopLeaf(PositionStruct &pos);
+
+#endif
 
 // 搜索的启动过程
 void SearchMain(int nDepth);
