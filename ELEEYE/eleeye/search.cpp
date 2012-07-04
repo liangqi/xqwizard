@@ -67,12 +67,8 @@ void BuildPos(PositionStruct &pos, const UcciCommStruct &UcciComm) {
     if (mv == 0) {
       break;
     }
-    if (pos.ucpcSquares[SRC(mv)] == 0) {
-      break;
-    }
-    pos.MakeMove(mv);
-    // 始终让pos.nMoveNum反映没吃子的步数
-    if (pos.LastMove().CptDrw > 0) {
+    if (pos.LegalMove(mv) && pos.MakeMove(mv) && pos.LastMove().CptDrw > 0) {
+      // 始终让pos.nMoveNum反映没吃子的步数
       pos.SetIrrev();
     }
   }
