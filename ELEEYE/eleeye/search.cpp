@@ -2,7 +2,7 @@
 search.h/search.cpp - Source Code for ElephantEye, Part VIII
 
 ElephantEye - a Chinese Chess Program (UCCI Engine)
-Designed by Morning Yellow, Version: 3.31, Last Modified: May 2012
+Designed by Morning Yellow, Version: 3.32, Last Modified: May 2012
 Copyright (C) 2004-2012 www.xqbase.com
 
 This library is free software; you can redistribute it and/or
@@ -670,7 +670,7 @@ static bool SearchUnique(int vlBeta, int nDepth) {
 
 // 主搜索例程
 void SearchMain(int nDepth) {
-  int i, vl, vlLast;
+  int i, vl, vlLast, nDraw;
   int nCurrTimer, nLimitTimer, nLimitNodes;
   bool bUnique;
 #ifndef CCHESS_A3800
@@ -759,7 +759,8 @@ void SearchMain(int nDepth) {
   Search2.llTime = GetTime();
   vlLast = 0;
   // 如果走了10回合无用着法，那么允许主动提和，以后每隔8回合提和一次
-  if (Search.pos.nMoveNum > 5 && ((Search.pos.nMoveNum - 4) / 2) % 8 == 0) {
+  nDraw = -Search.pos.LastMove().CptDrw;
+  if (nDraw > 5 && ((nDraw - 4) / 2) % 8 == 0) {
     Search.bDraw = true;
   }
   bUnique = false;
