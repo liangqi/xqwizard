@@ -25,7 +25,7 @@ var FILE_RIGHT = 11;
 var ADD_PIECE = false;
 var DEL_PIECE = true;
 
-var IN_BOARD_ = new Array(
+var IN_BOARD_ = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -41,10 +41,10 @@ var IN_BOARD_ = new Array(
   0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-);
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-var IN_FORT_ = new Array(
+var IN_FORT_ = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -60,10 +60,10 @@ var IN_FORT_ = new Array(
   0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-);
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-var LEGAL_SPAN = new Array(
+var LEGAL_SPAN = [
                        0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -96,10 +96,10 @@ var LEGAL_SPAN = new Array(
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0
-);
+  0, 0, 0, 0, 0, 0, 0,
+];
 
-var KNIGHT_PIN_ = new Array(
+var KNIGHT_PIN_ = [
                               0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -132,21 +132,17 @@ var KNIGHT_PIN_ = new Array(
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  0,  0,  0,  0,  0,  0,  0
-);
+  0,  0,  0,  0,  0,  0,  0,
+];
 
-var KING_DELTA = new Array(-16, -1, 1, 16);
-var ADVISOR_DELTA = new Array(-17, -15, 15, 17);
-var KNIGHT_DELTA = new Array(
-  new Array(-33, -31), new Array(-18, 14), new Array(-14, 18), new Array(31, 33)
-);
-var KNIGHT_CHECK_DELTA = new Array(
-  new Array(-33, -18), new Array(-31, -14), new Array(14, 31), new Array(18, 33)
-);
-var MVV_VALUE = new Array(50, 10, 10, 30, 40, 30, 20, 0);
+var KING_DELTA = [-16, -1, 1, 16];
+var ADVISOR_DELTA = [-17, -15, 15, 17];
+var KNIGHT_DELTA = [[-33, -31], [-18, 14], [-14, 18], [31, 33]];
+var KNIGHT_CHECK_DELTA = [[-33, -18], [-31, -14], [14, 31], [18, 33]];
+var MVV_VALUE = [50, 10, 10, 30, 40, 30, 20, 0];
 
-var PIECE_VALUE = new Array(
-  new Array(
+var PIECE_VALUE = [
+  [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -163,7 +159,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -180,7 +176,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -197,7 +193,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -214,7 +210,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -231,7 +227,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -248,7 +244,7 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ), new Array(
+  ], [
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -265,8 +261,8 @@ var PIECE_VALUE = new Array(
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  ),
-);
+  ],
+];
 
 function IN_BOARD(sq) {
   return IN_BOARD_[sq] != 0;
@@ -386,7 +382,7 @@ function ASC(c) {
 
 var FEN_PIECE = "        KABNRCP kabnrcp ";
 
-function FEN_TO_PIECE(c) {
+function CHAR_TO_PIECE(c) {
   switch (c) {
   case "K":
     return PIECE_KING;
@@ -410,7 +406,7 @@ function FEN_TO_PIECE(c) {
 }
 
 var PreGen_zobristKeyPlayer, PreGen_zobristLockPlayer;
-var PreGen_zobristKeyTable = new Array(14), PreGen_zobristLockTable = new Array(14);
+var PreGen_zobristKeyTable = [], PreGen_zobristLockTable = [];
 
 function Position() {
   this.sdPlayer;
@@ -421,7 +417,7 @@ function Position() {
   this.moveNum;
   this.distance;
 
-  this.pcSquares = new Array(256);
+  this.squares = new Array(256);
   this.mvList = new Array(MAX_MOVE_NUM);
   this.pcList = new Array(MAX_MOVE_NUM);
   this.keyList = new Array(MAX_MOVE_NUM);
@@ -430,7 +426,7 @@ function Position() {
   this.clearBoard = function() {
     this.sdPlayer = 0;
     for (var sq = 0; sq < 256; sq ++) {
-      this.pcSquares[sq] = 0;
+      this.squares[sq] = 0;
     }
     this.zobristKey = this.zobristLock = 0;
     this.vlWhite = this.vlBlack = 0;
@@ -445,7 +441,7 @@ function Position() {
 
   this.addPiece = function(sq, pc, bDel) {
     var pcAdjust;
-    this.pcSquares[sq] = bDel ? 0 : pc;
+    this.squares[sq] = bDel ? 0 : pc;
     if (pc < 16) {
       pcAdjust = pc - 8;
       this.vlWhite += bDel ? -this.cnPieceValue[pcAdjust][sq] :
@@ -463,11 +459,11 @@ function Position() {
   this.movePiece = function() {
     var sqSrc = SRC(this.mvList[this.moveNum]);
     var sqDst = DST(this.mvList[this.moveNum]);
-    this.pcList[this.moveNum] = this.pcSquares[sqDst];
+    this.pcList[this.moveNum] = this.squares[sqDst];
     if (this.pcList[this.moveNum] > 0) {
       this.addPiece(sqDst, this.pcList[this.moveNum], DEL_PIECE);
     }
-    var pc:int = this.pcSquares[sqSrc];
+    var pc:int = this.squares[sqSrc];
     this.addPiece(sqSrc, pc, DEL_PIECE);
     this.addPiece(sqDst, pc, ADD_PIECE);
   }
@@ -475,7 +471,7 @@ function Position() {
   this.undoMovePiece = function() {
     var sqSrc = SRC(this.mvList[this.moveNum]);
     var sqDst = DST(this.mvList[this.moveNum]);
-    var pc = this.pcSquares[sqDst];
+    var pc = this.squares[sqDst];
     this.addPiece(sqDst, pc, DEL_PIECE);
     this.addPiece(sqSrc, pc, ADD_PIECE);
     if (this.pcList[this.moveNum] > 0) {
@@ -552,7 +548,7 @@ function Position() {
         }
       } else if (c >= "A" && c <= "Z") {
         if (x <= FILE_RIGHT) {
-          var pt = FEN_TO_PIECE(c);
+          var pt = CHAR_TO_PIECE(c);
           if (pt >= 0) {
             this.addPiece(COORD_XY(x, y), pt + 8);
           }
@@ -560,7 +556,7 @@ function Position() {
         }
       } else if (c >= "a" && c <= "z") {
         if (x <= FILE_RIGHT) {
-          var pt = FEN_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
+          var pt = CHAR_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
           if (pt >= 0) {
             this.addPiece(COORD_XY(x, y), pt + 16);
           }
@@ -583,5 +579,418 @@ function Position() {
       this.changeSide();
     }
     this.setIrrev();
+  }
+
+  this.toFen = function() {
+    var fen = "";
+    for (var y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
+      var k = 0;
+      for (var x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
+        var pc = this.squares[COORD_XY(x, y)];
+        if (pc > 0) {
+          if (k > 0) {
+            fen += CHR(ASC("0") + k);
+            k = 0;
+          }
+          fen += FEN_PIECE.charAt(pc);
+        } else {
+          k ++;
+        }
+      }
+      if (k > 0) {
+        fen += CHR(ASC("0") + k));
+      }
+      fen += "/";
+    }
+    return fen.substring(0, fen.length - 1) + " " +
+        (this.sdPlayer == 0 ? 'w' : 'b');
+  }
+
+  this.generateAllMoves = function() {
+    return this.generateMoves(null);
+  }
+
+  this.generateMoves = function(vls) {
+    var mvs = [];
+    var pcSelfSide = SIDE_TAG(this.sdPlayer);
+    var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+    for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
+      var pcSrc = this.squares[sqSrc];
+      if ((pcSrc & pcSelfSide) == 0) {
+        continue;
+      }
+      switch (pcSrc - pcSelfSide) {
+      case PIECE_KING:
+        for (var i = 0; i < 4; i ++) {
+          var sqDst = sqSrc + KING_DELTA[i];
+          if (!IN_FORT(sqDst)) {
+            continue;
+          }
+          var pcDst = this.squares[sqDst];
+          if (vls == null) {
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else if ((pcDst & pcOppSide) != 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+            vls.push(MVV_LVA(pcDst, 5));
+          }
+        }
+        break;
+      case PIECE_ADVISOR:
+        for (var i = 0; i < 4; i ++) {
+          var sqDst = sqSrc + ADVISOR_DELTA[i];
+          if (!IN_FORT(sqDst)) {
+            continue;
+          }
+          var pcDst = this.squares[sqDst];
+          if (vls == null) {
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else if ((pcDst & pcOppSide) != 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+            vls.push(MVV_LVA(pcDst, 1));
+          }
+        }
+        break;
+      case PIECE_BISHOP:
+        for (var i = 0; i < 4; i ++) {
+          var sqDst = sqSrc + ADVISOR_DELTA[i];
+          if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) &&
+              this.squares[sqDst] == 0)) {
+            continue;
+          }
+          sqDst += ADVISOR_DELTA[i];
+          var pcDst = squares[sqDst];
+          if (vls == null) {
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else if ((pcDst & pcOppSide) != 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+            vls.push(MVV_LVA(pcDst, 1));
+          }
+        }
+        break;
+      case PIECE_KNIGHT:
+        for (var i = 0; i < 4; i ++) {
+          var sqDst = sqSrc + KING_DELTA[i];
+          if (squares[sqDst] > 0) {
+            continue;
+          }
+          for (var j = 0; j < 2; j ++) {
+            sqDst = sqSrc + KNIGHT_DELTA[i][j];
+            if (!IN_BOARD(sqDst)) {
+              continue;
+            }
+            var pcDst = squares[sqDst];
+            if (vls == null) {
+              if ((pcDst & pcSelfSide) == 0) {
+                mvs.push(MOVE(sqSrc, sqDst));
+              }
+            } else if ((pcDst & pcOppSide) != 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+              vls.push(MVV_LVA(pcDst, 1));
+            }
+          }
+        }
+        break;
+      case PIECE_ROOK:
+        for (var i = 0; i < 4; i ++) {
+          var delta = KING_DELTA[i];
+          var sqDst = sqSrc + delta;
+          while (IN_BOARD(sqDst)) {
+            var pcDst = squares[sqDst];
+            if (pcDst == 0) {
+              if (vls == null) {
+                mvs.push(MOVE(sqSrc, sqDst));
+              }
+            } else {
+              if ((pcDst & pcOppSide) != 0) {
+                mvs.push(MOVE(sqSrc, sqDst));
+                if (vls != null) {
+                  vls.push(MVV_LVA(pcDst, 4));
+                }
+              }
+              break;
+            }
+            sqDst += delta;
+          }
+        }
+        break;
+      case PIECE_CANNON:
+        for (var i = 0; i < 4; i ++) {
+          var delta = KING_DELTA[i];
+          var sqDst = sqSrc + delta;
+          while (IN_BOARD(sqDst)) {
+            var pcDst = squares[sqDst];
+            if (pcDst == 0) {
+              if (vls == null) {
+                mvs.push(MOVE(sqSrc, sqDst));
+              }
+            } else {
+              break;
+            }
+            sqDst += delta;
+          }
+          sqDst += delta;
+          while (IN_BOARD(sqDst)) {
+            int pcDst = squares[sqDst];
+            if (pcDst > 0) {
+              if ((pcDst & pcOppSide) != 0) {
+                mvs.push(MOVE(sqSrc, sqDst));
+                if (vls != null) {
+                  vls.push(MVV_LVA(pcDst, 4));
+                }
+              }
+              break;
+            }
+            sqDst += delta;
+          }
+        }
+        break;
+      case PIECE_PAWN:
+        var sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
+        if (IN_BOARD(sqDst)) {
+          var pcDst = squares[sqDst];
+          if (vls == null) {
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else if ((pcDst & pcOppSide) != 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+            vls.push(MVV_LVA(pcDst, 2));
+          }
+        }
+        if (AWAY_HALF(sqSrc, sdPlayer)) {
+          for (var delta = -1; delta <= 1; delta += 2) {
+            sqDst = sqSrc + delta;
+            if (IN_BOARD(sqDst)) {
+              var pcDst = squares[sqDst];
+              if (vls == null) {
+                if ((pcDst & pcSelfSide) == 0) {
+                  mvs.push(MOVE(sqSrc, sqDst));
+                }
+              } else if ((pcDst & pcOppSide) != 0) {
+                mvs.push(MOVE(sqSrc, sqDst));
+                vls.push(MVV_LVA(pcDst, 2));
+              }
+            }
+          }
+        }
+        break;
+      }
+    }
+    return moves;
+  }
+
+  this.legalMove = function(mv) {
+    var sqSrc = SRC(mv);
+    var pcSrc = this.squares[sqSrc];
+    var pcSelfSide = SIDE_TAG(this.sdPlayer);
+    if ((pcSrc & pcSelfSide) == 0) {
+      return false;
+    }
+
+    var sqDst = DST(mv);
+    var pcDst = this.squares[sqDst];
+    if ((pcDst & pcSelfSide) != 0) {
+      return false;
+    }
+
+    switch (pcSrc - pcSelfSide) {
+    case PIECE_KING:
+      return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
+    case PIECE_ADVISOR:
+      return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
+    case PIECE_BISHOP:
+      return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
+          squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+    case PIECE_KNIGHT:
+      var sqPin = KNIGHT_PIN(sqSrc, sqDst);
+      return sqPin != sqSrc && this.squares[sqPin] == 0;
+    case PIECE_ROOK:
+    case PIECE_CANNON:
+      var delta;
+      if (SAME_RANK(sqSrc, sqDst)) {
+        delta = (sqDst < sqSrc ? -1 : 1);
+      } else if (SAME_FILE(sqSrc, sqDst)) {
+        delta = (sqDst < sqSrc ? -16 : 16);
+      } else {
+        return false;
+      }
+      sqPin = sqSrc + delta;
+      while (sqPin != sqDst && squares[sqPin] == 0) {
+        sqPin += delta;
+      }
+      if (sqPin == sqDst) {
+        return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
+      }
+      if (pcDst == 0 || pcSrc - pcSelfSide != PIECE_CANNON) {
+        return false;
+      }
+      sqPin += delta;
+      while (sqPin != sqDst && squares[sqPin] == 0) {
+        sqPin += delta;
+      }
+      return sqPin == sqDst;
+    case PIECE_PAWN:
+      if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+        return true;
+      }
+      return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
+    default:
+      return false;
+    }
+  }
+
+  public boolean checked() {
+    int pcSelfSide = SIDE_TAG(sdPlayer);
+    int pcOppSide = OPP_SIDE_TAG(sdPlayer);
+    for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
+      if (squares[sqSrc] != pcSelfSide + PIECE_KING) {
+        continue;
+      }
+      if (squares[SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide + PIECE_PAWN) {
+        return true;
+      }
+      for (int delta = -1; delta <= 1; delta += 2) {
+        if (squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
+          return true;
+        }
+      }
+      for (int i = 0; i < 4; i ++) {
+        if (squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
+          continue;
+        }
+        for (int j = 0; j < 2; j ++) {
+          int pcDst = squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
+          if (pcDst == pcOppSide + PIECE_KNIGHT) {
+            return true;
+          }
+        }
+      }
+      for (int i = 0; i < 4; i ++) {
+        int delta = KING_DELTA[i];
+        int sqDst = sqSrc + delta;
+        while (IN_BOARD(sqDst)) {
+          int pcDst = squares[sqDst];
+          if (pcDst > 0) {
+            if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
+              return true;
+            }
+            break;
+          }
+          sqDst += delta;
+        }
+        sqDst += delta;
+        while (IN_BOARD(sqDst)) {
+          int pcDst = squares[sqDst];
+          if (pcDst > 0) {
+            if (pcDst == pcOppSide + PIECE_CANNON) {
+              return true;
+            }
+            break;
+          }
+          sqDst += delta;
+        }
+      }
+      return false;
+    }
+    return false;
+  }
+
+  public boolean isMate() {
+    int[] mvs = new int[MAX_GEN_MOVES];
+    int moves = generateAllMoves(mvs);
+    for (int i = 0; i < moves; i ++) {
+      if (makeMove(mvs[i])) {
+        undoMakeMove();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public int mateValue() {
+    return distance - MATE_VALUE;
+  }
+
+  public int banValue() {
+    return distance - BAN_VALUE;
+  }
+
+  public int drawValue() {
+    return (distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+  }
+
+  public int evaluate() {
+    int vl = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
+    return vl == drawValue() ? vl - 1 : vl;
+  }
+
+  public boolean nullOkay() {
+    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_OKAY_MARGIN;
+  }
+
+  public boolean nullSafe() {
+    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_SAFE_MARGIN;
+  }
+
+  public boolean inCheck() {
+    return chkList[moveNum - 1];
+  }
+
+  public boolean captured() {
+    return pcList[moveNum - 1] > 0;
+  }
+
+  public int repValue(int vlRep) {
+    int vlReturn = ((vlRep & 2) == 0 ? 0 : banValue()) + ((vlRep & 4) == 0 ? 0 : -banValue());
+    return vlReturn == 0 ? drawValue() : vlReturn;
+  }
+
+  public int repStatus() {
+    return repStatus(1);
+  }
+
+  public int repStatus(int recur_) {
+    int recur = recur_;
+    boolean selfSide = false;
+    boolean perpCheck = true;
+    boolean oppPerpCheck = true;
+    int index = moveNum - 1;
+    while (mvList[index] > 0 && pcList[index] == 0) {
+      if (selfSide) {
+        perpCheck = perpCheck && chkList[index];
+        if (keyList[index] == zobristKey) {
+          recur --;
+          if (recur == 0) {
+            return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
+          }
+        }
+      } else {
+        oppPerpCheck = oppPerpCheck && chkList[index];
+      }
+      selfSide = !selfSide;
+      index --;
+    }
+    return 0;
+  }
+
+  public Position mirror() {
+    Position pos = new Position();
+    pos.clearBoard();
+    for (int sq = 0; sq < 256; sq ++) {
+      int pc = squares[sq];
+      if (pc > 0) {
+        pos.addPiece(MIRROR_SQUARE(sq), pc);
+      }
+    }
+    if (sdPlayer == 1) {
+      pos.changeSide();
+    }
+    return pos;
   }
 }

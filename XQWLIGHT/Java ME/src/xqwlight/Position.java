@@ -404,6 +404,31 @@ public class Position {
 		return MVV_VALUE[pc & 7] - lva;
 	}
 
+	public static final String FEN_PIECE = "        KABNRCP kabnrcp ";
+
+	public static int CHAR_TO_PIECE(char c) {
+		switch (c) {
+		case 'K':
+			return PIECE_KING;
+		case 'A':
+			return PIECE_ADVISOR;
+		case 'B':
+		case 'E':
+			return PIECE_BISHOP;
+		case 'H':
+		case 'N':
+			return PIECE_KNIGHT;
+		case 'R':
+			return PIECE_ROOK;
+		case 'C':
+			return PIECE_CANNON;
+		case 'P':
+			return PIECE_PAWN;
+		default:
+			return -1;
+		}
+	}
+
 	public static int PreGen_zobristKeyPlayer;
 	public static int PreGen_zobristLockPlayer;
 	public static int[][] PreGen_zobristKeyTable = new int[14][256];
@@ -568,29 +593,6 @@ public class Position {
 		changeSide();
 	}
 
-	public int fenPiece(char c) {
-		switch (c) {
-		case 'K':
-			return PIECE_KING;
-		case 'A':
-			return PIECE_ADVISOR;
-		case 'B':
-		case 'E':
-			return PIECE_BISHOP;
-		case 'H':
-		case 'N':
-			return PIECE_KNIGHT;
-		case 'R':
-			return PIECE_ROOK;
-		case 'C':
-			return PIECE_CANNON;
-		case 'P':
-			return PIECE_PAWN;
-		default:
-			return -1;
-		}
-	}
-
 	public void fromFen(String fen) {
 		clearBoard();
 		int y = RANK_TOP;
@@ -617,7 +619,7 @@ public class Position {
 				}
 			} else if (c >= 'A' && c <= 'Z') {
 				if (x <= FILE_RIGHT) {
-					int pt = fenPiece(c);
+					int pt = CHAR_TO_PIECE(c);
 					if (pt >= 0) {
 						addPiece(COORD_XY(x, y), pt + 8);
 					}
@@ -625,7 +627,7 @@ public class Position {
 				}
 			} else if (c >= 'a' && c <= 'z') {
 				if (x <= FILE_RIGHT) {
-					int pt = fenPiece((char) (c + 'A' - 'a'));
+					int pt = CHAR_TO_PIECE((char) (c + 'A' - 'a'));
 					if (pt >= 0) {
 						addPiece(COORD_XY(x, y), pt + 16);
 					}
@@ -649,8 +651,6 @@ public class Position {
 		}
 		setIrrev();
 	}
-
-	public static final String FEN_PIECE = "        KABNRCP kabnrcp ";
 
 	public String toFen() {
 		StringBuffer fen = new StringBuffer();
@@ -913,15 +913,15 @@ public class Position {
 			}
 			if (sqPin == sqDst) {
 				return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
-			} else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
-				sqPin += delta;
-				while (sqPin != sqDst && squares[sqPin] == 0) {
-					sqPin += delta;
-				}
-				return sqPin == sqDst;
-			} else {
+			}
+			if (pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK) {
 				return false;
 			}
+			sqPin += delta;
+			while (sqPin != sqDst && squares[sqPin] == 0) {
+				sqPin += delta;
+			}
+			return sqPin == sqDst;
 		case PIECE_PAWN:
 			if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
 				return true;
