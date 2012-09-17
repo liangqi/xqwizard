@@ -845,37 +845,37 @@ function Position() {
     }
   }
 
-  public boolean checked() {
-    int pcSelfSide = SIDE_TAG(sdPlayer);
-    int pcOppSide = OPP_SIDE_TAG(sdPlayer);
-    for (int sqSrc = 0; sqSrc < 256; sqSrc ++) {
-      if (squares[sqSrc] != pcSelfSide + PIECE_KING) {
+  this.checked = function() {
+    var pcSelfSide = SIDE_TAG(this.sdPlayer);
+    var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+    for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
+      if (this.squares[sqSrc] != pcSelfSide + PIECE_KING) {
         continue;
       }
-      if (squares[SQUARE_FORWARD(sqSrc, sdPlayer)] == pcOppSide + PIECE_PAWN) {
+      if (this.squares[SQUARE_FORWARD(sqSrc, this.sdPlayer)] == pcOppSide + PIECE_PAWN) {
         return true;
       }
-      for (int delta = -1; delta <= 1; delta += 2) {
-        if (squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
+      for (var delta = -1; delta <= 1; delta += 2) {
+        if (this.squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
           return true;
         }
       }
-      for (int i = 0; i < 4; i ++) {
-        if (squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
+      for (var i = 0; i < 4; i ++) {
+        if (this.squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
           continue;
         }
-        for (int j = 0; j < 2; j ++) {
-          int pcDst = squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
+        for (var j = 0; j < 2; j ++) {
+          int pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
           if (pcDst == pcOppSide + PIECE_KNIGHT) {
             return true;
           }
         }
       }
-      for (int i = 0; i < 4; i ++) {
-        int delta = KING_DELTA[i];
-        int sqDst = sqSrc + delta;
+      for (var i = 0; i < 4; i ++) {
+        var delta = KING_DELTA[i];
+        var sqDst = sqSrc + delta;
         while (IN_BOARD(sqDst)) {
-          int pcDst = squares[sqDst];
+          var pcDst = this.squares[sqDst];
           if (pcDst > 0) {
             if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
               return true;
@@ -886,7 +886,7 @@ function Position() {
         }
         sqDst += delta;
         while (IN_BOARD(sqDst)) {
-          int pcDst = squares[sqDst];
+          var pcDst = this.squares[sqDst];
           if (pcDst > 0) {
             if (pcDst == pcOppSide + PIECE_CANNON) {
               return true;
@@ -901,10 +901,9 @@ function Position() {
     return false;
   }
 
-  public boolean isMate() {
-    int[] mvs = new int[MAX_GEN_MOVES];
-    int moves = generateAllMoves(mvs);
-    for (int i = 0; i < moves; i ++) {
+  this.isMate = function() {
+    var mvs = generateAllMoves();
+    for (var i = 0; i < var.length; i ++) {
       if (makeMove(mvs[i])) {
         undoMakeMove();
         return false;
@@ -913,65 +912,67 @@ function Position() {
     return true;
   }
 
-  public int mateValue() {
-    return distance - MATE_VALUE;
+  this.mateValue = function() {
+    return this.distance - MATE_VALUE;
   }
 
-  public int banValue() {
-    return distance - BAN_VALUE;
+  this.banValue = function() {
+    return this.distance - BAN_VALUE;
   }
 
-  public int drawValue() {
-    return (distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+  this.drawValue = function() {
+    return (this.distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
   }
 
-  public int evaluate() {
-    int vl = (sdPlayer == 0 ? vlWhite - vlBlack : vlBlack - vlWhite) + ADVANCED_VALUE;
-    return vl == drawValue() ? vl - 1 : vl;
+  this.evaluate = function() {
+    var vl = (this.sdPlayer == 0 ? this.vlWhite - this.vlBlack :
+        this.vlBlack - this.vlWhite) + ADVANCED_VALUE;
+    return vl == this.drawValue() ? vl - 1 : vl;
   }
 
-  public boolean nullOkay() {
-    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_OKAY_MARGIN;
+  this.nullOkay = function() {
+    return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_OKAY_MARGIN;
   }
 
-  public boolean nullSafe() {
-    return (sdPlayer == 0 ? vlWhite : vlBlack) > NULL_SAFE_MARGIN;
+  this.nullSafe = function() {
+    return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_SAFE_MARGIN;
   }
 
-  public boolean inCheck() {
-    return chkList[moveNum - 1];
+  this.inCheck = function() {
+    return this.chkList[this.moveNum - 1];
   }
 
-  public boolean captured() {
-    return pcList[moveNum - 1] > 0;
+  this.captured = function() {
+    return this.pcList[this.moveNum - 1] > 0;
   }
 
-  public int repValue(int vlRep) {
-    int vlReturn = ((vlRep & 2) == 0 ? 0 : banValue()) + ((vlRep & 4) == 0 ? 0 : -banValue());
-    return vlReturn == 0 ? drawValue() : vlReturn;
+  this.repValue(vlRep) {
+    var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
+        ((vlRep & 4) == 0 ? 0 : -this.banValue());
+    return vlReturn == 0 ? this.drawValue() : vlReturn;
   }
 
-  public int repStatus() {
-    return repStatus(1);
+  this.repStatus = function() {
+    return this.repStatus(1);
   }
 
-  public int repStatus(int recur_) {
-    int recur = recur_;
-    boolean selfSide = false;
-    boolean perpCheck = true;
-    boolean oppPerpCheck = true;
-    int index = moveNum - 1;
-    while (mvList[index] > 0 && pcList[index] == 0) {
+  this.repStatus(recur_) {
+    var recur = recur_;
+    var selfSide = false;
+    var perpCheck = true;
+    var oppPerpCheck = true;
+    var index = this.moveNum - 1;
+    while (this.mvList[index] > 0 && this.pcList[index] == 0) {
       if (selfSide) {
-        perpCheck = perpCheck && chkList[index];
-        if (keyList[index] == zobristKey) {
+        perpCheck = perpCheck && this.chkList[index];
+        if (this.keyList[index] == this.zobristKey) {
           recur --;
           if (recur == 0) {
             return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
           }
         }
       } else {
-        oppPerpCheck = oppPerpCheck && chkList[index];
+        oppPerpCheck = oppPerpCheck && this.chkList[index];
       }
       selfSide = !selfSide;
       index --;
@@ -979,16 +980,16 @@ function Position() {
     return 0;
   }
 
-  public Position mirror() {
-    Position pos = new Position();
+  this.mirror = function() {
+    var pos = new Position();
     pos.clearBoard();
-    for (int sq = 0; sq < 256; sq ++) {
-      int pc = squares[sq];
+    for (var sq = 0; sq < 256; sq ++) {
+      var pc = this.squares[sq];
       if (pc > 0) {
         pos.addPiece(MIRROR_SQUARE(sq), pc);
       }
     }
-    if (sdPlayer == 1) {
+    if (this.sdPlayer == 1) {
       pos.changeSide();
     }
     return pos;
