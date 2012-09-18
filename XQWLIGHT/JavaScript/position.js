@@ -6,9 +6,6 @@ var NULL_OKAY_MARGIN = 200;
 var DRAW_VALUE = 20;
 var ADVANCED_VALUE = 3;
 
-var MAX_MOVE_NUM = 1024;
-var MAX_GEN_MOVES = 128;
-
 var PIECE_KING = 0;
 var PIECE_ADVISOR = 1;
 var PIECE_BISHOP = 2;
@@ -461,33 +458,24 @@ for (var i = 0; i < 14; i ++) {
 }
 
 function Position() {
-  this.sdPlayer;
-  this.zobristKey;
-  this.zobristLock;
-  this.vlWhite;
-  this.vlBlack;
-  this.moveNum;
-  this.distance;
-
-  this.squares = new Array(256);
-  this.mvList = new Array(MAX_MOVE_NUM);
-  this.pcList = new Array(MAX_MOVE_NUM);
-  this.keyList = new Array(MAX_MOVE_NUM);
-  this.chkList = new Array(MAX_MOVE_NUM);
+  // sdPlayer, zobristKey, zobristLock, vlWhite, vlBlack, distance;
+  // squares, mvList, pcList, keyList, chkList;
 
   this.clearBoard = function() {
     this.sdPlayer = 0;
+    this.squares = [];
     for (var sq = 0; sq < 256; sq ++) {
-      this.squares[sq] = 0;
+      this.squares.push(0);
     }
     this.zobristKey = this.zobristLock = 0;
     this.vlWhite = this.vlBlack = 0;
   };
 
   this.setIrrev = function() {
-    this.mvList[0] = this.pcList[0] = 0;
-    this.chkList[0] = this.checked();
-    this.moveNum = 1;
+    this.mvList = [0];
+    this.pcList = [0];
+    this.keyList = [0];
+    this.chkList = [this.checked()];
     this.distance = 0;
   }
 
@@ -508,26 +496,30 @@ function Position() {
     this.zobristLock ^= PreGen_zobristLockTable[pcAdjust][sq];
   }
 
-  this.movePiece = function() {
-    var sqSrc = SRC(this.mvList[this.moveNum]);
-    var sqDst = DST(this.mvList[this.moveNum]);
-    this.pcList[this.moveNum] = this.squares[sqDst];
-    if (this.pcList[this.moveNum] > 0) {
-      this.addPiece(sqDst, this.pcList[this.moveNum], DEL_PIECE);
+  this.movePiece = function(mv) {
+    var sqSrc = SRC(mv);
+    var sqDst = DST(mv);
+    var pc = this.squares[sqDst];
+    this.pcList.push(pc);
+    if (pc > 0) {
+      this.addPiece(sqDst, pc, DEL_PIECE);
     }
-    var pc = this.squares[sqSrc];
+    pc = this.squares[sqSrc];
     this.addPiece(sqSrc, pc, DEL_PIECE);
     this.addPiece(sqDst, pc, ADD_PIECE);
+    this.mvList.push(mv);
   }
 
   this.undoMovePiece = function() {
-    var sqSrc = SRC(this.mvList[this.moveNum]);
-    var sqDst = DST(this.mvList[this.moveNum]);
+    mv = this.mvList.pop();
+    var sqSrc = SRC(mv);
+    var sqDst = DST(mv);
     var pc = this.squares[sqDst];
     this.addPiece(sqDst, pc, DEL_PIECE);
     this.addPiece(sqSrc, pc, ADD_PIECE);
-    if (this.pcList[this.moveNum] > 0) {
-      this.addPiece(sqDst, this.pcList[this.moveNum]);
+    pc = this.pcList.pop();
+    if (pc > 0) {
+      this.addPiece(sqDst, pc, ADD_PIECE);
     }
   }
 
@@ -538,40 +530,43 @@ function Position() {
   }
 
   this.makeMove = function(mv) {
-    this.keyList[this.moveNum] = this.zobristKey;
-    this.mvList[this.moveNum] = mv;
-    this.movePiece();
+    var zobristKey = this.zobristKey;
+    this.movePiece(mv);
     if (this.checked()) {
-      this.undoMovePiece();
+      this.undoMovePiece(mv);
       return false;
     }
+    this.keyList.push(zobristKey);
     this.changeSide();
-    this.chkList[this.moveNum] = this.checked();
-    this.moveNum ++;
+    this.chkList.push(this.checked());
     this.distance ++;
     return true;
   }
 
   this.undoMakeMove = function() {
-    this.moveNum --;
     this.distance --;
+    this.chkList.pop();
     this.changeSide();
+    this.keyList.pop();
     this.undoMovePiece();
   }
 
   this.nullMove = function() {
-    this.keyList[this.moveNum] = this.zobristKey;
+    this.mvList.push(0);
+    this.pcList.push(0);
+    this.keyList.push(this.zobristKey);
     this.changeSide();
-    this.mvList[this.moveNum] = this.pcList[this.moveNum] = 0;
-    this.chkList[this.moveNum] = false;
-    this.moveNum ++;
+    this.chkList.push(false);
     this.distance ++;
   }
 
   this.undoNullMove = function() {
-    this.moveNum --;
     this.distance --;
+    this.chkList.pop();
     this.changeSide();
+    this.keyList.pop();
+    this.pcList.pop();
+    this.mvList.pop();
   }
 
   this.fromFen = function(fen) {
@@ -991,11 +986,11 @@ function Position() {
   }
 
   this.inCheck = function() {
-    return this.chkList[this.moveNum - 1];
+    return this.chkList[this.chkList.length - 1];
   }
 
   this.captured = function() {
-    return this.pcList[this.moveNum - 1] > 0;
+    return this.pcList[this.pcList.length - 1] > 0;
   }
 
   this.repValue = function(vlRep) {
@@ -1013,7 +1008,7 @@ function Position() {
     var selfSide = false;
     var perpCheck = true;
     var oppPerpCheck = true;
-    var index = this.moveNum - 1;
+    var index = this.mvList.length - 1;
     while (this.mvList[index] > 0 && this.pcList[index] == 0) {
       if (selfSide) {
         perpCheck = perpCheck && this.chkList[index];
@@ -1045,5 +1040,9 @@ function Position() {
       pos.changeSide();
     }
     return pos;
+  }
+
+  this.historyIndex = function(mv) {
+    return ((this.squares[SRC(mv)] - 8) << 8) + DST(mv);
   }
 }
