@@ -405,8 +405,60 @@ function CHAR_TO_PIECE(c) {
   }
 }
 
+function RC4(key) {
+  var state = [];
+  var x = 0, y = 0;
+
+  function swap(i, j) {
+    var t = state[i];
+    state[i] = state[j];
+    state[j] = t;
+  }
+
+  for (var i = 0; i < 256; i ++) {
+    state.push(i);
+  }
+  var j = 0;
+  for (var i = 0; i < 256; i ++) {
+    j = (j + state[i] + key[i % key.length]) & 0xff;
+    swap(i, j);
+  }
+
+  this.nextByte = function() {
+    x = (x + 1) & 0xff;
+    y = (y + state[x]) & 0xff;
+    swap(x, y);
+    var t = (state[x] + state[y]) & 0xff;
+    return state[t];
+  }
+
+  this.nextLong = function() {
+    var n0 = this.nextByte();
+    var n1 = this.nextByte();
+    var n2 = this.nextByte();
+    var n3 = this.nextByte();
+    return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
+  }
+}
+
 var PreGen_zobristKeyPlayer, PreGen_zobristLockPlayer;
 var PreGen_zobristKeyTable = [], PreGen_zobristLockTable = [];
+
+var rc4 = new RC4([0]);
+PreGen_zobristKeyPlayer = rc4.nextLong();
+rc4.nextLong();
+PreGen_zobristLockPlayer = rc4.nextLong();
+for (var i = 0; i < 14; i ++) {
+  var keys = [];
+  var locks = [];
+  for (var j = 0; j < 256; j ++) {
+    keys.push(rc4.nextLong());
+    rc4.nextLong();
+    locks.push(rc4.nextLong());
+  }
+  PreGen_zobristKeyTable.push(keys);
+  PreGen_zobristLockTable.push(locks);
+}
 
 function Position() {
   this.sdPlayer;
@@ -444,12 +496,12 @@ function Position() {
     this.squares[sq] = bDel ? 0 : pc;
     if (pc < 16) {
       pcAdjust = pc - 8;
-      this.vlWhite += bDel ? -this.cnPieceValue[pcAdjust][sq] :
-          this.cnPieceValue[pcAdjust][sq];
+      this.vlWhite += bDel ? -PIECE_VALUE[pcAdjust][sq] :
+          PIECE_VALUE[pcAdjust][sq];
     } else {
       pcAdjust = pc - 16;
-      this.vlBlack += bDel ? -this.cnPieceValue[pcAdjust][SQUARE_FLIP(sq)] :
-          this.cnPieceValue[pcAdjust][SQUARE_FLIP(sq)];
+      this.vlBlack += bDel ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] :
+          PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
       pcAdjust += 7;
     }
     this.zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
@@ -463,7 +515,7 @@ function Position() {
     if (this.pcList[this.moveNum] > 0) {
       this.addPiece(sqDst, this.pcList[this.moveNum], DEL_PIECE);
     }
-    var pc:int = this.squares[sqSrc];
+    var pc = this.squares[sqSrc];
     this.addPiece(sqSrc, pc, DEL_PIECE);
     this.addPiece(sqDst, pc, ADD_PIECE);
   }
@@ -487,7 +539,7 @@ function Position() {
 
   this.makeMove = function(mv) {
     this.keyList[this.moveNum] = this.zobristKey;
-    this.mvList[moveNum] = mv;
+    this.mvList[this.moveNum] = mv;
     this.movePiece();
     if (this.checked()) {
       this.undoMovePiece();
@@ -527,7 +579,7 @@ function Position() {
     var y = RANK_TOP;
     var x = FILE_LEFT;
     var index = 0;
-    if (index == fen.length()) {
+    if (index == fen.length) {
       this.setIrrev();
       return;
     }
@@ -564,18 +616,18 @@ function Position() {
         }
       }
       index ++;
-      if (index == fen.length()) {
+      if (index == fen.length) {
         this.setIrrev();
         return;
       }
       c = fen.charAt(index);
     }
     index ++;
-    if (index == fen.length()) {
+    if (index == fen.length) {
       this.setIrrev();
       return;
     }
-    if (sdPlayer == (fen.charAt(index) == "b" ? 0 : 1)) {
+    if (this.sdPlayer == (fen.charAt(index) == "b" ? 0 : 1)) {
       this.changeSide();
     }
     this.setIrrev();
@@ -598,7 +650,7 @@ function Position() {
         }
       }
       if (k > 0) {
-        fen += CHR(ASC("0") + k));
+        fen += CHR(ASC("0") + k);
       }
       fen += "/";
     }
@@ -662,7 +714,7 @@ function Position() {
             continue;
           }
           sqDst += ADVISOR_DELTA[i];
-          var pcDst = squares[sqDst];
+          var pcDst = this.squares[sqDst];
           if (vls == null) {
             if ((pcDst & pcSelfSide) == 0) {
               mvs.push(MOVE(sqSrc, sqDst));
@@ -676,7 +728,7 @@ function Position() {
       case PIECE_KNIGHT:
         for (var i = 0; i < 4; i ++) {
           var sqDst = sqSrc + KING_DELTA[i];
-          if (squares[sqDst] > 0) {
+          if (this.squares[sqDst] > 0) {
             continue;
           }
           for (var j = 0; j < 2; j ++) {
@@ -684,7 +736,7 @@ function Position() {
             if (!IN_BOARD(sqDst)) {
               continue;
             }
-            var pcDst = squares[sqDst];
+            var pcDst = this.squares[sqDst];
             if (vls == null) {
               if ((pcDst & pcSelfSide) == 0) {
                 mvs.push(MOVE(sqSrc, sqDst));
@@ -701,7 +753,7 @@ function Position() {
           var delta = KING_DELTA[i];
           var sqDst = sqSrc + delta;
           while (IN_BOARD(sqDst)) {
-            var pcDst = squares[sqDst];
+            var pcDst = this.squares[sqDst];
             if (pcDst == 0) {
               if (vls == null) {
                 mvs.push(MOVE(sqSrc, sqDst));
@@ -724,7 +776,7 @@ function Position() {
           var delta = KING_DELTA[i];
           var sqDst = sqSrc + delta;
           while (IN_BOARD(sqDst)) {
-            var pcDst = squares[sqDst];
+            var pcDst = this.squares[sqDst];
             if (pcDst == 0) {
               if (vls == null) {
                 mvs.push(MOVE(sqSrc, sqDst));
@@ -736,7 +788,7 @@ function Position() {
           }
           sqDst += delta;
           while (IN_BOARD(sqDst)) {
-            int pcDst = squares[sqDst];
+            var pcDst = this.squares[sqDst];
             if (pcDst > 0) {
               if ((pcDst & pcOppSide) != 0) {
                 mvs.push(MOVE(sqSrc, sqDst));
@@ -751,9 +803,9 @@ function Position() {
         }
         break;
       case PIECE_PAWN:
-        var sqDst = SQUARE_FORWARD(sqSrc, sdPlayer);
+        var sqDst = SQUARE_FORWARD(sqSrc, this.sdPlayer);
         if (IN_BOARD(sqDst)) {
-          var pcDst = squares[sqDst];
+          var pcDst = this.squares[sqDst];
           if (vls == null) {
             if ((pcDst & pcSelfSide) == 0) {
               mvs.push(MOVE(sqSrc, sqDst));
@@ -763,11 +815,11 @@ function Position() {
             vls.push(MVV_LVA(pcDst, 2));
           }
         }
-        if (AWAY_HALF(sqSrc, sdPlayer)) {
+        if (AWAY_HALF(sqSrc, this.sdPlayer)) {
           for (var delta = -1; delta <= 1; delta += 2) {
             sqDst = sqSrc + delta;
             if (IN_BOARD(sqDst)) {
-              var pcDst = squares[sqDst];
+              var pcDst = this.squares[sqDst];
               if (vls == null) {
                 if ((pcDst & pcSelfSide) == 0) {
                   mvs.push(MOVE(sqSrc, sqDst));
@@ -806,7 +858,7 @@ function Position() {
       return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
     case PIECE_BISHOP:
       return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
-          squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+          this.squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
     case PIECE_KNIGHT:
       var sqPin = KNIGHT_PIN(sqSrc, sqDst);
       return sqPin != sqSrc && this.squares[sqPin] == 0;
@@ -821,7 +873,7 @@ function Position() {
         return false;
       }
       sqPin = sqSrc + delta;
-      while (sqPin != sqDst && squares[sqPin] == 0) {
+      while (sqPin != sqDst && this.squares[sqPin] == 0) {
         sqPin += delta;
       }
       if (sqPin == sqDst) {
@@ -831,15 +883,15 @@ function Position() {
         return false;
       }
       sqPin += delta;
-      while (sqPin != sqDst && squares[sqPin] == 0) {
+      while (sqPin != sqDst && this.squares[sqPin] == 0) {
         sqPin += delta;
       }
       return sqPin == sqDst;
     case PIECE_PAWN:
-      if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+      if (AWAY_HALF(sqDst, this.sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
         return true;
       }
-      return sqDst == SQUARE_FORWARD(sqSrc, sdPlayer);
+      return sqDst == SQUARE_FORWARD(sqSrc, this.sdPlayer);
     default:
       return false;
     }
@@ -865,7 +917,7 @@ function Position() {
           continue;
         }
         for (var j = 0; j < 2; j ++) {
-          int pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
+          var pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
           if (pcDst == pcOppSide + PIECE_KNIGHT) {
             return true;
           }
@@ -903,7 +955,7 @@ function Position() {
 
   this.isMate = function() {
     var mvs = generateAllMoves();
-    for (var i = 0; i < var.length; i ++) {
+    for (var i = 0; i < mvs.length; i ++) {
       if (makeMove(mvs[i])) {
         undoMakeMove();
         return false;
@@ -946,7 +998,7 @@ function Position() {
     return this.pcList[this.moveNum - 1] > 0;
   }
 
-  this.repValue(vlRep) {
+  this.repValue = function(vlRep) {
     var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
         ((vlRep & 4) == 0 ? 0 : -this.banValue());
     return vlReturn == 0 ? this.drawValue() : vlReturn;
@@ -956,7 +1008,7 @@ function Position() {
     return this.repStatus(1);
   }
 
-  this.repStatus(recur_) {
+  this.repStatus = function(recur_) {
     var recur = recur_;
     var selfSide = false;
     var perpCheck = true;
