@@ -24,34 +24,102 @@ function shellSort(mvs, vls) {
   }
 }
 
+var PHASE_HASH = 0;
+var PHASE_KILLER_1 = 1;
+var PHASE_KILLER_2 = 2;
+var PHASE_GEN_MOVES = 3;
+var PHASE_REST = 4;
+
+function SortItem(mvHash, pos, killerTable, historyTable) {
+  this.mvs = [];
+  this.vls = [];
+  this.mvHash = this.mvKiller1 = this.mvKiller2 = 0;
+  this.phase = PHASE_HASH;
+  this.index = 0;
+  this.singleReply = false;
+
+/*
+  if (false && pos.inCheck()) {
+    this.phase = PHASE_REST;
+    var mvsAll = pos.generateMoves(null);
+    for (var i = 0; i < mvsAll.length; i ++) {
+      var mv = mvsAll[i]
+      if (!pos.makeMove(mv)) {
+        continue;
+      }
+      pos.undoMakeMove();
+      this.mvs.push(this.mvs);
+      this.vls.push(mv == mvHash ? 0x7fffffff :
+          historyTable[pos.historyIndex(mv)]);
+    }
+    shellSort(this.mvs, this.vls);
+    this.singleReply = this.mvs.length == 1;
+  } else {
+    this.mvHash = mvHash;
+    this.mvKiller1 = killerTable[pos.distance][0];
+    this.mvKiller2 = killerTable[pos.distance][1];
+  }
+*/
+
+  this.next = function() {
+    switch (this.phase) {
+    case PHASE_HASH:
+      this.phase = PHASE_KILLER_1;
+      if (this.mvHash > 0) {
+        return this.mvHash;
+      }
+    case PHASE_KILLER_1:
+      this.phase = PHASE_KILLER_2;
+      if (this.mvKiller1 != this.mvHash && this.mvKiller1 > 0 &&
+          pos.legalMove(this.mvKiller1)) {
+        return this.mvKiller1;
+      }
+    case PHASE_KILLER_2:
+      this.phase = PHASE_GEN_MOVES;
+      if (this.mvKiller2 != this.mvHash && this.mvKiller2 > 0 &&
+          pos.legalMove(this.mvKiller2)) {
+        return this.mvKiller2;
+      }
+    case PHASE_GEN_MOVES:
+      this.phase = PHASE_REST;
+      this.mvs = pos.generateMoves(null);
+      this.vls = [];
+      for (var i = 0; i < this.mvs.length; i ++) {
+        this.vls.push(historyTable[pos.historyIndex(this.mvs[i])]);
+      }
+      // DEBUG shellSort(this.mvs, this.vls);
+      this.index = 0;
+    default:
+      while (this.index < this.mvs.length) {
+        var mv = this.mvs[this.index];
+        this.index ++;
+        if (mv != this.mvHash && mv != this.mvKiller1 && mv != this.mvKiller2) {
+          return mv;
+        }
+      }
+    }
+    return 0;
+  }
+}
+
+var LIMIT_DEPTH = 64;
+var NULL_DEPTH = 2;
+var RANDOMNESS = 8;
+
+var HASH_ALPHA = 1;
+var HASH_BETA = 2;
+var HASH_PV = 3;
+
 function Search(pos, hashLevel) {
-  var LIMIT_DEPTH = 64;
-  var NULL_DEPTH = 2;
-  var RANDOM_MASK = 7;
+  this.hashMask = (1 << hashLevel) - 1;
 
-  var HASH_ALPHA = 1;
-  var HASH_BETA = 2;
-  var HASH_PV = 3;
-
-  var mvResult, allNodes, allMillis;
-  var hashMask = (1 << hashLevel) - 1;
-  var hashTable = [];
-  for (var i = 0; i <= hashMask; i ++) {
-    hashTable.push({depth: 0, flag: 0, vl: 0, mv: 0, zobristLock: 0});
-  }
-  var historyTable = new Array(4096);
-  var mvKiller = [];
-  for (var i = 0; i < LIMIT_DEPTH; i ++) {
-    mvKiller.push(new Array(2));
+  this.getHashItem = function() {
+    return this.hashTable[pos.zobristKey & this.hashMask];
   }
 
-  function getHashItem() {
-    return hashTable[pos.zobristKey & hashMask];
-  }
-
-  function probeHash(vlAlpha, vlBeta, depth, mv) {
-    var hash = getHashItem();
-    if (hash.zobristLock != pos.zobristLock) {
+  this.probeHash = function(vlAlpha, vlBeta, depth, mv) {
+    var hash = this.getHashItem();
+    if (true || hash.zobristLock != pos.zobristLock) {
       mv[0] = 0;
       return -MATE_VALUE;
     }
@@ -72,7 +140,7 @@ function Search(pos, hashLevel) {
     } else if (hash.vl == pos.drawValue()) {
       return -MATE_VALUE;
     }
-    if (hash.depth < depth && mate) {
+    if (hash.depth < depth && !mate) {
       return -MATE_VALUE;
     }
     if (hash.flag == HASH_BETA) {
@@ -84,8 +152,8 @@ function Search(pos, hashLevel) {
     return hash.vl;
   }
 
-  function recordHash(flag, vl, depth, mv) {
-    var hash = getHashItem();
+  this.recordHash = function(flag, vl, depth, mv) {
+    var hash = this.getHashItem();
     if (hash.depth > depth) {
       return;
     }
@@ -104,101 +172,29 @@ function Search(pos, hashLevel) {
     } else if (vl == pos.drawValue() && mv == 0) {
       return;
     } else {
-      hash.vl = (short) vl;
+      hash.vl = vl;
     }
     hash.mv = mv;
     hash.zobristLock = pos.zobristLock;
   }
 
-  function SortItem(mvHash_) {
-    var PHASE_HASH = 0;
-    var PHASE_KILLER_1 = 1;
-    var PHASE_KILLER_2 = 2;
-    var PHASE_GEN_MOVES = 3;
-    var PHASE_REST = 4;
-
-    var index, phase, mvHash, mvKiller1, mvKiller2, singleReply;
-    var mvs = [], vls = [];
-
-    if (pos.inCheck()) {
-      phase = PHASE_REST;
-      mvHash = mvKiller1 = mvKiller2 = 0;
-      var mvsAll = generateAllMoves();
-      for (var i = 0; i < mvsAll.length; i ++) {
-        var mv = mvsAll[i]
-        if (!pos.makeMove(mv)) {
-          continue;
-        }
-        pos.undoMakeMove();
-        mvs.push(mvs);
-        vls.push(mv == mvHash ? 0x7fffffff : historyTable[pos.historyIndex(mv)]);
-      }
-      shellSort(mvs, vls);
-      index = 0;
-      singleReply = mvs.length == 1;
-    } else {
-      phase = PHASE_HASH;
-      mvHash = mvHash_;
-      mvKiller1 = mvKiller[pos.distance][0];
-      mvKiller2 = mvKiller[pos.distance][1];
-      singleReply = false;
-    }
-
-    this.next = function() {
-      switch (phase) {
-      case PHASE_HASH:
-        phase = PHASE_KILLER_1;
-        if (mvHash > 0) {
-          return mvHash;
-        }
-      case PHASE_KILLER_1:
-        phase = PHASE_KILLER_2;
-        if (mvKiller1 != mvHash && mvKiller1 > 0 && pos.legalMove(mvKiller1)) {
-          return mvKiller1;
-        }
-      case PHASE_KILLER_2:
-        phase = PHASE_GEN_MOVES;
-        if (mvKiller2 != mvHash && mvKiller2 > 0 && pos.legalMove(mvKiller2)) {
-          return mvKiller2;
-        }
-      case PHASE_GEN_MOVES:
-        phase = PHASE_REST;
-        mvs = pos.generateAllMoves();
-        for (var i = 0; i < mvs.length; i ++) {
-          vls.push(historyTable[pos.historyIndex(mvs[i])]);
-        }
-        shellSort(mvs, vls);
-        index = 0;
-      default:
-        while (index < mvs.length) {
-          var mv = mvs[index];
-          index ++;
-          if (mv != mvHash && mv != mvKiller1 && mv != mvKiller2) {
-            return mv;
-          }
-        }
-      }
-      return 0;
+  this.setBestMove = function(mv, depth) {
+    this.historyTable[pos.historyIndex(mv)] += depth * depth;
+    var mvsKiller = this.killerTable[pos.distance];
+    if (mvsKiller[0] != mv) {
+      mvsKiller[1] = mvsKiller[0];
+      mvsKiller[0] = mv;
     }
   }
 
-  function setBestMove(mv, depth) {
-    historyTable[pos.historyIndex(mv)] += depth * depth;
-    var killers = mvKiller[pos.distance];
-    if (killers[0] != mv) {
-      killers[1] = killers[0];
-      killers[0] = mv;
-    }
-  }
-
-  function searchQuiesc(vlAlpha_, vlBeta) {
+  this.searchQuiesc = function(vlAlpha_, vlBeta) {
     var vlAlpha = vlAlpha_;
-    allNodes ++;
+    this.allNodes ++;
     var vl = pos.mateValue();
     if (vl >= vlBeta) {
       return vl;
     }
-    var vlRep = pos.repStatus();
+    var vlRep = pos.repStatus(1);
     if (vlRep > 0) {
       return pos.repValue(vlRep);
     }
@@ -208,12 +204,11 @@ function Search(pos, hashLevel) {
     var vlBest = -MATE_VALUE;
     var mvs = [], vls = [];
     if (pos.inCheck()) {
-      mvs = pos.generateAllMoves(mvs);
-      int[] vls = new int[MAX_GEN_MOVES];
-      for (int i = 0; i < genMoves; i ++) {
-        vls[i] = historyTable[pos.historyIndex(mvs[i])];
+      mvs = pos.generateMoves(null);
+      for (var i = 0; i < mvs.length; i ++) {
+        vls.push(this.historyTable[pos.historyIndex(mvs[i])]);
       }
-      Util.shellSort(mvs, vls);
+      // DEBUG shellSort(mvs, vls);
     } else {
       vl = pos.evaluate();
       if (vl > vlBest) {
@@ -223,21 +218,22 @@ function Search(pos, hashLevel) {
         vlBest = vl;
         vlAlpha = Math.max(vl, vlAlpha);
       }
-      int[] vls = new int[MAX_GEN_MOVES];
-      genMoves = pos.generateMoves(mvs, vls);
-      Util.shellSort(mvs, vls, 0, genMoves);
-      for (int i = 0; i < genMoves; i ++) {
-        if (vls[i] < 10 || (vls[i] < 20 && Position.HOME_HALF(Position.DST(mvs[i]), pos.sdPlayer))) {
-          genMoves = i;
+      mvs = pos.generateMoves(vls);
+      // DEBUG shellSort(mvs, vls);
+/*
+      for (var i = 0; i < mvs.length; i ++) {
+        if (vls[i] < 10 || (vls[i] < 20 && HOME_HALF(DST(mvs[i]), pos.sdPlayer))) {
+          mvs.length = i;
           break;
         }
       }
+*/
     }
-    for (int i = 0; i < genMoves; i ++) {
+    for (var i = 0; i < mvs.length; i ++) {
       if (!pos.makeMove(mvs[i])) {
         continue;
       }
-      vl = -searchQuiesc(-vlBeta, -vlAlpha);
+      vl = -this.searchQuiesc(-vlBeta, -vlAlpha);
       pos.undoMakeMove();
       if (vl > vlBest) {
         if (vl >= vlBeta) {
@@ -250,31 +246,22 @@ function Search(pos, hashLevel) {
     return vlBest == -MATE_VALUE ? pos.mateValue() : vlBest;
   }
 
-  private int searchNoNull(int vlAlpha, int vlBeta, int depth) {
-    return searchFull(vlAlpha, vlBeta, depth, true);
-  }
-
-  private int searchFull(int vlAlpha, int vlBeta, int depth) {
-    return searchFull(vlAlpha, vlBeta, depth, false);
-  }
-
-  private int searchFull(int vlAlpha_, int vlBeta, int depth, boolean noNull) {
-    int vlAlpha = vlAlpha_;
-    int vl;
+  this.searchFull = function(vlAlpha_, vlBeta, depth, noNull) {
+    var vlAlpha = vlAlpha_;
     if (depth <= 0) {
-      return searchQuiesc(vlAlpha, vlBeta);
+      return this.searchQuiesc(vlAlpha, vlBeta);
     }
-    allNodes ++;
-    vl = pos.mateValue();
+    this.allNodes ++;
+    var vl = pos.mateValue();
     if (vl >= vlBeta) {
       return vl;
     }
-    int vlRep = pos.repStatus();
+    var vlRep = pos.repStatus(1);
     if (vlRep > 0) {
       return pos.repValue(vlRep);
     }
-    int[] mvHash = new int[1];
-    vl = probeHash(vlAlpha, vlBeta, depth, mvHash);
+    var mvHash = [0];
+    vl = this.probeHash(vlAlpha, vlBeta, depth, mvHash);
     if (vl > -MATE_VALUE) {
       return vl;
     }
@@ -283,28 +270,29 @@ function Search(pos, hashLevel) {
     }
     if (!noNull && !pos.inCheck() && pos.nullOkay()) {
       pos.nullMove();
-      vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
+      vl = -this.searchFull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1, true);
       pos.undoNullMove();
-      if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
+      if (vl >= vlBeta && (pos.nullSafe() &&
+          this.searchFull(vlAlpha, vlBeta, depth, true) >= vlBeta)) {
         return vl;
       }
     }
-    int hashFlag = HASH_ALPHA;
-    int vlBest = -MATE_VALUE;
-    int mvBest = 0;
-    SortItem sort = new SortItem(mvHash[0]);
-    int mv;
+    var hashFlag = HASH_ALPHA;
+    var vlBest = -MATE_VALUE;
+    var mvBest = 0;
+    var sort = new SortItem(mvHash[0], pos, this.killerTable, this.historyTable);
+    var mv;
     while ((mv = sort.next()) > 0) {
       if (!pos.makeMove(mv)) {
         continue;
       }
-      int newDepth = pos.inCheck() || sort.singleReply ? depth : depth - 1;
+      var newDepth = pos.inCheck() || sort.singleReply ? depth : depth - 1;
       if (vlBest == -MATE_VALUE) {
-        vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
+        vl = -this.searchFull(-vlBeta, -vlAlpha, newDepth, false);
       } else {
-        vl = -searchFull(-vlAlpha - 1, -vlAlpha, newDepth);
+        vl = -this.searchFull(-vlAlpha - 1, -vlAlpha, newDepth, false);
         if (vl > vlAlpha && vl < vlBeta) {
-          vl = -searchFull(-vlBeta, -vlAlpha, newDepth);
+          vl = -this.searchFull(-vlBeta, -vlAlpha, newDepth, false);
         }
       }
       pos.undoMakeMove();
@@ -325,55 +313,56 @@ function Search(pos, hashLevel) {
     if (vlBest == -MATE_VALUE) {
       return pos.mateValue();
     }
-    recordHash(hashFlag, vlBest, depth, mvBest);
+    this.recordHash(hashFlag, vlBest, depth, mvBest);
     if (mvBest > 0) {
-      setBestMove(mvBest, depth);
+      this.setBestMove(mvBest, depth);
     }
     return vlBest;
   }
 
-  private int searchRoot(int depth) {
-    int vlBest = -MATE_VALUE;
-    SortItem sort = new SortItem(mvResult);
-    int mv;
+  this.searchRoot = function(depth) {
+    var vlBest = -MATE_VALUE;
+    var sort = new SortItem(this.mvResult, pos, this.killerTable, this.historyTable);
+    var mv;
     while ((mv = sort.next()) > 0) {
       if (!pos.makeMove(mv)) {
         continue;
       }
-      int newDepth = pos.inCheck() ? depth : depth - 1;
-      int vl;
+      var newDepth = pos.inCheck() ? depth : depth - 1;
+      var vl;
       if (vlBest == -MATE_VALUE) {
-        vl = -searchNoNull(-MATE_VALUE, MATE_VALUE, newDepth);
+        vl = -this.searchFull(-MATE_VALUE, MATE_VALUE, newDepth, true);
       } else {
-        vl = -searchFull(-vlBest - 1, -vlBest, newDepth);
+        vl = -this.searchFull(-vlBest - 1, -vlBest, newDepth, false);
         if (vl > vlBest) {
-          vl = -searchNoNull(-MATE_VALUE, -vlBest, newDepth);
+          vl = -this.searchFull(-MATE_VALUE, -vlBest, newDepth, true);
         }
       }
       pos.undoMakeMove();
       if (vl > vlBest) {
         vlBest = vl;
-        mvResult = mv;
+        this.mvResult = mv;
         if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
-          vlBest += (Position.random.nextInt() & RANDOM_MASK) -
-              (Position.random.nextInt() & RANDOM_MASK);
+//          vlBest += Math.floor(Math.random() * RANDOMNESS) -
+//              Math.floor(Math.random() * RANDOMNESS);
           vlBest = (vlBest == pos.drawValue() ? vlBest - 1 : vlBest);
         }
       }
     }
-    setBestMove(mvResult, depth);
+    this.setBestMove(this.mvResult, depth);
     return vlBest;
   }
 
-  public boolean searchUnique(int vlBeta, int depth) {
-    SortItem sort = new SortItem(mvResult);
+  this.searchUnique = function(vlBeta, depth) {
+    var sort = new SortItem(this.mvResult, pos, this.killerTable, this.historyTable);
     sort.next();
-    int mv;
+    var mv;
     while ((mv = sort.next()) > 0) {
       if (!pos.makeMove(mv)) {
         continue;
       }
-      int vl = -searchFull(-vlBeta, 1 - vlBeta, pos.inCheck() ? depth : depth - 1);
+      var vl = -this.searchFull(-vlBeta, 1 - vlBeta,
+          pos.inCheck() ? depth : depth - 1, false);
       pos.undoMakeMove();
       if (vl >= vlBeta) {
         return false;
@@ -382,53 +371,51 @@ function Search(pos, hashLevel) {
     return true;
   }
 
-  public int searchMain(int millis) {
-    return searchMain(LIMIT_DEPTH, millis);
-  }
-
-  public int searchMain(int depth, int millis) {
-    mvResult = pos.bookMove();
-    if (mvResult > 0) {
-      pos.makeMove(mvResult);
+  this.searchMain = function(depth, millis) {
+    this.mvResult = getBookMove(pos);
+    if (this.mvResult > 0) {
+      pos.makeMove(this.mvResult);
       if (pos.repStatus(3) == 0) {
         pos.undoMakeMove();
-        return mvResult;
+        return this.mvResult;
       }
       pos.undoMakeMove();
     }
-    for (int i = 0; i <= hashMask; i ++) {
-      HashItem hash = hashTable[i];
-      hash.depth = hash.flag = 0;
-      hash.vl = 0;
-      hash.mv = hash.zobristLock = 0;
+    this.hashTable = [];
+    for (var i = 0; i <= this.hashMask; i ++) {
+      this.hashTable.push({depth: 0, flag: 0, vl: 0, mv: 0, zobristLock: 0});
     }
-    for (int i = 0; i < LIMIT_DEPTH; i ++) {
-      mvKiller[i][0] = mvKiller[i][1] = 0;
+    this.killerTable = [];
+    for (var i = 0; i < LIMIT_DEPTH; i ++) {
+      this.killerTable.push([0, 0]);
     }
-    for (int i = 0; i < 4096; i ++) {
-      historyTable[i] = 0;
+    this.historyTable = [];
+    for (var i = 0; i < 4096; i ++) {
+      this.historyTable.push(0);
     }
-    mvResult = 0;
-    allNodes = 0;
+    this.mvResult = 0;
+    this.allNodes = 0;
     pos.distance = 0;
-    long t = System.currentTimeMillis();
-    for (int i = 1; i <= depth; i ++) {
-      int vl = searchRoot(i);
-      allMillis = (int) (System.currentTimeMillis() - t);
-      if (allMillis > millis) {
+    var t = new Date().getTime();
+    for (var i = 1; i <= depth; i ++) {
+      var vl = this.searchRoot(i);
+      this.allMillis = new Date().getTime() - t;
+      if (this.allMillis > millis) {
         break;
       }
       if (vl > WIN_VALUE || vl < -WIN_VALUE) {
         break;
       }
-      if (searchUnique(1 - WIN_VALUE, i)) {
+/*
+      if (this.searchUnique(1 - WIN_VALUE, i)) {
         break;
       }
+*/
     }
-    return mvResult;
+    return this.mvResult;
   }
 
-  public int getKNPS() {
-    return allNodes / allMillis;
+  this.getKNPS = function() {
+    return this.allNodes / this.allMillis;
   }
 }

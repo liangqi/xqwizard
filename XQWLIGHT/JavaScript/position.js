@@ -403,30 +403,29 @@ function CHAR_TO_PIECE(c) {
 }
 
 function RC4(key) {
-  var state = [];
-  var x = 0, y = 0;
-
-  function swap(i, j) {
-    var t = state[i];
-    state[i] = state[j];
-    state[j] = t;
+  this.swap = function(i, j) {
+    var t = this.state[i];
+    this.state[i] = this.state[j];
+    this.state[j] = t;
   }
 
+  this.x = this.y = 0;
+  this.state = [];
   for (var i = 0; i < 256; i ++) {
-    state.push(i);
+    this.state.push(i);
   }
   var j = 0;
   for (var i = 0; i < 256; i ++) {
-    j = (j + state[i] + key[i % key.length]) & 0xff;
-    swap(i, j);
+    j = (j + this.state[i] + key[i % key.length]) & 0xff;
+    this.swap(i, j);
   }
 
   this.nextByte = function() {
-    x = (x + 1) & 0xff;
-    y = (y + state[x]) & 0xff;
-    swap(x, y);
-    var t = (state[x] + state[y]) & 0xff;
-    return state[t];
+    this.x = (this.x + 1) & 0xff;
+    this.y = (this.y + this.state[this.x]) & 0xff;
+    this.swap(this.x, this.y);
+    var t = (this.state[this.x] + this.state[this.y]) & 0xff;
+    return this.state[t];
   }
 
   this.nextLong = function() {
@@ -434,7 +433,7 @@ function RC4(key) {
     var n1 = this.nextByte();
     var n2 = this.nextByte();
     var n3 = this.nextByte();
-    return n0 + (n1 << 8) + (n2 << 16) + (n3 << 24);
+    return n0 + (n1 << 8) + (n2 << 16) + ((n3 << 24) & 0xffffffff);
   }
 }
 
@@ -653,10 +652,6 @@ function Position() {
         (this.sdPlayer == 0 ? 'w' : 'b');
   }
 
-  this.generateAllMoves = function() {
-    return this.generateMoves(null);
-  }
-
   this.generateMoves = function(vls) {
     var mvs = [];
     var pcSelfSide = SIDE_TAG(this.sdPlayer);
@@ -704,7 +699,7 @@ function Position() {
       case PIECE_BISHOP:
         for (var i = 0; i < 4; i ++) {
           var sqDst = sqSrc + ADVISOR_DELTA[i];
-          if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, sdPlayer) &&
+          if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, this.sdPlayer) &&
               this.squares[sqDst] == 0)) {
             continue;
           }
@@ -829,7 +824,7 @@ function Position() {
         break;
       }
     }
-    return moves;
+    return mvs;
   }
 
   this.legalMove = function(mv) {
@@ -949,7 +944,7 @@ function Position() {
   }
 
   this.isMate = function() {
-    var mvs = generateAllMoves();
+    var mvs = generateMoves(null);
     for (var i = 0; i < mvs.length; i ++) {
       if (makeMove(mvs[i])) {
         undoMakeMove();
@@ -997,10 +992,6 @@ function Position() {
     var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
         ((vlRep & 4) == 0 ? 0 : -this.banValue());
     return vlReturn == 0 ? this.drawValue() : vlReturn;
-  }
-
-  this.repStatus = function() {
-    return this.repStatus(1);
   }
 
   this.repStatus = function(recur_) {
