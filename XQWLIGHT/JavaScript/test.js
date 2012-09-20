@@ -265,9 +265,5 @@ function test() {
     }
     gened += mvs.length;
   }
-  // alert(legal + "|" + gened + "|" + moved + "|" + check);
-  pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/R1BAKABNR w - - 0 1");
-  var search = new Search(pos, 12);
-  search.searchMain(5, 1000000);
-  alert(search.allNodes + "|" + search.mvResult + "|" + search.getKNPS());
+  alert(legal + "|" + gened + "|" + moved + "|" + check);
 }

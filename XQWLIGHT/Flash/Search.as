@@ -211,7 +211,7 @@ package {
 				pos.nullMove();
 				vl = -searchFull(-vlBeta, 1 - vlBeta, nDepth - NULL_DEPTH - 1, NO_NULL);
 				pos.undoNullMove();
-				if (vl >= vlBeta && (pos.nullSafe() && searchFull(vlAlpha, vlBeta, nDepth, NO_NULL) >= vlBeta)) {
+				if (vl >= vlBeta && (pos.nullSafe() || searchFull(vlAlpha, vlBeta, nDepth - NULL_DEPTH, NO_NULL) >= vlBeta)) {
 					return vl;
 				}
 			}

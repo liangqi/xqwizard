@@ -780,15 +780,15 @@ package {
 				}
 				if (sqPin == sqDst) {
 					return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
-				} else if (pcDst > 0 && pcSrc - pcSelfSide == PIECE_CANNON) {
-					sqPin += nDelta;
-					while (sqPin != sqDst && pcSquares[sqPin] == 0) {
-						sqPin += nDelta;
-					}
-					return sqPin == sqDst;
-				} else {
+				}
+				if (pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK) {
 					return false;
 				}
+				sqPin += nDelta;
+				while (sqPin != sqDst && pcSquares[sqPin] == 0) {
+					sqPin += nDelta;
+				}
+				return sqPin == sqDst;
 			case PIECE_PAWN:
 				if (AWAY_HALF(sqDst, sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
 					return true;

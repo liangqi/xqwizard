@@ -38,8 +38,7 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
   this.index = 0;
   this.singleReply = false;
 
-/*
-  if (false && pos.inCheck()) {
+  if (pos.inCheck()) {
     this.phase = PHASE_REST;
     var mvsAll = pos.generateMoves(null);
     for (var i = 0; i < mvsAll.length; i ++) {
@@ -48,7 +47,7 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
         continue;
       }
       pos.undoMakeMove();
-      this.mvs.push(this.mvs);
+      this.mvs.push(mv);
       this.vls.push(mv == mvHash ? 0x7fffffff :
           historyTable[pos.historyIndex(mv)]);
     }
@@ -59,7 +58,6 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
     this.mvKiller1 = killerTable[pos.distance][0];
     this.mvKiller2 = killerTable[pos.distance][1];
   }
-*/
 
   this.next = function() {
     switch (this.phase) {
@@ -87,7 +85,7 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
       for (var i = 0; i < this.mvs.length; i ++) {
         this.vls.push(historyTable[pos.historyIndex(this.mvs[i])]);
       }
-      // DEBUG shellSort(this.mvs, this.vls);
+      shellSort(this.mvs, this.vls);
       this.index = 0;
     default:
       while (this.index < this.mvs.length) {
@@ -119,7 +117,7 @@ function Search(pos, hashLevel) {
 
   this.probeHash = function(vlAlpha, vlBeta, depth, mv) {
     var hash = this.getHashItem();
-    if (true || hash.zobristLock != pos.zobristLock) {
+    if (hash.zobristLock != pos.zobristLock) {
       mv[0] = 0;
       return -MATE_VALUE;
     }
@@ -208,7 +206,7 @@ function Search(pos, hashLevel) {
       for (var i = 0; i < mvs.length; i ++) {
         vls.push(this.historyTable[pos.historyIndex(mvs[i])]);
       }
-      // DEBUG shellSort(mvs, vls);
+      shellSort(mvs, vls);
     } else {
       vl = pos.evaluate();
       if (vl > vlBest) {
@@ -219,15 +217,13 @@ function Search(pos, hashLevel) {
         vlAlpha = Math.max(vl, vlAlpha);
       }
       mvs = pos.generateMoves(vls);
-      // DEBUG shellSort(mvs, vls);
-/*
+      shellSort(mvs, vls);
       for (var i = 0; i < mvs.length; i ++) {
         if (vls[i] < 10 || (vls[i] < 20 && HOME_HALF(DST(mvs[i]), pos.sdPlayer))) {
           mvs.length = i;
           break;
         }
       }
-*/
     }
     for (var i = 0; i < mvs.length; i ++) {
       if (!pos.makeMove(mvs[i])) {
@@ -272,8 +268,8 @@ function Search(pos, hashLevel) {
       pos.nullMove();
       vl = -this.searchFull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1, true);
       pos.undoNullMove();
-      if (vl >= vlBeta && (pos.nullSafe() &&
-          this.searchFull(vlAlpha, vlBeta, depth, true) >= vlBeta)) {
+      if (vl >= vlBeta && (pos.nullSafe() ||
+          this.searchFull(vlAlpha, vlBeta, depth - NULL_DEPTH, true) >= vlBeta)) {
         return vl;
       }
     }
@@ -343,8 +339,8 @@ function Search(pos, hashLevel) {
         vlBest = vl;
         this.mvResult = mv;
         if (vlBest > -WIN_VALUE && vlBest < WIN_VALUE) {
-//          vlBest += Math.floor(Math.random() * RANDOMNESS) -
-//              Math.floor(Math.random() * RANDOMNESS);
+          vlBest += Math.floor(Math.random() * RANDOMNESS) -
+              Math.floor(Math.random() * RANDOMNESS);
           vlBest = (vlBest == pos.drawValue() ? vlBest - 1 : vlBest);
         }
       }
@@ -406,11 +402,9 @@ function Search(pos, hashLevel) {
       if (vl > WIN_VALUE || vl < -WIN_VALUE) {
         break;
       }
-/*
       if (this.searchUnique(1 - WIN_VALUE, i)) {
         break;
       }
-*/
     }
     return this.mvResult;
   }

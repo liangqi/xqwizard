@@ -135,8 +135,8 @@ public class Search {
 			if (!pos.inCheck()) {
 				phase = PHASE_HASH;
 				this.mvHash = mvHash;
-				this.mvKiller1 = mvKiller[pos.distance][0];
-				this.mvKiller2 = mvKiller[pos.distance][1];
+				mvKiller1 = mvKiller[pos.distance][0];
+				mvKiller2 = mvKiller[pos.distance][1];
 				return;
 			}
 			phase = PHASE_REST;
@@ -306,7 +306,7 @@ public class Search {
 			pos.nullMove();
 			vl = -searchNoNull(-vlBeta, 1 - vlBeta, depth - NULL_DEPTH - 1);
 			pos.undoNullMove();
-			if (vl >= vlBeta && (pos.nullSafe() && searchNoNull(vlAlpha, vlBeta, depth) >= vlBeta)) {
+			if (vl >= vlBeta && (pos.nullSafe() || searchNoNull(vlAlpha, vlBeta, depth - NULL_DEPTH) >= vlBeta)) {
 				return vl;
 			}
 		}
