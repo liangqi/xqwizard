@@ -7,6 +7,7 @@ var PIECE_NAME = [
 
 var imgSquares = [];
 var pos = new Position();
+var search = new Search(pos, 16);
 var sqSelected = 0;
 var mvLast = 0;
 
@@ -84,6 +85,9 @@ function main() {
     document.body.appendChild(div);
     imgSquares.push(div);
   }
+  // pos.makeMove(MOVE(COORD_XY(4, 10), COORD_XY(7, 10)));
+  var mv = search.searchMain(64, 1000);
+  pos.makeMove(mv);
   flushBoard();
 
   dummy = document.createElement("div");

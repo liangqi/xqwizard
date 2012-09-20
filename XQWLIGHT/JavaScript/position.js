@@ -1,3 +1,19 @@
+function binarySearch(vlss, vl) {
+  var low = 0;
+  var high = vlss.length - 1;
+  while (low <= high) {
+    var mid = (low + high) >> 1;
+    if (vlss[mid][0] < vl) {
+      low = mid + 1;
+    } else if (vlss[mid][0] > vl) {
+      high = mid - 1;
+    } else {
+      return mid;
+    }
+  }
+  return -1;
+}
+
 var MATE_VALUE = 10000;
 var BAN_VALUE = MATE_VALUE - 100;
 var WIN_VALUE = MATE_VALUE - 200;
@@ -510,7 +526,7 @@ function Position() {
   }
 
   this.undoMovePiece = function() {
-    mv = this.mvList.pop();
+    var mv = this.mvList.pop();
     var sqSrc = SRC(mv);
     var sqDst = DST(mv);
     var pc = this.squares[sqDst];
@@ -862,7 +878,7 @@ function Position() {
       } else {
         return false;
       }
-      sqPin = sqSrc + delta;
+      var sqPin = sqSrc + delta;
       while (sqPin != sqDst && this.squares[sqPin] == 0) {
         sqPin += delta;
       }
@@ -1031,6 +1047,52 @@ function Position() {
       pos.changeSide();
     }
     return pos;
+  }
+
+  this.bookMove = function() {
+    if (typeof BOOK_DAT != "object" || BOOK_DAT.length == 0) {
+      return 0;
+    }
+    var mirror = false;
+    var lock = this.zobristLock >>> 1; // Convert into Unsigned
+    var index = binarySearch(BOOK_DAT, lock);
+    if (index < 0) {
+      mirror = true;
+      lock = this.mirror().zobristLock >>> 1; // Convert into Unsigned
+      index = binarySearch(BOOK_DAT, lock);
+    }
+    if (index < 0) {
+      return 0;
+    }
+    index --;
+    while (index >= 0 && BOOK_DAT[index][0] == lock) {
+      index --;
+    }
+    var mvs = [], vls = [];
+    var value = 0;
+    index ++;
+    while (index < BOOK_DAT.length && BOOK_DAT[index][0] == lock) {
+      var mv = BOOK_DAT[index][1];
+      mv = (mirror ? MIRROR_MOVE(mv) : mv);
+      if (this.legalMove(mv)) {
+        mvs.push(mv);
+        var vl = BOOK_DAT[index][2];
+        vls.push(vl);
+        value += vl;
+      }
+      index ++;
+    }
+    if (value == 0) {
+      return 0;
+    }
+    value = Math.floor(Math.random() * value);
+    for (index = 0; index < mvs.length; index ++) {
+      value -= vls[index];
+      if (value < 0) {
+        break;
+      }
+    }
+    return mvs[index];
   }
 
   this.historyIndex = function(mv) {

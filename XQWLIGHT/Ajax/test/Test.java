@@ -19,14 +19,18 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-package xqwlight;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import xqwlight.Position;
+import xqwlight.Search;
 
 public class Test {
 	public static void main(String[] args) throws Exception {
 		int[] mvs = new int[Position.MAX_GEN_MOVES];
 		int legal = 0, gened = 0, moved = 0, check = 0;
 		Position pos = new Position();
-		LineInputStream in = new LineInputStream(pos.getClass().getResourceAsStream("/book/FUNNY.EPD"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(Test.class.getResourceAsStream("/FUNNY.EPD")));
 		String str = in.readLine();
 		while (str != null) {
 			pos.fromFen(str);

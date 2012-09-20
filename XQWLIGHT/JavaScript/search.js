@@ -368,7 +368,7 @@ function Search(pos, hashLevel) {
   }
 
   this.searchMain = function(depth, millis) {
-    this.mvResult = getBookMove(pos);
+    this.mvResult = pos.bookMove();
     if (this.mvResult > 0) {
       pos.makeMove(this.mvResult);
       if (pos.repStatus(3) == 0) {
