@@ -1,3 +1,5 @@
+"use strict";
+
 function binarySearch(vlss, vl) {
   var low = 0;
   var high = vlss.length - 1;

@@ -1,3 +1,5 @@
+"use strict";
+
 var SQUARE_SIZE = 57;
 var PIECE_NAME = [
   "oo", null, null, null, null, null, null, null,

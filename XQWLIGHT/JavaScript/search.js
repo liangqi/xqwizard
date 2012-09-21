@@ -1,3 +1,5 @@
+"use strict";
+
 var SHELL_STEP = [0, 1, 4, 13, 40, 121, 364, 1093];
 
 function shellSort(mvs, vls) {
@@ -66,18 +68,21 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
       if (this.mvHash > 0) {
         return this.mvHash;
       }
+      // No Break
     case PHASE_KILLER_1:
       this.phase = PHASE_KILLER_2;
       if (this.mvKiller1 != this.mvHash && this.mvKiller1 > 0 &&
           pos.legalMove(this.mvKiller1)) {
         return this.mvKiller1;
       }
+      // No Break
     case PHASE_KILLER_2:
       this.phase = PHASE_GEN_MOVES;
       if (this.mvKiller2 != this.mvHash && this.mvKiller2 > 0 &&
           pos.legalMove(this.mvKiller2)) {
         return this.mvKiller2;
       }
+      // No Break
     case PHASE_GEN_MOVES:
       this.phase = PHASE_REST;
       this.mvs = pos.generateMoves(null);
@@ -87,6 +92,7 @@ function SortItem(mvHash, pos, killerTable, historyTable) {
       }
       shellSort(this.mvs, this.vls);
       this.index = 0;
+      // No Break
     default:
       while (this.index < this.mvs.length) {
         var mv = this.mvs[this.index];

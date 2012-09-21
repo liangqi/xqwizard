@@ -1,3 +1,5 @@
+"use strict";
+
 var PUZZLE_LIST = [
   "9/2Cca4/3k1C3/4P1p2/4N1b2/4R1r2/4c1n2/3p1n3/2rNK4/9 w",
   "4C4/4a4/b2ank2b/9/9/1RNR1crC1/3r1p3/3cKA3/4A4/4n4 w",
