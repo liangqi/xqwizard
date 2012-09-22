@@ -1,15 +1,18 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=gbk">
-    <link rel="stylesheet" type="text/css" href="main.css">
     <script src="book.js"></script>
     <script src="position.js"></script>
     <script src="search.js"></script>
-    <script src="main.js"></script>
+    <script src="board.js"></script>
   </head>
   <body>
+    <div id="container"></div>
     <script><!--
-      main();
+      var board = new Board(container, "images/", "sounds/");
+      board.setHashLevel(16);
+      board.setMillis(1000);
+      board.setComputer(1);
     --></script>
   </body>
 </html>
