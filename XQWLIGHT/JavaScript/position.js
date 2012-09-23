@@ -962,10 +962,10 @@ function Position() {
   }
 
   this.isMate = function() {
-    var mvs = generateMoves(null);
+    var mvs = this.generateMoves(null);
     for (var i = 0; i < mvs.length; i ++) {
-      if (makeMove(mvs[i])) {
-        undoMakeMove();
+      if (this.makeMove(mvs[i])) {
+        this.undoMakeMove();
         return false;
       }
     }

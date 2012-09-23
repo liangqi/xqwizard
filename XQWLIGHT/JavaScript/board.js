@@ -82,6 +82,52 @@ function Board(container, images, sounds) {
     this.computer = computer;
   }
 
+  this.addMove = function(mv) {
+    if (!this.pos.legalMove(mv)) {
+      return;
+    }
+    if (!this.pos.makeMove(mv)) {
+      this.playSound("illegal");
+      return;
+    }
+    if (this.mvLast > 0) {
+      this.drawSquare(SRC(this.mvLast), false);
+      this.drawSquare(DST(this.mvLast), false);
+    }
+    this.drawSquare(SRC(mv), true);
+    this.drawSquare(DST(mv), true);
+    this.sqSelected = 0;
+    this.mvLast = mv;
+    if (this.pos.isMate()) {
+      if (1 - this.pos.sdPlayer == this.computer) {
+        this.playSound("loss");
+        setTimeout(function() {
+          alert("请再接再厉！");
+        }, 250);
+      } else {
+        this.playSound("win");
+        setTimeout(function() {
+          alert("祝贺你取得胜利！");
+        }, 250);
+      }
+      return;
+    }
+    if (1 - this.pos.sdPlayer == this.computer) {
+      this.playSound(this.pos.inCheck() ? "check2" :
+          this.pos.captured() ? "capture2" : "move2");
+    } else {
+      this.playSound(this.pos.inCheck() ? "check" :
+          this.pos.captured() ? "capture" : "move");
+    }
+    if (this.search != null && this.pos.sdPlayer == this.computer) {
+      this.thinking.style.visibility = "visible";
+      setTimeout(function() {
+        board.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis));
+        board.thinking.style.visibility = "hidden";
+      }, 250);
+    }
+  }
+
   this.clickSquare = function(sq) {
     var pc = this.pos.squares[sq];
     if ((pc & SIDE_TAG(this.pos.sdPlayer)) != 0) {
@@ -96,28 +142,7 @@ function Board(container, images, sounds) {
       this.drawSquare(sq, true);
       this.sqSelected = sq;
     } else if (this.sqSelected > 0) {
-      var mv = MOVE(this.sqSelected, sq);
-      if (this.pos.legalMove(mv)) {
-        if (this.pos.makeMove(mv)) {
-          this.drawSquare(this.sqSelected, true);
-          this.drawSquare(sq, true);
-          this.sqSelected = 0;
-          this.mvLast = mv;
-          this.playSound(this.pos.inCheck() ? "check" :
-              this.pos.captured() ? "capture" : "move");
-          if (this.search != null && this.pos.sdPlayer == this.computer) {
-            this.thinking.style.visibility = "visible";
-            setTimeout(function() {
-              var mv = board.search.searchMain(LIMIT_DEPTH, board.millis);
-              board.pos.makeMove(mv);
-              board.flushBoard();
-              board.thinking.style.visibility = "hidden";
-            }, 256);
-          }
-        } else {
-          this.playSound("illegal");
-        }
-      }
+      this.addMove(MOVE(this.sqSelected, sq));
     }
   }
 
