@@ -443,12 +443,6 @@ function CHAR_TO_PIECE(c) {
 }
 
 function RC4(key) {
-  this.swap = function(i, j) {
-    var t = this.state[i];
-    this.state[i] = this.state[j];
-    this.state[j] = t;
-  }
-
   this.x = this.y = 0;
   this.state = [];
   for (var i = 0; i < 256; i ++) {
@@ -459,22 +453,28 @@ function RC4(key) {
     j = (j + this.state[i] + key[i % key.length]) & 0xff;
     this.swap(i, j);
   }
+}
 
-  this.nextByte = function() {
-    this.x = (this.x + 1) & 0xff;
-    this.y = (this.y + this.state[this.x]) & 0xff;
-    this.swap(this.x, this.y);
-    var t = (this.state[this.x] + this.state[this.y]) & 0xff;
-    return this.state[t];
-  }
+RC4.prototype.swap = function(i, j) {
+  var t = this.state[i];
+  this.state[i] = this.state[j];
+  this.state[j] = t;
+}
 
-  this.nextLong = function() {
-    var n0 = this.nextByte();
-    var n1 = this.nextByte();
-    var n2 = this.nextByte();
-    var n3 = this.nextByte();
-    return n0 + (n1 << 8) + (n2 << 16) + ((n3 << 24) & 0xffffffff);
-  }
+RC4.prototype.nextByte = function() {
+  this.x = (this.x + 1) & 0xff;
+  this.y = (this.y + this.state[this.x]) & 0xff;
+  this.swap(this.x, this.y);
+  var t = (this.state[this.x] + this.state[this.y]) & 0xff;
+  return this.state[t];
+}
+
+RC4.prototype.nextLong = function() {
+  var n0 = this.nextByte();
+  var n1 = this.nextByte();
+  var n2 = this.nextByte();
+  var n3 = this.nextByte();
+  return n0 + (n1 << 8) + (n2 << 16) + ((n3 << 24) & 0xffffffff);
 }
 
 var PreGen_zobristKeyPlayer, PreGen_zobristLockPlayer;
@@ -499,469 +499,320 @@ for (var i = 0; i < 14; i ++) {
 function Position() {
   // sdPlayer, zobristKey, zobristLock, vlWhite, vlBlack, distance;
   // squares, mvList, pcList, keyList, chkList;
+}
 
-  this.clearBoard = function() {
-    this.sdPlayer = 0;
-    this.squares = [];
-    for (var sq = 0; sq < 256; sq ++) {
-      this.squares.push(0);
-    }
-    this.zobristKey = this.zobristLock = 0;
-    this.vlWhite = this.vlBlack = 0;
-  };
-
-  this.setIrrev = function() {
-    this.mvList = [0];
-    this.pcList = [0];
-    this.keyList = [0];
-    this.chkList = [this.checked()];
-    this.distance = 0;
+Position.prototype.clearBoard = function() {
+  this.sdPlayer = 0;
+  this.squares = [];
+  for (var sq = 0; sq < 256; sq ++) {
+    this.squares.push(0);
   }
+  this.zobristKey = this.zobristLock = 0;
+  this.vlWhite = this.vlBlack = 0;
+};
 
-  this.addPiece = function(sq, pc, bDel) {
-    var pcAdjust;
-    this.squares[sq] = bDel ? 0 : pc;
-    if (pc < 16) {
-      pcAdjust = pc - 8;
-      this.vlWhite += bDel ? -PIECE_VALUE[pcAdjust][sq] :
-          PIECE_VALUE[pcAdjust][sq];
-    } else {
-      pcAdjust = pc - 16;
-      this.vlBlack += bDel ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] :
-          PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
-      pcAdjust += 7;
-    }
-    this.zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
-    this.zobristLock ^= PreGen_zobristLockTable[pcAdjust][sq];
+Position.prototype.setIrrev = function() {
+  this.mvList = [0];
+  this.pcList = [0];
+  this.keyList = [0];
+  this.chkList = [this.checked()];
+  this.distance = 0;
+}
+
+Position.prototype.addPiece = function(sq, pc, bDel) {
+  var pcAdjust;
+  this.squares[sq] = bDel ? 0 : pc;
+  if (pc < 16) {
+    pcAdjust = pc - 8;
+    this.vlWhite += bDel ? -PIECE_VALUE[pcAdjust][sq] :
+        PIECE_VALUE[pcAdjust][sq];
+  } else {
+    pcAdjust = pc - 16;
+    this.vlBlack += bDel ? -PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)] :
+        PIECE_VALUE[pcAdjust][SQUARE_FLIP(sq)];
+    pcAdjust += 7;
   }
+  this.zobristKey ^= PreGen_zobristKeyTable[pcAdjust][sq];
+  this.zobristLock ^= PreGen_zobristLockTable[pcAdjust][sq];
+}
 
-  this.movePiece = function(mv) {
-    var sqSrc = SRC(mv);
-    var sqDst = DST(mv);
-    var pc = this.squares[sqDst];
-    this.pcList.push(pc);
-    if (pc > 0) {
-      this.addPiece(sqDst, pc, DEL_PIECE);
-    }
-    pc = this.squares[sqSrc];
-    this.addPiece(sqSrc, pc, DEL_PIECE);
-    this.addPiece(sqDst, pc, ADD_PIECE);
-    this.mvList.push(mv);
-  }
-
-  this.undoMovePiece = function() {
-    var mv = this.mvList.pop();
-    var sqSrc = SRC(mv);
-    var sqDst = DST(mv);
-    var pc = this.squares[sqDst];
+Position.prototype.movePiece = function(mv) {
+  var sqSrc = SRC(mv);
+  var sqDst = DST(mv);
+  var pc = this.squares[sqDst];
+  this.pcList.push(pc);
+  if (pc > 0) {
     this.addPiece(sqDst, pc, DEL_PIECE);
-    this.addPiece(sqSrc, pc, ADD_PIECE);
-    pc = this.pcList.pop();
-    if (pc > 0) {
-      this.addPiece(sqDst, pc, ADD_PIECE);
-    }
   }
+  pc = this.squares[sqSrc];
+  this.addPiece(sqSrc, pc, DEL_PIECE);
+  this.addPiece(sqDst, pc, ADD_PIECE);
+  this.mvList.push(mv);
+}
 
-  this.changeSide = function() {
-    this.sdPlayer = 1 - this.sdPlayer;
-    this.zobristKey ^= PreGen_zobristKeyPlayer;
-    this.zobristLock ^= PreGen_zobristLockPlayer;
+Position.prototype.undoMovePiece = function() {
+  var mv = this.mvList.pop();
+  var sqSrc = SRC(mv);
+  var sqDst = DST(mv);
+  var pc = this.squares[sqDst];
+  this.addPiece(sqDst, pc, DEL_PIECE);
+  this.addPiece(sqSrc, pc, ADD_PIECE);
+  pc = this.pcList.pop();
+  if (pc > 0) {
+    this.addPiece(sqDst, pc, ADD_PIECE);
   }
+}
 
-  this.makeMove = function(mv) {
-    var zobristKey = this.zobristKey;
-    this.movePiece(mv);
-    if (this.checked()) {
-      this.undoMovePiece(mv);
-      return false;
-    }
-    this.keyList.push(zobristKey);
-    this.changeSide();
-    this.chkList.push(this.checked());
-    this.distance ++;
-    return true;
+Position.prototype.changeSide = function() {
+  this.sdPlayer = 1 - this.sdPlayer;
+  this.zobristKey ^= PreGen_zobristKeyPlayer;
+  this.zobristLock ^= PreGen_zobristLockPlayer;
+}
+
+Position.prototype.makeMove = function(mv) {
+  var zobristKey = this.zobristKey;
+  this.movePiece(mv);
+  if (this.checked()) {
+    this.undoMovePiece(mv);
+    return false;
   }
+  this.keyList.push(zobristKey);
+  this.changeSide();
+  this.chkList.push(this.checked());
+  this.distance ++;
+  return true;
+}
 
-  this.undoMakeMove = function() {
-    this.distance --;
-    this.chkList.pop();
-    this.changeSide();
-    this.keyList.pop();
-    this.undoMovePiece();
+Position.prototype.undoMakeMove = function() {
+  this.distance --;
+  this.chkList.pop();
+  this.changeSide();
+  this.keyList.pop();
+  this.undoMovePiece();
+}
+
+Position.prototype.nullMove = function() {
+  this.mvList.push(0);
+  this.pcList.push(0);
+  this.keyList.push(this.zobristKey);
+  this.changeSide();
+  this.chkList.push(false);
+  this.distance ++;
+}
+
+Position.prototype.undoNullMove = function() {
+  this.distance --;
+  this.chkList.pop();
+  this.changeSide();
+  this.keyList.pop();
+  this.pcList.pop();
+  this.mvList.pop();
+}
+
+Position.prototype.fromFen = function(fen) {
+  this.clearBoard();
+  var y = RANK_TOP;
+  var x = FILE_LEFT;
+  var index = 0;
+  if (index == fen.length) {
+    this.setIrrev();
+    return;
   }
-
-  this.nullMove = function() {
-    this.mvList.push(0);
-    this.pcList.push(0);
-    this.keyList.push(this.zobristKey);
-    this.changeSide();
-    this.chkList.push(false);
-    this.distance ++;
-  }
-
-  this.undoNullMove = function() {
-    this.distance --;
-    this.chkList.pop();
-    this.changeSide();
-    this.keyList.pop();
-    this.pcList.pop();
-    this.mvList.pop();
-  }
-
-  this.fromFen = function(fen) {
-    this.clearBoard();
-    var y = RANK_TOP;
-    var x = FILE_LEFT;
-    var index = 0;
-    if (index == fen.length) {
-      this.setIrrev();
-      return;
-    }
-    var c = fen.charAt(index);
-    while (c != " ") {
-      if (c == "/") {
-        x = FILE_LEFT;
-        y ++;
-        if (y > RANK_BOTTOM) {
+  var c = fen.charAt(index);
+  while (c != " ") {
+    if (c == "/") {
+      x = FILE_LEFT;
+      y ++;
+      if (y > RANK_BOTTOM) {
+        break;
+      }
+    } else if (c >= "1" && c <= "9") {
+      for (var k = 0; k < (ASC(c) - ASC("0")); k ++) {
+        if (x >= FILE_RIGHT) {
           break;
         }
-      } else if (c >= "1" && c <= "9") {
-        for (var k = 0; k < (ASC(c) - ASC("0")); k ++) {
-          if (x >= FILE_RIGHT) {
-            break;
-          }
-          x ++;
-        }
-      } else if (c >= "A" && c <= "Z") {
-        if (x <= FILE_RIGHT) {
-          var pt = CHAR_TO_PIECE(c);
-          if (pt >= 0) {
-            this.addPiece(COORD_XY(x, y), pt + 8);
-          }
-          x ++;
-        }
-      } else if (c >= "a" && c <= "z") {
-        if (x <= FILE_RIGHT) {
-          var pt = CHAR_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
-          if (pt >= 0) {
-            this.addPiece(COORD_XY(x, y), pt + 16);
-          }
-          x ++;
-        }
+        x ++;
       }
-      index ++;
-      if (index == fen.length) {
-        this.setIrrev();
-        return;
+    } else if (c >= "A" && c <= "Z") {
+      if (x <= FILE_RIGHT) {
+        var pt = CHAR_TO_PIECE(c);
+        if (pt >= 0) {
+          this.addPiece(COORD_XY(x, y), pt + 8);
+        }
+        x ++;
       }
-      c = fen.charAt(index);
+    } else if (c >= "a" && c <= "z") {
+      if (x <= FILE_RIGHT) {
+        var pt = CHAR_TO_PIECE(CHR(ASC(c) + ASC("A") - ASC("a")));
+        if (pt >= 0) {
+          this.addPiece(COORD_XY(x, y), pt + 16);
+        }
+        x ++;
+      }
     }
     index ++;
     if (index == fen.length) {
       this.setIrrev();
       return;
     }
-    if (this.sdPlayer == (fen.charAt(index) == "b" ? 0 : 1)) {
-      this.changeSide();
-    }
+    c = fen.charAt(index);
+  }
+  index ++;
+  if (index == fen.length) {
     this.setIrrev();
+    return;
   }
-
-  this.toFen = function() {
-    var fen = "";
-    for (var y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
-      var k = 0;
-      for (var x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
-        var pc = this.squares[COORD_XY(x, y)];
-        if (pc > 0) {
-          if (k > 0) {
-            fen += CHR(ASC("0") + k);
-            k = 0;
-          }
-          fen += FEN_PIECE.charAt(pc);
-        } else {
-          k ++;
-        }
-      }
-      if (k > 0) {
-        fen += CHR(ASC("0") + k);
-      }
-      fen += "/";
-    }
-    return fen.substring(0, fen.length - 1) + " " +
-        (this.sdPlayer == 0 ? 'w' : 'b');
+  if (this.sdPlayer == (fen.charAt(index) == "b" ? 0 : 1)) {
+    this.changeSide();
   }
+  this.setIrrev();
+}
 
-  this.generateMoves = function(vls) {
-    var mvs = [];
-    var pcSelfSide = SIDE_TAG(this.sdPlayer);
-    var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
-    for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
-      var pcSrc = this.squares[sqSrc];
-      if ((pcSrc & pcSelfSide) == 0) {
-        continue;
-      }
-      switch (pcSrc - pcSelfSide) {
-      case PIECE_KING:
-        for (var i = 0; i < 4; i ++) {
-          var sqDst = sqSrc + KING_DELTA[i];
-          if (!IN_FORT(sqDst)) {
-            continue;
-          }
-          var pcDst = this.squares[sqDst];
-          if (vls == null) {
-            if ((pcDst & pcSelfSide) == 0) {
-              mvs.push(MOVE(sqSrc, sqDst));
-            }
-          } else if ((pcDst & pcOppSide) != 0) {
-            mvs.push(MOVE(sqSrc, sqDst));
-            vls.push(MVV_LVA(pcDst, 5));
-          }
+Position.prototype.toFen = function() {
+  var fen = "";
+  for (var y = RANK_TOP; y <= RANK_BOTTOM; y ++) {
+    var k = 0;
+    for (var x = FILE_LEFT; x <= FILE_RIGHT; x ++) {
+      var pc = this.squares[COORD_XY(x, y)];
+      if (pc > 0) {
+        if (k > 0) {
+          fen += CHR(ASC("0") + k);
+          k = 0;
         }
-        break;
-      case PIECE_ADVISOR:
-        for (var i = 0; i < 4; i ++) {
-          var sqDst = sqSrc + ADVISOR_DELTA[i];
-          if (!IN_FORT(sqDst)) {
-            continue;
-          }
-          var pcDst = this.squares[sqDst];
-          if (vls == null) {
-            if ((pcDst & pcSelfSide) == 0) {
-              mvs.push(MOVE(sqSrc, sqDst));
-            }
-          } else if ((pcDst & pcOppSide) != 0) {
-            mvs.push(MOVE(sqSrc, sqDst));
-            vls.push(MVV_LVA(pcDst, 1));
-          }
-        }
-        break;
-      case PIECE_BISHOP:
-        for (var i = 0; i < 4; i ++) {
-          var sqDst = sqSrc + ADVISOR_DELTA[i];
-          if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, this.sdPlayer) &&
-              this.squares[sqDst] == 0)) {
-            continue;
-          }
-          sqDst += ADVISOR_DELTA[i];
-          var pcDst = this.squares[sqDst];
-          if (vls == null) {
-            if ((pcDst & pcSelfSide) == 0) {
-              mvs.push(MOVE(sqSrc, sqDst));
-            }
-          } else if ((pcDst & pcOppSide) != 0) {
-            mvs.push(MOVE(sqSrc, sqDst));
-            vls.push(MVV_LVA(pcDst, 1));
-          }
-        }
-        break;
-      case PIECE_KNIGHT:
-        for (var i = 0; i < 4; i ++) {
-          var sqDst = sqSrc + KING_DELTA[i];
-          if (this.squares[sqDst] > 0) {
-            continue;
-          }
-          for (var j = 0; j < 2; j ++) {
-            sqDst = sqSrc + KNIGHT_DELTA[i][j];
-            if (!IN_BOARD(sqDst)) {
-              continue;
-            }
-            var pcDst = this.squares[sqDst];
-            if (vls == null) {
-              if ((pcDst & pcSelfSide) == 0) {
-                mvs.push(MOVE(sqSrc, sqDst));
-              }
-            } else if ((pcDst & pcOppSide) != 0) {
-              mvs.push(MOVE(sqSrc, sqDst));
-              vls.push(MVV_LVA(pcDst, 1));
-            }
-          }
-        }
-        break;
-      case PIECE_ROOK:
-        for (var i = 0; i < 4; i ++) {
-          var delta = KING_DELTA[i];
-          var sqDst = sqSrc + delta;
-          while (IN_BOARD(sqDst)) {
-            var pcDst = this.squares[sqDst];
-            if (pcDst == 0) {
-              if (vls == null) {
-                mvs.push(MOVE(sqSrc, sqDst));
-              }
-            } else {
-              if ((pcDst & pcOppSide) != 0) {
-                mvs.push(MOVE(sqSrc, sqDst));
-                if (vls != null) {
-                  vls.push(MVV_LVA(pcDst, 4));
-                }
-              }
-              break;
-            }
-            sqDst += delta;
-          }
-        }
-        break;
-      case PIECE_CANNON:
-        for (var i = 0; i < 4; i ++) {
-          var delta = KING_DELTA[i];
-          var sqDst = sqSrc + delta;
-          while (IN_BOARD(sqDst)) {
-            var pcDst = this.squares[sqDst];
-            if (pcDst == 0) {
-              if (vls == null) {
-                mvs.push(MOVE(sqSrc, sqDst));
-              }
-            } else {
-              break;
-            }
-            sqDst += delta;
-          }
-          sqDst += delta;
-          while (IN_BOARD(sqDst)) {
-            var pcDst = this.squares[sqDst];
-            if (pcDst > 0) {
-              if ((pcDst & pcOppSide) != 0) {
-                mvs.push(MOVE(sqSrc, sqDst));
-                if (vls != null) {
-                  vls.push(MVV_LVA(pcDst, 4));
-                }
-              }
-              break;
-            }
-            sqDst += delta;
-          }
-        }
-        break;
-      case PIECE_PAWN:
-        var sqDst = SQUARE_FORWARD(sqSrc, this.sdPlayer);
-        if (IN_BOARD(sqDst)) {
-          var pcDst = this.squares[sqDst];
-          if (vls == null) {
-            if ((pcDst & pcSelfSide) == 0) {
-              mvs.push(MOVE(sqSrc, sqDst));
-            }
-          } else if ((pcDst & pcOppSide) != 0) {
-            mvs.push(MOVE(sqSrc, sqDst));
-            vls.push(MVV_LVA(pcDst, 2));
-          }
-        }
-        if (AWAY_HALF(sqSrc, this.sdPlayer)) {
-          for (var delta = -1; delta <= 1; delta += 2) {
-            sqDst = sqSrc + delta;
-            if (IN_BOARD(sqDst)) {
-              var pcDst = this.squares[sqDst];
-              if (vls == null) {
-                if ((pcDst & pcSelfSide) == 0) {
-                  mvs.push(MOVE(sqSrc, sqDst));
-                }
-              } else if ((pcDst & pcOppSide) != 0) {
-                mvs.push(MOVE(sqSrc, sqDst));
-                vls.push(MVV_LVA(pcDst, 2));
-              }
-            }
-          }
-        }
-        break;
+        fen += FEN_PIECE.charAt(pc);
+      } else {
+        k ++;
       }
     }
-    return mvs;
+    if (k > 0) {
+      fen += CHR(ASC("0") + k);
+    }
+    fen += "/";
   }
+  return fen.substring(0, fen.length - 1) + " " +
+      (this.sdPlayer == 0 ? 'w' : 'b');
+}
 
-  this.legalMove = function(mv) {
-    var sqSrc = SRC(mv);
+Position.prototype.generateMoves = function(vls) {
+  var mvs = [];
+  var pcSelfSide = SIDE_TAG(this.sdPlayer);
+  var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+  for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
     var pcSrc = this.squares[sqSrc];
-    var pcSelfSide = SIDE_TAG(this.sdPlayer);
     if ((pcSrc & pcSelfSide) == 0) {
-      return false;
+      continue;
     }
-
-    var sqDst = DST(mv);
-    var pcDst = this.squares[sqDst];
-    if ((pcDst & pcSelfSide) != 0) {
-      return false;
-    }
-
     switch (pcSrc - pcSelfSide) {
     case PIECE_KING:
-      return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
-    case PIECE_ADVISOR:
-      return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
-    case PIECE_BISHOP:
-      return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
-          this.squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
-    case PIECE_KNIGHT:
-      var sqPin = KNIGHT_PIN(sqSrc, sqDst);
-      return sqPin != sqSrc && this.squares[sqPin] == 0;
-    case PIECE_ROOK:
-    case PIECE_CANNON:
-      var delta;
-      if (SAME_RANK(sqSrc, sqDst)) {
-        delta = (sqDst < sqSrc ? -1 : 1);
-      } else if (SAME_FILE(sqSrc, sqDst)) {
-        delta = (sqDst < sqSrc ? -16 : 16);
-      } else {
-        return false;
-      }
-      var sqPin = sqSrc + delta;
-      while (sqPin != sqDst && this.squares[sqPin] == 0) {
-        sqPin += delta;
-      }
-      if (sqPin == sqDst) {
-        return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
-      }
-      if (pcDst == 0 || pcSrc - pcSelfSide != PIECE_CANNON) {
-        return false;
-      }
-      sqPin += delta;
-      while (sqPin != sqDst && this.squares[sqPin] == 0) {
-        sqPin += delta;
-      }
-      return sqPin == sqDst;
-    case PIECE_PAWN:
-      if (AWAY_HALF(sqDst, this.sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
-        return true;
-      }
-      return sqDst == SQUARE_FORWARD(sqSrc, this.sdPlayer);
-    default:
-      return false;
-    }
-  }
-
-  this.checked = function() {
-    var pcSelfSide = SIDE_TAG(this.sdPlayer);
-    var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
-    for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
-      if (this.squares[sqSrc] != pcSelfSide + PIECE_KING) {
-        continue;
-      }
-      if (this.squares[SQUARE_FORWARD(sqSrc, this.sdPlayer)] == pcOppSide + PIECE_PAWN) {
-        return true;
-      }
-      for (var delta = -1; delta <= 1; delta += 2) {
-        if (this.squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
-          return true;
+      for (var i = 0; i < 4; i ++) {
+        var sqDst = sqSrc + KING_DELTA[i];
+        if (!IN_FORT(sqDst)) {
+          continue;
+        }
+        var pcDst = this.squares[sqDst];
+        if (vls == null) {
+          if ((pcDst & pcSelfSide) == 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+          }
+        } else if ((pcDst & pcOppSide) != 0) {
+          mvs.push(MOVE(sqSrc, sqDst));
+          vls.push(MVV_LVA(pcDst, 5));
         }
       }
+      break;
+    case PIECE_ADVISOR:
       for (var i = 0; i < 4; i ++) {
-        if (this.squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
+        var sqDst = sqSrc + ADVISOR_DELTA[i];
+        if (!IN_FORT(sqDst)) {
+          continue;
+        }
+        var pcDst = this.squares[sqDst];
+        if (vls == null) {
+          if ((pcDst & pcSelfSide) == 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+          }
+        } else if ((pcDst & pcOppSide) != 0) {
+          mvs.push(MOVE(sqSrc, sqDst));
+          vls.push(MVV_LVA(pcDst, 1));
+        }
+      }
+      break;
+    case PIECE_BISHOP:
+      for (var i = 0; i < 4; i ++) {
+        var sqDst = sqSrc + ADVISOR_DELTA[i];
+        if (!(IN_BOARD(sqDst) && HOME_HALF(sqDst, this.sdPlayer) &&
+            this.squares[sqDst] == 0)) {
+          continue;
+        }
+        sqDst += ADVISOR_DELTA[i];
+        var pcDst = this.squares[sqDst];
+        if (vls == null) {
+          if ((pcDst & pcSelfSide) == 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+          }
+        } else if ((pcDst & pcOppSide) != 0) {
+          mvs.push(MOVE(sqSrc, sqDst));
+          vls.push(MVV_LVA(pcDst, 1));
+        }
+      }
+      break;
+    case PIECE_KNIGHT:
+      for (var i = 0; i < 4; i ++) {
+        var sqDst = sqSrc + KING_DELTA[i];
+        if (this.squares[sqDst] > 0) {
           continue;
         }
         for (var j = 0; j < 2; j ++) {
-          var pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
-          if (pcDst == pcOppSide + PIECE_KNIGHT) {
-            return true;
+          sqDst = sqSrc + KNIGHT_DELTA[i][j];
+          if (!IN_BOARD(sqDst)) {
+            continue;
+          }
+          var pcDst = this.squares[sqDst];
+          if (vls == null) {
+            if ((pcDst & pcSelfSide) == 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else if ((pcDst & pcOppSide) != 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+            vls.push(MVV_LVA(pcDst, 1));
           }
         }
       }
+      break;
+    case PIECE_ROOK:
       for (var i = 0; i < 4; i ++) {
         var delta = KING_DELTA[i];
         var sqDst = sqSrc + delta;
         while (IN_BOARD(sqDst)) {
           var pcDst = this.squares[sqDst];
-          if (pcDst > 0) {
-            if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
-              return true;
+          if (pcDst == 0) {
+            if (vls == null) {
+              mvs.push(MOVE(sqSrc, sqDst));
             }
+          } else {
+            if ((pcDst & pcOppSide) != 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+              if (vls != null) {
+                vls.push(MVV_LVA(pcDst, 4));
+              }
+            }
+            break;
+          }
+          sqDst += delta;
+        }
+      }
+      break;
+    case PIECE_CANNON:
+      for (var i = 0; i < 4; i ++) {
+        var delta = KING_DELTA[i];
+        var sqDst = sqSrc + delta;
+        while (IN_BOARD(sqDst)) {
+          var pcDst = this.squares[sqDst];
+          if (pcDst == 0) {
+            if (vls == null) {
+              mvs.push(MOVE(sqSrc, sqDst));
+            }
+          } else {
             break;
           }
           sqDst += delta;
@@ -970,156 +821,305 @@ function Position() {
         while (IN_BOARD(sqDst)) {
           var pcDst = this.squares[sqDst];
           if (pcDst > 0) {
-            if (pcDst == pcOppSide + PIECE_CANNON) {
-              return true;
+            if ((pcDst & pcOppSide) != 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+              if (vls != null) {
+                vls.push(MVV_LVA(pcDst, 4));
+              }
             }
             break;
           }
           sqDst += delta;
         }
       }
-      return false;
+      break;
+    case PIECE_PAWN:
+      var sqDst = SQUARE_FORWARD(sqSrc, this.sdPlayer);
+      if (IN_BOARD(sqDst)) {
+        var pcDst = this.squares[sqDst];
+        if (vls == null) {
+          if ((pcDst & pcSelfSide) == 0) {
+            mvs.push(MOVE(sqSrc, sqDst));
+          }
+        } else if ((pcDst & pcOppSide) != 0) {
+          mvs.push(MOVE(sqSrc, sqDst));
+          vls.push(MVV_LVA(pcDst, 2));
+        }
+      }
+      if (AWAY_HALF(sqSrc, this.sdPlayer)) {
+        for (var delta = -1; delta <= 1; delta += 2) {
+          sqDst = sqSrc + delta;
+          if (IN_BOARD(sqDst)) {
+            var pcDst = this.squares[sqDst];
+            if (vls == null) {
+              if ((pcDst & pcSelfSide) == 0) {
+                mvs.push(MOVE(sqSrc, sqDst));
+              }
+            } else if ((pcDst & pcOppSide) != 0) {
+              mvs.push(MOVE(sqSrc, sqDst));
+              vls.push(MVV_LVA(pcDst, 2));
+            }
+          }
+        }
+      }
+      break;
     }
+  }
+  return mvs;
+}
+
+Position.prototype.legalMove = function(mv) {
+  var sqSrc = SRC(mv);
+  var pcSrc = this.squares[sqSrc];
+  var pcSelfSide = SIDE_TAG(this.sdPlayer);
+  if ((pcSrc & pcSelfSide) == 0) {
     return false;
   }
 
-  this.isMate = function() {
-    var mvs = this.generateMoves(null);
-    for (var i = 0; i < mvs.length; i ++) {
-      if (this.makeMove(mvs[i])) {
-        this.undoMakeMove();
-        return false;
+  var sqDst = DST(mv);
+  var pcDst = this.squares[sqDst];
+  if ((pcDst & pcSelfSide) != 0) {
+    return false;
+  }
+
+  switch (pcSrc - pcSelfSide) {
+  case PIECE_KING:
+    return IN_FORT(sqDst) && KING_SPAN(sqSrc, sqDst);
+  case PIECE_ADVISOR:
+    return IN_FORT(sqDst) && ADVISOR_SPAN(sqSrc, sqDst);
+  case PIECE_BISHOP:
+    return SAME_HALF(sqSrc, sqDst) && BISHOP_SPAN(sqSrc, sqDst) &&
+        this.squares[BISHOP_PIN(sqSrc, sqDst)] == 0;
+  case PIECE_KNIGHT:
+    var sqPin = KNIGHT_PIN(sqSrc, sqDst);
+    return sqPin != sqSrc && this.squares[sqPin] == 0;
+  case PIECE_ROOK:
+  case PIECE_CANNON:
+    var delta;
+    if (SAME_RANK(sqSrc, sqDst)) {
+      delta = (sqDst < sqSrc ? -1 : 1);
+    } else if (SAME_FILE(sqSrc, sqDst)) {
+      delta = (sqDst < sqSrc ? -16 : 16);
+    } else {
+      return false;
+    }
+    var sqPin = sqSrc + delta;
+    while (sqPin != sqDst && this.squares[sqPin] == 0) {
+      sqPin += delta;
+    }
+    if (sqPin == sqDst) {
+      return pcDst == 0 || pcSrc - pcSelfSide == PIECE_ROOK;
+    }
+    if (pcDst == 0 || pcSrc - pcSelfSide != PIECE_CANNON) {
+      return false;
+    }
+    sqPin += delta;
+    while (sqPin != sqDst && this.squares[sqPin] == 0) {
+      sqPin += delta;
+    }
+    return sqPin == sqDst;
+  case PIECE_PAWN:
+    if (AWAY_HALF(sqDst, this.sdPlayer) && (sqDst == sqSrc - 1 || sqDst == sqSrc + 1)) {
+      return true;
+    }
+    return sqDst == SQUARE_FORWARD(sqSrc, this.sdPlayer);
+  default:
+    return false;
+  }
+}
+
+Position.prototype.checked = function() {
+  var pcSelfSide = SIDE_TAG(this.sdPlayer);
+  var pcOppSide = OPP_SIDE_TAG(this.sdPlayer);
+  for (var sqSrc = 0; sqSrc < 256; sqSrc ++) {
+    if (this.squares[sqSrc] != pcSelfSide + PIECE_KING) {
+      continue;
+    }
+    if (this.squares[SQUARE_FORWARD(sqSrc, this.sdPlayer)] == pcOppSide + PIECE_PAWN) {
+      return true;
+    }
+    for (var delta = -1; delta <= 1; delta += 2) {
+      if (this.squares[sqSrc + delta] == pcOppSide + PIECE_PAWN) {
+        return true;
       }
     }
-    return true;
-  }
-
-  this.mateValue = function() {
-    return this.distance - MATE_VALUE;
-  }
-
-  this.banValue = function() {
-    return this.distance - BAN_VALUE;
-  }
-
-  this.drawValue = function() {
-    return (this.distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
-  }
-
-  this.evaluate = function() {
-    var vl = (this.sdPlayer == 0 ? this.vlWhite - this.vlBlack :
-        this.vlBlack - this.vlWhite) + ADVANCED_VALUE;
-    return vl == this.drawValue() ? vl - 1 : vl;
-  }
-
-  this.nullOkay = function() {
-    return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_OKAY_MARGIN;
-  }
-
-  this.nullSafe = function() {
-    return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_SAFE_MARGIN;
-  }
-
-  this.inCheck = function() {
-    return this.chkList[this.chkList.length - 1];
-  }
-
-  this.captured = function() {
-    return this.pcList[this.pcList.length - 1] > 0;
-  }
-
-  this.repValue = function(vlRep) {
-    var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
-        ((vlRep & 4) == 0 ? 0 : -this.banValue());
-    return vlReturn == 0 ? this.drawValue() : vlReturn;
-  }
-
-  this.repStatus = function(recur_) {
-    var recur = recur_;
-    var selfSide = false;
-    var perpCheck = true;
-    var oppPerpCheck = true;
-    var index = this.mvList.length - 1;
-    while (this.mvList[index] > 0 && this.pcList[index] == 0) {
-      if (selfSide) {
-        perpCheck = perpCheck && this.chkList[index];
-        if (this.keyList[index] == this.zobristKey) {
-          recur --;
-          if (recur == 0) {
-            return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
-          }
+    for (var i = 0; i < 4; i ++) {
+      if (this.squares[sqSrc + ADVISOR_DELTA[i]] != 0) {
+        continue;
+      }
+      for (var j = 0; j < 2; j ++) {
+        var pcDst = this.squares[sqSrc + KNIGHT_CHECK_DELTA[i][j]];
+        if (pcDst == pcOppSide + PIECE_KNIGHT) {
+          return true;
         }
-      } else {
-        oppPerpCheck = oppPerpCheck && this.chkList[index];
       }
-      selfSide = !selfSide;
-      index --;
     }
+    for (var i = 0; i < 4; i ++) {
+      var delta = KING_DELTA[i];
+      var sqDst = sqSrc + delta;
+      while (IN_BOARD(sqDst)) {
+        var pcDst = this.squares[sqDst];
+        if (pcDst > 0) {
+          if (pcDst == pcOppSide + PIECE_ROOK || pcDst == pcOppSide + PIECE_KING) {
+            return true;
+          }
+          break;
+        }
+        sqDst += delta;
+      }
+      sqDst += delta;
+      while (IN_BOARD(sqDst)) {
+        var pcDst = this.squares[sqDst];
+        if (pcDst > 0) {
+          if (pcDst == pcOppSide + PIECE_CANNON) {
+            return true;
+          }
+          break;
+        }
+        sqDst += delta;
+      }
+    }
+    return false;
+  }
+  return false;
+}
+
+Position.prototype.isMate = function() {
+  var mvs = this.generateMoves(null);
+  for (var i = 0; i < mvs.length; i ++) {
+    if (this.makeMove(mvs[i])) {
+      this.undoMakeMove();
+      return false;
+    }
+  }
+  return true;
+}
+
+Position.prototype.mateValue = function() {
+  return this.distance - MATE_VALUE;
+}
+
+Position.prototype.banValue = function() {
+  return this.distance - BAN_VALUE;
+}
+
+Position.prototype.drawValue = function() {
+  return (this.distance & 1) == 0 ? -DRAW_VALUE : DRAW_VALUE;
+}
+
+Position.prototype.evaluate = function() {
+  var vl = (this.sdPlayer == 0 ? this.vlWhite - this.vlBlack :
+      this.vlBlack - this.vlWhite) + ADVANCED_VALUE;
+  return vl == this.drawValue() ? vl - 1 : vl;
+}
+
+Position.prototype.nullOkay = function() {
+  return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_OKAY_MARGIN;
+}
+
+Position.prototype.nullSafe = function() {
+  return (this.sdPlayer == 0 ? this.vlWhite : this.vlBlack) > NULL_SAFE_MARGIN;
+}
+
+Position.prototype.inCheck = function() {
+  return this.chkList[this.chkList.length - 1];
+}
+
+Position.prototype.captured = function() {
+  return this.pcList[this.pcList.length - 1] > 0;
+}
+
+Position.prototype.repValue = function(vlRep) {
+  var vlReturn = ((vlRep & 2) == 0 ? 0 : this.banValue()) +
+      ((vlRep & 4) == 0 ? 0 : -this.banValue());
+  return vlReturn == 0 ? this.drawValue() : vlReturn;
+}
+
+Position.prototype.repStatus = function(recur_) {
+  var recur = recur_;
+  var selfSide = false;
+  var perpCheck = true;
+  var oppPerpCheck = true;
+  var index = this.mvList.length - 1;
+  while (this.mvList[index] > 0 && this.pcList[index] == 0) {
+    if (selfSide) {
+      perpCheck = perpCheck && this.chkList[index];
+      if (this.keyList[index] == this.zobristKey) {
+        recur --;
+        if (recur == 0) {
+          return 1 + (perpCheck ? 2 : 0) + (oppPerpCheck ? 4 : 0);
+        }
+      }
+    } else {
+      oppPerpCheck = oppPerpCheck && this.chkList[index];
+    }
+    selfSide = !selfSide;
+    index --;
+  }
+  return 0;
+}
+
+Position.prototype.mirror = function() {
+  var pos = new Position();
+  pos.clearBoard();
+  for (var sq = 0; sq < 256; sq ++) {
+    var pc = this.squares[sq];
+    if (pc > 0) {
+      pos.addPiece(MIRROR_SQUARE(sq), pc);
+    }
+  }
+  if (this.sdPlayer == 1) {
+    pos.changeSide();
+  }
+  return pos;
+}
+
+Position.prototype.bookMove = function() {
+  if (typeof BOOK_DAT != "object" || BOOK_DAT.length == 0) {
     return 0;
   }
-
-  this.mirror = function() {
-    var pos = new Position();
-    pos.clearBoard();
-    for (var sq = 0; sq < 256; sq ++) {
-      var pc = this.squares[sq];
-      if (pc > 0) {
-        pos.addPiece(MIRROR_SQUARE(sq), pc);
-      }
-    }
-    if (this.sdPlayer == 1) {
-      pos.changeSide();
-    }
-    return pos;
+  var mirror = false;
+  var lock = this.zobristLock >>> 1; // Convert into Unsigned
+  var index = binarySearch(BOOK_DAT, lock);
+  if (index < 0) {
+    mirror = true;
+    lock = this.mirror().zobristLock >>> 1; // Convert into Unsigned
+    index = binarySearch(BOOK_DAT, lock);
   }
-
-  this.bookMove = function() {
-    if (typeof BOOK_DAT != "object" || BOOK_DAT.length == 0) {
-      return 0;
-    }
-    var mirror = false;
-    var lock = this.zobristLock >>> 1; // Convert into Unsigned
-    var index = binarySearch(BOOK_DAT, lock);
-    if (index < 0) {
-      mirror = true;
-      lock = this.mirror().zobristLock >>> 1; // Convert into Unsigned
-      index = binarySearch(BOOK_DAT, lock);
-    }
-    if (index < 0) {
-      return 0;
-    }
+  if (index < 0) {
+    return 0;
+  }
+  index --;
+  while (index >= 0 && BOOK_DAT[index][0] == lock) {
     index --;
-    while (index >= 0 && BOOK_DAT[index][0] == lock) {
-      index --;
+  }
+  var mvs = [], vls = [];
+  var value = 0;
+  index ++;
+  while (index < BOOK_DAT.length && BOOK_DAT[index][0] == lock) {
+    var mv = BOOK_DAT[index][1];
+    mv = (mirror ? MIRROR_MOVE(mv) : mv);
+    if (this.legalMove(mv)) {
+      mvs.push(mv);
+      var vl = BOOK_DAT[index][2];
+      vls.push(vl);
+      value += vl;
     }
-    var mvs = [], vls = [];
-    var value = 0;
     index ++;
-    while (index < BOOK_DAT.length && BOOK_DAT[index][0] == lock) {
-      var mv = BOOK_DAT[index][1];
-      mv = (mirror ? MIRROR_MOVE(mv) : mv);
-      if (this.legalMove(mv)) {
-        mvs.push(mv);
-        var vl = BOOK_DAT[index][2];
-        vls.push(vl);
-        value += vl;
-      }
-      index ++;
-    }
-    if (value == 0) {
-      return 0;
-    }
-    value = Math.floor(Math.random() * value);
-    for (index = 0; index < mvs.length; index ++) {
-      value -= vls[index];
-      if (value < 0) {
-        break;
-      }
-    }
-    return mvs[index];
   }
+  if (value == 0) {
+    return 0;
+  }
+  value = Math.floor(Math.random() * value);
+  for (index = 0; index < mvs.length; index ++) {
+    value -= vls[index];
+    if (value < 0) {
+      break;
+    }
+  }
+  return mvs[index];
+}
 
-  this.historyIndex = function(mv) {
-    return ((this.squares[SRC(mv)] - 8) << 8) + DST(mv);
-  }
+Position.prototype.historyIndex = function(mv) {
+  return ((this.squares[SRC(mv)] - 8) << 8) + DST(mv);
 }

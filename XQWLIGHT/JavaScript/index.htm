@@ -8,31 +8,31 @@
     <script src="board.js"></script>
   </head>
   <body>
-    <div style="text-align:center;font-size:24pt;font-family:黑体">象棋小巫师</div>
-    <div style="font-size:12pt">&nbsp;</div>
-    <div style="text-align:center;font-size:12pt">
+    <div style="text-align:center;font-size:22pt;font-family:黑体">象棋小巫师</div>
+    <div style="font-size:11pt">&nbsp;</div>
+    <div style="text-align:center;font-size:11pt">
       <span style="display:inline-block;margin-right:10px">
         <div id="container"></div>
       </span>
       <span style="display:inline-block;vertical-align:top"><div style="text-align:left">
-        <div>谁先走</div>
-        <div><select id="selMoveMode" style="font-size:12pt">
+        <div style="padding:2px">谁先走</div>
+        <div><select id="selMoveMode" style="font-size:11pt">
           <option selected value="0">我先走　</option>
           <option value="1">电脑先走</option>
           <option value="2">不用电脑</option>
         </select></div>
-        <div>先走让子</div>
-        <div><select id="selHandicap" style="font-size:12pt">
+        <div style="padding:2px">先走让子</div>
+        <div><select id="selHandicap" style="font-size:11pt">
           <option selected value="0">不让子&nbsp;&nbsp;&nbsp;</option>
           <option value="1">让左马　</option>
           <option value="2">让双马　</option>
           <option value="3">让九子　</option>
         </select></div>
-        <div><input type="button" value="&nbsp;重新开始&nbsp;" style="font-size:12pt" onclick="restart_click()"></div>
-        <div><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:12pt" onclick="board.retract()"></div>
+        <div style="padding:2px"><input type="button" value="&nbsp;重新开始&nbsp;" style="font-size:11pt" onclick="restart_click()"></div>
+        <div style="padding:2px"><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:11pt" onclick="board.retract()"></div>
         <div>&nbsp;</div>
-        <div style="text-align:left">电脑水平</div>
-        <div><select id="selLevel" style="font-size:12pt" onchange="board.millis = Math.pow(10, selectedIndex + 1)">
+        <div style="padding:2px">电脑水平</div>
+        <div><select id="selLevel" style="font-size:11pt" onchange="board.millis = Math.pow(10, selectedIndex + 1)">
           <option selected value="0">入门&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
           <option value="1">业余　　</option>
           <option value="2">专业　　</option>
@@ -41,7 +41,7 @@
         <div><input type="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">动画</label></input></div>
         <div><input type="checkbox" id="chkSound" onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
         <div>&nbsp;</div>
-        <div><input type="button" value="&nbsp;　调试　&nbsp;" style="font-size:12pt" onclick="debug()"></div>
+        <div style="padding:2px"><input type="button" value="&nbsp;　调试　&nbsp;" style="font-size:11pt" onclick="debug()"></div>
       </div></span>
     </div>
     <script><!--
@@ -65,7 +65,7 @@ function restart_click() {
 }
 
 function debug() {
-  alert(board.busy);
+  alert("NPS=" + Math.floor(board.search.getKNPS()) + "K");
 }
     --></script>
   </body>
