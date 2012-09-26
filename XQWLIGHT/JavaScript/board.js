@@ -243,6 +243,7 @@ Board.prototype.postAddMove = function(mv) {
     } else {
       alertDelay("长打作负，祝贺你取得胜利！");
     }
+    this.postAddMove2(true);
     this.busy = false;
     return;
   }
@@ -257,6 +258,7 @@ Board.prototype.postAddMove = function(mv) {
     }
     if (!hasMaterial) {
       alertDelay("双方都没有进攻棋子了，辛苦了！");
+      this.postAddMove2(true);
       this.busy = false;
       return;
     }
@@ -270,6 +272,7 @@ Board.prototype.postAddMove = function(mv) {
     }
     if (!captured) {
       alertDelay("超过自然限着作和，辛苦了！");
+      this.postAddMove2(true);
       this.busy = false;
       return;
     }
@@ -283,7 +286,14 @@ Board.prototype.postAddMove = function(mv) {
         this.pos.captured() ? "capture" : "move");
   }
 
+  this.postAddMove2(false);
   this.response();
+}
+
+Board.prototype.postAddMove2 = function(gameover) {
+  if (typeof this.onAddMove == "function") {
+    this.onAddMove(gameover);
+  }
 }
 
 Board.prototype.postMate = function() {
@@ -292,6 +302,7 @@ Board.prototype.postMate = function() {
   } else {
     alertDelay("祝贺你取得胜利！");
   }
+  this.postAddMove2(true);
   this.busy = false;
 }
 
@@ -337,9 +348,10 @@ Board.prototype.drawSquare = function(sq, selected) {
 }
 
 Board.prototype.flushBoard = function() {
+  this.mvLast = this.pos.mvList[this.pos.mvList.length - 1];
   for (var sq = 0; sq < 256; sq ++) {
     if (IN_BOARD(sq)) {
-      this.drawSquare(sq, false);
+      this.drawSquare(sq, sq == SRC(this.mvLast) || sq == DST(this.mvLast));
     }
   }
 }

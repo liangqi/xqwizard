@@ -2,28 +2,29 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=gbk">
     <title>象棋小巫师</title>
-    <script src="book.js"></script>
-    <script src="position.js"></script>
-    <script src="search.js"></script>
-    <script src="board.js"></script>
+    <script type="text/javascript" src="book.js"></script>
+    <script type="text/javascript" src="position.js"></script>
+    <script type="text/javascript" src="search.js"></script>
+    <script type="text/javascript" src="board.js"></script>
+    <script type="text/javascript" src="cchess.js"></script>
   </head>
   <body>
-    <div style="text-align:center;font-size:22pt;font-family:黑体">象棋小巫师</div>
-    <div style="font-size:11pt">&nbsp;</div>
-    <div style="text-align:center;font-size:11pt">
+    <div style="text-align:center;font-size:28px;font-family:黑体">象棋小巫师</div>
+    <div style="font-size:14px">&nbsp;</div>
+    <div style="text-align:center;font-size:14px">
       <span style="display:inline-block;margin-right:10px">
         <div id="container"></div>
       </span>
       <span style="display:inline-block;vertical-align:top"><div style="text-align:left">
         <div style="padding:2px">谁先走</div>
-        <div><select id="selMoveMode" style="font-size:11pt">
+        <div><select id="selMoveMode" size="3" style="font-size:14px;padding:2px">
           <option selected value="0">我先走　</option>
           <option value="1">电脑先走</option>
           <option value="2">不用电脑</option>
         </select></div>
         <div style="padding:2px">先走让子</div>
-        <div><select id="selHandicap" style="font-size:11pt">
-          <option selected value="0">不让子&nbsp;&nbsp;&nbsp;</option>
+        <div><select id="selHandicap" style="font-size:14px">
+          <option selected value="0">不让子　</option>
           <option value="1">让左马　</option>
           <option value="2">让双马　</option>
           <option value="3">让九子　</option>
@@ -32,20 +33,24 @@
         <div style="padding:2px"><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:11pt" onclick="board.retract()"></div>
         <div>&nbsp;</div>
         <div style="padding:2px">电脑水平</div>
-        <div><select id="selLevel" style="font-size:11pt" onchange="board.millis = Math.pow(10, selectedIndex + 1)">
-          <option selected value="0">入门&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+        <div><select id="selLevel" size="3" style="font-size:14px;padding:2px" onchange="board.millis = Math.pow(10, selectedIndex + 1)">
+          <option selected value="0">入门　　</option>
           <option value="1">业余　　</option>
           <option value="2">专业　　</option>
         </select></div>
         <div>&nbsp;</div>
         <div><input type="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">动画</label></input></div>
-        <div><input type="checkbox" id="chkSound" onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
+        <div><input type="checkbox" id="chkSound" checked onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
         <div>&nbsp;</div>
-        <div style="padding:2px"><input type="button" value="&nbsp;　调试　&nbsp;" style="font-size:11pt" onclick="debug()"></div>
+        <div>&nbsp;</div>
+        <div style="padding:2px">步骤</div>
+        <div><select id="selMoveList" size="10" style="font-family:宋体;font-size:14px;padding:2px">
+          <option selected value="0">=== 开始 ===</option>
+        </select></div>
       </div></span>
     </div>
-    <script><!--
-"use sctrict";
+    <script type="text/javascript"><!--
+"use strict";
 
 var STARTUP_FEN = [
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w",
@@ -54,18 +59,24 @@ var STARTUP_FEN = [
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w",
 ];
 
+var gameover = false;
+
 var board = new Board(container, "images/", "sounds/");
 board.setSearch(16);
 board.millis = 10;
 board.computer = 1;
+board.onAddMove = function(gameover_) {
+  gameover = gameover_;
+  var opt = document.createElement("option");
+  opt.selected = true;
+  opt.text = move2Iccs(board.mvLast);
+  selMoveList.add(opt);
+};
 
 function restart_click() {
+  gameover = false;
   board.computer = 1 - selMoveMode.selectedIndex;
   board.restart(STARTUP_FEN[selHandicap.selectedIndex]);
-}
-
-function debug() {
-  alert("NPS=" + Math.floor(board.search.getKNPS()) + "K");
 }
     --></script>
   </body>
