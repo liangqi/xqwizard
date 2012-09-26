@@ -61,7 +61,7 @@ function Board(container, images, sounds) {
   this.pos = new Position();
   this.pos.fromFen("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1");
   this.animated = true;
-  this.sound = false;
+  this.sound = true;
   this.search = null;
   this.imgSquares = [];
   this.sqSelected = 0;
@@ -142,7 +142,7 @@ Board.prototype.computerLastMove = function() {
   return 1 - this.pos.sdPlayer == this.computer;
 }
 
-Board.prototype.addMove = function(mv) {
+Board.prototype.addMove = function(mv, computerMove) {
   if (!this.pos.legalMove(mv)) {
     return;
   }
@@ -152,7 +152,7 @@ Board.prototype.addMove = function(mv) {
   }
   this.busy = true;
   if (!this.animated) {
-    this.postAddMove(mv);
+    this.postAddMove(mv, computerMove);
     return;
   }
 
@@ -172,7 +172,7 @@ Board.prototype.addMove = function(mv) {
       style.left = xSrc + "px";
       style.top = ySrc + "px";
       style.zIndex = 0;
-      this_.postAddMove(mv);
+      this_.postAddMove(mv, computerMove);
     } else {
       style.left = MOVE_PX(xSrc, xDst, step);
       style.top = MOVE_PX(ySrc, yDst, step);
@@ -181,7 +181,7 @@ Board.prototype.addMove = function(mv) {
   }, 16);
 }
 
-Board.prototype.postAddMove = function(mv) {
+Board.prototype.postAddMove = function(mv, computerMove) {
   if (this.mvLast > 0) {
     this.drawSquare(SRC(this.mvLast), false);
     this.drawSquare(DST(this.mvLast), false);
@@ -192,11 +192,7 @@ Board.prototype.postAddMove = function(mv) {
   this.mvLast = mv;
 
   if (this.pos.isMate()) {
-    if (this.computerLastMove()) {
-      this.playSound("loss");
-    } else {
-      this.playSound("win");
-    }
+    this.playSound(computerMove ? "loss" : "win");
 
     var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
     var sqMate = 0;
@@ -236,11 +232,14 @@ Board.prototype.postAddMove = function(mv) {
   var vlRep = this.pos.repStatus(3);
   if (vlRep > 0) {
     vlRep = this.pos.repValue(vlRep);
-    if (vlRep == 0) {
+    if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
+      this.playSound("draw");
       alertDelay("双方不变作和，辛苦了！");
-    } else if (this.computerMove() == (vlRep > 0)) {
+    } else if (computerMove == (vlRep < 0)) {
+      this.playSound("loss");
       alertDelay("长打作负，请不要气馁！");
     } else {
+      this.playSound("win");
       alertDelay("长打作负，祝贺你取得胜利！");
     }
     this.postAddMove2(true);
@@ -257,6 +256,7 @@ Board.prototype.postAddMove = function(mv) {
       }
     }
     if (!hasMaterial) {
+      this.playSound("draw");
       alertDelay("双方都没有进攻棋子了，辛苦了！");
       this.postAddMove2(true);
       this.busy = false;
@@ -271,6 +271,7 @@ Board.prototype.postAddMove = function(mv) {
       }
     }
     if (!captured) {
+      this.playSound("draw");
       alertDelay("超过自然限着作和，辛苦了！");
       this.postAddMove2(true);
       this.busy = false;
@@ -278,12 +279,12 @@ Board.prototype.postAddMove = function(mv) {
     }
   }
 
-  if (this.computerLastMove()) {
-    this.playSound(this.pos.inCheck() ? "check2" :
-        this.pos.captured() ? "capture2" : "move2");
+  if (this.pos.inCheck()) {
+    this.playSound(computerMove ? "check2" : "check");
+  } else if (this.pos.captured()) {
+    this.playSound(computerMove ? "capture2" : "capture");
   } else {
-    this.playSound(this.pos.inCheck() ? "check" :
-        this.pos.captured() ? "capture" : "move");
+    this.playSound(computerMove ? "move2" : "move");
   }
 
   this.postAddMove2(false);
@@ -296,12 +297,8 @@ Board.prototype.postAddMove2 = function(gameover) {
   }
 }
 
-Board.prototype.postMate = function() {
-  if (this.computerLastMove()) {
-    alertDelay("请再接再厉！");
-  } else {
-    alertDelay("祝贺你取得胜利！");
-  }
+Board.prototype.postMate = function(computerMove) {
+  alertDelay(computerMove ? "请再接再厉！" : "祝贺你取得胜利！");
   this.postAddMove2(true);
   this.busy = false;
 }
@@ -315,7 +312,7 @@ Board.prototype.response = function() {
   var this_ = this;
   this.busy = true;
   setTimeout(function() {
-    this_.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis));
+    this_.addMove(board.search.searchMain(LIMIT_DEPTH, board.millis), true);
     this_.thinking.style.visibility = "hidden";
   }, 250);
 }
@@ -338,7 +335,7 @@ Board.prototype.clickSquare = function(sq_) {
     this.drawSquare(sq, true);
     this.sqSelected = sq;
   } else if (this.sqSelected > 0) {
-    this.addMove(MOVE(this.sqSelected, sq));
+    this.addMove(MOVE(this.sqSelected, sq), false);
   }
 }
 
@@ -362,6 +359,7 @@ Board.prototype.restart = function(fen) {
   }
   this.pos.fromFen(fen);
   this.flushBoard();
+  this.playSound("newgame");
   this.response();
 }
 
