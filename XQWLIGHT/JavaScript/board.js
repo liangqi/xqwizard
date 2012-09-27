@@ -210,7 +210,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       }
     }
     if (!this.animated || sqMate == 0) {
-      this.postMate();
+      this.postMate(computerMove);
       return;
     }
 
@@ -227,7 +227,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
         style.backgroundImage = "url(" + this_.images +
             (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.gif)";
         style.zIndex = 0;
-        this_.postMate();
+        this_.postMate(computerMove);
       } else {
         style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
         step --;
