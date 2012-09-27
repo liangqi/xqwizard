@@ -224,9 +224,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
       if (step == 0) {
         clearInterval(timer);
         style.left = xMate + "px";
-        style.backgroundImage = "url(" + this_.images +
-            (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.gif)";
         style.zIndex = 0;
+        this_.imgSquares[sqMate].src = this_.images +
+            (this_.pos.sdPlayer == 0 ? "r" : "b") + "km.gif";
         this_.postMate(computerMove);
       } else {
         style.left = (xMate + ((step & 1) == 0 ? step : -step) * 2) + "px";
