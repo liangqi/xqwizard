@@ -22,6 +22,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 "use strict";
 
+var RESULT_UNKNOWN = 0;
+var RESULT_WIN = 1;
+var RESULT_DRAW = 2;
+var RESULT_LOSS = 3;
+
 var BOARD_WIDTH = 521;
 var BOARD_HEIGHT = 577;
 var SQUARE_SIZE = 57;
@@ -68,6 +73,7 @@ function Board(container, images, sounds) {
   this.mvLast = 0;
   this.millis = 0;
   this.computer = -1;
+  this.result = RESULT_UNKNOWN;
   this.busy = false;
 
   var style = container.style;
@@ -81,21 +87,21 @@ function Board(container, images, sounds) {
       this.imgSquares.push(null);
       continue;
     }
-    var div = document.createElement("div");
-    var style = div.style;
+    var img = document.createElement("img");
+    var style = img.style;
     style.position = "absolute";
     style.left = SQ_X(sq);
     style.top = SQ_Y(sq);
     style.width = SQUARE_SIZE;
     style.height = SQUARE_SIZE;
     style.zIndex = 0;
-    div.onclick = function(sq_) {
+    img.onmousedown = function(sq_) {
       return function() {
         this_.clickSquare(sq_);
       }
     } (sq);
-    container.appendChild(div);
-    this.imgSquares.push(div);
+    container.appendChild(img);
+    this.imgSquares.push(img);
   }
 
   this.thinking = document.createElement("img");
@@ -193,6 +199,7 @@ Board.prototype.postAddMove = function(mv, computerMove) {
 
   if (this.pos.isMate()) {
     this.playSound(computerMove ? "loss" : "win");
+    this.result = computerMove ? RESULT_LOSS : RESULT_WIN;
 
     var pc = SIDE_TAG(this.pos.sdPlayer) + PIECE_KING;
     var sqMate = 0;
@@ -234,15 +241,18 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     vlRep = this.pos.repValue(vlRep);
     if (vlRep > -WIN_VALUE && vlRep < WIN_VALUE) {
       this.playSound("draw");
+      this.result = RESULT_DRAW;
       alertDelay("双方不变作和，辛苦了！");
     } else if (computerMove == (vlRep < 0)) {
       this.playSound("loss");
+      this.result = RESULT_LOSS;
       alertDelay("长打作负，请不要气馁！");
     } else {
       this.playSound("win");
+      this.result = RESULT_WIN;
       alertDelay("长打作负，祝贺你取得胜利！");
     }
-    this.postAddMove2(true);
+    this.postAddMove2();
     this.busy = false;
     return;
   }
@@ -257,8 +267,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     }
     if (!hasMaterial) {
       this.playSound("draw");
+      this.result = RESULT_DRAW;
       alertDelay("双方都没有进攻棋子了，辛苦了！");
-      this.postAddMove2(true);
+      this.postAddMove2();
       this.busy = false;
       return;
     }
@@ -272,8 +283,9 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     }
     if (!captured) {
       this.playSound("draw");
+      this.result = RESULT_DRAW;
       alertDelay("超过自然限着作和，辛苦了！");
-      this.postAddMove2(true);
+      this.postAddMove2();
       this.busy = false;
       return;
     }
@@ -287,19 +299,19 @@ Board.prototype.postAddMove = function(mv, computerMove) {
     this.playSound(computerMove ? "move2" : "move");
   }
 
-  this.postAddMove2(false);
+  this.postAddMove2();
   this.response();
 }
 
-Board.prototype.postAddMove2 = function(gameover) {
+Board.prototype.postAddMove2 = function() {
   if (typeof this.onAddMove == "function") {
-    this.onAddMove(gameover);
+    this.onAddMove();
   }
 }
 
 Board.prototype.postMate = function(computerMove) {
   alertDelay(computerMove ? "请再接再厉！" : "祝贺你取得胜利！");
-  this.postAddMove2(true);
+  this.postAddMove2();
   this.busy = false;
 }
 
@@ -318,7 +330,7 @@ Board.prototype.response = function() {
 }
 
 Board.prototype.clickSquare = function(sq_) {
-  if (this.busy) {
+  if (this.busy || this.result != RESULT_UNKNOWN) {
     return;
   }
   var sq = this.flipped(sq_);
@@ -340,8 +352,9 @@ Board.prototype.clickSquare = function(sq_) {
 }
 
 Board.prototype.drawSquare = function(sq, selected) {
-  this.imgSquares[this.flipped(sq)].style.backgroundImage = "url(" + this.images +
-      PIECE_NAME[this.pos.squares[sq]] + (selected ? "s" : "") + ".gif)";
+  var img = this.imgSquares[this.flipped(sq)];
+  img.src = this.images + PIECE_NAME[this.pos.squares[sq]] + ".gif";
+  img.style.backgroundImage = selected ? "url(" + this.images + "oos.gif)" : "";
 }
 
 Board.prototype.flushBoard = function() {
@@ -357,6 +370,7 @@ Board.prototype.restart = function(fen) {
   if (this.busy) {
     return;
   }
+  this.result = RESULT_UNKNOWN;
   this.pos.fromFen(fen);
   this.flushBoard();
   this.playSound("newgame");
@@ -367,6 +381,7 @@ Board.prototype.retract = function() {
   if (this.busy) {
     return;
   }
+  this.result = RESULT_UNKNOWN;
   if (this.pos.mvList.length > 1) {
     this.pos.undoMakeMove();
   }

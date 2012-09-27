@@ -30,10 +30,10 @@
           <option value="3">让九子　</option>
         </select></div>
         <div style="padding:2px"><input type="button" value="&nbsp;重新开始&nbsp;" style="font-size:11pt" onclick="restart_click()"></div>
-        <div style="padding:2px"><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:11pt" onclick="board.retract()"></div>
+        <div style="padding:2px"><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:11pt" onclick="retract_click()"></div>
         <div>&nbsp;</div>
         <div style="padding:2px">电脑水平</div>
-        <div><select id="selLevel" size="3" style="font-size:14px;padding:2px" onchange="board.millis = Math.pow(10, selectedIndex + 1)">
+        <div><select id="selLevel" size="3" style="font-size:14px;padding:2px" onchange="level_change()">
           <option selected value="0">入门　　</option>
           <option value="1">业余　　</option>
           <option value="2">专业　　</option>
@@ -44,7 +44,7 @@
         <div>&nbsp;</div>
         <div>&nbsp;</div>
         <div style="padding:2px">步骤</div>
-        <div><select id="selMoveList" size="10" style="font-family:宋体;font-size:14px;padding:2px">
+        <div><select id="selMoveList" size="10" style="font-family:宋体;font-size:14px;padding:2px" onchange="moveList_change()">
           <option selected value="0">=== 开始 ===</option>
         </select></div>
       </div></span>
@@ -59,24 +59,75 @@ var STARTUP_FEN = [
   "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR w",
 ];
 
-var gameover = false;
+function createOption(text, value, ie8) {
+  var opt = document.createElement("option");
+  opt.selected = true;
+  opt.value = value;
+  if (ie8) {
+    opt.text = text;
+  } else {
+    opt.innerHTML = text.replace(/ /g, "&nbsp;");
+  }
+  return opt;
+}
 
 var board = new Board(container, "images/", "sounds/");
 board.setSearch(16);
 board.millis = 10;
 board.computer = 1;
-board.onAddMove = function(gameover_) {
-  gameover = gameover_;
-  var opt = document.createElement("option");
-  opt.selected = true;
-  opt.text = move2Iccs(board.mvLast);
-  selMoveList.add(opt);
+board.onAddMove = function() {
+  var counter = (board.pos.mvList.length >> 1);
+  var space = (counter > 99 ? "    " : "   ");
+  counter = (counter > 9 ? "" : " ") + counter + ".";
+  var text = (board.pos.sdPlayer == 0 ? space : counter) + move2Iccs(board.mvLast);
+  var value = "" + board.mvLast;
+  try {
+    selMoveList.add(createOption(text, value, false));
+  } catch (e) {
+    selMoveList.add(createOption(text, value, true));
+  }
 };
 
+function level_change() {
+  board.millis = Math.pow(10, selLevel.selectedIndex + 1);
+}
+
 function restart_click() {
-  gameover = false;
+  selMoveList.options.length = 1;
+  selMoveList.selectedIndex = 0;
   board.computer = 1 - selMoveMode.selectedIndex;
   board.restart(STARTUP_FEN[selHandicap.selectedIndex]);
+}
+
+function retract_click() {
+  for (var i = board.pos.mvList.length; i < selMoveList.options.length; i ++) {
+    board.pos.makeMove(parseInt(selMoveList.options[i].value));
+  }
+  board.retract();
+  selMoveList.options.length = board.pos.mvList.length;
+  selMoveList.selectedIndex = selMoveList.options.length - 1;
+}
+
+function moveList_change() {
+  if (board.result == RESULT_UNKNOWN) {
+    selMoveList.selectedIndex = selMoveList.options.length - 1;
+    return;
+  }
+  var from = board.pos.mvList.length;
+  var to = selMoveList.selectedIndex;
+  if (from == to + 1) {
+    return;
+  }
+  if (from > to + 1) {
+    for (var i = to + 1; i < from; i ++) {
+      board.pos.undoMakeMove();
+    }
+  } else {
+    for (var i = from; i <= to; i ++) {
+      board.pos.makeMove(parseInt(selMoveList.options[i].value));
+    }
+  }
+  board.flushBoard();
 }
     --></script>
   </body>
