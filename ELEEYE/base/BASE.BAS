@@ -327,7 +327,7 @@ End Function
 
 ' === Begin MsgBoxCheck ===
 
-Public Function mbc_NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Function mbc_NewWndProc(ByVal hWnd As Long, ByVal uMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 
 Dim dw(0 To 3) As Long, nWidth As Long, nHeight As Long
 
@@ -369,7 +369,7 @@ End If
 
 End Function
 
-Public Function MsgBoxCheck(ByVal szPrompt As String, ByVal szCheck As String, Optional ByVal bChecked As Boolean = False, _
+Public Function MsgBoxCheck(ByRef bChecked As Boolean, ByVal szCheck As String, ByVal szPrompt As String, _
         Optional ByVal dwStyle As Long = 0, Optional ByVal szTitle As String = vbNullString, _
         Optional ByVal nIcon As Integer = 0, Optional ByVal szIconFile As String = vbNullString) As Long
 
@@ -383,12 +383,7 @@ ElseIf StrPtr(szTitle) = 0 Then
 Else
     MsgBoxCheck = MsgBox(szPrompt, dwStyle, szTitle)
 End If
-
-End Function
-
-Public Function MsgBoxIsChecked() As Boolean
-
-MsgBoxIsChecked = mbc_bChecked
+bChecked = mbc_bChecked
 
 End Function
 
