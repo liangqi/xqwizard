@@ -496,7 +496,7 @@ End Function
 
 ' === Begin TrayIcon ===
 
-Public Sub AddTrayIcon(ByVal frm As Form, Optional ByVal hIcon As Long = 0, Optional ByVal szTip As String = "")
+Private Sub NotifyTray(ByVal frm As Form, ByVal hIcon As Long, ByVal szTip As String, ByVal dwMessage As Long)
 
 Dim nid As NotifyIconData
 nid.cbSize = Len(nid)
@@ -506,18 +506,25 @@ nid.uFlags = NIF_MESSAGE + NIF_ICON + NIF_TIP
 nid.uCallbackMessage = WM_TRAY
 nid.hIcon = IIf(hIcon = 0, frm.Icon.Handle, hIcon)
 nid.szTip = IIf(szTip = "", frm.Caption, szTip) & Chr(0)
-Shell_NotifyIconA NIM_ADD, nid
+Shell_NotifyIconA dwMessage, nid
+
+End Sub
+
+Public Sub AddTrayIcon(ByVal frm As Form, Optional ByVal hIcon As Long = 0, Optional ByVal szTip As String = "")
+
+NotifyTray frm, hIcon, szTip, NIM_ADD
+
+End Sub
+
+Public Sub ModifyTrayIcon(ByVal frm As Form, Optional ByVal hIcon As Long = 0, Optional ByVal szTip As String = "")
+
+NotifyTray frm, hIcon, szTip, NIM_MODIFY
 
 End Sub
 
 Public Sub DeleteTrayIcon(ByVal frm As Form)
 
-Dim nid As NotifyIconData
-nid.cbSize = Len(nid)
-nid.hWnd = frm.hWnd
-nid.uID = 0
-nid.uFlags = 0
-Shell_NotifyIconA NIM_DELETE, nid
+NotifyTray frm, 0, "", NIM_DELETE
 
 End Sub
 

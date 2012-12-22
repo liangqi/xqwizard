@@ -1,1 +1,0 @@
-g++ -DNDEBUG -O4 -Wall -oQH2UCCI.EXE ../base/pipe.cpp ../eleeye/ucci.cpp qh2ucci.cpp
