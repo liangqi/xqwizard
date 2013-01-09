@@ -15,7 +15,7 @@ inline uint64_t MAKE_LONG_LONG(uint32_t LowLong, uint32_t HighLong) {
   return (uint64_t) LowLong | ((uint64_t) HighLong << 32);
 }
 
-#ifdef __arm__
+#if defined __arm__ || defined __mips__
 
 inline int Bsf(uint32_t Operand) {
   uint32_t dw = Operand & -Operand;

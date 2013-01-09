@@ -1,0 +1,1 @@
+/NDK/BIN/mipsel-linux-android-g++.exe -DNDEBUG -O4 -Wall -fno-exceptions -I/NDK/include -B/NDK/lib -oeleeye ../base/pipe.cpp ucci.cpp pregen.cpp position.cpp genmoves.cpp hash.cpp book.cpp movesort.cpp preeval.cpp evaluate.cpp search.cpp eleeye.cpp
