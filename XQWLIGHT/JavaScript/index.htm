@@ -7,44 +7,76 @@
     <script type="text/javascript" src="search.js"></script>
     <script type="text/javascript" src="board.js"></script>
     <script type="text/javascript" src="cchess.js"></script>
+    <style type="text/css"><!--
+body {
+  background: url(../background.gif);
+}
+
+span.td {
+  display: inline-block;
+}
+
+div.label {
+  font-size: 14px;
+  padding:2px;
+}
+
+select {
+  font-size: 14px;
+  width: 108px;
+  padding:2px;
+}
+
+option {
+  font-size: 14px;
+}
+
+input.button {
+  font-size: 14px;
+  width: 108px;
+}
+
+label {
+  font-size: 14px;
+}
+
+    --></style>
   </head>
   <body>
     <div style="text-align:center;font-size:28px;font-family:黑体">象棋小巫师</div>
-    <div style="font-size:14px">&nbsp;</div>
-    <div style="text-align:center;font-size:14px">
-      <span style="display:inline-block;margin-right:10px">
+    <div style="height:16px"></div>
+    <div style="text-align:center;white-space:nowrap">
+      <span class="td" style="margin-right:10px">
         <div id="container"></div>
-      </span>
-      <span style="display:inline-block;vertical-align:top"><div style="text-align:left">
-        <div style="padding:2px">谁先走</div>
-        <div><select id="selMoveMode" size="3" style="font-size:14px;padding:2px">
-          <option selected value="0">我先走　</option>
+      </span><span class="td" style="vertical-align:top;width:120px;"><div style="text-align:left">
+        <div class="label">谁先走</div>
+        <div><select id="selMoveMode" size="3">
+          <option selected value="0">我先走</option>
           <option value="1">电脑先走</option>
           <option value="2">不用电脑</option>
         </select></div>
-        <div style="padding:2px">先走让子</div>
-        <div><select id="selHandicap" style="font-size:14px">
-          <option selected value="0">不让子　</option>
-          <option value="1">让左马　</option>
-          <option value="2">让双马　</option>
-          <option value="3">让九子　</option>
+        <div class="label">先走让子</div>
+        <div><select id="selHandicap" style="padding:0px">
+          <option selected value="0">不让子</option>
+          <option value="1">让左马</option>
+          <option value="2">让双马</option>
+          <option value="3">让九子</option>
         </select></div>
-        <div style="padding:2px"><input type="button" value="&nbsp;重新开始&nbsp;" style="font-size:11pt" onclick="restart_click()"></div>
-        <div style="padding:2px"><input type="button" value="&nbsp;　悔棋　&nbsp;" style="font-size:11pt" onclick="retract_click()"></div>
-        <div>&nbsp;</div>
-        <div style="padding:2px">电脑水平</div>
-        <div><select id="selLevel" size="3" style="font-size:14px;padding:2px" onchange="level_change()">
-          <option selected value="0">入门　　</option>
-          <option value="1">业余　　</option>
-          <option value="2">专业　　</option>
+        <div style="padding-top:2px"><input type="button" class="button" value="重新开始" onclick="restart_click()"></div>
+        <div style="padding-top:2px"><input type="button" class="button" value="悔棋" onclick="retract_click()"></div>
+        <div style="height:12px"></div>
+        <div class="label">电脑水平</div>
+        <div><select id="selLevel" size="3" onchange="level_change()">
+          <option selected value="0">入门</option>
+          <option value="1">业余</option>
+          <option value="2">专业</option>
         </select></div>
-        <div>&nbsp;</div>
-        <div><input type="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">动画</label></input></div>
-        <div><input type="checkbox" id="chkSound" checked onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div style="padding:2px">步骤</div>
-        <div><select id="selMoveList" size="10" style="font-family:宋体;font-size:14px;padding:2px" onchange="moveList_change()">
+        <div style="height:12px"></div>
+        <div><input type="checkbox" class="checkbox" id="chkAnimated" checked onclick="board.animated = checked"><label for="chkAnimated">动画</label></input></div>
+        <div><input type="checkbox" class="checkbox" checked onclick="board.setSound(checked)"><label for="chkSound">音效</label></input></div>
+        <div style="height:60px"></div>
+        <div class="label">步骤</div>
+        <div><select id="selMoveList" size="10" style="font-family:宋体" onchange="moveList_change()">
           <option selected value="0">=== 开始 ===</option>
         </select></div>
       </div></span>
@@ -86,6 +118,7 @@ board.onAddMove = function() {
   } catch (e) {
     selMoveList.add(createOption(text, value, true));
   }
+  selMoveList.scrollTop = selMoveList.scrollHeight;
 };
 
 function level_change() {
