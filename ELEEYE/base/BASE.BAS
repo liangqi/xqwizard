@@ -394,7 +394,7 @@ End Function
 Private Function TrimNull(ByVal sz As String) As String
 
 Dim i As Integer
-i = InStr(sz, Chr(0))
+i = InStr(sz, vbNullChar)
 If i > 0 Then
     TrimNull = Left(sz, i - 1)
 Else
@@ -406,7 +406,7 @@ End Function
 Public Function OpenFileDialog(ByVal szTitle As String, ByVal szFilter As String) As String
 
 Dim ofn As OpenFileName
-szFilter = Replace(szFilter, "|", Chr(0))
+szFilter = Replace(szFilter, "|", vbNullChar)
 ofn.lStructSize = Len(ofn)
 ofn.hwndOwner = 0
 On Error Resume Next
@@ -415,7 +415,7 @@ On Error GoTo 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
-ofn.lpstrFilter = szFilter & Chr(0)
+ofn.lpstrFilter = szFilter & vbNullChar
 ofn.lpstrFile = String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
@@ -436,7 +436,7 @@ Public Function SaveFileDialog(ByVal szTitle As String, ByVal szFilter As String
         ByVal szFileName As String, Optional ByVal szDefExt As String = vbNullString) As String
 
 Dim ofn As OpenFileName, sz As String
-szFilter = Replace(szFilter, "|", Chr(0))
+szFilter = Replace(szFilter, "|", vbNullChar)
 ofn.lStructSize = Len(ofn)
 ofn.hwndOwner = 0
 On Error Resume Next
@@ -445,7 +445,7 @@ On Error GoTo 0
 ofn.lpstrCustomFilter = vbNullString
 ofn.lpstrFileTitle = vbNullString
 ofn.lpstrInitialDir = vbNullString
-ofn.lpstrFilter = szFilter & Chr(0)
+ofn.lpstrFilter = szFilter & vbNullChar
 ofn.lpstrFile = szFileName & String(260, 0)
 ofn.nMaxFile = 260
 ofn.lpstrTitle = szTitle
@@ -505,7 +505,7 @@ nid.uID = 0
 nid.uFlags = NIF_MESSAGE + NIF_ICON + NIF_TIP
 nid.uCallbackMessage = WM_TRAY
 nid.hIcon = IIf(hIcon = 0, frm.Icon.Handle, hIcon)
-nid.szTip = IIf(szTip = "", frm.Caption, szTip) & Chr(0)
+nid.szTip = IIf(szTip = "", frm.Caption, szTip) & vbNullChar
 Shell_NotifyIconA dwMessage, nid
 
 End Sub

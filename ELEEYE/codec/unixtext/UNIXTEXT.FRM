@@ -89,7 +89,7 @@ On Error GoTo 0
 sz = ""
 Do While Not EOF(nOpenFile)
     Line Input #nOpenFile, szLine
-    szLine = Replace(szLine, IIf(chkMacText.Value = 0, Chr(10), Chr(13)), vbCrLf)
+    szLine = Replace(szLine, IIf(chkMacText.Value = 0, vbLf, vbCr), vbCrLf)
     sz = sz + szLine + vbCrLf
 Loop
 txtText.Text = sz
@@ -104,7 +104,7 @@ End Sub
 
 Private Sub ReadClipboard(ByVal sz As String)
 
-txtText.Text = Replace(sz, IIf(chkMacText.Value = 0, Chr(10), Chr(13)), vbCrLf)
+txtText.Text = Replace(sz, IIf(chkMacText.Value = 0, vbLf, vbCr), vbCrLf)
 
 End Sub
 
@@ -156,12 +156,12 @@ If chkClipboard.Value = 0 Then
         On Error GoTo lnErrorOpen
         Open sz For Output As #nOpenFile
         On Error GoTo 0
-        Print #nOpenFile, Replace(txtText.Text, IIf(chkMacText.Value = 0, Chr(13), Chr(10)), "");
+        Print #nOpenFile, Replace(txtText.Text, IIf(chkMacText.Value = 0, vbCr, vbLf), "");
         Close #nOpenFile
     End If
 Else
     Clipboard.Clear
-    Clipboard.SetText Replace(txtText.Text, IIf(chkMacText.Value = 0, Chr(13), Chr(10)), "")
+    Clipboard.SetText Replace(txtText.Text, IIf(chkMacText.Value = 0, vbCr, vbLf), "")
 End If
 
 Exit Sub
