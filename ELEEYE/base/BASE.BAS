@@ -188,6 +188,30 @@ Public Const IMAGE_SUBSYSTEM_WINDOWS_CE_GUI As Integer = 9  ' Image runs in the 
 Private Const IMAGE_DOS_SIGNATURE           As Integer = &H5A4D
 Private Const IMAGE_NT_SIGNATURE            As Long = &H4550
 
+' For UnixTimestamp
+Private Type SystemTime
+    wYear As Integer
+    wMonth As Integer
+    wDayOfWeek As Integer
+    wDay As Integer
+    wHour As Integer
+    wMinute As Integer
+    wSecond As Integer
+    wMilliseconds As Integer
+End Type
+
+Private Type TimeZoneInformation
+    Bias As Long
+    StandardName(32) As Integer
+    StandardDate As SystemTime
+    StandardBias As Long
+    DaylightName(32) As Integer
+    DaylightDate As SystemTime
+    DaylightBias As Long
+End Type
+
+Private Declare Sub GetTimeZoneInformation Lib "KERNEL32.DLL" (ByRef lpTimeZoneInformation As TimeZoneInformation)
+
 ' === Begin AllocString ===
 
 Public Function AllocString(ByVal lpsz As Long) As String
@@ -607,3 +631,15 @@ GetExeType = -2
 End Function
 
 ' === End GetExeType ===
+
+' === Begin UnixTimestamp ===
+
+Public Function UnixTimestamp() As Double
+
+Dim tzi As TimeZoneInformation
+GetTimeZoneInformation tzi
+UnixTimestamp = (Now - DateSerial(1970, 1, 1)) * 86400# + tzi.Bias * 60#
+
+End Function
+
+' === End UnixTimestamp ===
