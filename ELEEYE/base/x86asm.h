@@ -17,40 +17,29 @@ inline uint64_t MAKE_LONG_LONG(uint32_t LowLong, uint32_t HighLong) {
 
 #if defined __arm__ || defined __mips__
 
+static int cnNtzTable[64] = {
+  32,  0,  1, 12,  2,  6, -1, 13,   3, -1,  7, -1, -1, -1, -1, 14,
+  10,  4, -1, -1,  8, -1, -1, 25,  -1, -1, -1, -1, -1, 21, 27, 15,
+  31, 11,  5, -1, -1, -1, -1, -1,   9, -1, -1, 24, -1, -1, 20, 26,
+  30, -1, -1, -1, -1, 23, -1, 19,  29, -1, 22, 18, 28, 17, 16, -1
+};
+
+inline int BitScan(uint32_t Operand) {
+  uint32_t dw = ((Operand * 17) * 65) * 65535;
+  return cnNtzTable[((dw & -dw) * 0x0450FBAF) >> 26];  
+}
+
 inline int Bsf(uint32_t Operand) {
-  uint32_t dw = Operand & -Operand;
-  return
-      ((dw & 0xFFFF0000) != 0 ? 16 : 0) + 
-      ((dw & 0xFF00FF00) != 0 ? 8 : 0) +
-      ((dw & 0xF0F0F0F0) != 0 ? 4 : 0) +
-      ((dw & 0xCCCCCCCC) != 0 ? 2 : 0) +
-      ((dw & 0xAAAAAAAA) != 0 ? 1 : 0);
+  return BitScan(Operand & -Operand);
 }
 
 inline int Bsr(uint32_t Operand) {
-  uint32_t dw = Operand;
-  int n = 0;
-  if ((dw & 0xFFFF0000) != 0) {
-    dw &= 0xFFFF0000;
-    n += 16;
-  }
-  if ((dw & 0xFF00FF00) != 0) {
-    dw &= 0xFF00FF00;
-    n += 8;
-  }
-  if ((dw & 0xF0F0F0F0) != 0) {
-    dw &= 0xF0F0F0F0;
-    n += 4;
-  }
-  if ((dw & 0xCCCCCCCC) != 0) {
-    dw &= 0xCCCCCCCC;
-    n += 2;
-  }
-  if ((dw & 0xAAAAAAAA) != 0) {
-    dw &= 0xAAAAAAAA;
-    n ++;
-  }
-  return n;
+  uint32_t dw = Operand | (Operand >> 1);
+  dw |= dw >> 2;
+  dw |= dw >> 4;
+  dw |= dw >> 8;
+  dw |= dw >> 16;
+  return BitScan(dw - (dw >> 1));
 }
 
 #else
